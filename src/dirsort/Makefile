@@ -2,7 +2,8 @@ CC = g++
 CFLAGS = -Wall -Wextra -Wpedantic
 
 SRCS = main.cpp \
-			 rbtree.cpp 
+			 rbtree.cpp \
+			 taglib_parser.cpp \
 
 TAG_LIB = $(shell pkg-config --libs --cflags taglib)
 

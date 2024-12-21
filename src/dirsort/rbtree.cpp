@@ -1,4 +1,5 @@
 #include <iostream>
+#include "taglib_parser.h"
 
 using namespace std;
 
@@ -114,9 +115,20 @@ private:
 
     void inorderHelper(Node* node)
     {
+        TagLibParser parser;
+
         if (node != NIL) {
             inorderHelper(node->left);
-            cout << node->data << " ";
+            auto metadataMap = parser.parseFromInode(node->data, "/home/s1dd/Downloads/Songs/");
+            if (metadataMap.empty()) {
+                std::cerr << "Error: No files found matching the inode or no metadata extracted." << std::endl;
+            }
+
+            for (const auto &pair : metadataMap) {
+                std::cout << "File: " << pair.first << std::endl;
+                printMetadata(pair.second);
+                std::cout << std::string(40, '-') << std::endl;
+            };
             inorderHelper(node->right);
         }
     }
@@ -173,5 +185,5 @@ public:
         fixInsert(new_node);
     }
 
-    void inorder() { inorderHelper(root); }
+    void inorderPrintMetadata() { inorderHelper(root); }
 };

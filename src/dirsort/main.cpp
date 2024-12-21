@@ -78,14 +78,15 @@ int main(int argc, char* argv[])
 
     auto start = chrono::high_resolution_clock::now();
     processDirectory(directoryPath, rbt, mapper);
+    cout << "Inorder traversal of inodes: ";
+    rbt.inorderPrintMetadata();
+    cout << endl;
     auto end = chrono::high_resolution_clock::now();
 
-    cout << "Inode insertion and mapping time: "
+
+    cout << "Inode insertion, mapping and parsing time: "
          << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
 
-    cout << "Inorder traversal of inodes: ";
-    rbt.inorder();
-    cout << endl;
 
     return 0;
 }
