@@ -1,4 +1,25 @@
-# Defines the Chromium style for automatic reformatting.
-# http://clang.llvm.org/docs/ClangFormatStyleOptions.html
-BasedOnStyle: Chromium
-Standard: Cpp11
+---
+Language: Cpp
+BasedOnStyle: LLVM
+IndentWidth: 2
+TabWidth: 2
+UseTab: Never
+BreakBeforeBraces: Allman
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+ColumnLimit: 100
+ContinuationIndentWidth: 2
+IndentCaseLabels: true
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignConsecutiveMacros: true
+AlignEscapedNewlines: Left
+AlignOperands: true
+AlignTrailingComments: true
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceInEmptyParentheses: false
+PointerAlignment: Left
+IndentPPDirectives: None
+---
