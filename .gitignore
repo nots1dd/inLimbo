@@ -3,3 +3,4 @@ build_emscripten/
 src/dirsort/dirsort 
 src/dirsort/*.sync
 src/dirsort/*.out
+src/dirsort/test.txt
