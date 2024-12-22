@@ -19,6 +19,13 @@ Here are a few novelties that may or may not have been added yet:
 You will need CMake for this (and git obvi)
 
 ```bash
+git clone https://github.com/nots1dd/inLimbo.git 
+cd inLimbo/
+```
+
+Then building commands:
+
+```bash
 cmake -S . -B build/
 cmake --build build/
 ./build/inLimbo
@@ -61,3 +68,5 @@ Currently uses rbtrees and unordered_map to store and write the current inodes i
 > make
 > ```
 > 
+
+inLimbo is Free and Open Source Software Licensed under [GNU GPL v3](https://github.com/nots1dd/inlimbo/blob/main/LICENSE)
