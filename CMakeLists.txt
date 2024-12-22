@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.22)
 
-project(testing
+project(inLimbo
   LANGUAGES CXX
   VERSION 1.0.0
 )
@@ -26,10 +26,10 @@ FetchContent_Declare(ftxui
 FetchContent_MakeAvailable(ftxui)
 # ------------------------------------------------------------------------------
 
-add_executable(something src/main.cpp dom/color_info_sorted_2d.ipp)
-target_include_directories(something PRIVATE src)
+add_executable(inLimbo src/main.cpp dom/color_info_sorted_2d.ipp)
+target_include_directories(inLimbo PRIVATE src)
 
-target_link_libraries(something
+target_link_libraries(inLimbo
   PRIVATE ftxui::screen
   PRIVATE ftxui::dom
   PRIVATE ftxui::component
