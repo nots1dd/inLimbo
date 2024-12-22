@@ -97,7 +97,7 @@ private:
     Component renderer;
 
     const std::vector<std::string> spinner_frames = {
-        "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"
+        " ⠋", " ⠙", " ⠹", " ⠸", " ⠼", " ⠴", " ⠦", " ⠧", " ⠇", " ⠏"
     };
     int spinner_frame = 0;
 
@@ -116,7 +116,8 @@ private:
                 {"We Will Rock You", 122, "News of the World", 1977},
                 {"Don't Stop Me Now", 209, "Jazz", 1978},
                 {"Killer Queen", 180, "Sheer Heart Attack", 1974},
-                {"Under Pressure", 248, "Hot Space", 1982}
+                {"Under Pressure", 248, "Hot Space", 1982},
+                {"Under Pressure maybe", 249, "Hot Space 2", 1984}
             }},
             {"Pink Floyd", {
                 {"Another Brick in the Wall", 205, "The Wall", 1979},
@@ -156,7 +157,7 @@ private:
         seconds = seconds % 60;
         std::stringstream ss;
         ss << std::setfill('0') << std::setw(2) << minutes << ":"
-           << std::setfill('0') << std::setw(2) << seconds;
+           << std::setfill('0') << std::setw(2) << seconds << " ";
         return ss.str();
     }
 
@@ -210,7 +211,7 @@ private:
                     case 's': is_shuffle = !is_shuffle; return true;
                     case '=': volume = std::min(100, volume + 5); return true;
                     case '-': volume = std::max(0, volume - 5); return true;
-                    case 'h': show_help = !show_help; return true;
+                    case '?': show_help = !show_help; return true;
                     case 'v': current_view = ViewMode::Library; return true;
                     case 'l': current_view = ViewMode::Playlist; return true;
                     case '/': current_view = ViewMode::Search; return true;
@@ -266,7 +267,7 @@ private:
 
     Element RenderHelpScreen() {
         return vbox({
-            text("Keyboard Controls") | bold | color(Color::Green),
+            text("inLimbo Controls") | bold | color(Color::Green),
             text("─────────────────") | color(Color::Green),
             vbox({
                 text("Space  - Play/Pause"),
@@ -284,8 +285,15 @@ private:
                 text("q      - Quit"),
             }) | color(Color::Green),
             text(""),
-            text("Press 'h' to return to player") | color(Color::Yellow),
+            text("Press '?' to return to player") | color(Color::Yellow),
         }) | border | flex;
+    }
+
+    Color GetCurrWinColor(bool focused)
+    {
+      if (focused) return Color::White;
+
+      return Color::GrayDark;
     }
 
     Element RenderMainInterface(float progress) {
@@ -296,29 +304,37 @@ private:
             const auto& current_artist = library[selected_artist];
             const auto& current_song = current_artist.songs[selected_song];
             current_song_info = current_artist.name + " - " + current_song.title;
-            album_info = current_song.album + " (" + std::to_string(current_song.year) + ")";
+            album_info = current_song.album + " (" + std::to_string(current_song.year) + ") ";
         }
 
         // Status indicators
-        std::string status = std::string("【")
-            + (is_playing ? "▶" : "⏸") + " "
+        std::string status = std::string("  ")
+            + (is_playing ? "<>" : "!!") + " "
             + (is_shuffle ? "🔀" : "➡") + " "
             + (repeat_mode == RepeatMode::None ? "↩" :
                repeat_mode == RepeatMode::Single ? "🔂" : "🔁")
-            + "】";
+            + std::string("     ");
 
-        // Create the layout
+        // Left and right panes
         auto left_pane = vbox({
             text("Library") | bold | color(Color::Green),
             separator(),
-            artists_list->Render() | frame | flex
-        }) | size(WIDTH, EQUAL, 30) | border;
+            artists_list->Render() | frame | flex,
+        }) | border | color(GetCurrWinColor(focus_on_artists)); // No flex here for vertical space.
 
         auto right_pane = vbox({
             text("Songs") | bold | color(Color::Green),
             separator(),
-            songs_list->Render() | frame | flex
-        }) | flex | border;
+            songs_list->Render() | frame | flex,
+        }) | border | color(GetCurrWinColor(!focus_on_artists)); // No flex here for vertical space.
+
+        // Combine panes into a horizontal layout
+        auto panes = vbox({
+            hbox({
+            left_pane | flex,
+            right_pane | flex,
+            }) | flex // Allocate most vertical space to panes.
+        }) | flex;
 
         // Progress bar with time
         auto progress_style = is_playing ? color(Color::Green) : color(Color::GrayDark);
@@ -326,41 +342,36 @@ private:
             text(FormatTime((int)current_position)) | progress_style,
             gauge(progress) | flex | progress_style,
             text(FormatTime(GetCurrentSongDuration())) | progress_style,
-        });
+        }) | flex;
 
         // Volume indicator
         auto volume_bar = hbox({
-            text("Vol:") | dim,
+            text(" Vol: ") | dim,
             gauge(volume / 100.0) | size(WIDTH, EQUAL, 10) | color(Color::Yellow),
             text(std::to_string(volume) + "%") | dim,
         });
 
-        // Status bar
+        // Status bar with evenly spaced components
         auto status_bar = hbox({
             text(spinner_frames[spinner_frame]) | color(Color::Black),
-            text(" "),
             text(status) | color(Color::Black),
-            text(" "),
             text(current_song_info) | bold | color(Color::Red),
-            text(" - ") | dim,
+            filler(),
             text(album_info) | color(Color::Blue),
         }) | size(HEIGHT, EQUAL, 1) | bgcolor(Color::Yellow);
 
+        // Main layout
         return vbox({
+            panes,
             hbox({
-                left_pane,
-                right_pane,
-            }) | flex,
-            separator(),
-            progress_bar,
-            hbox({
-                volume_bar | flex,
-                text(current_view == ViewMode::Library ? "Library" :
-                     current_view == ViewMode::Playlist ? "Playlist" : "Search")
-                | dim | align_right,
+                progress_bar | border,
+                volume_bar | border,
+                text(current_view == ViewMode::Library ? " Library " :
+                     current_view == ViewMode::Playlist ? " Playlist " : " Search ")
+                | dim | align_right | border,
             }),
             status_bar,
-        });
+        }) | flex;
     }
 
     void NavigateList(bool move_down) {
