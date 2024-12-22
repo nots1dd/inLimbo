@@ -1,4 +1,4 @@
-# Testing
+# inLimbo
 
 A possible revamp of LiteMus
 
