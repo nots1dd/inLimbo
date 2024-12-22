@@ -185,10 +185,23 @@ private:
             current_position = 0;
         }
     }
+
     void CreateComponents() {
-        // Create lists with custom rendering
-        artists_list = Radiobox(&current_artist_names, &selected_artist);
-        songs_list = Radiobox(&current_song_names, &selected_song);
+        MenuOption artist_menu_options;
+        artist_menu_options.on_change = [&]() {
+            // Optional: Trigger any side effects when the artist selection changes
+        };
+        artist_menu_options.focused_entry = &selected_artist; // Ensures scrolling follows selection.
+
+        MenuOption song_menu_options;
+        song_menu_options.on_change = [&]() {
+        };
+        song_menu_options.focused_entry = &selected_song; // Ensures scrolling follows selection.
+
+        // Create lists with custom rendering and scroll synchronization
+        artists_list = Menu(&current_artist_names, &selected_artist, artist_menu_options);
+        songs_list = Menu(&current_song_names, &selected_song, song_menu_options);
+
         search_input = Input(&search_query, "Search...");
 
         auto main_container = Container::Vertical({
@@ -246,7 +259,7 @@ private:
             // Progress bar calculation
             int duration = GetCurrentSongDuration();
             float progress = duration > 0 ? (float)current_position / duration : 0;
-            
+
             // Spinner animation
             if (is_playing) {
                 spinner_frame = (spinner_frame + 1) % spinner_frames.size();
@@ -254,7 +267,7 @@ private:
 
             // Create the main layout
             Elements layout;
-            
+
             if (show_help) {
                 layout.push_back(RenderHelpScreen());
             } else {
@@ -317,13 +330,13 @@ private:
 
         // Left and right panes
         auto left_pane = vbox({
-            text("Library") | bold | color(Color::Green),
+            text(" Library") | bold | color(Color::Green) | inverted,
             separator(),
             artists_list->Render() | frame | flex,
         }) | border | color(GetCurrWinColor(focus_on_artists)); // No flex here for vertical space.
 
         auto right_pane = vbox({
-            text("Songs") | bold | color(Color::Green),
+            text(" Songs") | bold | color(Color::Green) | inverted,
             separator(),
             songs_list->Render() | frame | flex,
         }) | border | color(GetCurrWinColor(!focus_on_artists)); // No flex here for vertical space.
