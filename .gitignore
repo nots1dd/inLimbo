@@ -4,3 +4,5 @@ src/dirsort/dirsort
 src/dirsort/*.sync
 src/dirsort/*.out
 src/dirsort/test.txt
+src/network/client
+src/network/server
