@@ -7,3 +7,4 @@ src/dirsort/test.txt
 src/network/client
 src/network/server
 src/network/*.pem
+src/parser/*.out

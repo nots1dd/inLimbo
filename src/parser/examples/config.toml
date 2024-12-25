@@ -1,0 +1,8 @@
+[library]
+name = "Songs"
+directory = "/home/s1dd/Downloads/Songs/" # just an example
+
+[ftp]
+username = "client"
+salt = "random_salt_value"
+password_hash = "0a4dd737a1f7ab1f0b8f36f7ed75959febad3de996b5d5a8779547a7083fff16"

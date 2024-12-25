@@ -1,5 +1,13 @@
 # inLimbo
 
+> [!IMPORTANT]
+> 
+> inLimbo is a WIP
+> 
+> Most aspects of the project are under heavy development
+> and no stable release is present as of yet.
+> 
+
 A possible revamp of LiteMus
 
 ## Goal
@@ -68,5 +76,13 @@ Currently uses rbtrees and unordered_map to store and write the current inodes i
 > make
 > ```
 > 
+
+## CREDITS
+
+**TOML PARSER**:
+
+To parse the [config.toml](https://github.com/nots1dd/inlimbo/blob/main/src/parser/examples/config.toml) is thanks to [TOML++](https://github.com/marzer/tomlplusplus)
+
+----
 
 inLimbo is Free and Open Source Software Licensed under [GNU GPL v3](https://github.com/nots1dd/inlimbo/blob/main/LICENSE)

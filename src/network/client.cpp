@@ -1,27 +1,12 @@
-#include <iostream>
-#include <fstream>
-#include <cstring>
-#include <cstdlib>
+#include "protocols.h"
+#include <termios.h>
 #include <unistd.h>
-#include <arpa/inet.h>
-#include <openssl/ssl.h>
-#include <openssl/err.h>
-#include <openssl/sha.h>
-#include <sstream>
-#include <iomanip>
-#include <string>
 
-#define SERVER_IP "127.0.0.1" // Loopback addr just to test client and server on same system, ideally you should give the IP addr of the server
-#define PORT 12345
-#define BUFFER_SIZE 1024
-
-#define CA_CERT "server_cert.pem"  // Certificate Authority certificate
-
-// Credentials - matching exactly with server
+// Credentials - only username and salt is stored, password will be input at runtime
+// TODO:: Removing hardcoded vars like USERNAME and SALT
 const std::string USERNAME = "client";
-const std::string PASSWORD_HASH = "f8b9e6974d80c42ebc6d2cdbff240220e78a19f4915796df51f856cb43229e43";
+const std::string SALT = "random_salt_value"; // This should match the server's salt basically (found in config.toml)
 
-// Utility function to compute SHA-256 hash
 std::string sha256(const std::string& str) {
     unsigned char hash[SHA256_DIGEST_LENGTH];
     SHA256(reinterpret_cast<const unsigned char*>(str.c_str()), str.size(), hash);
@@ -33,7 +18,6 @@ std::string sha256(const std::string& str) {
     return oss.str();
 }
 
-// Initialize OpenSSL
 SSL_CTX* initialize_ssl() {
     SSL_load_error_strings();
     OpenSSL_add_ssl_algorithms();
@@ -44,25 +28,36 @@ SSL_CTX* initialize_ssl() {
         exit(EXIT_FAILURE);
     }
 
-    // Load trusted CA certificate
     if (!SSL_CTX_load_verify_locations(ctx, CA_CERT, nullptr)) {
         ERR_print_errors_fp(stderr);
         exit(EXIT_FAILURE);
     }
 
-    // Require server certificate verification
     SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, nullptr);
-
     return ctx;
 }
 
-// Authenticate with server
+// Function to securely read password
+std::string read_password() {
+    std::string password;
+    termios oldt;
+    tcgetattr(STDIN_FILENO, &oldt);
+    termios newt = oldt;
+    newt.c_lflag &= ~ECHO;
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    std::getline(std::cin, password);
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    std::cout << std::endl;
+    return password;
+}
+
 bool authenticate(SSL* ssl) {
     char buffer[BUFFER_SIZE];
     
-    // Send AUTH command first
-    const char* auth_cmd = "AUTH";
-    if (SSL_write(ssl, auth_cmd, strlen(auth_cmd)) <= 0) {
+    // Send AUTH command
+    if (SSL_write(ssl, AUTH_REQUEST, strlen(AUTH_REQUEST)) <= 0) {
         std::cerr << "Failed to send AUTH command" << std::endl;
         return false;
     }
@@ -81,13 +76,23 @@ bool authenticate(SSL* ssl) {
     }
 
     std::string challenge(buffer);
-    if (challenge.find("430") == 0) {
+    std::string auth_failed_str = get_error_message(STATUS_AUTH_FAILED);
+    if (challenge.find(auth_failed_str) != std::string::npos) {
         std::cout << challenge << std::endl;
         return false;
     }
 
-    // Calculate response using server's expected hash
-    std::string response = sha256(challenge + PASSWORD_HASH);
+    // Get password from user
+    std::cout << "Enter password: ";
+    std::string password = read_password();
+
+    // First compute the salted password hash
+    std::string salted_password_hash = sha256(SALT + password);
+
+    std::cout << "[CLIENT] " << salted_password_hash << std::endl;
+    
+    // Then compute the challenge response using the salted password hash
+    std::string response = sha256(challenge + salted_password_hash);
 
     // Send response
     if (SSL_write(ssl, response.c_str(), response.length()) <= 0) {
@@ -104,41 +109,35 @@ bool authenticate(SSL* ssl) {
 
     std::string result(buffer);
     std::cout << result;
-    return result.find("230") == 0;
+    return result.find(get_error_message(STATUS_AUTH_SUCCESS)) != std::string::npos;
 }
 
-// Receive file from server
 bool receive_file(SSL* ssl, const std::string& filename) {
     char buffer[BUFFER_SIZE];
-    std::string command = "GET " + filename;
+    std::string command = GET_REQUEST + std::string(" ") + filename;
     
-    // Send GET command
     if (SSL_write(ssl, command.c_str(), command.length()) <= 0) {
         std::cerr << "Failed to send GET command" << std::endl;
         return false;
     }
 
-    // Receive checksum
     memset(buffer, 0, BUFFER_SIZE);
     if (SSL_read(ssl, buffer, BUFFER_SIZE) <= 0) {
-        std::cerr << "Failed to receive checksum" << std::endl;
+        std::cerr << "Failed to receive response" << std::endl;
         return false;
     }
     
     std::string response(buffer);
-    if (response.find("550") == 0) {
+    if (response.find(get_error_message(STATUS_FILE_NOT_FOUND)) != std::string::npos) {
         std::cout << response;
         return false;
     }
 
-    std::string checksum = response.substr(response.find(": ") + 2);
-    checksum = checksum.substr(0, checksum.find('\n'));
-
-    // Receive transfer start confirmation
-    memset(buffer, 0, BUFFER_SIZE);
-    if (SSL_read(ssl, buffer, BUFFER_SIZE) <= 0) {
-        std::cerr << "Failed to receive transfer confirmation" << std::endl;
-        return false;
+    std::string checksum;
+    if (response.find("File checksum:") != std::string::npos) {
+        size_t start = response.find(": ") + 2;
+        size_t end = response.find("\n", start);
+        checksum = response.substr(start, end - start);
     }
 
     // Open file for writing
@@ -148,25 +147,48 @@ bool receive_file(SSL* ssl, const std::string& filename) {
         return false;
     }
 
-    // Receive file data
     std::ostringstream received_data;
+    bool started_transfer = false;  // Flag to check if file transfer has started
+
     while (true) {
         memset(buffer, 0, BUFFER_SIZE);
         int bytes = SSL_read(ssl, buffer, BUFFER_SIZE);
         if (bytes <= 0) break;
         
         std::string chunk(buffer, bytes);
-        if (chunk.find("226") == 0) break;
-        
+
+        // Skip the STATUS_CHECKSUM_VERIFY and checksum lines
+        if (chunk.find(get_error_message(STATUS_CHECKSUM_VERIFY)) != std::string::npos) {
+            continue; // Skip checksum verify message
+        }
+
+        if (!started_transfer) {
+            // Wait until we receive the STATUS_FILE_TRANSFER message before writing data
+            if (chunk.find(get_error_message(STATUS_FILE_TRANSFER)) != std::string::npos) {
+                started_transfer = true;  // File transfer has started
+                continue;  // Skip the STATUS_FILE_TRANSFER message
+            }
+            continue; // Skip any other data until transfer starts
+        }
+
+        // Break on transfer complete message
+        if (chunk.find(get_error_message(STATUS_TRANSFER_COMPLETE)) != std::string::npos) {
+            break;
+        }
+
+        // Write data to the file once transfer has started
         file.write(buffer, bytes);
-        received_data << std::string(buffer, bytes);
+        received_data.write(buffer, bytes);
     }
+
     file.close();
 
-    // Verify checksum
     std::string received_checksum = sha256(received_data.str());
-    if (received_checksum != checksum) {
-        std::cerr << "Checksum verification failed!" << std::endl;
+    if (!checksum.empty() && received_checksum != checksum) {        
+        std::cout << "[DEBUG] Received checksum from server: " << checksum << std::endl;
+        std::cout << "[DEBUG] Calculated checksum from received data: " << received_checksum << std::endl;
+        std::cout << "[DEBUG] Removing possible corrupted file..." << std::endl;
+        std::filesystem::remove(filename);
         return false;
     }
 
@@ -174,16 +196,13 @@ bool receive_file(SSL* ssl, const std::string& filename) {
     return true;
 }
 
-// List files on server
 void list_files(SSL* ssl) {
-    char buffer[BUFFER_SIZE];
-    const char* command = "LIST";
-    
-    if (SSL_write(ssl, command, strlen(command)) <= 0) {
+    if (SSL_write(ssl, LIST_REQUEST, strlen(LIST_REQUEST)) <= 0) {
         std::cerr << "Failed to send LIST command" << std::endl;
         return;
     }
 
+    char buffer[BUFFER_SIZE];
     while (true) {
         memset(buffer, 0, BUFFER_SIZE);
         int bytes = SSL_read(ssl, buffer, BUFFER_SIZE);
@@ -191,21 +210,29 @@ void list_files(SSL* ssl) {
         
         std::string response(buffer);
         std::cout << response;
-        if (response.find("226") != std::string::npos) break;
+        if (response.find(get_error_message(STATUS_TRANSFER_COMPLETE)) != std::string::npos) {
+            break;
+        }
     }
+}
+
+void print_help() {
+    std::cout << "\nAvailable commands:\n"
+              << "  LIST            - List available files\n"
+              << "  GET <filename>  - Download a file\n"
+              << "  HELP           - Show this help message\n"
+              << "  QUIT           - Exit the program\n";
 }
 
 int main() {
     SSL_CTX* ctx = initialize_ssl();
     
-    // Create socket
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock == -1) {
         perror("Socket creation failed");
         exit(EXIT_FAILURE);
     }
 
-    // Set up server address
     struct sockaddr_in server_addr = {};
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(PORT);
@@ -214,13 +241,11 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    // Connect to server
     if (connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
         perror("Connection failed");
         exit(EXIT_FAILURE);
     }
 
-    // Create SSL connection
     SSL* ssl = SSL_new(ctx);
     SSL_set_fd(ssl, sock);
     
@@ -229,7 +254,6 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    // Verify server certificate
     X509* cert = SSL_get_peer_certificate(ssl);
     if (!cert) {
         std::cerr << "No certificate presented by server" << std::endl;
@@ -244,16 +268,16 @@ int main() {
 
     std::cout << "Connected to server. Starting authentication..." << std::endl;
 
-    // Authenticate
     if (!authenticate(ssl)) {
         std::cerr << "Authentication failed" << std::endl;
         goto cleanup;
     }
 
-    // Main command loop
+    std::cout << "\nAuthentication successful! Type HELP for available commands." << std::endl;
+
     while (true) {
         std::string command;
-        std::cout << "\nEnter command (LIST, GET <filename>, or QUIT): ";
+        std::cout << "\nftp> ";
         std::getline(std::cin, command);
 
         if (command == "QUIT") {
@@ -261,11 +285,17 @@ int main() {
             break;
         } else if (command == "LIST") {
             list_files(ssl);
+        } else if (command == "HELP") {
+            print_help();
         } else if (command.substr(0, 3) == "GET") {
             std::string filename = command.substr(4);
+            if (filename.empty()) {
+                std::cout << "Please specify a filename" << std::endl;
+                continue;
+            }
             receive_file(ssl, filename);
         } else {
-            std::cout << "Invalid command" << std::endl;
+            std::cout << "Unknown command. Type 'HELP' for available commands." << std::endl;
         }
     }
 
