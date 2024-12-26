@@ -97,7 +97,7 @@ Currently uses rbtrees and unordered_map to store and write the current inodes i
 
 *DISCLAIMER*: This is not an original logo nor was it commisioned by me
 
-It is an artwork made for the band Radiohead and displayed at the **THIS IS WHAT YOU GET** exhibition. I got it from [here](https://www.ashmolean.org/exhibition/this-is-what-you-get-stanley-donwood-radiohead-thom-yorke)
+It is a basic stock image found online. I got it from [here](https://unsplash.com/photos/black-and-white-decor-FrQKfzoTgsw)
 
 **TOML PARSER**:
 
