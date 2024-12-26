@@ -99,6 +99,13 @@ public:
     }
     return result;
   }
+
+  std::map<std::string, std::map<std::string, std::map<unsigned int, std::map<unsigned int, Song>>>> returnSongMap()
+  {
+    return tree;
+  }
+  
+
 };
 
 #endif

@@ -5,6 +5,8 @@
 
 using namespace std;
 
+#define LIB_SYNC_PATH "lib.sync"
+
 class InodeFileMapper
 {
 private:

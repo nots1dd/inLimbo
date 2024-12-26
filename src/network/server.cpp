@@ -1,13 +1,13 @@
 #include "../parser/toml_parser.hpp"
 #include "protocols.h"
 
-std::string DIRECTORY = std::string(parseField("library", "directory"));
+std::string DIRECTORY = std::string(parseTOMLField(PARENT_LIB, PARENT_LIB_FIELD_DIR));
 
 // Predefined credentials (hashed password with salt)
-const std::string USERNAME = std::string(parseField("ftp", "username"));
-const std::string SALT = std::string(parseField("ftp", "salt"));
+const std::string USERNAME = std::string(parseTOMLField(PARENT_FTP, PARENT_FTP_FIELD_USER));
+const std::string SALT = std::string(parseTOMLField(PARENT_FTP, PARENT_FTP_FIELD_SALT));
 /* Server only has the password hash; Client will have to give the password in and the server will compute the hash of salt+password and compare it with the given password hash in config.toml */
-const std::string PASSWORD_HASH = std::string(parseField("ftp", "password_hash"));
+const std::string PASSWORD_HASH = std::string(parseTOMLField(PARENT_FTP, PARENT_FTP_FIELD_PWD_HASH));
 
 std::unordered_map<std::string, int> auth_attempts;
 

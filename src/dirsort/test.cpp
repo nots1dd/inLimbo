@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
   /*  return EXIT_FAILURE;*/
   /*}*/
 
-  string          directoryPath = string(parseField("library", "directory"));
+  string          directoryPath = string(parseTOMLField("library", "directory"));
   RedBlackTree    rbt;
   InodeFileMapper mapper("lib.sync");
 

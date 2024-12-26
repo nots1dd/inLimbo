@@ -79,9 +79,17 @@ Currently uses rbtrees and unordered_map to store and write the current inodes i
 
 ## CREDITS
 
+**LOGO**:
+
+It is an artwork made for the band Radiohead and displayed at the **THIS IS WHAT YOU GET** exhibition. I got it from [here](https://www.ashmolean.org/exhibition/this-is-what-you-get-stanley-donwood-radiohead-thom-yorke)
+
 **TOML PARSER**:
 
 To parse the [config.toml](https://github.com/nots1dd/inlimbo/blob/main/src/parser/examples/config.toml) is thanks to [TOML++](https://github.com/marzer/tomlplusplus)
+
+**AUDIO PLAYBACK & API**:
+
+Audio playback and capture is thanks to [miniaudio](https://github.com/mackron/miniaudio)
 
 ----
 

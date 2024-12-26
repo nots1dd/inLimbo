@@ -81,3 +81,37 @@ This CHANGELOG follows the below format:
 **NIL**
 
 ---
+
+## [ALPHA 0.2] --- 26-12-2024
+
+### Added
+**NIL**
+
+### Changed
+- Attempted integration of `src/dirsort` with FTXUI components (NOT COMPLETE AT ALL)
+
+- Setup macros for parents and fields of `src/parser/examples/config.toml` in `toml_parser.hpp`
+
+- Moved MusicPlayer class to `src/ui/ui_handler.hpp`
+
+- Added logo to the assets (with credits)
+
+- Officially started to work on the audio backend api class in `src/music/audio_playback.hpp` using **miniaudio**
+
+- Basic readme changes
+
+### Fixed
+**NIL**
+
+### Removed
+**NIL**
+
+Overally pretty buggy, but integration was smoother than expected.
+
+## Known Issues to fix in immediate commits
+
+-> Fix emscripten build by introducing TagLib's web-assembly build 
+
+-> Fix the FILENAME macro and its corresponding compilation problems in `src/parser/toml_parser.hpp`
+
+---

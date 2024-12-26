@@ -19,8 +19,8 @@ using namespace std;
 #define RED   'R'
 #define BLACK 'B'
 
-string DIRECTORY_FIELD = string(parseField("library", "directory")); // fetches the directory from the example config.toml for now
-string DEBUG_LOG_PARSE = string(parseField("debug", "parser_log"));
+string DIRECTORY_FIELD = string(parseTOMLField(PARENT_LIB, PARENT_LIB_FIELD_DIR)); // fetches the directory from the example config.toml for now
+string DEBUG_LOG_PARSE = string(parseTOMLField(PARENT_DBG, PARENT_DBG_FIELD_PARSER_LOG));
 
 // Node structure for the Red-Black Tree
 struct Node
@@ -226,6 +226,7 @@ public:
 
   void inorderStoreMetadata() { inorderHelper(root); }
   void printSongTree() { songTree.display(); }
+  SongTree returnSongTree() { return songTree; }
 };
 
 #endif
