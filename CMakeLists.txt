@@ -26,13 +26,14 @@ FetchContent_Declare(ftxui
 FetchContent_MakeAvailable(ftxui)
 # ------------------------------------------------------------------------------
 
-add_executable(inLimbo src/main.cpp dom/color_info_sorted_2d.ipp)
+add_executable(inLimbo src/main.cpp src/dirsort/taglib_parser.cpp dom/color_info_sorted_2d.ipp)
 target_include_directories(inLimbo PRIVATE src)
 
 target_link_libraries(inLimbo
   PRIVATE ftxui::screen
   PRIVATE ftxui::dom
   PRIVATE ftxui::component
+  PRIVATE tag
 )
 
 if (EMSCRIPTEN)

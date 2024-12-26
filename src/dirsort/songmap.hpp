@@ -1,3 +1,6 @@
+#ifndef SONG_MAP_HPP
+#define SONG_MAP_HPP
+
 #include "taglib_parser.h"
 #include <iostream>
 #include <map>
@@ -97,3 +100,5 @@ public:
     return result;
   }
 };
+
+#endif

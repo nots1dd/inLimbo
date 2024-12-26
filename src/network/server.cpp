@@ -1,4 +1,4 @@
-#include "../parser/toml_parser.cpp"
+#include "../parser/toml_parser.hpp"
 #include "protocols.h"
 
 std::string DIRECTORY = std::string(parseField("library", "directory"));

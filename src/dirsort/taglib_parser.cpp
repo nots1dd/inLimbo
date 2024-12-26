@@ -1,29 +1,47 @@
 #include "taglib_parser.h"
-#include <filesystem>
-#include <iostream>
-#include <sys/stat.h>
-#include <taglib/fileref.h>
-#include <taglib/tag.h>
-#include <taglib/tpropertymap.h>
 
 namespace fs = std::filesystem;
 
-// Constructor
-TagLibParser::TagLibParser() = default;
+// variable to keep track of user's preference of debug logs
+std::string debugLogBoolStr;
+
+// Constructor with parameter
+TagLibParser::TagLibParser(const std::string& debugString) {
+  debugLogBoolStr = debugString;
+}
+
+void sendErrMsg(std::string debugLogBoolStr, std::string errMsg)
+{
+  if (debugLogBoolStr == "false") {
+    return;
+  }
+
+  else if (debugLogBoolStr == "true") {
+    std::cerr << errMsg << std::endl;
+  }
+  else {
+    std::cerr << "invalid field in config.toml: " << debugLogBoolStr << std::endl;
+  }
+
+  return;
+}
 
 // Function to parse metadata from a file
 bool TagLibParser::parseFile(const std::string& filePath, Metadata& metadata)
 {
   TagLib::FileRef file(filePath.c_str());
+  std::string errMsg;
   if (file.isNull())
   {
-    std::cerr << "Error: Failed to open file: " << filePath << std::endl;
+    errMsg = "Error: Failed to open file: " + filePath;
+    sendErrMsg(debugLogBoolStr, errMsg);
     return false;
   }
 
   if (!file.tag())
   {
-    std::cerr << "Error: No tag information found in file: " << filePath << std::endl;
+    errMsg = "Error: No tag information found in file: " + filePath; 
+    sendErrMsg(debugLogBoolStr, errMsg);
     return false;
   }
 
@@ -72,6 +90,7 @@ std::unordered_map<std::string, Metadata> TagLibParser::parseFromInode(ino_t    
                                                                        const std::string& directory)
 {
   std::unordered_map<std::string, Metadata> metadataMap;
+  std::string tempErrMsg;
 
   for (const auto& entry : fs::recursive_directory_iterator(directory))
   {
@@ -87,15 +106,15 @@ std::unordered_map<std::string, Metadata> TagLibParser::parseFromInode(ino_t    
         }
         else
         {
-          std::cerr << "Error: Unable to parse metadata for file: " << entry.path().string()
-                    << std::endl;
+          tempErrMsg = "Error: Unable to parse metadata for file: " + entry.path().string();
+          sendErrMsg(debugLogBoolStr, tempErrMsg);
         }
       }
     }
     else
     {
-      std::cerr << "Error: Unable to stat file: " << entry.path().string() << " (" << errno << ")"
-                << std::endl;
+      tempErrMsg = "Error: Unable to stat file: " + entry.path().string(); 
+      sendErrMsg(debugLogBoolStr, tempErrMsg);
     }
   }
 

@@ -1,4 +1,3 @@
-#include <chrono>
 #include <ftxui/component/captured_mouse.hpp>
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_base.hpp>
@@ -6,19 +5,17 @@
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/color.hpp>
 #include <iomanip>
-#include <map>
 #include <memory>
 #include <random>
 #include <sstream>
-#include <string>
 #include <thread>
-#include <vector>
+#include "dirsort/inode_mapper.hpp"
 
 using namespace ftxui;
 
 // dummy structs for UI concept
 
-struct Song
+struct Song_Dummy
 {
   std::string title;
   int         duration_seconds;
@@ -29,7 +26,7 @@ struct Song
 struct Artist
 {
   std::string       name;
-  std::vector<Song> songs;
+  std::vector<Song_Dummy> songs;
 };
 
 class MusicPlayer
@@ -552,7 +549,54 @@ private:
 
 int main()
 {
+
+  string          directoryPath = string(parseField("library", "directory"));
+  RedBlackTree    rbt;
+  InodeFileMapper mapper("lib.sync");
+
+  auto start = chrono::high_resolution_clock::now();
+  processDirectory(directoryPath, rbt, mapper);
+  cout << "Inorder traversal of inodes: ";
+  rbt.inorderStoreMetadata();
+  cout << endl;
+  auto end = chrono::high_resolution_clock::now();
+
+  cout << "Inode insertion, mapping and parsing time: "
+       << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
+
+
   MusicPlayer player;
   player.Run();
   return 0;
 }
+
+
+/*
+ * 
+ *   std::map<std::string, std::map<std::string, std::map<unsigned int, std::map<unsigned int, Song>>>>
+    tree;
+ *
+ * void display() const
+  {
+    for (const auto& artistPair : tree)
+    {
+      std::cout << "Artist: " << artistPair.first << "\n";
+      for (const auto& albumPair : artistPair.second)
+      {
+        std::cout << "  Album: " << albumPair.first << "\n";
+        for (const auto& discPair : albumPair.second)
+        {
+          std::cout << "    Disc: " << discPair.first << "\n";
+          for (const auto& trackPair : discPair.second)
+          {
+            const auto& song = trackPair.second;
+            std::cout << "      Track " << trackPair.first << ": " << song.metadata.title
+                      << " (Inode: " << song.inode << ", Artist: " << song.metadata.artist
+                      << ", Album: " << song.metadata.album << ", Genre: " << song.metadata.genre
+                      << ")\n";
+          }
+        }
+      }
+    }
+  }
+  */

@@ -1,14 +1,12 @@
 CC = g++
 CFLAGS = -Wall -Wextra -Wpedantic
 
-SRCS = main.cpp \
-			 rbtree.cpp \
+SRCS = test.cpp \
 			 taglib_parser.cpp \
-			 songmap.cpp \
 
 TAG_LIB = $(shell pkg-config --libs --cflags taglib)
 
-TARGET = dirsort
+TARGET = dirsort-test
 
 all: $(TARGET)
 

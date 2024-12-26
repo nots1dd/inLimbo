@@ -57,6 +57,24 @@ curl -L -o protocols.h https://raw.githubusercontent.com/nots1dd/inLimbo/main/sr
 
 The above forms a baseline security and safety of your connection with the FTP server, it may not be the most secure nor the ideal process to go about securing a FTP server, but it works.
 
+If it is not obvious enough, the default password is `password`.
+
+> [!NOTE]
+> 
+> **TO CHANGE YOUR PASSWORD**:
+> 
+> It is simple enough actually, follow these steps:
+> 
+> 1. Change salt if you want to, upon choosing give it in your `config.toml` file **AND** your client.cpp code! 
+> 2. Get a password of your choosing and concatenate salt and password (salt + password -> in this order)
+> 3. Get its SHA256 hash of the concatenated string (can go to an [online alternative](https://emn178.github.io/online-tools/sha256.html)) or just use openssl or other binaries to find its hash 
+> 4. Put the hash in `config.toml` under password_hash field
+> 
+> You are all done!
+> 
+
+Currently *SALT* and *USERNAME* are hardcoded and tedious to change, but this will change in the future
+
 ## Goal
 
 The goal of this server is to easily transfer your local songs directory from your PC to phone without a hassle

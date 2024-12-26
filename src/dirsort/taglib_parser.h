@@ -3,6 +3,12 @@
 
 #include <string>
 #include <unordered_map>
+#include <filesystem>
+#include <iostream>
+#include <sys/stat.h>
+#include <taglib/fileref.h>
+#include <taglib/tag.h>
+#include <taglib/tpropertymap.h>
 
 // Metadata structure
 struct Metadata
@@ -23,7 +29,7 @@ struct Metadata
 class TagLibParser
 {
 public:
-  explicit TagLibParser();
+  explicit TagLibParser(const std::string& debugString);
 
   bool parseFile(const std::string& filePath, Metadata& metadata);
 
@@ -33,5 +39,7 @@ public:
 
 // Function to print metadata
 void printMetadata(const Metadata& metadata);
+
+void sendErrMsg(std::string debugLogBoolStr, std::string errMsg);
 
 #endif // TAGLIB_PARSER_H
