@@ -35,7 +35,8 @@ int main(int argc, char* argv[])
  *
  * -> Read the required songs directory
  * -> Take in every inode into an rbtree and map them all to lib.sync
- * -> Perform inorder traversal of rbtree and during traversal, call TagLibParser to parse the metadata of each inode
+ * -> Perform inorder traversal of rbtree and during traversal, call TagLibParser to parse the
+ *metadata of each inode
  * -> Print everything onto the terminal
  *
  *

@@ -8,8 +8,8 @@ using namespace std;
 
 // [TODO]: FIX THIS ISSUE OF COMPILATION ISSUES BY SETTING UP A LOCAL CONFIG.TOML $HOME/.config/inLimbo/ directory
 /* If you want to compile and run it for src/dirsort/test.cpp, uncomment the below line: */  
-// #define FILENAME "../../src/parser/examples/config.toml"
-#define FILENAME "src/parser/examples/config.toml"
+#define FILENAME "../../src/parser/examples/config.toml"
+// #define FILENAME "src/parser/examples/config.toml"
 
 /* CURRENT PARENTS & FIELDS MACROS DEFINION */ 
 

@@ -1,14 +1,14 @@
 #ifndef TAGLIB_PARSER_H
 #define TAGLIB_PARSER_H
 
-#include <string>
-#include <unordered_map>
 #include <filesystem>
 #include <iostream>
+#include <string>
 #include <sys/stat.h>
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
 #include <taglib/tpropertymap.h>
+#include <unordered_map>
 
 // Metadata structure
 struct Metadata

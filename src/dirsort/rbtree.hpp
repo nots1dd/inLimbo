@@ -1,25 +1,26 @@
 #ifndef RB_TREE_HPP
 #define RB_TREE_HPP
 
+#include "../parser/toml_parser.hpp"
+#include "songmap.hpp"
 #include <chrono>
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
 #include <dirent.h>
 #include <fstream>
-#include <sys/stat.h>
 #include <iostream>
+#include <sys/stat.h>
 #include <unordered_map>
 #include <vector>
-#include "songmap.hpp"
-#include "../parser/toml_parser.hpp"
 
 using namespace std;
 
 #define RED   'R'
 #define BLACK 'B'
 
-string DIRECTORY_FIELD = string(parseTOMLField(PARENT_LIB, PARENT_LIB_FIELD_DIR)); // fetches the directory from the example config.toml for now
+string DIRECTORY_FIELD = string(parseTOMLField(
+  PARENT_LIB, PARENT_LIB_FIELD_DIR)); // fetches the directory from the example config.toml for now
 string DEBUG_LOG_PARSE = string(parseTOMLField(PARENT_DBG, PARENT_DBG_FIELD_PARSER_LOG));
 
 // Node structure for the Red-Black Tree
@@ -152,7 +153,8 @@ private:
       auto metadataMap = parser.parseFromInode(node->data, DIRECTORY_FIELD);
       if (metadataMap.empty())
       {
-        sendErrMsg(DEBUG_LOG_PARSE, "Error: No files found matching the inode or no metadata extracted.");
+        sendErrMsg(DEBUG_LOG_PARSE,
+                   "Error: No files found matching the inode or no metadata extracted.");
       }
 
       for (const auto& pair : metadataMap)
@@ -224,8 +226,8 @@ public:
     fixInsert(new_node);
   }
 
-  void inorderStoreMetadata() { inorderHelper(root); }
-  void printSongTree() { songTree.display(); }
+  void     inorderStoreMetadata() { inorderHelper(root); }
+  void     printSongTree() { songTree.display(); }
   SongTree returnSongTree() { return songTree; }
 };
 

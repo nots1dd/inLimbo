@@ -6,20 +6,21 @@ namespace fs = std::filesystem;
 std::string debugLogBoolStr;
 
 // Constructor with parameter
-TagLibParser::TagLibParser(const std::string& debugString) {
-  debugLogBoolStr = debugString;
-}
+TagLibParser::TagLibParser(const std::string& debugString) { debugLogBoolStr = debugString; }
 
 void sendErrMsg(std::string debugLogBoolStr, std::string errMsg)
 {
-  if (debugLogBoolStr == "false") {
+  if (debugLogBoolStr == "false")
+  {
     return;
   }
 
-  else if (debugLogBoolStr == "true") {
+  else if (debugLogBoolStr == "true")
+  {
     std::cerr << errMsg << std::endl;
   }
-  else {
+  else
+  {
     std::cerr << "invalid field in config.toml: " << debugLogBoolStr << std::endl;
   }
 
@@ -30,7 +31,7 @@ void sendErrMsg(std::string debugLogBoolStr, std::string errMsg)
 bool TagLibParser::parseFile(const std::string& filePath, Metadata& metadata)
 {
   TagLib::FileRef file(filePath.c_str());
-  std::string errMsg;
+  std::string     errMsg;
   if (file.isNull())
   {
     errMsg = "Error: Failed to open file: " + filePath;
@@ -40,7 +41,7 @@ bool TagLibParser::parseFile(const std::string& filePath, Metadata& metadata)
 
   if (!file.tag())
   {
-    errMsg = "Error: No tag information found in file: " + filePath; 
+    errMsg = "Error: No tag information found in file: " + filePath;
     sendErrMsg(debugLogBoolStr, errMsg);
     return false;
   }
@@ -90,7 +91,7 @@ std::unordered_map<std::string, Metadata> TagLibParser::parseFromInode(ino_t    
                                                                        const std::string& directory)
 {
   std::unordered_map<std::string, Metadata> metadataMap;
-  std::string tempErrMsg;
+  std::string                               tempErrMsg;
 
   for (const auto& entry : fs::recursive_directory_iterator(directory))
   {
@@ -113,7 +114,7 @@ std::unordered_map<std::string, Metadata> TagLibParser::parseFromInode(ino_t    
     }
     else
     {
-      tempErrMsg = "Error: Unable to stat file: " + entry.path().string(); 
+      tempErrMsg = "Error: Unable to stat file: " + entry.path().string();
       sendErrMsg(debugLogBoolStr, tempErrMsg);
     }
   }

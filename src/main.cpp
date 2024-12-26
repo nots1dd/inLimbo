@@ -1,31 +1,31 @@
+#include "dirsort/inode_mapper.hpp"
+#include "ui/ui_handler.hpp"
 #include <iomanip>
 #include <memory>
 #include <random>
 #include <sstream>
 #include <thread>
-#include "dirsort/inode_mapper.hpp"
-#include "ui/ui_handler.hpp"
-
 
 // Update main() to pass the library to MusicPlayer
-int main() {
-    string directoryPath = string(parseTOMLField(PARENT_LIB, PARENT_LIB_FIELD_DIR));
-    RedBlackTree rbt;
-    InodeFileMapper mapper(LIB_SYNC_PATH);
+int main()
+{
+  string          directoryPath = string(parseTOMLField(PARENT_LIB, PARENT_LIB_FIELD_DIR));
+  RedBlackTree    rbt;
+  InodeFileMapper mapper(LIB_SYNC_PATH);
 
-    auto start = chrono::high_resolution_clock::now();
-    processDirectory(directoryPath, rbt, mapper);
-    cout << "Inorder traversal of inodes: ";
-    rbt.inorderStoreMetadata();
-    cout << endl;
-    auto end = chrono::high_resolution_clock::now();
+  auto start = chrono::high_resolution_clock::now();
+  processDirectory(directoryPath, rbt, mapper);
+  cout << "Inorder traversal of inodes: ";
+  rbt.inorderStoreMetadata();
+  cout << endl;
+  auto end = chrono::high_resolution_clock::now();
 
-    cout << "Inode insertion, mapping and parsing time: "
-         << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
+  cout << "Inode insertion, mapping and parsing time: "
+       << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
 
-    auto song_tree = rbt.returnSongTree(); 
-    auto library_map = song_tree.returnSongMap();
-    MusicPlayer player(library_map);
-    player.Run();
-    return 0;
+  auto        song_tree   = rbt.returnSongTree();
+  auto        library_map = song_tree.returnSongMap();
+  MusicPlayer player(library_map);
+  player.Run();
+  return 0;
 }
