@@ -1,4 +1,18 @@
-# inLimbo
+<div align="center">
+  <img src="assets/logo/inLimbo.jpg" alt="Logo">
+</div>
+
+<div align="center">
+  <h1 style="font-weight: bold; font-size: 3em; color: #3498db;">inLimbo</h1>
+</div>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/License-GNU GPL%20v3-blue" alt="License" />
+  <img src="https://img.shields.io/badge/Version-1.0%20alpha-red" alt="Version" />
+  <img src="https://img.shields.io/badge/Build-passing-brightgreen" alt="Build" />
+</p>
+
+----
 
 > [!IMPORTANT]
 > 
@@ -80,6 +94,8 @@ Currently uses rbtrees and unordered_map to store and write the current inodes i
 ## CREDITS
 
 **LOGO**:
+
+*DISCLAIMER*: This is not an original logo nor was it commisioned by me
 
 It is an artwork made for the band Radiohead and displayed at the **THIS IS WHAT YOU GET** exhibition. I got it from [here](https://www.ashmolean.org/exhibition/this-is-what-you-get-stanley-donwood-radiohead-thom-yorke)
 
