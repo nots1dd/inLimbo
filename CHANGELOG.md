@@ -115,3 +115,32 @@ Overally pretty buggy, but integration was smoother than expected.
 -> Fix the FILENAME macro and its corresponding compilation problems in `src/parser/toml_parser.hpp`
 
 ---
+
+## [ALPHA 0.3] --- 27-12-2024
+
+### Added
+**NIL**
+
+### Changed
+- Majorly developed FTXUI components and rendering problems
+
+- Event::Tab now works fully as intended along with proper intended display of album -> songs (similar to CMUS)
+
+- Finally shifted to reading TOML configs to `$HOME/.config/inLimbo/config.toml`
+
+- Added filePath to Metadata struct (for miniaudio and simplicity)
+
+### Fixed
+- Compilation issues with `src/network` and `src/dirsort` source files due to improper accessing of `src/parser/examples/config.toml`
+
+^ (every source file now reads from `$HOME/.config/inLimbo/config.toml` by default)
+
+### Removed
+**NIL**
+
+Commit was clean but status bar components took a hit and are not rendering properly
+
+## Known Issues to fix in immediate commits
+
+-> Fix emscripten build by introducing TagLib's web-assembly build 
+

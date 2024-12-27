@@ -70,6 +70,18 @@ make -j
 # This will run in port 8000
 ```
 
+## Configuration
+
+There is a very basic config file setup while building inLimbo in your `$HOME/.config/inLimbo/` directory 
+
+> [!IMPORTANT]
+> 
+> Check out [config.toml](https://github.com/nots1dd/inLimbo/blob/main/src/parser/examples/config.toml) to see all the possible fields
+> for configuration 
+> 
+> **IT IS UNDER HEAVY DEVELOPMENT SO EXPECT BREAKING CHANGES WITH EACH COMMIT**
+> 
+
 ## Dirsort 
 
 Currently uses rbtrees and unordered_map to store and write the current inodes in given directory to `lib.sync` file 

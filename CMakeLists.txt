@@ -45,3 +45,9 @@ if (EMSCRIPTEN)
     configure_file("src/${file}" ${file})
   endforeach(file)
 endif()
+
+# --- Ensure the config.toml file is created in the correct directory ---------------------
+if (NOT EXISTS "$ENV{HOME}/.config/inLimbo/config.toml")
+  file(MAKE_DIRECTORY "$ENV{HOME}/.config/inLimbo")
+  configure_file("${CMAKE_SOURCE_DIR}/src/parser/examples/config.toml" "$ENV{HOME}/.config/inLimbo/config.toml" COPYONLY)
+endif()

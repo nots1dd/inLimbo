@@ -23,6 +23,7 @@ struct Metadata
   unsigned int                                 discNumber = 0;
   std::string                                  lyrics     = "No Lyrics";
   std::unordered_map<std::string, std::string> additionalProperties;
+  std::string                                  filePath;
 };
 
 // TagLibParser class for parsing metadata

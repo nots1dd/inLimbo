@@ -3,50 +3,64 @@
 
 #include "toml.hpp"
 #include <iostream>
+#include <filesystem>
+#include <cstdlib>
 
 using namespace std;
+namespace fs = std::filesystem;
 
-// [TODO]: FIX THIS ISSUE OF COMPILATION ISSUES BY SETTING UP A LOCAL CONFIG.TOML $HOME/.config/inLimbo/ directory
-/* If you want to compile and run it for src/dirsort/test.cpp, uncomment the below line: */  
-#define FILENAME "../../src/parser/examples/config.toml"
-// #define FILENAME "src/parser/examples/config.toml"
+// Defined the path to the config.toml file in $HOME/.config/inLimbo/
+#define CONFIG_PATH "$HOME/.config/inLimbo/config.toml"
 
-/* CURRENT PARENTS & FIELDS MACROS DEFINION */ 
-
-// Section of config.toml with [library] -> parent with name library (idk what it is called)
+// Current parents & fields macros definitions
 #define PARENT_LIB "library"
-
-/* PARENT_LIB's FIELDS or children */ 
 #define PARENT_LIB_FIELD_NAME "name"
 #define PARENT_LIB_FIELD_DIR "directory"
 
-// FTP parent 
 #define PARENT_FTP "ftp"
-
-/* PARENT_FTP's FIELDS */
 #define PARENT_FTP_FIELD_USER "username"
 #define PARENT_FTP_FIELD_SALT "salt"
 #define PARENT_FTP_FIELD_PWD_HASH "password_hash"
 
-// DEBUG parent 
 #define PARENT_DBG "debug"
-
-/* PARENT_DBG's FIELDS */ 
 #define PARENT_DBG_FIELD_PARSER_LOG "parser_log"
 
-auto config = toml::parse_file(FILENAME);
+// Function to get the path for config.toml
+string getConfigPath() {
+  const char* homeDir = std::getenv("HOME");
+  if (!homeDir) {
+    cerr << "ERROR: HOME environment variable not found." << endl;
+    exit(EXIT_FAILURE);
+  }
 
+  // Construct the path to the config.toml in $HOME/.config/inLimbo/
+  string configFilePath = string(homeDir) + "/.config/inLimbo/config.toml";
+  return configFilePath;
+}
+
+// Function to check if the config.toml file exists
+bool configFileExists(const string& filePath) {
+  return fs::exists(filePath);
+}
+
+// Load the configuration file
+auto loadConfig() {
+  string configFilePath = getConfigPath();
+
+  if (!configFileExists(configFilePath)) {
+    cerr << "ERROR: config.toml not found in " << configFilePath << endl;
+    exit(EXIT_FAILURE);  // Exit gracefully if the file is not found
+  }
+
+  return toml::parse_file(configFilePath);
+}
+
+// Use the loaded configuration
+auto config = loadConfig();
+
+// Function to parse a TOML field from a given parent and field name
 string_view parseTOMLField(string parent, string field) {
   return config[parent][field].value_or(""sv);
 }
 
 #endif
-
-
-/*int main()*/
-/*{*/
-/*  cout << libName << endl << libPath << endl;*/
-/**/
-/*  return 0;*/
-/*}*/
-

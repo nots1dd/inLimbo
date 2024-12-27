@@ -55,6 +55,9 @@ bool TagLibParser::parseFile(const std::string& filePath, Metadata& metadata)
   metadata.year    = tag->year() == 0 ? 0 : tag->year();
   metadata.track   = tag->track() == 0 ? 0 : tag->track();
 
+  // to keep track of filepath 
+  metadata.filePath = filePath;
+
   // Extract additional properties such as lyrics and disc number
   TagLib::PropertyMap properties = file.file()->properties();
   if (properties.contains("DISCNUMBER"))
