@@ -1,12 +1,8 @@
 #include "dirsort/inode_mapper.hpp"
 #include "ui/ui_handler.hpp"
-#include <iomanip>
 #include <memory>
 #include <random>
-#include <sstream>
-#include <thread>
 
-// Update main() to pass the library to MusicPlayer
 int main()
 {
   string          directoryPath = string(parseTOMLField(PARENT_LIB, PARENT_LIB_FIELD_DIR));

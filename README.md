@@ -59,7 +59,10 @@ To build its web-assembly, you will need [emscripten](https://github.com/emscrip
 > 
 > Building the web-assembly:
 > 
-> It is not perfect and maybe not work
+> Currently I am not sure how to include and compile taglib
+> into wasm so currently the web build may compile but it will 
+> not work as I have dummy methods set up for EMSCRIPTEN build 
+> (else it wont even compile to wasm)
 > 
 
 ```bash 

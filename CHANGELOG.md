@@ -144,3 +144,37 @@ Commit was clean but status bar components took a hit and are not rendering prop
 
 -> Fix emscripten build by introducing TagLib's web-assembly build 
 
+---
+
+## [ALPHA 0.4] --- 29-12-2024
+
+### Added
+**NIL**
+
+### Changed
+- Started the integration of audio playback (miniaudio) and FTXUI class [A little rough on the edges but most of the functions in `src/music/audio_playback.hpp` work]
+
+- Fixed the EMSCRIPTEN compilation issues regarding taglib (but it still will not work as intended as dummy functions are placed for EMSCRIPTEN compilation instead)
+
+- Made album names distinct items in the songs pane 
+
+- Clean up + Formatting
+
+- Modified `src/music/audio_playback.hpp` to work in a different thread to avoid any freezing of tui and other issues
+
+- Some API call changes to `miniaudio` for MiniAudioPlayer class to make functions like *getDuration()* work
+
+- General `ui/ui_handler.hpp` changes to accomodate for the integration
+
+### Fixed
+- Web compilation using EMSCRIPTEN
+
+### Removed
+- taglib_parser.cpp (moved the definitions back to the header) [Subsequent changes to build files]
+
+Commit is decently sized however now that integration is completed it is time to refactor and move to other goals
+
+## Known Issues to fix in immediate commits
+**NIL**
+
+---

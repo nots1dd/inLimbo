@@ -26,25 +26,41 @@ FetchContent_Declare(ftxui
 FetchContent_MakeAvailable(ftxui)
 # ------------------------------------------------------------------------------
 
-add_executable(inLimbo src/main.cpp src/dirsort/taglib_parser.cpp dom/color_info_sorted_2d.ipp)
-target_include_directories(inLimbo PRIVATE src)
-
-target_link_libraries(inLimbo
-  PRIVATE ftxui::screen
-  PRIVATE ftxui::dom
-  PRIVATE ftxui::component
-  PRIVATE tag
+# --- Add Executable --------------------------------------------------------
+add_executable(inLimbo
+  src/main.cpp
+  dom/color_info_sorted_2d.ipp
 )
 
+# Set include directories for source files
+target_include_directories(inLimbo PRIVATE src)
+
+# --- Handle Emscripten-specific flags and files ---------------------------------
 if (EMSCRIPTEN)
+  # Emscripten-specific flags
   string(APPEND CMAKE_CXX_FLAGS " -s USE_PTHREADS")
   string(APPEND CMAKE_EXE_LINKER_FLAGS " -s ASYNCIFY")
   string(APPEND CMAKE_EXE_LINKER_FLAGS " -s PROXY_TO_PTHREAD")
 
+  # Ensure the necessary files are copied for web build
   foreach(file "index.html" "run_webassembly.py")
     configure_file("src/${file}" ${file})
   endforeach(file)
+
+  # Disable TagLib for Emscripten build
+  message(STATUS "Building for Emscripten: TagLib will be excluded")
+else()
+  # Native build: Link to additional libraries (e.g., TagLib)
+  find_package(TagLib REQUIRED)
+  target_link_libraries(inLimbo PRIVATE TagLib::TagLib)
 endif()
+
+# Link libraries for native build
+target_link_libraries(inLimbo
+  PRIVATE ftxui::screen
+  PRIVATE ftxui::dom
+  PRIVATE ftxui::component
+)
 
 # --- Ensure the config.toml file is created in the correct directory ---------------------
 if (NOT EXISTS "$ENV{HOME}/.config/inLimbo/config.toml")

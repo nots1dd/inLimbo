@@ -2,7 +2,6 @@ CC = g++
 CFLAGS = -Wall -Wextra -Wpedantic
 
 SRCS = test.cpp \
-			 taglib_parser.cpp \
 
 TAG_LIB = $(shell pkg-config --libs --cflags taglib)
 
