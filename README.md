@@ -8,7 +8,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/License-GNU GPL%20v3-blue" alt="License" />
-  <img src="https://img.shields.io/badge/Version-1.0%20alpha-red" alt="Version" />
+  <img src="https://img.shields.io/badge/Version-4.0%20alpha-red" alt="Version" />
   <img src="https://img.shields.io/badge/Build-passing-brightgreen" alt="Build" />
 </p>
 
