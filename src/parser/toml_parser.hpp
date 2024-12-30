@@ -25,6 +25,11 @@ namespace fs = std::filesystem;
 #define PARENT_DBG "debug"
 #define PARENT_DBG_FIELD_PARSER_LOG "parser_log"
 
+/* SPECIAL KEYBINDS MACROS */ 
+#define SPECIAL_KEYBIND_ENTER_STR "Enter"
+#define SPECIAL_KEYBIND_TAB_STR "Tab"
+#define SPECIAL_KEYBIND_SPACE_STR "Space"
+
 // Function to get the path for config.toml
 string getConfigPath() {
   const char* homeDir = std::getenv("HOME");

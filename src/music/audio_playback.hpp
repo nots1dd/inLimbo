@@ -16,6 +16,7 @@ private:
   bool        isPlaying;
   bool        wasPaused;
   uint64_t    pausePosition; // To store the position where the sound was paused
+  uint64_t    currentPosition;
   std::thread playbackThread;
 
 public:
@@ -163,5 +164,47 @@ public:
     }
     return duration;
   }
+  // BROKEN (NOT STRAIGHTFORWARD ITS ALL IN PCM TERMS)
+  double seekTime(int diff)
+  {
+      // Get the current position in PCM frames
+      currentPosition = ma_sound_get_time_in_pcm_frames(&sound);
+
+      // Get the total length of the song in PCM frames
+      ma_uint64 songLengthInFrames;
+      ma_result result = ma_sound_get_length_in_pcm_frames(&sound, &songLengthInFrames);
+
+      if (result != MA_SUCCESS)
+      {
+          throw std::runtime_error("Failed to get the length of the sound in PCM frames.");
+      }
+
+      uint32_t sampleRate = ma_engine_get_sample_rate(&engine);
+
+      uint64_t diffInFrames = static_cast<uint64_t>(diff * sampleRate);
+
+      currentPosition += diffInFrames;
+
+      if (currentPosition < 0)
+      {
+          currentPosition = 0;
+      }
+      else if (currentPosition > songLengthInFrames)
+      {
+          currentPosition = songLengthInFrames;
+      }
+
+      result = ma_sound_seek_to_pcm_frame(&sound, currentPosition);
+
+      if (result != MA_SUCCESS)
+      {
+          throw std::runtime_error("Failed to seek to the PCM frame.");
+      }
+
+      play();
+
+      return static_cast<double>(currentPosition);
+  }
+
 };
 #endif

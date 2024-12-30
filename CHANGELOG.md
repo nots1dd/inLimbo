@@ -178,3 +178,34 @@ Commit is decently sized however now that integration is completed it is time to
 **NIL**
 
 ---
+
+## [ALPHA 0.5] --- 31-12-2024
+
+### Added
+- `src/ui/keymaps.hpp` :: Basic middleware between TOML parser and MusicPlayer classes
+
+### Changed
+- Added keybind configuration and integrated them (**WITH THE EXCEPTION OF SPECIAL KEYS LIKE TAB, ENTER, ESC ...**)
+
+- Updated UI code even further (no cleanup though) with better overall flow and neatness of the project 
+
+- Added seek functionality in miniaudio backend (**BROKEN**)
+
+- Current playing state struct now holds even more metadata of the currently playing song (in hopes to display them in the future)
+
+- Updated `config.toml` with keybinds as a new parent
+
+### Fixed
+- The previously ugly status bar is now slightly better
+
+- Bug when in help window, other keybinds would still work and cause mishap (so now only one keybind works when in help win)
+
+### Removed
+**NIL**
+
+Commit is decently sized however now that integration is completed it is time to refactor and move to other goals
+
+## Known Issues to fix in immediate commits
+**NIL**
+
+---

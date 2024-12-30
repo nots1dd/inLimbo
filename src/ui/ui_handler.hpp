@@ -2,6 +2,7 @@
 #define FTXUI_HANDLER_HPP
 
 #include "../music/audio_playback.hpp"
+#include "keymaps.hpp"
 #include <algorithm>
 #include <chrono>
 #include <ftxui/component/captured_mouse.hpp>
@@ -18,6 +19,16 @@
 using namespace ftxui;
 
 #define ALBUM_DELIM "----------- "
+
+/* MACROS FOR SONG DETAILS */
+#define STATUS_PLAYING   "<>"
+#define STATUS_PAUSED    "!!"
+#define LYRICS_AVAIL     "L*"
+#define ADDN_PROPS_AVAIL "&"
+#define STATUS_BAR_DELIM " | "
+
+/* STRING TRUNCATION MACROS */ 
+#define MAX_LENGTH_SONG_NAME 50
 
 class MusicPlayer
 {
@@ -41,6 +52,7 @@ public:
         while (!should_quit)
         {
           using namespace std::chrono_literals;
+          UpdateVolume();
           std::this_thread::sleep_for(0.1s);
 
           if (is_playing)
@@ -77,16 +89,24 @@ private:
 
   struct PlayingState
   {
-    std::string artist;
-    std::string title;
-    std::string year;
-    std::string genre;
-    bool        has_comment = false;
-    bool        has_lyrics  = false;
-    int         duration;
+    std::string                                  artist;
+    std::string                                  title;
+    std::string                                  genre;
+    std::string                                  album;
+    bool                                         has_comment = false;
+    bool                                         has_lyrics  = false;
+    int                                          duration;
+    unsigned int                                 year       = 0;
+    unsigned int                                 track      = 0;
+    unsigned int                                 discNumber = 0;
+    std::string                                  lyrics;
+    std::string                                  comment;
+    std::unordered_map<std::string, std::string> additionalProperties;
   };
 
   PlayingState current_playing_state;
+
+  Keybinds global_keybinds = parseKeybinds();
 
   std::unique_ptr<MiniAudioPlayer> audio_player;
 
@@ -189,7 +209,7 @@ private:
           if (loadAudioFileStatus != -1)
           {
             is_playing = true;
-            audio_player->play();
+            audio_player->play(); // plays in a different thread
             current_playing_state.duration = audio_player->getDuration();
           }
           else
@@ -420,13 +440,25 @@ private:
   {
     if (Song* current_song = GetCurrentSong())
     {
-      const auto& metadata              = current_song->metadata;
+      const auto& metadata = current_song->metadata;
+
       current_playing_state.artist      = metadata.artist;
       current_playing_state.title       = metadata.title;
-      current_playing_state.year        = std::to_string(metadata.year);
+      current_playing_state.album       = metadata.album;
       current_playing_state.genre       = metadata.genre;
+      current_playing_state.comment     = metadata.comment;
+      current_playing_state.year        = metadata.year;
+      current_playing_state.track       = metadata.track;
+      current_playing_state.discNumber  = metadata.discNumber;
+      current_playing_state.lyrics      = metadata.lyrics;
       current_playing_state.has_comment = (metadata.comment != "No Comment");
       current_playing_state.has_lyrics  = (metadata.lyrics != "No Lyrics");
+
+      // If there's additional properties, you can either copy them or process as needed
+      for (const auto& [key, value] : metadata.additionalProperties)
+      {
+        current_playing_state.additionalProperties[key] = value;
+      }
     }
   }
 
@@ -457,11 +489,24 @@ private:
     main_container |= CatchEvent(
       [&](Event event)
       {
+        if (show_help)
+        {
+          // Check if the event matches the '?' or 'Q' or 'q' keybind for toggling help
+          if (event.is_character() &&
+              (event.character()[0] == global_keybinds.show_help || std::toupper(global_keybinds.quit_app) ||
+               event.character()[0] == global_keybinds.quit_app))
+          {
+            show_help = !show_help;
+            return true;
+          }
+          return false; // Prevent other keys from working
+        }
+
         if (event.is_mouse())
           return false;
 
-        if (event == Event::Return)
-        { // Handle Enter key
+        if (event == Event::Return) // Handle Enter key
+        {
           if (Song* current_song = GetCurrentSong())
           {
             current_position = 0;
@@ -471,47 +516,92 @@ private:
           return true;
         }
 
-        // Handle other events
         if (event.is_character())
         {
-          switch (event.character()[0])
+          // [TODO]: Figure out a way to emcompass special chars like Tab, Esc, Ret to TOML parser (FTXUI treats them diffferently so i cant integrate them normally)
+          char key = event.character()[0]; // Get the first character from the event
+
+          // Check against keybinds using if-else instead of switch
+          if (key == global_keybinds.quit_app || key == std::toupper(global_keybinds.quit_app))
           {
-            case 'q':
-            case 'Q':
-              Quit();
-              return true;
-            case ' ':
-              TogglePlayback();
-              return true;
-            case 'n':
-              PlayNextSong();
-              return true;
-            case 'p':
-              PlayPreviousSong();
-              return true;
-            case 'r':
-              CycleRepeatMode();
-              return true;
-            case '=':
-              volume = std::min(100, volume + 5);
-              UpdateVolume();
-              return true;
-            case '-':
-              volume = std::max(0, volume - 5);
-              UpdateVolume();
-              return true;
-            case '?':
-              show_help = !show_help;
-              return true;
-            case 'j':
-              NavigateList(true);
-              return true;
-            case 'k':
-              NavigateList(false);
-              return true;
-            case 'x': // Add key to dismiss dialog
-              show_dialog = false;
-              return true;
+            Quit();
+            return true;
+          }
+          else if (key == global_keybinds.toggle_play)
+          {
+            TogglePlayback();
+            return true;
+          }
+          else if (key == global_keybinds.play_song_next)
+          {
+            PlayNextSong();
+            return true;
+          }
+          else if (key == global_keybinds.play_song_prev)
+          {
+            PlayPreviousSong();
+            return true;
+          }
+          else if (key == global_keybinds.seek_ahead_5)
+          {
+            current_position = audio_player->seekTime(5);
+          }
+          else if (key == global_keybinds.seek_behind_5)
+          {
+            if (current_position >= 5)
+              current_position = audio_player->seekTime(-5);
+            else 
+              PlayCurrentSong();
+          }
+          else if (key == 'r')
+          {
+            CycleRepeatMode();
+            return true;
+          }
+          else if (key == global_keybinds.vol_up)
+          {
+            volume = std::min(100, volume + 5);
+            UpdateVolume();
+            return true;
+          }
+          else if (key == global_keybinds.vol_down)
+          {
+            volume = std::max(0, volume - 5);
+            UpdateVolume();
+            return true;
+          }
+          else if (key == global_keybinds.show_help)
+          {
+            show_help = !show_help;
+            return true;
+          }
+          else if (key == global_keybinds.scroll_down)
+          {
+            NavigateList(true);
+            return true;
+          }
+          else if (key == global_keybinds.scroll_up)
+          {
+            NavigateList(false);
+            return true;
+          }
+          else if (key == 'x')
+          { // Add key to dismiss dialog
+            show_dialog = false;
+            return true;
+          }
+          else if (key == global_keybinds.toggle_focus)
+          {
+            focus_on_artists = !focus_on_artists;
+            if (focus_on_artists)
+            {
+              artists_list->TakeFocus();
+            }
+            else
+            {
+              songs_list->TakeFocus();
+            }
+            return true;
           }
         }
 
@@ -628,23 +718,42 @@ private:
 
   Element RenderHelpScreen()
   {
+
+    auto title = text("inLimbo Controls") | bold | color(Color::Green);
+    auto separator = text("─────────────────") | color(Color::Green);
+
+    auto controls_list = vbox({
+                           hbox({text("Space"), text(" - "), text("Play/Pause")}),
+                           hbox({text("n"), text("      - "), text("Next song")}),
+                           hbox({text("p"), text("      - "), text("Previous song")}),
+                           hbox({text("r"), text("      - "), text("Cycle repeat mode")}),
+                           hbox({text("="), text("      - "), text("Volume up")}),
+                           hbox({text("-"), text("      - "), text("Volume down")}),
+                           hbox({text("Tab"), text("    - "), text("Switch focus")}),
+                           hbox({text("h"), text("      - "), text("Toggle help")}),
+                           hbox({text("q"), text("      - "), text("Quit")}),
+                           hbox({text("?"), text("      - "), text("Return to player")}),
+                         }) |
+                         color(Color::LightGreen);
+
+    auto symbols_explanation = vbox({
+      hbox({text("L*"), text(" -> "), text("The current song has lyrics metadata.")}) |
+        color(Color::Cyan),
+      hbox(
+        {text("&"), text("  -> "), text("The current song has additional properties metadata.")}) |
+        color(Color::Yellow),
+    });
+
+    auto footer = text("Press '?' to return to the player.") | color(Color::Yellow) | center;
+
     return vbox({
-             text("inLimbo Controls") | bold | color(Color::Green),
-             text("─────────────────") | color(Color::Green),
-             vbox({
-               text("Space  - Play/Pause"),
-               text("n      - Next song"),
-               text("p      - Previous song"),
-               text("r      - Cycle repeat mode"),
-               text("=      - Volume up"),
-               text("-      - Volume down"),
-               text("Tab    - Switch focus"),
-               text("h      - Toggle help"),
-               text("q      - Quit"),
-             }) |
-               color(Color::Green),
-             text(""),
-             text("Press '?' to return to player") | color(Color::Yellow),
+             title,
+             separator,
+             controls_list | border | flex,
+             separator,
+             text("Symbols Legend") | bold | color(Color::Blue),
+             symbols_explanation | border | flex,
+             footer,
            }) |
            border | flex;
   }
@@ -661,27 +770,28 @@ private:
     if (!current_playing_state.artist.empty())
     {
       current_song_info = current_playing_state.artist + " - " + current_playing_state.title;
-      year_info         = current_playing_state.year;
+      year_info         = std::to_string(current_playing_state.year) + " ";
 
       if (current_playing_state.genre != "Unknown Genre")
       {
-        additional_info += "Genre: " + current_playing_state.genre + " | ";
+        additional_info += "Genre: " + current_playing_state.genre + STATUS_BAR_DELIM;
       }
       if (current_playing_state.has_comment)
       {
-        additional_info += "💭 | ";
+        additional_info += ADDN_PROPS_AVAIL;
       }
       if (current_playing_state.has_lyrics)
       {
-        additional_info += "🎵 | ";
+        additional_info += LYRICS_AVAIL;
       }
+      additional_info += STATUS_BAR_DELIM;
     }
 
-    std::string status = std::string("  ") + (is_playing ? "▶️" : "⏸️") + " " +
+    std::string status = std::string("  ") + (is_playing ? STATUS_PLAYING : STATUS_PAUSED) + "  " +
                          (repeat_mode == RepeatMode::None     ? "↩️"
                           : repeat_mode == RepeatMode::Single ? "🔂"
                                                               : "🔁") +
-                         std::string("     ");
+                         std::string("    ");
 
     auto left_pane = vbox({
                        text(" Artists") | bold | color(Color::Green) | inverted,
@@ -720,10 +830,13 @@ private:
     auto status_bar = hbox({
                         text(spinner_frames[spinner_frame]) | color(Color::Black),
                         text(status) | color(Color::Black),
-                        text(current_song_info) | bold | color(Color::Red),
-                        filler(),
-                        text(additional_info) | color(Color::Blue),
-                        text(year_info) | color(Color::Blue) | flex,
+                        text(current_song_info) | bold | color(Color::Red) | size(WIDTH, LESS_THAN, MAX_LENGTH_SONG_NAME),
+                        filler(), // Push the right-aligned content to the end
+                        hbox({ 
+                            text(additional_info) | color(Color::Black) | flex,
+                            text(year_info) | color(Color::Black) | size(WIDTH, LESS_THAN, 15),
+                            text(" ")
+                        }) | align_right
                       }) |
                       size(HEIGHT, EQUAL, 1) | bgcolor(Color::Yellow);
 
