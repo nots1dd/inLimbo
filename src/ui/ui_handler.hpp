@@ -155,9 +155,6 @@ private:
         // Ensure we have a valid audio player instance
         if (!audio_player)
         {
-          show_dialog    = true;
-          dialog_message = "Error: Audio player is not initialized.";
-          sleep(1);
           audio_player = std::make_unique<MiniAudioPlayer>();
         }
 

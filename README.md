@@ -43,9 +43,10 @@ You will need CMake for this (and git obvi)
 ```bash
 git clone https://github.com/nots1dd/inLimbo.git 
 cd inLimbo/
+./init.sh # to initialize the repository with some important headers
 ```
 
-Then building commands:
+Then building commands: (**WILL NOT COMPILE IF `init.sh` IS NOT RUN FIRST**)
 
 ```bash
 cmake -S . -B build/
