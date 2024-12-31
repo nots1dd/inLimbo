@@ -209,3 +209,34 @@ Commit is decently sized however now that integration is completed it is time to
 **NIL**
 
 ---
+
+## [ALPHA 0.6] --- 31-12-2024
+
+### Added
+- `src/ui/misc.hpp` for miscellaneous functions that help the UI of the project
+
+### Changed
+- Added more fields to `config.toml`:- `goto_main_screen`, `toggle_mute` and `view_lyrics` with subsequent parsing and UI changes and integrations 
+
+- Fixed forward seek (works fine) but backward seek is still bugged
+
+- Added screen macros and better screen management to FTXUI
+
+- Lyrics and additional info is now displayed in another window clearly (lyrics are still not scrollable however)
+
+### Fixed
+- Multiple screens code refactored the old code to just switch screens based on booleans
+
+- Forward seek of a song
+
+### Removed
+**NIL**
+
+Commit is medium sized with decent changes to UI and configs.
+
+## Known Issues to fix in immediate commits
+- Backward seek 
+
+- Scrolling of lyrics
+
+---

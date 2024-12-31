@@ -1,5 +1,6 @@
 #ifndef AUDIO_PLAYBACK_HPP
 #define AUDIO_PLAYBACK_HPP
+
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
 #include <chrono>
@@ -16,7 +17,6 @@ private:
   bool        isPlaying;
   bool        wasPaused;
   uint64_t    pausePosition; // To store the position where the sound was paused
-  uint64_t    currentPosition;
   std::thread playbackThread;
 
 public:
@@ -165,46 +165,36 @@ public:
     return duration;
   }
   // BROKEN (NOT STRAIGHTFORWARD ITS ALL IN PCM TERMS)
-  double seekTime(int diff)
-  {
+  double seekTime(int seconds) {
+      // Get the sample rate of the sound
+      ma_uint32 sampleRate = ma_engine_get_sample_rate(&engine);
+
+      // Get the total length of the sound in PCM frames
+      ma_uint64 totalFrames;
+      ma_result result = ma_sound_get_length_in_pcm_frames(&sound, &totalFrames);
+      if (result != MA_SUCCESS) {
+          std::cerr << "Failed to get total PCM frames." << std::endl;
+      }
+
       // Get the current position in PCM frames
-      currentPosition = ma_sound_get_time_in_pcm_frames(&sound);
+      ma_uint64 currentFrames = ma_sound_get_time_in_pcm_frames(&sound);
 
-      // Get the total length of the song in PCM frames
-      ma_uint64 songLengthInFrames;
-      ma_result result = ma_sound_get_length_in_pcm_frames(&sound, &songLengthInFrames);
+      // Calculate the new position in PCM frames
+      ma_int64 newFrames = static_cast<ma_int64>(currentFrames) + static_cast<ma_int64>(seconds * sampleRate);
 
-      if (result != MA_SUCCESS)
-      {
-          throw std::runtime_error("Failed to get the length of the sound in PCM frames.");
+      // Clamp the new position to valid bounds
+      if (newFrames < 0) newFrames = 0;
+      if (static_cast<ma_uint64>(newFrames) > totalFrames) newFrames = totalFrames;
+
+      // Seek to the new position
+      result = ma_sound_seek_to_pcm_frame(&sound, static_cast<ma_uint64>(newFrames));
+      if (result != MA_SUCCESS) {
+          std::cerr << "Failed to seek sound." << std::endl;
       }
 
-      uint32_t sampleRate = ma_engine_get_sample_rate(&engine);
-
-      uint64_t diffInFrames = static_cast<uint64_t>(diff * sampleRate);
-
-      currentPosition += diffInFrames;
-
-      if (currentPosition < 0)
-      {
-          currentPosition = 0;
-      }
-      else if (currentPosition > songLengthInFrames)
-      {
-          currentPosition = songLengthInFrames;
-      }
-
-      result = ma_sound_seek_to_pcm_frame(&sound, currentPosition);
-
-      if (result != MA_SUCCESS)
-      {
-          throw std::runtime_error("Failed to seek to the PCM frame.");
-      }
-
-      play();
-
-      return static_cast<double>(currentPosition);
+      return (double)seconds;
   }
+
 
 };
 #endif

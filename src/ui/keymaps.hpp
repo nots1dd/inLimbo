@@ -19,9 +19,12 @@ struct Keybinds
   char play_song_prev;
   char vol_up;
   char vol_down;
+  char toggle_mute;
   char quit_app;
   char seek_ahead_5;
   char seek_behind_5;
+  char view_lyrics;
+  char goto_main_screen;
 
   // Map for special keybinds (like Tab, Enter, etc.) {Thought might cook but failed}
   unordered_map<string, char> special_keys;
@@ -59,9 +62,12 @@ Keybinds parseKeybinds()
   keybinds.play_song_prev = handle_special_keys(parseTOMLField("keybinds", "play_song_prev"));
   keybinds.vol_up         = handle_special_keys(parseTOMLField("keybinds", "vol_up"));
   keybinds.vol_down       = handle_special_keys(parseTOMLField("keybinds", "vol_down"));
+  keybinds.toggle_mute       = handle_special_keys(parseTOMLField("keybinds", "toggle_mute"));
   keybinds.quit_app       = handle_special_keys(parseTOMLField("keybinds", "quit_app"));
   keybinds.seek_ahead_5   = handle_special_keys(parseTOMLField("keybinds", "seek_ahead_5"));
   keybinds.seek_behind_5   = handle_special_keys(parseTOMLField("keybinds", "seek_behind_5"));
+  keybinds.view_lyrics   = handle_special_keys(parseTOMLField("keybinds", "view_lyrics"));
+  keybinds.goto_main_screen   = handle_special_keys(parseTOMLField("keybinds", "goto_main_screen"));
 
   return keybinds;
 }

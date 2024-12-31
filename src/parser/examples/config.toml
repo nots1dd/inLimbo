@@ -21,7 +21,10 @@ play_song_next = "n"
 play_song_prev = "p"
 vol_up = "="
 vol_down = "-"
+toggle_mute = "m"
 quit_app = "q"
 seek_ahead_5 = "l"
 seek_behind_5 = "h"
+view_lyrics = "L" # or '2' works
+goto_main_screen = "1" # main ui
 

@@ -2,6 +2,7 @@
 #define FTXUI_HANDLER_HPP
 
 #include "../music/audio_playback.hpp"
+#include "misc.hpp"
 #include "keymaps.hpp"
 #include <algorithm>
 #include <chrono>
@@ -29,6 +30,11 @@ using namespace ftxui;
 
 /* STRING TRUNCATION MACROS */ 
 #define MAX_LENGTH_SONG_NAME 50
+
+/* SCREEN MACROS */ 
+#define SHOW_MAIN_UI 0 
+#define SHOW_HELP_SCREEN 1
+#define SHOW_LYRICS_SCREEN 2
 
 class MusicPlayer
 {
@@ -120,6 +126,8 @@ private:
   unsigned int current_track = 1;
   bool         show_dialog   = false;
   std::string  dialog_message;
+  double seekBuffer;
+  bool first_g_pressed = false; // Track the state of the first 'g' press
 
   // Current view lists
   std::vector<std::string> current_artist_names;
@@ -131,8 +139,10 @@ private:
   bool               is_playing       = false;
   RepeatMode         repeat_mode      = RepeatMode::None;
   int                volume           = 50;
+  bool               muted            = false;
+  int                lastVolume       = volume;
   double             current_position = 0;
-  bool               show_help        = false;
+  int                active_screen    = 0; // 0 -> Main UI ; 1 -> Show help ; 2 -> Show lyrics
   bool               should_quit      = false;
   bool               focus_on_artists = true;
   ScreenInteractive* screen_          = nullptr;
@@ -489,14 +499,21 @@ private:
     main_container |= CatchEvent(
       [&](Event event)
       {
-        if (show_help)
+        if (active_screen == SHOW_HELP_SCREEN)
         {
           // Check if the event matches the '?' or 'Q' or 'q' keybind for toggling help
           if (event.is_character() &&
               (event.character()[0] == global_keybinds.show_help || std::toupper(global_keybinds.quit_app) ||
                event.character()[0] == global_keybinds.quit_app))
           {
-            show_help = !show_help;
+            active_screen = SHOW_MAIN_UI;
+            return true;
+          }
+          if (event.is_character() &&
+              (event.character()[0] == global_keybinds.view_lyrics || std::toupper(global_keybinds.quit_app) ||
+               event.character()[0] == global_keybinds.quit_app))
+          {
+            active_screen = SHOW_MAIN_UI;
             return true;
           }
           return false; // Prevent other keys from working
@@ -544,14 +561,17 @@ private:
           }
           else if (key == global_keybinds.seek_ahead_5)
           {
-            current_position = audio_player->seekTime(5);
+            seekBuffer = audio_player->seekTime(5);
+            current_position += seekBuffer;
           }
           else if (key == global_keybinds.seek_behind_5)
           {
-            if (current_position >= 5)
-              current_position = audio_player->seekTime(-5);
-            else 
+            if (current_position >= 5) {
+              seekBuffer = audio_player->seekTime(-5);
+              current_position += seekBuffer;
+            } else { 
               PlayCurrentSong();
+            }
           }
           else if (key == 'r')
           {
@@ -570,9 +590,21 @@ private:
             UpdateVolume();
             return true;
           }
+          else if (key == global_keybinds.toggle_mute)
+          {
+            muted = !muted;
+            if (muted) {
+              lastVolume = volume;
+              volume = 0;
+            } else {
+              volume = lastVolume;
+            }
+            UpdateVolume();
+            return true;
+          }
           else if (key == global_keybinds.show_help)
           {
-            show_help = !show_help;
+            active_screen = SHOW_HELP_SCREEN;
             return true;
           }
           else if (key == global_keybinds.scroll_down)
@@ -588,6 +620,37 @@ private:
           else if (key == 'x')
           { // Add key to dismiss dialog
             show_dialog = false;
+            return true;
+          }
+          else if (key == global_keybinds.view_lyrics && (current_playing_state.has_lyrics || current_playing_state.has_comment))
+          {
+            active_screen = SHOW_LYRICS_SCREEN;
+            return true;
+          }
+          else if (key == global_keybinds.goto_main_screen)
+          {
+            active_screen = SHOW_MAIN_UI;
+          }
+          // Some default keybinds
+          else if (key == 'g')
+          {
+
+              if (!first_g_pressed)
+              {
+                  // First 'g' press
+                  first_g_pressed = true;
+              }
+              else
+              {
+                  // Second 'g' press
+                  NavigateListToTop(true);
+                  first_g_pressed = false; // Reset the state
+                  return true;
+              }
+          }
+          else if (key == 'G')
+          {
+            NavigateListToTop(false);
             return true;
           }
           else if (key == global_keybinds.toggle_focus)
@@ -645,7 +708,7 @@ private:
                  }
 
                  Element interface;
-                 if (show_help)
+                 if (active_screen == SHOW_HELP_SCREEN)
                  {
                    interface = RenderHelpScreen();
                  }
@@ -662,6 +725,10 @@ private:
                      RenderDialog() | center // Center the dialog both horizontally and vertically
                    });
                  }
+                 if (active_screen == SHOW_LYRICS_SCREEN)
+                  {
+                    interface = RenderLyricsAndInfoView();
+                  }
 
                  return vbox(interface);
                });
@@ -676,6 +743,40 @@ private:
                     text("Press 'x' to close") | dim | center,
                   })) |
            size(WIDTH, LESS_THAN, 60) | size(HEIGHT, LESS_THAN, 5) | bgcolor(Color::White) | border;
+  }
+
+  Element RenderLyricsAndInfoView() {
+      std::vector<Element> additionalPropertiesText;
+
+      // Iterate through metadata.additionalProperties and format the key-value pairs
+      for (const auto& [key, value] : current_playing_state.additionalProperties) {
+        if (key != "LYRICS") { // We dont want to show lyrics twice
+          additionalPropertiesText.push_back(
+              hbox({text(key + ": "), text(value) | dim})
+          );
+        }
+      }
+
+      auto lyricLines = formatLyrics(current_playing_state.lyrics);
+      std::vector<Element> lyricElements;
+      for (const auto& line : lyricLines) {
+         lyricElements.push_back(text(line));
+      }
+
+      std::string end_text = "Use arrow keys to scroll, Press '" + std::string(1, static_cast<char>(global_keybinds.goto_main_screen)) + "' to go back home.";
+      return window(
+          text("Lyrics and Info") | bold | center,
+          vbox({
+              text("Lyrics:") | bold | underlined,
+              separator(),
+              vbox(lyricElements) | flex,
+              separator(),
+              text("Additional Info:") | bold | underlined,
+              vbox(additionalPropertiesText) | bold,
+              separator(),
+              text(end_text) | dim | center,
+              })) |
+          border;
   }
 
   void NavigateList(bool move_down)
@@ -716,6 +817,53 @@ private:
     }
   }
 
+  void NavigateListToTop(bool move_up)
+  {
+      if (focus_on_artists)
+      {
+          if (!current_artist_names.empty())
+          {
+              // Navigate to the top of the artist list
+              if (move_up) {
+                selected_artist = 0;
+              } else {
+                selected_artist = current_artist_names.size()-1;
+              }
+          }
+      }
+      else
+      {
+          if (!current_song_names.empty())
+          {
+              if (move_up)
+              {
+                  // Navigate to the first valid song, skipping headers
+                  selected_song = 0;
+                  while (selected_song < current_song_names.size() &&
+                         current_song_names[selected_song].rfind(ALBUM_DELIM, 0) == 0)
+                  {
+                      ++selected_song;
+                  }
+              }
+              else
+              {
+                  // Navigate to the last valid song
+                  selected_song = current_song_names.size() - 1;
+                  while (selected_song >= 0 &&
+                         current_song_names[selected_song].rfind(ALBUM_DELIM, 0) == 0)
+                  {
+                      --selected_song;
+                  }
+              }
+
+              if (selected_song < 0 || selected_song >= current_song_names.size())
+              {
+                  selected_song = 0; // Fallback
+              }
+          }
+      }
+  }
+
   Element RenderHelpScreen()
   {
 
@@ -723,28 +871,34 @@ private:
     auto separator = text("─────────────────") | color(Color::Green);
 
     auto controls_list = vbox({
-                           hbox({text("Space"), text(" - "), text("Play/Pause")}),
-                           hbox({text("n"), text("      - "), text("Next song")}),
-                           hbox({text("p"), text("      - "), text("Previous song")}),
-                           hbox({text("r"), text("      - "), text("Cycle repeat mode")}),
-                           hbox({text("="), text("      - "), text("Volume up")}),
-                           hbox({text("-"), text("      - "), text("Volume down")}),
-                           hbox({text("Tab"), text("    - "), text("Switch focus")}),
-                           hbox({text("h"), text("      - "), text("Toggle help")}),
-                           hbox({text("q"), text("      - "), text("Quit")}),
-                           hbox({text("?"), text("      - "), text("Return to player")}),
-                         }) |
-                         color(Color::LightGreen);
+        hbox({text(std::string(1, static_cast<char>(global_keybinds.toggle_play))), text("     - "), text("Toggle playback")}),
+        hbox({text(std::string(1, static_cast<char>(global_keybinds.play_song_next))), text("      - "), text("Next song")}),
+        hbox({text(std::string(1, static_cast<char>(global_keybinds.play_song_prev))), text("      - "), text("Previous song")}),
+        hbox({text("r"), text("      - "), text("Cycle repeat mode")}),
+        hbox({text(std::string(1, static_cast<char>(global_keybinds.vol_up))), text("      - "), text("Volume up")}),
+        hbox({text(std::string(1, static_cast<char>(global_keybinds.vol_down))), text("      - "), text("Volume down")}),
+        hbox({text(std::string(1, static_cast<char>(global_keybinds.toggle_mute))), text("      - "), text("Toggle muting the current instance of miniaudio")}),
+        hbox({text(std::string(1, static_cast<char>(global_keybinds.toggle_focus))), text("    - "), text("Switch focus")}),
+        hbox({text("gg"), text("    - "), text("Go to top of the current list")}),
+        hbox({text("g"), text("     - "), text("Go to bottom of the current list")}),
+        hbox({text(std::string(1, static_cast<char>(global_keybinds.seek_ahead_5))), text("      - "), text("Seek ahead by 5s")}),
+        hbox({text(std::string(1, static_cast<char>(global_keybinds.seek_behind_5))), text("      - "), text("Seek behind by 5s")}),
+        hbox({text(std::string(1, static_cast<char>(global_keybinds.quit_app))), text("      - "), text("Quit")}),
+        hbox({text(std::string(1, static_cast<char>(global_keybinds.show_help))), text("      - "), text("Toggle this help")}),
+        hbox({text(std::string(1, static_cast<char>(global_keybinds.goto_main_screen))), text("      - "), text("Go to song tree view")}),
+    }) |
+    color(Color::LightGreen);
 
     auto symbols_explanation = vbox({
-      hbox({text("L*"), text(" -> "), text("The current song has lyrics metadata.")}) |
+      hbox({text(LYRICS_AVAIL), text(" -> "), text("The current song has lyrics metadata.")}) |
         color(Color::Cyan),
       hbox(
-        {text("&"), text("  -> "), text("The current song has additional properties metadata.")}) |
+        {text(ADDN_PROPS_AVAIL), text("  -> "), text("The current song has additional properties metadata.")}) |
         color(Color::Yellow),
     });
 
-    auto footer = text("Press '?' to return to the player.") | color(Color::Yellow) | center;
+    std::string footer_text = "Press '" + std::string(1, static_cast<char>(global_keybinds.show_help)) + "' to return to inLimbo.";
+    auto footer = text(footer_text) | color(Color::Yellow) | center;
 
     return vbox({
              title,
