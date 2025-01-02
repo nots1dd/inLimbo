@@ -164,7 +164,7 @@ public:
     }
     return duration;
   }
-  // BROKEN (NOT STRAIGHTFORWARD ITS ALL IN PCM TERMS)
+
   double seekTime(int seconds) {
       // Get the sample rate of the sound
       ma_uint32 sampleRate = ma_engine_get_sample_rate(&engine);
@@ -180,13 +180,12 @@ public:
       ma_uint64 currentFrames = ma_sound_get_time_in_pcm_frames(&sound);
 
       // Calculate the new position in PCM frames
-      ma_int64 newFrames = static_cast<ma_int64>(currentFrames) + static_cast<ma_int64>(seconds * sampleRate);
+      ma_int64 newFrames = static_cast<ma_int64>(currentFrames) + static_cast<ma_int64>(seconds) * sampleRate;
 
       // Clamp the new position to valid bounds
-      if (newFrames < 0) newFrames = 0;
-      if (static_cast<ma_uint64>(newFrames) > totalFrames) newFrames = totalFrames;
+      if (newFrames < 0) newFrames = seconds = 0;
+      if (static_cast<ma_uint64>(newFrames) > totalFrames)  newFrames = totalFrames;
 
-      // Seek to the new position
       result = ma_sound_seek_to_pcm_frame(&sound, static_cast<ma_uint64>(newFrames));
       if (result != MA_SUCCESS) {
           std::cerr << "Failed to seek sound." << std::endl;

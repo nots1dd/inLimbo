@@ -55,4 +55,9 @@ std::vector<std::string> formatLyrics(const std::string& lyrics)
   return lines;
 }
 
+std::string charToStr(char ch)
+{
+  return std::string(1, static_cast<char>(ch));
+}
+
 #endif

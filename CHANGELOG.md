@@ -267,3 +267,30 @@ Commit is small but damn worth it. Fixed a very big issue and has solid optimisa
 - Scrolling of lyrics
 
 ---
+
+## [ALPHA 0.8] --- 03-01-2025
+
+### Added
+**NIL**
+
+### Changed
+- `seekTime` backend function to fix forward and backward seek times now
+
+- Added a `charToStr` function for better code understanding
+
+- UI bug fix for song seek
+
+### Fixed
+- Forward **AND** backward seek work now :) (an issue with the previous formula to calculate PCM frames)
+
+- UI bug when the song would play from beginning but it would still not be shown as the beginning
+
+### Removed
+**NIL**
+
+Very small commit but noteworthy as it fixes two bugs which were quite annoying
+
+## Known Issues to fix in immediate commits
+- Scrolling of lyrics
+
+---

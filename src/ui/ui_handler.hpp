@@ -575,6 +575,7 @@ private:
           }
           else
           {
+            current_position = 0; // resets to 0
             PlayCurrentSong();
           }
         }
@@ -873,32 +874,32 @@ private:
 
     auto controls_list =
       vbox({
-        hbox({text(std::string(1, static_cast<char>(global_keybinds.toggle_play))), text("     - "),
+        hbox({text(charToStr(global_keybinds.toggle_play)), text("     - "),
               text("Toggle playback")}),
-        hbox({text(std::string(1, static_cast<char>(global_keybinds.play_song_next))),
+        hbox({text(charToStr(global_keybinds.play_song_next)),
               text("      - "), text("Next song")}),
-        hbox({text(std::string(1, static_cast<char>(global_keybinds.play_song_prev))),
+        hbox({text(charToStr(global_keybinds.play_song_prev)),
               text("      - "), text("Previous song")}),
         hbox({text("r"), text("      - "), text("Cycle repeat mode")}),
-        hbox({text(std::string(1, static_cast<char>(global_keybinds.vol_up))), text("      - "),
+        hbox({text(charToStr(global_keybinds.vol_up)), text("      - "),
               text("Volume up")}),
-        hbox({text(std::string(1, static_cast<char>(global_keybinds.vol_down))), text("      - "),
+        hbox({text(charToStr(global_keybinds.vol_down)), text("      - "),
               text("Volume down")}),
-        hbox({text(std::string(1, static_cast<char>(global_keybinds.toggle_mute))),
+        hbox({text(charToStr(global_keybinds.toggle_mute)),
               text("      - "), text("Toggle muting the current instance of miniaudio")}),
-        hbox({text(std::string(1, static_cast<char>(global_keybinds.toggle_focus))), text("    - "),
+        hbox({text(charToStr(global_keybinds.toggle_focus)), text("    - "),
               text("Switch focus")}),
         hbox({text("gg"), text("    - "), text("Go to top of the current list")}),
         hbox({text("g"), text("     - "), text("Go to bottom of the current list")}),
-        hbox({text(std::string(1, static_cast<char>(global_keybinds.seek_ahead_5))),
+        hbox({text(charToStr(global_keybinds.seek_ahead_5)),
               text("      - "), text("Seek ahead by 5s")}),
-        hbox({text(std::string(1, static_cast<char>(global_keybinds.seek_behind_5))),
+        hbox({text(charToStr(global_keybinds.seek_behind_5)),
               text("      - "), text("Seek behind by 5s")}),
-        hbox({text(std::string(1, static_cast<char>(global_keybinds.quit_app))), text("      - "),
+        hbox({text(charToStr(global_keybinds.quit_app)), text("      - "),
               text("Quit")}),
-        hbox({text(std::string(1, static_cast<char>(global_keybinds.show_help))), text("      - "),
+        hbox({text(charToStr(global_keybinds.show_help)), text("      - "),
               text("Toggle this help")}),
-        hbox({text(std::string(1, static_cast<char>(global_keybinds.goto_main_screen))),
+        hbox({text(charToStr(global_keybinds.goto_main_screen)),
               text("      - "), text("Go to song tree view")}),
       }) |
       color(Color::LightGreen);
