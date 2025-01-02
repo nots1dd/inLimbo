@@ -240,3 +240,30 @@ Commit is medium sized with decent changes to UI and configs.
 - Scrolling of lyrics
 
 ---
+
+## [ALPHA 0.7] --- 02-01-2025
+
+### Added
+**NIL**
+
+### Changed
+- Finally fixed the keybinds for special keys like `Tab`, `Esc`, `Enter` and `Space` and is completely dynamic (depends on `config.toml` **ONLY**)
+
+- Massively optimised `src/ui/keymaps.hpp` to have unordered_maps to hold and traverse required fields
+
+- Some more documentation in `config.toml` and `src/network/NETWORK.md`
+
+### Fixed
+- Keybinds are now *FULLY* dynamic (regardless of whether the event is dynamic or just a character as per FTXUIs Event system)
+
+### Removed
+**NIL**
+
+Commit is small but damn worth it. Fixed a very big issue and has solid optimisations
+
+## Known Issues to fix in immediate commits
+- Backward seek 
+
+- Scrolling of lyrics
+
+---

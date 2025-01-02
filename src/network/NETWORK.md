@@ -46,7 +46,18 @@ curl -L -o protocols.h https://raw.githubusercontent.com/nots1dd/inLimbo/main/sr
 > ./client # make sure you have server_cert.pem in your phone already
 > ```
 > 
-
+> **CAUTION:** If client refuses to connect and you are sure that everything is done as explained,
+> 
+> -> Consider changing the `SERVER_IP` macro in `protocols.h` to the server's ip address (you can find it out in linux using `ip a`)
+> 
+> In code it should look something like this:
+> 
+> ```cpp 
+> #define SERVER_IP "127.0.0.1" // by default it is set to loopback addr, set this to the actual servers ip
+> ```
+> 
+> I will come up with a more dynamic way of setting this in the future but right now it is pretty rigid.
+> 
 -> The server will have access to the password hash that you will give in config.toml file
 
 -> The client will input the password and compute the sha256 hash of salt+password and raise a challenge with the server's hash 
