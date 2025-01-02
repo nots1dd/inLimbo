@@ -8,7 +8,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/License-GNU GPL%20v3-blue" alt="License" />
-  <img src="https://img.shields.io/badge/Version-4.0%20alpha-red" alt="Version" />
+  <img src="https://img.shields.io/badge/Version-8.0%20alpha-red" alt="Version" />
   <img src="https://img.shields.io/badge/Build-passing-brightgreen" alt="Build" />
 </p>
 
@@ -23,6 +23,15 @@
 > 
 
 A possible revamp of LiteMus
+
+## Features
+
+- **Fully configurable**: Keybinds, library, FTP credentials, and more, all in one `config.toml` file located in `$HOME/.config/inLimbo/config.toml`
+- **Very fast and easy to use**: Optimized for speed and usability.
+- **Very few external dependencies**: Minimal setup required to get started.
+- **Clean and nice TUI experience**: Interact with your music library seamlessly in a terminal interface.
+- **Showcases all the metadata**: Displays song metadata, including lyrics, genre, and more, for every file in your library.
+- **Plays and caters to many audio file formats**: Compatible with a variety of audio formats, depending on the capabilities of [miniaudio](https://github.com/mackron/miniaudio).
 
 ## Goal
 
