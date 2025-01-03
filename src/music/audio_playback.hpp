@@ -165,35 +165,39 @@ public:
     return duration;
   }
 
-  double seekTime(int seconds) {
-      // Get the sample rate of the sound
-      ma_uint32 sampleRate = ma_engine_get_sample_rate(&engine);
+  double seekTime(int seconds)
+  {
+    // Get the sample rate of the sound
+    ma_uint32 sampleRate = ma_engine_get_sample_rate(&engine);
 
-      // Get the total length of the sound in PCM frames
-      ma_uint64 totalFrames;
-      ma_result result = ma_sound_get_length_in_pcm_frames(&sound, &totalFrames);
-      if (result != MA_SUCCESS) {
-          std::cerr << "Failed to get total PCM frames." << std::endl;
-      }
+    // Get the total length of the sound in PCM frames
+    ma_uint64 totalFrames;
+    ma_result result = ma_sound_get_length_in_pcm_frames(&sound, &totalFrames);
+    if (result != MA_SUCCESS)
+    {
+      std::cerr << "Failed to get total PCM frames." << std::endl;
+    }
 
-      // Get the current position in PCM frames
-      ma_uint64 currentFrames = ma_sound_get_time_in_pcm_frames(&sound);
+    // Get the current position in PCM frames
+    ma_uint64 currentFrames = ma_sound_get_time_in_pcm_frames(&sound);
 
-      // Calculate the new position in PCM frames
-      ma_int64 newFrames = static_cast<ma_int64>(currentFrames) + static_cast<ma_int64>(seconds) * sampleRate;
+    // Calculate the new position in PCM frames
+    ma_int64 newFrames =
+      static_cast<ma_int64>(currentFrames) + static_cast<ma_int64>(seconds) * sampleRate;
 
-      // Clamp the new position to valid bounds
-      if (newFrames < 0) newFrames = seconds = 0;
-      if (static_cast<ma_uint64>(newFrames) > totalFrames)  newFrames = totalFrames;
+    // Clamp the new position to valid bounds
+    if (newFrames < 0)
+      newFrames = seconds = 0;
+    if (static_cast<ma_uint64>(newFrames) > totalFrames)
+      newFrames = totalFrames;
 
-      result = ma_sound_seek_to_pcm_frame(&sound, static_cast<ma_uint64>(newFrames));
-      if (result != MA_SUCCESS) {
-          std::cerr << "Failed to seek sound." << std::endl;
-      }
+    result = ma_sound_seek_to_pcm_frame(&sound, static_cast<ma_uint64>(newFrames));
+    if (result != MA_SUCCESS)
+    {
+      std::cerr << "Failed to seek sound." << std::endl;
+    }
 
-      return (double)seconds;
+    return (double)seconds;
   }
-
-
 };
 #endif

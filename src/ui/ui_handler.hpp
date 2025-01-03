@@ -6,15 +6,8 @@
 #include "misc.hpp"
 #include <algorithm>
 #include <chrono>
-#include <ftxui/component/captured_mouse.hpp>
-#include <ftxui/component/component.hpp>
-#include <ftxui/component/component_base.hpp>
-#include <ftxui/component/screen_interactive.hpp>
-#include <ftxui/dom/elements.hpp>
-#include <ftxui/screen/color.hpp>
 #include <iomanip>
 #include <sstream>
-#include <string>
 #include <thread>
 
 using namespace ftxui;
@@ -35,6 +28,7 @@ using namespace ftxui;
 #define SHOW_MAIN_UI       0
 #define SHOW_HELP_SCREEN   1
 #define SHOW_LYRICS_SCREEN 2
+#define SHOW_QUEUE_SCREEN  3
 
 class MusicPlayer
 {
@@ -116,6 +110,9 @@ private:
 
   std::unique_ptr<MiniAudioPlayer> audio_player;
 
+  std::vector<Song> song_queue;
+  int               current_song_queue_index = 0;
+
   // Main data structure
   std::map<std::string, std::map<std::string, std::map<unsigned int, std::map<unsigned int, Song>>>>
     library;
@@ -142,7 +139,7 @@ private:
   bool               muted            = false;
   int                lastVolume       = volume;
   double             current_position = 0;
-  int                active_screen    = 0; // 0 -> Main UI ; 1 -> Show help ; 2 -> Show lyrics
+  int                active_screen    = 0; // 0 -> Main UI ; 1 -> Show help ; 2 -> Show lyrics; 3 -> Songs queue screen
   bool               should_quit      = false;
   bool               focus_on_artists = true;
   ScreenInteractive* screen_          = nullptr;
@@ -273,40 +270,42 @@ private:
 
   void PlayNextSong()
   {
-    if (!current_song_names.empty())
+    if (current_song_queue_index + 1 < song_queue.size())
     {
-      do
-      {
-        selected_song = (selected_song + 1) % current_song_names.size();
-      } while (current_song_names[selected_song].rfind(ALBUM_DELIM, 0) == 0);
-
+      current_song_queue_index++;
       current_position = 0;
       PlayCurrentSong();
       UpdatePlayingState();
+    }
+    else
+    {
+      show_dialog    = true;
+      dialog_message = "Error: No more songs in the queue.";
     }
   }
 
   void PlayPreviousSong()
   {
-    if (!current_song_names.empty())
+    // If rewinding within the current song
+    if (current_position > 3.0)
     {
-      if (current_position > 3.0)
-      {
-        current_position = 0;
-        PlayCurrentSong();
-      }
-      else
-      {
-        do
-        {
-          selected_song =
-            (selected_song - 1 + current_song_names.size()) % current_song_names.size();
-        } while (current_song_names[selected_song].rfind(ALBUM_DELIM, 0) == 0);
+      current_position = 0;
+      PlayCurrentSong();
+      return;
+    }
 
-        current_position = 0;
-        PlayCurrentSong();
-        UpdatePlayingState();
-      }
+    // Move to the previous song if possible
+    if (current_song_queue_index > 0)
+    {
+      current_song_queue_index--;
+      current_position = 0;
+      PlayCurrentSong();
+      UpdatePlayingState();
+    }
+    else
+    {
+      show_dialog    = true;
+      dialog_message = "Error: No previous song available.";
     }
   }
 
@@ -337,17 +336,17 @@ private:
       {
         // Get year from the first song in the album
         const Song& first_song = discs.begin()->second.begin()->second;
-        std::string album_info = album_name + " (" + std::to_string(first_song.metadata.year) + ")";
-        current_song_names.push_back(ALBUM_DELIM + album_info + " " +
-                                     ALBUM_DELIM); // Mark as a header
+        std::string album_info = ALBUM_DELIM + std::string(" ") + album_name + " (" +
+                                 std::to_string(first_song.metadata.year) + ") " + ALBUM_DELIM;
+        current_song_names.push_back(album_info); // Mark as a header
 
         for (const auto& [disc_number, tracks] : discs)
         {
           for (const auto& [track_number, song] : tracks)
           {
-            std::stringstream ss;
-            ss << disc_number << "-" << track_number << ": " << song.metadata.title;
-            current_song_names.push_back(ss.str());
+            std::string song_info = format_song_info(disc_number, track_number, song.metadata.title,
+                                                     song.metadata.duration);
+            current_song_names.push_back(song_info);
           }
         }
       }
@@ -377,54 +376,57 @@ private:
     return vbox(std::move(rendered_items)) | frame | flex;
   }
 
-  Song* GetCurrentSong()
+  void ClearQueue()
   {
-    // Check if we have valid data to fetch the song
-    if (current_artist.empty() || selected_song < 0 || selected_song >= current_song_names.size())
+    song_queue.clear();
+    current_song_queue_index = 0;
+  }
+
+  void EnqueueAllSongsByArtist(const std::string& artist, const std::string& song_name)
+  {
+    // Clear the existing song list
+    ClearQueue();
+
+    bool start_enqueue = false;
+
+    // Check if the artist exists in the library
+    if (library.find(artist) == library.end())
     {
-      return nullptr;
+      std::cerr << "Artist not found in the library: " << artist << std::endl;
+      return;
     }
 
-    // Get the selected song name
-    const std::string& selected_song_name = current_song_names[selected_song];
+    const auto& artist_data = library.at(artist);
 
-    // Try to find the artist in the library
-    if (library.find(current_artist) == library.end())
-    {
-      return nullptr;
-    }
-
-    const auto& artist_data = library.at(current_artist);
-
-    // Loop over all albums in the artist's library
+    // Iterate through all albums, discs, and tracks
     for (const auto& album_pair : artist_data)
     {
-      const std::string& album_name = album_pair.first;
-
-      // Loop over all discs in the album
       for (const auto& disc_pair : album_pair.second)
       {
-        const unsigned int disc_number = disc_pair.first;
-
-        // Loop over all tracks in the disc
         for (const auto& track_pair : disc_pair.second)
         {
-          const unsigned int track_number = track_pair.first;
-          const Song&        song         = track_pair.second;
+          const Song& song = track_pair.second;
 
-          // Create a formatted string that matches the song display format
-          std::stringstream song_identifier;
-          song_identifier << disc_number << "-" << track_number << ": " << song.metadata.title;
+          if (song_name == format_song_info(disc_pair.first, track_pair.first, song.metadata.title,
+                                            song.metadata.duration))
+            start_enqueue = true;
 
-          // If the formatted song string matches the selected song
-          if (selected_song_name == song_identifier.str())
-          {
-            return const_cast<Song*>(&song); // Return the song
-          }
+          // Add the song to the list
+          if (start_enqueue)
+            song_queue.push_back(song);
         }
       }
     }
-    return nullptr; // Return null if no match found
+  }
+
+  Song* GetCurrentSong()
+  {
+    if (!song_queue.empty() && current_song_queue_index < song_queue.size())
+    {
+      return &song_queue[current_song_queue_index];
+    }
+
+    return nullptr;
   }
 
   int GetCurrentSongDuration()
@@ -434,16 +436,6 @@ private:
       return current_playing_state.duration;
     }
     return 0;
-  }
-
-  std::string FormatTime(int seconds)
-  {
-    int minutes = seconds / 60;
-    seconds     = seconds % 60;
-    std::stringstream ss;
-    ss << std::setfill('0') << std::setw(2) << minutes << ":" << std::setfill('0') << std::setw(2)
-       << seconds << " ";
-    return ss.str();
   }
 
   void UpdatePlayingState()
@@ -529,12 +521,22 @@ private:
 
         if (is_keybind_match(global_keybinds.play_song))
         {
-
-          if (Song* current_song = GetCurrentSong())
+          if (!current_artist.empty())
           {
-            current_position = 0;
-            PlayCurrentSong();
-            UpdatePlayingState();
+            EnqueueAllSongsByArtist(current_artist, current_song_names[selected_song]);
+
+            if (Song* current_song = GetCurrentSong())
+            {
+              // Enqueue all songs by the current artist
+              current_position = 0;
+              PlayCurrentSong();
+              UpdatePlayingState();
+            }
+          }
+          else
+          {
+            show_dialog    = true;
+            dialog_message = "No artist selected to play songs from.";
           }
 
           return true;
@@ -769,7 +771,7 @@ private:
                   vbox({
                     text("Lyrics:") | bold | underlined,
                     separator(),
-                    vbox(lyricElements) | flex,
+                    vbox(lyricElements) | frame | flex,
                     separator(),
                     text("Additional Info:") | bold | underlined,
                     vbox(additionalPropertiesText) | bold,
@@ -874,33 +876,29 @@ private:
 
     auto controls_list =
       vbox({
-        hbox({text(charToStr(global_keybinds.toggle_play)), text("     - "),
-              text("Toggle playback")}),
-        hbox({text(charToStr(global_keybinds.play_song_next)),
-              text("      - "), text("Next song")}),
-        hbox({text(charToStr(global_keybinds.play_song_prev)),
-              text("      - "), text("Previous song")}),
+        hbox(
+          {text(charToStr(global_keybinds.toggle_play)), text("     - "), text("Toggle playback")}),
+        hbox(
+          {text(charToStr(global_keybinds.play_song_next)), text("      - "), text("Next song")}),
+        hbox({text(charToStr(global_keybinds.play_song_prev)), text("      - "),
+              text("Previous song")}),
         hbox({text("r"), text("      - "), text("Cycle repeat mode")}),
-        hbox({text(charToStr(global_keybinds.vol_up)), text("      - "),
-              text("Volume up")}),
-        hbox({text(charToStr(global_keybinds.vol_down)), text("      - "),
-              text("Volume down")}),
-        hbox({text(charToStr(global_keybinds.toggle_mute)),
-              text("      - "), text("Toggle muting the current instance of miniaudio")}),
-        hbox({text(charToStr(global_keybinds.toggle_focus)), text("    - "),
-              text("Switch focus")}),
+        hbox({text(charToStr(global_keybinds.vol_up)), text("      - "), text("Volume up")}),
+        hbox({text(charToStr(global_keybinds.vol_down)), text("      - "), text("Volume down")}),
+        hbox({text(charToStr(global_keybinds.toggle_mute)), text("      - "),
+              text("Toggle muting the current instance of miniaudio")}),
+        hbox({text(charToStr(global_keybinds.toggle_focus)), text("    - "), text("Switch focus")}),
         hbox({text("gg"), text("    - "), text("Go to top of the current list")}),
         hbox({text("g"), text("     - "), text("Go to bottom of the current list")}),
-        hbox({text(charToStr(global_keybinds.seek_ahead_5)),
-              text("      - "), text("Seek ahead by 5s")}),
-        hbox({text(charToStr(global_keybinds.seek_behind_5)),
-              text("      - "), text("Seek behind by 5s")}),
-        hbox({text(charToStr(global_keybinds.quit_app)), text("      - "),
-              text("Quit")}),
-        hbox({text(charToStr(global_keybinds.show_help)), text("      - "),
-              text("Toggle this help")}),
-        hbox({text(charToStr(global_keybinds.goto_main_screen)),
-              text("      - "), text("Go to song tree view")}),
+        hbox({text(charToStr(global_keybinds.seek_ahead_5)), text("      - "),
+              text("Seek ahead by 5s")}),
+        hbox({text(charToStr(global_keybinds.seek_behind_5)), text("      - "),
+              text("Seek behind by 5s")}),
+        hbox({text(charToStr(global_keybinds.quit_app)), text("      - "), text("Quit")}),
+        hbox(
+          {text(charToStr(global_keybinds.show_help)), text("      - "), text("Toggle this help")}),
+        hbox({text(charToStr(global_keybinds.goto_main_screen)), text("      - "),
+              text("Go to song tree view")}),
       }) |
       color(Color::LightGreen);
 

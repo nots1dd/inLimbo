@@ -50,9 +50,7 @@ if (EMSCRIPTEN)
   # Disable TagLib for Emscripten build
   message(STATUS "Building for Emscripten: TagLib will be excluded")
 else()
-  # Native build: Link to additional libraries (e.g., TagLib)
-  find_package(TagLib REQUIRED)
-  target_link_libraries(inLimbo PRIVATE TagLib::TagLib)
+  target_link_libraries(inLimbo)
 endif()
 
 # Link libraries for native build
@@ -60,6 +58,7 @@ target_link_libraries(inLimbo
   PRIVATE ftxui::screen
   PRIVATE ftxui::dom
   PRIVATE ftxui::component
+  PRIVATE tag
 )
 
 # --- Ensure the config.toml file is created in the correct directory ---------------------

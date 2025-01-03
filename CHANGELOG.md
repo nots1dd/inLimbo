@@ -294,3 +294,33 @@ Very small commit but noteworthy as it fixes two bugs which were quite annoying
 - Scrolling of lyrics
 
 ---
+
+## [ALPHA 0.9] --- 03-01-2025
+
+### Added
+**NIL**
+
+### Changed
+- Changed `CMakeLists.txt` file to properly link and compile the project
+
+- TagLib parser now parses the duration metadata as well
+
+- Formatting of code 
+
+- Slight refactor and optimisations of `src/ui/ui_handler.hpp`
+
+- Now when `play_song` is invoked, all the songs of the current artist after the selected song are enqueued to a list, so even if we just view and switch artists,
+  it will not change the current song
+
+### Fixed
+- Play next and previous songs are fixed thanks to Song queue implementation
+
+### Removed
+**NIL**
+
+Decently sized commit but the issue of songs changing just by traversal is fixed now thanks to Song queue. This also is step forward to adding more keybinds to add song to queue, remove song from queue so on..
+
+## Known Issues to fix in immediate commits
+- Scrolling of lyrics
+
+---

@@ -28,6 +28,7 @@ struct Metadata
   std::string                                  lyrics     = "No Lyrics";
   std::unordered_map<std::string, std::string> additionalProperties;
   std::string                                  filePath;
+  float duration = 0.0f;
 };
 
 // TagLibParser class for parsing metadata
@@ -98,6 +99,11 @@ bool TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) {
   metadata.comment = tag->comment().isEmpty() ? "No Comment" : tag->comment().to8Bit(true);
   metadata.year    = tag->year() == 0 ? 0 : tag->year();
   metadata.track   = tag->track() == 0 ? 0 : tag->track();
+  
+  TagLib::AudioProperties *audioProperties = file.audioProperties();
+  if (audioProperties) {
+    metadata.duration = audioProperties->length(); // Duration in seconds
+  }
 
   // Keep track of file path
   metadata.filePath = filePath;
