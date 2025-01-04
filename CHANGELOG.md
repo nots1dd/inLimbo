@@ -324,3 +324,34 @@ Decently sized commit but the issue of songs changing just by traversal is fixed
 - Scrolling of lyrics
 
 ---
+
+## [ALPHA 1.0] --- 04-01-2025
+
+### Added
+`src/ui/colors.hpp`
+
+### Changed
+- Finally shifted to all true colors by using `ftxui::Color::RGB` function
+
+- Removed `spinner_frames`
+
+- Updated main UI (Added number of songs in queue and next song display)
+
+- Fixed help window to showcase the supported special chars (Tab, Enter, Space, Esc)
+
+- Lyrics window is changed from (panes are now vertical not horizontal)
+
+### Fixed
+- Help window fix for special chars
+
+- True colors implementation
+
+### Removed
+**NIL**
+
+Medium sized commit that adds quite a few features and implementation but more work needs to be done.
+
+## Known Issues to fix in immediate commits
+- Scrolling of lyrics
+
+---

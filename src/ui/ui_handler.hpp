@@ -22,7 +22,8 @@ using namespace ftxui;
 #define STATUS_BAR_DELIM " | "
 
 /* STRING TRUNCATION MACROS */
-#define MAX_LENGTH_SONG_NAME 50
+#define MAX_LENGTH_SONG_NAME   50
+#define MAX_LENGTH_ARTIST_NAME 20
 
 /* SCREEN MACROS */
 #define SHOW_MAIN_UI       0
@@ -131,15 +132,16 @@ private:
   std::vector<std::string> current_song_names;
 
   // Player state
-  int                selected_artist  = 0;
-  int                selected_song    = 0;
-  bool               is_playing       = false;
-  RepeatMode         repeat_mode      = RepeatMode::None;
-  int                volume           = 50;
-  bool               muted            = false;
-  int                lastVolume       = volume;
-  double             current_position = 0;
-  int                active_screen    = 0; // 0 -> Main UI ; 1 -> Show help ; 2 -> Show lyrics; 3 -> Songs queue screen
+  int        selected_artist  = 0;
+  int        selected_song    = 0;
+  bool       is_playing       = false;
+  RepeatMode repeat_mode      = RepeatMode::None;
+  int        volume           = 50;
+  bool       muted            = false;
+  int        lastVolume       = volume;
+  double     current_position = 0;
+  int        active_screen =
+    0; // 0 -> Main UI ; 1 -> Show help ; 2 -> Show lyrics; 3 -> Songs queue screen
   bool               should_quit      = false;
   bool               focus_on_artists = true;
   ScreenInteractive* screen_          = nullptr;
@@ -149,10 +151,6 @@ private:
   Component songs_list;
   Component controls;
   Component renderer;
-
-  const std::vector<std::string> spinner_frames = {" ⠋", " ⠙", " ⠹", " ⠸", " ⠼",
-                                                   " ⠴", " ⠦", " ⠧", " ⠇", " ⠏"};
-  int                            spinner_frame  = 0;
 
   void InitializeData()
   {
@@ -363,7 +361,8 @@ private:
       const std::string& item = current_song_names[i];
       if (item.rfind(ALBUM_DELIM, 0) == 0)
       {
-        rendered_items.push_back(text(item.substr(8)) | bold | color(Color::Yellow) | inverted);
+        rendered_items.push_back(text(item.substr(8)) | bold |
+                                 getTrueColor(TrueColors::Color::Yellow) | inverted);
       }
       else
       {
@@ -701,11 +700,6 @@ private:
                  int   duration = GetCurrentSongDuration();
                  float progress = duration > 0 ? (float)current_position / duration : 0;
 
-                 if (is_playing)
-                 {
-                   spinner_frame = (spinner_frame + 1) % spinner_frames.size();
-                 }
-
                  Element interface;
                  if (active_screen == SHOW_HELP_SCREEN)
                  {
@@ -720,7 +714,7 @@ private:
                  {
                    // Create a semi-transparent overlay with the dialog box
                    interface = dbox({
-                     interface | dim,        // Dim the background
+                     interface,              // Dim the background
                      RenderDialog() | center // Center the dialog both horizontally and vertically
                    });
                  }
@@ -735,50 +729,91 @@ private:
 
   Element RenderDialog()
   {
-    return window(text("File Information") | bold | center,
-                  vbox({
-                    text(dialog_message),
-                    separator(),
-                    text("Press 'x' to close") | dim | center,
-                  })) |
-           size(WIDTH, LESS_THAN, 60) | size(HEIGHT, LESS_THAN, 5) | bgcolor(Color::White) | border;
+    return window(
+             text(" File Information ") | bold | center | getTrueColor(TrueColors::Color::White) |
+               getTrueBGColor(TrueColors::Color::Gray),
+             vbox({
+               text(dialog_message) | getTrueColor(TrueColors::Color::Coral),
+               separator() | color(Color::GrayLight),
+               text("Press 'x' to close") | dim | center | getTrueColor(TrueColors::Color::Pink),
+             }) |
+               center) |
+           size(WIDTH, LESS_THAN, 60) | size(HEIGHT, LESS_THAN, 8) |
+           getTrueBGColor(TrueColors::Color::Black) | borderHeavy;
   }
 
   Element RenderLyricsAndInfoView()
   {
     std::vector<Element> additionalPropertiesText;
-
-    // Iterate through metadata.additionalProperties and format the key-value pairs
     for (const auto& [key, value] : current_playing_state.additionalProperties)
     {
       if (key != "LYRICS")
-      { // We dont want to show lyrics twice
+      {
         additionalPropertiesText.push_back(hbox({text(key + ": "), text(value) | dim}));
       }
     }
 
-    auto                 lyricLines = formatLyrics(current_playing_state.lyrics);
-    std::vector<Element> lyricElements;
-    for (const auto& line : lyricLines)
-    {
-      lyricElements.push_back(text(line));
-    }
+    auto          lyricLines    = formatLyrics(current_playing_state.lyrics);
+    static size_t selected_line = 0; // Static to persist across frames
+    auto          container     = Container::Vertical({});
+
+    container |= CatchEvent(
+      [&](Event event)
+      {
+        if (event == Event::ArrowUp || event == Event::Character('k'))
+        {
+          if (selected_line > 0)
+            selected_line--;
+          return true;
+        }
+        else if (event == Event::ArrowDown || event == Event::Character('j'))
+        {
+          if (selected_line < lyricLines.size() - 1)
+            selected_line++;
+          return true;
+        }
+        return false;
+      });
+
+    auto renderer = Renderer(container,
+                             [&]
+                             {
+                               Elements focused_elements;
+                               for (size_t i = 0; i < lyricLines.size(); ++i)
+                               {
+                                 if (i == selected_line)
+                                 {
+                                   focused_elements.push_back(text(lyricLines[i]) | bold);
+                                 }
+                                 else
+                                 {
+                                   focused_elements.push_back(text(lyricLines[i]));
+                                 }
+                               }
+
+                               // Ensure the scroll view adapts to the selected line
+                               return vbox(focused_elements) | vscroll_indicator | yframe | flex;
+                             });
+
+    container->Add(renderer);
 
     std::string end_text = "Use arrow keys to scroll, Press '" +
                            std::string(1, static_cast<char>(global_keybinds.goto_main_screen)) +
                            "' to go back home.";
-    return window(text("Lyrics and Info") | bold | center,
-                  vbox({
-                    text("Lyrics:") | bold | underlined,
-                    separator(),
-                    vbox(lyricElements) | frame | flex,
-                    separator(),
-                    text("Additional Info:") | bold | underlined,
-                    vbox(additionalPropertiesText) | bold,
-                    separator(),
-                    text(end_text) | dim | center,
-                  })) |
-           border;
+
+    auto lyrics_pane = window(text(" Lyrics ") | bold | center, vbox({
+                                                                  renderer->Render() | flex,
+                                                                  separator(),
+                                                                  text(end_text) | dim | center,
+                                                                }));
+
+    auto info_pane = window(text(" Additional Info ") | bold | center,
+                            vbox(additionalPropertiesText) | frame | flex);
+
+    return hbox({
+      lyrics_pane | flex,
+      info_pane | flex,
+    });
   }
 
   void NavigateList(bool move_down)
@@ -870,64 +905,76 @@ private:
 
   Element RenderHelpScreen()
   {
+    auto title = text("inLimbo Controls") | bold | getTrueColor(TrueColors::Color::Teal);
 
-    auto title = text("inLimbo Controls") | bold | color(Color::Green);
-    auto separator = text("─────────────────") | color(Color::Green);
+    // Helper function to create a single keybind row
+    auto createRow =
+      [&](const std::string& key, const std::string& description, TrueColors::Color color)
+    {
+      return hbox({
+        text(key) | getTrueColor(color),
+        text("  --  ") | getTrueColor(TrueColors::Color::Gray),
+        text(description) | getTrueColor(TrueColors::Color::White),
+      });
+    };
 
     auto controls_list =
       vbox({
-        hbox(
-          {text(charToStr(global_keybinds.toggle_play)), text("     - "), text("Toggle playback")}),
-        hbox(
-          {text(charToStr(global_keybinds.play_song_next)), text("      - "), text("Next song")}),
-        hbox({text(charToStr(global_keybinds.play_song_prev)), text("      - "),
-              text("Previous song")}),
-        hbox({text("r"), text("      - "), text("Cycle repeat mode")}),
-        hbox({text(charToStr(global_keybinds.vol_up)), text("      - "), text("Volume up")}),
-        hbox({text(charToStr(global_keybinds.vol_down)), text("      - "), text("Volume down")}),
-        hbox({text(charToStr(global_keybinds.toggle_mute)), text("      - "),
-              text("Toggle muting the current instance of miniaudio")}),
-        hbox({text(charToStr(global_keybinds.toggle_focus)), text("    - "), text("Switch focus")}),
-        hbox({text("gg"), text("    - "), text("Go to top of the current list")}),
-        hbox({text("g"), text("     - "), text("Go to bottom of the current list")}),
-        hbox({text(charToStr(global_keybinds.seek_ahead_5)), text("      - "),
-              text("Seek ahead by 5s")}),
-        hbox({text(charToStr(global_keybinds.seek_behind_5)), text("      - "),
-              text("Seek behind by 5s")}),
-        hbox({text(charToStr(global_keybinds.quit_app)), text("      - "), text("Quit")}),
-        hbox(
-          {text(charToStr(global_keybinds.show_help)), text("      - "), text("Toggle this help")}),
-        hbox({text(charToStr(global_keybinds.goto_main_screen)), text("      - "),
-              text("Go to song tree view")}),
+        createRow(charToStr(global_keybinds.toggle_play), "Toggle playback",
+                  TrueColors::Color::Teal),
+        createRow(charToStr(global_keybinds.play_song_next), "Next song",
+                  TrueColors::Color::LightCyan),
+        createRow(charToStr(global_keybinds.play_song_prev), "Previous song",
+                  TrueColors::Color::LightCyan),
+        createRow("r", "Cycle repeat mode", TrueColors::Color::LightMagenta),
+        createRow(charToStr(global_keybinds.vol_up), "Volume up", TrueColors::Color::LightGreen),
+        createRow(charToStr(global_keybinds.vol_down), "Volume down",
+                  TrueColors::Color::LightGreen),
+        createRow(charToStr(global_keybinds.toggle_mute),
+                  "Toggle muting the current instance of miniaudio", TrueColors::Color::LightRed),
+        createRow(charToStr(global_keybinds.toggle_focus), "Switch focus",
+                  TrueColors::Color::LightYellow),
+        createRow("gg", "Go to top of the current list", TrueColors::Color::LightBlue),
+        createRow("G", "Go to bottom of the current list", TrueColors::Color::LightBlue),
+        createRow(charToStr(global_keybinds.seek_ahead_5), "Seek ahead by 5s",
+                  TrueColors::Color::Orange),
+        createRow(charToStr(global_keybinds.seek_behind_5), "Seek behind by 5s",
+                  TrueColors::Color::Orange),
+        createRow(charToStr(global_keybinds.quit_app), "Quit", TrueColors::Color::LightRed),
+        createRow(charToStr(global_keybinds.show_help), "Toggle this help",
+                  TrueColors::Color::Cyan),
+        createRow(charToStr(global_keybinds.goto_main_screen), "Go to song tree view",
+                  TrueColors::Color::Teal),
       }) |
-      color(Color::LightGreen);
+      getTrueColor(TrueColors::Color::LightGreen);
 
     auto symbols_explanation = vbox({
       hbox({text(LYRICS_AVAIL), text(" -> "), text("The current song has lyrics metadata.")}) |
-        color(Color::Cyan),
+        getTrueColor(TrueColors::Color::LightCyan),
       hbox({text(ADDN_PROPS_AVAIL), text("  -> "),
             text("The current song has additional properties metadata.")}) |
-        color(Color::Yellow),
+        getTrueColor(TrueColors::Color::LightYellow),
     });
 
-    std::string footer_text = "Press '" +
-                              std::string(1, static_cast<char>(global_keybinds.show_help)) +
-                              "' to return to inLimbo.";
-    auto footer = text(footer_text) | color(Color::Yellow) | center;
+    std::string footer_text =
+      "Press '" + charToStr(global_keybinds.show_help) + "' to return to inLimbo.";
+    auto footer = text(footer_text) | getTrueColor(TrueColors::Color::LightYellow) | center;
 
     return vbox({
              title,
-             separator,
              controls_list | border | flex,
-             separator,
-             text("Symbols Legend") | bold | color(Color::Blue),
+             text("Symbols Legend") | bold | getTrueColor(TrueColors::Color::LightBlue),
              symbols_explanation | border | flex,
              footer,
            }) |
-           border | flex;
+           flex;
   }
 
-  Color GetCurrWinColor(bool focused) { return focused ? Color::White : Color::GrayDark; }
+  Color GetCurrWinColor(bool focused)
+  {
+    return focused ? TrueColors::GetColor(TrueColors::Color::White)
+                   : TrueColors::GetColor(TrueColors::Color::DarkGray);
+  }
 
   Element RenderMainInterface(float progress)
   {
@@ -938,7 +985,7 @@ private:
     // Use the current_playing_state instead of GetCurrentSong()
     if (!current_playing_state.artist.empty())
     {
-      current_song_info = current_playing_state.artist + " - " + current_playing_state.title;
+      current_song_info = " - " + current_playing_state.title;
       year_info         = std::to_string(current_playing_state.year) + " ";
 
       if (current_playing_state.genre != "Unknown Genre")
@@ -963,19 +1010,21 @@ private:
                                                               : "🔁") +
                          std::string("    ");
 
-    auto left_pane = vbox({
-                       text(" Artists") | bold | color(Color::Green) | inverted,
-                       separator(),
-                       artists_list->Render() | frame | flex,
-                     }) |
-                     border | color(GetCurrWinColor(focus_on_artists));
+    auto left_pane =
+      vbox({
+        text(" Artists") | bold | getTrueColor(TrueColors::Color::LightGreen) | inverted,
+        separator(),
+        artists_list->Render() | frame | flex,
+      }) |
+      border | color(GetCurrWinColor(focus_on_artists));
 
-    auto right_pane = vbox({
-                        text(" Songs") | bold | color(Color::Green) | inverted,
-                        separator(),
-                        songs_list->Render() | frame | flex,
-                      }) |
-                      border | color(GetCurrWinColor(!focus_on_artists));
+    auto right_pane =
+      vbox({
+        text(" Songs") | bold | getTrueColor(TrueColors::Color::LightGreen) | inverted,
+        separator(),
+        songs_list->Render() | frame | flex,
+      }) |
+      border | color(GetCurrWinColor(!focus_on_artists));
 
     auto panes = vbox({hbox({
                          left_pane | size(WIDTH, EQUAL, 100) | flex,
@@ -984,7 +1033,8 @@ private:
                        flex}) |
                  flex;
 
-    auto progress_style = is_playing ? color(Color::Green) : color(Color::White);
+    auto progress_style = is_playing ? getTrueColor(TrueColors::Color::SlateBlue)
+                                     : getTrueColor(TrueColors::Color::Crimson);
     auto progress_bar   = hbox({
       text(FormatTime((int)current_position)) | progress_style,
       gauge(progress) | flex | progress_style,
@@ -993,26 +1043,43 @@ private:
 
     auto volume_bar = hbox({
       text(" Vol: ") | dim,
-      gauge(volume / 100.0) | size(WIDTH, EQUAL, 10) | color(Color::Yellow),
+      gauge(volume / 100.0) | size(WIDTH, EQUAL, 10) | getTrueColor(TrueColors::Color::LightYellow),
       text(std::to_string(volume) + "%") | dim,
     });
 
+    std::string queue_info = " ";
+    queue_info += std::to_string(song_queue.size()) + " songs in queue.";
+    std::string up_next_song = " Next up: ";
+    if (song_queue.size() > 1)
+      up_next_song += song_queue[current_song_queue_index + 1].metadata.title + " by " +
+                      song_queue[current_song_queue_index + 1].metadata.artist;
+    else
+      up_next_song += "Next song not available.";
+    auto queue_bar = hbox({
+      text(queue_info) | dim | border | bold,
+      text(up_next_song) | dim | border | flex | size(WIDTH, LESS_THAN, MAX_LENGTH_SONG_NAME),
+    });
+
     auto status_bar =
-      hbox({text(spinner_frames[spinner_frame]) | color(Color::Black),
-            text(status) | color(Color::Black),
-            text(current_song_info) | bold | color(Color::Red) |
+      hbox({text(status) | getTrueColor(TrueColors::Color::Black),
+            text(current_playing_state.artist) | getTrueColor(TrueColors::Color::Gold) | bold |
+              size(WIDTH, LESS_THAN, MAX_LENGTH_ARTIST_NAME),
+            text(current_song_info) | bold | getTrueColor(TrueColors::Color::LightRed) |
               size(WIDTH, LESS_THAN, MAX_LENGTH_SONG_NAME),
             filler(), // Push the right-aligned content to the end
-            hbox({text(additional_info) | color(Color::Black) | flex,
-                  text(year_info) | color(Color::Black) | size(WIDTH, LESS_THAN, 15), text(" ")}) |
+            hbox({text(additional_info) | getTrueColor(TrueColors::Color::Black) | flex,
+                  text(year_info) | getTrueColor(TrueColors::Color::Black) |
+                    size(WIDTH, LESS_THAN, 15),
+                  text(" ")}) |
               align_right}) |
-      size(HEIGHT, EQUAL, 1) | bgcolor(Color::Yellow);
+      size(HEIGHT, EQUAL, 1) | getTrueBGColor(TrueColors::Color::White);
 
     return vbox({
              panes,
              hbox({
                progress_bar | border | flex,
-               volume_bar | border | flex,
+               volume_bar | border,
+               queue_bar,
              }),
              status_bar,
            }) |
