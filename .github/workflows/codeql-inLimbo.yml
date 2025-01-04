@@ -32,6 +32,7 @@ jobs:
       run: |
         # Ensure any dependencies are installed before building
         cd $(find -type d -name inLimbo) # get out of .github/workflows
+        ls
         
         sudo apt-get update
         sudo apt-get install -y build-essential cmake libtag1-dev git  # Example dependencies, modify as needed
