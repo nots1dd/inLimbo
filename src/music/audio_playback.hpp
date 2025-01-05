@@ -50,7 +50,6 @@ public:
       throw std::runtime_error("Failed to load audio file: " + filePath);
       return -1;
     }
-    std::cout << "Loaded " << filePath << " with MA_SUCCESS" << std::endl;
     return 0;
   }
 
@@ -81,7 +80,7 @@ public:
               isPlaying = false;
               break;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
           }
         });
     }

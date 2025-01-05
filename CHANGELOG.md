@@ -355,3 +355,30 @@ Medium sized commit that adds quite a few features and implementation but more w
 - Scrolling of lyrics
 
 ---
+
+## [ALPHA 1.1] --- 05-01-2025
+
+### Added
+**NIL**
+
+### Changed
+- Added 3 new fields to `config.toml` and `Adding Song to Queue` and `Replay Song` has been integrated and subsequent changes to `src/ui/keymaps.hpp` 
+
+- Changed MiniAudioPlayer class's play() function thread sleep to 10ms
+
+- Removed Repeat Mode UI for now
+
+- Additional thread detach and creation handling to `PlayCurrentSong` in `src/ui/ui_handler.hpp`
+
+### Fixed
+- Some concurrency issues in `PlayCurrentSong` when invoking the function too fast 
+
+### Removed
+- Repeat Mode UI
+
+Commit that proceeds to add queue features and fix issues (regarding threads) along the way
+
+## Known Issues to fix in immediate commits
+- Scrolling of lyrics
+
+---

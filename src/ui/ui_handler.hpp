@@ -61,14 +61,7 @@ public:
             current_position += 0.1;
             if (current_position >= GetCurrentSongDuration())
             {
-              if (repeat_mode == RepeatMode::Single)
-              {
-                current_position = 0;
-              }
-              else
-              {
-                PlayNextSong();
-              }
+              PlayNextSong();
             }
           }
           screen.PostEvent(Event::Custom);
@@ -81,13 +74,6 @@ public:
   }
 
 private:
-  enum class RepeatMode
-  {
-    None,
-    Single,
-    All
-  };
-
   struct PlayingState
   {
     std::string                                  artist;
@@ -132,15 +118,15 @@ private:
   std::vector<std::string> current_song_names;
 
   // Player state
-  int        selected_artist  = 0;
-  int        selected_song    = 0;
-  bool       is_playing       = false;
-  RepeatMode repeat_mode      = RepeatMode::None;
-  int        volume           = 50;
-  bool       muted            = false;
-  int        lastVolume       = volume;
-  double     current_position = 0;
-  int        active_screen =
+  int    selected_artist    = 0;
+  int    selected_song      = 0;
+  int    current_lyric_line = 0;
+  bool   is_playing         = false;
+  int    volume             = 50;
+  bool   muted              = false;
+  int    lastVolume         = volume;
+  double current_position   = 0;
+  int    active_screen =
     0; // 0 -> Main UI ; 1 -> Show help ; 2 -> Show lyrics; 3 -> Songs queue screen
   bool               should_quit      = false;
   bool               focus_on_artists = true;
@@ -149,6 +135,7 @@ private:
   // UI Components
   Component artists_list;
   Component songs_list;
+  Component lyrics_list;
   Component controls;
   Component renderer;
 
@@ -174,31 +161,45 @@ private:
 
   void PlayCurrentSong()
   {
+    static std::mutex        play_mutex;
+    static std::atomic<bool> is_processing{false};
+
+    // Spawn a detached thread for playing the song
     std::thread(
-      [&]
+      [&]()
       {
+        // Avoid overlapping executions
+        std::unique_lock<std::mutex> lock(play_mutex, std::try_to_lock);
+        if (!lock || is_processing)
+        {
+          return; // Another invocation is already running
+        }
+        is_processing = true;
+
         // Ensure we have a valid audio player instance
         if (!audio_player)
         {
           audio_player = std::make_unique<MiniAudioPlayer>();
         }
 
-        Song* current_song = GetCurrentSong();
+        Song* current_song = GetCurrentSongFromQueue();
         if (!current_song)
         {
           show_dialog    = true;
           dialog_message = "Error: No current song found.";
+          is_processing  = false;
           return;
         }
 
         try
         {
-          // Check if the file path is valid before attempting to load
+          // Check if the file path is valid
           const std::string& file_path = current_song->metadata.filePath;
           if (file_path.empty())
           {
             show_dialog    = true;
             dialog_message = "Error: Invalid file path.";
+            is_processing  = false;
             return;
           }
 
@@ -214,7 +215,7 @@ private:
           if (loadAudioFileStatus != -1)
           {
             is_playing = true;
-            audio_player->play(); // plays in a different thread
+            audio_player->play(); // Plays in a separate thread internally
             current_playing_state.duration = audio_player->getDuration();
           }
           else
@@ -230,6 +231,15 @@ private:
           dialog_message = "Err: " + std::string(e.what());
           is_playing     = false;
         }
+        catch (const std::bad_alloc& ba)
+        {
+          show_dialog    = true;
+          dialog_message = "Bad alloc: " + std::string(ba.what());
+          is_playing     = false;
+        }
+
+        // Mark processing as complete
+        is_processing = false;
       })
       .detach();
   }
@@ -282,14 +292,19 @@ private:
     }
   }
 
+  void ReplaySong()
+  {
+    current_position = 0;
+    PlayCurrentSong();
+    return;
+  }
+
   void PlayPreviousSong()
   {
     // If rewinding within the current song
     if (current_position > 3.0)
     {
-      current_position = 0;
-      PlayCurrentSong();
-      return;
+      ReplaySong();
     }
 
     // Move to the previous song if possible
@@ -381,6 +396,31 @@ private:
     current_song_queue_index = 0;
   }
 
+  const Song& GetCurrentSong(const std::string& artist, const std::string& song_name)
+  {
+    const auto& artist_data = library.at(artist);
+
+    // Iterate through all albums, discs, and tracks
+    for (const auto& album_pair : artist_data)
+    {
+      for (const auto& disc_pair : album_pair.second)
+      {
+        for (const auto& track_pair : disc_pair.second)
+        {
+          const Song& song = track_pair.second;
+
+          if (song_name == format_song_info(disc_pair.first, track_pair.first, song.metadata.title,
+                                            song.metadata.duration))
+          {
+            return song; // Return a reference to the matched song.
+          }
+        }
+      }
+    }
+
+    throw std::runtime_error("Song not found.");
+  }
+
   void EnqueueAllSongsByArtist(const std::string& artist, const std::string& song_name)
   {
     // Clear the existing song list
@@ -406,6 +446,7 @@ private:
         {
           const Song& song = track_pair.second;
 
+          // TODO: Make the formmating better
           if (song_name == format_song_info(disc_pair.first, track_pair.first, song.metadata.title,
                                             song.metadata.duration))
             start_enqueue = true;
@@ -418,7 +459,27 @@ private:
     }
   }
 
-  Song* GetCurrentSong()
+  void AddSongToQueue()
+  {
+    // Validate indices to prevent out-of-range access
+    if (selected_artist >= current_artist_names.size() ||
+        selected_song >= current_song_names.size())
+    {
+      throw std::runtime_error("Invalid artist or song selection.");
+    }
+
+    // Get a const reference to the current song
+    const Song& current_preview_song =
+      GetCurrentSong(current_artist_names[selected_artist], current_song_names[selected_song]);
+
+    // Add a copy of the song to the queue
+    song_queue.push_back(current_preview_song);
+
+    dialog_message = "Song added to queue.";
+    show_dialog    = true;
+  }
+
+  Song* GetCurrentSongFromQueue()
   {
     if (!song_queue.empty() && current_song_queue_index < song_queue.size())
     {
@@ -439,7 +500,7 @@ private:
 
   void UpdatePlayingState()
   {
-    if (Song* current_song = GetCurrentSong())
+    if (Song* current_song = GetCurrentSongFromQueue())
     {
       const auto& metadata = current_song->metadata;
 
@@ -524,7 +585,7 @@ private:
           {
             EnqueueAllSongsByArtist(current_artist, current_song_names[selected_song]);
 
-            if (Song* current_song = GetCurrentSong())
+            if (Song* current_song = GetCurrentSongFromQueue())
             {
               // Enqueue all songs by the current artist
               current_position = 0;
@@ -569,7 +630,7 @@ private:
         }
         else if (is_keybind_match(global_keybinds.seek_behind_5))
         {
-          if (current_position >= 5)
+          if (current_position > 5)
           {
             seekBuffer = audio_player->seekTime(-5);
             current_position += seekBuffer;
@@ -579,10 +640,11 @@ private:
             current_position = 0; // resets to 0
             PlayCurrentSong();
           }
+          UpdatePlayingState();
         }
-        else if (is_keybind_match('r'))
+        else if (is_keybind_match(global_keybinds.replay_song))
         {
-          CycleRepeatMode();
+          ReplaySong();
           return true;
         }
         else if (is_keybind_match(global_keybinds.vol_up))
@@ -677,6 +739,11 @@ private:
           }
           return true;
         }
+        else if (is_keybind_match(global_keybinds.add_song_to_queue))
+        {
+          AddSongToQueue();
+          return true;
+        }
 
         /* Default keys */
         if (event == Event::ArrowDown)
@@ -744,6 +811,11 @@ private:
 
   Element RenderLyricsAndInfoView()
   {
+
+    MenuOption lyrics_scroll;
+    lyrics_scroll.on_change     = [&]() {};
+    lyrics_scroll.focused_entry = &current_lyric_line;
+
     std::vector<Element> additionalPropertiesText;
     for (const auto& [key, value] : current_playing_state.additionalProperties)
     {
@@ -756,6 +828,8 @@ private:
     auto          lyricLines    = formatLyrics(current_playing_state.lyrics);
     static size_t selected_line = 0; // Static to persist across frames
     auto          container     = Container::Vertical({});
+
+    lyrics_list = Menu(&lyricLines, &current_lyric_line, lyrics_scroll);
 
     container |= CatchEvent(
       [&](Event event)
@@ -982,7 +1056,6 @@ private:
     std::string year_info;
     std::string additional_info;
 
-    // Use the current_playing_state instead of GetCurrentSong()
     if (!current_playing_state.artist.empty())
     {
       current_song_info = " - " + current_playing_state.title;
@@ -1005,9 +1078,6 @@ private:
     }
 
     std::string status = std::string("  ") + (is_playing ? STATUS_PLAYING : STATUS_PAUSED) + "  " +
-                         (repeat_mode == RepeatMode::None     ? "↩️"
-                          : repeat_mode == RepeatMode::Single ? "🔂"
-                                                              : "🔁") +
                          std::string("    ");
 
     auto left_pane =
@@ -1048,7 +1118,7 @@ private:
     });
 
     std::string queue_info = " ";
-    queue_info += std::to_string(song_queue.size()) + " songs in queue.";
+    queue_info += std::to_string(song_queue.size() - current_song_queue_index) + " songs in queue.";
     std::string up_next_song = " Next up: ";
     if (song_queue.size() > 1)
       up_next_song += song_queue[current_song_queue_index + 1].metadata.title + " by " +
@@ -1084,11 +1154,6 @@ private:
              status_bar,
            }) |
            flex;
-  }
-
-  void CycleRepeatMode()
-  {
-    repeat_mode = static_cast<RepeatMode>((static_cast<int>(repeat_mode) + 1) % 3);
   }
 
   void Quit()

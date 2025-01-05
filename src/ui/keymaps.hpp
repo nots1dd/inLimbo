@@ -25,6 +25,10 @@ struct Keybinds
   char seek_behind_5;
   char view_lyrics;
   char goto_main_screen;
+  char replay_song;
+  char add_song_to_queue;
+  char play_this_song_next;
+  char view_song_queue;
 };
 
 Keybinds parseKeybinds()
@@ -81,8 +85,11 @@ Keybinds parseKeybinds()
     {"seek_ahead_5", &keybinds.seek_ahead_5},
     {"seek_behind_5", &keybinds.seek_behind_5},
     {"view_lyrics", &keybinds.view_lyrics},
+    {"replay_song", &keybinds.replay_song},
     {"goto_main_screen", &keybinds.goto_main_screen},
-  };
+    {"add_song_to_queue", &keybinds.add_song_to_queue},
+    {"play_this_song_next", &keybinds.play_this_song_next},
+    {"view_song_queue", &keybinds.view_song_queue}};
 
   for (const auto& [field, member_ptr] : field_map)
   {
