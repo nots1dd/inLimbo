@@ -108,4 +108,31 @@ ftxui::Decorator getTrueBGColor(TrueColors::Color color)
   return ftxui::bgcolor(TrueColors::GetColor(color));
 }
 
+Element renderAlbumName(const std::string& album_name, const int& year, TrueColors::Color color)
+{
+  return hbox({text(" "), text(album_name) | bold, filler(), text(std::to_string(year)) | dim | align_right, text(" ")}) |
+         inverted | getTrueColor(color) | dim;
+}
+
+Element renderSongName(const std::string& disc_track_info, const std::string& song_name,
+                       const int& duration)
+{
+  return hbox({text(disc_track_info) | dim, text(song_name) | bold | flex_grow,
+               filler(), // Spacer for dynamic layout
+               text(FormatTime(duration)) | align_right});
+}
+
+auto RenderSongMenu(const std::vector<Element>& items, int* selected_index, TrueColors::Color color)
+{
+  Elements rendered_items;
+  for (size_t i = 0; i < items.size(); ++i)
+  {
+    bool is_selected    = (i == *selected_index);
+    auto style          = is_selected ? getTrueColor(color) : nothing;
+    auto inverted_style = is_selected ? inverted : nothing;
+    rendered_items.push_back(items[i] | style | inverted_style);
+  }
+  return vbox(std::move(rendered_items));
+}
+
 #endif

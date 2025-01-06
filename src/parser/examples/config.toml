@@ -9,6 +9,7 @@ password_hash = "0a4dd737a1f7ab1f0b8f36f7ed75959febad3de996b5d5a8779547a7083fff1
 
 [debug]
 parser_log = "false" # false to disable it, true to enable it
+debounce_time_in_ms = "500" # Adding debounce to events (minimum is 500)
 
 # NOTE: Only `Tab`, `Escape`, `Enter/Return` and `Space` are accepted as special chars aside from [a-Z][0-9] charset
 [keybinds]
