@@ -30,6 +30,7 @@ FetchContent_MakeAvailable(ftxui)
 add_executable(inLimbo
   src/main.cpp
   dom/color_info_sorted_2d.ipp
+  src/ui/components/scroller.cpp
 )
 
 # Set include directories for source files

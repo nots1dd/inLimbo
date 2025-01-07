@@ -382,3 +382,48 @@ Commit that proceeds to add queue features and fix issues (regarding threads) al
 - Scrolling of lyrics
 
 ---
+
+## [ALPHA 1.2] --- 07-01-2025
+
+### Added
+- Colors customizability setup (`COLORS.md`)
+
+- Better Song Menu Viewing
+
+- Better error handling of MusicPlayer class
+
+- `src/ui/components` - Scroller component
+
+### Changed
+- Changing SongMenu from traditional menu to vector<Element> with apt rendering and scroll (**NOT DYNAMIC SCROLLING THO**)
+
+- Added colors customizability with one field currently and subsequent changes to `src/ui/colors.hpp`
+
+- UI overhaul (MAJOR)
+
+- Better formatting of lyrics (FIXED)
+
+- Formatting + some refactor
+
+- Tried to make the player more safe with 
+
+- New fields to `config.toml`
+
+- New component `scroller` to try and render the scroller in render lyrics func
+
+### Fixed
+- Formatting of lyrics 
+
+- Song menu UI
+
+### Removed
+- Some redundant functions like `format_song_info`
+
+Very big commit in dev branch that is to be merged with main after some sanity checks
+
+## Known Issues to fix in immediate commits
+- Scrolling of lyrics and sone menu
+
+- Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
+
+---

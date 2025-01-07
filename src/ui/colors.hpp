@@ -154,4 +154,86 @@ ftxui::Color GetColor(Color color)
 
 } // namespace TrueColors
 
+struct InLimboColors
+{
+  TrueColors::Color active_win_color;
+};
+
+// Function to map color strings from TOML to the enum
+TrueColors::Color parseColor(const std::string& color_name)
+{
+  static const std::unordered_map<std::string, TrueColors::Color> color_map = {
+    {"Black", TrueColors::Color::Black},
+    {"White", TrueColors::Color::White},
+    {"Red", TrueColors::Color::Red},
+    {"LightRed", TrueColors::Color::LightRed},
+    {"Green", TrueColors::Color::Green},
+    {"LightGreen", TrueColors::Color::LightGreen},
+    {"Blue", TrueColors::Color::Blue},
+    {"LightBlue", TrueColors::Color::LightBlue},
+    {"Yellow", TrueColors::Color::Yellow},
+    {"LightYellow", TrueColors::Color::LightYellow},
+    {"Cyan", TrueColors::Color::Cyan},
+    {"LightCyan", TrueColors::Color::LightCyan},
+    {"Magenta", TrueColors::Color::Magenta},
+    {"LightMagenta", TrueColors::Color::LightMagenta},
+    {"Gray", TrueColors::Color::Gray},
+    {"LightGray", TrueColors::Color::LightGray},
+    {"DarkGray", TrueColors::Color::DarkGray},
+    {"Orange", TrueColors::Color::Orange},
+    {"LightOrange", TrueColors::Color::LightOrange},
+    {"Purple", TrueColors::Color::Purple},
+    {"LightPurple", TrueColors::Color::LightPurple},
+    {"Pink", TrueColors::Color::Pink},
+    {"LightPink", TrueColors::Color::LightPink},
+    {"Teal", TrueColors::Color::Teal},
+    {"LightTeal", TrueColors::Color::LightTeal},
+    {"SkyBlue", TrueColors::Color::SkyBlue},
+    {"Coral", TrueColors::Color::Coral},
+    {"Lime", TrueColors::Color::Lime},
+    {"Lavender", TrueColors::Color::Lavender},
+    {"Crimson", TrueColors::Color::Crimson},
+    {"Gold", TrueColors::Color::Gold},
+    {"Indigo", TrueColors::Color::Indigo},
+    {"Mint", TrueColors::Color::Mint},
+    {"Navy", TrueColors::Color::Navy},
+    {"Peach", TrueColors::Color::Peach},
+    {"Sand", TrueColors::Color::Sand},
+    {"SeaGreen", TrueColors::Color::SeaGreen},
+    {"LightSeaGreen", TrueColors::Color::LightSeaGreen},
+    {"SlateBlue", TrueColors::Color::SlateBlue},
+    {"LightSlateBlue", TrueColors::Color::LightSlateBlue},
+    {"SunsetOrange", TrueColors::Color::SunsetOrange},
+    {"Turquoise", TrueColors::Color::Turquoise},
+    {"LightTurquoise", TrueColors::Color::LightTurquoise}};
+
+  auto it = color_map.find(color_name);
+  if (it != color_map.end())
+  {
+    return it->second;
+  }
+
+  std::cerr << "Error: Unsupported or empty color '" << color_name
+            << "'. Please check your configuration." << std::endl;
+  std::exit(EXIT_FAILURE);
+}
+
+// Function to parse the colors from the TOML file into the InLimboColors struct
+InLimboColors parseColors()
+{
+  InLimboColors colors;
+
+  // Mapping of fields in the InLimboColors struct
+  const std::unordered_map<std::string, TrueColors::Color*> field_map = {
+    {"active_win_color", &colors.active_win_color}};
+
+  for (const auto& [field, member_color] : field_map)
+  {
+    std::string color_name = std::string(parseTOMLField(PARENT_COLORS, field));
+    *member_color          = parseColor(color_name);
+  }
+
+  return colors;
+}
+
 #endif

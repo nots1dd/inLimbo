@@ -16,21 +16,24 @@ std::vector<std::string> formatLyrics(const std::string& lyrics)
 {
   std::vector<std::string> lines;
   std::string              currentLine;
-  bool                     lastWasUppercase = false;
-  bool                     insideBrackets   = false;
-  bool                     wasSpecialChar   = false;
+  bool                     insideBrackets     = false;
+  bool                     lastWasUppercase   = false;
+  bool                     lastWasSpecialChar = false; // Tracks special characters within words
+  char                     previousChar       = '\0';
 
   for (char c : lyrics)
   {
     if (c == '[')
     {
-      lines.push_back(currentLine);
-      currentLine.clear();
+      if (!currentLine.empty())
+      {
+        lines.push_back(currentLine);
+        currentLine.clear();
+      }
       insideBrackets = true;
+      currentLine += c;
+      continue;
     }
-
-    if (c == '(' || c == ')' || c == '{' || c == '}')
-      wasSpecialChar = !wasSpecialChar;
 
     if (insideBrackets)
     {
@@ -41,23 +44,48 @@ std::vector<std::string> formatLyrics(const std::string& lyrics)
         currentLine.clear();
         insideBrackets = false;
       }
+      continue;
     }
-    else
+
+    if (c == '\'' || c == '-')
     {
-      if (std::isupper(c) && !lastWasUppercase && !wasSpecialChar && !currentLine.empty())
+      currentLine += c;
+      lastWasSpecialChar = true;
+      continue;
+    }
+
+    if (std::isupper(c) && !lastWasUppercase && !lastWasSpecialChar && !currentLine.empty() &&
+        previousChar != '\n' && previousChar != ' ')
+    {
+      lines.push_back(currentLine);
+      currentLine.clear();
+    }
+
+    currentLine += c;
+
+    if (c == '\n')
+    {
+      if (!currentLine.empty())
       {
-        lines.push_back(currentLine); // Start a new line if uppercase
+        lines.push_back(currentLine);
         currentLine.clear();
       }
-      currentLine += c;
-      lastWasUppercase = std::isupper(c);
     }
+
+    lastWasUppercase   = std::isupper(c);
+    lastWasSpecialChar = false;
+    previousChar       = c;
   }
 
   if (!currentLine.empty())
   {
-    lines.push_back(currentLine); // Push any remaining text after the loop
+    lines.push_back(currentLine);
   }
+
+  // Trim empty lines (optional)
+  lines.erase(std::remove_if(lines.begin(), lines.end(),
+                             [](const std::string& line) { return line.empty(); }),
+              lines.end());
 
   return lines;
 }
@@ -89,15 +117,6 @@ std::string FormatTime(int seconds)
   return ss.str();
 }
 
-// [TODO]: Make the song formatting better
-std::string format_song_info(const auto& disc_number, const auto& track_number,
-                             const std::string& song_name,
-                             const int          duration) // this formatting is pretty bad
-{
-  return std::to_string(disc_number) + "-" + std::to_string(track_number) + ": " + song_name +
-         " ( " + FormatTime(duration) + ")";
-}
-
 ftxui::Decorator getTrueColor(TrueColors::Color color)
 {
   return ftxui::color(TrueColors::GetColor(color));
@@ -106,6 +125,38 @@ ftxui::Decorator getTrueColor(TrueColors::Color color)
 ftxui::Decorator getTrueBGColor(TrueColors::Color color)
 {
   return ftxui::bgcolor(TrueColors::GetColor(color));
+}
+
+Element renderAlbumName(const std::string& album_name, const int& year, TrueColors::Color color)
+{
+  return hbox({text(" "), text(album_name) | bold, filler(),
+               text(std::to_string(year)) | dim | align_right, text(" ")}) |
+         inverted | getTrueColor(color) | dim;
+}
+
+Element renderSongName(const std::string& disc_track_info, const std::string& song_name,
+                       const int& duration)
+{
+  return hbox({text(disc_track_info) | dim, text(song_name) | bold | flex_grow,
+               filler(), // Spacer for dynamic layout
+               text(FormatTime(duration)) | align_right});
+}
+
+// TODO: Make Song Menu dynamically scrollable
+auto RenderSongMenu(const std::vector<Element>& items, int* selected_index, TrueColors::Color color)
+{
+  Elements rendered_items;
+  for (size_t i = 0; i < items.size(); ++i)
+  {
+    bool is_selected = (i == *selected_index);
+    /*bool is_playing     = (i == *playing_index);*/
+    auto style          = is_selected ? getTrueColor(color) : nothing;
+    auto inverted_style = is_selected ? inverted : nothing;
+    /*auto playing_style = is_playing ? getTrueColor(playing_color) : nothing;*/
+    rendered_items.push_back(items[i] | style | inverted_style);
+  }
+
+  return vbox(std::move(rendered_items));
 }
 
 #endif

@@ -32,6 +32,7 @@ A possible revamp of LiteMus
 - **Clean and nice TUI experience**: Interact with your music library seamlessly in a terminal interface.
 - **Showcases all the metadata**: Displays song metadata, including lyrics, genre, and more, for every file in your library.
 - **Plays and caters to many audio file formats**: Compatible with a variety of audio formats, depending on the capabilities of [miniaudio](https://github.com/mackron/miniaudio).
+- **Customizable**: Add your own color palette to inLimbo ;)
 
 ## Goal
 
