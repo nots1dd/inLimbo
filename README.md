@@ -8,7 +8,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/License-GNU GPL%20v3-blue" alt="License" />
-  <img src="https://img.shields.io/badge/Version-8.0%20alpha-red" alt="Version" />
+  <img src="https://img.shields.io/badge/Version-1.2%20alpha-red" alt="Version" />
   <img src="https://img.shields.io/badge/Build-passing-brightgreen" alt="Build" />
 </p>
 
@@ -46,7 +46,7 @@ Here are a few novelties that may or may not have been added yet:
 4. Fast and efficient loading of your song directory with everything you need :)
 5. TUI over the web?? (Why would you want this)
 
-## Building
+## BUILDING
 
 You will need CMake for this (and git obvi)
 
@@ -84,7 +84,7 @@ make -j
 # This will run in port 8000
 ```
 
-## Configuration
+## CONFIGURATION
 
 There is a very basic config file setup while building inLimbo in your `$HOME/.config/inLimbo/` directory 
 
@@ -94,15 +94,25 @@ There is a very basic config file setup while building inLimbo in your `$HOME/.c
 > for configuration 
 > 
 > **IT IS UNDER HEAVY DEVELOPMENT SO EXPECT BREAKING CHANGES WITH EACH COMMIT**
-> 
+>
 
-## Dirsort 
+Check out [COLORS](https://github.com/nots1dd/inLimbo/blob/main/COLORS.md) for more information on how to set up colors in `inLimbo`
 
-Currently uses rbtrees and unordered_map to store and write the current inodes in given directory to `lib.sync` file 
+## DIRECTORY SORTING 
+
+Currently uses `rbtrees` and `unordered_map` to store and write the current inodes in given directory to `lib.sync` file 
 
 -> rbtree will contain all the inodes at runtime
 
 -> cached to `lib.sync` for future use and faster data fetch
+
+To test out the creation of the song map of your chosen directory:
+
+```bash
+cd src/dirsort/
+make
+./dirsort-test # change the directory in $HOME/.config/inLimbo/config.toml to test out
+```
 
 > [!NOTE]
 > 
