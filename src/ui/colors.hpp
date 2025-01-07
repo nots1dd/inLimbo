@@ -157,6 +157,8 @@ ftxui::Color GetColor(Color color)
 struct InLimboColors
 {
   TrueColors::Color active_win_color;
+  TrueColors::Color album_name_bg;
+  TrueColors::Color menu_cursor_bg;
 };
 
 // Function to map color strings from TOML to the enum
@@ -225,7 +227,9 @@ InLimboColors parseColors()
 
   // Mapping of fields in the InLimboColors struct
   const std::unordered_map<std::string, TrueColors::Color*> field_map = {
-    {"active_win_color", &colors.active_win_color}};
+    {"active_win_color", &colors.active_win_color},
+    {"album_name_bg", &colors.album_name_bg},
+    {"menu_cursor_bg", &colors.menu_cursor_bg}};
 
   for (const auto& [field, member_color] : field_map)
   {

@@ -6,15 +6,11 @@
 #include "keymaps.hpp"
 #include "misc.hpp"
 #include <algorithm>
-#include <chrono>
 #include <iomanip>
 #include <sstream>
-#include <thread>
 #include <unordered_set>
 
 using namespace ftxui;
-
-#define ALBUM_DELIM "----------- "
 
 /* MACROS FOR SONG DETAILS */
 #define STATUS_PLAYING   "<>"
@@ -375,7 +371,7 @@ private:
         // Get year from the first song in the album
         const Song& first_song = discs.begin()->second.begin()->second;
         current_song_elements.push_back(
-          renderAlbumName(album_name, first_song.metadata.year, TrueColors::Color::LightGray));
+          renderAlbumName(album_name, first_song.metadata.year, global_colors.album_name_bg));
         album_name_indices.insert(current_song_elements.size() - 1);
 
         for (const auto& [disc_number, tracks] : discs)
@@ -488,6 +484,8 @@ private:
       return &song_queue[current_song_queue_index];
     }
 
+    dialog_message = "Something went worng";
+    show_dialog = true;
     return nullptr;
   }
 
@@ -547,7 +545,7 @@ private:
       [&]() mutable
       {
         return RenderSongMenu(current_song_elements, &selected_inode,
-                                TrueColors::Color::LightYellow); // This should return an Element
+                                global_colors.menu_cursor_bg); // This should return an Element
       });
 
     auto main_container = Container::Horizontal({artists_list, songs_list});
