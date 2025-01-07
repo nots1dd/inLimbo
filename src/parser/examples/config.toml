@@ -33,3 +33,6 @@ replay_song = "r"
 add_song_to_queue = "a"
 play_this_song_next = "b"
 view_song_queue = "3"
+
+[colors]
+active_win_color = "blue"

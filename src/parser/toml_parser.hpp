@@ -9,9 +9,6 @@
 using namespace std;
 namespace fs = std::filesystem;
 
-// Defined the path to the config.toml file in $HOME/.config/inLimbo/
-#define CONFIG_PATH "$HOME/.config/inLimbo/config.toml"
-
 // Current parents & fields macros definitions
 #define PARENT_LIB "library"
 #define PARENT_LIB_FIELD_NAME "name"
@@ -26,9 +23,12 @@ namespace fs = std::filesystem;
 #define PARENT_DBG_FIELD_PARSER_LOG "parser_log"
 
 /* SPECIAL KEYBINDS MACROS */ 
+#define PARENT_KEYBINDS "keybinds"
 #define SPECIAL_KEYBIND_ENTER_STR "Enter"
 #define SPECIAL_KEYBIND_TAB_STR "Tab"
 #define SPECIAL_KEYBIND_SPACE_STR "Space"
+
+#define PARENT_COLORS "colors"
 
 // Function to get the path for config.toml
 string getConfigPath() {

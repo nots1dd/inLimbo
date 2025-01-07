@@ -93,7 +93,7 @@ Keybinds parseKeybinds()
 
   for (const auto& [field, member_ptr] : field_map)
   {
-    *member_ptr = handle_special_keys(parseTOMLField("keybinds", field), field);
+    *member_ptr = handle_special_keys(parseTOMLField(PARENT_KEYBINDS, field), field);
   }
 
   return keybinds;

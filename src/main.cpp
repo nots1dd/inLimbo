@@ -22,6 +22,15 @@ int main()
   auto        song_tree   = rbt.returnSongTree();
   auto        library_map = song_tree.returnSongMap();
   MusicPlayer player(library_map);
-  player.Run();
+  try
+  {
+    player.Run();
+  }
+  catch (std::exception e)
+  {
+    std::cout << "Some issue has occurred with inLimbo: " << e.what() << std::endl
+              << "Exiting with code 1." << std::endl;
+    return 1;
+  }
   return 0;
 }
