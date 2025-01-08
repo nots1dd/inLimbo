@@ -7,6 +7,7 @@
 #include "misc.hpp"
 #include <algorithm>
 #include <iomanip>
+#include <future>
 #include <sstream>
 #include <unordered_set>
 
@@ -44,31 +45,78 @@ public:
 
   void Run()
   {
-    auto        screen = ScreenInteractive::Fullscreen();
-    std::thread refresh_thread(
-      [&]
-      {
-        while (!should_quit)
-        {
-          using namespace std::chrono_literals;
-          UpdateVolume();
-          std::this_thread::sleep_for(0.1s);
+    auto screen = ScreenInteractive::Fullscreen();
 
-          if (is_playing)
+    try
+    {
+      std::thread refresh_thread(
+        [&]
+        {
+          try
           {
-            current_position += 0.1;
-            if (current_position >= GetCurrentSongDuration())
+            while (!should_quit)
             {
-              PlayNextSong();
+              using namespace std::chrono_literals;
+              
+              // Safely update volume
+              UpdateVolume();
+
+              std::this_thread::sleep_for(0.1s);
+
+              if (is_playing)
+              {
+                current_position += 0.1;
+                if (current_position >= GetCurrentSongDuration())
+                {
+                  PlayNextSong();
+                }
+              }
+              
+              // Post a custom event to refresh the UI
+              screen.PostEvent(Event::Custom);
             }
           }
-          screen.PostEvent(Event::Custom);
-        }
-      });
+          catch (const std::exception& e)
+          {
+            show_dialog = true;
+            dialog_message = "Error in refresh thread: " + std::string(e.what());
+          }
+          catch (...)
+          {
+            show_dialog = true;
+            dialog_message = "Unknown error occurred in refresh thread.";
+          }
+        });
 
-    refresh_thread.detach();
+      refresh_thread.detach(); // Detach thread to run independently
+    }
+    catch (const std::exception& e)
+    {
+      dialog_message = "Error starting refresh thread: " + std::string(e.what());
+      show_dialog = true;
+    }
+    catch (...)
+    {
+      dialog_message = "Unknown error occurred while starting refresh thread.";
+      show_dialog = true;
+    }
+
     screen_ = &screen;
-    screen.Loop(renderer);
+
+    try
+    {
+      screen.Loop(renderer);
+    }
+    catch (const std::exception& e)
+    {
+      dialog_message = "Error in UI loop: " + std::string(e.what());
+      show_dialog = true;
+    }
+    catch (...)
+    {
+      dialog_message = "Unknown error occurred in UI loop.";
+      show_dialog = true;
+    }
   }
 
 private:
@@ -98,6 +146,7 @@ private:
   std::mutex                       play_mutex;
   std::atomic<bool>                is_processing{false};
   std::atomic<bool>                is_playing{false};
+  std::future<void> play_future;
   std::atomic<bool>                is_thread_running{false};
   std::thread                      audio_thread;
 
@@ -144,7 +193,6 @@ private:
   Component songs_list;
   Component scroller;
   Component lyrics_scroller;
-  Component controls;
   Component renderer;
 
   void InitializeData()
@@ -167,101 +215,75 @@ private:
 
   /* Miniaudio class integrations */
 
-  void PlayCurrentSong()
-  {
-    try
-    {
-      std::unique_lock<std::mutex> lock(play_mutex, std::try_to_lock);
-      if (!lock || is_processing)
-      {
-        return; // Another invocation is already running
-      }
-      is_processing = true;
-
-      if (is_thread_running)
-      {
-        if (audio_thread.joinable())
+  void PlayCurrentSong() {
         {
-          audio_thread.join(); // Wait for the previous thread to finish
+            std::lock_guard<std::mutex> lock(play_mutex);
+            if (is_processing) {
+                return; // Another invocation is already running
+            }
+            is_processing = true;
         }
-      }
 
-      // Spawn a new thread to play the current song
-      audio_thread = std::thread(
-        [&]()
-        {
-          is_thread_running = true;
+        play_future = std::async(std::launch::async, [this]() {
+            try {
+                {
+                    std::lock_guard<std::mutex> lock(play_mutex);
+                    if (!audio_player) {
+                        audio_player = std::make_unique<MiniAudioPlayer>();
+                    }
+                }
 
-          if (!audio_player)
-          {
-            audio_player = std::make_unique<MiniAudioPlayer>();
-          }
+                Song* current_song = GetCurrentSongFromQueue();
+                if (!current_song) {
+                    throw std::runtime_error("Error: No current song found.");
+                }
 
-          Song* current_song = GetCurrentSongFromQueue();
-          if (!current_song)
-          {
-            show_dialog       = true;
-            dialog_message    = "Error: No current song found.";
-            is_processing     = false;
-            is_thread_running = false;
-            return;
-          }
+                const std::string& file_path = current_song->metadata.filePath;
+                if (file_path.empty()) {
+                    throw std::runtime_error("Error: Invalid file path.");
+                }
 
-          try
-          {
-            const std::string& file_path = current_song->metadata.filePath;
-            if (file_path.empty())
-            {
-              show_dialog       = true;
-              dialog_message    = "Error: Invalid file path.";
-              is_processing     = false;
-              is_thread_running = false;
-              return;
+                {
+                    std::lock_guard<std::mutex> lock(play_mutex);
+                    if (is_playing) {
+                        audio_player->stop(); // Stop the current song if playing
+                        is_playing = false;
+                    }
+                }
+
+                // Load the audio file
+                int loadAudioFileStatus = audio_player->loadFile(file_path);
+                if (loadAudioFileStatus == -1) {
+                    throw std::runtime_error("Error: Failed to load the audio file.");
+                }
+
+                {
+                    std::lock_guard<std::mutex> lock(play_mutex);
+                    is_playing = true;
+                }
+
+                audio_player->play(); // Play the song (it will play in a separate thread)
+                current_playing_state.duration = audio_player->getDuration();
+
+                {
+                    std::lock_guard<std::mutex> lock(play_mutex);
+                    // Simulate setting duration or other playback state
+                }
+            } catch (const std::exception& e) {
+                {
+                    std::lock_guard<std::mutex> lock(play_mutex);
+                    show_dialog = true;
+                    dialog_message = e.what();
+                    is_playing = false;
+                }
             }
 
-            if (is_playing)
             {
-              audio_player->stop(); // Stop the current song if playing
-              is_playing = false;
+                std::lock_guard<std::mutex> lock(play_mutex);
+                is_processing = false;
             }
-
-            // Load the audio file
-            int loadAudioFileStatus = audio_player->loadFile(file_path);
-            if (loadAudioFileStatus != -1)
-            {
-              is_playing = true;
-              audio_player->play(); // Play the song (it will play in a separate thread)
-              current_playing_state.duration = audio_player->getDuration();
-            }
-            else
-            {
-              show_dialog    = true;
-              dialog_message = "Error: Failed to load the audio file.";
-              is_playing     = false;
-            }
-          }
-          catch (const std::exception& e)
-          {
-            show_dialog    = true;
-            dialog_message = "Err: " + std::string(e.what());
-            is_playing     = false;
-          }
-
-          // Mark processing as complete and cleanup the thread
-          is_processing     = false;
-          is_thread_running = false;
         });
-
-      audio_thread.detach(); // Since we cant access this thread, we cant manually free it (WHICH
-                             // CAUSES SOME ISSUES)
     }
-    catch (const std::exception& e)
-    {
-      dialog_message = "Something went wrong! Info: " + std::string(e.what());
-      show_dialog    = true;
-      is_playing     = false;
-    }
-  }
 
   void TogglePlayback()
   {
@@ -810,7 +832,7 @@ private:
                  {
                    // TODO: Fix lyrics scroll
                    lyrics_scroller =
-                     Scroller(Renderer([&]() mutable { return RenderLyricsAndInfoView(); }));
+                     Scroller(Renderer([&]() mutable { return RenderLyricsAndInfoView() | frame | border; }));
                    interface = lyrics_scroller->Render();
                  }
 
@@ -1107,7 +1129,7 @@ private:
 
     auto panes = vbox({hbox({
                          left_pane | size(WIDTH, EQUAL, 100) | size(HEIGHT, EQUAL, 100) | flex,
-                         right_pane | size(WIDTH, EQUAL, 100) | flex,
+                         right_pane | size(WIDTH, EQUAL, 100) | size(HEIGHT, EQUAL, 100) |flex,
                        }) |
                        flex}) |
                  flex;
