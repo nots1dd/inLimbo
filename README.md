@@ -34,7 +34,13 @@ A possible revamp of LiteMus
 - **Plays and caters to many audio file formats**: Compatible with a variety of audio formats, depending on the capabilities of [miniaudio](https://github.com/mackron/miniaudio).
 - **Customizable**: Add your own color palette to inLimbo ;)
 
-## Goal
+## LOOKS
+
+<div align="center">
+  <img src="assets/gifs/inLimbo-1.gif" alt="inLimbo Demo GIF" width="600">
+</div>
+
+## GOAL
 
 The goal of this project is just to find peace and solitude for me as I try to create something I wanted for a long time
 
@@ -97,6 +103,10 @@ There is a very basic config file setup while building inLimbo in your `$HOME/.c
 >
 
 Check out [COLORS](https://github.com/nots1dd/inLimbo/blob/main/COLORS.md) for more information on how to set up colors in `inLimbo`
+
+<div align="center">
+  <img src="assets/gifs/inLimboColors.gif" alt="inLimbo Demo GIF" width="600">
+</div>
 
 ## DIRECTORY SORTING 
 
