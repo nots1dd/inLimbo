@@ -27,6 +27,7 @@ struct Keybinds
   char goto_main_screen;
   char replay_song;
   char add_song_to_queue;
+  char remove_song_from_queue;
   char play_this_song_next;
   char view_song_queue;
 };
@@ -88,6 +89,7 @@ Keybinds parseKeybinds()
     {"replay_song", &keybinds.replay_song},
     {"goto_main_screen", &keybinds.goto_main_screen},
     {"add_song_to_queue", &keybinds.add_song_to_queue},
+    {"remove_song_from_queue", &keybinds.remove_song_from_queue},
     {"play_this_song_next", &keybinds.play_this_song_next},
     {"view_song_queue", &keybinds.view_song_queue}};
 

@@ -6,8 +6,8 @@
 #include "keymaps.hpp"
 #include "misc.hpp"
 #include <algorithm>
-#include <iomanip>
 #include <future>
+#include <iomanip>
 #include <sstream>
 #include <unordered_set>
 
@@ -29,6 +29,8 @@ using namespace ftxui;
 #define SHOW_HELP_SCREEN   1
 #define SHOW_LYRICS_SCREEN 2
 #define SHOW_QUEUE_SCREEN  3
+
+#define MIN_DEBOUNCE_TIME_IN_MS 500
 
 class MusicPlayer
 {
@@ -57,7 +59,7 @@ public:
             while (!should_quit)
             {
               using namespace std::chrono_literals;
-              
+
               // Safely update volume
               UpdateVolume();
 
@@ -71,19 +73,19 @@ public:
                   PlayNextSong();
                 }
               }
-              
+
               // Post a custom event to refresh the UI
               screen.PostEvent(Event::Custom);
             }
           }
           catch (const std::exception& e)
           {
-            show_dialog = true;
+            show_dialog    = true;
             dialog_message = "Error in refresh thread: " + std::string(e.what());
           }
           catch (...)
           {
-            show_dialog = true;
+            show_dialog    = true;
             dialog_message = "Unknown error occurred in refresh thread.";
           }
         });
@@ -93,12 +95,12 @@ public:
     catch (const std::exception& e)
     {
       dialog_message = "Error starting refresh thread: " + std::string(e.what());
-      show_dialog = true;
+      show_dialog    = true;
     }
     catch (...)
     {
       dialog_message = "Unknown error occurred while starting refresh thread.";
-      show_dialog = true;
+      show_dialog    = true;
     }
 
     screen_ = &screen;
@@ -110,12 +112,12 @@ public:
     catch (const std::exception& e)
     {
       dialog_message = "Error in UI loop: " + std::string(e.what());
-      show_dialog = true;
+      show_dialog    = true;
     }
     catch (...)
     {
       dialog_message = "Unknown error occurred in UI loop.";
-      show_dialog = true;
+      show_dialog    = true;
     }
   }
 
@@ -146,7 +148,7 @@ private:
   std::mutex                       play_mutex;
   std::atomic<bool>                is_processing{false};
   std::atomic<bool>                is_playing{false};
-  std::future<void> play_future;
+  std::future<void>                play_future;
   std::atomic<bool>                is_thread_running{false};
   std::thread                      audio_thread;
 
@@ -168,15 +170,17 @@ private:
 
   // Current view lists
   std::vector<std::string>  current_artist_names;
+  std::vector<std::string>  song_queue_names;
   std::vector<Element>      current_song_elements;
   std::vector<unsigned int> current_inodes;
   std::unordered_set<int>   album_name_indices;
   int albums_indices_traversed = 1; // first element of current_song_elements is always an album
 
   // Player state
-  int selected_artist    = 0;
-  int selected_inode     = 1; // First element is always going to album name so we ignore it
-  int current_lyric_line = 0;
+  int selected_artist     = 0;
+  int selected_song_queue = 0;
+  int selected_inode      = 1; // First element is always going to album name so we ignore it
+  int current_lyric_line  = 0;
   std::vector<Element> lyricElements;
   int                  volume           = 50;
   bool                 muted            = false;
@@ -191,6 +195,7 @@ private:
   // UI Components
   Component artists_list;
   Component songs_list;
+  Component songs_queue_comp;
   Component scroller;
   Component lyrics_scroller;
   Component renderer;
@@ -215,75 +220,88 @@ private:
 
   /* Miniaudio class integrations */
 
-  void PlayCurrentSong() {
-        {
-            std::lock_guard<std::mutex> lock(play_mutex);
-            if (is_processing) {
-                return; // Another invocation is already running
-            }
-            is_processing = true;
-        }
-
-        play_future = std::async(std::launch::async, [this]() {
-            try {
-                {
-                    std::lock_guard<std::mutex> lock(play_mutex);
-                    if (!audio_player) {
-                        audio_player = std::make_unique<MiniAudioPlayer>();
-                    }
-                }
-
-                Song* current_song = GetCurrentSongFromQueue();
-                if (!current_song) {
-                    throw std::runtime_error("Error: No current song found.");
-                }
-
-                const std::string& file_path = current_song->metadata.filePath;
-                if (file_path.empty()) {
-                    throw std::runtime_error("Error: Invalid file path.");
-                }
-
-                {
-                    std::lock_guard<std::mutex> lock(play_mutex);
-                    if (is_playing) {
-                        audio_player->stop(); // Stop the current song if playing
-                        is_playing = false;
-                    }
-                }
-
-                // Load the audio file
-                int loadAudioFileStatus = audio_player->loadFile(file_path);
-                if (loadAudioFileStatus == -1) {
-                    throw std::runtime_error("Error: Failed to load the audio file.");
-                }
-
-                {
-                    std::lock_guard<std::mutex> lock(play_mutex);
-                    is_playing = true;
-                }
-
-                audio_player->play(); // Play the song (it will play in a separate thread)
-                current_playing_state.duration = audio_player->getDuration();
-
-                {
-                    std::lock_guard<std::mutex> lock(play_mutex);
-                    // Simulate setting duration or other playback state
-                }
-            } catch (const std::exception& e) {
-                {
-                    std::lock_guard<std::mutex> lock(play_mutex);
-                    show_dialog = true;
-                    dialog_message = e.what();
-                    is_playing = false;
-                }
-            }
-
-            {
-                std::lock_guard<std::mutex> lock(play_mutex);
-                is_processing = false;
-            }
-        });
+  void PlayCurrentSong()
+  {
+    {
+      std::lock_guard<std::mutex> lock(play_mutex);
+      if (is_processing)
+      {
+        return; // Another invocation is already running
+      }
+      is_processing = true;
     }
+
+    play_future =
+      std::async(std::launch::async,
+                 [this]()
+                 {
+                   try
+                   {
+                     {
+                       std::lock_guard<std::mutex> lock(play_mutex);
+                       if (!audio_player)
+                       {
+                         audio_player = std::make_unique<MiniAudioPlayer>();
+                       }
+                     }
+
+                     Song* current_song = GetCurrentSongFromQueue();
+                     if (!current_song)
+                     {
+                       throw std::runtime_error("Error: No current song found.");
+                     }
+
+                     const std::string& file_path = current_song->metadata.filePath;
+                     if (file_path.empty())
+                     {
+                       throw std::runtime_error("Error: Invalid file path.");
+                     }
+
+                     {
+                       std::lock_guard<std::mutex> lock(play_mutex);
+                       if (is_playing)
+                       {
+                         audio_player->stop(); // Stop the current song if playing
+                         is_playing = false;
+                       }
+                     }
+
+                     // Load the audio file
+                     int loadAudioFileStatus = audio_player->loadFile(file_path);
+                     if (loadAudioFileStatus == -1)
+                     {
+                       throw std::runtime_error("Error: Failed to load the audio file.");
+                     }
+
+                     {
+                       std::lock_guard<std::mutex> lock(play_mutex);
+                       is_playing = true;
+                     }
+
+                     audio_player->play(); // Play the song (it will play in a separate thread)
+                     current_playing_state.duration = audio_player->getDuration();
+
+                     {
+                       std::lock_guard<std::mutex> lock(play_mutex);
+                       // Simulate setting duration or other playback state
+                     }
+                   }
+                   catch (const std::exception& e)
+                   {
+                     {
+                       std::lock_guard<std::mutex> lock(play_mutex);
+                       show_dialog    = true;
+                       dialog_message = e.what();
+                       is_playing     = false;
+                     }
+                   }
+
+                   {
+                     std::lock_guard<std::mutex> lock(play_mutex);
+                     is_processing = false;
+                   }
+                 });
+  }
 
   void TogglePlayback()
   {
@@ -499,6 +517,20 @@ private:
     show_dialog    = true;
   }
 
+  void RemoveSongFromQueue()
+  {
+    if (selected_song_queue == current_song_queue_index)
+    {
+      dialog_message = "Unable to remove song... This is playing right now!";
+      show_dialog = true;
+      return;
+    }
+    if (selected_song_queue < song_queue.size())
+    {
+      song_queue.erase(song_queue.begin() + selected_song_queue);
+    }
+  }
+
   Song* GetCurrentSongFromQueue()
   {
     if (!song_queue.empty() && current_song_queue_index < song_queue.size())
@@ -507,7 +539,7 @@ private:
     }
 
     dialog_message = "Something went worng";
-    show_dialog = true;
+    show_dialog    = true;
     return nullptr;
   }
 
@@ -577,8 +609,8 @@ private:
 
     auto last_event_time = std::chrono::steady_clock::now(); // Tracks the last event time
     int  debounce_time = std::stoi(std::string(parseTOMLField(PARENT_DBG, "debounce_time_in_ms")));
-    if (debounce_time < 500)
-      debounce_time = 500; // min debounce time is 0.5s
+    if (debounce_time < MIN_DEBOUNCE_TIME_IN_MS)
+      debounce_time = MIN_DEBOUNCE_TIME_IN_MS; // min debounce time is 0.5s
     const int final_debounce_time = debounce_time;
     auto      debounce_duration   = std::chrono::milliseconds(final_debounce_time);
 
@@ -610,189 +642,241 @@ private:
           return false; // Prevent other keys from working
         }
 
-        if (event.is_mouse())
-          return false;
-
-        if (is_keybind_match(global_keybinds.play_song) && !focus_on_artists)
+        else if (active_screen == SHOW_QUEUE_SCREEN)
         {
-          if (!current_artist.empty())
+          if (is_keybind_match(global_keybinds.remove_song_from_queue))
           {
-            EnqueueAllSongsByArtist(current_artist);
+            RemoveSongFromQueue();
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.scroll_down))
+          {
+            NavigateList(true);
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.scroll_up))
+          {
+            NavigateList(false);
+            return true;
+          }
+          else if (is_keybind_match('g'))
+          {
 
-            if (Song* current_song = GetCurrentSongFromQueue())
+            if (!first_g_pressed)
             {
-              // Enqueue all songs by the current artist
-              current_position = 0;
-              PlayCurrentSong();
-              UpdatePlayingState();
+              // First 'g' press
+              first_g_pressed = true;
+            }
+            else
+            {
+              // Second 'g' press
+              NavigateListToTop(true);
+              first_g_pressed = false; // Reset the state
+              return true;
             }
           }
-          else
+          else if (is_keybind_match('G'))
           {
-            show_dialog    = true;
-            dialog_message = "No artist selected to play songs from.";
+            NavigateListToTop(false);
+            return true;
           }
-          return true;
-        }
-        // Check against keybinds using if-else instead of switch
-        else if (is_keybind_match(global_keybinds.quit_app) ||
-                 is_keybind_match(std::toupper(global_keybinds.quit_app)))
-        {
-          Quit();
-          return true;
-        }
-        else if (is_keybind_match(global_keybinds.toggle_play))
-        {
-          TogglePlayback();
-          return true;
-        }
-        else if (is_keybind_match(global_keybinds.play_song_next))
-        {
-          auto now = std::chrono::steady_clock::now();
-          if (now - last_event_time < debounce_duration)
-            return false;
-          PlayNextSong();
-          last_event_time = now; // Update the last event time
-          return true;
-        }
-        else if (is_keybind_match(global_keybinds.play_song_prev))
-        {
-          auto now = std::chrono::steady_clock::now();
-          if (now - last_event_time < debounce_duration)
-            return false;
-          last_event_time = now;
-          PlayPreviousSong();
-          return true;
-        }
-        else if (is_keybind_match(global_keybinds.seek_ahead_5))
-        {
-          seekBuffer = audio_player->seekTime(5);
-          current_position += seekBuffer;
-        }
-        else if (is_keybind_match(global_keybinds.seek_behind_5))
-        {
-          if (current_position > 5)
+          else if (is_keybind_match(global_keybinds.goto_main_screen))
           {
-            seekBuffer = audio_player->seekTime(-5);
-            current_position += seekBuffer;
-          }
-          else
-          {
-            current_position = 0; // resets to 0
-            PlayCurrentSong();
-          }
-          UpdatePlayingState();
-        }
-        else if (is_keybind_match(global_keybinds.replay_song))
-        {
-          ReplaySong();
-          return true;
-        }
-        else if (is_keybind_match(global_keybinds.vol_up))
-        {
-          volume = std::min(100, volume + 5);
-          UpdateVolume();
-          return true;
-        }
-        else if (is_keybind_match(global_keybinds.vol_down))
-        {
-          volume = std::max(0, volume - 5);
-          UpdateVolume();
-          return true;
-        }
-        else if (is_keybind_match(global_keybinds.toggle_mute))
-        {
-          muted = !muted;
-          if (muted)
-          {
-            lastVolume = volume;
-            volume     = 0;
-          }
-          else
-          {
-            volume = lastVolume;
-          }
-          UpdateVolume();
-          return true;
-        }
-        else if (is_keybind_match(global_keybinds.show_help))
-        {
-          active_screen = SHOW_HELP_SCREEN;
-          return true;
-        }
-        else if (is_keybind_match(global_keybinds.scroll_down))
-        {
-          NavigateList(true);
-          return true;
-        }
-        else if (is_keybind_match(global_keybinds.scroll_up))
-        {
-          NavigateList(false);
-          return true;
-        }
-        else if (is_keybind_match('x'))
-        { // Add key to dismiss dialog
-          show_dialog = false;
-          return true;
-        }
-        else if (is_keybind_match(global_keybinds.view_lyrics) &&
-                 (current_playing_state.has_lyrics || current_playing_state.has_comment))
-        {
-          active_screen = SHOW_LYRICS_SCREEN;
-          return true;
-        }
-        else if (is_keybind_match(global_keybinds.goto_main_screen))
-        {
-          active_screen = SHOW_MAIN_UI;
-        }
-        // Some default keybinds
-        else if (is_keybind_match('g'))
-        {
-
-          if (!first_g_pressed)
-          {
-            // First 'g' press
-            first_g_pressed = true;
-          }
-          else
-          {
-            // Second 'g' press
-            NavigateListToTop(true);
-            first_g_pressed = false; // Reset the state
+            active_screen = SHOW_MAIN_UI;
             return true;
           }
         }
-        else if (is_keybind_match('G'))
-        {
-          NavigateListToTop(false);
-          return true;
-        }
-        else if (is_keybind_match(global_keybinds.toggle_focus))
-        {
-          focus_on_artists = !focus_on_artists;
-          if (focus_on_artists)
+
+        else if (event.is_mouse())
+          return false;
+
+        else if (active_screen == SHOW_MAIN_UI) {
+
+          if (is_keybind_match(global_keybinds.play_song) && !focus_on_artists)
           {
-            artists_list->TakeFocus();
+            if (!current_artist.empty())
+            {
+              EnqueueAllSongsByArtist(current_artist);
+
+              if (Song* current_song = GetCurrentSongFromQueue())
+              {
+                // Enqueue all songs by the current artist
+                current_position = 0;
+                PlayCurrentSong();
+                UpdatePlayingState();
+              }
+            }
+            else
+            {
+              show_dialog    = true;
+              dialog_message = "No artist selected to play songs from.";
+            }
+            return true;
           }
-          else
+          // Check against keybinds using if-else instead of switch
+          else if (is_keybind_match(global_keybinds.quit_app) ||
+                   is_keybind_match(std::toupper(global_keybinds.quit_app)))
           {
-            songs_list->TakeFocus();
+            Quit();
+            return true;
           }
-          return true;
-        }
-        else if (is_keybind_match(global_keybinds.add_song_to_queue))
-        {
-          AddSongToQueue();
-          return true;
+          else if (is_keybind_match(global_keybinds.toggle_play))
+          {
+            TogglePlayback();
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.play_song_next))
+          {
+            auto now = std::chrono::steady_clock::now();
+            if (now - last_event_time < debounce_duration)
+              return false;
+            PlayNextSong();
+            last_event_time = now; // Update the last event time
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.play_song_prev))
+          {
+            auto now = std::chrono::steady_clock::now();
+            if (now - last_event_time < debounce_duration)
+              return false;
+            last_event_time = now;
+            PlayPreviousSong();
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.seek_ahead_5))
+          {
+            seekBuffer = audio_player->seekTime(5);
+            current_position += seekBuffer;
+          }
+          else if (is_keybind_match(global_keybinds.seek_behind_5))
+          {
+            if (current_position > 5)
+            {
+              seekBuffer = audio_player->seekTime(-5);
+              current_position += seekBuffer;
+            }
+            else
+            {
+              ReplaySong();
+            }
+            UpdatePlayingState();
+          }
+          else if (is_keybind_match(global_keybinds.replay_song))
+          {
+            ReplaySong();
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.vol_up))
+          {
+            volume = std::min(100, volume + 5);
+            UpdateVolume();
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.vol_down))
+          {
+            volume = std::max(0, volume - 5);
+            UpdateVolume();
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.toggle_mute))
+          {
+            muted = !muted;
+            if (muted)
+            {
+              lastVolume = volume;
+              volume     = 0;
+            }
+            else
+            {
+              volume = lastVolume;
+            }
+            UpdateVolume();
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.show_help))
+          {
+            active_screen = SHOW_HELP_SCREEN;
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.scroll_down))
+          {
+            NavigateList(true);
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.scroll_up))
+          {
+            NavigateList(false);
+            return true;
+          }
+          else if (is_keybind_match('x'))
+          { // Add key to dismiss dialog
+            show_dialog = false;
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.view_lyrics) &&
+                   (current_playing_state.has_lyrics || current_playing_state.has_comment))
+          {
+            active_screen = SHOW_LYRICS_SCREEN;
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.view_song_queue) && !song_queue.empty())
+          {
+            active_screen = SHOW_QUEUE_SCREEN;
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.goto_main_screen))
+          {
+            active_screen = SHOW_MAIN_UI;
+            return true;
+          }
+          // Some default keybinds
+          else if (is_keybind_match('g'))
+          {
+
+            if (!first_g_pressed)
+            {
+              // First 'g' press
+              first_g_pressed = true;
+            }
+            else
+            {
+              // Second 'g' press
+              NavigateListToTop(true);
+              first_g_pressed = false; // Reset the state
+              return true;
+            }
+          }
+          else if (is_keybind_match('G'))
+          {
+            NavigateListToTop(false);
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.toggle_focus))
+          {
+            focus_on_artists = !focus_on_artists;
+            if (focus_on_artists)
+            {
+              artists_list->TakeFocus();
+            }
+            else
+            {
+              songs_list->TakeFocus();
+            }
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.add_song_to_queue))
+          {
+            AddSongToQueue();
+            return true;
+          }
         }
 
-        /* Default keys */
-        /*if (event == Event::ArrowDown)*/
+        /*if (event == Event::ArrowDown && active_screen == SHOW_QUEUE_SCREEN)*/
         /*{*/
         /*  NavigateList(true);*/
         /*  return true;*/
         /*}*/
-        /*if (event == Event::ArrowUp)*/
+        /*if (event == Event::ArrowUp && active_screen == SHOW_QUEUE_SCREEN)*/
         /*{*/
         /*  NavigateList(false);*/
         /*  return true;*/
@@ -813,11 +897,20 @@ private:
                  {
                    interface = RenderHelpScreen();
                  }
-                 else
+                 if (active_screen == SHOW_MAIN_UI)
                  {
                    interface = RenderMainInterface(progress);
                  }
 
+                 if (active_screen == SHOW_LYRICS_SCREEN)
+                 {
+                   // TODO: Fix lyrics scroll
+                   interface = RenderLyricsAndInfoView();
+                 }
+                 if (active_screen == SHOW_QUEUE_SCREEN)
+                 {
+                   interface = RenderQueueScreen();
+                 }
                  if (show_dialog)
                  {
                    // Create a semi-transparent overlay with the dialog box
@@ -826,14 +919,7 @@ private:
                        interface,              // Dim the background
                        RenderDialog() | center // Center the dialog both horizontally and vertically
                      }) |
-                     getTrueColor(TrueColors::Color::White);
-                 }
-                 if (active_screen == SHOW_LYRICS_SCREEN)
-                 {
-                   // TODO: Fix lyrics scroll
-                   lyrics_scroller =
-                     Scroller(Renderer([&]() mutable { return RenderLyricsAndInfoView() | frame | border; }));
-                   interface = lyrics_scroller->Render();
+                     getTrueColor(TrueColors::Color::White) | flex;
                  }
 
                  return vbox(interface);
@@ -881,7 +967,9 @@ private:
 
     UpdateLyrics();
 
-    scroller = Scroller(Renderer([&] { return vbox(lyricElements) | vscroll_indicator; }));
+    scroller = Scroller(Renderer([&] { return vbox(lyricElements); }));
+
+    auto scroller_component = Container::Vertical({scroller});
 
     std::string end_text = "Use arrow keys to scroll, Press '" +
                            std::string(1, static_cast<char>(global_keybinds.goto_main_screen)) +
@@ -891,19 +979,74 @@ private:
                                 [&]
                                 {
                                   return vbox({
-                                    vbox(lyricElements),
+                                    scroller->Render(),
                                     separator(),
                                     text(end_text) | dim | center,
                                   });
                                 });
 
-    auto info_pane = window(text(" Additional Info ") | bold | center,
+    auto info_pane = window(text(" Additional Info ") | bold | center | inverted,
                             vbox(additionalPropertiesText) | frame | flex);
 
-    return hbox({
-      lyrics_pane->Render() | flex | border,
-      info_pane | flex | border,
+    auto info_pane_component = Container::Vertical({Renderer([&] { return vbox(info_pane); })});
+
+    auto main_container = Container::Horizontal({
+      scroller_component,
+      info_pane_component,
     });
+
+    return Renderer(main_container,
+                    [&]
+                    {
+                      return hbox({
+                        lyrics_pane->Render() | flex | border,
+                        info_pane | flex | border,
+                      });
+                    })
+      ->Render();
+  }
+
+  void UpdateSongQueueList()
+  {
+    song_queue_names.clear();
+
+    for (int i = current_song_queue_index; i < song_queue.size(); i++)
+    {
+      std::string eleName = song_queue[i].metadata.title + " by " + song_queue[i].metadata.artist;
+      if (i == current_song_queue_index) eleName += "  *";
+      song_queue_names.push_back(eleName);
+    }
+
+    return;
+  }
+
+  Element RenderQueueScreen()
+  {
+    MenuOption song_queue_comp_options;
+    song_queue_comp_options.on_change     = [&]() {};
+    song_queue_comp_options.focused_entry = &selected_song_queue;
+    songs_queue_comp = Menu(&song_queue_names, &selected_song_queue, song_queue_comp_options);
+    UpdateSongQueueList();
+
+    auto title = text(" Song Queue ") | bold | getTrueColor(TrueColors::Color::LightBlue) |
+                 underlined | center;
+
+    auto separator_line = separator() | dim | flex;
+
+    std::string end_text = "Use '" + charToStr(global_keybinds.remove_song_from_queue) + "' to remove selected song from queue, Press '" +
+                       std::string(1, static_cast<char>(global_keybinds.goto_main_screen)) +
+                       "' to go back home.";
+
+    auto queue_container = vbox({
+      songs_queue_comp->Render() | border | flex | getTrueColor(TrueColors::Color::LightGray),
+      separator(),
+    });
+
+    return vbox({
+          title,
+          queue_container | frame | flex,
+          text(end_text) | dim | center,
+        }) | flex;
   }
 
   void NavigateSongMenu(bool move_down)
@@ -938,69 +1081,101 @@ private:
 
   void NavigateList(bool move_down)
   {
-    if (focus_on_artists)
+    if (active_screen == SHOW_MAIN_UI)
     {
-      if (!current_artist_names.empty())
+      if (focus_on_artists)
       {
-        if (move_down)
+        if (!current_artist_names.empty())
         {
-          selected_artist = (selected_artist + 1) % current_artist_names.size();
+          if (move_down)
+          {
+            selected_artist = (selected_artist + 1) % current_artist_names.size();
+          }
+          else
+          {
+            selected_artist =
+              (selected_artist - 1 + current_artist_names.size()) % current_artist_names.size();
+          }
+          UpdateSongsForArtist(current_artist_names[selected_artist]);
+          selected_inode           = 1; // Reset to the first song
+          albums_indices_traversed = 1;
         }
-        else
+      }
+      else
+      {
+        if (!current_inodes.empty())
         {
-          selected_artist =
-            (selected_artist - 1 + current_artist_names.size()) % current_artist_names.size();
+          NavigateSongMenu(move_down);
         }
-        UpdateSongsForArtist(current_artist_names[selected_artist]);
-        selected_inode           = 1; // Reset to the first song
-        albums_indices_traversed = 1;
       }
     }
-    else
+    else if (active_screen == SHOW_QUEUE_SCREEN)
     {
-      if (!current_inodes.empty())
+      if (move_down)
       {
-        NavigateSongMenu(move_down);
+        selected_song_queue = (selected_song_queue + 1) % song_queue_names.size();
+      }
+      else
+      {
+        selected_song_queue =
+          (selected_song_queue - 1 + song_queue_names.size()) % song_queue_names.size();
       }
     }
   }
 
   void NavigateListToTop(bool move_up)
   {
-    if (focus_on_artists)
+    if (active_screen == SHOW_MAIN_UI)
     {
-      if (!current_artist_names.empty())
+      if (focus_on_artists)
       {
-        // Navigate to the top of the artist list
-        if (move_up)
+        if (!current_artist_names.empty())
         {
-          selected_artist = 0;
+          // Navigate to the top of the artist list
+          if (move_up)
+          {
+            selected_artist = 0;
+          }
+          else
+          {
+            selected_artist = current_artist_names.size() - 1;
+          }
         }
-        else
+      }
+      else
+      {
+        if (!current_inodes.empty())
         {
-          selected_artist = current_artist_names.size() - 1;
+          if (move_up)
+          {
+            // Navigate to the first valid song, skipping headers
+            selected_inode = 1;
+            albums_indices_traversed = 1;
+          }
+          else
+          {
+            // Navigate to the last valid song
+            selected_inode = current_song_elements.size() - 1;
+            albums_indices_traversed = album_name_indices.size();
+          }
+
+          if (selected_inode < 0 || selected_inode >= current_song_elements.size())
+          {
+            selected_inode = 1; // Fallback
+            albums_indices_traversed = 1;
+          }
         }
       }
     }
-    else
+    else if (active_screen == SHOW_QUEUE_SCREEN)
     {
-      if (!current_inodes.empty())
+      if (move_up)
       {
-        if (move_up)
-        {
-          // Navigate to the first valid song, skipping headers
-          selected_inode = 1;
-        }
-        else
-        {
-          // Navigate to the last valid song
-          selected_inode = current_song_elements.size() - 1;
-        }
-
-        if (selected_inode < 0 || selected_inode >= current_song_elements.size())
-        {
-          selected_inode = 1; // Fallback
-        }
+        selected_song_queue = 0;
+      }
+      else
+      {
+        selected_song_queue = song_queue_names.size() - 1;
       }
     }
   }
@@ -1129,7 +1304,7 @@ private:
 
     auto panes = vbox({hbox({
                          left_pane | size(WIDTH, EQUAL, 100) | size(HEIGHT, EQUAL, 100) | flex,
-                         right_pane | size(WIDTH, EQUAL, 100) | size(HEIGHT, EQUAL, 100) |flex,
+                         right_pane | size(WIDTH, EQUAL, 100) | size(HEIGHT, EQUAL, 100) | flex,
                        }) |
                        flex}) |
                  flex;
@@ -1192,9 +1367,27 @@ private:
 
   void Quit()
   {
-    if (audio_player)
-      audio_player->stop();
     should_quit = true;
+
+    {
+      std::lock_guard<std::mutex> lock(play_mutex);
+      if (audio_player)
+      {
+        audio_player->stop();
+      }
+    }
+
+    if (play_future.valid())
+    {
+      auto status = play_future.wait_for(std::chrono::seconds(1));
+      if (status != std::future_status::ready)
+      {
+        // Handle timeout - future didn't complete in time
+        dialog_message = "Warning: Audio shutdown timed out";
+        show_dialog    = true;
+      }
+    }
+
     if (screen_)
     {
       screen_->ExitLoopClosure()();

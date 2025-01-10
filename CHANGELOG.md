@@ -427,3 +427,32 @@ Very big commit in dev branch that is to be merged with main after some sanity c
 - Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
 
 ---
+
+## [ALPHA 1.3] --- 10-01-2025
+
+### Added
+- New field in `config.toml` -> Remove Song From Queue
+
+### Changed
+- Added QUEUE SCREEN with subsequent proper integration and error handling (with testing) 
+
+- Functionality of removing song from queue while in QUEUE SCREEN is added with testing
+
+- CatchEvent changes with respect to active_screen to avoid confusion in UI
+
+- Attempted to fix concurrency issues (still WIP)
+
+### Fixed
+**NIL**
+
+### Removed
+**NIL**
+
+Decent commit with more to come, refactor TBD else its gonna be trouble
+
+## Known Issues to fix in immediate commits
+- Scrolling of lyrics and sone menu
+
+- Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
+
+---
