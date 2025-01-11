@@ -1,3 +1,10 @@
+#
+# Example config.toml for the inLimbo project.
+# 
+# URL: https://github.com/nots1dd/inLimbo 
+# Author: Siddharth Karanam (nots1dd)
+# 
+
 [library]
 name = "Songs"
 directory = "/home/s1dd/Downloads/temp/" # just an example
@@ -35,7 +42,13 @@ remove_song_from_queue = "d"
 play_this_song_next = "b"
 view_song_queue = "3"
 
+# Colors format: Solid Colors and Hexadecimal values of format `#RRGGBB`
 [colors]
 active_win_color = "Blue"
+inactive_win_color = "#282828"
 album_name_bg = "LightPink"
 menu_cursor_bg = "LightYellow"
+artists_title_bg = "#458586" 
+artists_title_fg = "#E9DDB5"
+songs_title_bg = "#D7981E"
+songs_title_fg = "#E9DDB5"

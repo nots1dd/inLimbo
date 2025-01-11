@@ -456,3 +456,46 @@ Decent commit with more to come, refactor TBD else its gonna be trouble
 - Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
 
 ---
+
+## [ALPHA 1.4] --- 11-01-2025
+
+### Added
+- Some concurrency safechecks in `src/music/audio_playback.hpp`
+
+- Massive theming update, can use hexadecimal format to color the TUI with subsequent changes to `src/ui/colors.hpp` and `src/ui/ui_handler.hpp`
+
+- Added multiple *DBG BUILD* options to check for issues in addressing, threads etc.
+
+- Implemented loading the songmap from cache file ("lib.sync") itself [However, the time to access the cache and time to load the directory seem to be very similar]
+
+### Changed
+- Moved `.clang-format` to `/` in file source tree
+
+- Changes to README regarding how to debug build
+
+- Changes to COLORS.md regarding how to theme using hexadecimal
+
+- New fields to `config.toml` under [colors] => songs, artists title's bg and fg
+
+- Changed the InLimboColors struct in `src/ui/colors.hpp` to have `ftxui::Color` as member vars instead of `TrueColor::Color`
+
+- Implementation of rendering lyrics is moved to a menu, sort of dynamic fixing it soon
+
+### Fixed
+- Bug with deleting the song from queue 
+
+- Some keybind issues while in different screens
+
+- A bug where `album_indices_traversed` was unaccounted for when navigating song menu to the top
+
+### Removed
+**NIL**
+
+Pretty big commit that added a lot of changes, hopefully shifting toward refactoring in the next immediate commits
+
+## Known Issues to fix in immediate commits
+- Scrolling of lyrics and song menu (lyrics is almost done)
+
+- Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
+
+---

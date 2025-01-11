@@ -111,7 +111,9 @@ By understanding the available colors and how to configure them in the `config.t
 
 > [!NOTE]
 > 
-> More customizable fields will be available soon!
+> Theming is fully up!
 > 
-> Theming is still quite far-fetched but you can try ;)
+> It is quite simple, just put the hexadecimal value in the required field :)
+> 
+> I will make a few basic themes as an example in the future
 > 

@@ -5,6 +5,7 @@
 #include "miniaudio.h"
 #include <chrono>
 #include <iostream>
+#include <mutex>
 #include <stdexcept>
 #include <string>
 #include <thread>
@@ -18,9 +19,10 @@ private:
   bool        wasPaused;
   uint64_t    pausePosition; // To store the position where the sound was paused
   std::thread playbackThread;
+  std::mutex  mtx; // Mutex to protect shared state
 
 public:
-  MiniAudioPlayer() : isPlaying(false)
+  MiniAudioPlayer() : isPlaying(false), wasPaused(false), pausePosition(0)
   {
     if (ma_engine_init(NULL, &engine) != MA_SUCCESS)
     {
@@ -37,6 +39,8 @@ public:
 
   int loadFile(const std::string& filePath)
   {
+    std::unique_lock<std::mutex> lock(mtx); // Protect shared state
+
     if (isPlaying)
     {
       stop();
@@ -55,6 +59,7 @@ public:
 
   void play()
   {
+    std::unique_lock<std::mutex> lock(mtx); // Protect shared state
     if (!isPlaying)
     {
       if (ma_sound_start(&sound) != MA_SUCCESS)
@@ -77,10 +82,11 @@ public:
           {
             if (!ma_sound_is_playing(&sound))
             {
+              std::unique_lock<std::mutex> lock(mtx); // Protect shared state
               isPlaying = false;
               break;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
           }
         });
     }
@@ -88,6 +94,7 @@ public:
 
   void pause()
   {
+    std::unique_lock<std::mutex> lock(mtx); // Protect shared state
     if (isPlaying)
     {
       // Store the current position before stopping
@@ -109,11 +116,11 @@ public:
 
   void resume()
   {
+    std::unique_lock<std::mutex> lock(mtx); // Protect shared state
     if (wasPaused)
     {
       // Seek to the stored position and start playing again
       ma_sound_seek_to_pcm_frame(&sound, pausePosition);
-
       play(); // Call play() to resume playback from the correct position
       wasPaused = false;
     }
@@ -121,6 +128,7 @@ public:
 
   void stop()
   {
+    std::unique_lock<std::mutex> lock(mtx); // Protect shared state
     if (isPlaying)
     {
       if (ma_sound_stop(&sound) != MA_SUCCESS)
@@ -128,11 +136,12 @@ public:
         throw std::runtime_error("Failed to stop the sound.");
       }
       isPlaying = false;
-      if (playbackThread.joinable())
-      {
-        playbackThread.join();
-      }
       ma_sound_seek_to_pcm_frame(&sound, 0);
+    }
+
+    if (playbackThread.joinable())
+    {
+      playbackThread.join();
     }
   }
 
@@ -147,10 +156,15 @@ public:
 
   float getVolume() const { return ma_sound_get_volume(&sound); }
 
-  bool isCurrentlyPlaying() const { return isPlaying; }
+  bool isCurrentlyPlaying()
+  {
+    std::unique_lock<std::mutex> lock(mtx); // Protect shared state
+    return isPlaying;
+  }
 
   float getDuration()
   {
+    std::unique_lock<std::mutex> lock(mtx); // Protect shared state
     if (ma_sound_get_time_in_milliseconds(&sound) != MA_SUCCESS)
     {
       throw std::runtime_error("Failed to get sound duration.");
@@ -166,6 +180,8 @@ public:
 
   double seekTime(int seconds)
   {
+    std::unique_lock<std::mutex> lock(mtx); // Protect shared state
+
     // Get the sample rate of the sound
     ma_uint32 sampleRate = ma_engine_get_sample_rate(&engine);
 
@@ -199,4 +215,5 @@ public:
     return (double)seconds;
   }
 };
+
 #endif

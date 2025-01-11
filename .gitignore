@@ -1,5 +1,6 @@
 *.sync
 build/
+build-dbg/
 build_emscripten/
 src/dirsort/dirsort-test 
 src/dirsort/*.sync

@@ -3,6 +3,11 @@
 
 #include <cstdint> // For uint8_t
 #include <ftxui/screen/color.hpp>
+#include <iomanip>
+#include <iostream>
+#include <regex>
+#include <string>
+#include <unordered_map>
 
 using namespace ftxui;
 
@@ -156,58 +161,89 @@ ftxui::Color GetColor(Color color)
 
 struct InLimboColors
 {
-  TrueColors::Color active_win_color;
-  TrueColors::Color album_name_bg;
-  TrueColors::Color menu_cursor_bg;
+  ftxui::Color active_win_color;
+  ftxui::Color inactive_win_color;
+  ftxui::Color album_name_bg;
+  ftxui::Color menu_cursor_bg;
+  ftxui::Color artists_title_bg;
+  ftxui::Color artists_title_fg;
+  ftxui::Color songs_title_bg;
+  ftxui::Color songs_title_fg;
 };
 
-// Function to map color strings from TOML to the enum
-TrueColors::Color parseColor(const std::string& color_name)
+ftxui::Color parseHexColor(const std::string& hex)
 {
-  static const std::unordered_map<std::string, TrueColors::Color> color_map = {
-    {"Black", TrueColors::Color::Black},
-    {"White", TrueColors::Color::White},
-    {"Red", TrueColors::Color::Red},
-    {"LightRed", TrueColors::Color::LightRed},
-    {"Green", TrueColors::Color::Green},
-    {"LightGreen", TrueColors::Color::LightGreen},
-    {"Blue", TrueColors::Color::Blue},
-    {"LightBlue", TrueColors::Color::LightBlue},
-    {"Yellow", TrueColors::Color::Yellow},
-    {"LightYellow", TrueColors::Color::LightYellow},
-    {"Cyan", TrueColors::Color::Cyan},
-    {"LightCyan", TrueColors::Color::LightCyan},
-    {"Magenta", TrueColors::Color::Magenta},
-    {"LightMagenta", TrueColors::Color::LightMagenta},
-    {"Gray", TrueColors::Color::Gray},
-    {"LightGray", TrueColors::Color::LightGray},
-    {"DarkGray", TrueColors::Color::DarkGray},
-    {"Orange", TrueColors::Color::Orange},
-    {"LightOrange", TrueColors::Color::LightOrange},
-    {"Purple", TrueColors::Color::Purple},
-    {"LightPurple", TrueColors::Color::LightPurple},
-    {"Pink", TrueColors::Color::Pink},
-    {"LightPink", TrueColors::Color::LightPink},
-    {"Teal", TrueColors::Color::Teal},
-    {"LightTeal", TrueColors::Color::LightTeal},
-    {"SkyBlue", TrueColors::Color::SkyBlue},
-    {"Coral", TrueColors::Color::Coral},
-    {"Lime", TrueColors::Color::Lime},
-    {"Lavender", TrueColors::Color::Lavender},
-    {"Crimson", TrueColors::Color::Crimson},
-    {"Gold", TrueColors::Color::Gold},
-    {"Indigo", TrueColors::Color::Indigo},
-    {"Mint", TrueColors::Color::Mint},
-    {"Navy", TrueColors::Color::Navy},
-    {"Peach", TrueColors::Color::Peach},
-    {"Sand", TrueColors::Color::Sand},
-    {"SeaGreen", TrueColors::Color::SeaGreen},
-    {"LightSeaGreen", TrueColors::Color::LightSeaGreen},
-    {"SlateBlue", TrueColors::Color::SlateBlue},
-    {"LightSlateBlue", TrueColors::Color::LightSlateBlue},
-    {"SunsetOrange", TrueColors::Color::SunsetOrange},
-    {"Turquoise", TrueColors::Color::Turquoise},
-    {"LightTurquoise", TrueColors::Color::LightTurquoise}};
+  // Validate hex format
+  std::regex  hex_regex("^#([0-9a-fA-F]{6})$"); // Matches #RRGGBB
+  std::smatch match;
+
+  if (!std::regex_match(hex, match, hex_regex))
+  {
+    std::cerr << "Error: Invalid hexadecimal color format: '" << hex
+              << "'. Use a string like `#RRGGBB`." << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+
+  // Extract RGB components from the validated hex string
+  int r = std::stoi(hex.substr(1, 2), nullptr, 16);
+  int g = std::stoi(hex.substr(3, 2), nullptr, 16);
+  int b = std::stoi(hex.substr(5, 2), nullptr, 16);
+
+  return ftxui::Color::RGB(r, g, b);
+}
+
+// Function to map color strings from TOML to ftxui::Color
+ftxui::Color parseColor(const std::string& color_name)
+{
+  if (color_name[0] == '#')
+  {
+    return parseHexColor(color_name);
+  }
+
+  static const std::unordered_map<std::string, ftxui::Color> color_map = {
+    {"Black", TrueColors::GetColor(TrueColors::Color::Black)},
+    {"White", TrueColors::GetColor(TrueColors::Color::White)},
+    {"Red", TrueColors::GetColor(TrueColors::Color::Red)},
+    {"LightRed", TrueColors::GetColor(TrueColors::Color::LightRed)},
+    {"Green", TrueColors::GetColor(TrueColors::Color::Green)},
+    {"LightGreen", TrueColors::GetColor(TrueColors::Color::LightGreen)},
+    {"Blue", TrueColors::GetColor(TrueColors::Color::Blue)},
+    {"LightBlue", TrueColors::GetColor(TrueColors::Color::LightBlue)},
+    {"Yellow", TrueColors::GetColor(TrueColors::Color::Yellow)},
+    {"LightYellow", TrueColors::GetColor(TrueColors::Color::LightYellow)},
+    {"Cyan", TrueColors::GetColor(TrueColors::Color::Cyan)},
+    {"LightCyan", TrueColors::GetColor(TrueColors::Color::LightCyan)},
+    {"Magenta", TrueColors::GetColor(TrueColors::Color::Magenta)},
+    {"LightMagenta", TrueColors::GetColor(TrueColors::Color::LightMagenta)},
+    {"Gray", TrueColors::GetColor(TrueColors::Color::Gray)},
+    {"LightGray", TrueColors::GetColor(TrueColors::Color::LightGray)},
+    {"DarkGray", TrueColors::GetColor(TrueColors::Color::DarkGray)},
+    {"Orange", TrueColors::GetColor(TrueColors::Color::Orange)},
+    {"LightOrange", TrueColors::GetColor(TrueColors::Color::LightOrange)},
+    {"Purple", TrueColors::GetColor(TrueColors::Color::Purple)},
+    {"LightPurple", TrueColors::GetColor(TrueColors::Color::LightPurple)},
+    {"Pink", TrueColors::GetColor(TrueColors::Color::Pink)},
+    {"LightPink", TrueColors::GetColor(TrueColors::Color::LightPink)},
+    {"Teal", TrueColors::GetColor(TrueColors::Color::Teal)},
+    {"LightTeal", TrueColors::GetColor(TrueColors::Color::LightTeal)},
+    {"SkyBlue", TrueColors::GetColor(TrueColors::Color::SkyBlue)},
+    {"Coral", TrueColors::GetColor(TrueColors::Color::Coral)},
+    {"Lime", TrueColors::GetColor(TrueColors::Color::Lime)},
+    {"Lavender", TrueColors::GetColor(TrueColors::Color::Lavender)},
+    {"Crimson", TrueColors::GetColor(TrueColors::Color::Crimson)},
+    {"Gold", TrueColors::GetColor(TrueColors::Color::Gold)},
+    {"Indigo", TrueColors::GetColor(TrueColors::Color::Indigo)},
+    {"Mint", TrueColors::GetColor(TrueColors::Color::Mint)},
+    {"Navy", TrueColors::GetColor(TrueColors::Color::Navy)},
+    {"Peach", TrueColors::GetColor(TrueColors::Color::Peach)},
+    {"Sand", TrueColors::GetColor(TrueColors::Color::Sand)},
+    {"SeaGreen", TrueColors::GetColor(TrueColors::Color::SeaGreen)},
+    {"LightSeaGreen", TrueColors::GetColor(TrueColors::Color::LightSeaGreen)},
+    {"SlateBlue", TrueColors::GetColor(TrueColors::Color::SlateBlue)},
+    {"LightSlateBlue", TrueColors::GetColor(TrueColors::Color::LightSlateBlue)},
+    {"SunsetOrange", TrueColors::GetColor(TrueColors::Color::SunsetOrange)},
+    {"Turquoise", TrueColors::GetColor(TrueColors::Color::Turquoise)},
+    {"LightTurquoise", TrueColors::GetColor(TrueColors::Color::LightTurquoise)}};
 
   auto it = color_map.find(color_name);
   if (it != color_map.end())
@@ -226,10 +262,15 @@ InLimboColors parseColors()
   InLimboColors colors;
 
   // Mapping of fields in the InLimboColors struct
-  const std::unordered_map<std::string, TrueColors::Color*> field_map = {
+  const std::unordered_map<std::string, ftxui::Color*> field_map = {
     {"active_win_color", &colors.active_win_color},
+    {"inactive_win_color", &colors.inactive_win_color},
     {"album_name_bg", &colors.album_name_bg},
-    {"menu_cursor_bg", &colors.menu_cursor_bg}};
+    {"menu_cursor_bg", &colors.menu_cursor_bg},
+    {"artists_title_bg", &colors.artists_title_bg},
+    {"artists_title_fg", &colors.artists_title_fg},
+    {"songs_title_bg", &colors.songs_title_bg},
+    {"songs_title_fg", &colors.songs_title_fg}};
 
   for (const auto& [field, member_color] : field_map)
   {

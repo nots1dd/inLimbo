@@ -2,59 +2,61 @@
 #define TOML_PARSER_HPP
 
 #include "toml.hpp"
-#include <iostream>
-#include <filesystem>
 #include <cstdlib>
+#include <filesystem>
+#include <iostream>
 
 using namespace std;
 namespace fs = std::filesystem;
 
 // Current parents & fields macros definitions
-#define PARENT_LIB "library"
+#define PARENT_LIB            "library"
 #define PARENT_LIB_FIELD_NAME "name"
-#define PARENT_LIB_FIELD_DIR "directory"
+#define PARENT_LIB_FIELD_DIR  "directory"
 
-#define PARENT_FTP "ftp"
-#define PARENT_FTP_FIELD_USER "username"
-#define PARENT_FTP_FIELD_SALT "salt"
+#define PARENT_FTP                "ftp"
+#define PARENT_FTP_FIELD_USER     "username"
+#define PARENT_FTP_FIELD_SALT     "salt"
 #define PARENT_FTP_FIELD_PWD_HASH "password_hash"
 
-#define PARENT_DBG "debug"
+#define PARENT_DBG                  "debug"
 #define PARENT_DBG_FIELD_PARSER_LOG "parser_log"
 
-/* SPECIAL KEYBINDS MACROS */ 
-#define PARENT_KEYBINDS "keybinds"
+/* SPECIAL KEYBINDS MACROS */
+#define PARENT_KEYBINDS           "keybinds"
 #define SPECIAL_KEYBIND_ENTER_STR "Enter"
-#define SPECIAL_KEYBIND_TAB_STR "Tab"
+#define SPECIAL_KEYBIND_TAB_STR   "Tab"
 #define SPECIAL_KEYBIND_SPACE_STR "Space"
 
 #define PARENT_COLORS "colors"
 
 // Function to get the path for config.toml
-string getConfigPath() {
+string getConfigPath(string fileName)
+{
   const char* homeDir = std::getenv("HOME");
-  if (!homeDir) {
+  if (!homeDir)
+  {
     cerr << "ERROR: HOME environment variable not found." << endl;
     exit(EXIT_FAILURE);
   }
 
   // Construct the path to the config.toml in $HOME/.config/inLimbo/
-  string configFilePath = string(homeDir) + "/.config/inLimbo/config.toml";
+  string configFilePath = string(homeDir) + "/.config/inLimbo/" + fileName;
   return configFilePath;
 }
 
 // Function to check if the config.toml file exists
-bool configFileExists(const string& filePath) {
-  return fs::exists(filePath);
-}
+bool configFileExists(const string& filePath) { return fs::exists(filePath); }
 
 // Load the configuration file
-auto loadConfig() {
-  string configFilePath = getConfigPath();
+auto loadConfig()
+{
+  string configFilePath = getConfigPath("config.toml");
 
-  if (!configFileExists(configFilePath)) {
+  if (!configFileExists(configFilePath))
+  {
     cerr << "ERROR: config.toml not found in " << configFilePath << endl;
-    exit(EXIT_FAILURE);  // Exit gracefully if the file is not found
+    exit(EXIT_FAILURE); // Exit gracefully if the file is not found
   }
 
   return toml::parse_file(configFilePath);
@@ -64,8 +66,14 @@ auto loadConfig() {
 auto config = loadConfig();
 
 // Function to parse a TOML field from a given parent and field name
-string_view parseTOMLField(string parent, string field) {
+string_view parseTOMLField(string parent, string field)
+{
   return config[parent][field].value_or(""sv);
+}
+
+int64_t parseTOMLFieldInt(string parent, string field)
+{
+  return config[parent][field].value_or(-1);
 }
 
 #endif

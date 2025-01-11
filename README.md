@@ -90,9 +90,35 @@ make -j
 # This will run in port 8000
 ```
 
+> [!NOTE]
+> 
+> To try debug build check out [DEBUGGING](https://github.com/nots1dd/inLimbo?tab=readme-ov-file#debugging)
+> 
+
+## DEBUGGING
+
+inLimbo is in active development and is prone to having *A LOT* of issues
+
+To try out **DEBUG BUILD** to find bugs/issues:
+
+```bash 
+mkdir build-dbg/
+cd build-dbg/
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+make
+```
+
+The **DEBUG BUILD** will account for the following issues:
+
+-> Threads
+
+-> Address Sanitation (ASan)
+
+-> Undefined Behaviour Sanitation (UBSan)
+
 ## CONFIGURATION
 
-There is a very basic config file setup while building inLimbo in your `$HOME/.config/inLimbo/` directory 
+There is quite a lot to configure in the inLimbo project. A basic config file will be setup in your `$HOME/.config/inLimbo/` directory while using CMake to build
 
 > [!IMPORTANT]
 > 
@@ -102,7 +128,16 @@ There is a very basic config file setup while building inLimbo in your `$HOME/.c
 > **IT IS UNDER HEAVY DEVELOPMENT SO EXPECT BREAKING CHANGES WITH EACH COMMIT**
 >
 
-Check out [COLORS](https://github.com/nots1dd/inLimbo/blob/main/COLORS.md) for more information on how to set up colors in `inLimbo`
+**COLORS FORMAT**
+
+-> Hexadecimal `#RRGGBB` format 
+
+-> TrueColors (Solid predefined colors):
+
+> [!NOTE]
+> 
+> For TrueColors, check out [COLORS](https://github.com/nots1dd/inLimbo/blob/main/COLORS.md) for more information on how to set up colors in `inLimbo`
+> 
 
 <div align="center">
   <img src="assets/gifs/inLimboColors.gif" alt="inLimbo Demo GIF" width="600">

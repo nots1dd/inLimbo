@@ -3,22 +3,18 @@
 #include <memory>
 #include <random>
 
-int main()
+int main(int argc, char* argv[])
 {
   string          directoryPath = string(parseTOMLField(PARENT_LIB, PARENT_LIB_FIELD_DIR));
+  string          libSyncPath   = getConfigPath(LIB_SYNC_NAME);
   RedBlackTree    rbt;
-  InodeFileMapper mapper(LIB_SYNC_PATH);
+  InodeFileMapper mapper(libSyncPath, "false");
 
   auto start = chrono::high_resolution_clock::now();
+  cout << "-- Reading directory..." << endl;
   processDirectory(directoryPath, rbt, mapper);
-  cout << "Inorder traversal of inodes: ";
   rbt.inorderStoreMetadata();
-  cout << endl;
-  auto end = chrono::high_resolution_clock::now();
-
-  cout << "Inode insertion, mapping and parsing time: "
-       << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
-
+  auto        end         = chrono::high_resolution_clock::now();
   auto        song_tree   = rbt.returnSongTree();
   auto        library_map = song_tree.returnSongMap();
   MusicPlayer player(library_map);
@@ -32,5 +28,9 @@ int main()
               << "Exiting with code 1." << std::endl;
     return 1;
   }
+
+  cout << "-- Inode insertion & mapping time: "
+       << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
+
   return 0;
 }
