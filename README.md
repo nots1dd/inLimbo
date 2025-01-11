@@ -40,6 +40,15 @@ A possible revamp of LiteMus
   <img src="assets/gifs/inLimbo-1.gif" alt="inLimbo Demo GIF" width="600">
 </div>
 
+## DEPENDENCIES 
+
+1. TagLib     ==> [here](https://taglib.org/)                                   [libtag1-dev for Ubuntu]        
+2. Gio        ==> [here](https://docs.gtk.org/gio/)                             [libgio-2.0-dev for Ubuntu]
+3. GLib       ==> [here](https://docs.gtk.org/glib/)                            [libglib-2.0-dev for Ubuntu]
+4. pkg-config ==> [here](https://www.freedesktop.org/wiki/Software/pkg-config/) [pkg-config for Ubuntu]
+
+**FTXUI** is fetched from GitHub [here](https://github.com/ArthurSonzogni/FTXUI/) itself during building so **NO** need to install it separately.
+
 ## GOAL
 
 The goal of this project is just to find peace and solitude for me as I try to create something I wanted for a long time
@@ -101,11 +110,24 @@ inLimbo is in active development and is prone to having *A LOT* of issues
 
 To try out **DEBUG BUILD** to find bugs/issues:
 
+1. Debug build with `AddressSanitizer` (ASan):
+
 ```bash 
 mkdir build-dbg/
 cd build-dbg/
-cmake -DCMAKE_BUILD_TYPE=Debug ..
+cmake -DCMAKE_BUILD_TYPE=Debug-ASan ..
 make
+./inLimbo-DBG-Asan
+```
+
+2. Debug build with `Thread Sanitizer` (TSan):
+
+```bash 
+mkdir build-dbg/
+cd build-dbg/
+cmake -DCMAKE_BUILD_TYPE=Debug-TSan ..
+make
+./inLimbo-Debug-Tsan
 ```
 
 The **DEBUG BUILD** will account for the following issues:

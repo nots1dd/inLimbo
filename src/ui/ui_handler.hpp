@@ -5,6 +5,7 @@
 #include "./components/scroller.hpp"
 #include "keymaps.hpp"
 #include "misc.hpp"
+#include "../dbus/mpris-service.hpp"
 #include <algorithm>
 #include <future>
 #include <iomanip>
@@ -47,6 +48,15 @@ public:
 
   void Run()
   {
+    mprisService = std::make_unique<MPRISService>("inLimbo");
+
+    std::thread mpris_dbus_thread([&] {
+      GMainLoop* loop = g_main_loop_new(nullptr, FALSE);
+      g_main_loop_run(loop);
+    });
+
+    mpris_dbus_thread.detach();
+
     auto screen = ScreenInteractive::Fullscreen();
 
     try
@@ -141,6 +151,8 @@ private:
   };
 
   PlayingState current_playing_state;
+
+  std::unique_ptr<MPRISService> mprisService;
 
   Keybinds      global_keybinds = parseKeybinds();
   InLimboColors global_colors   = parseColors();
@@ -576,6 +588,7 @@ private:
       current_playing_state.lyrics      = metadata.lyrics;
       current_playing_state.has_comment = (metadata.comment != "No Comment");
       current_playing_state.has_lyrics  = (metadata.lyrics != "No Lyrics");
+      // duration gets updated in the PlayCurrentSong() thread itself
 
       // If there's additional properties, you can either copy them or process as needed
       for (const auto& [key, value] : metadata.additionalProperties)
@@ -583,6 +596,14 @@ private:
         current_playing_state.additionalProperties[key] = value;
       }
     }
+
+    const std::string& mprisSongTitle = current_playing_state.title;
+    const std::string& mprisSongArtist = current_playing_state.artist;
+    const std::string& mprisSongAlbum = current_playing_state.album;
+    const std::string& mprisSongComment = current_playing_state.comment;
+    const std::string& mprisSongGenre = current_playing_state.genre;
+
+    mprisService->updateMetadata(mprisSongTitle, mprisSongArtist, mprisSongAlbum, static_cast<int64_t>(GetCurrentSongFromQueue()->metadata.duration), mprisSongComment, mprisSongGenre, current_playing_state.track, current_playing_state.discNumber);
   }
 
   void CreateComponents()

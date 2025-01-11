@@ -499,3 +499,32 @@ Pretty big commit that added a lot of changes, hopefully shifting toward refacto
 - Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
 
 ---
+
+## [ALPHA 1.5] --- 12-01-2025
+
+### Added
+- `src/dbus` -> To interact with dbus using `gio` (general purpose IO lib) and `glib` (utility lib)
+
+- Added `gio` and `glib` as inLimbo's dependencies
+
+### Changed
+- Changes to README.md to showcase dependencies
+
+- Complete integration of MPRISService class into inLimbo with subsequent changes and testing
+
+- Metadata of current song is given to dbus that can be easily accessed by playerctl and similar daemons
+
+### Fixed
+**NIL**
+
+### Removed
+**NIL**
+
+Minor commit that somehow added a pretty neat feature. Will continue to work on setting up implementations (if needed)
+
+## Known Issues to fix in immediate commits
+- Scrolling of lyrics and song menu (lyrics is almost done)
+
+- Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
+
+---

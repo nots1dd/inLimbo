@@ -102,11 +102,22 @@ else()
   target_link_libraries(${EXECUTABLE_NAME})
 endif()
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB REQUIRED glib-2.0 gio-2.0)
+
+# Add include directories for glib and gio
+include_directories(${GLIB_INCLUDE_DIRS})
+link_directories(${GLIB_LIBRARY_DIRS})
+
+# Add the necessary compilation and linker flags
+add_definitions(${GLIB_CFLAGS_OTHER})
+
 # Link libraries for native build
 target_link_libraries(${EXECUTABLE_NAME}
   PRIVATE ftxui::screen
   PRIVATE ftxui::dom
   PRIVATE ftxui::component
+  PRIVATE ${GLIB_LIBRARIES}
   PRIVATE tag
 )
 
