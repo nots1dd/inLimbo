@@ -38,6 +38,7 @@ A possible revamp of LiteMus
 
 <div align="center">
   <img src="assets/gifs/inLimbo-1.gif" alt="inLimbo Demo GIF" width="600">
+  <img src="assets/gifs/inLimbo-3.gif" alt="inLimbo Demo GIF" width="600">
 </div>
 
 ## DEPENDENCIES 
@@ -162,7 +163,7 @@ There is quite a lot to configure in the inLimbo project. A basic config file wi
 > 
 
 <div align="center">
-  <img src="assets/gifs/inLimboColors.gif" alt="inLimbo Demo GIF" width="600">
+  <img src="assets/gifs/inLimbo-2.gif" alt="inLimbo Demo GIF" width="600">
 </div>
 
 ## DIRECTORY SORTING 
@@ -204,8 +205,18 @@ To generate and view doxygen documentation locally:
 
 ```bash 
 doxygen .Doxyfile # ensure that you have doxygen installed first 
+cp -r assets/gifs/ docs/
+cp index.html docs/
 firefox docs/html/index.html # or any web browser (xdg-open also works)
 ```
+
+It is much easier to use the script `make_docs.sh`
+
+```bash
+./make_docs.sh
+```
+
+Or you could just visit [inLimbo Website](https://nots1dd.github.io/inLimbo/)
 
 ## CREDITS
 

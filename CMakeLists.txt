@@ -102,8 +102,35 @@ else()
   target_link_libraries(${EXECUTABLE_NAME})
 endif()
 
+# Ensure that pkg-config is available
 find_package(PkgConfig REQUIRED)
+
+# Try to find GLib and Gio using pkg-config
 pkg_check_modules(GLIB REQUIRED glib-2.0 gio-2.0)
+
+# If pkg-config is not available or fails to find the libraries, fall back to manual search
+if (NOT GLIB_FOUND)
+    message(STATUS "pkg-config not found or failed to find GLib and Gio, attempting manual search...")
+
+    # Try searching for the libraries using standard system directories
+    find_library(GLIB_LIBRARY NAMES glib-2.0 gio-2.0)
+    
+    if (NOT GLIB_LIBRARY)
+        message(FATAL_ERROR "GLib and Gio libraries not found. Install libglib-2.0-dev and libgio-2.0-dev.")
+    endif()
+
+    # Manually find the include directories for GLib and Gio
+    find_path(GLIB_INCLUDE_DIR glib.h)
+    find_path(GIO_INCLUDE_DIR gio.h)
+
+    # If the includes or libraries are not found, give an error
+    if (NOT GLIB_INCLUDE_DIR OR NOT GIO_INCLUDE_DIR)
+        message(FATAL_ERROR "GLib and Gio include files not found.")
+    endif()
+    
+    set(GLIB_LIBRARIES ${GLIB_LIBRARY})
+    set(GLIB_INCLUDE_DIRS ${GLIB_INCLUDE_DIR} ${GIO_INCLUDE_DIR})
+endif()
 
 # Add include directories for glib and gio
 include_directories(${GLIB_INCLUDE_DIRS})
