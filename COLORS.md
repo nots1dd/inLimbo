@@ -1,4 +1,6 @@
-# inLimbo Colors - Color Schema Documentation
+# COLORS inLimbo
+
+Color Schema Documentation for inLimbo
 
 This document explains the color schema used in [**inLimbo**](https://github.com/nots1dd/inLimbo), including all available colors, their respective RGB values, and how to configure them in the `config.toml` file.
 

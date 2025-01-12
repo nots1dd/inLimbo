@@ -194,6 +194,19 @@ make
 > ```
 > 
 
+## DOCUMENTATION
+
+Currently I am setting up a Doxygen documentation page that should really make it easy to understand the flow of the project 
+
+Man page is also under progress
+
+To generate and view doxygen documentation locally:
+
+```bash 
+doxygen .Doxyfile # ensure that you have doxygen installed first 
+firefox docs/html/index.html # or any web browser (xdg-open also works)
+```
+
 ## CREDITS
 
 **LOGO**:

@@ -2,13 +2,13 @@
 
 Working on a custom implementation of FTP server
 
-## Current implementation
+### Current implementation
 
 Just a basic challenge security auth using openssl and some back and forth signal receiving in a traditional CS arch
 
 -> Allows for one file download from server (directory is hardcoded atm)
 
-## SSL security
+### SSL security
 
 We are using openssl for a more safer socket connection and transmission
 
@@ -86,7 +86,7 @@ If it is not obvious enough, the default password is `password`.
 
 Currently *SALT* and *USERNAME* are hardcoded and tedious to change, but this will change in the future
 
-## Goal
+### Goal
 
 The goal of this server is to easily transfer your local songs directory from your PC to phone without a hassle
 

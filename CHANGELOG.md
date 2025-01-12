@@ -108,7 +108,7 @@ This CHANGELOG follows the below format:
 
 Overally pretty buggy, but integration was smoother than expected.
 
-## Known Issues to fix in immediate commits
+### Known Issues to fix in immediate commits
 
 -> Fix emscripten build by introducing TagLib's web-assembly build 
 
@@ -140,7 +140,7 @@ Overally pretty buggy, but integration was smoother than expected.
 
 Commit was clean but status bar components took a hit and are not rendering properly
 
-## Known Issues to fix in immediate commits
+### Known Issues to fix in immediate commits
 
 -> Fix emscripten build by introducing TagLib's web-assembly build 
 
@@ -174,7 +174,7 @@ Commit was clean but status bar components took a hit and are not rendering prop
 
 Commit is decently sized however now that integration is completed it is time to refactor and move to other goals
 
-## Known Issues to fix in immediate commits
+### Known Issues to fix in immediate commits
 **NIL**
 
 ---
@@ -205,7 +205,7 @@ Commit is decently sized however now that integration is completed it is time to
 
 Commit is decently sized however now that integration is completed it is time to refactor and move to other goals
 
-## Known Issues to fix in immediate commits
+### Known Issues to fix in immediate commits
 **NIL**
 
 ---
@@ -234,7 +234,7 @@ Commit is decently sized however now that integration is completed it is time to
 
 Commit is medium sized with decent changes to UI and configs.
 
-## Known Issues to fix in immediate commits
+### Known Issues to fix in immediate commits
 - Backward seek 
 
 - Scrolling of lyrics
@@ -261,7 +261,7 @@ Commit is medium sized with decent changes to UI and configs.
 
 Commit is small but damn worth it. Fixed a very big issue and has solid optimisations
 
-## Known Issues to fix in immediate commits
+### Known Issues to fix in immediate commits
 - Backward seek 
 
 - Scrolling of lyrics
@@ -290,7 +290,7 @@ Commit is small but damn worth it. Fixed a very big issue and has solid optimisa
 
 Very small commit but noteworthy as it fixes two bugs which were quite annoying
 
-## Known Issues to fix in immediate commits
+### Known Issues to fix in immediate commits
 - Scrolling of lyrics
 
 ---
@@ -320,7 +320,7 @@ Very small commit but noteworthy as it fixes two bugs which were quite annoying
 
 Decently sized commit but the issue of songs changing just by traversal is fixed now thanks to Song queue. This also is step forward to adding more keybinds to add song to queue, remove song from queue so on..
 
-## Known Issues to fix in immediate commits
+### Known Issues to fix in immediate commits
 - Scrolling of lyrics
 
 ---
@@ -351,7 +351,7 @@ Decently sized commit but the issue of songs changing just by traversal is fixed
 
 Medium sized commit that adds quite a few features and implementation but more work needs to be done.
 
-## Known Issues to fix in immediate commits
+### Known Issues to fix in immediate commits
 - Scrolling of lyrics
 
 ---
@@ -378,7 +378,7 @@ Medium sized commit that adds quite a few features and implementation but more w
 
 Commit that proceeds to add queue features and fix issues (regarding threads) along the way
 
-## Known Issues to fix in immediate commits
+### Known Issues to fix in immediate commits
 - Scrolling of lyrics
 
 ---
@@ -421,7 +421,7 @@ Commit that proceeds to add queue features and fix issues (regarding threads) al
 
 Very big commit in dev branch that is to be merged with main after some sanity checks
 
-## Known Issues to fix in immediate commits
+### Known Issues to fix in immediate commits
 - Scrolling of lyrics and sone menu
 
 - Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
@@ -450,7 +450,7 @@ Very big commit in dev branch that is to be merged with main after some sanity c
 
 Decent commit with more to come, refactor TBD else its gonna be trouble
 
-## Known Issues to fix in immediate commits
+### Known Issues to fix in immediate commits
 - Scrolling of lyrics and sone menu
 
 - Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
@@ -493,7 +493,7 @@ Decent commit with more to come, refactor TBD else its gonna be trouble
 
 Pretty big commit that added a lot of changes, hopefully shifting toward refactoring in the next immediate commits
 
-## Known Issues to fix in immediate commits
+### Known Issues to fix in immediate commits
 - Scrolling of lyrics and song menu (lyrics is almost done)
 
 - Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
@@ -522,7 +522,38 @@ Pretty big commit that added a lot of changes, hopefully shifting toward refacto
 
 Minor commit that somehow added a pretty neat feature. Will continue to work on setting up implementations (if needed)
 
-## Known Issues to fix in immediate commits
+### Known Issues to fix in immediate commits
+- Scrolling of lyrics and song menu (lyrics is almost done)
+
+- Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
+
+---
+
+## [ALPHA 1.6] --- 13-01-2025
+
+### Added
+- Doxygen documentation setup `.Doxyfile`
+
+- New resized logo for Doxygen 
+
+- Landing page basic html file
+
+- Changes to all markdown files for doxygen docs
+
+### Changed
+- Comments to most headers to add Doxygen documentation
+
+- Added `add_artists_songs_to_queue` and `play_this_song_next` fields to `config.toml` with subsequent integration
+
+### Fixed
+- Issue with RenderQueueScreen's menu disappearing when removing song from queue
+
+### Removed
+**NIL**
+
+Weird commit that sets up for better and more transparent way of understanding the project thanks to doxygen
+
+### Known Issues to fix in immediate commits
 - Scrolling of lyrics and song menu (lyrics is almost done)
 
 - Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread

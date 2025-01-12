@@ -14,24 +14,31 @@
 
 using namespace ftxui;
 
-/* MACROS FOR SONG DETAILS */
+/** MACROS FOR SONG DETAILS */
 #define STATUS_PLAYING   "<>"
 #define STATUS_PAUSED    "!!"
 #define LYRICS_AVAIL     "L*"
 #define ADDN_PROPS_AVAIL "&*"
 #define STATUS_BAR_DELIM " | "
 
-/* STRING TRUNCATION MACROS */
+/** STRING TRUNCATION MACROS */
 #define MAX_LENGTH_SONG_NAME   50
 #define MAX_LENGTH_ARTIST_NAME 30
 
-/* SCREEN MACROS */
+/** SCREEN MACROS */
 #define SHOW_MAIN_UI       0
 #define SHOW_HELP_SCREEN   1
 #define SHOW_LYRICS_SCREEN 2
 #define SHOW_QUEUE_SCREEN  3
 
 #define MIN_DEBOUNCE_TIME_IN_MS 500
+
+/**
+ * @class MusicPlayer
+ * @brief A terminal-based music player.
+ *
+ * This class handles playback, playlist management, and user interactions.
+ */
 
 class MusicPlayer
 {
@@ -480,10 +487,27 @@ private:
     throw std::runtime_error("Song not found.");
   }
 
-  void EnqueueAllSongsByArtist(const std::string& artist)
+  void PlayThisSongNext(const std::string& artist)
+  {
+    const Song& get_curr_song = GetCurrentSong(artist);
+
+    try {
+      song_queue.insert(song_queue.begin() + current_song_queue_index + 1, get_curr_song);
+    }
+    catch (std::exception e) {
+      dialog_message = "Could not play this song next!";
+      show_dialog = true;
+    }
+
+    current_song_queue_index++;
+    return;
+  }
+
+  void EnqueueAllSongsByArtist(const std::string& artist, bool clearQueue)
   {
     // Clear the existing song list
-    ClearQueue();
+    if (clearQueue)
+      ClearQueue();
 
     bool start_enqueue = false;
 
@@ -546,7 +570,6 @@ private:
     if (selected_song_queue < song_queue.size())
     {
       song_queue.erase(song_queue.begin() + selected_song_queue);
-      current_song_queue_index--;
     }
   }
 
@@ -764,7 +787,7 @@ private:
           {
             if (!current_artist.empty())
             {
-              EnqueueAllSongsByArtist(current_artist);
+              EnqueueAllSongsByArtist(current_artist, true);
 
               if (Song* current_song = GetCurrentSongFromQueue())
               {
@@ -940,6 +963,19 @@ private:
             AddSongToQueue();
             return true;
           }
+          else if (is_keybind_match(global_keybinds.add_artists_songs_to_queue) && focus_on_artists)
+          {
+            /*selected_inode = 0; // sanity check, the current song pane's index should start from top to enqueue all songs*/
+            /*albums_indices_traversed = 1;*/
+            EnqueueAllSongsByArtist(current_artist_names[selected_artist], false);
+            NavigateList(true);
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.play_this_song_next) && !focus_on_artists)
+          {
+            PlayThisSongNext(current_artist_names[selected_artist]);
+            return true;
+          }
         }
 
         /*if (event == Event::ArrowDown && active_screen == SHOW_QUEUE_SCREEN)*/
@@ -1049,11 +1085,14 @@ private:
     auto info_pane = window(text(" Additional Info ") | bold | center | inverted,
                             vbox(additionalPropertiesText) | frame | flex);
 
-    return vbox({
-      lyrics_pane | flex | border,
-      separator(),
-      text(end_text) | dim | center,
-    });
+    return hbox({
+        vbox({
+          lyrics_pane | flex | border,
+          separator(),
+          text(end_text) | dim | center,
+        }) | flex,
+        vbox({info_pane}) | flex
+      }) | flex;
   }
 
   void UpdateSongQueueList()
@@ -1084,9 +1123,9 @@ private:
 
     auto separator_line = separator() | dim | flex;
 
-    std::string end_text = "Use '" + charToStr(global_keybinds.remove_song_from_queue) +
-                           "' to remove selected song from queue, Press '" +
-                           charToStr(global_keybinds.goto_main_screen) + "' to go back home.";
+    std::string end_text = "Use '" + charToStr(global_keybinds.remove_song_from_queue) + "' to remove selected song from queue, Press '" +
+                       std::string(1, static_cast<char>(global_keybinds.goto_main_screen)) +
+                       "' to go back home.";
 
     auto queue_container = vbox({
       songs_queue_comp->Render() | border | flex | getTrueColor(TrueColors::Color::LightGray),
@@ -1094,11 +1133,10 @@ private:
     });
 
     return vbox({
-             title,
-             queue_container | flex,
-             text(end_text) | dim | center,
-           }) |
-           flex | frame | border;
+          title,
+          queue_container | frame | flex,
+          text(end_text) | dim | center,
+        }) | flex;
   }
 
   void NavigateSongMenu(bool move_down)
@@ -1402,7 +1440,7 @@ private:
 
     std::string queue_info = " ";
     int         songs_left = song_queue.size() - current_song_queue_index - 1;
-    if (songs_left > current_song_elements.size())
+    if (songs_left > song_queue.size())
       songs_left = 0;
     queue_info += std::to_string(songs_left) + " songs left.";
     std::string up_next_song = " Next up: ";

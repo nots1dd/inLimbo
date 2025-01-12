@@ -12,3 +12,4 @@ src/network/*.pem
 src/parser/*.out
 src/parser/toml.hpp
 src/music/miniaudio.h
+docs/

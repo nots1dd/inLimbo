@@ -10,18 +10,34 @@
 #include <string>
 #include <thread>
 
+/**
+ * @class MiniAudioPlayer
+ * @brief A class for playing audio using the MiniAudio library.
+ *
+ * This class wraps the functionality of the MiniAudio library to provide methods for loading,
+ * playing, pausing, resuming, stopping, adjusting volume, and seeking within an audio file. It
+ * manages playback in a separate thread to handle real-time updates on whether the sound is
+ * currently playing.
+ */
 class MiniAudioPlayer
 {
 private:
-  ma_engine   engine;
-  ma_sound    sound;
-  bool        isPlaying;
-  bool        wasPaused;
-  uint64_t    pausePosition; // To store the position where the sound was paused
-  std::thread playbackThread;
-  std::mutex  mtx; // Mutex to protect shared state
+  ma_engine   engine;         /**< The MiniAudio engine object used to manage sound playback. */
+  ma_sound    sound;          /**< The sound object representing the audio file being played. */
+  bool        isPlaying;      /**< Flag to track if the sound is currently playing. */
+  bool        wasPaused;      /**< Flag to track if the sound was paused. */
+  uint64_t    pausePosition;  /**< Stores the position in PCM frames where the sound was paused. */
+  std::thread playbackThread; /**< A thread for monitoring the playback state in the background. */
+  std::mutex  mtx;            /**< Mutex to protect shared state between methods and threads. */
 
 public:
+  /**
+   * @brief Constructs a MiniAudioPlayer object and initializes the MiniAudio engine.
+   *
+   * Initializes the engine and prepares the player for loading and playing audio.
+   *
+   * @throws std::runtime_error If the MiniAudio engine cannot be initialized.
+   */
   MiniAudioPlayer() : isPlaying(false), wasPaused(false), pausePosition(0)
   {
     if (ma_engine_init(NULL, &engine) != MA_SUCCESS)
@@ -30,6 +46,12 @@ public:
     }
   }
 
+  /**
+   * @brief Destroys the MiniAudioPlayer object, stopping any playback and cleaning up resources.
+   *
+   * This method ensures that the sound is stopped, the engine is uninitialized, and resources are
+   * cleaned up.
+   */
   ~MiniAudioPlayer()
   {
     stop();
@@ -37,6 +59,17 @@ public:
     ma_engine_uninit(&engine);
   }
 
+  /**
+   * @brief Loads an audio file for playback.
+   *
+   * This method loads the audio file into memory for playback. If a file is already loaded, it is
+   * unloaded before loading the new file. If the player is currently playing, it stops the playback
+   * first.
+   *
+   * @param filePath The path to the audio file to load.
+   * @return 0 on success, -1 on failure.
+   * @throws std::runtime_error If the audio file cannot be loaded.
+   */
   int loadFile(const std::string& filePath)
   {
     std::unique_lock<std::mutex> lock(mtx); // Protect shared state
@@ -57,6 +90,14 @@ public:
     return 0;
   }
 
+  /**
+   * @brief Starts playback of the loaded audio file.
+   *
+   * This method begins playback from the beginning of the audio file. If the audio file is already
+   * playing, nothing happens. A playback thread is started to monitor the state of playback.
+   *
+   * @throws std::runtime_error If playback cannot be started.
+   */
   void play()
   {
     std::unique_lock<std::mutex> lock(mtx); // Protect shared state
@@ -92,6 +133,14 @@ public:
     }
   }
 
+  /**
+   * @brief Pauses the current audio playback.
+   *
+   * This method pauses playback and stores the current position to allow resumption from the same
+   * point.
+   *
+   * @throws std::runtime_error If pausing the sound fails.
+   */
   void pause()
   {
     std::unique_lock<std::mutex> lock(mtx); // Protect shared state
@@ -114,6 +163,12 @@ public:
     }
   }
 
+  /**
+   * @brief Resumes playback from the last paused position.
+   *
+   * This method resumes playback from the position where the sound was paused. If the sound was not
+   * paused, nothing happens.
+   */
   void resume()
   {
     if (wasPaused)
@@ -125,6 +180,12 @@ public:
     }
   }
 
+  /**
+   * @brief Stops the playback and resets the playback position.
+   *
+   * This method stops the current playback, resets the playback position to the beginning, and
+   * ensures the playback thread is joined.
+   */
   void stop()
   {
     std::unique_lock<std::mutex> lock(mtx); // Protect shared state
@@ -144,6 +205,15 @@ public:
     }
   }
 
+  /**
+   * @brief Sets the volume of the audio playback.
+   *
+   * This method adjusts the playback volume. The volume is a float between 0.0 (silent) and 1.0
+   * (maximum volume).
+   *
+   * @param volume The volume to set.
+   * @throws std::invalid_argument If the volume is outside the valid range of 0.0 to 1.0.
+   */
   void setVolume(float volume)
   {
     if (volume < 0.0f || volume > 1.0f)
@@ -153,14 +223,36 @@ public:
     ma_sound_set_volume(&sound, volume);
   }
 
+  /**
+   * @brief Gets the current volume of the audio playback.
+   *
+   * This method retrieves the current volume level of the sound playback.
+   *
+   * @return The current volume level.
+   */
   float getVolume() const { return ma_sound_get_volume(&sound); }
 
+  /**
+   * @brief Checks if the sound is currently playing.
+   *
+   * This method returns whether the sound is currently playing.
+   *
+   * @return `true` if the sound is playing, `false` otherwise.
+   */
   bool isCurrentlyPlaying()
   {
     std::unique_lock<std::mutex> lock(mtx); // Protect shared state
     return isPlaying;
   }
 
+  /**
+   * @brief Gets the total duration of the sound in seconds.
+   *
+   * This method retrieves the total duration of the loaded audio file in seconds.
+   *
+   * @return The duration of the sound in seconds.
+   * @throws std::runtime_error If the duration cannot be retrieved.
+   */
   float getDuration()
   {
     std::unique_lock<std::mutex> lock(mtx); // Protect shared state
@@ -177,6 +269,14 @@ public:
     return duration;
   }
 
+  /**
+   * @brief Seeks to a specific time in the audio (in seconds).
+   *
+   * This method seeks to a specific position in the audio based on the number of seconds provided.
+   *
+   * @param seconds The time (in seconds) to seek to.
+   * @return The actual time (in seconds) that the sound was seeked to.
+   */
   double seekTime(int seconds)
   {
     std::unique_lock<std::mutex> lock(mtx); // Protect shared state

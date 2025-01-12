@@ -28,7 +28,7 @@ jobs:
       with:
         languages: ${{ matrix.language }}
 
-    - name: Build inLimbo in Ubuntu
+    - name: Build inLimbo in Ubuntu (x86 arch - GCC)
       run: |
         # Ensure any dependencies are installed before building
         

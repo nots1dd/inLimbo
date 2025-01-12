@@ -14,7 +14,14 @@ using namespace ftxui;
 namespace TrueColors
 {
 
-// Enum class for predefined true colors
+/**
+ * @enum Color
+ * @brief Enumeration for predefined true colors.
+ * 
+ * This enumeration provides a set of predefined colors that can be used for
+ * setting terminal colors in the application. Each color maps to an RGB value.
+ */
+
 enum class Color
 {
   Black,
@@ -62,7 +69,12 @@ enum class Color
   LightTurquoise
 };
 
-// Function to map the enum to ftxui::Color::RGB
+/**
+ * @brief Maps a predefined color enum to its corresponding ftxui::Color::RGB value.
+ * 
+ * @param color The predefined color enum.
+ * @return ftxui::Color The corresponding RGB color.
+ */
 ftxui::Color GetColor(Color color)
 {
   switch (color)
@@ -159,6 +171,15 @@ ftxui::Color GetColor(Color color)
 
 } // namespace TrueColors
 
+/**
+ * @struct InLimboColors
+ * @brief Represents a collection of colors used in the application.
+ * 
+ * This structure holds various color fields that can be customized
+ * through configurations, such as active window color, background colors,
+ * and title colors.
+ */
+
 struct InLimboColors
 {
   ftxui::Color active_win_color;
@@ -170,6 +191,14 @@ struct InLimboColors
   ftxui::Color songs_title_bg;
   ftxui::Color songs_title_fg;
 };
+
+/**
+ * @brief Parses a hexadecimal color string into an ftxui::Color::RGB value.
+ * 
+ * @param hex The hexadecimal color string in the format `#RRGGBB`.
+ * @return ftxui::Color The corresponding RGB color.
+ * @throws std::exit on invalid format.
+ */
 
 ftxui::Color parseHexColor(const std::string& hex)
 {
@@ -192,7 +221,13 @@ ftxui::Color parseHexColor(const std::string& hex)
   return ftxui::Color::RGB(r, g, b);
 }
 
-// Function to map color strings from TOML to ftxui::Color
+/**
+ * @brief Parses a color name or hex value into an ftxui::Color.
+ * 
+ * @param color_name The name or hexadecimal representation of the color.
+ * @return ftxui::Color The corresponding RGB color.
+ * @throws std::exit on invalid or unsupported colors.
+ */
 ftxui::Color parseColor(const std::string& color_name)
 {
   if (color_name[0] == '#')
@@ -256,7 +291,11 @@ ftxui::Color parseColor(const std::string& color_name)
   std::exit(EXIT_FAILURE);
 }
 
-// Function to parse the colors from the TOML file into the InLimboColors struct
+/**
+ * @brief Parses colors from a TOML configuration into an InLimboColors struct.
+ * 
+ * @return InLimboColors The populated color configuration.
+ */
 InLimboColors parseColors()
 {
   InLimboColors colors;
