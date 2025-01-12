@@ -1,0 +1,44 @@
+\doxysection{Tag\+Lib\+Parser Class Reference}
+\hypertarget{classTagLibParser}{}\label{classTagLibParser}\index{TagLibParser@{TagLibParser}}
+
+
+{\ttfamily \#include $<$taglib\+\_\+parser.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classTagLibParser_ae17fbbefed079d5457c3a53af0328080}{Tag\+Lib\+Parser}} (const std\+::string \&debug\+String)
+\item 
+bool \mbox{\hyperlink{classTagLibParser_a42f060c96746baf0e495bb8bed4a2778}{parse\+File}} (const std\+::string \&file\+Path, \mbox{\hyperlink{structMetadata}{Metadata}} \&metadata)
+\item 
+std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{structMetadata}{Metadata}} $>$ \mbox{\hyperlink{classTagLibParser_ac7e0277f5bf46433d1bf64b9e0154641}{parse\+From\+Inode}} (ino\+\_\+t inode, const std\+::string \&directory)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classTagLibParser_ae17fbbefed079d5457c3a53af0328080}\index{TagLibParser@{TagLibParser}!TagLibParser@{TagLibParser}}
+\index{TagLibParser@{TagLibParser}!TagLibParser@{TagLibParser}}
+\doxysubsubsection{\texorpdfstring{TagLibParser()}{TagLibParser()}}
+{\footnotesize\ttfamily \label{classTagLibParser_ae17fbbefed079d5457c3a53af0328080} 
+Tag\+Lib\+Parser\+::\+Tag\+Lib\+Parser (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{debug\+String}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classTagLibParser_a42f060c96746baf0e495bb8bed4a2778}\index{TagLibParser@{TagLibParser}!parseFile@{parseFile}}
+\index{parseFile@{parseFile}!TagLibParser@{TagLibParser}}
+\doxysubsubsection{\texorpdfstring{parseFile()}{parseFile()}}
+{\footnotesize\ttfamily \label{classTagLibParser_a42f060c96746baf0e495bb8bed4a2778} 
+bool Tag\+Lib\+Parser\+::parse\+File (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+Path}{, }\item[{\mbox{\hyperlink{structMetadata}{Metadata}} \&}]{metadata}{}\end{DoxyParamCaption})}
+
+\Hypertarget{classTagLibParser_ac7e0277f5bf46433d1bf64b9e0154641}\index{TagLibParser@{TagLibParser}!parseFromInode@{parseFromInode}}
+\index{parseFromInode@{parseFromInode}!TagLibParser@{TagLibParser}}
+\doxysubsubsection{\texorpdfstring{parseFromInode()}{parseFromInode()}}
+{\footnotesize\ttfamily \label{classTagLibParser_ac7e0277f5bf46433d1bf64b9e0154641} 
+std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{structMetadata}{Metadata}} $>$ Tag\+Lib\+Parser\+::parse\+From\+Inode (\begin{DoxyParamCaption}\item[{ino\+\_\+t}]{inode}{, }\item[{const std\+::string \&}]{directory}{}\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/dirsort/\mbox{\hyperlink{taglib__parser_8h}{taglib\+\_\+parser.\+h}}\end{DoxyCompactItemize}

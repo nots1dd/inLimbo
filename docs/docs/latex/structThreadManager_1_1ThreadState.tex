@@ -1,0 +1,73 @@
+\doxysection{Thread\+Manager\+::Thread\+State Struct Reference}
+\hypertarget{structThreadManager_1_1ThreadState}{}\label{structThreadManager_1_1ThreadState}\index{ThreadManager::ThreadState@{ThreadManager::ThreadState}}
+
+
+Represents the state of a thread managed by \doxylink{classThreadManager}{Thread\+Manager}.  
+
+
+
+
+{\ttfamily \#include $<$thread\+\_\+manager.\+hpp$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::mutex \mbox{\hyperlink{structThreadManager_1_1ThreadState_a472cefdd0390050a0f0d411c32e90b62}{play\+\_\+mutex}}
+\begin{DoxyCompactList}\small\item\em A mutex to synchronize access to the play state. \end{DoxyCompactList}\item 
+std\+::atomic$<$ bool $>$ \mbox{\hyperlink{structThreadManager_1_1ThreadState_aa65dcf7ed9375055518411ffcf52eab2}{is\+\_\+processing}} \{false\}
+\begin{DoxyCompactList}\small\item\em Indicates whether the thread is currently processing. \end{DoxyCompactList}\item 
+std\+::atomic$<$ bool $>$ \mbox{\hyperlink{structThreadManager_1_1ThreadState_acbfe3de9f8e76cfeead80b264b43519c}{is\+\_\+playing}} \{false\}
+\begin{DoxyCompactList}\small\item\em Indicates whether the thread is currently playing. \end{DoxyCompactList}\item 
+std\+::future$<$ void $>$ \mbox{\hyperlink{structThreadManager_1_1ThreadState_a1ae196f9c12a605986ac045cfc311d3f}{play\+\_\+future}}
+\begin{DoxyCompactList}\small\item\em A future object associated with the play operation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the state of a thread managed by \doxylink{classThreadManager}{Thread\+Manager}. 
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structThreadManager_1_1ThreadState_acbfe3de9f8e76cfeead80b264b43519c}\index{ThreadManager::ThreadState@{ThreadManager::ThreadState}!is\_playing@{is\_playing}}
+\index{is\_playing@{is\_playing}!ThreadManager::ThreadState@{ThreadManager::ThreadState}}
+\doxysubsubsection{\texorpdfstring{is\_playing}{is\_playing}}
+{\footnotesize\ttfamily \label{structThreadManager_1_1ThreadState_acbfe3de9f8e76cfeead80b264b43519c} 
+std\+::atomic$<$bool$>$ Thread\+Manager\+::\+Thread\+State\+::is\+\_\+playing \{false\}}
+
+
+
+Indicates whether the thread is currently playing. 
+
+\Hypertarget{structThreadManager_1_1ThreadState_aa65dcf7ed9375055518411ffcf52eab2}\index{ThreadManager::ThreadState@{ThreadManager::ThreadState}!is\_processing@{is\_processing}}
+\index{is\_processing@{is\_processing}!ThreadManager::ThreadState@{ThreadManager::ThreadState}}
+\doxysubsubsection{\texorpdfstring{is\_processing}{is\_processing}}
+{\footnotesize\ttfamily \label{structThreadManager_1_1ThreadState_aa65dcf7ed9375055518411ffcf52eab2} 
+std\+::atomic$<$bool$>$ Thread\+Manager\+::\+Thread\+State\+::is\+\_\+processing \{false\}}
+
+
+
+Indicates whether the thread is currently processing. 
+
+\Hypertarget{structThreadManager_1_1ThreadState_a1ae196f9c12a605986ac045cfc311d3f}\index{ThreadManager::ThreadState@{ThreadManager::ThreadState}!play\_future@{play\_future}}
+\index{play\_future@{play\_future}!ThreadManager::ThreadState@{ThreadManager::ThreadState}}
+\doxysubsubsection{\texorpdfstring{play\_future}{play\_future}}
+{\footnotesize\ttfamily \label{structThreadManager_1_1ThreadState_a1ae196f9c12a605986ac045cfc311d3f} 
+std\+::future$<$void$>$ Thread\+Manager\+::\+Thread\+State\+::play\+\_\+future}
+
+
+
+A future object associated with the play operation. 
+
+\Hypertarget{structThreadManager_1_1ThreadState_a472cefdd0390050a0f0d411c32e90b62}\index{ThreadManager::ThreadState@{ThreadManager::ThreadState}!play\_mutex@{play\_mutex}}
+\index{play\_mutex@{play\_mutex}!ThreadManager::ThreadState@{ThreadManager::ThreadState}}
+\doxysubsubsection{\texorpdfstring{play\_mutex}{play\_mutex}}
+{\footnotesize\ttfamily \label{structThreadManager_1_1ThreadState_a472cefdd0390050a0f0d411c32e90b62} 
+std\+::mutex Thread\+Manager\+::\+Thread\+State\+::play\+\_\+mutex}
+
+
+
+A mutex to synchronize access to the play state. 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/ui/\mbox{\hyperlink{thread__manager_8hpp}{thread\+\_\+manager.\+hpp}}\end{DoxyCompactItemize}

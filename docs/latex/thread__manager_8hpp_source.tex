@@ -1,0 +1,37 @@
+\doxysection{thread\+\_\+manager.\+hpp}
+\hypertarget{thread__manager_8hpp_source}{}\label{thread__manager_8hpp_source}\index{src/ui/thread\_manager.hpp@{src/ui/thread\_manager.hpp}}
+\mbox{\hyperlink{thread__manager_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ THREAD\_MANAGER\_HPP}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#define\ THREAD\_MANAGER\_HPP}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <future>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classThreadManager}{ThreadManager}}\ \{}
+\DoxyCodeLine{00019\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structThreadManager_1_1ThreadState}{ThreadState}}\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ std::mutex\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_a472cefdd0390050a0f0d411c32e90b62}{play\_mutex}};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ std::atomic<bool>\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_aa65dcf7ed9375055518411ffcf52eab2}{is\_processing}}\{\textcolor{keyword}{false}\};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ std::atomic<bool>\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_acbfe3de9f8e76cfeead80b264b43519c}{is\_playing}}\{\textcolor{keyword}{false}\};}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ std::future<void>\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_a1ae196f9c12a605986ac045cfc311d3f}{play\_future}};}
+\DoxyCodeLine{00044\ \ \ \ \ \};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00050\ \ \ \ \ \mbox{\hyperlink{structThreadManager_1_1ThreadState}{ThreadState}}\&\ \mbox{\hyperlink{classThreadManager_a68d674d82375bbf4cbaeda427df036a2}{getThreadState}}()\ \{\ \textcolor{keywordflow}{return}\ thread\_state;\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classThreadManager_a8c0b77d668ea526a62b556b42751a5a6}{lockPlayMutex}}(\mbox{\hyperlink{structThreadManager_1_1ThreadState}{ThreadState}}\&\ thread\_state)\ \{\ std::unique\_lock<std::mutex>\ lock(thread\_state.play\_mutex);\ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00066\ \ \ \ \ ThreadState\ thread\_state;}
+\DoxyCodeLine{00067\ \};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ THREAD\_MANAGER\_HPP}}
+
+\end{DoxyCode}

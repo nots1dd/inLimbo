@@ -1,0 +1,250 @@
+\chapter{README}
+\hypertarget{md_README}{}\label{md_README}\index{README@{README}}
+  
+
+ \doxysection*{in\+Limbo}
+
+ 
+
+
+
+   
+
+\DoxyHorRuler{0}
+
+
+\begin{DoxyImportant}{Important}
+~\newline
+ in\+Limbo is a WIP ~\newline
+~\newline
+ Most aspects of the project are under heavy development and no stable release is present as of yet. ~\newline
+~\newline
+
+\end{DoxyImportant}
+A possible revamp of Lite\+Mus\hypertarget{md_README_autotoc_md5}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{md_README_autotoc_md5}
+
+\begin{DoxyItemize}
+\item {\bfseries{Fully configurable}}\+: \doxylink{structKeybinds}{Keybinds}, library, FTP credentials, and more, all in one {\ttfamily config.\+toml} file located in {\ttfamily \$HOME/.config/in\+Limbo/config.\+toml}
+\item {\bfseries{Very fast and easy to use}}\+: Optimized for speed and usability.
+\item {\bfseries{Very few external dependencies}}\+: Minimal setup required to get started.
+\item {\bfseries{Clean and nice TUI experience}}\+: Interact with your music library seamlessly in a terminal interface.
+\item {\bfseries{Showcases all the metadata}}\+: Displays song metadata, including lyrics, genre, and more, for every file in your library.
+\item {\bfseries{Plays and caters to many audio file formats}}\+: Compatible with a variety of audio formats, depending on the capabilities of \href{https://github.com/mackron/miniaudio}{\texttt{ miniaudio}}.
+\item {\bfseries{Customizable}}\+: Add your own color palette to in\+Limbo ;)
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md6}{}\doxysubsection{\texorpdfstring{LOOKS}{LOOKS}}\label{md_README_autotoc_md6}
+   \hypertarget{md_README_autotoc_md7}{}\doxysubsection{\texorpdfstring{DEPENDENCIES}{DEPENDENCIES}}\label{md_README_autotoc_md7}
+
+\begin{DoxyEnumerate}
+\item Tag\+Lib ==\texorpdfstring{$>$}{>} \href{https://taglib.org/}{\texttt{ here}} \mbox{[}libtag1-\/dev for Ubuntu\mbox{]} ~\newline
+
+\item Gio ==\texorpdfstring{$>$}{>} \href{https://docs.gtk.org/gio/}{\texttt{ here}} \mbox{[}libgio-\/2.\+0-\/dev for Ubuntu\mbox{]}
+\item GLib ==\texorpdfstring{$>$}{>} \href{https://docs.gtk.org/glib/}{\texttt{ here}} \mbox{[}libglib-\/2.\+0-\/dev for Ubuntu\mbox{]}
+\item pkg-\/config ==\texorpdfstring{$>$}{>} \href{https://www.freedesktop.org/wiki/Software/pkg-config/}{\texttt{ here}} \mbox{[}pkg-\/config for Ubuntu\mbox{]}
+\end{DoxyEnumerate}
+
+{\bfseries{FTXUI}} is fetched from Git\+Hub \href{https://github.com/ArthurSonzogni/FTXUI/}{\texttt{ here}} itself during building so {\bfseries{NO}} need to install it separately.\hypertarget{md_README_autotoc_md8}{}\doxysubsection{\texorpdfstring{GOAL}{GOAL}}\label{md_README_autotoc_md8}
+The goal of this project is just to find peace and solitude for me as I try to create something I wanted for a long time
+
+Here are a few novelties that may or may not have been added yet\+:
+
+
+\begin{DoxyEnumerate}
+\item Cool and amazing TUI experience thanks to FTXUI
+\item Full use of metadata (lyrics, genre, etc..) and available for display
+\item Simple and easy network transfer of your favourite songs over to another device
+\item Fast and efficient loading of your song directory with everything you need \+:)
+\item TUI over the web?? (Why would you want this)
+\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md9}{}\doxysubsection{\texorpdfstring{BUILDING}{BUILDING}}\label{md_README_autotoc_md9}
+You will need CMake for this (and git obvi)
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ clone\ https://github.com/nots1dd/inLimbo.git\ }
+\DoxyCodeLine{cd\ inLimbo/}
+\DoxyCodeLine{./init.sh\ \#\ to\ initialize\ the\ repository\ with\ some\ important\ headers}
+
+\end{DoxyCode}
+
+
+Then building commands\+: ({\bfseries{WILL NOT COMPILE IF {\ttfamily \doxylink{init_8sh}{init.\+sh}} IS NOT RUN FIRST}})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S\ .\ -\/B\ build/}
+\DoxyCodeLine{cmake\ -\/-\/build\ build/}
+\DoxyCodeLine{./build/inLimbo}
+
+\end{DoxyCode}
+
+
+To build its web-\/assembly, you will need \href{https://github.com/emscripten-core/emscripten}{\texttt{ emscripten}}
+
+\begin{DoxyImportant}{Important}
+~\newline
+ Building the web-\/assembly\+: ~\newline
+~\newline
+ Currently I am not sure how to include and compile taglib into wasm so currently the web build may compile but it will not work as I have dummy methods set up for EMSCRIPTEN build (else it wont even compile to wasm) ~\newline
+~\newline
+
+\end{DoxyImportant}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir\ build\_emscripten\ \&\&\ cd\ build\_emscripten\ }
+\DoxyCodeLine{emcmake\ cmake\ ..}
+\DoxyCodeLine{make\ -\/j}
+\DoxyCodeLine{./run\_webassembly.py\ \#\ assuming\ the\ compilation\ has\ no\ errors}
+\DoxyCodeLine{\#\ This\ will\ run\ in\ port\ 8000}
+
+\end{DoxyCode}
+
+
+\begin{DoxyNote}{Note}
+~\newline
+ To try debug build check out \href{https://github.com/nots1dd/inLimbo?tab=readme-ov-file\#debugging}{\texttt{ DEBUGGING}} ~\newline
+~\newline
+
+\end{DoxyNote}
+\hypertarget{md_README_autotoc_md10}{}\doxysubsection{\texorpdfstring{DEBUGGING}{DEBUGGING}}\label{md_README_autotoc_md10}
+in\+Limbo is in active development and is prone to having {\itshape A LOT} of issues
+
+To try out {\bfseries{DEBUG BUILD}} to find bugs/issues\+:
+
+
+\begin{DoxyEnumerate}
+\item Debug build with {\ttfamily Address\+Sanitizer} (ASan)\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir\ build-\/dbg/}
+\DoxyCodeLine{cd\ build-\/dbg/}
+\DoxyCodeLine{cmake\ -\/DCMAKE\_BUILD\_TYPE=Debug-\/ASan\ ..}
+\DoxyCodeLine{make}
+\DoxyCodeLine{./inLimbo-\/DBG-\/Asan}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item Debug build with {\ttfamily Thread Sanitizer} (TSan)\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir\ build-\/dbg/}
+\DoxyCodeLine{cd\ build-\/dbg/}
+\DoxyCodeLine{cmake\ -\/DCMAKE\_BUILD\_TYPE=Debug-\/TSan\ ..}
+\DoxyCodeLine{make}
+\DoxyCodeLine{./inLimbo-\/Debug-\/Tsan}
+
+\end{DoxyCode}
+
+
+The {\bfseries{DEBUG BUILD}} will account for the following issues\+:
+
+-\/\texorpdfstring{$>$}{>} Threads
+
+-\/\texorpdfstring{$>$}{>} Address Sanitation (ASan)
+
+-\/\texorpdfstring{$>$}{>} Undefined Behaviour Sanitation (UBSan)\hypertarget{md_README_autotoc_md11}{}\doxysubsection{\texorpdfstring{CONFIGURATION}{CONFIGURATION}}\label{md_README_autotoc_md11}
+There is quite a lot to configure in the in\+Limbo project. A basic config file will be setup in your {\ttfamily \$HOME/.config/in\+Limbo/} directory while using CMake to build
+
+\begin{DoxyImportant}{Important}
+~\newline
+ Check out \href{https://github.com/nots1dd/inLimbo/blob/main/src/parser/examples/config.toml}{\texttt{ config.\+toml}} to see all the possible fields for configuration ~\newline
+~\newline
+ {\bfseries{IT IS UNDER HEAVY DEVELOPMENT SO EXPECT BREAKING CHANGES WITH EACH COMMIT}} ~\newline
+~\newline
+
+\end{DoxyImportant}
+{\bfseries{COLORS FORMAT}}
+
+-\/\texorpdfstring{$>$}{>} Hexadecimal {\ttfamily \#RRGGBB} format
+
+-\/\texorpdfstring{$>$}{>} \doxylink{namespaceTrueColors}{True\+Colors} (Solid predefined colors)\+:
+
+\begin{DoxyNote}{Note}
+~\newline
+ For \doxylink{namespaceTrueColors}{True\+Colors}, check out \href{https://github.com/nots1dd/inLimbo/blob/main/COLORS.md}{\texttt{ COLORS}} for more information on how to set up colors in {\ttfamily in\+Limbo} ~\newline
+~\newline
+
+\end{DoxyNote}
+  \hypertarget{md_README_autotoc_md12}{}\doxysubsection{\texorpdfstring{DIRECTORY SORTING}{DIRECTORY SORTING}}\label{md_README_autotoc_md12}
+Currently uses {\ttfamily rbtrees} and {\ttfamily unordered\+\_\+map} to store and write the current inodes in given directory to {\ttfamily lib.\+sync} file
+
+-\/\texorpdfstring{$>$}{>} rbtree will contain all the inodes at runtime
+
+-\/\texorpdfstring{$>$}{>} cached to {\ttfamily lib.\+sync} for future use and faster data fetch
+
+To test out the creation of the song map of your chosen directory\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd\ src/dirsort/}
+\DoxyCodeLine{make}
+\DoxyCodeLine{./dirsort-\/test\ \#\ change\ the\ directory\ in\ \$HOME/.config/inLimbo/config.toml\ to\ test\ out}
+
+\end{DoxyCode}
+
+
+\begin{DoxyNote}{Note}
+~\newline
+ src/dirsort/ has the current implementation of how the chosen songs directory will be cached and read into memory to display in ftxui TUI ~\newline
+~\newline
+ To use dirsort/ source files separately\+: ~\newline
+~\newline
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make}
+
+\end{DoxyCode}
+ ~\newline
+~\newline
+
+\end{DoxyNote}
+\hypertarget{md_README_autotoc_md13}{}\doxysubsection{\texorpdfstring{DOCUMENTATION}{DOCUMENTATION}}\label{md_README_autotoc_md13}
+Currently I am setting up a Doxygen documentation page that should really make it easy to understand the flow of the project
+
+Man page is also under progress
+
+To generate and view doxygen documentation locally\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{doxygen\ .Doxyfile\ \#\ ensure\ that\ you\ have\ doxygen\ installed\ first\ }
+\DoxyCodeLine{cp\ -\/r\ assets/gifs/\ docs/}
+\DoxyCodeLine{cp\ index.html\ docs/}
+\DoxyCodeLine{firefox\ docs/html/index.html\ \#\ or\ any\ web\ browser\ (xdg-\/open\ also\ works)}
+
+\end{DoxyCode}
+
+
+It is much easier to use the script {\ttfamily make\+\_\+docs.\+sh}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./make\_docs.sh}
+
+\end{DoxyCode}
+
+
+Or you could just visit \href{https://nots1dd.github.io/inLimbo/}{\texttt{ in\+Limbo Website}}\hypertarget{md_README_autotoc_md14}{}\doxysubsection{\texorpdfstring{CREDITS}{CREDITS}}\label{md_README_autotoc_md14}
+{\bfseries{LOGO}}\+:
+
+{\itshape DISCLAIMER}\+: This is not an original logo nor was it commisioned by me
+
+It is a basic stock image found online. I got it from \href{https://unsplash.com/photos/black-and-white-decor-FrQKfzoTgsw}{\texttt{ here}}
+
+{\bfseries{TOML PARSER}}\+:
+
+To parse the \href{https://github.com/nots1dd/inlimbo/blob/main/src/parser/examples/config.toml}{\texttt{ config.\+toml}} is thanks to \href{https://github.com/marzer/tomlplusplus}{\texttt{ TOML++}}
+
+{\bfseries{AUDIO PLAYBACK \& API}}\+:
+
+Audio playback and capture is thanks to \href{https://github.com/mackron/miniaudio}{\texttt{ miniaudio}}
+
+\DoxyHorRuler{0}
+
+
+in\+Limbo is Free and Open Source Software Licensed under \href{https://github.com/nots1dd/inlimbo/blob/main/LICENSE}{\texttt{ GNU GPL v3}} 
