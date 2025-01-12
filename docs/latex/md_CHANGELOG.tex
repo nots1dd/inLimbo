@@ -475,4 +475,32 @@ Weird commit that sets up for better and more transparent way of understanding t
 \end{DoxyItemize}
 
 \DoxyHorRuler{0}
+\hypertarget{md_CHANGELOG_autotoc_md137}{}\doxysection{\texorpdfstring{\mbox{[}ALPHA 1.\+7\mbox{]} --- 13-\/01-\/2025}{\mbox{[}ALPHA 1.\+7\mbox{]} --- 13-\/01-\/2025}}\label{md_CHANGELOG_autotoc_md137}
+\hypertarget{md_CHANGELOG_autotoc_md138}{}\doxysubsection{\texorpdfstring{Added}{Added}}\label{md_CHANGELOG_autotoc_md138}
+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{thread__manager_8hpp}{src/ui/thread\+\_\+manager.\+hpp}} -\/\texorpdfstring{$>$}{>} To handle concurrency in UI with testing + doxygen docs setup
+\item A LOT of new color fields to {\ttfamily config.\+toml} (Check it out) with subsequent integration in {\ttfamily \doxylink{colors_8hpp}{src/ui/colors.\+hpp}} and {\ttfamily \doxylink{ui__handler_8hpp}{src/ui/ui\+\_\+handler.\+hpp}}
+\item Some object deletion and freeing when calling \doxylink{classMPRISService}{MPRISService} destructor
+\item {\ttfamily src/signal} -\/\texorpdfstring{$>$}{>} To catch all signals and handle gracefully ({\bfseries{FULL INTEGRATION NOT DONE YET}})
+\item Some changes to format lyrics function and added \doxylink{structComponentState}{Component\+State} in {\ttfamily \doxylink{misc_8hpp}{src/ui/misc.\+hpp}} to keep track of all components of UI together
+\end{DoxyItemize}\hypertarget{md_CHANGELOG_autotoc_md139}{}\doxysubsection{\texorpdfstring{Changed}{Changed}}\label{md_CHANGELOG_autotoc_md139}
+
+\begin{DoxyItemize}
+\item Added more functions in \doxylink{misc_8hpp}{misc.\+hpp} to refactor code in ui\+\_\+handler
+\end{DoxyItemize}\hypertarget{md_CHANGELOG_autotoc_md140}{}\doxysubsection{\texorpdfstring{Fixed}{Fixed}}\label{md_CHANGELOG_autotoc_md140}
+
+\begin{DoxyItemize}
+\item Finally fixed scrolling lyrics menu issue, now it completely works with testing
+\item Weird issue with deletion of song from queue is fully fixed with testing
+\end{DoxyItemize}\hypertarget{md_CHANGELOG_autotoc_md141}{}\doxysubsection{\texorpdfstring{Removed}{Removed}}\label{md_CHANGELOG_autotoc_md141}
+{\bfseries{NIL}}
+
+Sizeable commit with refactoring and more configuration options as its priority, more such commits expected in future\hypertarget{md_CHANGELOG_autotoc_md142}{}\doxysubsection{\texorpdfstring{Known Issues to fix in immediate commits}{Known Issues to fix in immediate commits}}\label{md_CHANGELOG_autotoc_md142}
+
+\begin{DoxyItemize}
+\item Runtime errors with respect to {\ttfamily Play\+Current\+Song()} that may be due to detaching the audio thread
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
  

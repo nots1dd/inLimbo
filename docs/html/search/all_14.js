@@ -22,7 +22,9 @@ var searchData=
   ['list_5frequest_19',['LIST_REQUEST',['../protocols_8h.html#aa2f5eb41e269ffb089b097ae2bfa4b13',1,'protocols.h']]],
   ['loadconfig_20',['loadConfig',['../toml__parser_8hpp.html#ab0f9ee0b01e2b1ec3208d0323ee8957b',1,'toml_parser.hpp']]],
   ['loadfile_21',['loadFile',['../classMiniAudioPlayer.html#a5269bc0086c47ca3a23899fd7324433c',1,'MiniAudioPlayer']]],
-  ['looks_22',['LOOKS',['../md_README.html#autotoc_md6',1,'']]],
-  ['lyrics_23',['lyrics',['../structMetadata.html#a5a3933635bffdb997a7f8eee6f83f415',1,'Metadata']]],
-  ['lyrics_5favail_24',['LYRICS_AVAIL',['../ui__handler_8hpp.html#aba56a61f453fc60302c6c87189871467',1,'ui_handler.hpp']]]
+  ['lockplaymutex_22',['lockPlayMutex',['../classThreadManager.html#a8c0b77d668ea526a62b556b42751a5a6',1,'ThreadManager']]],
+  ['looks_23',['LOOKS',['../md_README.html#autotoc_md6',1,'']]],
+  ['lyrics_24',['lyrics',['../structMetadata.html#a5a3933635bffdb997a7f8eee6f83f415',1,'Metadata']]],
+  ['lyrics_5favail_25',['LYRICS_AVAIL',['../ui__handler_8hpp.html#aba56a61f453fc60302c6c87189871467',1,'ui_handler.hpp']]],
+  ['lyrics_5fscroller_26',['lyrics_scroller',['../structComponentState.html#a35b0ecb15c35a5e0ef8bd52d144d9243',1,'ComponentState']]]
 ];

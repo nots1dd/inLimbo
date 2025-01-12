@@ -10,6 +10,11 @@
 {\ttfamily \#include $<$ftxui/dom/elements.\+hpp$>$}\newline
 {\ttfamily \#include $<$string$>$}\newline
 {\ttfamily \#include $<$vector$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structComponentState}{Component\+State}}
+\end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -27,6 +32,8 @@ Element \mbox{\hyperlink{misc_8hpp_a40a9888f76354b21ca85f69ffe014750}{render\+Al
 \item 
 Element \mbox{\hyperlink{misc_8hpp_adcfcdc4bf50bc48f25cc0e8df2e80822}{render\+Song\+Name}} (const std\+::string \&disc\+\_\+track\+\_\+info, const std\+::string \&song\+\_\+name, const int \&duration)
 \item 
+Component \mbox{\hyperlink{misc_8hpp_a6bb02df78ce571092937657c5b25de61}{Create\+Menu}} (const std\+::vector$<$ std\+::string $>$ \texorpdfstring{$\ast$}{*}vec\+Lines, int \texorpdfstring{$\ast$}{*}curr\+Line)
+\item 
 auto \mbox{\hyperlink{misc_8hpp_ae177f32772c1011c09dfce5f982c7f64}{Render\+Song\+Menu}} (const std\+::vector$<$ Element $>$ \&items, int \texorpdfstring{$\ast$}{*}selected\+\_\+index, ftxui\+::\+Color sel\+\_\+color)
 \end{DoxyCompactItemize}
 
@@ -37,6 +44,12 @@ auto \mbox{\hyperlink{misc_8hpp_ae177f32772c1011c09dfce5f982c7f64}{Render\+Song\
 \doxysubsubsection{\texorpdfstring{charToStr()}{charToStr()}}
 {\footnotesize\ttfamily \label{misc_8hpp_a2e2246f99124f69740c8012be4b75c36} 
 std\+::string char\+To\+Str (\begin{DoxyParamCaption}\item[{char}]{ch}{}\end{DoxyParamCaption})}
+
+\Hypertarget{misc_8hpp_a6bb02df78ce571092937657c5b25de61}\index{misc.hpp@{misc.hpp}!CreateMenu@{CreateMenu}}
+\index{CreateMenu@{CreateMenu}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{CreateMenu()}{CreateMenu()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a6bb02df78ce571092937657c5b25de61} 
+Component Create\+Menu (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \texorpdfstring{$\ast$}{*}}]{vec\+Lines}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{curr\+Line}{}\end{DoxyParamCaption})}
 
 \Hypertarget{misc_8hpp_a624a33fe79ca546dc4abb6e0735586ce}\index{misc.hpp@{misc.hpp}!formatLyrics@{formatLyrics}}
 \index{formatLyrics@{formatLyrics}!misc.hpp@{misc.hpp}}

@@ -131,7 +131,7 @@ Features</h2>
 </ul>
 <h2><a class="anchor" id="autotoc_md6"></a>
 LOOKS</h2>
-<div align="center"> <img src="assets/gifs/inLimbo-1.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md7"></a>
+<div align="center"> <img src="assets/gifs/inLimbo-1.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> <img src="assets/gifs/inLimbo-3.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md7"></a>
 DEPENDENCIES</h2>
 <ol type="1">
 <li>TagLib ==&gt; <a href="https://taglib.org/">here</a> [libtag1-dev for Ubuntu] <br  />
@@ -218,7 +218,7 @@ CONFIGURATION</h2>
  For <a class="el" href="namespaceTrueColors.html">TrueColors</a>, check out <a href="https://github.com/nots1dd/inLimbo/blob/main/COLORS.md">COLORS</a> for more information on how to set up colors in <code>inLimbo</code> <br  />
 <br  />
 </dd></dl>
-<div align="center"> <img src="assets/gifs/inLimboColors.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md12"></a>
+<div align="center"> <img src="assets/gifs/inLimbo-2.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md12"></a>
 DIRECTORY SORTING</h2>
 <p>Currently uses <code>rbtrees</code> and <code>unordered_map</code> to store and write the current inodes in given directory to <code>lib.sync</code> file</p>
 <p>-&gt; rbtree will contain all the inodes at runtime</p>
@@ -242,8 +242,13 @@ DOCUMENTATION</h2>
 <p>Man page is also under progress</p>
 <p>To generate and view doxygen documentation locally:</p>
 <div class="fragment"><div class="line">doxygen .Doxyfile # ensure that you have doxygen installed first </div>
+<div class="line">cp -r assets/gifs/ docs/</div>
+<div class="line">cp index.html docs/</div>
 <div class="line">firefox docs/html/index.html # or any web browser (xdg-open also works)</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md14"></a>
+</div><!-- fragment --><p>It is much easier to use the script <code>make_docs.sh</code></p>
+<div class="fragment"><div class="line">./make_docs.sh</div>
+</div><!-- fragment --><p>Or you could just visit <a href="https://nots1dd.github.io/inLimbo/">inLimbo Website</a></p>
+<h2><a class="anchor" id="autotoc_md14"></a>
 CREDITS</h2>
 <p><b>LOGO</b>:</p>
 <p><em>DISCLAIMER</em>: This is not an original logo nor was it commisioned by me</p>

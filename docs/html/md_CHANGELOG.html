@@ -641,6 +641,38 @@ Known Issues to fix in immediate commits</h2>
 <li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread</li>
 </ul>
 <hr  />
+<h1><a class="anchor" id="autotoc_md137"></a>
+[ALPHA 1.7] &mdash; 13-01-2025</h1>
+<h2><a class="anchor" id="autotoc_md138"></a>
+Added</h2>
+<ul>
+<li><code><a class="el" href="thread__manager_8hpp.html">src/ui/thread_manager.hpp</a></code> -&gt; To handle concurrency in UI with testing + doxygen docs setup</li>
+<li>A LOT of new color fields to <code>config.toml</code> (Check it out) with subsequent integration in <code><a class="el" href="colors_8hpp.html">src/ui/colors.hpp</a></code> and <code><a class="el" href="ui__handler_8hpp.html">src/ui/ui_handler.hpp</a></code></li>
+<li>Some object deletion and freeing when calling <a class="el" href="classMPRISService.html" title="A class that implements an MPRIS service over D-Bus.">MPRISService</a> destructor</li>
+<li><code>src/signal</code> -&gt; To catch all signals and handle gracefully (<b>FULL INTEGRATION NOT DONE YET</b>)</li>
+<li>Some changes to format lyrics function and added <a class="el" href="structComponentState.html">ComponentState</a> in <code><a class="el" href="misc_8hpp.html">src/ui/misc.hpp</a></code> to keep track of all components of UI together</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md139"></a>
+Changed</h2>
+<ul>
+<li>Added more functions in <a class="el" href="misc_8hpp.html">misc.hpp</a> to refactor code in ui_handler</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md140"></a>
+Fixed</h2>
+<ul>
+<li>Finally fixed scrolling lyrics menu issue, now it completely works with testing</li>
+<li>Weird issue with deletion of song from queue is fully fixed with testing</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md141"></a>
+Removed</h2>
+<p><b>NIL</b></p>
+<p>Sizeable commit with refactoring and more configuration options as its priority, more such commits expected in future</p>
+<h2><a class="anchor" id="autotoc_md142"></a>
+Known Issues to fix in immediate commits</h2>
+<ul>
+<li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread</li>
+</ul>
+<hr  />
  </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

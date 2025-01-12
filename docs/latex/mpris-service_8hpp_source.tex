@@ -119,187 +119,190 @@
 \DoxyCodeLine{00147\ }
 \DoxyCodeLine{00148\ \ \ \mbox{\hyperlink{classMPRISService}{\string~MPRISService}}()}
 \DoxyCodeLine{00149\ \ \ \{}
-\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordflow}{if}\ (connection\_)}
-\DoxyCodeLine{00151\ \ \ \ \ \{}
-\DoxyCodeLine{00152\ \ \ \ \ \ \ g\_object\_unref(connection\_);}
-\DoxyCodeLine{00153\ \ \ \ \ \}}
-\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordflow}{if}\ (introspection\_data\_)}
-\DoxyCodeLine{00155\ \ \ \ \ \{}
-\DoxyCodeLine{00156\ \ \ \ \ \ \ g\_dbus\_node\_info\_unref(introspection\_data\_);}
-\DoxyCodeLine{00157\ \ \ \ \ \}}
-\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_metadata\_)}
-\DoxyCodeLine{00159\ \ \ \ \ \{}
-\DoxyCodeLine{00160\ \ \ \ \ \ \ g\_variant\_unref(current\_metadata\_);}
-\DoxyCodeLine{00161\ \ \ \ \ \}}
-\DoxyCodeLine{00162\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}-\/-\/\ MPRISService\ cleaned\ up."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00163\ \ \ \}}
-\DoxyCodeLine{00164\ }
-\DoxyCodeLine{00181\ }
-\DoxyCodeLine{00182\ \ \ \textcolor{keywordtype}{void}\ updateMetadata(\textcolor{keyword}{const}\ std::string\&\ title,\ \textcolor{keyword}{const}\ std::string\&\ artist,\ \textcolor{keyword}{const}\ std::string\&\ album,}
-\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ length,\ \textcolor{keyword}{const}\ std::string\&\ comment\ =\ \textcolor{stringliteral}{"{}"{}},}
-\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ genre\ =\ \textcolor{stringliteral}{"{}"{}},\ \textcolor{keywordtype}{int}\ trackNumber\ =\ 0,\ \textcolor{keywordtype}{int}\ discNumber\ =\ 0)}
-\DoxyCodeLine{00185\ \ \ \{}
-\DoxyCodeLine{00186\ \ \ \ \ GVariantBuilder\ builder;}
-\DoxyCodeLine{00187\ \ \ \ \ g\_variant\_builder\_init(\&builder,\ G\_VARIANT\_TYPE(\textcolor{stringliteral}{"{}a\{sv\}"{}}));}
-\DoxyCodeLine{00188\ }
-\DoxyCodeLine{00189\ \ \ \ \ \textcolor{comment}{//\ Required\ field}}
-\DoxyCodeLine{00190\ \ \ \ \ std::string\ trackid\ =\ \textcolor{stringliteral}{"{}/org/mpris/MediaPlayer2/Track/"{}}\ +\ std::to\_string(rand());}
-\DoxyCodeLine{00191\ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}mpris:trackid"{}},}
-\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\_variant\_new\_object\_path(trackid.c\_str()));}
-\DoxyCodeLine{00193\ }
-\DoxyCodeLine{00194\ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}xesam:title"{}},\ g\_variant\_new\_string(title.c\_str()));}
-\DoxyCodeLine{00195\ }
-\DoxyCodeLine{00196\ \ \ \ \ GVariantBuilder\ artist\_builder;}
-\DoxyCodeLine{00197\ \ \ \ \ g\_variant\_builder\_init(\&artist\_builder,\ G\_VARIANT\_TYPE(\textcolor{stringliteral}{"{}as"{}}));}
-\DoxyCodeLine{00198\ \ \ \ \ g\_variant\_builder\_add(\&artist\_builder,\ \textcolor{stringliteral}{"{}s"{}},\ artist.c\_str());}
-\DoxyCodeLine{00199\ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}xesam:artist"{}},\ g\_variant\_builder\_end(\&artist\_builder));}
-\DoxyCodeLine{00200\ }
-\DoxyCodeLine{00201\ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}xesam:album"{}},\ g\_variant\_new\_string(album.c\_str()));}
-\DoxyCodeLine{00202\ }
-\DoxyCodeLine{00203\ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}mpris:length"{}},\ g\_variant\_new\_int64(length\ *\ 1000000));}
-\DoxyCodeLine{00204\ }
-\DoxyCodeLine{00205\ \ \ \ \ \textcolor{comment}{//\ Add\ optional\ fields}}
-\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keywordflow}{if}\ (!comment.empty())}
-\DoxyCodeLine{00207\ \ \ \ \ \{}
-\DoxyCodeLine{00208\ \ \ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}xesam:comment"{}},}
-\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\_variant\_new\_string(comment.c\_str()));}
-\DoxyCodeLine{00210\ \ \ \ \ \}}
-\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keywordflow}{if}\ (!genre.empty())}
-\DoxyCodeLine{00212\ \ \ \ \ \{}
-\DoxyCodeLine{00213\ \ \ \ \ \ \ GVariantBuilder\ genre\_builder;}
-\DoxyCodeLine{00214\ \ \ \ \ \ \ g\_variant\_builder\_init(\&genre\_builder,\ G\_VARIANT\_TYPE(\textcolor{stringliteral}{"{}as"{}}));}
-\DoxyCodeLine{00215\ \ \ \ \ \ \ g\_variant\_builder\_add(\&genre\_builder,\ \textcolor{stringliteral}{"{}s"{}},\ genre.c\_str());}
-\DoxyCodeLine{00216\ \ \ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}xesam:genre"{}},\ g\_variant\_builder\_end(\&genre\_builder));}
-\DoxyCodeLine{00217\ \ \ \ \ \}}
-\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keywordflow}{if}\ (trackNumber\ >\ 0)}
-\DoxyCodeLine{00219\ \ \ \ \ \{}
-\DoxyCodeLine{00220\ \ \ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}xesam:trackNumber"{}},}
-\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\_variant\_new\_int32(trackNumber));}
-\DoxyCodeLine{00222\ \ \ \ \ \}}
-\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keywordflow}{if}\ (discNumber\ >\ 0)}
-\DoxyCodeLine{00224\ \ \ \ \ \{}
-\DoxyCodeLine{00225\ \ \ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}xesam:discNumber"{}},\ g\_variant\_new\_int32(discNumber));}
-\DoxyCodeLine{00226\ \ \ \ \ \}}
-\DoxyCodeLine{00227\ }
-\DoxyCodeLine{00228\ \ \ \ \ \textcolor{comment}{//\ Save\ current\ metadata}}
-\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_metadata\_)}
-\DoxyCodeLine{00230\ \ \ \ \ \ \ g\_variant\_unref(current\_metadata\_);}
-\DoxyCodeLine{00231\ \ \ \ \ current\_metadata\_\ =\ g\_variant\_builder\_end(\&builder);}
-\DoxyCodeLine{00232\ \ \ \ \ g\_variant\_ref(current\_metadata\_);}
-\DoxyCodeLine{00233\ }
-\DoxyCodeLine{00234\ \ \ \ \ \textcolor{comment}{//\ Emit\ property\ changed}}
-\DoxyCodeLine{00235\ \ \ \ \ GVariantBuilder\ props\_builder;}
-\DoxyCodeLine{00236\ \ \ \ \ g\_variant\_builder\_init(\&props\_builder,\ G\_VARIANT\_TYPE\_ARRAY);}
-\DoxyCodeLine{00237\ \ \ \ \ g\_variant\_builder\_add(\&props\_builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}Metadata"{}},\ current\_metadata\_);}
-\DoxyCodeLine{00238\ }
-\DoxyCodeLine{00239\ \ \ \ \ g\_dbus\_connection\_emit\_signal(}
-\DoxyCodeLine{00240\ \ \ \ \ \ \ connection\_,\ \textcolor{keyword}{nullptr},\ \textcolor{stringliteral}{"{}/org/mpris/MediaPlayer2"{}},\ \textcolor{stringliteral}{"{}org.freedesktop.DBus.Properties"{}},}
-\DoxyCodeLine{00241\ \ \ \ \ \ \ \textcolor{stringliteral}{"{}PropertiesChanged"{}},}
-\DoxyCodeLine{00242\ \ \ \ \ \ \ g\_variant\_new(\textcolor{stringliteral}{"{}(sa\{sv\}as)"{}},\ \textcolor{stringliteral}{"{}org.mpris.MediaPlayer2.Player"{}},\ \&props\_builder,\ \textcolor{keyword}{nullptr}),}
-\DoxyCodeLine{00243\ \ \ \ \ \ \ \textcolor{keyword}{nullptr});}
-\DoxyCodeLine{00244\ \ \ \}}
-\DoxyCodeLine{00245\ }
-\DoxyCodeLine{00246\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00257\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ on\_bus\_acquired(GDBusConnection*\ connection,\ \textcolor{keyword}{const}\ gchar*\ name,\ gpointer\ user\_data)}
-\DoxyCodeLine{00258\ \ \ \{}
-\DoxyCodeLine{00259\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Acquired\ bus\ name:\ "{}}\ <<\ name\ <<\ std::endl;}
-\DoxyCodeLine{00260\ \ \ \}}
-\DoxyCodeLine{00261\ }
-\DoxyCodeLine{00277\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handle\_root\_method\_call(GDBusConnection*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,}
-\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ GVariant*,\ GDBusMethodInvocation*\ invocation,}
-\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*)}
-\DoxyCodeLine{00280\ \ \ \{}
-\DoxyCodeLine{00281\ \ \ \ \ g\_dbus\_method\_invocation\_return\_value(invocation,\ \textcolor{keyword}{nullptr});}
-\DoxyCodeLine{00282\ \ \ \}}
-\DoxyCodeLine{00283\ }
-\DoxyCodeLine{00298\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handle\_player\_method\_call(GDBusConnection*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,}
-\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \ \ \ \ \ \ \ \ \ \ \ method\_name,\ GVariant*,}
-\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GDBusMethodInvocation*\ invocation,\ \textcolor{keywordtype}{void}*\ user\_data)}
-\DoxyCodeLine{00301\ \ \ \{}
-\DoxyCodeLine{00302\ \ \ \ \ \textcolor{keyword}{auto}*\ service\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{classMPRISService_afbe327c0dc95de1266aa0a514f234a18}{MPRISService}}*\textcolor{keyword}{>}(user\_data);}
-\DoxyCodeLine{00303\ \ \ \ \ g\_dbus\_method\_invocation\_return\_value(invocation,\ \textcolor{keyword}{nullptr});}
-\DoxyCodeLine{00304\ \ \ \}}
-\DoxyCodeLine{00305\ }
-\DoxyCodeLine{00320\ \ \ \textcolor{keyword}{static}\ GVariant*\ handle\_root\_get\_property(GDBusConnection*\ connection,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ sender,}
-\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ object\_path,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ interface\_name,}
-\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ property\_name,\ GError**\ error,}
-\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ user\_data)}
-\DoxyCodeLine{00324\ \ \ \{}
-\DoxyCodeLine{00325\ \ \ \ \ \textcolor{keyword}{auto}*\ service\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{classMPRISService_afbe327c0dc95de1266aa0a514f234a18}{MPRISService}}*\textcolor{keyword}{>}(user\_data);}
-\DoxyCodeLine{00326\ }
-\DoxyCodeLine{00327\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}Identity"{}})\ ==\ 0)}
-\DoxyCodeLine{00328\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_string(service-\/>applicationName\_.c\_str());}
-\DoxyCodeLine{00329\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanQuit"{}})\ ==\ 0)}
-\DoxyCodeLine{00330\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(TRUE);}
-\DoxyCodeLine{00331\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanRaise"{}})\ ==\ 0)}
-\DoxyCodeLine{00332\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(TRUE);}
-\DoxyCodeLine{00333\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}HasTrackList"{}})\ ==\ 0)}
-\DoxyCodeLine{00334\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(FALSE);}
-\DoxyCodeLine{00335\ }
-\DoxyCodeLine{00336\ \ \ \ \ \textcolor{comment}{//\ Property\ not\ recognized:\ set\ error\ and\ return\ nullptr}}
-\DoxyCodeLine{00337\ \ \ \ \ g\_set\_error(error,\ G\_IO\_ERROR,\ G\_IO\_ERROR\_FAILED,}
-\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Property\ '\%s'\ is\ not\ recognized\ for\ interface\ '\%s'."{}},\ property\_name,}
-\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ interface\_name);}
-\DoxyCodeLine{00340\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00341\ \ \ \}}
-\DoxyCodeLine{00342\ }
-\DoxyCodeLine{00358\ \ \ \textcolor{keyword}{static}\ GVariant*\ handle\_player\_get\_property(GDBusConnection*\ connection,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ sender,}
-\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ object\_path,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ interface\_name,}
-\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ property\_name,\ GError**\ error,}
-\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ user\_data)}
-\DoxyCodeLine{00362\ \ \ \{}
-\DoxyCodeLine{00363\ \ \ \ \ \textcolor{keyword}{auto}*\ service\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{classMPRISService_afbe327c0dc95de1266aa0a514f234a18}{MPRISService}}*\textcolor{keyword}{>}(user\_data);}
-\DoxyCodeLine{00364\ }
-\DoxyCodeLine{00365\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}PlaybackStatus"{}})\ ==\ 0)}
-\DoxyCodeLine{00366\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_string(\textcolor{stringliteral}{"{}Playing"{}});}
-\DoxyCodeLine{00367\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}LoopStatus"{}})\ ==\ 0)}
-\DoxyCodeLine{00368\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_string(\textcolor{stringliteral}{"{}None"{}});}
-\DoxyCodeLine{00369\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}Rate"{}})\ ==\ 0)}
-\DoxyCodeLine{00370\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_double(1.0);}
-\DoxyCodeLine{00371\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}Shuffle"{}})\ ==\ 0)}
-\DoxyCodeLine{00372\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(FALSE);}
-\DoxyCodeLine{00373\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}Metadata"{}})\ ==\ 0)}
-\DoxyCodeLine{00374\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ service-\/>current\_metadata\_\ ?\ g\_variant\_ref(service-\/>current\_metadata\_)}
-\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ g\_variant\_new(\textcolor{stringliteral}{"{}a\{sv\}"{}},\ nullptr);}
-\DoxyCodeLine{00376\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}Volume"{}})\ ==\ 0)}
-\DoxyCodeLine{00377\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_double(1.0);}
-\DoxyCodeLine{00378\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}Position"{}})\ ==\ 0)}
-\DoxyCodeLine{00379\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_int64(0);}
-\DoxyCodeLine{00380\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}MinimumRate"{}})\ ==\ 0)}
-\DoxyCodeLine{00381\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_double(1.0);}
-\DoxyCodeLine{00382\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}MaximumRate"{}})\ ==\ 0)}
-\DoxyCodeLine{00383\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_double(1.0);}
-\DoxyCodeLine{00384\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanGoNext"{}})\ ==\ 0)}
-\DoxyCodeLine{00385\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(TRUE);}
-\DoxyCodeLine{00386\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanGoPrevious"{}})\ ==\ 0)}
-\DoxyCodeLine{00387\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(TRUE);}
-\DoxyCodeLine{00388\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanPlay"{}})\ ==\ 0)}
-\DoxyCodeLine{00389\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(TRUE);}
-\DoxyCodeLine{00390\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanPause"{}})\ ==\ 0)}
-\DoxyCodeLine{00391\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(TRUE);}
-\DoxyCodeLine{00392\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanSeek"{}})\ ==\ 0)}
-\DoxyCodeLine{00393\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(FALSE);}
-\DoxyCodeLine{00394\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanControl"{}})\ ==\ 0)}
-\DoxyCodeLine{00395\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(TRUE);}
-\DoxyCodeLine{00396\ }
-\DoxyCodeLine{00397\ \ \ \ \ \textcolor{comment}{//\ Property\ not\ recognized:\ set\ error\ and\ return\ nullptr}}
-\DoxyCodeLine{00398\ \ \ \ \ g\_set\_error(error,\ G\_IO\_ERROR,\ G\_IO\_ERROR\_FAILED,}
-\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Property\ '\%s'\ is\ not\ recognized\ for\ interface\ '\%s'."{}},\ property\_name,}
-\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ interface\_name);}
-\DoxyCodeLine{00401\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00402\ \ \ \}}
-\DoxyCodeLine{00417\ \ \ \textcolor{keyword}{static}\ gboolean\ handle\_player\_set\_property(GDBusConnection*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,}
-\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ GVariant*,\ GError**,\ \textcolor{keywordtype}{void}*)}
-\DoxyCodeLine{00419\ \ \ \{}
-\DoxyCodeLine{00420\ \ \ \ \ \textcolor{keywordflow}{return}\ TRUE;}
-\DoxyCodeLine{00421\ \ \ \}}
-\DoxyCodeLine{00422\ }
-\DoxyCodeLine{00423\ \ \ std::string\ \ \ \ \ \ applicationName\_;}
-\DoxyCodeLine{00424\ \ \ GDBusNodeInfo*\ \ \ introspection\_data\_\ =\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00425\ \ \ GDBusConnection*\ connection\_\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00426\ \ \ GVariant*\ \ \ \ \ \ \ \ current\_metadata\_\ \ \ =\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00427\ \};}
-\DoxyCodeLine{00428\ }
-\DoxyCodeLine{00429\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (connection\_)}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ g\_object\_unref(connection\_);}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ connection\_\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (introspection\_data\_)}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ g\_dbus\_node\_info\_unref(introspection\_data\_);}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ introspection\_data\_\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_metadata\_)}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ g\_variant\_unref(current\_metadata\_);}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ current\_metadata\_\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}-\/-\/\ MPRISService\ cleaned\ up."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00166\ \ \ \}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \textcolor{keywordtype}{void}\ updateMetadata(\textcolor{keyword}{const}\ std::string\&\ title,\ \textcolor{keyword}{const}\ std::string\&\ artist,\ \textcolor{keyword}{const}\ std::string\&\ album,}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ length,\ \textcolor{keyword}{const}\ std::string\&\ comment\ =\ \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ genre\ =\ \textcolor{stringliteral}{"{}"{}},\ \textcolor{keywordtype}{int}\ trackNumber\ =\ 0,\ \textcolor{keywordtype}{int}\ discNumber\ =\ 0)}
+\DoxyCodeLine{00188\ \ \ \{}
+\DoxyCodeLine{00189\ \ \ \ \ GVariantBuilder\ builder;}
+\DoxyCodeLine{00190\ \ \ \ \ g\_variant\_builder\_init(\&builder,\ G\_VARIANT\_TYPE(\textcolor{stringliteral}{"{}a\{sv\}"{}}));}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{comment}{//\ Required\ field}}
+\DoxyCodeLine{00193\ \ \ \ \ std::string\ trackid\ =\ \textcolor{stringliteral}{"{}/org/mpris/MediaPlayer2/Track/"{}}\ +\ std::to\_string(rand());}
+\DoxyCodeLine{00194\ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}mpris:trackid"{}},}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\_variant\_new\_object\_path(trackid.c\_str()));}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}xesam:title"{}},\ g\_variant\_new\_string(title.c\_str()));}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ GVariantBuilder\ artist\_builder;}
+\DoxyCodeLine{00200\ \ \ \ \ g\_variant\_builder\_init(\&artist\_builder,\ G\_VARIANT\_TYPE(\textcolor{stringliteral}{"{}as"{}}));}
+\DoxyCodeLine{00201\ \ \ \ \ g\_variant\_builder\_add(\&artist\_builder,\ \textcolor{stringliteral}{"{}s"{}},\ artist.c\_str());}
+\DoxyCodeLine{00202\ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}xesam:artist"{}},\ g\_variant\_builder\_end(\&artist\_builder));}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}xesam:album"{}},\ g\_variant\_new\_string(album.c\_str()));}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}mpris:length"{}},\ g\_variant\_new\_int64(length\ *\ 1000000));}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{comment}{//\ Add\ optional\ fields}}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keywordflow}{if}\ (!comment.empty())}
+\DoxyCodeLine{00210\ \ \ \ \ \{}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}xesam:comment"{}},}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\_variant\_new\_string(comment.c\_str()));}
+\DoxyCodeLine{00213\ \ \ \ \ \}}
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keywordflow}{if}\ (!genre.empty())}
+\DoxyCodeLine{00215\ \ \ \ \ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ GVariantBuilder\ genre\_builder;}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ g\_variant\_builder\_init(\&genre\_builder,\ G\_VARIANT\_TYPE(\textcolor{stringliteral}{"{}as"{}}));}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ g\_variant\_builder\_add(\&genre\_builder,\ \textcolor{stringliteral}{"{}s"{}},\ genre.c\_str());}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}xesam:genre"{}},\ g\_variant\_builder\_end(\&genre\_builder));}
+\DoxyCodeLine{00220\ \ \ \ \ \}}
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keywordflow}{if}\ (trackNumber\ >\ 0)}
+\DoxyCodeLine{00222\ \ \ \ \ \{}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}xesam:trackNumber"{}},}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\_variant\_new\_int32(trackNumber));}
+\DoxyCodeLine{00225\ \ \ \ \ \}}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keywordflow}{if}\ (discNumber\ >\ 0)}
+\DoxyCodeLine{00227\ \ \ \ \ \{}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ g\_variant\_builder\_add(\&builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}xesam:discNumber"{}},\ g\_variant\_new\_int32(discNumber));}
+\DoxyCodeLine{00229\ \ \ \ \ \}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{comment}{//\ Save\ current\ metadata}}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_metadata\_)}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ g\_variant\_unref(current\_metadata\_);}
+\DoxyCodeLine{00234\ \ \ \ \ current\_metadata\_\ =\ g\_variant\_builder\_end(\&builder);}
+\DoxyCodeLine{00235\ \ \ \ \ g\_variant\_ref(current\_metadata\_);}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{comment}{//\ Emit\ property\ changed}}
+\DoxyCodeLine{00238\ \ \ \ \ GVariantBuilder\ props\_builder;}
+\DoxyCodeLine{00239\ \ \ \ \ g\_variant\_builder\_init(\&props\_builder,\ G\_VARIANT\_TYPE\_ARRAY);}
+\DoxyCodeLine{00240\ \ \ \ \ g\_variant\_builder\_add(\&props\_builder,\ \textcolor{stringliteral}{"{}\{sv\}"{}},\ \textcolor{stringliteral}{"{}Metadata"{}},\ current\_metadata\_);}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \ \ g\_dbus\_connection\_emit\_signal(}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ connection\_,\ \textcolor{keyword}{nullptr},\ \textcolor{stringliteral}{"{}/org/mpris/MediaPlayer2"{}},\ \textcolor{stringliteral}{"{}org.freedesktop.DBus.Properties"{}},}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \textcolor{stringliteral}{"{}PropertiesChanged"{}},}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ g\_variant\_new(\textcolor{stringliteral}{"{}(sa\{sv\}as)"{}},\ \textcolor{stringliteral}{"{}org.mpris.MediaPlayer2.Player"{}},\ \&props\_builder,\ \textcolor{keyword}{nullptr}),}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00247\ \ \ \}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00260\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ on\_bus\_acquired(GDBusConnection*\ connection,\ \textcolor{keyword}{const}\ gchar*\ name,\ gpointer\ user\_data)}
+\DoxyCodeLine{00261\ \ \ \{}
+\DoxyCodeLine{00262\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Acquired\ bus\ name:\ "{}}\ <<\ name\ <<\ std::endl;}
+\DoxyCodeLine{00263\ \ \ \}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00280\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handle\_root\_method\_call(GDBusConnection*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ GVariant*,\ GDBusMethodInvocation*\ invocation,}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*)}
+\DoxyCodeLine{00283\ \ \ \{}
+\DoxyCodeLine{00284\ \ \ \ \ g\_dbus\_method\_invocation\_return\_value(invocation,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00285\ \ \ \}}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00301\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handle\_player\_method\_call(GDBusConnection*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \ \ \ \ \ \ \ \ \ \ \ method\_name,\ GVariant*,}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GDBusMethodInvocation*\ invocation,\ \textcolor{keywordtype}{void}*\ user\_data)}
+\DoxyCodeLine{00304\ \ \ \{}
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keyword}{auto}*\ service\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{classMPRISService_afbe327c0dc95de1266aa0a514f234a18}{MPRISService}}*\textcolor{keyword}{>}(user\_data);}
+\DoxyCodeLine{00306\ \ \ \ \ g\_dbus\_method\_invocation\_return\_value(invocation,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00307\ \ \ \}}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00323\ \ \ \textcolor{keyword}{static}\ GVariant*\ handle\_root\_get\_property(GDBusConnection*\ connection,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ sender,}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ object\_path,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ interface\_name,}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ property\_name,\ GError**\ error,}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ user\_data)}
+\DoxyCodeLine{00327\ \ \ \{}
+\DoxyCodeLine{00328\ \ \ \ \ \textcolor{keyword}{auto}*\ service\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{classMPRISService_afbe327c0dc95de1266aa0a514f234a18}{MPRISService}}*\textcolor{keyword}{>}(user\_data);}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00330\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}Identity"{}})\ ==\ 0)}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_string(service-\/>applicationName\_.c\_str());}
+\DoxyCodeLine{00332\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanQuit"{}})\ ==\ 0)}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(TRUE);}
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanRaise"{}})\ ==\ 0)}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(TRUE);}
+\DoxyCodeLine{00336\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}HasTrackList"{}})\ ==\ 0)}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(FALSE);}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \ \ \ \ \textcolor{comment}{//\ Property\ not\ recognized:\ set\ error\ and\ return\ nullptr}}
+\DoxyCodeLine{00340\ \ \ \ \ g\_set\_error(error,\ G\_IO\_ERROR,\ G\_IO\_ERROR\_FAILED,}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Property\ '\%s'\ is\ not\ recognized\ for\ interface\ '\%s'."{}},\ property\_name,}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ interface\_name);}
+\DoxyCodeLine{00343\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00344\ \ \ \}}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00361\ \ \ \textcolor{keyword}{static}\ GVariant*\ handle\_player\_get\_property(GDBusConnection*\ connection,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ sender,}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ object\_path,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ interface\_name,}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ property\_name,\ GError**\ error,}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ user\_data)}
+\DoxyCodeLine{00365\ \ \ \{}
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{keyword}{auto}*\ service\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{classMPRISService_afbe327c0dc95de1266aa0a514f234a18}{MPRISService}}*\textcolor{keyword}{>}(user\_data);}
+\DoxyCodeLine{00367\ }
+\DoxyCodeLine{00368\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}PlaybackStatus"{}})\ ==\ 0)}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_string(\textcolor{stringliteral}{"{}Playing"{}});}
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}LoopStatus"{}})\ ==\ 0)}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_string(\textcolor{stringliteral}{"{}None"{}});}
+\DoxyCodeLine{00372\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}Rate"{}})\ ==\ 0)}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_double(1.0);}
+\DoxyCodeLine{00374\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}Shuffle"{}})\ ==\ 0)}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(FALSE);}
+\DoxyCodeLine{00376\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}Metadata"{}})\ ==\ 0)}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ service-\/>current\_metadata\_\ ?\ g\_variant\_ref(service-\/>current\_metadata\_)}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ g\_variant\_new(\textcolor{stringliteral}{"{}a\{sv\}"{}},\ nullptr);}
+\DoxyCodeLine{00379\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}Volume"{}})\ ==\ 0)}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_double(1.0);}
+\DoxyCodeLine{00381\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}Position"{}})\ ==\ 0)}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_int64(0);}
+\DoxyCodeLine{00383\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}MinimumRate"{}})\ ==\ 0)}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_double(1.0);}
+\DoxyCodeLine{00385\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}MaximumRate"{}})\ ==\ 0)}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_double(1.0);}
+\DoxyCodeLine{00387\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanGoNext"{}})\ ==\ 0)}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(TRUE);}
+\DoxyCodeLine{00389\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanGoPrevious"{}})\ ==\ 0)}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(TRUE);}
+\DoxyCodeLine{00391\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanPlay"{}})\ ==\ 0)}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(TRUE);}
+\DoxyCodeLine{00393\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanPause"{}})\ ==\ 0)}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(TRUE);}
+\DoxyCodeLine{00395\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanSeek"{}})\ ==\ 0)}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(FALSE);}
+\DoxyCodeLine{00397\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_strcmp0(property\_name,\ \textcolor{stringliteral}{"{}CanControl"{}})\ ==\ 0)}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_variant\_new\_boolean(TRUE);}
+\DoxyCodeLine{00399\ }
+\DoxyCodeLine{00400\ \ \ \ \ \textcolor{comment}{//\ Property\ not\ recognized:\ set\ error\ and\ return\ nullptr}}
+\DoxyCodeLine{00401\ \ \ \ \ g\_set\_error(error,\ G\_IO\_ERROR,\ G\_IO\_ERROR\_FAILED,}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Property\ '\%s'\ is\ not\ recognized\ for\ interface\ '\%s'."{}},\ property\_name,}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ interface\_name);}
+\DoxyCodeLine{00404\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00405\ \ \ \}}
+\DoxyCodeLine{00420\ \ \ \textcolor{keyword}{static}\ gboolean\ handle\_player\_set\_property(GDBusConnection*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*,\ GVariant*,\ GError**,\ \textcolor{keywordtype}{void}*)}
+\DoxyCodeLine{00422\ \ \ \{}
+\DoxyCodeLine{00423\ \ \ \ \ \textcolor{keywordflow}{return}\ TRUE;}
+\DoxyCodeLine{00424\ \ \ \}}
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00426\ \ \ std::string\ \ \ \ \ \ applicationName\_;}
+\DoxyCodeLine{00427\ \ \ GDBusNodeInfo*\ \ \ introspection\_data\_\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00428\ \ \ GDBusConnection*\ connection\_\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00429\ \ \ GVariant*\ \ \ \ \ \ \ \ current\_metadata\_\ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00430\ \};}
+\DoxyCodeLine{00431\ }
+\DoxyCodeLine{00432\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

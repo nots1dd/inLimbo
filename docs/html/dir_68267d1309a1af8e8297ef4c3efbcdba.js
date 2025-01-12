@@ -5,6 +5,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "music", "dir_cc94bbbd6458851dcc70e30eea527aa9.html", "dir_cc94bbbd6458851dcc70e30eea527aa9" ],
     [ "network", "dir_fc4c7f03e1a69a98c370fae55a743828.html", "dir_fc4c7f03e1a69a98c370fae55a743828" ],
     [ "parser", "dir_6cd8491d143eb218b70983dbdb3c58bc.html", "dir_6cd8491d143eb218b70983dbdb3c58bc" ],
+    [ "signal", "dir_e681bd22f1a85a89d9c18b68cc50d922.html", "dir_e681bd22f1a85a89d9c18b68cc50d922" ],
     [ "ui", "dir_da5c6b39c0a2f54e57df6799511cd3ab.html", "dir_da5c6b39c0a2f54e57df6799511cd3ab" ],
     [ "cmd-line-args.hpp", "cmd-line-args_8hpp.html", "cmd-line-args_8hpp" ],
     [ "main.cpp", "main_8cpp.html", "main_8cpp" ],

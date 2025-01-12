@@ -7,6 +7,7 @@ var annotated_dup =
       [ "CustomHTTPRequestHandler", "classrun__webassembly_1_1CustomHTTPRequestHandler.html", "classrun__webassembly_1_1CustomHTTPRequestHandler" ]
     ] ],
     [ "CommandLineArgs", "classCommandLineArgs.html", "classCommandLineArgs" ],
+    [ "ComponentState", "structComponentState.html", "structComponentState" ],
     [ "InLimboColors", "structInLimboColors.html", "structInLimboColors" ],
     [ "InodeFileMapper", "classInodeFileMapper.html", "classInodeFileMapper" ],
     [ "Keybinds", "structKeybinds.html", "structKeybinds" ],
@@ -16,7 +17,9 @@ var annotated_dup =
     [ "MusicPlayer", "classMusicPlayer.html", "classMusicPlayer" ],
     [ "Node", "structNode.html", "structNode" ],
     [ "RedBlackTree", "classRedBlackTree.html", "classRedBlackTree" ],
+    [ "SignalHandler", "classSignalHandler.html", "classSignalHandler" ],
     [ "Song", "structSong.html", "structSong" ],
     [ "SongTree", "classSongTree.html", "classSongTree" ],
-    [ "TagLibParser", "classTagLibParser.html", "classTagLibParser" ]
+    [ "TagLibParser", "classTagLibParser.html", "classTagLibParser" ],
+    [ "ThreadManager", "classThreadManager.html", "classThreadManager" ]
 ];

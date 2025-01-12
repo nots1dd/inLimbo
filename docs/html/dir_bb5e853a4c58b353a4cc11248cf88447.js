@@ -1,4 +1,0 @@
-var dir_bb5e853a4c58b353a4cc11248cf88447 =
-[
-    [ "ftxui-src", "dir_44a3f8251b0a374d075500392829f47b.html", "dir_44a3f8251b0a374d075500392829f47b" ]
-];

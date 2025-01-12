@@ -1,6 +1,8 @@
 var misc_8hpp =
 [
+    [ "ComponentState", "structComponentState.html", "structComponentState" ],
     [ "charToStr", "misc_8hpp.html#a2e2246f99124f69740c8012be4b75c36", null ],
+    [ "CreateMenu", "misc_8hpp.html#a6bb02df78ce571092937657c5b25de61", null ],
     [ "formatLyrics", "misc_8hpp.html#a624a33fe79ca546dc4abb6e0735586ce", null ],
     [ "FormatTime", "misc_8hpp.html#a76d3e10fc086b99d9046b6406baf51da", null ],
     [ "getTrueBGColor", "misc_8hpp.html#a32a29b442a57acc73893a7b2be55dec9", null ],

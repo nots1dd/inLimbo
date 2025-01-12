@@ -148,6 +148,13 @@ var NAVTREE =
         [ "Fixed", "md_CHANGELOG.html#autotoc_md133", null ],
         [ "Removed", "md_CHANGELOG.html#autotoc_md134", null ],
         [ "Known Issues to fix in immediate commits", "md_CHANGELOG.html#autotoc_md135", null ]
+      ] ],
+      [ "[ALPHA 1.7] — 13-01-2025", "md_CHANGELOG.html#autotoc_md137", [
+        [ "Added", "md_CHANGELOG.html#autotoc_md138", null ],
+        [ "Changed", "md_CHANGELOG.html#autotoc_md139", null ],
+        [ "Fixed", "md_CHANGELOG.html#autotoc_md140", null ],
+        [ "Removed", "md_CHANGELOG.html#autotoc_md141", null ],
+        [ "Known Issues to fix in immediate commits", "md_CHANGELOG.html#autotoc_md142", null ]
       ] ]
     ] ],
     [ "Namespaces", "namespaces.html", [
@@ -184,7 +191,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6dab9c31a17936f5966fd4fbe74f9b09012"
+"namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6da51e6cd92b6c45f9affdc158ecca2b8b8"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
