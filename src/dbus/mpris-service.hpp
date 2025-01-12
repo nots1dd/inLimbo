@@ -242,11 +242,17 @@ private:
         g_dbus_method_invocation_return_value(invocation, nullptr);
     }
 
-    static GVariant* handle_root_get_property(GDBusConnection*, const char*, const char*,
-                                            const char*, const char* property_name,
-                                            GError**, void* user_data) {
+    static GVariant* handle_root_get_property(
+        GDBusConnection* connection,
+        const char* sender,
+        const char* object_path,
+        const char* interface_name,
+        const char* property_name,
+        GError** error,
+        void* user_data) 
+    {
         auto* service = static_cast<MPRISService*>(user_data);
-        
+
         if (g_strcmp0(property_name, "Identity") == 0)
             return g_variant_new_string(service->applicationName_.c_str());
         if (g_strcmp0(property_name, "CanQuit") == 0)
@@ -255,49 +261,63 @@ private:
             return g_variant_new_boolean(TRUE);
         if (g_strcmp0(property_name, "HasTrackList") == 0)
             return g_variant_new_boolean(FALSE);
-        
+
+        // Property not recognized: set error and return nullptr
+        g_set_error(error, G_IO_ERROR, G_IO_ERROR_FAILED,
+                    "Property '%s' is not recognized for interface '%s'.",
+                    property_name, interface_name);
         return nullptr;
     }
 
-    static GVariant* handle_player_get_property(GDBusConnection*, const char*, const char*,
-                                              const char*, const char* property_name,
-                                              GError**, void* user_data) {
-        auto* service = static_cast<MPRISService*>(user_data);
-        
-        if (g_strcmp0(property_name, "PlaybackStatus") == 0)
-            return g_variant_new_string("Playing");
-        if (g_strcmp0(property_name, "LoopStatus") == 0)
-            return g_variant_new_string("None");
-        if (g_strcmp0(property_name, "Rate") == 0)
-            return g_variant_new_double(1.0);
-        if (g_strcmp0(property_name, "Shuffle") == 0)
-            return g_variant_new_boolean(FALSE);
-        if (g_strcmp0(property_name, "Metadata") == 0)
-            return service->current_metadata_ ? g_variant_ref(service->current_metadata_) 
+  static GVariant* handle_player_get_property(
+      GDBusConnection* connection,
+      const char* sender,
+      const char* object_path,
+      const char* interface_name,
+      const char* property_name,
+      GError** error,
+      void* user_data) 
+  {
+      auto* service = static_cast<MPRISService*>(user_data);
+
+      if (g_strcmp0(property_name, "PlaybackStatus") == 0)
+          return g_variant_new_string("Playing");
+      if (g_strcmp0(property_name, "LoopStatus") == 0)
+          return g_variant_new_string("None");
+      if (g_strcmp0(property_name, "Rate") == 0)
+          return g_variant_new_double(1.0);
+      if (g_strcmp0(property_name, "Shuffle") == 0)
+          return g_variant_new_boolean(FALSE);
+      if (g_strcmp0(property_name, "Metadata") == 0)
+          return service->current_metadata_ ? g_variant_ref(service->current_metadata_) 
                                             : g_variant_new("a{sv}", nullptr);
-        if (g_strcmp0(property_name, "Volume") == 0)
-            return g_variant_new_double(1.0);
-        if (g_strcmp0(property_name, "Position") == 0)
-            return g_variant_new_int64(0);
-        if (g_strcmp0(property_name, "MinimumRate") == 0)
-            return g_variant_new_double(1.0);
-        if (g_strcmp0(property_name, "MaximumRate") == 0)
-            return g_variant_new_double(1.0);
-        if (g_strcmp0(property_name, "CanGoNext") == 0)
-            return g_variant_new_boolean(TRUE);
-        if (g_strcmp0(property_name, "CanGoPrevious") == 0)
-            return g_variant_new_boolean(TRUE);
-        if (g_strcmp0(property_name, "CanPlay") == 0)
-            return g_variant_new_boolean(TRUE);
-        if (g_strcmp0(property_name, "CanPause") == 0)
-            return g_variant_new_boolean(TRUE);
-        if (g_strcmp0(property_name, "CanSeek") == 0)
-            return g_variant_new_boolean(FALSE);
-        if (g_strcmp0(property_name, "CanControl") == 0)
-            return g_variant_new_boolean(TRUE);
-        
-        return nullptr;
-    }
+      if (g_strcmp0(property_name, "Volume") == 0)
+          return g_variant_new_double(1.0);
+      if (g_strcmp0(property_name, "Position") == 0)
+          return g_variant_new_int64(0);
+      if (g_strcmp0(property_name, "MinimumRate") == 0)
+          return g_variant_new_double(1.0);
+      if (g_strcmp0(property_name, "MaximumRate") == 0)
+          return g_variant_new_double(1.0);
+      if (g_strcmp0(property_name, "CanGoNext") == 0)
+          return g_variant_new_boolean(TRUE);
+      if (g_strcmp0(property_name, "CanGoPrevious") == 0)
+          return g_variant_new_boolean(TRUE);
+      if (g_strcmp0(property_name, "CanPlay") == 0)
+          return g_variant_new_boolean(TRUE);
+      if (g_strcmp0(property_name, "CanPause") == 0)
+          return g_variant_new_boolean(TRUE);
+      if (g_strcmp0(property_name, "CanSeek") == 0)
+          return g_variant_new_boolean(FALSE);
+      if (g_strcmp0(property_name, "CanControl") == 0)
+          return g_variant_new_boolean(TRUE);
+
+      // Property not recognized: set error and return nullptr
+      g_set_error(error, G_IO_ERROR, G_IO_ERROR_FAILED,
+                  "Property '%s' is not recognized for interface '%s'.",
+                  property_name, interface_name);
+      return nullptr;
+  }
 
     static gboolean handle_player_set_property(GDBusConnection*, const char*, const char*,
                                              const char*, const char*, GVariant*,
