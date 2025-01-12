@@ -1,0 +1,168 @@
+\doxysection{misc.\+hpp}
+\hypertarget{misc_8hpp_source}{}\label{misc_8hpp_source}\index{src/ui/misc.hpp@{src/ui/misc.hpp}}
+\mbox{\hyperlink{misc_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ MISC\_HEADER}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ MISC\_HEADER}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{colors_8hpp}{./colors.hpp}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cctype>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <ftxui/component/captured\_mouse.hpp>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <ftxui/component/component.hpp>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <ftxui/component/component\_base.hpp>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <ftxui/component/event.hpp>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <ftxui/component/screen\_interactive.hpp>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <ftxui/dom/elements.hpp>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ std::vector<std::string>\ \mbox{\hyperlink{misc_8hpp_a624a33fe79ca546dc4abb6e0735586ce}{formatLyrics}}(\textcolor{keyword}{const}\ std::string\&\ lyrics)}
+\DoxyCodeLine{00016\ \{}
+\DoxyCodeLine{00017\ \ \ std::vector<std::string>\ lines;}
+\DoxyCodeLine{00018\ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ currentLine;}
+\DoxyCodeLine{00019\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ insideBrackets\ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00020\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lastWasUppercase\ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00021\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lastWasSpecialChar\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ Tracks\ special\ characters\ within\ words}}
+\DoxyCodeLine{00022\ \ \ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ previousChar\ \ \ \ \ \ \ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{char}\ c\ :\ lyrics)}
+\DoxyCodeLine{00025\ \ \ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'['})}
+\DoxyCodeLine{00027\ \ \ \ \ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!currentLine.empty())}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ currentLine.clear();}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ insideBrackets\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ currentLine\ +=\ c;}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00036\ \ \ \ \ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordflow}{if}\ (insideBrackets)}
+\DoxyCodeLine{00039\ \ \ \ \ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ currentLine\ +=\ c;}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{']'})}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ currentLine.clear();}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ insideBrackets\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'\(\backslash\)''}\ ||\ c\ ==\ \textcolor{charliteral}{'-\/'})}
+\DoxyCodeLine{00051\ \ \ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ currentLine\ +=\ c;}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ lastWasSpecialChar\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00055\ \ \ \ \ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordflow}{if}\ (std::isupper(c)\ \&\&\ !lastWasUppercase\ \&\&\ !lastWasSpecialChar\ \&\&\ !currentLine.empty()\ \&\&}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ previousChar\ !=\ \textcolor{charliteral}{'\(\backslash\)n'}\ \&\&\ previousChar\ !=\ \textcolor{charliteral}{'\ '})}
+\DoxyCodeLine{00059\ \ \ \ \ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ currentLine.clear();}
+\DoxyCodeLine{00062\ \ \ \ \ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ currentLine\ +=\ c;}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'\(\backslash\)n'})}
+\DoxyCodeLine{00067\ \ \ \ \ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!currentLine.empty())}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ currentLine.clear();}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00073\ \ \ \ \ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ lastWasUppercase\ \ \ =\ std::isupper(c);}
+\DoxyCodeLine{00076\ \ \ \ \ lastWasSpecialChar\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00077\ \ \ \ \ previousChar\ \ \ \ \ \ \ =\ c;}
+\DoxyCodeLine{00078\ \ \ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \textcolor{keywordflow}{if}\ (!currentLine.empty())}
+\DoxyCodeLine{00081\ \ \ \{}
+\DoxyCodeLine{00082\ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00083\ \ \ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \textcolor{comment}{//\ Trim\ empty\ lines\ (optional)}}
+\DoxyCodeLine{00086\ \ \ lines.erase(std::remove\_if(lines.begin(),\ lines.end(),}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [](\textcolor{keyword}{const}\ std::string\&\ line)\ \{\ return\ line.empty();\ \}),}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lines.end());}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \textcolor{keywordflow}{return}\ lines;}
+\DoxyCodeLine{00091\ \}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ std::string\ \mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(\textcolor{keywordtype}{char}\ ch)}
+\DoxyCodeLine{00094\ \{}
+\DoxyCodeLine{00095\ \ \ \textcolor{keywordflow}{switch}\ (ch)}
+\DoxyCodeLine{00096\ \ \ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'\(\backslash\)t'}:}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Tab"{}};}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'\ '}:}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Space"{}};}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'\(\backslash\)n'}:}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Enter"{}};}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordflow}{case}\ 27:}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Escape"{}};\ \textcolor{comment}{//\ ASCII\ value\ for\ the\ Escape\ key}}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::string(1,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(ch));}
+\DoxyCodeLine{00107\ \ \ \}}
+\DoxyCodeLine{00108\ \}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ std::string\ \mbox{\hyperlink{misc_8hpp_a76d3e10fc086b99d9046b6406baf51da}{FormatTime}}(\textcolor{keywordtype}{int}\ seconds)}
+\DoxyCodeLine{00111\ \{}
+\DoxyCodeLine{00112\ \ \ \textcolor{keywordtype}{int}\ minutes\ =\ seconds\ /\ 60;}
+\DoxyCodeLine{00113\ \ \ seconds\ \ \ \ \ =\ seconds\ \%\ 60;}
+\DoxyCodeLine{00114\ \ \ std::stringstream\ ss;}
+\DoxyCodeLine{00115\ \ \ ss\ <<\ std::setfill(\textcolor{charliteral}{'0'})\ <<\ std::setw(2)\ <<\ minutes\ <<\ \textcolor{stringliteral}{"{}:"{}}\ <<\ std::setfill(\textcolor{charliteral}{'0'})\ <<\ std::setw(2)}
+\DoxyCodeLine{00116\ \ \ \ \ \ <<\ seconds\ <<\ \textcolor{stringliteral}{"{}\ "{}};}
+\DoxyCodeLine{00117\ \ \ \textcolor{keywordflow}{return}\ ss.str();}
+\DoxyCodeLine{00118\ \}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ ftxui::Decorator\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{TrueColors::Color}}\ color)}
+\DoxyCodeLine{00121\ \{}
+\DoxyCodeLine{00122\ \ \ \textcolor{keywordflow}{return}\ ftxui::color(\mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(color));}
+\DoxyCodeLine{00123\ \}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ ftxui::Decorator\ \mbox{\hyperlink{misc_8hpp_a32a29b442a57acc73893a7b2be55dec9}{getTrueBGColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{TrueColors::Color}}\ color)}
+\DoxyCodeLine{00126\ \{}
+\DoxyCodeLine{00127\ \ \ \textcolor{keywordflow}{return}\ ftxui::bgcolor(\mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(color));}
+\DoxyCodeLine{00128\ \}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ Element\ \mbox{\hyperlink{misc_8hpp_a40a9888f76354b21ca85f69ffe014750}{renderAlbumName}}(\textcolor{keyword}{const}\ std::string\&\ album\_name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\&\ year,\ ftxui::Color\ sel\_color)}
+\DoxyCodeLine{00131\ \{}
+\DoxyCodeLine{00132\ \ \ \textcolor{keywordflow}{return}\ hbox(\{text(\textcolor{stringliteral}{"{}\ "{}}),\ text(album\_name)\ |\ bold,\ filler(),}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text(std::to\_string(year))\ |\ dim\ |\ align\_right,\ text(\textcolor{stringliteral}{"{}\ "{}})\})\ |}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ inverted\ |\ color(sel\_color)\ |\ dim;}
+\DoxyCodeLine{00135\ \}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ Element\ \mbox{\hyperlink{misc_8hpp_adcfcdc4bf50bc48f25cc0e8df2e80822}{renderSongName}}(\textcolor{keyword}{const}\ std::string\&\ disc\_track\_info,\ \textcolor{keyword}{const}\ std::string\&\ song\_name,}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\&\ duration)}
+\DoxyCodeLine{00139\ \{}
+\DoxyCodeLine{00140\ \ \ \textcolor{keywordflow}{return}\ hbox(\{text(disc\_track\_info)\ |\ dim,\ text(song\_name)\ |\ bold\ |\ flex\_grow,}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ filler(),\ \textcolor{comment}{//\ Spacer\ for\ dynamic\ layout}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text(\mbox{\hyperlink{misc_8hpp_a76d3e10fc086b99d9046b6406baf51da}{FormatTime}}(duration))\ |\ align\_right\});}
+\DoxyCodeLine{00143\ \}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \textcolor{comment}{//\ TODO:\ Make\ Song\ Menu\ dynamically\ scrollable}}
+\DoxyCodeLine{00146\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_ae177f32772c1011c09dfce5f982c7f64}{RenderSongMenu}}(\textcolor{keyword}{const}\ std::vector<Element>\&\ items,\ \textcolor{keywordtype}{int}*\ selected\_index,\ ftxui::Color\ sel\_color)}
+\DoxyCodeLine{00147\ \{}
+\DoxyCodeLine{00148\ \ \ Elements\ rendered\_items;}
+\DoxyCodeLine{00149\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ items.size();\ ++i)}
+\DoxyCodeLine{00150\ \ \ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_selected\ =\ (i\ ==\ *selected\_index);}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{comment}{/*bool\ is\_playing\ \ \ \ \ =\ (i\ ==\ *playing\_index);*/}}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keyword}{auto}\ style\ \ \ \ \ \ \ \ \ \ =\ is\_selected\ ?\ color(sel\_color)\ :\ nothing;}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{auto}\ inverted\_style\ =\ is\_selected\ ?\ inverted\ :\ nothing;}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{comment}{/*auto\ playing\_style\ =\ is\_playing\ ?\ getTrueColor(playing\_color)\ :\ nothing;*/}}
+\DoxyCodeLine{00156\ \ \ \ \ rendered\_items.push\_back(items[i]\ |\ style\ |\ inverted\_style);}
+\DoxyCodeLine{00157\ \ \ \}}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \textcolor{keywordflow}{return}\ vbox(std::move(rendered\_items));}
+\DoxyCodeLine{00160\ \}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

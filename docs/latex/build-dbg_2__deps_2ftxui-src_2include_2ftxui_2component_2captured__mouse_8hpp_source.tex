@@ -1,0 +1,23 @@
+\doxysection{captured\+\_\+mouse.\+hpp}
+\hypertarget{build-dbg_2__deps_2ftxui-src_2include_2ftxui_2component_2captured__mouse_8hpp_source}{}\label{build-dbg_2__deps_2ftxui-src_2include_2ftxui_2component_2captured__mouse_8hpp_source}\index{build-\/dbg/\_deps/ftxui-\/src/include/ftxui/component/captured\_mouse.hpp@{build-\/dbg/\_deps/ftxui-\/src/include/ftxui/component/captured\_mouse.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2020\ Arthur\ Sonzogni.\ All\ rights\ reserved.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Use\ of\ this\ source\ code\ is\ governed\ by\ the\ MIT\ license\ that\ can\ be\ found\ in}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ FTXUI\_CAPTURED\_MOUSE\_HPP}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ FTXUI\_CAPTURED\_MOUSE\_HPP}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }ftxui\ \{}
+\DoxyCodeLine{00010\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classftxui_1_1CapturedMouseInterface}{CapturedMouseInterface}}\ \{}
+\DoxyCodeLine{00011\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00012\ \ \ \textcolor{keyword}{virtual}\ \string~CapturedMouseInterface()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00013\ \};}
+\DoxyCodeLine{00014\ \textcolor{keyword}{using\ }CapturedMouse\ =\ std::unique\_ptr<CapturedMouseInterface>;}
+\DoxyCodeLine{00015\ \}\ \ \textcolor{comment}{//\ namespace\ ftxui}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ end\ of\ include\ guard:\ FTXUI\_CAPTURED\_MOUSE\_HPP\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

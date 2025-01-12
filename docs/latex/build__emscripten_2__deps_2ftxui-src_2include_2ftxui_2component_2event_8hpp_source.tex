@@ -1,0 +1,106 @@
+\doxysection{event.\+hpp}
+\hypertarget{build__emscripten_2__deps_2ftxui-src_2include_2ftxui_2component_2event_8hpp_source}{}\label{build__emscripten_2__deps_2ftxui-src_2include_2ftxui_2component_2event_8hpp_source}\index{build\_emscripten/\_deps/ftxui-\/src/include/ftxui/component/event.hpp@{build\_emscripten/\_deps/ftxui-\/src/include/ftxui/component/event.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2020\ Arthur\ Sonzogni.\ All\ rights\ reserved.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Use\ of\ this\ source\ code\ is\ governed\ by\ the\ MIT\ license\ that\ can\ be\ found\ in}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ FTXUI\_COMPONENT\_EVENT\_HPP}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ FTXUI\_COMPONENT\_EVENT\_HPP}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <ftxui/component/mouse.hpp>}\ \ \textcolor{comment}{//\ for\ Mouse}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <string>}\ \ \textcolor{comment}{//\ for\ string,\ operator==}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }ftxui\ \{}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classftxui_1_1ScreenInteractive}{ScreenInteractive}};}
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classftxui_1_1ComponentBase}{ComponentBase}};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structftxui_1_1Event}{Event}}\ \{}
+\DoxyCodeLine{00030\ \ \ \textcolor{comment}{//\ -\/-\/-\/\ Constructor\ section\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00031\ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ \mbox{\hyperlink{structftxui_1_1Event_a76bb32507ef5b345b33a5e5858fd4f22}{Character}}(std::string);}
+\DoxyCodeLine{00032\ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ \mbox{\hyperlink{structftxui_1_1Event_a76bb32507ef5b345b33a5e5858fd4f22}{Character}}(\textcolor{keywordtype}{char});}
+\DoxyCodeLine{00033\ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ \mbox{\hyperlink{structftxui_1_1Event_a76bb32507ef5b345b33a5e5858fd4f22}{Character}}(\textcolor{keywordtype}{wchar\_t});}
+\DoxyCodeLine{00034\ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ \mbox{\hyperlink{structftxui_1_1Event_a96a1fca3c470b925314dc68bb4ff69fa}{Special}}(std::string);}
+\DoxyCodeLine{00035\ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ \mbox{\hyperlink{structftxui_1_1Event_a8676a736487849042dc0e9b6be568960}{Mouse}}(std::string,\ \mbox{\hyperlink{structftxui_1_1Event_a8676a736487849042dc0e9b6be568960}{Mouse}}\ mouse);}
+\DoxyCodeLine{00036\ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ CursorReporting(std::string,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \textcolor{comment}{//\ -\/-\/-\/\ Arrow\ -\/-\/-\/}}
+\DoxyCodeLine{00039\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ ArrowLeft;}
+\DoxyCodeLine{00040\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ ArrowRight;}
+\DoxyCodeLine{00041\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ ArrowUp;}
+\DoxyCodeLine{00042\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ ArrowDown;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ ArrowLeftCtrl;}
+\DoxyCodeLine{00045\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ ArrowRightCtrl;}
+\DoxyCodeLine{00046\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ ArrowUpCtrl;}
+\DoxyCodeLine{00047\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ ArrowDownCtrl;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \textcolor{comment}{//\ -\/-\/-\/\ Other\ -\/-\/-\/}}
+\DoxyCodeLine{00050\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ Backspace;}
+\DoxyCodeLine{00051\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ Delete;}
+\DoxyCodeLine{00052\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ Return;}
+\DoxyCodeLine{00053\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ Escape;}
+\DoxyCodeLine{00054\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ Tab;}
+\DoxyCodeLine{00055\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ TabReverse;}
+\DoxyCodeLine{00056\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ F1,\ F2,\ F3,\ F4,\ F5,\ F6,\ F7,\ F8,\ F9,\ F10,\ F11,\ F12;}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ Home;}
+\DoxyCodeLine{00059\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ End;}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ PageUp;}
+\DoxyCodeLine{00062\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ PageDown;}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \textcolor{comment}{//\ -\/-\/-\/\ Custom\ -\/-\/-\/}}
+\DoxyCodeLine{00065\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\ Custom;}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \textcolor{comment}{//-\/-\/-\/\ Method\ section\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00068\ \ \ \textcolor{keywordtype}{bool}\ is\_character()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ type\_\ ==\ Type::Character;\ \}}
+\DoxyCodeLine{00069\ \ \ std::string\ character()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ input\_;\ \}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \textcolor{keywordtype}{bool}\ is\_mouse()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ type\_\ ==\ Type::Mouse;\ \}}
+\DoxyCodeLine{00072\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structftxui_1_1Event_a8676a736487849042dc0e9b6be568960}{Mouse}}\&\ mouse()\ \{\ \textcolor{keywordflow}{return}\ data\_.mouse;\ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \textcolor{keywordtype}{bool}\ is\_cursor\_reporting()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ type\_\ ==\ Type::CursorReporting;\ \}}
+\DoxyCodeLine{00075\ \ \ \textcolor{keywordtype}{int}\ cursor\_x()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ data\_.cursor.x;\ \}}
+\DoxyCodeLine{00076\ \ \ \textcolor{keywordtype}{int}\ cursor\_y()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ data\_.cursor.y;\ \}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \textcolor{keyword}{const}\ std::string\&\ input()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ input\_;\ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\&\ other)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ input\_\ ==\ other.input\_;\ \}}
+\DoxyCodeLine{00081\ \ \ \textcolor{keywordtype}{bool}\ operator!=(\textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Event}{Event}}\&\ other)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !operator==(other);\ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \textcolor{comment}{//-\/-\/-\/\ State\ section\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00084\ \ \ ScreenInteractive*\ screen\_\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00087\ \ \ \textcolor{keyword}{friend}\ ComponentBase;}
+\DoxyCodeLine{00088\ \ \ \textcolor{keyword}{friend}\ ScreenInteractive;}
+\DoxyCodeLine{00089\ \ \ \textcolor{keyword}{enum\ class}\ Type\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ Unknown,}
+\DoxyCodeLine{00091\ \ \ \ \ \mbox{\hyperlink{structftxui_1_1Event_a76bb32507ef5b345b33a5e5858fd4f22}{Character}},}
+\DoxyCodeLine{00092\ \ \ \ \ \mbox{\hyperlink{structftxui_1_1Event_a8676a736487849042dc0e9b6be568960}{Mouse}},}
+\DoxyCodeLine{00093\ \ \ \ \ CursorReporting,}
+\DoxyCodeLine{00094\ \ \ \};}
+\DoxyCodeLine{00095\ \ \ Type\ type\_\ =\ Type::Unknown;}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \textcolor{keyword}{struct\ }Cursor\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordtype}{int}\ x\ =\ 0;}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{int}\ y\ =\ 0;}
+\DoxyCodeLine{00100\ \ \ \};}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structftxui_1_1Event_a8676a736487849042dc0e9b6be568960}{Mouse}}\ mouse;}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{struct\ }Cursor\ cursor;}
+\DoxyCodeLine{00105\ \ \ \}\ data\_\ =\ \{\};}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ std::string\ input\_;}
+\DoxyCodeLine{00108\ \};}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \}\ \ \textcolor{comment}{//\ namespace\ ftxui}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ end\ of\ include\ guard:\ FTXUI\_COMPONENT\_EVENT\_HPP\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

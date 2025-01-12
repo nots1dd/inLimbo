@@ -1,0 +1,151 @@
+\doxysection{src/ui/colors.hpp File Reference}
+\hypertarget{colors_8hpp}{}\label{colors_8hpp}\index{src/ui/colors.hpp@{src/ui/colors.hpp}}
+{\ttfamily \#include $<$cstdint$>$}\newline
+{\ttfamily \#include $<$ftxui/screen/color.\+hpp$>$}\newline
+{\ttfamily \#include $<$iomanip$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$regex$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structInLimboColors}{In\+Limbo\+Colors}}
+\begin{DoxyCompactList}\small\item\em Represents a collection of colors used in the application. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceTrueColors}{True\+Colors}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{True\+Colors\+::\+Color}} \{ \newline
+\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae90dfb84e30edf611e326eeb04d680de}{True\+Colors\+::\+Black}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da25a81701fbfa4a1efdf660a950c1d006}{True\+Colors\+::\+White}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daee38e4d5dd68c4e440825018d549cb47}{True\+Colors\+::\+Red}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daf9a96fb667261a141d10021a66d6ad0f}{True\+Colors\+::\+Light\+Red}}
+, \newline
+\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dad382816a3cbeed082c9e216e7392eed1}{True\+Colors\+::\+Green}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da7a6a38bec67cbc2a39ce22f34e4ed8e2}{True\+Colors\+::\+Light\+Green}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da9594eec95be70e7b1710f730fdda33d9}{True\+Colors\+::\+Blue}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da4d7ff7393a484a7b9ed2e381f5cdeaf7}{True\+Colors\+::\+Light\+Blue}}
+, \newline
+\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da51e6cd92b6c45f9affdc158ecca2b8b8}{True\+Colors\+::\+Yellow}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafaf948b65bda38f44b17d156177d1728}{True\+Colors\+::\+Light\+Yellow}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da023c239d2f2538f140a20e72c7b73f20}{True\+Colors\+::\+Cyan}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dac37b5ce4ba80a097d82726ae74d34b13}{True\+Colors\+::\+Light\+Cyan}}
+, \newline
+\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dab91cc2c1416fcca942b61c7ac5b1a9ac}{True\+Colors\+::\+Magenta}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daf1ec64ef9f82e9fb86b094f8b548f9f1}{True\+Colors\+::\+Light\+Magenta}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da994ae1d9731cebe455aff211bcb25b93}{True\+Colors\+::\+Gray}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafb55202637692de4a494e9ade4cff2dd}{True\+Colors\+::\+Light\+Gray}}
+, \newline
+\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da91e93fc984985226ad4d319a4e4134ab}{True\+Colors\+::\+Dark\+Gray}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da909cea0c97058cfe2e3ea8d675cb08e1}{True\+Colors\+::\+Orange}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da475e89699fa47c1b7b07977437e16b3c}{True\+Colors\+::\+Light\+Orange}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dab9ba865fec061c9706d2fd7ce49c0cc7}{True\+Colors\+::\+Purple}}
+, \newline
+\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafef6599756397fc44e38e609d72cc35c}{True\+Colors\+::\+Light\+Purple}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da8dc5344bc0746e1cc5abf896ca03bbdf}{True\+Colors\+::\+Pink}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dab9c31a17936f5966fd4fbe74f9b09012}{True\+Colors\+::\+Light\+Pink}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae20385a2b41df1743f787ebef18222b8}{True\+Colors\+::\+Teal}}
+, \newline
+\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da44a58aefa71d33bd93c37c69cfcb6856}{True\+Colors\+::\+Light\+Teal}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dace0e27a9031d2062e7c3c99c9e691432}{True\+Colors\+::\+Sky\+Blue}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da61db47dac8aefe03fc67ee1b65ecd8f6}{True\+Colors\+::\+Coral}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafc1cebf02dc2ee68655f3e7bf1b84230}{True\+Colors\+::\+Lime}}
+, \newline
+\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae346c232ce72c429ea0995de9f63f551}{True\+Colors\+::\+Lavender}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da2e24b6a6dcc7ea9356fb274402296a06}{True\+Colors\+::\+Crimson}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da9768feb3fdb1f267b06093bc572952dd}{True\+Colors\+::\+Gold}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da8b7b9806e715b01b9021912e0f86935f}{True\+Colors\+::\+Indigo}}
+, \newline
+\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daca8a196f97a48b2bb489f3e849a68418}{True\+Colors\+::\+Mint}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da13ad5ac690e735fa48cf982532174e79}{True\+Colors\+::\+Navy}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da53841c6e42a6ce77b6f3b80133c9342c}{True\+Colors\+::\+Peach}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dacec7ca178e2f7b1ae3a4600868c57aca}{True\+Colors\+::\+Sand}}
+, \newline
+\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da2e9fa83f4491dac5067162194331411e}{True\+Colors\+::\+Sea\+Green}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da37cf7970e7976f3f0f926f4e7141fc1c}{True\+Colors\+::\+Light\+Sea\+Green}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dac375f3201e4105d841391a86cc3f1fc5}{True\+Colors\+::\+Slate\+Blue}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da08843d30dd5304f696af8703f5522c35}{True\+Colors\+::\+Light\+Slate\+Blue}}
+, \newline
+\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da3d62adaa3a0f93443206bc1528278ba2}{True\+Colors\+::\+Sunset\+Orange}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dada3a4f0a911cebe3bc75f6e39c324696}{True\+Colors\+::\+Turquoise}}
+, \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae5c96e2ad0520ead9cec1a0664a709a9}{True\+Colors\+::\+Light\+Turquoise}}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeration for predefined true colors. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+ftxui\+::\+Color \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{True\+Colors\+::\+Get\+Color}} (\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{Color}} color)
+\begin{DoxyCompactList}\small\item\em Maps a predefined color enum to its corresponding ftxui\+::\+Color\+::\+RGB value. \end{DoxyCompactList}\item 
+ftxui\+::\+Color \mbox{\hyperlink{colors_8hpp_a38d72813e90e14f8b18e88cd4af7c9da}{parse\+Hex\+Color}} (const std\+::string \&hex)
+\begin{DoxyCompactList}\small\item\em Parses a hexadecimal color string into an ftxui\+::\+Color\+::\+RGB value. \end{DoxyCompactList}\item 
+ftxui\+::\+Color \mbox{\hyperlink{colors_8hpp_adf73c6c8342b58af9e25838c451bc575}{parse\+Color}} (const std\+::string \&color\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Parses a color name or hex value into an ftxui\+::\+Color. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structInLimboColors}{In\+Limbo\+Colors}} \mbox{\hyperlink{colors_8hpp_a637d01c5fd950275d85073732fec1d08}{parse\+Colors}} ()
+\begin{DoxyCompactList}\small\item\em Parses colors from a TOML configuration into an \doxylink{structInLimboColors}{In\+Limbo\+Colors} struct. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{colors_8hpp_adf73c6c8342b58af9e25838c451bc575}\index{colors.hpp@{colors.hpp}!parseColor@{parseColor}}
+\index{parseColor@{parseColor}!colors.hpp@{colors.hpp}}
+\doxysubsubsection{\texorpdfstring{parseColor()}{parseColor()}}
+{\footnotesize\ttfamily \label{colors_8hpp_adf73c6c8342b58af9e25838c451bc575} 
+ftxui\+::\+Color parse\+Color (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{color\+\_\+name}{}\end{DoxyParamCaption})}
+
+
+
+Parses a color name or hex value into an ftxui\+::\+Color. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em color\+\_\+name} & The name or hexadecimal representation of the color. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+ftxui\+::\+Color The corresponding RGB color. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::exit} & on invalid or unsupported colors. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{colors_8hpp_a637d01c5fd950275d85073732fec1d08}\index{colors.hpp@{colors.hpp}!parseColors@{parseColors}}
+\index{parseColors@{parseColors}!colors.hpp@{colors.hpp}}
+\doxysubsubsection{\texorpdfstring{parseColors()}{parseColors()}}
+{\footnotesize\ttfamily \label{colors_8hpp_a637d01c5fd950275d85073732fec1d08} 
+\mbox{\hyperlink{structInLimboColors}{In\+Limbo\+Colors}} parse\+Colors (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Parses colors from a TOML configuration into an \doxylink{structInLimboColors}{In\+Limbo\+Colors} struct. 
+
+\begin{DoxyReturn}{Returns}
+\doxylink{structInLimboColors}{In\+Limbo\+Colors} The populated color configuration. 
+\end{DoxyReturn}
+\Hypertarget{colors_8hpp_a38d72813e90e14f8b18e88cd4af7c9da}\index{colors.hpp@{colors.hpp}!parseHexColor@{parseHexColor}}
+\index{parseHexColor@{parseHexColor}!colors.hpp@{colors.hpp}}
+\doxysubsubsection{\texorpdfstring{parseHexColor()}{parseHexColor()}}
+{\footnotesize\ttfamily \label{colors_8hpp_a38d72813e90e14f8b18e88cd4af7c9da} 
+ftxui\+::\+Color parse\+Hex\+Color (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{hex}{}\end{DoxyParamCaption})}
+
+
+
+Parses a hexadecimal color string into an ftxui\+::\+Color\+::\+RGB value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em hex} & The hexadecimal color string in the format {\ttfamily \#RRGGBB}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+ftxui\+::\+Color The corresponding RGB color. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::exit} & on invalid format. \\
+\hline
+\end{DoxyExceptions}

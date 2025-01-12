@@ -1,0 +1,103 @@
+\doxysection{src/network/client.cpp File Reference}
+\hypertarget{client_8cpp}{}\label{client_8cpp}\index{src/network/client.cpp@{src/network/client.cpp}}
+{\ttfamily \#include "{}protocols.\+h"{}}\newline
+{\ttfamily \#include $<$termios.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{client_8cpp_ab5831cf37681f7fdc032960a380fdcd1}{sha256}} (const std\+::string \&str)
+\item 
+SSL\+\_\+\+CTX \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{client_8cpp_a5f2c9a31e6ce295c270f6a5876c46c9d}{initialize\+\_\+ssl}} ()
+\item 
+std\+::string \mbox{\hyperlink{client_8cpp_a4b0db2ddc56f01fd232e11c7a337564a}{read\+\_\+password}} ()
+\item 
+bool \mbox{\hyperlink{client_8cpp_a069a9d9cff4f6decc645b9ffd4f47b4b}{authenticate}} (SSL \texorpdfstring{$\ast$}{*}ssl)
+\item 
+bool \mbox{\hyperlink{client_8cpp_a0e91db1333a10b3cb462ae3e59941a80}{receive\+\_\+file}} (SSL \texorpdfstring{$\ast$}{*}ssl, const std\+::string \&filename)
+\item 
+void \mbox{\hyperlink{client_8cpp_af0b1ec3bdcd646e275ee6f349d98ba55}{list\+\_\+files}} (SSL \texorpdfstring{$\ast$}{*}ssl)
+\item 
+void \mbox{\hyperlink{client_8cpp_a853216ac51aa181669ff4d3de74058a7}{print\+\_\+help}} ()
+\item 
+int \mbox{\hyperlink{client_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const std\+::string \mbox{\hyperlink{client_8cpp_a4f9bd9eba9795a3cd6c6915ff298af61}{USERNAME}} = "{}client"{}
+\item 
+const std\+::string \mbox{\hyperlink{client_8cpp_af5ee117f7b07ddeb815e32a6b95d9c83}{SALT}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{client_8cpp_a069a9d9cff4f6decc645b9ffd4f47b4b}\index{client.cpp@{client.cpp}!authenticate@{authenticate}}
+\index{authenticate@{authenticate}!client.cpp@{client.cpp}}
+\doxysubsubsection{\texorpdfstring{authenticate()}{authenticate()}}
+{\footnotesize\ttfamily \label{client_8cpp_a069a9d9cff4f6decc645b9ffd4f47b4b} 
+bool authenticate (\begin{DoxyParamCaption}\item[{SSL \texorpdfstring{$\ast$}{*}}]{ssl}{}\end{DoxyParamCaption})}
+
+\Hypertarget{client_8cpp_a5f2c9a31e6ce295c270f6a5876c46c9d}\index{client.cpp@{client.cpp}!initialize\_ssl@{initialize\_ssl}}
+\index{initialize\_ssl@{initialize\_ssl}!client.cpp@{client.cpp}}
+\doxysubsubsection{\texorpdfstring{initialize\_ssl()}{initialize\_ssl()}}
+{\footnotesize\ttfamily \label{client_8cpp_a5f2c9a31e6ce295c270f6a5876c46c9d} 
+SSL\+\_\+\+CTX \texorpdfstring{$\ast$}{*} initialize\+\_\+ssl (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{client_8cpp_af0b1ec3bdcd646e275ee6f349d98ba55}\index{client.cpp@{client.cpp}!list\_files@{list\_files}}
+\index{list\_files@{list\_files}!client.cpp@{client.cpp}}
+\doxysubsubsection{\texorpdfstring{list\_files()}{list\_files()}}
+{\footnotesize\ttfamily \label{client_8cpp_af0b1ec3bdcd646e275ee6f349d98ba55} 
+void list\+\_\+files (\begin{DoxyParamCaption}\item[{SSL \texorpdfstring{$\ast$}{*}}]{ssl}{}\end{DoxyParamCaption})}
+
+\Hypertarget{client_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}\index{client.cpp@{client.cpp}!main@{main}}
+\index{main@{main}!client.cpp@{client.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily \label{client_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4} 
+int main (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{client_8cpp_a853216ac51aa181669ff4d3de74058a7}\index{client.cpp@{client.cpp}!print\_help@{print\_help}}
+\index{print\_help@{print\_help}!client.cpp@{client.cpp}}
+\doxysubsubsection{\texorpdfstring{print\_help()}{print\_help()}}
+{\footnotesize\ttfamily \label{client_8cpp_a853216ac51aa181669ff4d3de74058a7} 
+void print\+\_\+help (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{client_8cpp_a4b0db2ddc56f01fd232e11c7a337564a}\index{client.cpp@{client.cpp}!read\_password@{read\_password}}
+\index{read\_password@{read\_password}!client.cpp@{client.cpp}}
+\doxysubsubsection{\texorpdfstring{read\_password()}{read\_password()}}
+{\footnotesize\ttfamily \label{client_8cpp_a4b0db2ddc56f01fd232e11c7a337564a} 
+std\+::string read\+\_\+password (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{client_8cpp_a0e91db1333a10b3cb462ae3e59941a80}\index{client.cpp@{client.cpp}!receive\_file@{receive\_file}}
+\index{receive\_file@{receive\_file}!client.cpp@{client.cpp}}
+\doxysubsubsection{\texorpdfstring{receive\_file()}{receive\_file()}}
+{\footnotesize\ttfamily \label{client_8cpp_a0e91db1333a10b3cb462ae3e59941a80} 
+bool receive\+\_\+file (\begin{DoxyParamCaption}\item[{SSL \texorpdfstring{$\ast$}{*}}]{ssl}{, }\item[{const std\+::string \&}]{filename}{}\end{DoxyParamCaption})}
+
+\Hypertarget{client_8cpp_ab5831cf37681f7fdc032960a380fdcd1}\index{client.cpp@{client.cpp}!sha256@{sha256}}
+\index{sha256@{sha256}!client.cpp@{client.cpp}}
+\doxysubsubsection{\texorpdfstring{sha256()}{sha256()}}
+{\footnotesize\ttfamily \label{client_8cpp_ab5831cf37681f7fdc032960a380fdcd1} 
+std\+::string sha256 (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{str}{}\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{client_8cpp_af5ee117f7b07ddeb815e32a6b95d9c83}\index{client.cpp@{client.cpp}!SALT@{SALT}}
+\index{SALT@{SALT}!client.cpp@{client.cpp}}
+\doxysubsubsection{\texorpdfstring{SALT}{SALT}}
+{\footnotesize\ttfamily \label{client_8cpp_af5ee117f7b07ddeb815e32a6b95d9c83} 
+const std\+::string SALT}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}random\_salt\_value"{}}}
+
+\end{DoxyCode}
+\Hypertarget{client_8cpp_a4f9bd9eba9795a3cd6c6915ff298af61}\index{client.cpp@{client.cpp}!USERNAME@{USERNAME}}
+\index{USERNAME@{USERNAME}!client.cpp@{client.cpp}}
+\doxysubsubsection{\texorpdfstring{USERNAME}{USERNAME}}
+{\footnotesize\ttfamily \label{client_8cpp_a4f9bd9eba9795a3cd6c6915ff298af61} 
+const std\+::string USERNAME = "{}client"{}}
+

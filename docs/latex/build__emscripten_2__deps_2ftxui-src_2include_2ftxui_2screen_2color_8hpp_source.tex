@@ -1,0 +1,338 @@
+\doxysection{color.\+hpp}
+\hypertarget{build__emscripten_2__deps_2ftxui-src_2include_2ftxui_2screen_2color_8hpp_source}{}\label{build__emscripten_2__deps_2ftxui-src_2include_2ftxui_2screen_2color_8hpp_source}\index{build\_emscripten/\_deps/ftxui-\/src/include/ftxui/screen/color.hpp@{build\_emscripten/\_deps/ftxui-\/src/include/ftxui/screen/color.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2020\ Arthur\ Sonzogni.\ All\ rights\ reserved.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Use\ of\ this\ source\ code\ is\ governed\ by\ the\ MIT\ license\ that\ can\ be\ found\ in}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ FTXUI\_SCREEN\_COLOR\_HPP}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ FTXUI\_SCREEN\_COLOR\_HPP}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cstdint>}\ \ \textcolor{comment}{//\ for\ uint8\_t}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}\ \ \ \textcolor{comment}{//\ for\ string}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}\ \ \ \textcolor{comment}{//\ for\ vector}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifdef\ RGB}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ Workaround\ for\ wingdi.h\ (via\ Windows.h)\ defining\ macros\ that\ break\ things.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ https://docs.microsoft.com/en-\/us/windows/win32/api/wingdi/nf-\/wingdi-\/rgb}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#undef\ RGB}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }ftxui\ \{}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classftxui_1_1Color_afa1676ff15c48927d27751829396f491}{Color}}\ \{}
+\DoxyCodeLine{00022\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00023\ \ \ \textcolor{keyword}{enum}\ Palette1\ :\ uint8\_t;}
+\DoxyCodeLine{00024\ \ \ \textcolor{keyword}{enum}\ Palette16\ :\ uint8\_t;}
+\DoxyCodeLine{00025\ \ \ \textcolor{keyword}{enum}\ Palette256\ :\ uint8\_t;}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \mbox{\hyperlink{classftxui_1_1Color_afa1676ff15c48927d27751829396f491}{Color}}();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Transparent.}}
+\DoxyCodeLine{00028\ \ \ \mbox{\hyperlink{classftxui_1_1Color_afa1676ff15c48927d27751829396f491}{Color}}(Palette1\ index);\ \ \ \ \textcolor{comment}{//\ Transparent.}}
+\DoxyCodeLine{00029\ \ \ \mbox{\hyperlink{classftxui_1_1Color_afa1676ff15c48927d27751829396f491}{Color}}(Palette16\ index);\ \ \ \textcolor{comment}{//\ Implicit\ conversion\ from\ index\ to\ Color.}}
+\DoxyCodeLine{00030\ \ \ \mbox{\hyperlink{classftxui_1_1Color_afa1676ff15c48927d27751829396f491}{Color}}(Palette256\ index);\ \ \textcolor{comment}{//\ Implicit\ conversion\ from\ index\ to\ Color.}}
+\DoxyCodeLine{00031\ \ \ \mbox{\hyperlink{classftxui_1_1Color_afa1676ff15c48927d27751829396f491}{Color}}(uint8\_t\ red,\ uint8\_t\ green,\ uint8\_t\ blue);}
+\DoxyCodeLine{00032\ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{classftxui_1_1Color_afa1676ff15c48927d27751829396f491}{Color}}\ \mbox{\hyperlink{classftxui_1_1Color_a73ea9ba5427b2e53a5e91c26c256b5bf}{RGB}}(uint8\_t\ red,\ uint8\_t\ green,\ uint8\_t\ blue);}
+\DoxyCodeLine{00033\ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{classftxui_1_1Color_afa1676ff15c48927d27751829396f491}{Color}}\ \mbox{\hyperlink{classftxui_1_1Color_a3ec30f8faab02896b42e580765b2719e}{HSV}}(uint8\_t\ hue,\ uint8\_t\ saturation,\ uint8\_t\ value);}
+\DoxyCodeLine{00034\ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{classftxui_1_1Color_afa1676ff15c48927d27751829396f491}{Color}}\ Interpolate(\textcolor{keywordtype}{float}\ t,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classftxui_1_1Color_afa1676ff15c48927d27751829396f491}{Color}}\&\ a,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classftxui_1_1Color_afa1676ff15c48927d27751829396f491}{Color}}\&\ b);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00037\ \ \ \textcolor{comment}{//\ List\ of\ colors:}}
+\DoxyCodeLine{00038\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00039\ \ \ \textcolor{comment}{//\ clang-\/format\ off}}
+\DoxyCodeLine{00040\ \ \ \textcolor{keyword}{enum}\ Palette1\ :\ uint8\_t\{}
+\DoxyCodeLine{00041\ \ \ \ \ Default,\ \textcolor{comment}{//\ Transparent}}
+\DoxyCodeLine{00042\ \ \ \};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \textcolor{keyword}{enum}\ Palette16\ :\ uint8\_t\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ Black\ \ \ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00046\ \ \ \ \ Red\ \ \ \ \ \ \ \ \ \ =\ 1,}
+\DoxyCodeLine{00047\ \ \ \ \ Green\ \ \ \ \ \ \ \ =\ 2,}
+\DoxyCodeLine{00048\ \ \ \ \ Yellow\ \ \ \ \ \ \ =\ 3,}
+\DoxyCodeLine{00049\ \ \ \ \ Blue\ \ \ \ \ \ \ \ \ =\ 4,}
+\DoxyCodeLine{00050\ \ \ \ \ Magenta\ \ \ \ \ \ =\ 5,}
+\DoxyCodeLine{00051\ \ \ \ \ Cyan\ \ \ \ \ \ \ \ \ =\ 6,}
+\DoxyCodeLine{00052\ \ \ \ \ GrayLight\ \ \ \ =\ 7,}
+\DoxyCodeLine{00053\ \ \ \ \ GrayDark\ \ \ \ \ =\ 8,}
+\DoxyCodeLine{00054\ \ \ \ \ RedLight\ \ \ \ \ =\ 9,}
+\DoxyCodeLine{00055\ \ \ \ \ GreenLight\ \ \ =\ 10,}
+\DoxyCodeLine{00056\ \ \ \ \ YellowLight\ \ =\ 11,}
+\DoxyCodeLine{00057\ \ \ \ \ BlueLight\ \ \ \ =\ 12,}
+\DoxyCodeLine{00058\ \ \ \ \ MagentaLight\ =\ 13,}
+\DoxyCodeLine{00059\ \ \ \ \ CyanLight\ \ \ \ =\ 14,}
+\DoxyCodeLine{00060\ \ \ \ \ White\ \ \ \ \ \ \ \ =\ 15,}
+\DoxyCodeLine{00061\ \ \ \};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \textcolor{keyword}{enum}\ Palette256\ :\ uint8\_t\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ Aquamarine1\ \ \ \ \ \ \ \ =\ 122,}
+\DoxyCodeLine{00065\ \ \ \ \ Aquamarine1Bis\ \ \ \ \ =\ 86,}
+\DoxyCodeLine{00066\ \ \ \ \ Aquamarine3\ \ \ \ \ \ \ \ =\ 79,}
+\DoxyCodeLine{00067\ \ \ \ \ Blue1\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 21,}
+\DoxyCodeLine{00068\ \ \ \ \ Blue3\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 19,}
+\DoxyCodeLine{00069\ \ \ \ \ Blue3Bis\ \ \ \ \ \ \ \ \ \ \ =\ 20,}
+\DoxyCodeLine{00070\ \ \ \ \ BlueViolet\ \ \ \ \ \ \ \ \ =\ 57,}
+\DoxyCodeLine{00071\ \ \ \ \ CadetBlue\ \ \ \ \ \ \ \ \ \ =\ 72,}
+\DoxyCodeLine{00072\ \ \ \ \ CadetBlueBis\ \ \ \ \ \ \ =\ 73,}
+\DoxyCodeLine{00073\ \ \ \ \ Chartreuse1\ \ \ \ \ \ \ \ =\ 118,}
+\DoxyCodeLine{00074\ \ \ \ \ Chartreuse2\ \ \ \ \ \ \ \ =\ 112,}
+\DoxyCodeLine{00075\ \ \ \ \ Chartreuse2Bis\ \ \ \ \ =\ 82,}
+\DoxyCodeLine{00076\ \ \ \ \ Chartreuse3\ \ \ \ \ \ \ \ =\ 70,}
+\DoxyCodeLine{00077\ \ \ \ \ Chartreuse3Bis\ \ \ \ \ =\ 76,}
+\DoxyCodeLine{00078\ \ \ \ \ Chartreuse4\ \ \ \ \ \ \ \ =\ 64,}
+\DoxyCodeLine{00079\ \ \ \ \ CornflowerBlue\ \ \ \ \ =\ 69,}
+\DoxyCodeLine{00080\ \ \ \ \ Cornsilk1\ \ \ \ \ \ \ \ \ \ =\ 230,}
+\DoxyCodeLine{00081\ \ \ \ \ Cyan1\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 51,}
+\DoxyCodeLine{00082\ \ \ \ \ Cyan2\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 50,}
+\DoxyCodeLine{00083\ \ \ \ \ Cyan3\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 43,}
+\DoxyCodeLine{00084\ \ \ \ \ DarkBlue\ \ \ \ \ \ \ \ \ \ \ =\ 18,}
+\DoxyCodeLine{00085\ \ \ \ \ DarkCyan\ \ \ \ \ \ \ \ \ \ \ =\ 36,}
+\DoxyCodeLine{00086\ \ \ \ \ DarkGoldenrod\ \ \ \ \ \ =\ 136,}
+\DoxyCodeLine{00087\ \ \ \ \ DarkGreen\ \ \ \ \ \ \ \ \ \ =\ 22,}
+\DoxyCodeLine{00088\ \ \ \ \ DarkKhaki\ \ \ \ \ \ \ \ \ \ =\ 143,}
+\DoxyCodeLine{00089\ \ \ \ \ DarkMagenta\ \ \ \ \ \ \ \ =\ 90,}
+\DoxyCodeLine{00090\ \ \ \ \ DarkMagentaBis\ \ \ \ \ =\ 91,}
+\DoxyCodeLine{00091\ \ \ \ \ DarkOliveGreen1\ \ \ \ =\ 191,}
+\DoxyCodeLine{00092\ \ \ \ \ DarkOliveGreen1Bis\ =\ 192,}
+\DoxyCodeLine{00093\ \ \ \ \ DarkOliveGreen2\ \ \ \ =\ 155,}
+\DoxyCodeLine{00094\ \ \ \ \ DarkOliveGreen3\ \ \ \ =\ 107,}
+\DoxyCodeLine{00095\ \ \ \ \ DarkOliveGreen3Bis\ =\ 113,}
+\DoxyCodeLine{00096\ \ \ \ \ DarkOliveGreen3Ter\ =\ 149,}
+\DoxyCodeLine{00097\ \ \ \ \ DarkOrange\ \ \ \ \ \ \ \ \ =\ 208,}
+\DoxyCodeLine{00098\ \ \ \ \ DarkOrange3\ \ \ \ \ \ \ \ =\ 130,}
+\DoxyCodeLine{00099\ \ \ \ \ DarkOrange3Bis\ \ \ \ \ =\ 166,}
+\DoxyCodeLine{00100\ \ \ \ \ DarkRed\ \ \ \ \ \ \ \ \ \ \ \ =\ 52,}
+\DoxyCodeLine{00101\ \ \ \ \ DarkRedBis\ \ \ \ \ \ \ \ \ =\ 88,}
+\DoxyCodeLine{00102\ \ \ \ \ DarkSeaGreen\ \ \ \ \ \ \ =\ 108,}
+\DoxyCodeLine{00103\ \ \ \ \ DarkSeaGreen1\ \ \ \ \ \ =\ 158,}
+\DoxyCodeLine{00104\ \ \ \ \ DarkSeaGreen1Bis\ \ \ =\ 193,}
+\DoxyCodeLine{00105\ \ \ \ \ DarkSeaGreen2\ \ \ \ \ \ =\ 151,}
+\DoxyCodeLine{00106\ \ \ \ \ DarkSeaGreen2Bis\ \ \ =\ 157,}
+\DoxyCodeLine{00107\ \ \ \ \ DarkSeaGreen3\ \ \ \ \ \ =\ 115,}
+\DoxyCodeLine{00108\ \ \ \ \ DarkSeaGreen3Bis\ \ \ =\ 150,}
+\DoxyCodeLine{00109\ \ \ \ \ DarkSeaGreen4\ \ \ \ \ \ =\ 65,}
+\DoxyCodeLine{00110\ \ \ \ \ DarkSeaGreen4Bis\ \ \ =\ 71,}
+\DoxyCodeLine{00111\ \ \ \ \ DarkSlateGray1\ \ \ \ \ =\ 123,}
+\DoxyCodeLine{00112\ \ \ \ \ DarkSlateGray2\ \ \ \ \ =\ 87,}
+\DoxyCodeLine{00113\ \ \ \ \ DarkSlateGray3\ \ \ \ \ =\ 116,}
+\DoxyCodeLine{00114\ \ \ \ \ DarkTurquoise\ \ \ \ \ \ =\ 44,}
+\DoxyCodeLine{00115\ \ \ \ \ DarkViolet\ \ \ \ \ \ \ \ \ =\ 128,}
+\DoxyCodeLine{00116\ \ \ \ \ DarkVioletBis\ \ \ \ \ \ =\ 92,}
+\DoxyCodeLine{00117\ \ \ \ \ DeepPink1\ \ \ \ \ \ \ \ \ \ =\ 198,}
+\DoxyCodeLine{00118\ \ \ \ \ DeepPink1Bis\ \ \ \ \ \ \ =\ 199,}
+\DoxyCodeLine{00119\ \ \ \ \ DeepPink2\ \ \ \ \ \ \ \ \ \ =\ 197,}
+\DoxyCodeLine{00120\ \ \ \ \ DeepPink3\ \ \ \ \ \ \ \ \ \ =\ 161,}
+\DoxyCodeLine{00121\ \ \ \ \ DeepPink3Bis\ \ \ \ \ \ \ =\ 162,}
+\DoxyCodeLine{00122\ \ \ \ \ DeepPink4\ \ \ \ \ \ \ \ \ \ =\ 125,}
+\DoxyCodeLine{00123\ \ \ \ \ DeepPink4Bis\ \ \ \ \ \ \ \ \ \ =\ 89,}
+\DoxyCodeLine{00124\ \ \ \ \ DeepPink4Ter\ \ \ \ \ \ \ =\ 53,}
+\DoxyCodeLine{00125\ \ \ \ \ DeepSkyBlue1\ \ \ \ \ \ \ =\ 39,}
+\DoxyCodeLine{00126\ \ \ \ \ DeepSkyBlue2\ \ \ \ \ \ \ =\ 38,}
+\DoxyCodeLine{00127\ \ \ \ \ DeepSkyBlue3\ \ \ \ \ \ \ =\ 31,}
+\DoxyCodeLine{00128\ \ \ \ \ DeepSkyBlue3Bis\ \ \ \ =\ 32,}
+\DoxyCodeLine{00129\ \ \ \ \ DeepSkyBlue4\ \ \ \ \ \ \ =\ 23,}
+\DoxyCodeLine{00130\ \ \ \ \ DeepSkyBlue4Bis\ \ \ \ =\ 24,}
+\DoxyCodeLine{00131\ \ \ \ \ DeepSkyBlue4Ter\ \ \ \ =\ 25,}
+\DoxyCodeLine{00132\ \ \ \ \ DodgerBlue1\ \ \ \ \ \ \ \ =\ 33,}
+\DoxyCodeLine{00133\ \ \ \ \ DodgerBlue2\ \ \ \ \ \ \ \ =\ 27,}
+\DoxyCodeLine{00134\ \ \ \ \ DodgerBlue3\ \ \ \ \ \ \ \ =\ 26,}
+\DoxyCodeLine{00135\ \ \ \ \ Gold1\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 220,}
+\DoxyCodeLine{00136\ \ \ \ \ Gold3\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 142,}
+\DoxyCodeLine{00137\ \ \ \ \ Gold3Bis\ \ \ \ \ \ \ \ \ \ \ =\ 178,}
+\DoxyCodeLine{00138\ \ \ \ \ Green1\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 46,}
+\DoxyCodeLine{00139\ \ \ \ \ Green3\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 34,}
+\DoxyCodeLine{00140\ \ \ \ \ Green3Bis\ \ \ \ \ \ \ \ \ \ =\ 40,}
+\DoxyCodeLine{00141\ \ \ \ \ Green4\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 28,}
+\DoxyCodeLine{00142\ \ \ \ \ GreenYellow\ \ \ \ \ \ \ \ =\ 154,}
+\DoxyCodeLine{00143\ \ \ \ \ Grey0\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 16,}
+\DoxyCodeLine{00144\ \ \ \ \ Grey100\ \ \ \ \ \ \ \ \ \ \ \ =\ 231,}
+\DoxyCodeLine{00145\ \ \ \ \ Grey11\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 234,}
+\DoxyCodeLine{00146\ \ \ \ \ Grey15\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 235,}
+\DoxyCodeLine{00147\ \ \ \ \ Grey19\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 236,}
+\DoxyCodeLine{00148\ \ \ \ \ Grey23\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 237,}
+\DoxyCodeLine{00149\ \ \ \ \ Grey27\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 238,}
+\DoxyCodeLine{00150\ \ \ \ \ Grey3\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 232,}
+\DoxyCodeLine{00151\ \ \ \ \ Grey30\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 239,}
+\DoxyCodeLine{00152\ \ \ \ \ Grey35\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 240,}
+\DoxyCodeLine{00153\ \ \ \ \ Grey37\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 59,}
+\DoxyCodeLine{00154\ \ \ \ \ Grey39\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 241,}
+\DoxyCodeLine{00155\ \ \ \ \ Grey42\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 242,}
+\DoxyCodeLine{00156\ \ \ \ \ Grey46\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 243,}
+\DoxyCodeLine{00157\ \ \ \ \ Grey50\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 244,}
+\DoxyCodeLine{00158\ \ \ \ \ Grey53\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 102,}
+\DoxyCodeLine{00159\ \ \ \ \ Grey54\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 245,}
+\DoxyCodeLine{00160\ \ \ \ \ Grey58\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 246,}
+\DoxyCodeLine{00161\ \ \ \ \ Grey62\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 247,}
+\DoxyCodeLine{00162\ \ \ \ \ Grey63\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 139,}
+\DoxyCodeLine{00163\ \ \ \ \ Grey66\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 248,}
+\DoxyCodeLine{00164\ \ \ \ \ Grey69\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 145,}
+\DoxyCodeLine{00165\ \ \ \ \ Grey7\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 233,}
+\DoxyCodeLine{00166\ \ \ \ \ Grey70\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 249,}
+\DoxyCodeLine{00167\ \ \ \ \ Grey74\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 250,}
+\DoxyCodeLine{00168\ \ \ \ \ Grey78\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 251,}
+\DoxyCodeLine{00169\ \ \ \ \ Grey82\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 252,}
+\DoxyCodeLine{00170\ \ \ \ \ Grey84\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 188,}
+\DoxyCodeLine{00171\ \ \ \ \ Grey85\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 253,}
+\DoxyCodeLine{00172\ \ \ \ \ Grey89\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 254,}
+\DoxyCodeLine{00173\ \ \ \ \ Grey93\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 255,}
+\DoxyCodeLine{00174\ \ \ \ \ Honeydew2\ \ \ \ \ \ \ \ \ \ =\ 194,}
+\DoxyCodeLine{00175\ \ \ \ \ HotPink\ \ \ \ \ \ \ \ \ \ \ \ =\ 205,}
+\DoxyCodeLine{00176\ \ \ \ \ HotPink2\ \ \ \ \ \ \ \ \ \ \ =\ 169,}
+\DoxyCodeLine{00177\ \ \ \ \ HotPink3\ \ \ \ \ \ \ \ \ \ \ =\ 132,}
+\DoxyCodeLine{00178\ \ \ \ \ HotPink3Bis\ \ \ \ \ \ \ \ =\ 168,}
+\DoxyCodeLine{00179\ \ \ \ \ HotPinkBis\ \ \ \ \ \ \ \ \ =\ 206,}
+\DoxyCodeLine{00180\ \ \ \ \ IndianRed\ \ \ \ \ \ \ \ \ \ =\ 131,}
+\DoxyCodeLine{00181\ \ \ \ \ IndianRed1\ \ \ \ \ \ \ \ \ =\ 203,}
+\DoxyCodeLine{00182\ \ \ \ \ IndianRed1Bis\ \ \ \ \ \ =\ 204,}
+\DoxyCodeLine{00183\ \ \ \ \ IndianRedBis\ \ \ \ \ \ \ =\ 167,}
+\DoxyCodeLine{00184\ \ \ \ \ Khaki1\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 228,}
+\DoxyCodeLine{00185\ \ \ \ \ Khaki3\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 185,}
+\DoxyCodeLine{00186\ \ \ \ \ LightCoral\ \ \ \ \ \ \ \ \ =\ 210,}
+\DoxyCodeLine{00187\ \ \ \ \ LightCyan1Bis\ \ \ \ \ \ =\ 195,}
+\DoxyCodeLine{00188\ \ \ \ \ LightCyan3\ \ \ \ \ \ \ \ \ =\ 152,}
+\DoxyCodeLine{00189\ \ \ \ \ LightGoldenrod1\ \ \ \ =\ 227,}
+\DoxyCodeLine{00190\ \ \ \ \ LightGoldenrod2\ \ \ \ =\ 186,}
+\DoxyCodeLine{00191\ \ \ \ \ LightGoldenrod2Bis\ =\ 221,}
+\DoxyCodeLine{00192\ \ \ \ \ LightGoldenrod2Ter\ =\ 222,}
+\DoxyCodeLine{00193\ \ \ \ \ LightGoldenrod3\ \ \ \ =\ 179,}
+\DoxyCodeLine{00194\ \ \ \ \ LightGreen\ \ \ \ \ \ \ \ \ =\ 119,}
+\DoxyCodeLine{00195\ \ \ \ \ LightGreenBis\ \ \ \ \ \ =\ 120,}
+\DoxyCodeLine{00196\ \ \ \ \ LightPink1\ \ \ \ \ \ \ \ \ =\ 217,}
+\DoxyCodeLine{00197\ \ \ \ \ LightPink3\ \ \ \ \ \ \ \ \ =\ 174,}
+\DoxyCodeLine{00198\ \ \ \ \ LightPink4\ \ \ \ \ \ \ \ \ =\ 95,}
+\DoxyCodeLine{00199\ \ \ \ \ LightSalmon1\ \ \ \ \ \ \ =\ 216,}
+\DoxyCodeLine{00200\ \ \ \ \ LightSalmon3\ \ \ \ \ \ \ =\ 137,}
+\DoxyCodeLine{00201\ \ \ \ \ LightSalmon3Bis\ \ \ \ \ \ \ =\ 173,}
+\DoxyCodeLine{00202\ \ \ \ \ LightSeaGreen\ \ \ \ \ \ =\ 37,}
+\DoxyCodeLine{00203\ \ \ \ \ LightSkyBlue1\ \ \ \ \ \ =\ 153,}
+\DoxyCodeLine{00204\ \ \ \ \ LightSkyBlue3\ \ \ \ \ \ =\ 109,}
+\DoxyCodeLine{00205\ \ \ \ \ LightSkyBlue3Bis\ \ \ \ \ \ =\ 110,}
+\DoxyCodeLine{00206\ \ \ \ \ LightSlateBlue\ \ \ \ \ =\ 105,}
+\DoxyCodeLine{00207\ \ \ \ \ LightSlateGrey\ \ \ \ \ =\ 103,}
+\DoxyCodeLine{00208\ \ \ \ \ LightSteelBlue\ \ \ \ \ =\ 147,}
+\DoxyCodeLine{00209\ \ \ \ \ LightSteelBlue1\ \ \ \ =\ 189,}
+\DoxyCodeLine{00210\ \ \ \ \ LightSteelBlue3\ \ \ \ =\ 146,}
+\DoxyCodeLine{00211\ \ \ \ \ LightYellow3\ \ \ \ \ \ \ =\ 187,}
+\DoxyCodeLine{00212\ \ \ \ \ Magenta1\ \ \ \ \ \ \ \ \ \ \ =\ 201,}
+\DoxyCodeLine{00213\ \ \ \ \ Magenta2\ \ \ \ \ \ \ \ \ \ \ =\ 165,}
+\DoxyCodeLine{00214\ \ \ \ \ Magenta2Bis\ \ \ \ \ \ \ \ =\ 200,}
+\DoxyCodeLine{00215\ \ \ \ \ Magenta3\ \ \ \ \ \ \ \ \ \ \ =\ 127,}
+\DoxyCodeLine{00216\ \ \ \ \ Magenta3Bis\ \ \ \ \ \ \ \ =\ 163,}
+\DoxyCodeLine{00217\ \ \ \ \ Magenta3Ter\ \ \ \ \ \ \ \ =\ 164,}
+\DoxyCodeLine{00218\ \ \ \ \ MediumOrchid\ \ \ \ \ \ \ =\ 134,}
+\DoxyCodeLine{00219\ \ \ \ \ MediumOrchid1\ \ \ \ \ \ =\ 171,}
+\DoxyCodeLine{00220\ \ \ \ \ MediumOrchid1Bis\ \ \ =\ 207,}
+\DoxyCodeLine{00221\ \ \ \ \ MediumOrchid3\ \ \ \ \ \ =\ 133,}
+\DoxyCodeLine{00222\ \ \ \ \ MediumPurple\ \ \ \ \ \ \ =\ 104,}
+\DoxyCodeLine{00223\ \ \ \ \ MediumPurple1\ \ \ \ \ \ =\ 141,}
+\DoxyCodeLine{00224\ \ \ \ \ MediumPurple2\ \ \ \ \ \ =\ 135,}
+\DoxyCodeLine{00225\ \ \ \ \ MediumPurple2Bis\ \ \ =\ 140,}
+\DoxyCodeLine{00226\ \ \ \ \ MediumPurple3\ \ \ \ \ \ =\ 97,}
+\DoxyCodeLine{00227\ \ \ \ \ MediumPurple3Bis\ \ \ =\ 98,}
+\DoxyCodeLine{00228\ \ \ \ \ MediumPurple4\ \ \ \ \ \ =\ 60,}
+\DoxyCodeLine{00229\ \ \ \ \ MediumSpringGreen\ \ =\ 49,}
+\DoxyCodeLine{00230\ \ \ \ \ MediumTurquoise\ \ \ \ =\ 80,}
+\DoxyCodeLine{00231\ \ \ \ \ MediumVioletRed\ \ \ \ =\ 126,}
+\DoxyCodeLine{00232\ \ \ \ \ MistyRose1\ \ \ \ \ \ \ \ \ =\ 224,}
+\DoxyCodeLine{00233\ \ \ \ \ MistyRose3\ \ \ \ \ \ \ \ \ =\ 181,}
+\DoxyCodeLine{00234\ \ \ \ \ NavajoWhite1\ \ \ \ \ \ \ =\ 223,}
+\DoxyCodeLine{00235\ \ \ \ \ NavajoWhite3\ \ \ \ \ \ \ =\ 144,}
+\DoxyCodeLine{00236\ \ \ \ \ NavyBlue\ \ \ \ \ \ \ \ \ \ \ =\ 17,}
+\DoxyCodeLine{00237\ \ \ \ \ Orange1\ \ \ \ \ \ \ \ \ \ \ \ =\ 214,}
+\DoxyCodeLine{00238\ \ \ \ \ Orange3\ \ \ \ \ \ \ \ \ \ \ \ =\ 172,}
+\DoxyCodeLine{00239\ \ \ \ \ Orange4\ \ \ \ \ \ \ \ \ \ \ \ =\ 58,}
+\DoxyCodeLine{00240\ \ \ \ \ Orange4Bis\ \ \ \ \ \ \ \ \ =\ 94,}
+\DoxyCodeLine{00241\ \ \ \ \ OrangeRed1\ \ \ \ \ \ \ \ \ =\ 202,}
+\DoxyCodeLine{00242\ \ \ \ \ Orchid\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 170,}
+\DoxyCodeLine{00243\ \ \ \ \ Orchid1\ \ \ \ \ \ \ \ \ \ \ \ =\ 213,}
+\DoxyCodeLine{00244\ \ \ \ \ Orchid2\ \ \ \ \ \ \ \ \ \ \ \ =\ 212,}
+\DoxyCodeLine{00245\ \ \ \ \ PaleGreen1\ \ \ \ \ \ \ \ \ =\ 121,}
+\DoxyCodeLine{00246\ \ \ \ \ PaleGreen1Bis\ \ \ \ \ \ =\ 156,}
+\DoxyCodeLine{00247\ \ \ \ \ PaleGreen3\ \ \ \ \ \ \ \ \ =\ 114,}
+\DoxyCodeLine{00248\ \ \ \ \ PaleGreen3Bis\ \ \ \ \ \ =\ 77,}
+\DoxyCodeLine{00249\ \ \ \ \ PaleTurquoise1\ \ \ \ \ =\ 159,}
+\DoxyCodeLine{00250\ \ \ \ \ PaleTurquoise4\ \ \ \ \ =\ 66,}
+\DoxyCodeLine{00251\ \ \ \ \ PaleVioletRed1\ \ \ \ \ =\ 211,}
+\DoxyCodeLine{00252\ \ \ \ \ Pink1\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 218,}
+\DoxyCodeLine{00253\ \ \ \ \ Pink3\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 175,}
+\DoxyCodeLine{00254\ \ \ \ \ Plum1\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 219,}
+\DoxyCodeLine{00255\ \ \ \ \ Plum2\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 183,}
+\DoxyCodeLine{00256\ \ \ \ \ Plum3\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 176,}
+\DoxyCodeLine{00257\ \ \ \ \ Plum4\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 96,}
+\DoxyCodeLine{00258\ \ \ \ \ Purple\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 129,}
+\DoxyCodeLine{00259\ \ \ \ \ Purple3\ \ \ \ \ \ \ \ \ \ \ \ =\ 56,}
+\DoxyCodeLine{00260\ \ \ \ \ Purple4\ \ \ \ \ \ \ \ \ \ \ \ =\ 54,}
+\DoxyCodeLine{00261\ \ \ \ \ Purple4Bis\ \ \ \ \ \ \ \ \ =\ 55,}
+\DoxyCodeLine{00262\ \ \ \ \ PurpleBis\ \ \ \ \ \ \ \ \ \ =\ 93,}
+\DoxyCodeLine{00263\ \ \ \ \ Red1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 196,}
+\DoxyCodeLine{00264\ \ \ \ \ Red3\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 124,}
+\DoxyCodeLine{00265\ \ \ \ \ Red3Bis\ \ \ \ \ \ \ \ \ \ \ \ =\ 160,}
+\DoxyCodeLine{00266\ \ \ \ \ RosyBrown\ \ \ \ \ \ \ \ \ \ =\ 138,}
+\DoxyCodeLine{00267\ \ \ \ \ RoyalBlue1\ \ \ \ \ \ \ \ \ =\ 63,}
+\DoxyCodeLine{00268\ \ \ \ \ Salmon1\ \ \ \ \ \ \ \ \ \ \ \ =\ 209,}
+\DoxyCodeLine{00269\ \ \ \ \ SandyBrown\ \ \ \ \ \ \ \ \ =\ 215,}
+\DoxyCodeLine{00270\ \ \ \ \ SeaGreen1\ \ \ \ \ \ \ \ \ \ =\ 84,}
+\DoxyCodeLine{00271\ \ \ \ \ SeaGreen1Bis\ \ \ \ \ \ \ =\ 85,}
+\DoxyCodeLine{00272\ \ \ \ \ SeaGreen2\ \ \ \ \ \ \ \ \ \ =\ 83,}
+\DoxyCodeLine{00273\ \ \ \ \ SeaGreen3\ \ \ \ \ \ \ \ \ \ =\ 78,}
+\DoxyCodeLine{00274\ \ \ \ \ SkyBlue1\ \ \ \ \ \ \ \ \ \ \ =\ 117,}
+\DoxyCodeLine{00275\ \ \ \ \ SkyBlue2\ \ \ \ \ \ \ \ \ \ \ =\ 111,}
+\DoxyCodeLine{00276\ \ \ \ \ SkyBlue3\ \ \ \ \ \ \ \ \ \ \ =\ 74,}
+\DoxyCodeLine{00277\ \ \ \ \ SlateBlue1\ \ \ \ \ \ \ \ \ =\ 99,}
+\DoxyCodeLine{00278\ \ \ \ \ SlateBlue3\ \ \ \ \ \ \ \ \ =\ 61,}
+\DoxyCodeLine{00279\ \ \ \ \ SlateBlue3Bis\ \ \ \ \ \ =\ 62,}
+\DoxyCodeLine{00280\ \ \ \ \ SpringGreen1\ \ \ \ \ \ \ =\ 48,}
+\DoxyCodeLine{00281\ \ \ \ \ SpringGreen2\ \ \ \ \ \ \ =\ 42,}
+\DoxyCodeLine{00282\ \ \ \ \ SpringGreen2Bis\ \ \ \ =\ 47,}
+\DoxyCodeLine{00283\ \ \ \ \ SpringGreen3\ \ \ \ \ \ \ =\ 35,}
+\DoxyCodeLine{00284\ \ \ \ \ SpringGreen3Bis\ \ \ \ =\ 41,}
+\DoxyCodeLine{00285\ \ \ \ \ SpringGreen4\ \ \ \ \ \ \ =\ 29,}
+\DoxyCodeLine{00286\ \ \ \ \ SteelBlue\ \ \ \ \ \ \ \ \ \ =\ 67,}
+\DoxyCodeLine{00287\ \ \ \ \ SteelBlue1\ \ \ \ \ \ \ \ \ =\ 75,}
+\DoxyCodeLine{00288\ \ \ \ \ SteelBlue1Bis\ \ \ \ \ \ =\ 81,}
+\DoxyCodeLine{00289\ \ \ \ \ SteelBlue3\ \ \ \ \ \ \ \ \ =\ 68,}
+\DoxyCodeLine{00290\ \ \ \ \ Tan\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 180,}
+\DoxyCodeLine{00291\ \ \ \ \ Thistle1\ \ \ \ \ \ \ \ \ \ \ =\ 225,}
+\DoxyCodeLine{00292\ \ \ \ \ Thistle3\ \ \ \ \ \ \ \ \ \ \ =\ 182,}
+\DoxyCodeLine{00293\ \ \ \ \ Turquoise2\ \ \ \ \ \ \ \ \ =\ 45,}
+\DoxyCodeLine{00294\ \ \ \ \ Turquoise4\ \ \ \ \ \ \ \ \ =\ 30,}
+\DoxyCodeLine{00295\ \ \ \ \ Violet\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 177,}
+\DoxyCodeLine{00296\ \ \ \ \ Wheat1\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 229,}
+\DoxyCodeLine{00297\ \ \ \ \ Wheat4\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 101,}
+\DoxyCodeLine{00298\ \ \ \ \ Yellow1\ \ \ \ \ \ \ \ \ \ \ \ =\ 226,}
+\DoxyCodeLine{00299\ \ \ \ \ Yellow2\ \ \ \ \ \ \ \ \ \ \ \ =\ 190,}
+\DoxyCodeLine{00300\ \ \ \ \ Yellow3\ \ \ \ \ \ \ \ \ \ \ \ =\ 148,}
+\DoxyCodeLine{00301\ \ \ \ \ Yellow3Bis\ \ \ \ \ \ \ \ \ =\ 184,}
+\DoxyCodeLine{00302\ \ \ \ \ Yellow4\ \ \ \ \ \ \ \ \ \ \ \ =\ 100,}
+\DoxyCodeLine{00303\ \ \ \ \ Yellow4Bis\ \ \ \ \ \ \ \ \ =\ 106,}
+\DoxyCodeLine{00304\ \ \ \};}
+\DoxyCodeLine{00305\ \ \ \textcolor{comment}{//\ clang-\/format\ on}}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \ \ \textcolor{comment}{//\ -\/-\/-\/\ Operators\ -\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00308\ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \mbox{\hyperlink{classftxui_1_1Color_afa1676ff15c48927d27751829396f491}{Color}}\&\ rhs)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00309\ \ \ \textcolor{keywordtype}{bool}\ operator!=(\textcolor{keyword}{const}\ \mbox{\hyperlink{classftxui_1_1Color_afa1676ff15c48927d27751829396f491}{Color}}\&\ rhs)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ \ \ std::string\ Print(\textcolor{keywordtype}{bool}\ is\_background\_color)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00314\ \ \ \textcolor{keyword}{enum\ class}\ ColorType\ :\ uint8\_t\ \{}
+\DoxyCodeLine{00315\ \ \ \ \ Palette1,}
+\DoxyCodeLine{00316\ \ \ \ \ Palette16,}
+\DoxyCodeLine{00317\ \ \ \ \ Palette256,}
+\DoxyCodeLine{00318\ \ \ \ \ TrueColor,}
+\DoxyCodeLine{00319\ \ \ \};}
+\DoxyCodeLine{00320\ \ \ ColorType\ type\_\ =\ ColorType::Palette1;}
+\DoxyCodeLine{00321\ \ \ uint8\_t\ red\_\ =\ 0;}
+\DoxyCodeLine{00322\ \ \ uint8\_t\ green\_\ =\ 0;}
+\DoxyCodeLine{00323\ \ \ uint8\_t\ blue\_\ =\ 0;}
+\DoxyCodeLine{00324\ \};}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \textcolor{keyword}{inline}\ \textcolor{keyword}{namespace\ }literals\ \{}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00330\ \mbox{\hyperlink{classftxui_1_1Color}{Color}}\ \textcolor{keyword}{operator}\textcolor{stringliteral}{"{}"{}}\_rgb(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{int}\ combined);}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \}\ \ \textcolor{comment}{//\ namespace\ literals}}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \}\ \ \textcolor{comment}{//\ namespace\ ftxui}}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ FTXUI\_SCREEN\_COLOR\_HPP}}
+
+\end{DoxyCode}

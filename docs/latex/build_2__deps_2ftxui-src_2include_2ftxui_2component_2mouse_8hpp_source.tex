@@ -1,0 +1,47 @@
+\doxysection{mouse.\+hpp}
+\hypertarget{build_2__deps_2ftxui-src_2include_2ftxui_2component_2mouse_8hpp_source}{}\label{build_2__deps_2ftxui-src_2include_2ftxui_2component_2mouse_8hpp_source}\index{build/\_deps/ftxui-\/src/include/ftxui/component/mouse.hpp@{build/\_deps/ftxui-\/src/include/ftxui/component/mouse.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2020\ Arthur\ Sonzogni.\ All\ rights\ reserved.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Use\ of\ this\ source\ code\ is\ governed\ by\ the\ MIT\ license\ that\ can\ be\ found\ in}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ FTXUI\_COMPONENT\_MOUSE\_HPP}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ FTXUI\_COMPONENT\_MOUSE\_HPP}}
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }ftxui\ \{}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structftxui_1_1Mouse}{Mouse}}\ \{}
+\DoxyCodeLine{00012\ \ \ \textcolor{keyword}{enum}\ Button\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ Left\ =\ 0,}
+\DoxyCodeLine{00014\ \ \ \ \ Middle\ =\ 1,}
+\DoxyCodeLine{00015\ \ \ \ \ Right\ =\ 2,}
+\DoxyCodeLine{00016\ \ \ \ \ None\ =\ 3,}
+\DoxyCodeLine{00017\ \ \ \ \ WheelUp\ =\ 4,}
+\DoxyCodeLine{00018\ \ \ \ \ WheelDown\ =\ 5,}
+\DoxyCodeLine{00019\ \ \ \};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \textcolor{keyword}{enum}\ Motion\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ Released\ =\ 0,}
+\DoxyCodeLine{00023\ \ \ \ \ Pressed\ =\ 1,}
+\DoxyCodeLine{00024\ \ \ \};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \textcolor{comment}{//\ Button}}
+\DoxyCodeLine{00027\ \ \ Button\ button\ =\ Button::None;}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \textcolor{comment}{//\ Motion}}
+\DoxyCodeLine{00030\ \ \ Motion\ motion\ =\ Motion::Pressed;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \textcolor{comment}{//\ Modifiers:}}
+\DoxyCodeLine{00033\ \ \ \textcolor{keywordtype}{bool}\ shift\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00034\ \ \ \textcolor{keywordtype}{bool}\ meta\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00035\ \ \ \textcolor{keywordtype}{bool}\ control\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \textcolor{comment}{//\ Coordinates:}}
+\DoxyCodeLine{00038\ \ \ \textcolor{keywordtype}{int}\ x\ =\ 0;}
+\DoxyCodeLine{00039\ \ \ \textcolor{keywordtype}{int}\ y\ =\ 0;}
+\DoxyCodeLine{00040\ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \}\ \ \textcolor{comment}{//\ namespace\ ftxui}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ end\ of\ include\ guard:\ FTXUI\_COMPONENT\_MOUSE\_HPP\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

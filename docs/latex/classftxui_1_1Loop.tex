@@ -1,0 +1,94 @@
+\doxysection{ftxui\+::Loop Class Reference}
+\hypertarget{classftxui_1_1Loop}{}\label{classftxui_1_1Loop}\index{ftxui::Loop@{ftxui::Loop}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classftxui_1_1Loop_acad333f67da6371e62394b23ba4bf47d}{Loop}} (\mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} \texorpdfstring{$\ast$}{*}screen, Component component)
+\begin{DoxyCompactList}\small\item\em A \doxylink{classftxui_1_1Loop}{Loop} is a wrapper around a Component and a \doxylink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}. It is used to run a Component in a terminal. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Loop_a72a0556a3ed0fec76c8b6c63fe84568f}\label{classftxui_1_1Loop_a72a0556a3ed0fec76c8b6c63fe84568f} 
+bool {\bfseries Has\+Quitted} ()
+\begin{DoxyCompactList}\small\item\em Whether the loop has quitted. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Loop_a8bfb2d75421c2f3831627672d55ea9bf}\label{classftxui_1_1Loop_a8bfb2d75421c2f3831627672d55ea9bf} 
+void {\bfseries Run\+Once} ()
+\begin{DoxyCompactList}\small\item\em Execute the loop. Make the {\ttfamily component} to process every pending tasks/events. A new frame might be drawn if the previous was invalidated. Return true until the loop hasn\textquotesingle{}t completed. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Loop_a72d1cd9abf57a1c6754145c32479e07c}\label{classftxui_1_1Loop_a72d1cd9abf57a1c6754145c32479e07c} 
+void {\bfseries Run\+Once\+Blocking} ()
+\begin{DoxyCompactList}\small\item\em Wait for at least one event to be handled and execute {\ttfamily \doxylink{classftxui_1_1Loop_a8bfb2d75421c2f3831627672d55ea9bf}{Loop\+::\+Run\+Once()}}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classftxui_1_1Loop_a9c29a75e0961fa95c9884e2f6bf96969}{Run}} ()
+\item 
+\Hypertarget{classftxui_1_1Loop_acad333f67da6371e62394b23ba4bf47d}\label{classftxui_1_1Loop_acad333f67da6371e62394b23ba4bf47d} 
+{\bfseries Loop} (\mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} \texorpdfstring{$\ast$}{*}screen, Component component)
+\item 
+\Hypertarget{classftxui_1_1Loop_a72a0556a3ed0fec76c8b6c63fe84568f}\label{classftxui_1_1Loop_a72a0556a3ed0fec76c8b6c63fe84568f} 
+bool {\bfseries Has\+Quitted} ()
+\item 
+\Hypertarget{classftxui_1_1Loop_a8bfb2d75421c2f3831627672d55ea9bf}\label{classftxui_1_1Loop_a8bfb2d75421c2f3831627672d55ea9bf} 
+void {\bfseries Run\+Once} ()
+\item 
+\Hypertarget{classftxui_1_1Loop_a72d1cd9abf57a1c6754145c32479e07c}\label{classftxui_1_1Loop_a72d1cd9abf57a1c6754145c32479e07c} 
+void {\bfseries Run\+Once\+Blocking} ()
+\item 
+\Hypertarget{classftxui_1_1Loop_a9c29a75e0961fa95c9884e2f6bf96969}\label{classftxui_1_1Loop_a9c29a75e0961fa95c9884e2f6bf96969} 
+void {\bfseries Run} ()
+\item 
+\Hypertarget{classftxui_1_1Loop_acad333f67da6371e62394b23ba4bf47d}\label{classftxui_1_1Loop_acad333f67da6371e62394b23ba4bf47d} 
+{\bfseries Loop} (\mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} \texorpdfstring{$\ast$}{*}screen, Component component)
+\item 
+\Hypertarget{classftxui_1_1Loop_a72a0556a3ed0fec76c8b6c63fe84568f}\label{classftxui_1_1Loop_a72a0556a3ed0fec76c8b6c63fe84568f} 
+bool {\bfseries Has\+Quitted} ()
+\item 
+\Hypertarget{classftxui_1_1Loop_a8bfb2d75421c2f3831627672d55ea9bf}\label{classftxui_1_1Loop_a8bfb2d75421c2f3831627672d55ea9bf} 
+void {\bfseries Run\+Once} ()
+\item 
+\Hypertarget{classftxui_1_1Loop_a72d1cd9abf57a1c6754145c32479e07c}\label{classftxui_1_1Loop_a72d1cd9abf57a1c6754145c32479e07c} 
+void {\bfseries Run\+Once\+Blocking} ()
+\item 
+\Hypertarget{classftxui_1_1Loop_a9c29a75e0961fa95c9884e2f6bf96969}\label{classftxui_1_1Loop_a9c29a75e0961fa95c9884e2f6bf96969} 
+void {\bfseries Run} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classftxui_1_1Loop_acad333f67da6371e62394b23ba4bf47d}\index{ftxui::Loop@{ftxui::Loop}!Loop@{Loop}}
+\index{Loop@{Loop}!ftxui::Loop@{ftxui::Loop}}
+\doxysubsubsection{\texorpdfstring{Loop()}{Loop()}}
+{\footnotesize\ttfamily \label{classftxui_1_1Loop_acad333f67da6371e62394b23ba4bf47d} 
+ftxui\+::\+Loop\+::\+Loop (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} \texorpdfstring{$\ast$}{*}}]{screen}{, }\item[{Component}]{component}{}\end{DoxyParamCaption})}
+
+
+
+A \doxylink{classftxui_1_1Loop}{Loop} is a wrapper around a Component and a \doxylink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}. It is used to run a Component in a terminal. 
+
+\begin{DoxySeeAlso}{See also}
+Component, \doxylink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}. 
+
+Screen\+Interactive\+::\+Loop(). 
+
+Screen\+Interactive\+::\+Exit\+Loop(). 
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}{Parameters}
+{\em screen} & The screen to use. \\
+\hline
+{\em component} & The component to run. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classftxui_1_1Loop_a9c29a75e0961fa95c9884e2f6bf96969}\index{ftxui::Loop@{ftxui::Loop}!Run@{Run}}
+\index{Run@{Run}!ftxui::Loop@{ftxui::Loop}}
+\doxysubsubsection{\texorpdfstring{Run()}{Run()}}
+{\footnotesize\ttfamily \label{classftxui_1_1Loop_a9c29a75e0961fa95c9884e2f6bf96969} 
+void ftxui\+::\+Loop\+::\+Run (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Execute the loop, blocking the current thread, up until the loop has quitted. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+build-\/dbg/\+\_\+deps/ftxui-\/src/include/ftxui/component/loop.\+hpp\item 
+build/\+\_\+deps/ftxui-\/src/include/ftxui/component/loop.\+hpp\item 
+build\+\_\+emscripten/\+\_\+deps/ftxui-\/src/include/ftxui/component/loop.\+hpp\item 
+build-\/dbg/\+\_\+deps/ftxui-\/src/src/ftxui/component/loop.\+cpp\item 
+build/\+\_\+deps/ftxui-\/src/src/ftxui/component/loop.\+cpp\item 
+build\+\_\+emscripten/\+\_\+deps/ftxui-\/src/src/ftxui/component/loop.\+cpp\end{DoxyCompactItemize}

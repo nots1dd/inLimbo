@@ -1,0 +1,40 @@
+\doxysection{requirement.\+hpp}
+\hypertarget{build__emscripten_2__deps_2ftxui-src_2include_2ftxui_2dom_2requirement_8hpp_source}{}\label{build__emscripten_2__deps_2ftxui-src_2include_2ftxui_2dom_2requirement_8hpp_source}\index{build\_emscripten/\_deps/ftxui-\/src/include/ftxui/dom/requirement.hpp@{build\_emscripten/\_deps/ftxui-\/src/include/ftxui/dom/requirement.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2020\ Arthur\ Sonzogni.\ All\ rights\ reserved.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Use\ of\ this\ source\ code\ is\ governed\ by\ the\ MIT\ license\ that\ can\ be\ found\ in}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ FTXUI\_DOM\_REQUIREMENT\_HPP}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ FTXUI\_DOM\_REQUIREMENT\_HPP}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}ftxui/screen/box.hpp"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }ftxui\ \{}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structftxui_1_1Requirement}{Requirement}}\ \{}
+\DoxyCodeLine{00012\ \ \ \textcolor{comment}{//\ The\ required\ size\ to\ fully\ draw\ the\ element.}}
+\DoxyCodeLine{00013\ \ \ \textcolor{keywordtype}{int}\ min\_x\ =\ 0;}
+\DoxyCodeLine{00014\ \ \ \textcolor{keywordtype}{int}\ min\_y\ =\ 0;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \textcolor{comment}{//\ How\ much\ flexibility\ is\ given\ to\ the\ component.}}
+\DoxyCodeLine{00017\ \ \ \textcolor{keywordtype}{int}\ flex\_grow\_x\ =\ 0;}
+\DoxyCodeLine{00018\ \ \ \textcolor{keywordtype}{int}\ flex\_grow\_y\ =\ 0;}
+\DoxyCodeLine{00019\ \ \ \textcolor{keywordtype}{int}\ flex\_shrink\_x\ =\ 0;}
+\DoxyCodeLine{00020\ \ \ \textcolor{keywordtype}{int}\ flex\_shrink\_y\ =\ 0;}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \textcolor{comment}{//\ Focus\ management\ to\ support\ the\ frame/focus/select\ element.}}
+\DoxyCodeLine{00023\ \ \ \textcolor{keyword}{enum}\ Selection\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ NORMAL\ =\ 0,}
+\DoxyCodeLine{00025\ \ \ \ \ SELECTED\ =\ 1,}
+\DoxyCodeLine{00026\ \ \ \ \ FOCUSED\ =\ 2,}
+\DoxyCodeLine{00027\ \ \ \};}
+\DoxyCodeLine{00028\ \ \ Selection\ selection\ =\ NORMAL;}
+\DoxyCodeLine{00029\ \ \ \mbox{\hyperlink{structftxui_1_1Box}{Box}}\ selected\_box;}
+\DoxyCodeLine{00030\ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \}\ \ \textcolor{comment}{//\ namespace\ ftxui}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ FTXUI\_DOM\_REQUIREMENT\_HPP}}
+
+\end{DoxyCode}

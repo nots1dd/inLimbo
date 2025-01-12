@@ -1,0 +1,416 @@
+\doxysection{ftxui\+::Screen\+Interactive Class Reference}
+\hypertarget{classftxui_1_1ScreenInteractive}{}\label{classftxui_1_1ScreenInteractive}\index{ftxui::ScreenInteractive@{ftxui::ScreenInteractive}}
+Inheritance diagram for ftxui\+::Screen\+Interactive\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classftxui_1_1ScreenInteractive}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classftxui_1_1ScreenInteractive_1_1Private}{Private}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classftxui_1_1ScreenInteractive_af19dd0a940575649564cbf027ac0c654}{Track\+Mouse}} (bool enable=true)
+\begin{DoxyCompactList}\small\item\em Set whether mouse is tracked and events reported. called outside of the main loop. E.\+g {\ttfamily Screen\+Interactive\+::\+Loop(...)}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classftxui_1_1ScreenInteractive_a23b52629a57315d01ec6fa60dd886b09}{Loop}} (Component)
+\begin{DoxyCompactList}\small\item\em Execute the main loop. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a916b7d708a72ad26c9a5a7cd0a96412b}\label{classftxui_1_1ScreenInteractive_a916b7d708a72ad26c9a5a7cd0a96412b} 
+void {\bfseries Exit} ()
+\begin{DoxyCompactList}\small\item\em Exit the main loop. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a9b82d34ded816a868e9e2fe900926153}\label{classftxui_1_1ScreenInteractive_a9b82d34ded816a868e9e2fe900926153} 
+Closure {\bfseries Exit\+Loop\+Closure} ()
+\begin{DoxyCompactList}\small\item\em Return a function to exit the main loop. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_afeab8ea868e6db00aef55fbab93f5135}\label{classftxui_1_1ScreenInteractive_afeab8ea868e6db00aef55fbab93f5135} 
+void {\bfseries Post} (Task task)
+\begin{DoxyCompactList}\small\item\em Add a task to the main loop. It will be executed later, after every other scheduled tasks. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a0cb88888962608ed07724350a97d7cea}\label{classftxui_1_1ScreenInteractive_a0cb88888962608ed07724350a97d7cea} 
+void {\bfseries Post\+Event} (\mbox{\hyperlink{structftxui_1_1Event}{Event}} event)
+\begin{DoxyCompactList}\small\item\em Add an event to the main loop. It will be executed later, after every other scheduled events. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_afe90c505962fcbf405068620f898703c}\label{classftxui_1_1ScreenInteractive_afe90c505962fcbf405068620f898703c} 
+void {\bfseries Request\+Animation\+Frame} ()
+\begin{DoxyCompactList}\small\item\em Add a task to draw the screen one more time, until all the animations are done. \end{DoxyCompactList}\item 
+Captured\+Mouse \mbox{\hyperlink{classftxui_1_1ScreenInteractive_ae921ea2133e6ee308e33880d78d59c1e}{Capture\+Mouse}} ()
+\begin{DoxyCompactList}\small\item\em Try to get the unique lock about behing able to capture the mouse. \end{DoxyCompactList}\item 
+Closure \mbox{\hyperlink{classftxui_1_1ScreenInteractive_a1ea63a2594eeaee211e0e8548ec71035}{With\+Restored\+IO}} (Closure)
+\begin{DoxyCompactList}\small\item\em Decorate a function. It executes the same way, but with the currently active screen terminal hooks temporarilly uninstalled during its execution. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_af19dd0a940575649564cbf027ac0c654}\label{classftxui_1_1ScreenInteractive_af19dd0a940575649564cbf027ac0c654} 
+void {\bfseries Track\+Mouse} (bool enable=true)
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a23b52629a57315d01ec6fa60dd886b09}\label{classftxui_1_1ScreenInteractive_a23b52629a57315d01ec6fa60dd886b09} 
+void {\bfseries Loop} (Component)
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a916b7d708a72ad26c9a5a7cd0a96412b}\label{classftxui_1_1ScreenInteractive_a916b7d708a72ad26c9a5a7cd0a96412b} 
+void {\bfseries Exit} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a9b82d34ded816a868e9e2fe900926153}\label{classftxui_1_1ScreenInteractive_a9b82d34ded816a868e9e2fe900926153} 
+Closure {\bfseries Exit\+Loop\+Closure} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_afeab8ea868e6db00aef55fbab93f5135}\label{classftxui_1_1ScreenInteractive_afeab8ea868e6db00aef55fbab93f5135} 
+void {\bfseries Post} (Task task)
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a0cb88888962608ed07724350a97d7cea}\label{classftxui_1_1ScreenInteractive_a0cb88888962608ed07724350a97d7cea} 
+void {\bfseries Post\+Event} (\mbox{\hyperlink{structftxui_1_1Event}{Event}} event)
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_afe90c505962fcbf405068620f898703c}\label{classftxui_1_1ScreenInteractive_afe90c505962fcbf405068620f898703c} 
+void {\bfseries Request\+Animation\+Frame} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_ae921ea2133e6ee308e33880d78d59c1e}\label{classftxui_1_1ScreenInteractive_ae921ea2133e6ee308e33880d78d59c1e} 
+Captured\+Mouse {\bfseries Capture\+Mouse} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a1ea63a2594eeaee211e0e8548ec71035}\label{classftxui_1_1ScreenInteractive_a1ea63a2594eeaee211e0e8548ec71035} 
+Closure {\bfseries With\+Restored\+IO} (Closure)
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_af19dd0a940575649564cbf027ac0c654}\label{classftxui_1_1ScreenInteractive_af19dd0a940575649564cbf027ac0c654} 
+void {\bfseries Track\+Mouse} (bool enable=true)
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a23b52629a57315d01ec6fa60dd886b09}\label{classftxui_1_1ScreenInteractive_a23b52629a57315d01ec6fa60dd886b09} 
+void {\bfseries Loop} (Component)
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a916b7d708a72ad26c9a5a7cd0a96412b}\label{classftxui_1_1ScreenInteractive_a916b7d708a72ad26c9a5a7cd0a96412b} 
+void {\bfseries Exit} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a9b82d34ded816a868e9e2fe900926153}\label{classftxui_1_1ScreenInteractive_a9b82d34ded816a868e9e2fe900926153} 
+Closure {\bfseries Exit\+Loop\+Closure} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_afeab8ea868e6db00aef55fbab93f5135}\label{classftxui_1_1ScreenInteractive_afeab8ea868e6db00aef55fbab93f5135} 
+void {\bfseries Post} (Task task)
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a0cb88888962608ed07724350a97d7cea}\label{classftxui_1_1ScreenInteractive_a0cb88888962608ed07724350a97d7cea} 
+void {\bfseries Post\+Event} (\mbox{\hyperlink{structftxui_1_1Event}{Event}} event)
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_afe90c505962fcbf405068620f898703c}\label{classftxui_1_1ScreenInteractive_afe90c505962fcbf405068620f898703c} 
+void {\bfseries Request\+Animation\+Frame} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_ae921ea2133e6ee308e33880d78d59c1e}\label{classftxui_1_1ScreenInteractive_ae921ea2133e6ee308e33880d78d59c1e} 
+Captured\+Mouse {\bfseries Capture\+Mouse} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a1ea63a2594eeaee211e0e8548ec71035}\label{classftxui_1_1ScreenInteractive_a1ea63a2594eeaee211e0e8548ec71035} 
+Closure {\bfseries With\+Restored\+IO} (Closure)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classftxui_1_1Screen}{ftxui\+::\+Screen}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Screen} (int dimx, int dimy)
+\item 
+std\+::string \& \mbox{\hyperlink{classftxui_1_1Screen_a5c3599734d14e7e10595a48bd6dbf1cf}{at}} (int x, int y)
+\begin{DoxyCompactList}\small\item\em Access a character in a cell at a given position. \end{DoxyCompactList}\item 
+const std\+::string \& \mbox{\hyperlink{classftxui_1_1Screen_af43f669b2be081010849cb296ef30f94}{at}} (int x, int y) const
+\begin{DoxyCompactList}\small\item\em Access a character in a cell at a given position. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} \& \mbox{\hyperlink{classftxui_1_1Screen_ae26bf6fc1c0d9a6931db7da43da461dd}{Pixel\+At}} (int x, int y)
+\begin{DoxyCompactList}\small\item\em Access a cell (\doxylink{structftxui_1_1Pixel}{Pixel}) at a given position. \end{DoxyCompactList}\item 
+const \mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} \& \mbox{\hyperlink{classftxui_1_1Screen_aba3f46e9965895278573af54d9285f37}{Pixel\+At}} (int x, int y) const
+\begin{DoxyCompactList}\small\item\em Access a cell (\doxylink{structftxui_1_1Pixel}{Pixel}) at a given position. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classftxui_1_1Screen_a99aaed52447e5693a3819c382fc69abf}{To\+String}} () const
+\item 
+void {\bfseries Print} () const
+\item 
+int {\bfseries dimx} () const
+\item 
+int {\bfseries dimy} () const
+\item 
+std\+::string \mbox{\hyperlink{classftxui_1_1Screen_a9ef960333b62c0377ba70e6c8aea5f42}{Reset\+Position}} (bool clear=false) const
+\begin{DoxyCompactList}\small\item\em Return a string to be printed in order to reset the cursor position to the beginning of the screen. \end{DoxyCompactList}\item 
+void {\bfseries Clear} ()
+\begin{DoxyCompactList}\small\item\em Clear all the pixel from the screen. \end{DoxyCompactList}\item 
+void {\bfseries Apply\+Shader} ()
+\item 
+\mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}} {\bfseries cursor} () const
+\item 
+void {\bfseries Set\+Cursor} (\mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}} cursor)
+\item 
+uint8\+\_\+t {\bfseries Register\+Hyperlink} (const std\+::string \&link)
+\item 
+const std\+::string \& {\bfseries Hyperlink} (uint8\+\_\+t id) const
+\item 
+{\bfseries Screen} (int dimx, int dimy)
+\item 
+std\+::string \& {\bfseries at} (int x, int y)
+\item 
+const std\+::string \& {\bfseries at} (int x, int y) const
+\item 
+\mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} \& {\bfseries Pixel\+At} (int x, int y)
+\item 
+const \mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} \& {\bfseries Pixel\+At} (int x, int y) const
+\item 
+std\+::string {\bfseries To\+String} () const
+\item 
+void {\bfseries Print} () const
+\item 
+int {\bfseries dimx} () const
+\item 
+int {\bfseries dimy} () const
+\item 
+std\+::string {\bfseries Reset\+Position} (bool clear=false) const
+\item 
+void {\bfseries Clear} ()
+\item 
+void {\bfseries Apply\+Shader} ()
+\item 
+\mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}} {\bfseries cursor} () const
+\item 
+void {\bfseries Set\+Cursor} (\mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}} cursor)
+\item 
+uint8\+\_\+t {\bfseries Register\+Hyperlink} (const std\+::string \&link)
+\item 
+const std\+::string \& {\bfseries Hyperlink} (uint8\+\_\+t id) const
+\item 
+{\bfseries Screen} (int dimx, int dimy)
+\item 
+std\+::string \& {\bfseries at} (int x, int y)
+\item 
+const std\+::string \& {\bfseries at} (int x, int y) const
+\item 
+\mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} \& {\bfseries Pixel\+At} (int x, int y)
+\item 
+const \mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} \& {\bfseries Pixel\+At} (int x, int y) const
+\item 
+std\+::string {\bfseries To\+String} () const
+\item 
+void {\bfseries Print} () const
+\item 
+int {\bfseries dimx} () const
+\item 
+int {\bfseries dimy} () const
+\item 
+std\+::string {\bfseries Reset\+Position} (bool clear=false) const
+\item 
+void {\bfseries Clear} ()
+\item 
+void {\bfseries Apply\+Shader} ()
+\item 
+\mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}} {\bfseries cursor} () const
+\item 
+void {\bfseries Set\+Cursor} (\mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}} cursor)
+\item 
+uint8\+\_\+t {\bfseries Register\+Hyperlink} (const std\+::string \&link)
+\item 
+const std\+::string \& {\bfseries Hyperlink} (uint8\+\_\+t id) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a12916e8cb33e1627c5a780231372271c}\label{classftxui_1_1ScreenInteractive_a12916e8cb33e1627c5a780231372271c} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} {\bfseries Fixed\+Size} (int dimx, int dimy)
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_adcd5b394015f461ee8e2b5c44d1d2e46}\label{classftxui_1_1ScreenInteractive_adcd5b394015f461ee8e2b5c44d1d2e46} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} {\bfseries Fullscreen} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a1521ef0f9272bebbb5b59e7b3f9840f5}\label{classftxui_1_1ScreenInteractive_a1521ef0f9272bebbb5b59e7b3f9840f5} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} {\bfseries Fit\+Component} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a3a1ada02847e3b396554d0ba51734b6c}\label{classftxui_1_1ScreenInteractive_a3a1ada02847e3b396554d0ba51734b6c} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} {\bfseries Terminal\+Output} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a1edcb7595159a08cfdc48ea9497e2eb7}\label{classftxui_1_1ScreenInteractive_a1edcb7595159a08cfdc48ea9497e2eb7} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} \texorpdfstring{$\ast$}{*} {\bfseries Active} ()
+\begin{DoxyCompactList}\small\item\em Return the currently active screen, or null if none. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a662659506474f245e663a5ec1c3e4603}\label{classftxui_1_1ScreenInteractive_a662659506474f245e663a5ec1c3e4603} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} {\bfseries Fixed\+Size} (int dimx, int dimy)
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a761d10089c63f9564f28ee15d62b691f}\label{classftxui_1_1ScreenInteractive_a761d10089c63f9564f28ee15d62b691f} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} {\bfseries Fullscreen} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a417ab78ef1f388c8bd242b0b4c893e7a}\label{classftxui_1_1ScreenInteractive_a417ab78ef1f388c8bd242b0b4c893e7a} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} {\bfseries Fit\+Component} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_aa1e296068e41e67ae43c81fbd548230f}\label{classftxui_1_1ScreenInteractive_aa1e296068e41e67ae43c81fbd548230f} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} {\bfseries Terminal\+Output} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_ae6842c25137aa3a74da7ef22ee72cb8c}\label{classftxui_1_1ScreenInteractive_ae6842c25137aa3a74da7ef22ee72cb8c} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} \texorpdfstring{$\ast$}{*} {\bfseries Active} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a662659506474f245e663a5ec1c3e4603}\label{classftxui_1_1ScreenInteractive_a662659506474f245e663a5ec1c3e4603} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} {\bfseries Fixed\+Size} (int dimx, int dimy)
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a761d10089c63f9564f28ee15d62b691f}\label{classftxui_1_1ScreenInteractive_a761d10089c63f9564f28ee15d62b691f} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} {\bfseries Fullscreen} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a417ab78ef1f388c8bd242b0b4c893e7a}\label{classftxui_1_1ScreenInteractive_a417ab78ef1f388c8bd242b0b4c893e7a} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} {\bfseries Fit\+Component} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_aa1e296068e41e67ae43c81fbd548230f}\label{classftxui_1_1ScreenInteractive_aa1e296068e41e67ae43c81fbd548230f} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} {\bfseries Terminal\+Output} ()
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_ae6842c25137aa3a74da7ef22ee72cb8c}\label{classftxui_1_1ScreenInteractive_ae6842c25137aa3a74da7ef22ee72cb8c} 
+static \mbox{\hyperlink{classftxui_1_1ScreenInteractive}{Screen\+Interactive}} \texorpdfstring{$\ast$}{*} {\bfseries Active} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{classftxui_1_1Screen}{ftxui\+::\+Screen}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{classftxui_1_1Screen}{Screen}} {\bfseries Create} (\mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} dimension)
+\begin{DoxyCompactList}\small\item\em Create a screen with the given dimension. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{classftxui_1_1Screen}{Screen}} {\bfseries Create} (\mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} width, \mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} height)
+\begin{DoxyCompactList}\small\item\em Create a screen with the given dimension along the x-\/axis and y-\/axis. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{classftxui_1_1Screen}{Screen}} {\bfseries Create} (\mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} dimension)
+\item 
+static \mbox{\hyperlink{classftxui_1_1Screen}{Screen}} {\bfseries Create} (\mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} width, \mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} height)
+\item 
+static \mbox{\hyperlink{classftxui_1_1Screen}{Screen}} {\bfseries Create} (\mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} dimension)
+\item 
+static \mbox{\hyperlink{classftxui_1_1Screen}{Screen}} {\bfseries Create} (\mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} width, \mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} height)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_a15b3fd7e6267d8ff8757a46161d2dd14}\label{classftxui_1_1ScreenInteractive_a15b3fd7e6267d8ff8757a46161d2dd14} 
+friend {\bfseries Private}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{classftxui_1_1Screen}{ftxui\+::\+Screen}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structftxui_1_1Box}{Box}} {\bfseries stencil}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classftxui_1_1ScreenInteractive_af5d172ebdcd2fa3596215424ebf2df8f}\label{classftxui_1_1ScreenInteractive_af5d172ebdcd2fa3596215424ebf2df8f} 
+class {\bfseries Loop}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{classftxui_1_1Screen}{ftxui\+::\+Screen}}}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries dimx\+\_\+}
+\item 
+int {\bfseries dimy\+\_\+}
+\item 
+std\+::vector$<$ std\+::vector$<$ \mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} $>$ $>$ {\bfseries pixels\+\_\+}
+\item 
+\mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}} {\bfseries cursor\+\_\+}
+\item 
+std\+::vector$<$ std\+::string $>$ {\bfseries hyperlinks\+\_\+} = \{"{}"{}\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classftxui_1_1ScreenInteractive_ae921ea2133e6ee308e33880d78d59c1e}\index{ftxui::ScreenInteractive@{ftxui::ScreenInteractive}!CaptureMouse@{CaptureMouse}}
+\index{CaptureMouse@{CaptureMouse}!ftxui::ScreenInteractive@{ftxui::ScreenInteractive}}
+\doxysubsubsection{\texorpdfstring{CaptureMouse()}{CaptureMouse()}}
+{\footnotesize\ttfamily \label{classftxui_1_1ScreenInteractive_ae921ea2133e6ee308e33880d78d59c1e} 
+Captured\+Mouse ftxui\+::\+Screen\+Interactive\+::\+Capture\+Mouse (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Try to get the unique lock about behing able to capture the mouse. 
+
+\begin{DoxyReturn}{Returns}
+A unique lock if the mouse is not already captured, otherwise a null. 
+\end{DoxyReturn}
+\Hypertarget{classftxui_1_1ScreenInteractive_a23b52629a57315d01ec6fa60dd886b09}\index{ftxui::ScreenInteractive@{ftxui::ScreenInteractive}!Loop@{Loop}}
+\index{Loop@{Loop}!ftxui::ScreenInteractive@{ftxui::ScreenInteractive}}
+\doxysubsubsection{\texorpdfstring{Loop()}{Loop()}}
+{\footnotesize\ttfamily \label{classftxui_1_1ScreenInteractive_a23b52629a57315d01ec6fa60dd886b09} 
+void ftxui\+::\+Screen\+Interactive\+::\+Loop (\begin{DoxyParamCaption}\item[{Component}]{component}{}\end{DoxyParamCaption})}
+
+
+
+Execute the main loop. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em component} & The component to draw. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classftxui_1_1ScreenInteractive_af19dd0a940575649564cbf027ac0c654}\index{ftxui::ScreenInteractive@{ftxui::ScreenInteractive}!TrackMouse@{TrackMouse}}
+\index{TrackMouse@{TrackMouse}!ftxui::ScreenInteractive@{ftxui::ScreenInteractive}}
+\doxysubsubsection{\texorpdfstring{TrackMouse()}{TrackMouse()}}
+{\footnotesize\ttfamily \label{classftxui_1_1ScreenInteractive_af19dd0a940575649564cbf027ac0c654} 
+void ftxui\+::\+Screen\+Interactive\+::\+Track\+Mouse (\begin{DoxyParamCaption}\item[{bool}]{enable}{ = {\ttfamily true}}\end{DoxyParamCaption})}
+
+
+
+Set whether mouse is tracked and events reported. called outside of the main loop. E.\+g {\ttfamily Screen\+Interactive\+::\+Loop(...)}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em enable} & Whether to enable mouse event tracking. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This muse be called outside of the main loop. E.\+g. before calling {\ttfamily Screen\+Interactive\+::\+Loop}. 
+
+\doxylink{structftxui_1_1Mouse}{Mouse} tracking is enabled by default. 
+
+\doxylink{structftxui_1_1Mouse}{Mouse} tracking is only supported on terminals that supports it.
+\end{DoxyNote}
+\hypertarget{classftxui_1_1ScreenInteractive_autotoc_md113}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{classftxui_1_1ScreenInteractive_autotoc_md113}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{auto}\ screen\ =\ ScreenInteractive::TerminalOutput();}
+\DoxyCodeLine{screen.TrackMouse(\textcolor{keyword}{false});}
+\DoxyCodeLine{screen.Loop(component);}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em enable} & Whether to enable mouse event tracking. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This muse be called outside of the main loop. E.\+g. before calling {\ttfamily Screen\+Interactive\+::\+Loop}. 
+
+\doxylink{structftxui_1_1Mouse}{Mouse} tracking is enabled by default. 
+
+\doxylink{structftxui_1_1Mouse}{Mouse} tracking is only supported on terminals that supports it.
+\end{DoxyNote}
+\hypertarget{classftxui_1_1ScreenInteractive_autotoc_md305}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{classftxui_1_1ScreenInteractive_autotoc_md305}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{auto}\ screen\ =\ ScreenInteractive::TerminalOutput();}
+\DoxyCodeLine{screen.TrackMouse(\textcolor{keyword}{false});}
+\DoxyCodeLine{screen.Loop(component);}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em enable} & Whether to enable mouse event tracking. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This muse be called outside of the main loop. E.\+g. before calling {\ttfamily Screen\+Interactive\+::\+Loop}. 
+
+\doxylink{structftxui_1_1Mouse}{Mouse} tracking is enabled by default. 
+
+\doxylink{structftxui_1_1Mouse}{Mouse} tracking is only supported on terminals that supports it.
+\end{DoxyNote}
+\hypertarget{classftxui_1_1ScreenInteractive_autotoc_md497}{}\doxysubsubsubsection{\texorpdfstring{Example}{Example}}\label{classftxui_1_1ScreenInteractive_autotoc_md497}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{auto}\ screen\ =\ ScreenInteractive::TerminalOutput();}
+\DoxyCodeLine{screen.TrackMouse(\textcolor{keyword}{false});}
+\DoxyCodeLine{screen.Loop(component);}
+
+\end{DoxyCode}
+ \Hypertarget{classftxui_1_1ScreenInteractive_a1ea63a2594eeaee211e0e8548ec71035}\index{ftxui::ScreenInteractive@{ftxui::ScreenInteractive}!WithRestoredIO@{WithRestoredIO}}
+\index{WithRestoredIO@{WithRestoredIO}!ftxui::ScreenInteractive@{ftxui::ScreenInteractive}}
+\doxysubsubsection{\texorpdfstring{WithRestoredIO()}{WithRestoredIO()}}
+{\footnotesize\ttfamily \label{classftxui_1_1ScreenInteractive_a1ea63a2594eeaee211e0e8548ec71035} 
+Closure ftxui\+::\+Screen\+Interactive\+::\+With\+Restored\+IO (\begin{DoxyParamCaption}\item[{Closure}]{fn}{}\end{DoxyParamCaption})}
+
+
+
+Decorate a function. It executes the same way, but with the currently active screen terminal hooks temporarilly uninstalled during its execution. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fn} & The function to decorate. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+build-\/dbg/\+\_\+deps/ftxui-\/src/include/ftxui/component/screen\+\_\+interactive.\+hpp\item 
+build/\+\_\+deps/ftxui-\/src/include/ftxui/component/screen\+\_\+interactive.\+hpp\item 
+build\+\_\+emscripten/\+\_\+deps/ftxui-\/src/include/ftxui/component/screen\+\_\+interactive.\+hpp\item 
+build-\/dbg/\+\_\+deps/ftxui-\/src/src/ftxui/component/screen\+\_\+interactive.\+cpp\item 
+build/\+\_\+deps/ftxui-\/src/src/ftxui/component/screen\+\_\+interactive.\+cpp\item 
+build\+\_\+emscripten/\+\_\+deps/ftxui-\/src/src/ftxui/component/screen\+\_\+interactive.\+cpp\end{DoxyCompactItemize}

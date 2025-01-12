@@ -1,0 +1,30 @@
+\doxysection{box.\+hpp}
+\hypertarget{build__emscripten_2__deps_2ftxui-src_2include_2ftxui_2screen_2box_8hpp_source}{}\label{build__emscripten_2__deps_2ftxui-src_2include_2ftxui_2screen_2box_8hpp_source}\index{build\_emscripten/\_deps/ftxui-\/src/include/ftxui/screen/box.hpp@{build\_emscripten/\_deps/ftxui-\/src/include/ftxui/screen/box.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2020\ Arthur\ Sonzogni.\ All\ rights\ reserved.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Use\ of\ this\ source\ code\ is\ governed\ by\ the\ MIT\ license\ that\ can\ be\ found\ in}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ FTXUI\_SCREEN\_BOX\_HPP}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ FTXUI\_SCREEN\_BOX\_HPP}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }ftxui\ \{}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structftxui_1_1Box}{Box}}\ \{}
+\DoxyCodeLine{00010\ \ \ \textcolor{keywordtype}{int}\ x\_min\ =\ 0;}
+\DoxyCodeLine{00011\ \ \ \textcolor{keywordtype}{int}\ x\_max\ =\ 0;}
+\DoxyCodeLine{00012\ \ \ \textcolor{keywordtype}{int}\ y\_min\ =\ 0;}
+\DoxyCodeLine{00013\ \ \ \textcolor{keywordtype}{int}\ y\_max\ =\ 0;}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structftxui_1_1Box_a83078c88dc8559de6ba026288f6f236a}{Intersection}}(\mbox{\hyperlink{structftxui_1_1Box}{Box}}\ a,\ \mbox{\hyperlink{structftxui_1_1Box}{Box}}\ b)\ -\/>\ \mbox{\hyperlink{structftxui_1_1Box}{Box}};}
+\DoxyCodeLine{00016\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structftxui_1_1Box_aa47b99c370a44fb68dcb8478bd946ea2}{Union}}(\mbox{\hyperlink{structftxui_1_1Box}{Box}}\ a,\ \mbox{\hyperlink{structftxui_1_1Box}{Box}}\ b)\ -\/>\ \mbox{\hyperlink{structftxui_1_1Box}{Box}};}
+\DoxyCodeLine{00017\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structftxui_1_1Box_a80b90f16ee15d50f1fb05d70b8c89780}{Contain}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00018\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structftxui_1_1Box_a908fb02c773021d23959f7a50fb1f7cf}{operator==}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Box}{Box}}\&\ other)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00019\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structftxui_1_1Box_a1d57ef03e727a9d29cfecaf04c085e6a}{operator!=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1Box}{Box}}\&\ other)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00020\ \};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \}\ \ \textcolor{comment}{//\ namespace\ ftxui}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ FTXUI\_SCREEN\_BOX\_HPP}}
+
+\end{DoxyCode}

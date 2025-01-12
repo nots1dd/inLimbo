@@ -1,0 +1,41 @@
+\doxysection{string.\+hpp}
+\hypertarget{build__emscripten_2__deps_2ftxui-src_2include_2ftxui_2screen_2string_8hpp_source}{}\label{build__emscripten_2__deps_2ftxui-src_2include_2ftxui_2screen_2string_8hpp_source}\index{build\_emscripten/\_deps/ftxui-\/src/include/ftxui/screen/string.hpp@{build\_emscripten/\_deps/ftxui-\/src/include/ftxui/screen/string.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2020\ Arthur\ Sonzogni.\ All\ rights\ reserved.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Use\ of\ this\ source\ code\ is\ governed\ by\ the\ MIT\ license\ that\ can\ be\ found\ in}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ FTXUI\_SCREEN\_STRING\_HPP}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ FTXUI\_SCREEN\_STRING\_HPP}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stddef.h>}\ \ \textcolor{comment}{//\ for\ size\_t}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <cstdint>}\ \ \ \textcolor{comment}{//\ for\ uint8\_t}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <string>}\ \ \ \ \textcolor{comment}{//\ for\ string,\ wstring,\ to\_string}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <vector>}\ \ \ \ \textcolor{comment}{//\ for\ vector}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }ftxui\ \{}
+\DoxyCodeLine{00013\ std::string\ to\_string(\textcolor{keyword}{const}\ std::wstring\&\ s);}
+\DoxyCodeLine{00014\ std::wstring\ to\_wstring(\textcolor{keyword}{const}\ std::string\&\ s);}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00017\ std::wstring\ to\_wstring(T\ s)\ \{}
+\DoxyCodeLine{00018\ \ \ \textcolor{keywordflow}{return}\ to\_wstring(std::to\_string(s));}
+\DoxyCodeLine{00019\ \}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keywordtype}{int}\ string\_width(\textcolor{keyword}{const}\ std::string\&);}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ Split\ the\ string\ into\ a\ its\ glyphs.\ An\ empty\ one\ is\ inserted\ ater\ fullwidth}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ ones.}}
+\DoxyCodeLine{00025\ std::vector<std::string>\ Utf8ToGlyphs(\textcolor{keyword}{const}\ std::string\&\ input);}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ Map\ every\ cells\ drawn\ by\ |input|\ to\ their\ corresponding\ Glyphs.\ Half-\/size}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ Glyphs\ takes\ one\ cell,\ full-\/size\ Glyphs\ take\ two\ cells.}}
+\DoxyCodeLine{00029\ std::vector<int>\ CellToGlyphIndex(\textcolor{keyword}{const}\ std::string\&\ input);}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \}\ \ \textcolor{comment}{//\ namespace\ ftxui}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ "{}ftxui/screen/deprecated.hpp"{}}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ end\ of\ include\ guard:\ FTXUI\_SCREEN\_STRING\_HPP\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

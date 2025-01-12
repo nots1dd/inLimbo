@@ -1,0 +1,252 @@
+\doxysection{Mini\+Audio\+Player Class Reference}
+\hypertarget{classMiniAudioPlayer}{}\label{classMiniAudioPlayer}\index{MiniAudioPlayer@{MiniAudioPlayer}}
+
+
+A class for playing audio using the Mini\+Audio library.  
+
+
+
+
+{\ttfamily \#include $<$audio\+\_\+playback.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classMiniAudioPlayer_ad8fc2362d2046790cf6bdcb9ec4933f1}{Mini\+Audio\+Player}} ()
+\begin{DoxyCompactList}\small\item\em Constructs a \doxylink{classMiniAudioPlayer}{Mini\+Audio\+Player} object and initializes the Mini\+Audio engine. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classMiniAudioPlayer_ade3387406ebf3bf900d561b8e72a2a3c}{\texorpdfstring{$\sim$}{\string~}\+Mini\+Audio\+Player}} ()
+\begin{DoxyCompactList}\small\item\em Destroys the \doxylink{classMiniAudioPlayer}{Mini\+Audio\+Player} object, stopping any playback and cleaning up resources. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classMiniAudioPlayer_a5269bc0086c47ca3a23899fd7324433c}{load\+File}} (const std\+::string \&file\+Path)
+\begin{DoxyCompactList}\small\item\em Loads an audio file for playback. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classMiniAudioPlayer_afaed2fe579e6ec80066056d622f42b8a}{play}} ()
+\begin{DoxyCompactList}\small\item\em Starts playback of the loaded audio file. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classMiniAudioPlayer_a9e0326f4904c8dc484730a9f1588d60d}{pause}} ()
+\begin{DoxyCompactList}\small\item\em Pauses the current audio playback. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classMiniAudioPlayer_a76e2cf58ef484743383411c267d1e6b3}{resume}} ()
+\begin{DoxyCompactList}\small\item\em Resumes playback from the last paused position. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classMiniAudioPlayer_a8233c5e0b8bb3a14402dc89281719029}{stop}} ()
+\begin{DoxyCompactList}\small\item\em Stops the playback and resets the playback position. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classMiniAudioPlayer_ab2c4bae21c2ea00b2f3af8b697835950}{set\+Volume}} (float volume)
+\begin{DoxyCompactList}\small\item\em Sets the volume of the audio playback. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classMiniAudioPlayer_a0ba783ad7c4b8b695298ff5d554e1922}{get\+Volume}} () const
+\begin{DoxyCompactList}\small\item\em Gets the current volume of the audio playback. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classMiniAudioPlayer_a4ccaf3af3d5377c91dbf24685a7e3440}{is\+Currently\+Playing}} ()
+\begin{DoxyCompactList}\small\item\em Checks if the sound is currently playing. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classMiniAudioPlayer_af23b5fbce361c592b6916bc2955db1e5}{get\+Duration}} ()
+\begin{DoxyCompactList}\small\item\em Gets the total duration of the sound in seconds. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{classMiniAudioPlayer_ac173876d6e4accb4100ecd7fa1e0ac69}{seek\+Time}} (int seconds)
+\begin{DoxyCompactList}\small\item\em Seeks to a specific time in the audio (in seconds). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A class for playing audio using the Mini\+Audio library. 
+
+This class wraps the functionality of the Mini\+Audio library to provide methods for loading, playing, pausing, resuming, stopping, adjusting volume, and seeking within an audio file. It manages playback in a separate thread to handle real-\/time updates on whether the sound is currently playing. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classMiniAudioPlayer_ad8fc2362d2046790cf6bdcb9ec4933f1}\index{MiniAudioPlayer@{MiniAudioPlayer}!MiniAudioPlayer@{MiniAudioPlayer}}
+\index{MiniAudioPlayer@{MiniAudioPlayer}!MiniAudioPlayer@{MiniAudioPlayer}}
+\doxysubsubsection{\texorpdfstring{MiniAudioPlayer()}{MiniAudioPlayer()}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_ad8fc2362d2046790cf6bdcb9ec4933f1} 
+Mini\+Audio\+Player\+::\+Mini\+Audio\+Player (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructs a \doxylink{classMiniAudioPlayer}{Mini\+Audio\+Player} object and initializes the Mini\+Audio engine. 
+
+Initializes the engine and prepares the player for loading and playing audio.
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::runtime\+\_\+error} & If the Mini\+Audio engine cannot be initialized. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{classMiniAudioPlayer_ade3387406ebf3bf900d561b8e72a2a3c}\index{MiniAudioPlayer@{MiniAudioPlayer}!````~MiniAudioPlayer@{\texorpdfstring{$\sim$}{\string~}MiniAudioPlayer}}
+\index{````~MiniAudioPlayer@{\texorpdfstring{$\sim$}{\string~}MiniAudioPlayer}!MiniAudioPlayer@{MiniAudioPlayer}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}MiniAudioPlayer()}{\string~MiniAudioPlayer()}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_ade3387406ebf3bf900d561b8e72a2a3c} 
+Mini\+Audio\+Player\+::\texorpdfstring{$\sim$}{\string~}\+Mini\+Audio\+Player (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Destroys the \doxylink{classMiniAudioPlayer}{Mini\+Audio\+Player} object, stopping any playback and cleaning up resources. 
+
+This method ensures that the sound is stopped, the engine is uninitialized, and resources are cleaned up. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classMiniAudioPlayer_af23b5fbce361c592b6916bc2955db1e5}\index{MiniAudioPlayer@{MiniAudioPlayer}!getDuration@{getDuration}}
+\index{getDuration@{getDuration}!MiniAudioPlayer@{MiniAudioPlayer}}
+\doxysubsubsection{\texorpdfstring{getDuration()}{getDuration()}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_af23b5fbce361c592b6916bc2955db1e5} 
+float Mini\+Audio\+Player\+::get\+Duration (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets the total duration of the sound in seconds. 
+
+This method retrieves the total duration of the loaded audio file in seconds.
+
+\begin{DoxyReturn}{Returns}
+The duration of the sound in seconds. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::runtime\+\_\+error} & If the duration cannot be retrieved. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{classMiniAudioPlayer_a0ba783ad7c4b8b695298ff5d554e1922}\index{MiniAudioPlayer@{MiniAudioPlayer}!getVolume@{getVolume}}
+\index{getVolume@{getVolume}!MiniAudioPlayer@{MiniAudioPlayer}}
+\doxysubsubsection{\texorpdfstring{getVolume()}{getVolume()}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_a0ba783ad7c4b8b695298ff5d554e1922} 
+float Mini\+Audio\+Player\+::get\+Volume (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets the current volume of the audio playback. 
+
+This method retrieves the current volume level of the sound playback.
+
+\begin{DoxyReturn}{Returns}
+The current volume level. 
+\end{DoxyReturn}
+\Hypertarget{classMiniAudioPlayer_a4ccaf3af3d5377c91dbf24685a7e3440}\index{MiniAudioPlayer@{MiniAudioPlayer}!isCurrentlyPlaying@{isCurrentlyPlaying}}
+\index{isCurrentlyPlaying@{isCurrentlyPlaying}!MiniAudioPlayer@{MiniAudioPlayer}}
+\doxysubsubsection{\texorpdfstring{isCurrentlyPlaying()}{isCurrentlyPlaying()}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_a4ccaf3af3d5377c91dbf24685a7e3440} 
+bool Mini\+Audio\+Player\+::is\+Currently\+Playing (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Checks if the sound is currently playing. 
+
+This method returns whether the sound is currently playing.
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the sound is playing, {\ttfamily false} otherwise. 
+\end{DoxyReturn}
+\Hypertarget{classMiniAudioPlayer_a5269bc0086c47ca3a23899fd7324433c}\index{MiniAudioPlayer@{MiniAudioPlayer}!loadFile@{loadFile}}
+\index{loadFile@{loadFile}!MiniAudioPlayer@{MiniAudioPlayer}}
+\doxysubsubsection{\texorpdfstring{loadFile()}{loadFile()}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_a5269bc0086c47ca3a23899fd7324433c} 
+int Mini\+Audio\+Player\+::load\+File (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+Path}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Loads an audio file for playback. 
+
+This method loads the audio file into memory for playback. If a file is already loaded, it is unloaded before loading the new file. If the player is currently playing, it stops the playback first.
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+Path} & The path to the audio file to load. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, -\/1 on failure. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::runtime\+\_\+error} & If the audio file cannot be loaded. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{classMiniAudioPlayer_a9e0326f4904c8dc484730a9f1588d60d}\index{MiniAudioPlayer@{MiniAudioPlayer}!pause@{pause}}
+\index{pause@{pause}!MiniAudioPlayer@{MiniAudioPlayer}}
+\doxysubsubsection{\texorpdfstring{pause()}{pause()}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_a9e0326f4904c8dc484730a9f1588d60d} 
+void Mini\+Audio\+Player\+::pause (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Pauses the current audio playback. 
+
+This method pauses playback and stores the current position to allow resumption from the same point.
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::runtime\+\_\+error} & If pausing the sound fails. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{classMiniAudioPlayer_afaed2fe579e6ec80066056d622f42b8a}\index{MiniAudioPlayer@{MiniAudioPlayer}!play@{play}}
+\index{play@{play}!MiniAudioPlayer@{MiniAudioPlayer}}
+\doxysubsubsection{\texorpdfstring{play()}{play()}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_afaed2fe579e6ec80066056d622f42b8a} 
+void Mini\+Audio\+Player\+::play (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Starts playback of the loaded audio file. 
+
+This method begins playback from the beginning of the audio file. If the audio file is already playing, nothing happens. A playback thread is started to monitor the state of playback.
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::runtime\+\_\+error} & If playback cannot be started. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{classMiniAudioPlayer_a76e2cf58ef484743383411c267d1e6b3}\index{MiniAudioPlayer@{MiniAudioPlayer}!resume@{resume}}
+\index{resume@{resume}!MiniAudioPlayer@{MiniAudioPlayer}}
+\doxysubsubsection{\texorpdfstring{resume()}{resume()}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_a76e2cf58ef484743383411c267d1e6b3} 
+void Mini\+Audio\+Player\+::resume (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Resumes playback from the last paused position. 
+
+This method resumes playback from the position where the sound was paused. If the sound was not paused, nothing happens. \Hypertarget{classMiniAudioPlayer_ac173876d6e4accb4100ecd7fa1e0ac69}\index{MiniAudioPlayer@{MiniAudioPlayer}!seekTime@{seekTime}}
+\index{seekTime@{seekTime}!MiniAudioPlayer@{MiniAudioPlayer}}
+\doxysubsubsection{\texorpdfstring{seekTime()}{seekTime()}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_ac173876d6e4accb4100ecd7fa1e0ac69} 
+double Mini\+Audio\+Player\+::seek\+Time (\begin{DoxyParamCaption}\item[{int}]{seconds}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Seeks to a specific time in the audio (in seconds). 
+
+This method seeks to a specific position in the audio based on the number of seconds provided.
+
+
+\begin{DoxyParams}{Parameters}
+{\em seconds} & The time (in seconds) to seek to. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The actual time (in seconds) that the sound was seeked to. 
+\end{DoxyReturn}
+\Hypertarget{classMiniAudioPlayer_ab2c4bae21c2ea00b2f3af8b697835950}\index{MiniAudioPlayer@{MiniAudioPlayer}!setVolume@{setVolume}}
+\index{setVolume@{setVolume}!MiniAudioPlayer@{MiniAudioPlayer}}
+\doxysubsubsection{\texorpdfstring{setVolume()}{setVolume()}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_ab2c4bae21c2ea00b2f3af8b697835950} 
+void Mini\+Audio\+Player\+::set\+Volume (\begin{DoxyParamCaption}\item[{float}]{volume}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the volume of the audio playback. 
+
+This method adjusts the playback volume. The volume is a float between 0.\+0 (silent) and 1.\+0 (maximum volume).
+
+
+\begin{DoxyParams}{Parameters}
+{\em volume} & The volume to set. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::invalid\+\_\+argument} & If the volume is outside the valid range of 0.\+0 to 1.\+0. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{classMiniAudioPlayer_a8233c5e0b8bb3a14402dc89281719029}\index{MiniAudioPlayer@{MiniAudioPlayer}!stop@{stop}}
+\index{stop@{stop}!MiniAudioPlayer@{MiniAudioPlayer}}
+\doxysubsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_a8233c5e0b8bb3a14402dc89281719029} 
+void Mini\+Audio\+Player\+::stop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Stops the playback and resets the playback position. 
+
+This method stops the current playback, resets the playback position to the beginning, and ensures the playback thread is joined. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/music/\mbox{\hyperlink{audio__playback_8hpp}{audio\+\_\+playback.\+hpp}}\end{DoxyCompactItemize}

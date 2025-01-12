@@ -1,0 +1,72 @@
+\doxysection{node.\+hpp}
+\hypertarget{build_2__deps_2ftxui-src_2include_2ftxui_2dom_2node_8hpp_source}{}\label{build_2__deps_2ftxui-src_2include_2ftxui_2dom_2node_8hpp_source}\index{build/\_deps/ftxui-\/src/include/ftxui/dom/node.hpp@{build/\_deps/ftxui-\/src/include/ftxui/dom/node.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2020\ Arthur\ Sonzogni.\ All\ rights\ reserved.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Use\ of\ this\ source\ code\ is\ governed\ by\ the\ MIT\ license\ that\ can\ be\ found\ in}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ FTXUI\_DOM\_NODE\_HPP}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ FTXUI\_DOM\_NODE\_HPP}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <memory>}\ \ \textcolor{comment}{//\ for\ shared\_ptr}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <vector>}\ \ \textcolor{comment}{//\ for\ vector}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}ftxui/dom/requirement.hpp"{}}\ \ \textcolor{comment}{//\ for\ Requirement}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}ftxui/screen/box.hpp"{}}\ \ \ \ \ \ \ \textcolor{comment}{//\ for\ Box}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}ftxui/screen/screen.hpp"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }ftxui\ \{}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classftxui_1_1Node}{Node}};}
+\DoxyCodeLine{00017\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classftxui_1_1Screen}{Screen}};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{using\ }Element\ =\ std::shared\_ptr<Node>;}
+\DoxyCodeLine{00020\ \textcolor{keyword}{using\ }Elements\ =\ std::vector<Element>;}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classftxui_1_1Node}{Node}}\ \{}
+\DoxyCodeLine{00023\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00024\ \ \ Node();}
+\DoxyCodeLine{00025\ \ \ Node(Elements\ children);}
+\DoxyCodeLine{00026\ \ \ Node(\textcolor{keyword}{const}\ Node\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00027\ \ \ Node(\textcolor{keyword}{const}\ Node\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00028\ \ \ Node\&\ operator=(\textcolor{keyword}{const}\ Node\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00029\ \ \ Node\&\ operator=(\textcolor{keyword}{const}\ Node\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \textcolor{keyword}{virtual}\ \string~Node();}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \textcolor{comment}{//\ Step\ 1:\ Compute\ layout\ requirement.\ Tell\ parent\ what\ dimensions\ this}}
+\DoxyCodeLine{00034\ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ element\ wants\ to\ be.}}
+\DoxyCodeLine{00035\ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ Propagated\ from\ Children\ to\ Parents.}}
+\DoxyCodeLine{00036\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classftxui_1_1Node_a33d77039cccf7ad7a6e735a7e7cf18ca}{ComputeRequirement}}();}
+\DoxyCodeLine{00037\ \ \ Requirement\ requirement()\ \{\ \textcolor{keywordflow}{return}\ requirement\_;\ \}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \textcolor{comment}{//\ Step\ 2:\ Assign\ this\ element\ its\ final\ dimensions.}}
+\DoxyCodeLine{00040\ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ Propagated\ from\ Parents\ to\ Children.}}
+\DoxyCodeLine{00041\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classftxui_1_1Node_a479035e42e36b160aa8a2db95c48f32e}{SetBox}}(Box\ box);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \textcolor{comment}{//\ Step\ 3:\ Draw\ this\ element.}}
+\DoxyCodeLine{00044\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classftxui_1_1Node_a58d187beeaa76631d4f5262faeaf4197}{Render}}(Screen\&\ screen);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \textcolor{comment}{//\ Layout\ may\ not\ resolve\ within\ a\ single\ iteration\ for\ some\ elements.\ This}}
+\DoxyCodeLine{00047\ \ \ \textcolor{comment}{//\ allows\ them\ to\ request\ additionnal\ iterations.\ This\ signal\ must\ be}}
+\DoxyCodeLine{00048\ \ \ \textcolor{comment}{//\ forwarded\ to\ children\ at\ least\ once.}}
+\DoxyCodeLine{00049\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structftxui_1_1Node_1_1Status}{Status}}\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{int}\ iteration\ =\ 0;}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{bool}\ need\_iteration\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00052\ \ \ \};}
+\DoxyCodeLine{00053\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Check(\mbox{\hyperlink{structftxui_1_1Node_1_1Status}{Status}}*\ status);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00056\ \ \ Elements\ children\_;}
+\DoxyCodeLine{00057\ \ \ Requirement\ requirement\_;}
+\DoxyCodeLine{00058\ \ \ Box\ box\_;}
+\DoxyCodeLine{00059\ \};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keywordtype}{void}\ Render(\mbox{\hyperlink{classftxui_1_1Screen}{Screen}}\&\ screen,\ \textcolor{keyword}{const}\ Element\&\ element);}
+\DoxyCodeLine{00062\ \textcolor{keywordtype}{void}\ Render(\mbox{\hyperlink{classftxui_1_1Screen}{Screen}}\&\ screen,\ \mbox{\hyperlink{classftxui_1_1Node}{Node}}*\ node);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \}\ \ \textcolor{comment}{//\ namespace\ ftxui}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ FTXUI\_DOM\_NODE\_HPP}}
+
+\end{DoxyCode}

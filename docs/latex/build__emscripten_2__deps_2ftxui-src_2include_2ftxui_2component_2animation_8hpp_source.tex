@@ -1,0 +1,123 @@
+\doxysection{animation.\+hpp}
+\hypertarget{build__emscripten_2__deps_2ftxui-src_2include_2ftxui_2component_2animation_8hpp_source}{}\label{build__emscripten_2__deps_2ftxui-src_2include_2ftxui_2component_2animation_8hpp_source}\index{build\_emscripten/\_deps/ftxui-\/src/include/ftxui/component/animation.hpp@{build\_emscripten/\_deps/ftxui-\/src/include/ftxui/component/animation.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2022\ Arthur\ Sonzogni.\ All\ rights\ reserved.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Use\ of\ this\ source\ code\ is\ governed\ by\ the\ MIT\ license\ that\ can\ be\ found\ in}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ FTXUI\_ANIMATION\_HPP}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ FTXUI\_ANIMATION\_HPP}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <chrono>}\ \ \ \ \ \ \textcolor{comment}{//\ for\ milliseconds,\ duration,\ steady\_clock,\ time\_point}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <functional>}\ \ \textcolor{comment}{//\ for\ function}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}ftxui/component/event.hpp"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }ftxui\ \{}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }animation\ \{}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ Components\ who\ haven't\ completed\ their\ animation\ can\ call\ this\ function\ to}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ request\ a\ new\ frame\ to\ be\ drawn\ later.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ When\ there\ is\ no\ new\ events\ and\ no\ animations\ to\ complete,\ no\ new\ frame\ is}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ drawn.}}
+\DoxyCodeLine{00020\ \textcolor{keywordtype}{void}\ RequestAnimationFrame();}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{using\ }Clock\ =\ std::chrono::steady\_clock;}
+\DoxyCodeLine{00023\ \textcolor{keyword}{using\ }TimePoint\ =\ std::chrono::time\_point<Clock>;}
+\DoxyCodeLine{00024\ \textcolor{keyword}{using\ }Duration\ =\ std::chrono::duration<float>;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Parameter\ of\ Component::OnAnimation(param).}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }Params\ \{}
+\DoxyCodeLine{00028\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00029\ \ \ Params(Duration\ \mbox{\hyperlink{classftxui_1_1animation_1_1Params_a0ae5b0cd60aaa7b6dc54855756d78290}{duration}})\ :\ duration\_(\mbox{\hyperlink{classftxui_1_1animation_1_1Params_a0ae5b0cd60aaa7b6dc54855756d78290}{duration}})\ \{\}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00032\ \ \ Duration\ \mbox{\hyperlink{classftxui_1_1animation_1_1Params_a0ae5b0cd60aaa7b6dc54855756d78290}{duration}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ duration\_;\ \}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00035\ \ \ Duration\ duration\_;}
+\DoxyCodeLine{00036\ \};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{namespace\ }easing\ \{}
+\DoxyCodeLine{00039\ \textcolor{keyword}{using\ }Function\ =\ std::function<float(\textcolor{keywordtype}{float})>;}
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ Linear\ interpolation\ (no\ easing)}}
+\DoxyCodeLine{00041\ \textcolor{keywordtype}{float}\ Linear(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ Quadratic\ easing;\ p\string^2}}
+\DoxyCodeLine{00044\ \textcolor{keywordtype}{float}\ QuadraticIn(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00045\ \textcolor{keywordtype}{float}\ QuadraticOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00046\ \textcolor{keywordtype}{float}\ QuadraticInOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{comment}{//\ Cubic\ easing;\ p\string^3}}
+\DoxyCodeLine{00049\ \textcolor{keywordtype}{float}\ CubicIn(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00050\ \textcolor{keywordtype}{float}\ CubicOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00051\ \textcolor{keywordtype}{float}\ CubicInOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{comment}{//\ Quartic\ easing;\ p\string^4}}
+\DoxyCodeLine{00054\ \textcolor{keywordtype}{float}\ QuarticIn(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00055\ \textcolor{keywordtype}{float}\ QuarticOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00056\ \textcolor{keywordtype}{float}\ QuarticInOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{comment}{//\ Quintic\ easing;\ p\string^5}}
+\DoxyCodeLine{00059\ \textcolor{keywordtype}{float}\ QuinticIn(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00060\ \textcolor{keywordtype}{float}\ QuinticOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00061\ \textcolor{keywordtype}{float}\ QuinticInOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ Sine\ wave\ easing;\ sin(p\ *\ PI/2)}}
+\DoxyCodeLine{00064\ \textcolor{keywordtype}{float}\ SineIn(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00065\ \textcolor{keywordtype}{float}\ SineOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00066\ \textcolor{keywordtype}{float}\ SineInOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{comment}{//\ Circular\ easing;\ sqrt(1\ -\/\ p\string^2)}}
+\DoxyCodeLine{00069\ \textcolor{keywordtype}{float}\ CircularIn(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00070\ \textcolor{keywordtype}{float}\ CircularOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00071\ \textcolor{keywordtype}{float}\ CircularInOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{comment}{//\ Exponential\ easing,\ base\ 2}}
+\DoxyCodeLine{00074\ \textcolor{keywordtype}{float}\ ExponentialIn(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00075\ \textcolor{keywordtype}{float}\ ExponentialOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00076\ \textcolor{keywordtype}{float}\ ExponentialInOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{comment}{//\ Exponentially-\/damped\ sine\ wave\ easing}}
+\DoxyCodeLine{00079\ \textcolor{keywordtype}{float}\ ElasticIn(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00080\ \textcolor{keywordtype}{float}\ ElasticOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00081\ \textcolor{keywordtype}{float}\ ElasticInOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{comment}{//\ Overshooting\ cubic\ easing;}}
+\DoxyCodeLine{00084\ \textcolor{keywordtype}{float}\ BackIn(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00085\ \textcolor{keywordtype}{float}\ BackOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00086\ \textcolor{keywordtype}{float}\ BackInOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{comment}{//\ Exponentially-\/decaying\ bounce\ easing}}
+\DoxyCodeLine{00089\ \textcolor{keywordtype}{float}\ BounceIn(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00090\ \textcolor{keywordtype}{float}\ BounceOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00091\ \textcolor{keywordtype}{float}\ BounceInOut(\textcolor{keywordtype}{float}\ p);}
+\DoxyCodeLine{00092\ \}\ \ \textcolor{comment}{//\ namespace\ easing}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{keyword}{class\ }Animator\ \{}
+\DoxyCodeLine{00095\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00096\ \ \ Animator(\textcolor{keywordtype}{float}*\ from,}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ to\ =\ 0.f,}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ Duration\ duration\ =\ std::chrono::milliseconds(250),}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ easing::Function\ easing\_function\ =\ easing::Linear,}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ Duration\ delay\ =\ std::chrono::milliseconds(0));}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \textcolor{keywordtype}{void}\ OnAnimation(\mbox{\hyperlink{classftxui_1_1animation_1_1Params}{Params}}\&);}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \textcolor{keywordtype}{float}\ to()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ to\_;\ \}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00107\ \ \ \textcolor{keywordtype}{float}*\ value\_;}
+\DoxyCodeLine{00108\ \ \ \textcolor{keywordtype}{float}\ from\_;}
+\DoxyCodeLine{00109\ \ \ \textcolor{keywordtype}{float}\ to\_;}
+\DoxyCodeLine{00110\ \ \ Duration\ duration\_;}
+\DoxyCodeLine{00111\ \ \ easing::Function\ easing\_function\_;}
+\DoxyCodeLine{00112\ \ \ Duration\ current\_;}
+\DoxyCodeLine{00113\ \};}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \}\ \ \textcolor{comment}{//\ namespace\ animation}}
+\DoxyCodeLine{00116\ \}\ \ \textcolor{comment}{//\ namespace\ ftxui}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ end\ of\ include\ guard:\ FTXUI\_ANIMATION\_HPP\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

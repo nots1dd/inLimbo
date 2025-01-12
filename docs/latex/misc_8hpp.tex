@@ -1,0 +1,82 @@
+\doxysection{src/ui/misc.hpp File Reference}
+\hypertarget{misc_8hpp}{}\label{misc_8hpp}\index{src/ui/misc.hpp@{src/ui/misc.hpp}}
+{\ttfamily \#include "{}./colors.\+hpp"{}}\newline
+{\ttfamily \#include $<$cctype$>$}\newline
+{\ttfamily \#include $<$ftxui/component/captured\+\_\+mouse.\+hpp$>$}\newline
+{\ttfamily \#include $<$ftxui/component/component.\+hpp$>$}\newline
+{\ttfamily \#include $<$ftxui/component/component\+\_\+base.\+hpp$>$}\newline
+{\ttfamily \#include $<$ftxui/component/event.\+hpp$>$}\newline
+{\ttfamily \#include $<$ftxui/component/screen\+\_\+interactive.\+hpp$>$}\newline
+{\ttfamily \#include $<$ftxui/dom/elements.\+hpp$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{misc_8hpp_a624a33fe79ca546dc4abb6e0735586ce}{format\+Lyrics}} (const std\+::string \&lyrics)
+\item 
+std\+::string \mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{char\+To\+Str}} (char ch)
+\item 
+std\+::string \mbox{\hyperlink{misc_8hpp_a76d3e10fc086b99d9046b6406baf51da}{Format\+Time}} (int seconds)
+\item 
+ftxui\+::\+Decorator \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{get\+True\+Color}} (\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{True\+Colors\+::\+Color}} color)
+\item 
+ftxui\+::\+Decorator \mbox{\hyperlink{misc_8hpp_a32a29b442a57acc73893a7b2be55dec9}{get\+True\+BGColor}} (\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{True\+Colors\+::\+Color}} color)
+\item 
+Element \mbox{\hyperlink{misc_8hpp_a40a9888f76354b21ca85f69ffe014750}{render\+Album\+Name}} (const std\+::string \&album\+\_\+name, const int \&year, ftxui\+::\+Color sel\+\_\+color)
+\item 
+Element \mbox{\hyperlink{misc_8hpp_adcfcdc4bf50bc48f25cc0e8df2e80822}{render\+Song\+Name}} (const std\+::string \&disc\+\_\+track\+\_\+info, const std\+::string \&song\+\_\+name, const int \&duration)
+\item 
+auto \mbox{\hyperlink{misc_8hpp_ae177f32772c1011c09dfce5f982c7f64}{Render\+Song\+Menu}} (const std\+::vector$<$ Element $>$ \&items, int \texorpdfstring{$\ast$}{*}selected\+\_\+index, ftxui\+::\+Color sel\+\_\+color)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}\index{misc.hpp@{misc.hpp}!charToStr@{charToStr}}
+\index{charToStr@{charToStr}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{charToStr()}{charToStr()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a2e2246f99124f69740c8012be4b75c36} 
+std\+::string char\+To\+Str (\begin{DoxyParamCaption}\item[{char}]{ch}{}\end{DoxyParamCaption})}
+
+\Hypertarget{misc_8hpp_a624a33fe79ca546dc4abb6e0735586ce}\index{misc.hpp@{misc.hpp}!formatLyrics@{formatLyrics}}
+\index{formatLyrics@{formatLyrics}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{formatLyrics()}{formatLyrics()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a624a33fe79ca546dc4abb6e0735586ce} 
+std\+::vector$<$ std\+::string $>$ format\+Lyrics (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{lyrics}{}\end{DoxyParamCaption})}
+
+\Hypertarget{misc_8hpp_a76d3e10fc086b99d9046b6406baf51da}\index{misc.hpp@{misc.hpp}!FormatTime@{FormatTime}}
+\index{FormatTime@{FormatTime}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{FormatTime()}{FormatTime()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a76d3e10fc086b99d9046b6406baf51da} 
+std\+::string Format\+Time (\begin{DoxyParamCaption}\item[{int}]{seconds}{}\end{DoxyParamCaption})}
+
+\Hypertarget{misc_8hpp_a32a29b442a57acc73893a7b2be55dec9}\index{misc.hpp@{misc.hpp}!getTrueBGColor@{getTrueBGColor}}
+\index{getTrueBGColor@{getTrueBGColor}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{getTrueBGColor()}{getTrueBGColor()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a32a29b442a57acc73893a7b2be55dec9} 
+ftxui\+::\+Decorator get\+True\+BGColor (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{True\+Colors\+::\+Color}}}]{color}{}\end{DoxyParamCaption})}
+
+\Hypertarget{misc_8hpp_a8322ea931342052157aab9682d60a14f}\index{misc.hpp@{misc.hpp}!getTrueColor@{getTrueColor}}
+\index{getTrueColor@{getTrueColor}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{getTrueColor()}{getTrueColor()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a8322ea931342052157aab9682d60a14f} 
+ftxui\+::\+Decorator get\+True\+Color (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{True\+Colors\+::\+Color}}}]{color}{}\end{DoxyParamCaption})}
+
+\Hypertarget{misc_8hpp_a40a9888f76354b21ca85f69ffe014750}\index{misc.hpp@{misc.hpp}!renderAlbumName@{renderAlbumName}}
+\index{renderAlbumName@{renderAlbumName}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{renderAlbumName()}{renderAlbumName()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a40a9888f76354b21ca85f69ffe014750} 
+Element render\+Album\+Name (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{album\+\_\+name}{, }\item[{const int \&}]{year}{, }\item[{ftxui\+::\+Color}]{sel\+\_\+color}{}\end{DoxyParamCaption})}
+
+\Hypertarget{misc_8hpp_ae177f32772c1011c09dfce5f982c7f64}\index{misc.hpp@{misc.hpp}!RenderSongMenu@{RenderSongMenu}}
+\index{RenderSongMenu@{RenderSongMenu}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{RenderSongMenu()}{RenderSongMenu()}}
+{\footnotesize\ttfamily \label{misc_8hpp_ae177f32772c1011c09dfce5f982c7f64} 
+auto Render\+Song\+Menu (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ Element $>$ \&}]{items}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{selected\+\_\+index}{, }\item[{ftxui\+::\+Color}]{sel\+\_\+color}{}\end{DoxyParamCaption})}
+
+\Hypertarget{misc_8hpp_adcfcdc4bf50bc48f25cc0e8df2e80822}\index{misc.hpp@{misc.hpp}!renderSongName@{renderSongName}}
+\index{renderSongName@{renderSongName}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{renderSongName()}{renderSongName()}}
+{\footnotesize\ttfamily \label{misc_8hpp_adcfcdc4bf50bc48f25cc0e8df2e80822} 
+Element render\+Song\+Name (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{disc\+\_\+track\+\_\+info}{, }\item[{const std\+::string \&}]{song\+\_\+name}{, }\item[{const int \&}]{duration}{}\end{DoxyParamCaption})}
+

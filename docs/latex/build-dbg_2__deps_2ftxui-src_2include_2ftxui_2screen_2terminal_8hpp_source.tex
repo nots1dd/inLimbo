@@ -1,0 +1,36 @@
+\doxysection{terminal.\+hpp}
+\hypertarget{build-dbg_2__deps_2ftxui-src_2include_2ftxui_2screen_2terminal_8hpp_source}{}\label{build-dbg_2__deps_2ftxui-src_2include_2ftxui_2screen_2terminal_8hpp_source}\index{build-\/dbg/\_deps/ftxui-\/src/include/ftxui/screen/terminal.hpp@{build-\/dbg/\_deps/ftxui-\/src/include/ftxui/screen/terminal.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2020\ Arthur\ Sonzogni.\ All\ rights\ reserved.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Use\ of\ this\ source\ code\ is\ governed\ by\ the\ MIT\ license\ that\ can\ be\ found\ in}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ FTXUI\_SCREEN\_TERMINAL\_HPP}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ FTXUI\_SCREEN\_TERMINAL\_HPP}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }ftxui\ \{}
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}}\ \{}
+\DoxyCodeLine{00009\ \ \ \textcolor{keywordtype}{int}\ dimx;}
+\DoxyCodeLine{00010\ \ \ \textcolor{keywordtype}{int}\ dimy;}
+\DoxyCodeLine{00011\ \};}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{namespace\ }Terminal\ \{}
+\DoxyCodeLine{00014\ Dimensions\ Size();}
+\DoxyCodeLine{00015\ \textcolor{keywordtype}{void}\ SetFallbackSize(\textcolor{keyword}{const}\ Dimensions\&\ fallbackSize);}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{enum}\ Color\ \{}
+\DoxyCodeLine{00018\ \ \ Palette1,}
+\DoxyCodeLine{00019\ \ \ Palette16,}
+\DoxyCodeLine{00020\ \ \ Palette256,}
+\DoxyCodeLine{00021\ \ \ TrueColor,}
+\DoxyCodeLine{00022\ \};}
+\DoxyCodeLine{00023\ Color\ ColorSupport();}
+\DoxyCodeLine{00024\ \textcolor{keywordtype}{void}\ SetColorSupport(Color\ color);}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \}\ \ \textcolor{comment}{//\ namespace\ Terminal}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \}\ \ \textcolor{comment}{//\ namespace\ ftxui}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ FTXUI\_SCREEN\_TERMINAL\_HPP}}
+
+\end{DoxyCode}

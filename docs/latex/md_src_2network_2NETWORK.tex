@@ -1,0 +1,102 @@
+\chapter{NETWORK}
+\hypertarget{md_src_2network_2NETWORK}{}\label{md_src_2network_2NETWORK}\index{NETWORK@{NETWORK}}
+\label{md_src_2network_2NETWORK_autotoc_md0}%
+\Hypertarget{md_src_2network_2NETWORK_autotoc_md0}%
+
+
+Working on a custom implementation of FTP server\hypertarget{md_src_2network_2NETWORK_autotoc_md1}{}\doxysubsection{\texorpdfstring{Current implementation}{Current implementation}}\label{md_src_2network_2NETWORK_autotoc_md1}
+Just a basic challenge security auth using openssl and some back and forth signal receiving in a traditional CS arch
+
+-\/\texorpdfstring{$>$}{>} Allows for one file download from server (directory is hardcoded atm)\hypertarget{md_src_2network_2NETWORK_autotoc_md2}{}\doxysubsection{\texorpdfstring{SSL security}{SSL security}}\label{md_src_2network_2NETWORK_autotoc_md2}
+We are using openssl for a more safer socket connection and transmission
+
+To generate server key and certificate\+: ({\bfseries{RUN IN YOUR SERVER(\+PC) AND SEND IT TO YOUR PHONE}})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ Give\ the\ Common\ name\ as\ your\ server's\ IP\ addr,\ email\ is\ not\ necessary}
+\DoxyCodeLine{openssl\ req\ -\/x509\ -\/nodes\ -\/days\ 365\ -\/newkey\ rsa:2048\ -\/keyout\ server\_key.pem\ -\/out\ server\_cert.pem}
+
+\end{DoxyCode}
+
+
+Make sure that the following files are sent over to your phone using this command\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ You\ will\ have\ to\ also\ send\ over\ the\ servers'\ certificate:-\/\ server\_cert.pem\ file\ to\ your\ phone}
+\DoxyCodeLine{mkdir\ inLimbo\_client}
+\DoxyCodeLine{cd\ inLimbo\_client/}
+\DoxyCodeLine{curl\ -\/L\ -\/o\ client.cpp\ https://raw.githubusercontent.com/nots1dd/inLimbo/main/src/network/client.cpp}
+\DoxyCodeLine{curl\ -\/L\ -\/o\ protocols.h\ https://raw.githubusercontent.com/nots1dd/inLimbo/main/src/network/protocols.h}
+
+\end{DoxyCode}
+
+
+\begin{DoxyNote}{Note}
+~\newline
+ You will need to have termux installed and configured in order to compile client code in your phone ~\newline
+~\newline
+ IOS users sadly cannot use this feature ~\newline
+~\newline
+ {\bfseries{MAKE SURE THAT YOU SETUP TERMUX IN YOUR PHONE BY RUNNING {\ttfamily termux-\/setup-\/storage}}} ~\newline
+~\newline
+ This is to get access to the Internal Storage of your android phone in termux itself ~\newline
+~\newline
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ To\ install\ compiler\ and\ compiling\ client.cpp\ in\ your\ phone\ (android\ only)}
+\DoxyCodeLine{pkg\ install\ clang\ libllvm}
+\DoxyCodeLine{clang++\ client.cpp\ -\/lcrypto\ -\/lssl\ -\/o\ client}
+\DoxyCodeLine{./client\ \#\ make\ sure\ you\ have\ server\_cert.pem\ in\ your\ phone\ already}
+
+\end{DoxyCode}
+ ~\newline
+~\newline
+ {\bfseries{CAUTION\+:}} If client refuses to connect and you are sure that everything is done as explained, ~\newline
+~\newline
+ -\/\texorpdfstring{$>$}{>} Consider changing the {\ttfamily SERVER\+\_\+\+IP} macro in {\ttfamily \doxylink{protocols_8h}{protocols.\+h}} to the server\textquotesingle{}s ip address (you can find it out in linux using {\ttfamily ip a}) ~\newline
+~\newline
+ In code it should look something like this\+: ~\newline
+~\newline
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#define\ SERVER\_IP\ "{}127.0.0.1"{}\ }\textcolor{comment}{//\ by\ default\ it\ is\ set\ to\ loopback\ addr,\ set\ this\ to\ the\ actual\ servers\ ip}}
+
+\end{DoxyCode}
+ ~\newline
+~\newline
+ I will come up with a more dynamic way of setting this in the future but right now it is pretty rigid. ~\newline
+~\newline
+ -\/\texorpdfstring{$>$}{>} The server will have access to the password hash that you will give in config.\+toml file
+\end{DoxyNote}
+-\/\texorpdfstring{$>$}{>} The client will input the password and compute the sha256 hash of salt+password and raise a challenge with the server\textquotesingle{}s hash
+
+-\/\texorpdfstring{$>$}{>} If they match, we autheticate successfully, else it fails
+
+-\/\texorpdfstring{$>$}{>} Needless to say, the client also needs the {\ttfamily server\+\_\+cert.\+pem} file as well else client can never connect
+
+The above forms a baseline security and safety of your connection with the FTP server, it may not be the most secure nor the ideal process to go about securing a FTP server, but it works.
+
+If it is not obvious enough, the default password is {\ttfamily password}.
+
+\begin{DoxyNote}{Note}
+~\newline
+ {\bfseries{TO CHANGE YOUR PASSWORD}}\+: ~\newline
+~\newline
+ It is simple enough actually, follow these steps\+: ~\newline
+~\newline
+
+\begin{DoxyEnumerate}
+\item Change salt if you want to, upon choosing give it in your {\ttfamily config.\+toml} file {\bfseries{AND}} your \doxylink{client_8cpp}{client.\+cpp} code!
+\item Get a password of your choosing and concatenate salt and password (salt + password -\/\texorpdfstring{$>$}{>} in this order)
+\item Get its SHA256 hash of the concatenated string (can go to an \href{https://emn178.github.io/online-tools/sha256.html}{\texttt{ online alternative}}) or just use openssl or other binaries to find its hash
+\item Put the hash in {\ttfamily config.\+toml} under password\+\_\+hash field ~\newline
+~\newline
+ You are all done! ~\newline
+~\newline
+
+\end{DoxyEnumerate}
+\end{DoxyNote}
+Currently {\itshape SALT} and {\itshape USERNAME} are hardcoded and tedious to change, but this will change in the future\hypertarget{md_src_2network_2NETWORK_autotoc_md3}{}\doxysubsection{\texorpdfstring{Goal}{Goal}}\label{md_src_2network_2NETWORK_autotoc_md3}
+The goal of this server is to easily transfer your local songs directory from your PC to phone without a hassle 

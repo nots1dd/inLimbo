@@ -1,0 +1,59 @@
+\doxysection{color\+\_\+info\+\_\+sorted\+\_\+2d.\+ipp}
+\hypertarget{build__emscripten_2__deps_2ftxui-src_2examples_2dom_2color__info__sorted__2d_8ipp_source}{}\label{build__emscripten_2__deps_2ftxui-src_2examples_2dom_2color__info__sorted__2d_8ipp_source}\index{build\_emscripten/\_deps/ftxui-\/src/examples/dom/color\_info\_sorted\_2d.ipp@{build\_emscripten/\_deps/ftxui-\/src/examples/dom/color\_info\_sorted\_2d.ipp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <ftxui/screen/color\_info.hpp>}\ \ \textcolor{comment}{//\ for\ ftxui::ColorInfo}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ std::vector<std::vector<ftxui::ColorInfo>>\ ColorInfoSorted2D()\ \{}
+\DoxyCodeLine{00006\ \ \ \textcolor{comment}{//\ Acquire\ the\ color\ information\ for\ the\ palette256.}}
+\DoxyCodeLine{00007\ \ \ std::vector<ftxui::ColorInfo>\ info\_gray;}
+\DoxyCodeLine{00008\ \ \ std::vector<ftxui::ColorInfo>\ info\_color;}
+\DoxyCodeLine{00009\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 16;\ i\ <\ 256;\ ++i)\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \mbox{\hyperlink{structftxui_1_1ColorInfo}{ftxui::ColorInfo}}\ info\ =\ GetColorInfo(ftxui::Color::Palette256(i));}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keywordflow}{if}\ (info.saturation\ ==\ 0)}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ info\_gray.push\_back(info);}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ info\_color.push\_back(info);}
+\DoxyCodeLine{00015\ \ \ \}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \textcolor{comment}{//\ Sort\ info\_color\ by\ hue.}}
+\DoxyCodeLine{00018\ \ \ std::sort(}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ info\_color.begin(),\ info\_color.end(),}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ [](\textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1ColorInfo}{ftxui::ColorInfo}}\&\ A,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1ColorInfo}{ftxui::ColorInfo}}\&\ B)\ \{\ return\ A.hue\ <\ B.hue;\ \});}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \textcolor{comment}{//\ Make\ 8\ colums,\ one\ gray\ and\ seven\ colored.}}
+\DoxyCodeLine{00023\ \ \ std::vector<std::vector<ftxui::ColorInfo>>\ info\_columns(8);}
+\DoxyCodeLine{00024\ \ \ info\_columns[0]\ =\ info\_gray;}
+\DoxyCodeLine{00025\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ info\_color.size();\ ++i)\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ info\_columns[1\ +\ 7\ *\ i\ /\ info\_color.size()].push\_back(info\_color[i]);}
+\DoxyCodeLine{00027\ \ \ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \textcolor{comment}{//\ Minimize\ discontinuities\ for\ every\ columns.}}
+\DoxyCodeLine{00030\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ column\ :\ info\_columns)\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ std::sort(column.begin(),\ column.end(),}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [](\textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1ColorInfo}{ftxui::ColorInfo}}\&\ A,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structftxui_1_1ColorInfo}{ftxui::ColorInfo}}\&\ B)\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ A.value\ <\ B.value;}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ int(column.size())\ -\/\ 1;\ ++i)\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ best\_index\ =\ i\ +\ 1;}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ best\_distance\ =\ 255\ *\ 255\ *\ 3;}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ i\ +\ 1;\ j\ <\ column.size();\ ++j)\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dx\ =\ column[i].red\ -\/\ column[j].red;}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dy\ =\ column[i].green\ -\/\ column[j].green;}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dz\ =\ column[i].blue\ -\/\ column[j].blue;}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ distance\ =\ dx\ *\ dx\ +\ dy\ *\ dy\ +\ dz\ *\ dz;}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (best\_distance\ >\ distance)\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ best\_distance\ =\ distance;}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ best\_index\ =\ j;}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ std::swap(column[i\ +\ 1],\ column[best\_index]);}
+\DoxyCodeLine{00049\ \ \ \ \ \}}
+\DoxyCodeLine{00050\ \ \ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \textcolor{keywordflow}{return}\ std::move(info\_columns);}
+\DoxyCodeLine{00053\ \}}
+
+\end{DoxyCode}

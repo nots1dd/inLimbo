@@ -1,0 +1,31 @@
+\doxysection{node\+\_\+decorator.\+hpp}
+\hypertarget{build__emscripten_2__deps_2ftxui-src_2src_2ftxui_2dom_2node__decorator_8hpp_source}{}\label{build__emscripten_2__deps_2ftxui-src_2src_2ftxui_2dom_2node__decorator_8hpp_source}\index{build\_emscripten/\_deps/ftxui-\/src/src/ftxui/dom/node\_decorator.hpp@{build\_emscripten/\_deps/ftxui-\/src/src/ftxui/dom/node\_decorator.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2020\ Arthur\ Sonzogni.\ All\ rights\ reserved.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Use\ of\ this\ source\ code\ is\ governed\ by\ the\ MIT\ license\ that\ can\ be\ found\ in}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ FTXUI\_DOM\_NODE\_DECORATOR\_H\_}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ FTXUI\_DOM\_NODE\_DECORATOR\_H\_}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <utility>}\ \ \textcolor{comment}{//\ for\ move}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}ftxui/dom/elements.hpp"{}}\ \ \textcolor{comment}{//\ for\ Element,\ unpack}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}ftxui/dom/node.hpp"{}}\ \ \ \ \ \ \textcolor{comment}{//\ for\ Node}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }ftxui\ \{}
+\DoxyCodeLine{00013\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structftxui_1_1Box}{Box}};}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ Helper\ class.}}
+\DoxyCodeLine{00016\ \textcolor{keyword}{class\ }NodeDecorator\ :\ \textcolor{keyword}{public}\ Node\ \{}
+\DoxyCodeLine{00017\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00018\ \ \ NodeDecorator(Element\ child)\ :\ Node(unpack(std::move(child)))\ \{\}}
+\DoxyCodeLine{00019\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classftxui_1_1NodeDecorator_a48877d895634b3a3fdb2b12f69ce47e4}{ComputeRequirement}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00020\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classftxui_1_1NodeDecorator_a61250411759297f1fdf058369867f96a}{SetBox}}(\mbox{\hyperlink{structftxui_1_1Box}{Box}}\ box)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00021\ \};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \}\ \ \textcolor{comment}{//\ namespace\ ftxui}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ end\ of\ include\ guard:\ FTXUI\_DOM\_NODE\_DECORATOR\_H\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

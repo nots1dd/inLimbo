@@ -1,0 +1,46 @@
+\doxysection{MPRISService Class Reference}
+\hypertarget{classMPRISService}{}\label{classMPRISService}\index{MPRISService@{MPRISService}}
+
+
+A class that implements an MPRIS service over D-\/\+Bus.  
+
+
+
+
+{\ttfamily \#include $<$mpris-\/service.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classMPRISService_afbe327c0dc95de1266aa0a514f234a18}{MPRISService}} (const std\+::string \&application\+Name)
+\begin{DoxyCompactList}\small\item\em Constructs a new \doxylink{classMPRISService}{MPRISService} object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A class that implements an MPRIS service over D-\/\+Bus. 
+
+This class provides a service for exposing media player properties and methods over D-\/\+Bus using the MPRIS interface, which includes features like controlling playback, retrieving metadata, and exposing basic media player information such as supported URI schemes. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classMPRISService_afbe327c0dc95de1266aa0a514f234a18}\index{MPRISService@{MPRISService}!MPRISService@{MPRISService}}
+\index{MPRISService@{MPRISService}!MPRISService@{MPRISService}}
+\doxysubsubsection{\texorpdfstring{MPRISService()}{MPRISService()}}
+{\footnotesize\ttfamily \label{classMPRISService_afbe327c0dc95de1266aa0a514f234a18} 
+MPRISService\+::\+MPRISService (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{application\+Name}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructs a new \doxylink{classMPRISService}{MPRISService} object. 
+
+This constructor sets up the D-\/\+Bus connection, registers the service on the session bus, and initializes default metadata values for the media player.
+
+
+\begin{DoxyParams}{Parameters}
+{\em application\+Name} & The name of the media player application. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/dbus/\mbox{\hyperlink{mpris-service_8hpp}{mpris-\/service.\+hpp}}\end{DoxyCompactItemize}

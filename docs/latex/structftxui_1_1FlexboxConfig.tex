@@ -1,0 +1,1437 @@
+\doxysection{ftxui\+::Flexbox\+Config Struct Reference}
+\hypertarget{structftxui_1_1FlexboxConfig}{}\label{structftxui_1_1FlexboxConfig}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0}{Direction}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}{Row}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}{Row\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}{Column}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}{Column\+Inversed}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}{Row}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}{Row\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}{Column}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}{Column\+Inversed}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}{Row}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}{Row\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}{Column}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}{Column\+Inversed}}
+ \}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8}{Wrap}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}{No\+Wrap}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}{Wrap}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}{Wrap\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}{No\+Wrap}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}{Wrap}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}{Wrap\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}{No\+Wrap}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}{Wrap}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}{Wrap\+Inversed}}
+ \}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000}{Justify\+Content}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+ \}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48}{Align\+Items}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+ \}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6}{Align\+Content}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+ \}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0}{Direction}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}{Row}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}{Row\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}{Column}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}{Column\+Inversed}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}{Row}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}{Row\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}{Column}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}{Column\+Inversed}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}{Row}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}{Row\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}{Column}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}{Column\+Inversed}}
+ \}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8}{Wrap}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}{No\+Wrap}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}{Wrap}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}{Wrap\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}{No\+Wrap}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}{Wrap}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}{Wrap\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}{No\+Wrap}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}{Wrap}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}{Wrap\+Inversed}}
+ \}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000}{Justify\+Content}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+ \}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48}{Align\+Items}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+ \}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6}{Align\+Content}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+ \}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0}{Direction}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}{Row}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}{Row\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}{Column}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}{Column\+Inversed}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}{Row}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}{Row\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}{Column}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}{Column\+Inversed}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}{Row}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}{Row\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}{Column}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}{Column\+Inversed}}
+ \}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8}{Wrap}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}{No\+Wrap}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}{Wrap}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}{Wrap\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}{No\+Wrap}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}{Wrap}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}{Wrap\+Inversed}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}{No\+Wrap}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}{Wrap}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}{Wrap\+Inversed}}
+ \}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000}{Justify\+Content}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+ \}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48}{Align\+Items}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+ \}
+\item 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6}{Align\+Content}} \{ \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}{Flex\+Start}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}{Flex\+End}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}{Center}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}{Stretch}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}{Space\+Between}}
+, \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}{Space\+Around}}
+, \newline
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}{Space\+Evenly}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_a8943e1ed6dd948e36c308475b509af9d}\label{structftxui_1_1FlexboxConfig_a8943e1ed6dd948e36c308475b509af9d} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0}{Flexbox\+Config\+::\+Direction}})
+\begin{DoxyCompactList}\small\item\em Set the flexbox direction. \end{DoxyCompactList}\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_ade82b23d39df6e59ed3b2c69374c5f3c}\label{structftxui_1_1FlexboxConfig_ade82b23d39df6e59ed3b2c69374c5f3c} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8}{Flexbox\+Config\+::\+Wrap}})
+\begin{DoxyCompactList}\small\item\em Set the flexbox wrap. \end{DoxyCompactList}\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_abb10a85e27a39d61e818e0170cd8e32c}\label{structftxui_1_1FlexboxConfig_abb10a85e27a39d61e818e0170cd8e32c} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000}{Flexbox\+Config\+::\+Justify\+Content}})
+\begin{DoxyCompactList}\small\item\em Set the flexbox justify content. \end{DoxyCompactList}\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_ac231664a451120227d79f304bf174983}\label{structftxui_1_1FlexboxConfig_ac231664a451120227d79f304bf174983} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48}{Flexbox\+Config\+::\+Align\+Items}})
+\begin{DoxyCompactList}\small\item\em Set the flexbox align items. \end{DoxyCompactList}\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_a2c13f2f7411c3181f99202b3ae737d58}\label{structftxui_1_1FlexboxConfig_a2c13f2f7411c3181f99202b3ae737d58} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6}{Flexbox\+Config\+::\+Align\+Content}})
+\begin{DoxyCompactList}\small\item\em Set the flexbox align content. \end{DoxyCompactList}\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_a5e1cfa11c4f9bc93d848197cc5613e4e}\label{structftxui_1_1FlexboxConfig_a5e1cfa11c4f9bc93d848197cc5613e4e} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set\+Gap} (int gap\+\_\+x, int gap\+\_\+y)
+\begin{DoxyCompactList}\small\item\em Set the flexbox flex direction. \end{DoxyCompactList}\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_a8943e1ed6dd948e36c308475b509af9d}\label{structftxui_1_1FlexboxConfig_a8943e1ed6dd948e36c308475b509af9d} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0}{Flexbox\+Config\+::\+Direction}})
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_ade82b23d39df6e59ed3b2c69374c5f3c}\label{structftxui_1_1FlexboxConfig_ade82b23d39df6e59ed3b2c69374c5f3c} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8}{Flexbox\+Config\+::\+Wrap}})
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_abb10a85e27a39d61e818e0170cd8e32c}\label{structftxui_1_1FlexboxConfig_abb10a85e27a39d61e818e0170cd8e32c} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000}{Flexbox\+Config\+::\+Justify\+Content}})
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_ac231664a451120227d79f304bf174983}\label{structftxui_1_1FlexboxConfig_ac231664a451120227d79f304bf174983} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48}{Flexbox\+Config\+::\+Align\+Items}})
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_a2c13f2f7411c3181f99202b3ae737d58}\label{structftxui_1_1FlexboxConfig_a2c13f2f7411c3181f99202b3ae737d58} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6}{Flexbox\+Config\+::\+Align\+Content}})
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_a5e1cfa11c4f9bc93d848197cc5613e4e}\label{structftxui_1_1FlexboxConfig_a5e1cfa11c4f9bc93d848197cc5613e4e} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set\+Gap} (int gap\+\_\+x, int gap\+\_\+y)
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_a8943e1ed6dd948e36c308475b509af9d}\label{structftxui_1_1FlexboxConfig_a8943e1ed6dd948e36c308475b509af9d} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0}{Flexbox\+Config\+::\+Direction}})
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_ade82b23d39df6e59ed3b2c69374c5f3c}\label{structftxui_1_1FlexboxConfig_ade82b23d39df6e59ed3b2c69374c5f3c} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8}{Flexbox\+Config\+::\+Wrap}})
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_abb10a85e27a39d61e818e0170cd8e32c}\label{structftxui_1_1FlexboxConfig_abb10a85e27a39d61e818e0170cd8e32c} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000}{Flexbox\+Config\+::\+Justify\+Content}})
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_ac231664a451120227d79f304bf174983}\label{structftxui_1_1FlexboxConfig_ac231664a451120227d79f304bf174983} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48}{Flexbox\+Config\+::\+Align\+Items}})
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_a2c13f2f7411c3181f99202b3ae737d58}\label{structftxui_1_1FlexboxConfig_a2c13f2f7411c3181f99202b3ae737d58} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set} (\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6}{Flexbox\+Config\+::\+Align\+Content}})
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_a5e1cfa11c4f9bc93d848197cc5613e4e}\label{structftxui_1_1FlexboxConfig_a5e1cfa11c4f9bc93d848197cc5613e4e} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig}{Flexbox\+Config}} \& {\bfseries Set\+Gap} (int gap\+\_\+x, int gap\+\_\+y)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_a14a17b33d31455beb23ba805c10e3437}\label{structftxui_1_1FlexboxConfig_a14a17b33d31455beb23ba805c10e3437} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0}{Direction}} {\bfseries direction} = \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}{Direction\+::\+Row}}
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_a11e23fbcf9dab0896078fe91eb364b4c}\label{structftxui_1_1FlexboxConfig_a11e23fbcf9dab0896078fe91eb364b4c} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8}{Wrap}} {\bfseries wrap} = \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}{Wrap\+::\+Wrap}}
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_a6fa74e58e38854fe44b548028d054af3}\label{structftxui_1_1FlexboxConfig_a6fa74e58e38854fe44b548028d054af3} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000}{Justify\+Content}} {\bfseries justify\+\_\+content} = \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}{Justify\+Content\+::\+Flex\+Start}}
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_a177bebffe58aeb9092f05cbaa0d1f131}\label{structftxui_1_1FlexboxConfig_a177bebffe58aeb9092f05cbaa0d1f131} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48}{Align\+Items}} {\bfseries align\+\_\+items} = \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}{Align\+Items\+::\+Flex\+Start}}
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_ad0e01c3e3abfa9144a9992578eda6a02}\label{structftxui_1_1FlexboxConfig_ad0e01c3e3abfa9144a9992578eda6a02} 
+\mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6}{Align\+Content}} {\bfseries align\+\_\+content} = \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}{Align\+Content\+::\+Flex\+Start}}
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_af1a630d200d87b3d419af1cb6e7c9077}\label{structftxui_1_1FlexboxConfig_af1a630d200d87b3d419af1cb6e7c9077} 
+int {\bfseries gap\+\_\+x} = 0
+\item 
+\Hypertarget{structftxui_1_1FlexboxConfig_afaa76111ad26836b51dcb3296a35eafe}\label{structftxui_1_1FlexboxConfig_afaa76111ad26836b51dcb3296a35eafe} 
+int {\bfseries gap\+\_\+y} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Enumeration Documentation}
+\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!AlignContent@{AlignContent}}
+\index{AlignContent@{AlignContent}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{AlignContent}{AlignContent}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6}{ftxui\+::\+Flexbox\+Config\+::\+Align\+Content}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&items are evenly distributed in the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&tems evenly distributed with equal space around each line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&items are evenly distributed in the cross axis with equal space around them. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&items are evenly distributed in the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&tems evenly distributed with equal space around each line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&items are evenly distributed in the cross axis with equal space around them. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&items are evenly distributed in the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&tems evenly distributed with equal space around each line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&items are evenly distributed in the cross axis with equal space around them. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!AlignContent@{AlignContent}}
+\index{AlignContent@{AlignContent}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{AlignContent}{AlignContent}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6}{ftxui\+::\+Flexbox\+Config\+::\+Align\+Content}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&items are evenly distributed in the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&tems evenly distributed with equal space around each line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&items are evenly distributed in the cross axis with equal space around them. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&items are evenly distributed in the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&tems evenly distributed with equal space around each line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&items are evenly distributed in the cross axis with equal space around them. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&items are evenly distributed in the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&tems evenly distributed with equal space around each line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&items are evenly distributed in the cross axis with equal space around them. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!AlignContent@{AlignContent}}
+\index{AlignContent@{AlignContent}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{AlignContent}{AlignContent}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6}{ftxui\+::\+Flexbox\+Config\+::\+Align\+Content}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&items are evenly distributed in the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&tems evenly distributed with equal space around each line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&items are evenly distributed in the cross axis with equal space around them. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&items are evenly distributed in the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&tems evenly distributed with equal space around each line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&items are evenly distributed in the cross axis with equal space around them. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&items are evenly distributed in the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&tems evenly distributed with equal space around each line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_af13db96c842596c1d88da5d40d61b1c6a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&items are evenly distributed in the cross axis with equal space around them. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!AlignItems@{AlignItems}}
+\index{AlignItems@{AlignItems}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{AlignItems}{AlignItems}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48}{ftxui\+::\+Flexbox\+Config\+::\+Align\+Items}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+This defines the default behavior for how flex items are laid out along the cross axis on the current line. Think of it as the justify-\/content version for the cross-\/axis (perpendicular to the main-\/axis). \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!AlignItems@{AlignItems}}
+\index{AlignItems@{AlignItems}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{AlignItems}{AlignItems}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48}{ftxui\+::\+Flexbox\+Config\+::\+Align\+Items}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+This defines the default behavior for how flex items are laid out along the cross axis on the current line. Think of it as the justify-\/content version for the cross-\/axis (perpendicular to the main-\/axis). \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!AlignItems@{AlignItems}}
+\index{AlignItems@{AlignItems}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{AlignItems}{AlignItems}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48}{ftxui\+::\+Flexbox\+Config\+::\+Align\+Items}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+This defines the default behavior for how flex items are laid out along the cross axis on the current line. Think of it as the justify-\/content version for the cross-\/axis (perpendicular to the main-\/axis). \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&items are placed at the start of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&items are placed at the end of the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&items are centered along the cross axis. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_ae146c379472ae116ec4993e501c4df48afbb09a82eafab60150d0996e8fe46560} 
+Stretch&items are stretched to fill the cross axis. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Direction@{Direction}}
+\index{Direction@{Direction}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{Direction}{Direction}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0}{ftxui\+::\+Flexbox\+Config\+::\+Direction}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+This establishes the main-\/axis, thus defining the direction flex items are placed in the flex container. Flexbox is (aside wrapping) single-\/direction layout concept. Think of flex items as primarily laying out either in horizontal rows or vertical columns. \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Row@{Row}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Row@{Row}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3} 
+Row&Flex items are laid out in a row. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RowInversed@{RowInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!RowInversed@{RowInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a} 
+Row\+Inversed&Flex items are laid out in a row, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Column@{Column}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Column@{Column}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d} 
+Column&Flex items are laid out in a column. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ColumnInversed@{ColumnInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!ColumnInversed@{ColumnInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20} 
+Column\+Inversed&Flex items are laid out in a column, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Row@{Row}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Row@{Row}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3} 
+Row&Flex items are laid out in a row. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RowInversed@{RowInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!RowInversed@{RowInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a} 
+Row\+Inversed&Flex items are laid out in a row, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Column@{Column}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Column@{Column}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d} 
+Column&Flex items are laid out in a column. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ColumnInversed@{ColumnInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!ColumnInversed@{ColumnInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20} 
+Column\+Inversed&Flex items are laid out in a column, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Row@{Row}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Row@{Row}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3} 
+Row&Flex items are laid out in a row. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RowInversed@{RowInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!RowInversed@{RowInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a} 
+Row\+Inversed&Flex items are laid out in a row, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Column@{Column}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Column@{Column}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d} 
+Column&Flex items are laid out in a column. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ColumnInversed@{ColumnInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!ColumnInversed@{ColumnInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20} 
+Column\+Inversed&Flex items are laid out in a column, but in reverse order. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Direction@{Direction}}
+\index{Direction@{Direction}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{Direction}{Direction}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0}{ftxui\+::\+Flexbox\+Config\+::\+Direction}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+This establishes the main-\/axis, thus defining the direction flex items are placed in the flex container. Flexbox is (aside wrapping) single-\/direction layout concept. Think of flex items as primarily laying out either in horizontal rows or vertical columns. \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Row@{Row}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Row@{Row}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3} 
+Row&Flex items are laid out in a row. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RowInversed@{RowInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!RowInversed@{RowInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a} 
+Row\+Inversed&Flex items are laid out in a row, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Column@{Column}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Column@{Column}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d} 
+Column&Flex items are laid out in a column. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ColumnInversed@{ColumnInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!ColumnInversed@{ColumnInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20} 
+Column\+Inversed&Flex items are laid out in a column, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Row@{Row}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Row@{Row}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3} 
+Row&Flex items are laid out in a row. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RowInversed@{RowInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!RowInversed@{RowInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a} 
+Row\+Inversed&Flex items are laid out in a row, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Column@{Column}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Column@{Column}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d} 
+Column&Flex items are laid out in a column. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ColumnInversed@{ColumnInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!ColumnInversed@{ColumnInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20} 
+Column\+Inversed&Flex items are laid out in a column, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Row@{Row}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Row@{Row}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3} 
+Row&Flex items are laid out in a row. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RowInversed@{RowInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!RowInversed@{RowInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a} 
+Row\+Inversed&Flex items are laid out in a row, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Column@{Column}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Column@{Column}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d} 
+Column&Flex items are laid out in a column. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ColumnInversed@{ColumnInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!ColumnInversed@{ColumnInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20} 
+Column\+Inversed&Flex items are laid out in a column, but in reverse order. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Direction@{Direction}}
+\index{Direction@{Direction}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{Direction}{Direction}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0}{ftxui\+::\+Flexbox\+Config\+::\+Direction}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+This establishes the main-\/axis, thus defining the direction flex items are placed in the flex container. Flexbox is (aside wrapping) single-\/direction layout concept. Think of flex items as primarily laying out either in horizontal rows or vertical columns. \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Row@{Row}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Row@{Row}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3} 
+Row&Flex items are laid out in a row. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RowInversed@{RowInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!RowInversed@{RowInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a} 
+Row\+Inversed&Flex items are laid out in a row, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Column@{Column}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Column@{Column}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d} 
+Column&Flex items are laid out in a column. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ColumnInversed@{ColumnInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!ColumnInversed@{ColumnInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20} 
+Column\+Inversed&Flex items are laid out in a column, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Row@{Row}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Row@{Row}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3} 
+Row&Flex items are laid out in a row. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RowInversed@{RowInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!RowInversed@{RowInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a} 
+Row\+Inversed&Flex items are laid out in a row, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Column@{Column}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Column@{Column}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d} 
+Column&Flex items are laid out in a column. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ColumnInversed@{ColumnInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!ColumnInversed@{ColumnInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20} 
+Column\+Inversed&Flex items are laid out in a column, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Row@{Row}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Row@{Row}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0aa70367aa7cb74e510f4f9413ccf059d3} 
+Row&Flex items are laid out in a row. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RowInversed@{RowInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!RowInversed@{RowInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0abba4d6f3a9cec9c96600e3e0d17b9f6a} 
+Row\+Inversed&Flex items are laid out in a row, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Column@{Column}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Column@{Column}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a1976d7f704de389d9fe064e08ea35b2d} 
+Column&Flex items are laid out in a column. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ColumnInversed@{ColumnInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!ColumnInversed@{ColumnInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20}\label{structftxui_1_1FlexboxConfig_a024993c575c549fe2ba31b16540c2fd0a338df815740895b690c7b07716acda20} 
+Column\+Inversed&Flex items are laid out in a column, but in reverse order. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!JustifyContent@{JustifyContent}}
+\index{JustifyContent@{JustifyContent}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{JustifyContent}{JustifyContent}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000}{ftxui\+::\+Flexbox\+Config\+::\+Justify\+Content}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+This defines the alignment along the main axis. It helps distribute extra free space leftover when either all the flex items on a line are inflexible, or are flexible but have reached their maximum size. It also exerts some control over the alignment of items when they overflow the line. \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&Items are aligned to the start of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&Items are aligned to the end of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&Items are centered along the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560} 
+Stretch&Items are stretched to fill the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&Items are evenly distributed in the line; first item is on the start. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&Items are evenly distributed in the line with equal space around them. Note that visually the spaces aren’t equal, since all the items have equal space on both sides. The first item will have one unit of space against the container edge, but two units of space between the next item because that next item has its own spacing that applies. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&Items are distributed so that the spacing between any two items (and the space to the edges) is equal. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&Items are aligned to the start of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&Items are aligned to the end of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&Items are centered along the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560} 
+Stretch&Items are stretched to fill the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&Items are evenly distributed in the line; first item is on the start. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&Items are evenly distributed in the line with equal space around them. Note that visually the spaces aren’t equal, since all the items have equal space on both sides. The first item will have one unit of space against the container edge, but two units of space between the next item because that next item has its own spacing that applies. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&Items are distributed so that the spacing between any two items (and the space to the edges) is equal. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&Items are aligned to the start of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&Items are aligned to the end of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&Items are centered along the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560} 
+Stretch&Items are stretched to fill the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&Items are evenly distributed in the line; first item is on the start. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&Items are evenly distributed in the line with equal space around them. Note that visually the spaces aren’t equal, since all the items have equal space on both sides. The first item will have one unit of space against the container edge, but two units of space between the next item because that next item has its own spacing that applies. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&Items are distributed so that the spacing between any two items (and the space to the edges) is equal. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!JustifyContent@{JustifyContent}}
+\index{JustifyContent@{JustifyContent}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{JustifyContent}{JustifyContent}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000}{ftxui\+::\+Flexbox\+Config\+::\+Justify\+Content}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+This defines the alignment along the main axis. It helps distribute extra free space leftover when either all the flex items on a line are inflexible, or are flexible but have reached their maximum size. It also exerts some control over the alignment of items when they overflow the line. \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&Items are aligned to the start of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&Items are aligned to the end of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&Items are centered along the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560} 
+Stretch&Items are stretched to fill the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&Items are evenly distributed in the line; first item is on the start. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&Items are evenly distributed in the line with equal space around them. Note that visually the spaces aren’t equal, since all the items have equal space on both sides. The first item will have one unit of space against the container edge, but two units of space between the next item because that next item has its own spacing that applies. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&Items are distributed so that the spacing between any two items (and the space to the edges) is equal. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&Items are aligned to the start of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&Items are aligned to the end of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&Items are centered along the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560} 
+Stretch&Items are stretched to fill the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&Items are evenly distributed in the line; first item is on the start. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&Items are evenly distributed in the line with equal space around them. Note that visually the spaces aren’t equal, since all the items have equal space on both sides. The first item will have one unit of space against the container edge, but two units of space between the next item because that next item has its own spacing that applies. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&Items are distributed so that the spacing between any two items (and the space to the edges) is equal. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&Items are aligned to the start of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&Items are aligned to the end of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&Items are centered along the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560} 
+Stretch&Items are stretched to fill the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&Items are evenly distributed in the line; first item is on the start. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&Items are evenly distributed in the line with equal space around them. Note that visually the spaces aren’t equal, since all the items have equal space on both sides. The first item will have one unit of space against the container edge, but two units of space between the next item because that next item has its own spacing that applies. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&Items are distributed so that the spacing between any two items (and the space to the edges) is equal. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!JustifyContent@{JustifyContent}}
+\index{JustifyContent@{JustifyContent}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{JustifyContent}{JustifyContent}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000}{ftxui\+::\+Flexbox\+Config\+::\+Justify\+Content}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+This defines the alignment along the main axis. It helps distribute extra free space leftover when either all the flex items on a line are inflexible, or are flexible but have reached their maximum size. It also exerts some control over the alignment of items when they overflow the line. \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&Items are aligned to the start of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&Items are aligned to the end of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&Items are centered along the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560} 
+Stretch&Items are stretched to fill the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&Items are evenly distributed in the line; first item is on the start. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&Items are evenly distributed in the line with equal space around them. Note that visually the spaces aren’t equal, since all the items have equal space on both sides. The first item will have one unit of space against the container edge, but two units of space between the next item because that next item has its own spacing that applies. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&Items are distributed so that the spacing between any two items (and the space to the edges) is equal. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&Items are aligned to the start of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&Items are aligned to the end of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&Items are centered along the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560} 
+Stretch&Items are stretched to fill the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&Items are evenly distributed in the line; first item is on the start. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&Items are evenly distributed in the line with equal space around them. Note that visually the spaces aren’t equal, since all the items have equal space on both sides. The first item will have one unit of space against the container edge, but two units of space between the next item because that next item has its own spacing that applies. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&Items are distributed so that the spacing between any two items (and the space to the edges) is equal. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexStart@{FlexStart}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexStart@{FlexStart}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a8d5898e4f1bd5527306b1f62fa4fd952} 
+Flex\+Start&Items are aligned to the start of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FlexEnd@{FlexEnd}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!FlexEnd@{FlexEnd}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a923a60a08f41dc3052190403fc2a6b25} 
+Flex\+End&Items are aligned to the end of flexbox\textquotesingle{}s direction. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Center@{Center}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Center@{Center}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a4f1f6016fc9f3f2353c0cc7c67b292bd} 
+Center&Items are centered along the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stretch@{Stretch}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Stretch@{Stretch}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afbb09a82eafab60150d0996e8fe46560} 
+Stretch&Items are stretched to fill the line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceBetween@{SpaceBetween}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceBetween@{SpaceBetween}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000afa2f3f8f296dcb6e5c287d69eae1c119} 
+Space\+Between&Items are evenly distributed in the line; first item is on the start. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceAround@{SpaceAround}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceAround@{SpaceAround}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000aa711fff5f720542ab104aab0805e2565} 
+Space\+Around&Items are evenly distributed in the line with equal space around them. Note that visually the spaces aren’t equal, since all the items have equal space on both sides. The first item will have one unit of space against the container edge, but two units of space between the next item because that next item has its own spacing that applies. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SpaceEvenly@{SpaceEvenly}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!SpaceEvenly@{SpaceEvenly}}}\Hypertarget{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235}\label{structftxui_1_1FlexboxConfig_a2aead4217deda668fc71707a1cdd4000a34ad3eaf7ee60a45210ad60bd731e235} 
+Space\+Evenly&Items are distributed so that the spacing between any two items (and the space to the edges) is equal. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Wrap@{Wrap}}
+\index{Wrap@{Wrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{Wrap}{Wrap}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8}{ftxui\+::\+Flexbox\+Config\+::\+Wrap}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+By default, flex items will all try to fit onto one line. You can change that and allow the items to wrap as needed with this property. \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NoWrap@{NoWrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!NoWrap@{NoWrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44} 
+No\+Wrap&Flex items will all try to fit onto one line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Wrap@{Wrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Wrap@{Wrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d} 
+Wrap&Flex items will wrap onto multiple lines. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WrapInversed@{WrapInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!WrapInversed@{WrapInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642} 
+Wrap\+Inversed&Flex items will wrap onto multiple lines, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NoWrap@{NoWrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!NoWrap@{NoWrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44} 
+No\+Wrap&Flex items will all try to fit onto one line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Wrap@{Wrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Wrap@{Wrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d} 
+Wrap&Flex items will wrap onto multiple lines. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WrapInversed@{WrapInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!WrapInversed@{WrapInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642} 
+Wrap\+Inversed&Flex items will wrap onto multiple lines, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NoWrap@{NoWrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!NoWrap@{NoWrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44} 
+No\+Wrap&Flex items will all try to fit onto one line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Wrap@{Wrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Wrap@{Wrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d} 
+Wrap&Flex items will wrap onto multiple lines. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WrapInversed@{WrapInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!WrapInversed@{WrapInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642} 
+Wrap\+Inversed&Flex items will wrap onto multiple lines, but in reverse order. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Wrap@{Wrap}}
+\index{Wrap@{Wrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{Wrap}{Wrap}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8}{ftxui\+::\+Flexbox\+Config\+::\+Wrap}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+By default, flex items will all try to fit onto one line. You can change that and allow the items to wrap as needed with this property. \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NoWrap@{NoWrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!NoWrap@{NoWrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44} 
+No\+Wrap&Flex items will all try to fit onto one line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Wrap@{Wrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Wrap@{Wrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d} 
+Wrap&Flex items will wrap onto multiple lines. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WrapInversed@{WrapInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!WrapInversed@{WrapInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642} 
+Wrap\+Inversed&Flex items will wrap onto multiple lines, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NoWrap@{NoWrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!NoWrap@{NoWrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44} 
+No\+Wrap&Flex items will all try to fit onto one line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Wrap@{Wrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Wrap@{Wrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d} 
+Wrap&Flex items will wrap onto multiple lines. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WrapInversed@{WrapInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!WrapInversed@{WrapInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642} 
+Wrap\+Inversed&Flex items will wrap onto multiple lines, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NoWrap@{NoWrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!NoWrap@{NoWrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44} 
+No\+Wrap&Flex items will all try to fit onto one line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Wrap@{Wrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Wrap@{Wrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d} 
+Wrap&Flex items will wrap onto multiple lines. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WrapInversed@{WrapInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!WrapInversed@{WrapInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642} 
+Wrap\+Inversed&Flex items will wrap onto multiple lines, but in reverse order. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Wrap@{Wrap}}
+\index{Wrap@{Wrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}
+\doxysubsubsection{\texorpdfstring{Wrap}{Wrap}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8} 
+enum class \mbox{\hyperlink{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8}{ftxui\+::\+Flexbox\+Config\+::\+Wrap}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+By default, flex items will all try to fit onto one line. You can change that and allow the items to wrap as needed with this property. \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NoWrap@{NoWrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!NoWrap@{NoWrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44} 
+No\+Wrap&Flex items will all try to fit onto one line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Wrap@{Wrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Wrap@{Wrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d} 
+Wrap&Flex items will wrap onto multiple lines. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WrapInversed@{WrapInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!WrapInversed@{WrapInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642} 
+Wrap\+Inversed&Flex items will wrap onto multiple lines, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NoWrap@{NoWrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!NoWrap@{NoWrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44} 
+No\+Wrap&Flex items will all try to fit onto one line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Wrap@{Wrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Wrap@{Wrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d} 
+Wrap&Flex items will wrap onto multiple lines. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WrapInversed@{WrapInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!WrapInversed@{WrapInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642} 
+Wrap\+Inversed&Flex items will wrap onto multiple lines, but in reverse order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NoWrap@{NoWrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!NoWrap@{NoWrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8a93ac740a98eb4cc45b853c780ed16c44} 
+No\+Wrap&Flex items will all try to fit onto one line. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Wrap@{Wrap}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!Wrap@{Wrap}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8aa212b19ef5f2fb30acf92e6cbccc1f2d} 
+Wrap&Flex items will wrap onto multiple lines. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WrapInversed@{WrapInversed}!ftxui::FlexboxConfig@{ftxui::FlexboxConfig}}\index{ftxui::FlexboxConfig@{ftxui::FlexboxConfig}!WrapInversed@{WrapInversed}}}\Hypertarget{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642}\label{structftxui_1_1FlexboxConfig_abf7c43c64afed10ae714b9e8e756cbb8ad639e613e3589af04e39135707dbc642} 
+Wrap\+Inversed&Flex items will wrap onto multiple lines, but in reverse order. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+build-\/dbg/\+\_\+deps/ftxui-\/src/include/ftxui/dom/flexbox\+\_\+config.\+hpp\item 
+build/\+\_\+deps/ftxui-\/src/include/ftxui/dom/flexbox\+\_\+config.\+hpp\item 
+build\+\_\+emscripten/\+\_\+deps/ftxui-\/src/include/ftxui/dom/flexbox\+\_\+config.\+hpp\item 
+build-\/dbg/\+\_\+deps/ftxui-\/src/src/ftxui/dom/flexbox\+\_\+config.\+cpp\item 
+build/\+\_\+deps/ftxui-\/src/src/ftxui/dom/flexbox\+\_\+config.\+cpp\item 
+build\+\_\+emscripten/\+\_\+deps/ftxui-\/src/src/ftxui/dom/flexbox\+\_\+config.\+cpp\end{DoxyCompactItemize}

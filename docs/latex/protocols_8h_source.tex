@@ -1,0 +1,102 @@
+\doxysection{protocols.\+h}
+\hypertarget{protocols_8h_source}{}\label{protocols_8h_source}\index{src/network/protocols.h@{src/network/protocols.h}}
+\mbox{\hyperlink{protocols_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ PROTOCOLS\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ PROTOCOLS\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <arpa/inet.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <filesystem>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <iomanip>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <openssl/err.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <openssl/sha.h>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <openssl/ssl.h>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <random>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <unistd.h>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*\ Protocol\ status\ codes\ for\ FTP\ server\ */}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{/*\ AUTH\ */}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ AUTH\_REQUEST\ \ \ \ \ \ \ \ "{}AUTH"{}}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ STATUS\_AUTH\_FAILED\ \ 430}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ STATUS\_AUTH\_SUCCESS\ 230}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{/*\ FILES\ */}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ LIST\_REQUEST\ \ \ \ \ \ \ \ \ \ \ \ \ "{}LIST"{}}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ GET\_REQUEST\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}GET"{}}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ STATUS\_MISSING\_FILE\_NAME\ 400}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ STATUS\_LISTING\_FILES\ \ \ \ \ 150}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ STATUS\_FILE\_TRANSFER\ \ \ \ \ 160}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ STATUS\_TRANSFER\_COMPLETE\ 226}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{comment}{/*\ CHECKSUM\ */}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ STATUS\_CHECKSUM\_VERIFY\ 151}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{/*\ ERROR\ HANDLING\ */}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ STATUS\_FILE\_NOT\_FOUND\ \ 550}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ STATUS\_UNKNOWN\_COMMAND\ 500}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{comment}{/*\ TERMINATION\ */}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ QUIT\_REQUEST\ \ \ "{}QUIT"{}}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ STATUS\_GOODBYE\ 221}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ PORT\ \ \ \ \ \ \ \ \ \ 12345}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ BUFFER\_SIZE\ \ \ 1024}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ MAX\_ATTEMPTS\ \ 3}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ ATTEMPT\_DELAY\ 2000\ }\textcolor{comment}{//\ in\ ms}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ SERVER\_CERT\ "{}server\_cert.pem"{}}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ SERVER\_KEY\ \ "{}server\_key.pem"{}}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{comment}{/*\ Loopback\ addr\ just\ to\ test\ client\ and\ server\ on\ same\ system,\ ideally\ you\ should\ give\ the\ IP\ addr}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ of\ the\ server\ */}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ SERVER\_IP\ "{}127.0.0.1"{}}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ CA\_CERT\ \ \ "{}server\_cert.pem"{}\ }\textcolor{comment}{//\ Certificate\ Authority\ certificate\ (for\ the\ client)}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{protocols_8h_aeb2c0f525e4da8c6b9a66d71d02cd96e}{get\_error\_message}}(\textcolor{keywordtype}{int}\ status\_code)}
+\DoxyCodeLine{00062\ \{}
+\DoxyCodeLine{00063\ \ \ \textcolor{keywordflow}{switch}\ (status\_code)}
+\DoxyCodeLine{00064\ \ \ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{protocols_8h_af55c4f77ea5fecf465b75fdc4b123d73}{STATUS\_AUTH\_FAILED}}:}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}-\/-\/>\ 430:\ Too\ many\ failed\ attempts\(\backslash\)n"{}};}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{protocols_8h_a6117cf1ab035a6a3d4602c3a30930d86}{STATUS\_AUTH\_SUCCESS}}:}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}-\/-\/>\ 230:\ Authentication\ successful!"{}};}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{protocols_8h_a28f69e620346e7eb92b74cc9f6e67690}{STATUS\_FILE\_NOT\_FOUND}}:}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}-\/-\/>\ 550:\ File\ not\ found\ or\ invalid\ file\ path\(\backslash\)n"{}};}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{protocols_8h_afd09b0513d012beffd6e80d4e31a3c4b}{STATUS\_UNKNOWN\_COMMAND}}:}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}-\/-\/>\ 500:\ Unknown\ command\(\backslash\)n"{}};}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{protocols_8h_af1c527c46452a3ff34897215dfbaed8b}{STATUS\_MISSING\_FILE\_NAME}}:}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}-\/-\/>\ 400:\ Missing\ file\ name\(\backslash\)n"{}};}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{protocols_8h_a87368622ebc9355ac8f70a08ff1f8b20}{STATUS\_LISTING\_FILES}}:}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}-\/-\/>\ 150:\ Listing\ files:\(\backslash\)n"{}};}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{protocols_8h_af676d845c7a78cf5066366df0a4b2033}{STATUS\_TRANSFER\_COMPLETE}}:}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}-\/-\/>\ 226:\ Transfer\ complete\(\backslash\)n"{}};}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{protocols_8h_aea74b1ad09182f73f850848021f9d27e}{STATUS\_GOODBYE}}:}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}-\/-\/>\ 221:\ Goodbye\(\backslash\)n"{}};}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{protocols_8h_aae69a3112652fbe49477a3843fc71eb1}{STATUS\_FILE\_TRANSFER}}:}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}-\/-\/>\ 160:\ Starting\ File\ Transfer:\(\backslash\)n"{}};}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{protocols_8h_ab7a05d6c6343ede6b0627da1f120e40f}{STATUS\_CHECKSUM\_VERIFY}}:}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}-\/-\/>\ 151:\ Verifying\ checksum..\(\backslash\)n"{}};}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}-\/-\/>\ 500:\ Unknown\ status\ code\(\backslash\)n"{}};\ \textcolor{comment}{//\ Default\ error\ for\ unknown\ status\ codes}}
+\DoxyCodeLine{00087\ \ \ \}}
+\DoxyCodeLine{00088\ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{protocols_8h_a6980d7a77bd2125c8778cfe09f28049e}{send\_protocol\_message}}(SSL*\ ssl,\ \textcolor{keywordtype}{int}\ status\_code)}
+\DoxyCodeLine{00091\ \{}
+\DoxyCodeLine{00092\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ error\_msg\ =\ \mbox{\hyperlink{protocols_8h_aeb2c0f525e4da8c6b9a66d71d02cd96e}{get\_error\_message}}(status\_code);}
+\DoxyCodeLine{00093\ \ \ SSL\_write(ssl,\ error\_msg,\ strlen(error\_msg));}
+\DoxyCodeLine{00094\ \}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

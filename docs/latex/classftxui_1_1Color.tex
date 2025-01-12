@@ -1,0 +1,3102 @@
+\doxysection{ftxui\+::Color Class Reference}
+\hypertarget{classftxui_1_1Color}{}\label{classftxui_1_1Color}\index{ftxui::Color@{ftxui::Color}}
+
+
+A class representing terminal colors.  
+
+
+
+
+{\ttfamily \#include $<$color.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classftxui_1_1Color_ab43fa19fc42558bc57e1c6f5147a0143}\label{classftxui_1_1Color_ab43fa19fc42558bc57e1c6f5147a0143} 
+enum {\bfseries Palette1} \+: uint8\+\_\+t \{ {\bfseries Default}
+, {\bfseries Default}
+, {\bfseries Default}
+ \}
+\item 
+\Hypertarget{classftxui_1_1Color_ac86e752483b7f2d91f21a1c498503abb}\label{classftxui_1_1Color_ac86e752483b7f2d91f21a1c498503abb} 
+enum {\bfseries Palette16} \+: uint8\+\_\+t \{ \newline
+{\bfseries Black} = 0
+, {\bfseries Red} = 1
+, {\bfseries Green} = 2
+, {\bfseries Yellow} = 3
+, \newline
+{\bfseries Blue} = 4
+, {\bfseries Magenta} = 5
+, {\bfseries Cyan} = 6
+, {\bfseries Gray\+Light} = 7
+, \newline
+{\bfseries Gray\+Dark} = 8
+, {\bfseries Red\+Light} = 9
+, {\bfseries Green\+Light} = 10
+, {\bfseries Yellow\+Light} = 11
+, \newline
+{\bfseries Blue\+Light} = 12
+, {\bfseries Magenta\+Light} = 13
+, {\bfseries Cyan\+Light} = 14
+, {\bfseries White} = 15
+, \newline
+{\bfseries Black} = 0
+, {\bfseries Red} = 1
+, {\bfseries Green} = 2
+, {\bfseries Yellow} = 3
+, \newline
+{\bfseries Blue} = 4
+, {\bfseries Magenta} = 5
+, {\bfseries Cyan} = 6
+, {\bfseries Gray\+Light} = 7
+, \newline
+{\bfseries Gray\+Dark} = 8
+, {\bfseries Red\+Light} = 9
+, {\bfseries Green\+Light} = 10
+, {\bfseries Yellow\+Light} = 11
+, \newline
+{\bfseries Blue\+Light} = 12
+, {\bfseries Magenta\+Light} = 13
+, {\bfseries Cyan\+Light} = 14
+, {\bfseries White} = 15
+, \newline
+{\bfseries Black} = 0
+, {\bfseries Red} = 1
+, {\bfseries Green} = 2
+, {\bfseries Yellow} = 3
+, \newline
+{\bfseries Blue} = 4
+, {\bfseries Magenta} = 5
+, {\bfseries Cyan} = 6
+, {\bfseries Gray\+Light} = 7
+, \newline
+{\bfseries Gray\+Dark} = 8
+, {\bfseries Red\+Light} = 9
+, {\bfseries Green\+Light} = 10
+, {\bfseries Yellow\+Light} = 11
+, \newline
+{\bfseries Blue\+Light} = 12
+, {\bfseries Magenta\+Light} = 13
+, {\bfseries Cyan\+Light} = 14
+, {\bfseries White} = 15
+ \}
+\item 
+\Hypertarget{classftxui_1_1Color_ab5027212f1ff50f9a38c5e2006b5bd0c}\label{classftxui_1_1Color_ab5027212f1ff50f9a38c5e2006b5bd0c} 
+enum {\bfseries Palette256} \+: uint8\+\_\+t \{ \newline
+{\bfseries Aquamarine1} = 122
+, {\bfseries Aquamarine1\+Bis} = 86
+, {\bfseries Aquamarine3} = 79
+, {\bfseries Blue1} = 21
+, \newline
+{\bfseries Blue3} = 19
+, {\bfseries Blue3\+Bis} = 20
+, {\bfseries Blue\+Violet} = 57
+, {\bfseries Cadet\+Blue} = 72
+, \newline
+{\bfseries Cadet\+Blue\+Bis} = 73
+, {\bfseries Chartreuse1} = 118
+, {\bfseries Chartreuse2} = 112
+, {\bfseries Chartreuse2\+Bis} = 82
+, \newline
+{\bfseries Chartreuse3} = 70
+, {\bfseries Chartreuse3\+Bis} = 76
+, {\bfseries Chartreuse4} = 64
+, {\bfseries Cornflower\+Blue} = 69
+, \newline
+{\bfseries Cornsilk1} = 230
+, {\bfseries Cyan1} = 51
+, {\bfseries Cyan2} = 50
+, {\bfseries Cyan3} = 43
+, \newline
+{\bfseries Dark\+Blue} = 18
+, {\bfseries Dark\+Cyan} = 36
+, {\bfseries Dark\+Goldenrod} = 136
+, {\bfseries Dark\+Green} = 22
+, \newline
+{\bfseries Dark\+Khaki} = 143
+, {\bfseries Dark\+Magenta} = 90
+, {\bfseries Dark\+Magenta\+Bis} = 91
+, {\bfseries Dark\+Olive\+Green1} = 191
+, \newline
+{\bfseries Dark\+Olive\+Green1\+Bis} = 192
+, {\bfseries Dark\+Olive\+Green2} = 155
+, {\bfseries Dark\+Olive\+Green3} = 107
+, {\bfseries Dark\+Olive\+Green3\+Bis} = 113
+, \newline
+{\bfseries Dark\+Olive\+Green3\+Ter} = 149
+, {\bfseries Dark\+Orange} = 208
+, {\bfseries Dark\+Orange3} = 130
+, {\bfseries Dark\+Orange3\+Bis} = 166
+, \newline
+{\bfseries Dark\+Red} = 52
+, {\bfseries Dark\+Red\+Bis} = 88
+, {\bfseries Dark\+Sea\+Green} = 108
+, {\bfseries Dark\+Sea\+Green1} = 158
+, \newline
+{\bfseries Dark\+Sea\+Green1\+Bis} = 193
+, {\bfseries Dark\+Sea\+Green2} = 151
+, {\bfseries Dark\+Sea\+Green2\+Bis} = 157
+, {\bfseries Dark\+Sea\+Green3} = 115
+, \newline
+{\bfseries Dark\+Sea\+Green3\+Bis} = 150
+, {\bfseries Dark\+Sea\+Green4} = 65
+, {\bfseries Dark\+Sea\+Green4\+Bis} = 71
+, {\bfseries Dark\+Slate\+Gray1} = 123
+, \newline
+{\bfseries Dark\+Slate\+Gray2} = 87
+, {\bfseries Dark\+Slate\+Gray3} = 116
+, {\bfseries Dark\+Turquoise} = 44
+, {\bfseries Dark\+Violet} = 128
+, \newline
+{\bfseries Dark\+Violet\+Bis} = 92
+, {\bfseries Deep\+Pink1} = 198
+, {\bfseries Deep\+Pink1\+Bis} = 199
+, {\bfseries Deep\+Pink2} = 197
+, \newline
+{\bfseries Deep\+Pink3} = 161
+, {\bfseries Deep\+Pink3\+Bis} = 162
+, {\bfseries Deep\+Pink4} = 125
+, {\bfseries Deep\+Pink4\+Bis} = 89
+, \newline
+{\bfseries Deep\+Pink4\+Ter} = 53
+, {\bfseries Deep\+Sky\+Blue1} = 39
+, {\bfseries Deep\+Sky\+Blue2} = 38
+, {\bfseries Deep\+Sky\+Blue3} = 31
+, \newline
+{\bfseries Deep\+Sky\+Blue3\+Bis} = 32
+, {\bfseries Deep\+Sky\+Blue4} = 23
+, {\bfseries Deep\+Sky\+Blue4\+Bis} = 24
+, {\bfseries Deep\+Sky\+Blue4\+Ter} = 25
+, \newline
+{\bfseries Dodger\+Blue1} = 33
+, {\bfseries Dodger\+Blue2} = 27
+, {\bfseries Dodger\+Blue3} = 26
+, {\bfseries Gold1} = 220
+, \newline
+{\bfseries Gold3} = 142
+, {\bfseries Gold3\+Bis} = 178
+, {\bfseries Green1} = 46
+, {\bfseries Green3} = 34
+, \newline
+{\bfseries Green3\+Bis} = 40
+, {\bfseries Green4} = 28
+, {\bfseries Green\+Yellow} = 154
+, {\bfseries Grey0} = 16
+, \newline
+{\bfseries Grey100} = 231
+, {\bfseries Grey11} = 234
+, {\bfseries Grey15} = 235
+, {\bfseries Grey19} = 236
+, \newline
+{\bfseries Grey23} = 237
+, {\bfseries Grey27} = 238
+, {\bfseries Grey3} = 232
+, {\bfseries Grey30} = 239
+, \newline
+{\bfseries Grey35} = 240
+, {\bfseries Grey37} = 59
+, {\bfseries Grey39} = 241
+, {\bfseries Grey42} = 242
+, \newline
+{\bfseries Grey46} = 243
+, {\bfseries Grey50} = 244
+, {\bfseries Grey53} = 102
+, {\bfseries Grey54} = 245
+, \newline
+{\bfseries Grey58} = 246
+, {\bfseries Grey62} = 247
+, {\bfseries Grey63} = 139
+, {\bfseries Grey66} = 248
+, \newline
+{\bfseries Grey69} = 145
+, {\bfseries Grey7} = 233
+, {\bfseries Grey70} = 249
+, {\bfseries Grey74} = 250
+, \newline
+{\bfseries Grey78} = 251
+, {\bfseries Grey82} = 252
+, {\bfseries Grey84} = 188
+, {\bfseries Grey85} = 253
+, \newline
+{\bfseries Grey89} = 254
+, {\bfseries Grey93} = 255
+, {\bfseries Honeydew2} = 194
+, {\bfseries Hot\+Pink} = 205
+, \newline
+{\bfseries Hot\+Pink2} = 169
+, {\bfseries Hot\+Pink3} = 132
+, {\bfseries Hot\+Pink3\+Bis} = 168
+, {\bfseries Hot\+Pink\+Bis} = 206
+, \newline
+{\bfseries Indian\+Red} = 131
+, {\bfseries Indian\+Red1} = 203
+, {\bfseries Indian\+Red1\+Bis} = 204
+, {\bfseries Indian\+Red\+Bis} = 167
+, \newline
+{\bfseries Khaki1} = 228
+, {\bfseries Khaki3} = 185
+, {\bfseries Light\+Coral} = 210
+, {\bfseries Light\+Cyan1\+Bis} = 195
+, \newline
+{\bfseries Light\+Cyan3} = 152
+, {\bfseries Light\+Goldenrod1} = 227
+, {\bfseries Light\+Goldenrod2} = 186
+, {\bfseries Light\+Goldenrod2\+Bis} = 221
+, \newline
+{\bfseries Light\+Goldenrod2\+Ter} = 222
+, {\bfseries Light\+Goldenrod3} = 179
+, {\bfseries Light\+Green} = 119
+, {\bfseries Light\+Green\+Bis} = 120
+, \newline
+{\bfseries Light\+Pink1} = 217
+, {\bfseries Light\+Pink3} = 174
+, {\bfseries Light\+Pink4} = 95
+, {\bfseries Light\+Salmon1} = 216
+, \newline
+{\bfseries Light\+Salmon3} = 137
+, {\bfseries Light\+Salmon3\+Bis} = 173
+, {\bfseries Light\+Sea\+Green} = 37
+, {\bfseries Light\+Sky\+Blue1} = 153
+, \newline
+{\bfseries Light\+Sky\+Blue3} = 109
+, {\bfseries Light\+Sky\+Blue3\+Bis} = 110
+, {\bfseries Light\+Slate\+Blue} = 105
+, {\bfseries Light\+Slate\+Grey} = 103
+, \newline
+{\bfseries Light\+Steel\+Blue} = 147
+, {\bfseries Light\+Steel\+Blue1} = 189
+, {\bfseries Light\+Steel\+Blue3} = 146
+, {\bfseries Light\+Yellow3} = 187
+, \newline
+{\bfseries Magenta1} = 201
+, {\bfseries Magenta2} = 165
+, {\bfseries Magenta2\+Bis} = 200
+, {\bfseries Magenta3} = 127
+, \newline
+{\bfseries Magenta3\+Bis} = 163
+, {\bfseries Magenta3\+Ter} = 164
+, {\bfseries Medium\+Orchid} = 134
+, {\bfseries Medium\+Orchid1} = 171
+, \newline
+{\bfseries Medium\+Orchid1\+Bis} = 207
+, {\bfseries Medium\+Orchid3} = 133
+, {\bfseries Medium\+Purple} = 104
+, {\bfseries Medium\+Purple1} = 141
+, \newline
+{\bfseries Medium\+Purple2} = 135
+, {\bfseries Medium\+Purple2\+Bis} = 140
+, {\bfseries Medium\+Purple3} = 97
+, {\bfseries Medium\+Purple3\+Bis} = 98
+, \newline
+{\bfseries Medium\+Purple4} = 60
+, {\bfseries Medium\+Spring\+Green} = 49
+, {\bfseries Medium\+Turquoise} = 80
+, {\bfseries Medium\+Violet\+Red} = 126
+, \newline
+{\bfseries Misty\+Rose1} = 224
+, {\bfseries Misty\+Rose3} = 181
+, {\bfseries Navajo\+White1} = 223
+, {\bfseries Navajo\+White3} = 144
+, \newline
+{\bfseries Navy\+Blue} = 17
+, {\bfseries Orange1} = 214
+, {\bfseries Orange3} = 172
+, {\bfseries Orange4} = 58
+, \newline
+{\bfseries Orange4\+Bis} = 94
+, {\bfseries Orange\+Red1} = 202
+, {\bfseries Orchid} = 170
+, {\bfseries Orchid1} = 213
+, \newline
+{\bfseries Orchid2} = 212
+, {\bfseries Pale\+Green1} = 121
+, {\bfseries Pale\+Green1\+Bis} = 156
+, {\bfseries Pale\+Green3} = 114
+, \newline
+{\bfseries Pale\+Green3\+Bis} = 77
+, {\bfseries Pale\+Turquoise1} = 159
+, {\bfseries Pale\+Turquoise4} = 66
+, {\bfseries Pale\+Violet\+Red1} = 211
+, \newline
+{\bfseries Pink1} = 218
+, {\bfseries Pink3} = 175
+, {\bfseries Plum1} = 219
+, {\bfseries Plum2} = 183
+, \newline
+{\bfseries Plum3} = 176
+, {\bfseries Plum4} = 96
+, {\bfseries Purple} = 129
+, {\bfseries Purple3} = 56
+, \newline
+{\bfseries Purple4} = 54
+, {\bfseries Purple4\+Bis} = 55
+, {\bfseries Purple\+Bis} = 93
+, {\bfseries Red1} = 196
+, \newline
+{\bfseries Red3} = 124
+, {\bfseries Red3\+Bis} = 160
+, {\bfseries Rosy\+Brown} = 138
+, {\bfseries Royal\+Blue1} = 63
+, \newline
+{\bfseries Salmon1} = 209
+, {\bfseries Sandy\+Brown} = 215
+, {\bfseries Sea\+Green1} = 84
+, {\bfseries Sea\+Green1\+Bis} = 85
+, \newline
+{\bfseries Sea\+Green2} = 83
+, {\bfseries Sea\+Green3} = 78
+, {\bfseries Sky\+Blue1} = 117
+, {\bfseries Sky\+Blue2} = 111
+, \newline
+{\bfseries Sky\+Blue3} = 74
+, {\bfseries Slate\+Blue1} = 99
+, {\bfseries Slate\+Blue3} = 61
+, {\bfseries Slate\+Blue3\+Bis} = 62
+, \newline
+{\bfseries Spring\+Green1} = 48
+, {\bfseries Spring\+Green2} = 42
+, {\bfseries Spring\+Green2\+Bis} = 47
+, {\bfseries Spring\+Green3} = 35
+, \newline
+{\bfseries Spring\+Green3\+Bis} = 41
+, {\bfseries Spring\+Green4} = 29
+, {\bfseries Steel\+Blue} = 67
+, {\bfseries Steel\+Blue1} = 75
+, \newline
+{\bfseries Steel\+Blue1\+Bis} = 81
+, {\bfseries Steel\+Blue3} = 68
+, {\bfseries Tan} = 180
+, {\bfseries Thistle1} = 225
+, \newline
+{\bfseries Thistle3} = 182
+, {\bfseries Turquoise2} = 45
+, {\bfseries Turquoise4} = 30
+, {\bfseries Violet} = 177
+, \newline
+{\bfseries Wheat1} = 229
+, {\bfseries Wheat4} = 101
+, {\bfseries Yellow1} = 226
+, {\bfseries Yellow2} = 190
+, \newline
+{\bfseries Yellow3} = 148
+, {\bfseries Yellow3\+Bis} = 184
+, {\bfseries Yellow4} = 100
+, {\bfseries Yellow4\+Bis} = 106
+, \newline
+{\bfseries Aquamarine1} = 122
+, {\bfseries Aquamarine1\+Bis} = 86
+, {\bfseries Aquamarine3} = 79
+, {\bfseries Blue1} = 21
+, \newline
+{\bfseries Blue3} = 19
+, {\bfseries Blue3\+Bis} = 20
+, {\bfseries Blue\+Violet} = 57
+, {\bfseries Cadet\+Blue} = 72
+, \newline
+{\bfseries Cadet\+Blue\+Bis} = 73
+, {\bfseries Chartreuse1} = 118
+, {\bfseries Chartreuse2} = 112
+, {\bfseries Chartreuse2\+Bis} = 82
+, \newline
+{\bfseries Chartreuse3} = 70
+, {\bfseries Chartreuse3\+Bis} = 76
+, {\bfseries Chartreuse4} = 64
+, {\bfseries Cornflower\+Blue} = 69
+, \newline
+{\bfseries Cornsilk1} = 230
+, {\bfseries Cyan1} = 51
+, {\bfseries Cyan2} = 50
+, {\bfseries Cyan3} = 43
+, \newline
+{\bfseries Dark\+Blue} = 18
+, {\bfseries Dark\+Cyan} = 36
+, {\bfseries Dark\+Goldenrod} = 136
+, {\bfseries Dark\+Green} = 22
+, \newline
+{\bfseries Dark\+Khaki} = 143
+, {\bfseries Dark\+Magenta} = 90
+, {\bfseries Dark\+Magenta\+Bis} = 91
+, {\bfseries Dark\+Olive\+Green1} = 191
+, \newline
+{\bfseries Dark\+Olive\+Green1\+Bis} = 192
+, {\bfseries Dark\+Olive\+Green2} = 155
+, {\bfseries Dark\+Olive\+Green3} = 107
+, {\bfseries Dark\+Olive\+Green3\+Bis} = 113
+, \newline
+{\bfseries Dark\+Olive\+Green3\+Ter} = 149
+, {\bfseries Dark\+Orange} = 208
+, {\bfseries Dark\+Orange3} = 130
+, {\bfseries Dark\+Orange3\+Bis} = 166
+, \newline
+{\bfseries Dark\+Red} = 52
+, {\bfseries Dark\+Red\+Bis} = 88
+, {\bfseries Dark\+Sea\+Green} = 108
+, {\bfseries Dark\+Sea\+Green1} = 158
+, \newline
+{\bfseries Dark\+Sea\+Green1\+Bis} = 193
+, {\bfseries Dark\+Sea\+Green2} = 151
+, {\bfseries Dark\+Sea\+Green2\+Bis} = 157
+, {\bfseries Dark\+Sea\+Green3} = 115
+, \newline
+{\bfseries Dark\+Sea\+Green3\+Bis} = 150
+, {\bfseries Dark\+Sea\+Green4} = 65
+, {\bfseries Dark\+Sea\+Green4\+Bis} = 71
+, {\bfseries Dark\+Slate\+Gray1} = 123
+, \newline
+{\bfseries Dark\+Slate\+Gray2} = 87
+, {\bfseries Dark\+Slate\+Gray3} = 116
+, {\bfseries Dark\+Turquoise} = 44
+, {\bfseries Dark\+Violet} = 128
+, \newline
+{\bfseries Dark\+Violet\+Bis} = 92
+, {\bfseries Deep\+Pink1} = 198
+, {\bfseries Deep\+Pink1\+Bis} = 199
+, {\bfseries Deep\+Pink2} = 197
+, \newline
+{\bfseries Deep\+Pink3} = 161
+, {\bfseries Deep\+Pink3\+Bis} = 162
+, {\bfseries Deep\+Pink4} = 125
+, {\bfseries Deep\+Pink4\+Bis} = 89
+, \newline
+{\bfseries Deep\+Pink4\+Ter} = 53
+, {\bfseries Deep\+Sky\+Blue1} = 39
+, {\bfseries Deep\+Sky\+Blue2} = 38
+, {\bfseries Deep\+Sky\+Blue3} = 31
+, \newline
+{\bfseries Deep\+Sky\+Blue3\+Bis} = 32
+, {\bfseries Deep\+Sky\+Blue4} = 23
+, {\bfseries Deep\+Sky\+Blue4\+Bis} = 24
+, {\bfseries Deep\+Sky\+Blue4\+Ter} = 25
+, \newline
+{\bfseries Dodger\+Blue1} = 33
+, {\bfseries Dodger\+Blue2} = 27
+, {\bfseries Dodger\+Blue3} = 26
+, {\bfseries Gold1} = 220
+, \newline
+{\bfseries Gold3} = 142
+, {\bfseries Gold3\+Bis} = 178
+, {\bfseries Green1} = 46
+, {\bfseries Green3} = 34
+, \newline
+{\bfseries Green3\+Bis} = 40
+, {\bfseries Green4} = 28
+, {\bfseries Green\+Yellow} = 154
+, {\bfseries Grey0} = 16
+, \newline
+{\bfseries Grey100} = 231
+, {\bfseries Grey11} = 234
+, {\bfseries Grey15} = 235
+, {\bfseries Grey19} = 236
+, \newline
+{\bfseries Grey23} = 237
+, {\bfseries Grey27} = 238
+, {\bfseries Grey3} = 232
+, {\bfseries Grey30} = 239
+, \newline
+{\bfseries Grey35} = 240
+, {\bfseries Grey37} = 59
+, {\bfseries Grey39} = 241
+, {\bfseries Grey42} = 242
+, \newline
+{\bfseries Grey46} = 243
+, {\bfseries Grey50} = 244
+, {\bfseries Grey53} = 102
+, {\bfseries Grey54} = 245
+, \newline
+{\bfseries Grey58} = 246
+, {\bfseries Grey62} = 247
+, {\bfseries Grey63} = 139
+, {\bfseries Grey66} = 248
+, \newline
+{\bfseries Grey69} = 145
+, {\bfseries Grey7} = 233
+, {\bfseries Grey70} = 249
+, {\bfseries Grey74} = 250
+, \newline
+{\bfseries Grey78} = 251
+, {\bfseries Grey82} = 252
+, {\bfseries Grey84} = 188
+, {\bfseries Grey85} = 253
+, \newline
+{\bfseries Grey89} = 254
+, {\bfseries Grey93} = 255
+, {\bfseries Honeydew2} = 194
+, {\bfseries Hot\+Pink} = 205
+, \newline
+{\bfseries Hot\+Pink2} = 169
+, {\bfseries Hot\+Pink3} = 132
+, {\bfseries Hot\+Pink3\+Bis} = 168
+, {\bfseries Hot\+Pink\+Bis} = 206
+, \newline
+{\bfseries Indian\+Red} = 131
+, {\bfseries Indian\+Red1} = 203
+, {\bfseries Indian\+Red1\+Bis} = 204
+, {\bfseries Indian\+Red\+Bis} = 167
+, \newline
+{\bfseries Khaki1} = 228
+, {\bfseries Khaki3} = 185
+, {\bfseries Light\+Coral} = 210
+, {\bfseries Light\+Cyan1\+Bis} = 195
+, \newline
+{\bfseries Light\+Cyan3} = 152
+, {\bfseries Light\+Goldenrod1} = 227
+, {\bfseries Light\+Goldenrod2} = 186
+, {\bfseries Light\+Goldenrod2\+Bis} = 221
+, \newline
+{\bfseries Light\+Goldenrod2\+Ter} = 222
+, {\bfseries Light\+Goldenrod3} = 179
+, {\bfseries Light\+Green} = 119
+, {\bfseries Light\+Green\+Bis} = 120
+, \newline
+{\bfseries Light\+Pink1} = 217
+, {\bfseries Light\+Pink3} = 174
+, {\bfseries Light\+Pink4} = 95
+, {\bfseries Light\+Salmon1} = 216
+, \newline
+{\bfseries Light\+Salmon3} = 137
+, {\bfseries Light\+Salmon3\+Bis} = 173
+, {\bfseries Light\+Sea\+Green} = 37
+, {\bfseries Light\+Sky\+Blue1} = 153
+, \newline
+{\bfseries Light\+Sky\+Blue3} = 109
+, {\bfseries Light\+Sky\+Blue3\+Bis} = 110
+, {\bfseries Light\+Slate\+Blue} = 105
+, {\bfseries Light\+Slate\+Grey} = 103
+, \newline
+{\bfseries Light\+Steel\+Blue} = 147
+, {\bfseries Light\+Steel\+Blue1} = 189
+, {\bfseries Light\+Steel\+Blue3} = 146
+, {\bfseries Light\+Yellow3} = 187
+, \newline
+{\bfseries Magenta1} = 201
+, {\bfseries Magenta2} = 165
+, {\bfseries Magenta2\+Bis} = 200
+, {\bfseries Magenta3} = 127
+, \newline
+{\bfseries Magenta3\+Bis} = 163
+, {\bfseries Magenta3\+Ter} = 164
+, {\bfseries Medium\+Orchid} = 134
+, {\bfseries Medium\+Orchid1} = 171
+, \newline
+{\bfseries Medium\+Orchid1\+Bis} = 207
+, {\bfseries Medium\+Orchid3} = 133
+, {\bfseries Medium\+Purple} = 104
+, {\bfseries Medium\+Purple1} = 141
+, \newline
+{\bfseries Medium\+Purple2} = 135
+, {\bfseries Medium\+Purple2\+Bis} = 140
+, {\bfseries Medium\+Purple3} = 97
+, {\bfseries Medium\+Purple3\+Bis} = 98
+, \newline
+{\bfseries Medium\+Purple4} = 60
+, {\bfseries Medium\+Spring\+Green} = 49
+, {\bfseries Medium\+Turquoise} = 80
+, {\bfseries Medium\+Violet\+Red} = 126
+, \newline
+{\bfseries Misty\+Rose1} = 224
+, {\bfseries Misty\+Rose3} = 181
+, {\bfseries Navajo\+White1} = 223
+, {\bfseries Navajo\+White3} = 144
+, \newline
+{\bfseries Navy\+Blue} = 17
+, {\bfseries Orange1} = 214
+, {\bfseries Orange3} = 172
+, {\bfseries Orange4} = 58
+, \newline
+{\bfseries Orange4\+Bis} = 94
+, {\bfseries Orange\+Red1} = 202
+, {\bfseries Orchid} = 170
+, {\bfseries Orchid1} = 213
+, \newline
+{\bfseries Orchid2} = 212
+, {\bfseries Pale\+Green1} = 121
+, {\bfseries Pale\+Green1\+Bis} = 156
+, {\bfseries Pale\+Green3} = 114
+, \newline
+{\bfseries Pale\+Green3\+Bis} = 77
+, {\bfseries Pale\+Turquoise1} = 159
+, {\bfseries Pale\+Turquoise4} = 66
+, {\bfseries Pale\+Violet\+Red1} = 211
+, \newline
+{\bfseries Pink1} = 218
+, {\bfseries Pink3} = 175
+, {\bfseries Plum1} = 219
+, {\bfseries Plum2} = 183
+, \newline
+{\bfseries Plum3} = 176
+, {\bfseries Plum4} = 96
+, {\bfseries Purple} = 129
+, {\bfseries Purple3} = 56
+, \newline
+{\bfseries Purple4} = 54
+, {\bfseries Purple4\+Bis} = 55
+, {\bfseries Purple\+Bis} = 93
+, {\bfseries Red1} = 196
+, \newline
+{\bfseries Red3} = 124
+, {\bfseries Red3\+Bis} = 160
+, {\bfseries Rosy\+Brown} = 138
+, {\bfseries Royal\+Blue1} = 63
+, \newline
+{\bfseries Salmon1} = 209
+, {\bfseries Sandy\+Brown} = 215
+, {\bfseries Sea\+Green1} = 84
+, {\bfseries Sea\+Green1\+Bis} = 85
+, \newline
+{\bfseries Sea\+Green2} = 83
+, {\bfseries Sea\+Green3} = 78
+, {\bfseries Sky\+Blue1} = 117
+, {\bfseries Sky\+Blue2} = 111
+, \newline
+{\bfseries Sky\+Blue3} = 74
+, {\bfseries Slate\+Blue1} = 99
+, {\bfseries Slate\+Blue3} = 61
+, {\bfseries Slate\+Blue3\+Bis} = 62
+, \newline
+{\bfseries Spring\+Green1} = 48
+, {\bfseries Spring\+Green2} = 42
+, {\bfseries Spring\+Green2\+Bis} = 47
+, {\bfseries Spring\+Green3} = 35
+, \newline
+{\bfseries Spring\+Green3\+Bis} = 41
+, {\bfseries Spring\+Green4} = 29
+, {\bfseries Steel\+Blue} = 67
+, {\bfseries Steel\+Blue1} = 75
+, \newline
+{\bfseries Steel\+Blue1\+Bis} = 81
+, {\bfseries Steel\+Blue3} = 68
+, {\bfseries Tan} = 180
+, {\bfseries Thistle1} = 225
+, \newline
+{\bfseries Thistle3} = 182
+, {\bfseries Turquoise2} = 45
+, {\bfseries Turquoise4} = 30
+, {\bfseries Violet} = 177
+, \newline
+{\bfseries Wheat1} = 229
+, {\bfseries Wheat4} = 101
+, {\bfseries Yellow1} = 226
+, {\bfseries Yellow2} = 190
+, \newline
+{\bfseries Yellow3} = 148
+, {\bfseries Yellow3\+Bis} = 184
+, {\bfseries Yellow4} = 100
+, {\bfseries Yellow4\+Bis} = 106
+, \newline
+{\bfseries Aquamarine1} = 122
+, {\bfseries Aquamarine1\+Bis} = 86
+, {\bfseries Aquamarine3} = 79
+, {\bfseries Blue1} = 21
+, \newline
+{\bfseries Blue3} = 19
+, {\bfseries Blue3\+Bis} = 20
+, {\bfseries Blue\+Violet} = 57
+, {\bfseries Cadet\+Blue} = 72
+, \newline
+{\bfseries Cadet\+Blue\+Bis} = 73
+, {\bfseries Chartreuse1} = 118
+, {\bfseries Chartreuse2} = 112
+, {\bfseries Chartreuse2\+Bis} = 82
+, \newline
+{\bfseries Chartreuse3} = 70
+, {\bfseries Chartreuse3\+Bis} = 76
+, {\bfseries Chartreuse4} = 64
+, {\bfseries Cornflower\+Blue} = 69
+, \newline
+{\bfseries Cornsilk1} = 230
+, {\bfseries Cyan1} = 51
+, {\bfseries Cyan2} = 50
+, {\bfseries Cyan3} = 43
+, \newline
+{\bfseries Dark\+Blue} = 18
+, {\bfseries Dark\+Cyan} = 36
+, {\bfseries Dark\+Goldenrod} = 136
+, {\bfseries Dark\+Green} = 22
+, \newline
+{\bfseries Dark\+Khaki} = 143
+, {\bfseries Dark\+Magenta} = 90
+, {\bfseries Dark\+Magenta\+Bis} = 91
+, {\bfseries Dark\+Olive\+Green1} = 191
+, \newline
+{\bfseries Dark\+Olive\+Green1\+Bis} = 192
+, {\bfseries Dark\+Olive\+Green2} = 155
+, {\bfseries Dark\+Olive\+Green3} = 107
+, {\bfseries Dark\+Olive\+Green3\+Bis} = 113
+, \newline
+{\bfseries Dark\+Olive\+Green3\+Ter} = 149
+, {\bfseries Dark\+Orange} = 208
+, {\bfseries Dark\+Orange3} = 130
+, {\bfseries Dark\+Orange3\+Bis} = 166
+, \newline
+{\bfseries Dark\+Red} = 52
+, {\bfseries Dark\+Red\+Bis} = 88
+, {\bfseries Dark\+Sea\+Green} = 108
+, {\bfseries Dark\+Sea\+Green1} = 158
+, \newline
+{\bfseries Dark\+Sea\+Green1\+Bis} = 193
+, {\bfseries Dark\+Sea\+Green2} = 151
+, {\bfseries Dark\+Sea\+Green2\+Bis} = 157
+, {\bfseries Dark\+Sea\+Green3} = 115
+, \newline
+{\bfseries Dark\+Sea\+Green3\+Bis} = 150
+, {\bfseries Dark\+Sea\+Green4} = 65
+, {\bfseries Dark\+Sea\+Green4\+Bis} = 71
+, {\bfseries Dark\+Slate\+Gray1} = 123
+, \newline
+{\bfseries Dark\+Slate\+Gray2} = 87
+, {\bfseries Dark\+Slate\+Gray3} = 116
+, {\bfseries Dark\+Turquoise} = 44
+, {\bfseries Dark\+Violet} = 128
+, \newline
+{\bfseries Dark\+Violet\+Bis} = 92
+, {\bfseries Deep\+Pink1} = 198
+, {\bfseries Deep\+Pink1\+Bis} = 199
+, {\bfseries Deep\+Pink2} = 197
+, \newline
+{\bfseries Deep\+Pink3} = 161
+, {\bfseries Deep\+Pink3\+Bis} = 162
+, {\bfseries Deep\+Pink4} = 125
+, {\bfseries Deep\+Pink4\+Bis} = 89
+, \newline
+{\bfseries Deep\+Pink4\+Ter} = 53
+, {\bfseries Deep\+Sky\+Blue1} = 39
+, {\bfseries Deep\+Sky\+Blue2} = 38
+, {\bfseries Deep\+Sky\+Blue3} = 31
+, \newline
+{\bfseries Deep\+Sky\+Blue3\+Bis} = 32
+, {\bfseries Deep\+Sky\+Blue4} = 23
+, {\bfseries Deep\+Sky\+Blue4\+Bis} = 24
+, {\bfseries Deep\+Sky\+Blue4\+Ter} = 25
+, \newline
+{\bfseries Dodger\+Blue1} = 33
+, {\bfseries Dodger\+Blue2} = 27
+, {\bfseries Dodger\+Blue3} = 26
+, {\bfseries Gold1} = 220
+, \newline
+{\bfseries Gold3} = 142
+, {\bfseries Gold3\+Bis} = 178
+, {\bfseries Green1} = 46
+, {\bfseries Green3} = 34
+, \newline
+{\bfseries Green3\+Bis} = 40
+, {\bfseries Green4} = 28
+, {\bfseries Green\+Yellow} = 154
+, {\bfseries Grey0} = 16
+, \newline
+{\bfseries Grey100} = 231
+, {\bfseries Grey11} = 234
+, {\bfseries Grey15} = 235
+, {\bfseries Grey19} = 236
+, \newline
+{\bfseries Grey23} = 237
+, {\bfseries Grey27} = 238
+, {\bfseries Grey3} = 232
+, {\bfseries Grey30} = 239
+, \newline
+{\bfseries Grey35} = 240
+, {\bfseries Grey37} = 59
+, {\bfseries Grey39} = 241
+, {\bfseries Grey42} = 242
+, \newline
+{\bfseries Grey46} = 243
+, {\bfseries Grey50} = 244
+, {\bfseries Grey53} = 102
+, {\bfseries Grey54} = 245
+, \newline
+{\bfseries Grey58} = 246
+, {\bfseries Grey62} = 247
+, {\bfseries Grey63} = 139
+, {\bfseries Grey66} = 248
+, \newline
+{\bfseries Grey69} = 145
+, {\bfseries Grey7} = 233
+, {\bfseries Grey70} = 249
+, {\bfseries Grey74} = 250
+, \newline
+{\bfseries Grey78} = 251
+, {\bfseries Grey82} = 252
+, {\bfseries Grey84} = 188
+, {\bfseries Grey85} = 253
+, \newline
+{\bfseries Grey89} = 254
+, {\bfseries Grey93} = 255
+, {\bfseries Honeydew2} = 194
+, {\bfseries Hot\+Pink} = 205
+, \newline
+{\bfseries Hot\+Pink2} = 169
+, {\bfseries Hot\+Pink3} = 132
+, {\bfseries Hot\+Pink3\+Bis} = 168
+, {\bfseries Hot\+Pink\+Bis} = 206
+, \newline
+{\bfseries Indian\+Red} = 131
+, {\bfseries Indian\+Red1} = 203
+, {\bfseries Indian\+Red1\+Bis} = 204
+, {\bfseries Indian\+Red\+Bis} = 167
+, \newline
+{\bfseries Khaki1} = 228
+, {\bfseries Khaki3} = 185
+, {\bfseries Light\+Coral} = 210
+, {\bfseries Light\+Cyan1\+Bis} = 195
+, \newline
+{\bfseries Light\+Cyan3} = 152
+, {\bfseries Light\+Goldenrod1} = 227
+, {\bfseries Light\+Goldenrod2} = 186
+, {\bfseries Light\+Goldenrod2\+Bis} = 221
+, \newline
+{\bfseries Light\+Goldenrod2\+Ter} = 222
+, {\bfseries Light\+Goldenrod3} = 179
+, {\bfseries Light\+Green} = 119
+, {\bfseries Light\+Green\+Bis} = 120
+, \newline
+{\bfseries Light\+Pink1} = 217
+, {\bfseries Light\+Pink3} = 174
+, {\bfseries Light\+Pink4} = 95
+, {\bfseries Light\+Salmon1} = 216
+, \newline
+{\bfseries Light\+Salmon3} = 137
+, {\bfseries Light\+Salmon3\+Bis} = 173
+, {\bfseries Light\+Sea\+Green} = 37
+, {\bfseries Light\+Sky\+Blue1} = 153
+, \newline
+{\bfseries Light\+Sky\+Blue3} = 109
+, {\bfseries Light\+Sky\+Blue3\+Bis} = 110
+, {\bfseries Light\+Slate\+Blue} = 105
+, {\bfseries Light\+Slate\+Grey} = 103
+, \newline
+{\bfseries Light\+Steel\+Blue} = 147
+, {\bfseries Light\+Steel\+Blue1} = 189
+, {\bfseries Light\+Steel\+Blue3} = 146
+, {\bfseries Light\+Yellow3} = 187
+, \newline
+{\bfseries Magenta1} = 201
+, {\bfseries Magenta2} = 165
+, {\bfseries Magenta2\+Bis} = 200
+, {\bfseries Magenta3} = 127
+, \newline
+{\bfseries Magenta3\+Bis} = 163
+, {\bfseries Magenta3\+Ter} = 164
+, {\bfseries Medium\+Orchid} = 134
+, {\bfseries Medium\+Orchid1} = 171
+, \newline
+{\bfseries Medium\+Orchid1\+Bis} = 207
+, {\bfseries Medium\+Orchid3} = 133
+, {\bfseries Medium\+Purple} = 104
+, {\bfseries Medium\+Purple1} = 141
+, \newline
+{\bfseries Medium\+Purple2} = 135
+, {\bfseries Medium\+Purple2\+Bis} = 140
+, {\bfseries Medium\+Purple3} = 97
+, {\bfseries Medium\+Purple3\+Bis} = 98
+, \newline
+{\bfseries Medium\+Purple4} = 60
+, {\bfseries Medium\+Spring\+Green} = 49
+, {\bfseries Medium\+Turquoise} = 80
+, {\bfseries Medium\+Violet\+Red} = 126
+, \newline
+{\bfseries Misty\+Rose1} = 224
+, {\bfseries Misty\+Rose3} = 181
+, {\bfseries Navajo\+White1} = 223
+, {\bfseries Navajo\+White3} = 144
+, \newline
+{\bfseries Navy\+Blue} = 17
+, {\bfseries Orange1} = 214
+, {\bfseries Orange3} = 172
+, {\bfseries Orange4} = 58
+, \newline
+{\bfseries Orange4\+Bis} = 94
+, {\bfseries Orange\+Red1} = 202
+, {\bfseries Orchid} = 170
+, {\bfseries Orchid1} = 213
+, \newline
+{\bfseries Orchid2} = 212
+, {\bfseries Pale\+Green1} = 121
+, {\bfseries Pale\+Green1\+Bis} = 156
+, {\bfseries Pale\+Green3} = 114
+, \newline
+{\bfseries Pale\+Green3\+Bis} = 77
+, {\bfseries Pale\+Turquoise1} = 159
+, {\bfseries Pale\+Turquoise4} = 66
+, {\bfseries Pale\+Violet\+Red1} = 211
+, \newline
+{\bfseries Pink1} = 218
+, {\bfseries Pink3} = 175
+, {\bfseries Plum1} = 219
+, {\bfseries Plum2} = 183
+, \newline
+{\bfseries Plum3} = 176
+, {\bfseries Plum4} = 96
+, {\bfseries Purple} = 129
+, {\bfseries Purple3} = 56
+, \newline
+{\bfseries Purple4} = 54
+, {\bfseries Purple4\+Bis} = 55
+, {\bfseries Purple\+Bis} = 93
+, {\bfseries Red1} = 196
+, \newline
+{\bfseries Red3} = 124
+, {\bfseries Red3\+Bis} = 160
+, {\bfseries Rosy\+Brown} = 138
+, {\bfseries Royal\+Blue1} = 63
+, \newline
+{\bfseries Salmon1} = 209
+, {\bfseries Sandy\+Brown} = 215
+, {\bfseries Sea\+Green1} = 84
+, {\bfseries Sea\+Green1\+Bis} = 85
+, \newline
+{\bfseries Sea\+Green2} = 83
+, {\bfseries Sea\+Green3} = 78
+, {\bfseries Sky\+Blue1} = 117
+, {\bfseries Sky\+Blue2} = 111
+, \newline
+{\bfseries Sky\+Blue3} = 74
+, {\bfseries Slate\+Blue1} = 99
+, {\bfseries Slate\+Blue3} = 61
+, {\bfseries Slate\+Blue3\+Bis} = 62
+, \newline
+{\bfseries Spring\+Green1} = 48
+, {\bfseries Spring\+Green2} = 42
+, {\bfseries Spring\+Green2\+Bis} = 47
+, {\bfseries Spring\+Green3} = 35
+, \newline
+{\bfseries Spring\+Green3\+Bis} = 41
+, {\bfseries Spring\+Green4} = 29
+, {\bfseries Steel\+Blue} = 67
+, {\bfseries Steel\+Blue1} = 75
+, \newline
+{\bfseries Steel\+Blue1\+Bis} = 81
+, {\bfseries Steel\+Blue3} = 68
+, {\bfseries Tan} = 180
+, {\bfseries Thistle1} = 225
+, \newline
+{\bfseries Thistle3} = 182
+, {\bfseries Turquoise2} = 45
+, {\bfseries Turquoise4} = 30
+, {\bfseries Violet} = 177
+, \newline
+{\bfseries Wheat1} = 229
+, {\bfseries Wheat4} = 101
+, {\bfseries Yellow1} = 226
+, {\bfseries Yellow2} = 190
+, \newline
+{\bfseries Yellow3} = 148
+, {\bfseries Yellow3\+Bis} = 184
+, {\bfseries Yellow4} = 100
+, {\bfseries Yellow4\+Bis} = 106
+ \}
+\item 
+\Hypertarget{classftxui_1_1Color_ab43fa19fc42558bc57e1c6f5147a0143}\label{classftxui_1_1Color_ab43fa19fc42558bc57e1c6f5147a0143} 
+enum {\bfseries Palette1} \+: uint8\+\_\+t \{ {\bfseries Default}
+, {\bfseries Default}
+, {\bfseries Default}
+ \}
+\item 
+\Hypertarget{classftxui_1_1Color_ac86e752483b7f2d91f21a1c498503abb}\label{classftxui_1_1Color_ac86e752483b7f2d91f21a1c498503abb} 
+enum {\bfseries Palette16} \+: uint8\+\_\+t \{ \newline
+{\bfseries Black} = 0
+, {\bfseries Red} = 1
+, {\bfseries Green} = 2
+, {\bfseries Yellow} = 3
+, \newline
+{\bfseries Blue} = 4
+, {\bfseries Magenta} = 5
+, {\bfseries Cyan} = 6
+, {\bfseries Gray\+Light} = 7
+, \newline
+{\bfseries Gray\+Dark} = 8
+, {\bfseries Red\+Light} = 9
+, {\bfseries Green\+Light} = 10
+, {\bfseries Yellow\+Light} = 11
+, \newline
+{\bfseries Blue\+Light} = 12
+, {\bfseries Magenta\+Light} = 13
+, {\bfseries Cyan\+Light} = 14
+, {\bfseries White} = 15
+, \newline
+{\bfseries Black} = 0
+, {\bfseries Red} = 1
+, {\bfseries Green} = 2
+, {\bfseries Yellow} = 3
+, \newline
+{\bfseries Blue} = 4
+, {\bfseries Magenta} = 5
+, {\bfseries Cyan} = 6
+, {\bfseries Gray\+Light} = 7
+, \newline
+{\bfseries Gray\+Dark} = 8
+, {\bfseries Red\+Light} = 9
+, {\bfseries Green\+Light} = 10
+, {\bfseries Yellow\+Light} = 11
+, \newline
+{\bfseries Blue\+Light} = 12
+, {\bfseries Magenta\+Light} = 13
+, {\bfseries Cyan\+Light} = 14
+, {\bfseries White} = 15
+, \newline
+{\bfseries Black} = 0
+, {\bfseries Red} = 1
+, {\bfseries Green} = 2
+, {\bfseries Yellow} = 3
+, \newline
+{\bfseries Blue} = 4
+, {\bfseries Magenta} = 5
+, {\bfseries Cyan} = 6
+, {\bfseries Gray\+Light} = 7
+, \newline
+{\bfseries Gray\+Dark} = 8
+, {\bfseries Red\+Light} = 9
+, {\bfseries Green\+Light} = 10
+, {\bfseries Yellow\+Light} = 11
+, \newline
+{\bfseries Blue\+Light} = 12
+, {\bfseries Magenta\+Light} = 13
+, {\bfseries Cyan\+Light} = 14
+, {\bfseries White} = 15
+ \}
+\item 
+\Hypertarget{classftxui_1_1Color_ab5027212f1ff50f9a38c5e2006b5bd0c}\label{classftxui_1_1Color_ab5027212f1ff50f9a38c5e2006b5bd0c} 
+enum {\bfseries Palette256} \+: uint8\+\_\+t \{ \newline
+{\bfseries Aquamarine1} = 122
+, {\bfseries Aquamarine1\+Bis} = 86
+, {\bfseries Aquamarine3} = 79
+, {\bfseries Blue1} = 21
+, \newline
+{\bfseries Blue3} = 19
+, {\bfseries Blue3\+Bis} = 20
+, {\bfseries Blue\+Violet} = 57
+, {\bfseries Cadet\+Blue} = 72
+, \newline
+{\bfseries Cadet\+Blue\+Bis} = 73
+, {\bfseries Chartreuse1} = 118
+, {\bfseries Chartreuse2} = 112
+, {\bfseries Chartreuse2\+Bis} = 82
+, \newline
+{\bfseries Chartreuse3} = 70
+, {\bfseries Chartreuse3\+Bis} = 76
+, {\bfseries Chartreuse4} = 64
+, {\bfseries Cornflower\+Blue} = 69
+, \newline
+{\bfseries Cornsilk1} = 230
+, {\bfseries Cyan1} = 51
+, {\bfseries Cyan2} = 50
+, {\bfseries Cyan3} = 43
+, \newline
+{\bfseries Dark\+Blue} = 18
+, {\bfseries Dark\+Cyan} = 36
+, {\bfseries Dark\+Goldenrod} = 136
+, {\bfseries Dark\+Green} = 22
+, \newline
+{\bfseries Dark\+Khaki} = 143
+, {\bfseries Dark\+Magenta} = 90
+, {\bfseries Dark\+Magenta\+Bis} = 91
+, {\bfseries Dark\+Olive\+Green1} = 191
+, \newline
+{\bfseries Dark\+Olive\+Green1\+Bis} = 192
+, {\bfseries Dark\+Olive\+Green2} = 155
+, {\bfseries Dark\+Olive\+Green3} = 107
+, {\bfseries Dark\+Olive\+Green3\+Bis} = 113
+, \newline
+{\bfseries Dark\+Olive\+Green3\+Ter} = 149
+, {\bfseries Dark\+Orange} = 208
+, {\bfseries Dark\+Orange3} = 130
+, {\bfseries Dark\+Orange3\+Bis} = 166
+, \newline
+{\bfseries Dark\+Red} = 52
+, {\bfseries Dark\+Red\+Bis} = 88
+, {\bfseries Dark\+Sea\+Green} = 108
+, {\bfseries Dark\+Sea\+Green1} = 158
+, \newline
+{\bfseries Dark\+Sea\+Green1\+Bis} = 193
+, {\bfseries Dark\+Sea\+Green2} = 151
+, {\bfseries Dark\+Sea\+Green2\+Bis} = 157
+, {\bfseries Dark\+Sea\+Green3} = 115
+, \newline
+{\bfseries Dark\+Sea\+Green3\+Bis} = 150
+, {\bfseries Dark\+Sea\+Green4} = 65
+, {\bfseries Dark\+Sea\+Green4\+Bis} = 71
+, {\bfseries Dark\+Slate\+Gray1} = 123
+, \newline
+{\bfseries Dark\+Slate\+Gray2} = 87
+, {\bfseries Dark\+Slate\+Gray3} = 116
+, {\bfseries Dark\+Turquoise} = 44
+, {\bfseries Dark\+Violet} = 128
+, \newline
+{\bfseries Dark\+Violet\+Bis} = 92
+, {\bfseries Deep\+Pink1} = 198
+, {\bfseries Deep\+Pink1\+Bis} = 199
+, {\bfseries Deep\+Pink2} = 197
+, \newline
+{\bfseries Deep\+Pink3} = 161
+, {\bfseries Deep\+Pink3\+Bis} = 162
+, {\bfseries Deep\+Pink4} = 125
+, {\bfseries Deep\+Pink4\+Bis} = 89
+, \newline
+{\bfseries Deep\+Pink4\+Ter} = 53
+, {\bfseries Deep\+Sky\+Blue1} = 39
+, {\bfseries Deep\+Sky\+Blue2} = 38
+, {\bfseries Deep\+Sky\+Blue3} = 31
+, \newline
+{\bfseries Deep\+Sky\+Blue3\+Bis} = 32
+, {\bfseries Deep\+Sky\+Blue4} = 23
+, {\bfseries Deep\+Sky\+Blue4\+Bis} = 24
+, {\bfseries Deep\+Sky\+Blue4\+Ter} = 25
+, \newline
+{\bfseries Dodger\+Blue1} = 33
+, {\bfseries Dodger\+Blue2} = 27
+, {\bfseries Dodger\+Blue3} = 26
+, {\bfseries Gold1} = 220
+, \newline
+{\bfseries Gold3} = 142
+, {\bfseries Gold3\+Bis} = 178
+, {\bfseries Green1} = 46
+, {\bfseries Green3} = 34
+, \newline
+{\bfseries Green3\+Bis} = 40
+, {\bfseries Green4} = 28
+, {\bfseries Green\+Yellow} = 154
+, {\bfseries Grey0} = 16
+, \newline
+{\bfseries Grey100} = 231
+, {\bfseries Grey11} = 234
+, {\bfseries Grey15} = 235
+, {\bfseries Grey19} = 236
+, \newline
+{\bfseries Grey23} = 237
+, {\bfseries Grey27} = 238
+, {\bfseries Grey3} = 232
+, {\bfseries Grey30} = 239
+, \newline
+{\bfseries Grey35} = 240
+, {\bfseries Grey37} = 59
+, {\bfseries Grey39} = 241
+, {\bfseries Grey42} = 242
+, \newline
+{\bfseries Grey46} = 243
+, {\bfseries Grey50} = 244
+, {\bfseries Grey53} = 102
+, {\bfseries Grey54} = 245
+, \newline
+{\bfseries Grey58} = 246
+, {\bfseries Grey62} = 247
+, {\bfseries Grey63} = 139
+, {\bfseries Grey66} = 248
+, \newline
+{\bfseries Grey69} = 145
+, {\bfseries Grey7} = 233
+, {\bfseries Grey70} = 249
+, {\bfseries Grey74} = 250
+, \newline
+{\bfseries Grey78} = 251
+, {\bfseries Grey82} = 252
+, {\bfseries Grey84} = 188
+, {\bfseries Grey85} = 253
+, \newline
+{\bfseries Grey89} = 254
+, {\bfseries Grey93} = 255
+, {\bfseries Honeydew2} = 194
+, {\bfseries Hot\+Pink} = 205
+, \newline
+{\bfseries Hot\+Pink2} = 169
+, {\bfseries Hot\+Pink3} = 132
+, {\bfseries Hot\+Pink3\+Bis} = 168
+, {\bfseries Hot\+Pink\+Bis} = 206
+, \newline
+{\bfseries Indian\+Red} = 131
+, {\bfseries Indian\+Red1} = 203
+, {\bfseries Indian\+Red1\+Bis} = 204
+, {\bfseries Indian\+Red\+Bis} = 167
+, \newline
+{\bfseries Khaki1} = 228
+, {\bfseries Khaki3} = 185
+, {\bfseries Light\+Coral} = 210
+, {\bfseries Light\+Cyan1\+Bis} = 195
+, \newline
+{\bfseries Light\+Cyan3} = 152
+, {\bfseries Light\+Goldenrod1} = 227
+, {\bfseries Light\+Goldenrod2} = 186
+, {\bfseries Light\+Goldenrod2\+Bis} = 221
+, \newline
+{\bfseries Light\+Goldenrod2\+Ter} = 222
+, {\bfseries Light\+Goldenrod3} = 179
+, {\bfseries Light\+Green} = 119
+, {\bfseries Light\+Green\+Bis} = 120
+, \newline
+{\bfseries Light\+Pink1} = 217
+, {\bfseries Light\+Pink3} = 174
+, {\bfseries Light\+Pink4} = 95
+, {\bfseries Light\+Salmon1} = 216
+, \newline
+{\bfseries Light\+Salmon3} = 137
+, {\bfseries Light\+Salmon3\+Bis} = 173
+, {\bfseries Light\+Sea\+Green} = 37
+, {\bfseries Light\+Sky\+Blue1} = 153
+, \newline
+{\bfseries Light\+Sky\+Blue3} = 109
+, {\bfseries Light\+Sky\+Blue3\+Bis} = 110
+, {\bfseries Light\+Slate\+Blue} = 105
+, {\bfseries Light\+Slate\+Grey} = 103
+, \newline
+{\bfseries Light\+Steel\+Blue} = 147
+, {\bfseries Light\+Steel\+Blue1} = 189
+, {\bfseries Light\+Steel\+Blue3} = 146
+, {\bfseries Light\+Yellow3} = 187
+, \newline
+{\bfseries Magenta1} = 201
+, {\bfseries Magenta2} = 165
+, {\bfseries Magenta2\+Bis} = 200
+, {\bfseries Magenta3} = 127
+, \newline
+{\bfseries Magenta3\+Bis} = 163
+, {\bfseries Magenta3\+Ter} = 164
+, {\bfseries Medium\+Orchid} = 134
+, {\bfseries Medium\+Orchid1} = 171
+, \newline
+{\bfseries Medium\+Orchid1\+Bis} = 207
+, {\bfseries Medium\+Orchid3} = 133
+, {\bfseries Medium\+Purple} = 104
+, {\bfseries Medium\+Purple1} = 141
+, \newline
+{\bfseries Medium\+Purple2} = 135
+, {\bfseries Medium\+Purple2\+Bis} = 140
+, {\bfseries Medium\+Purple3} = 97
+, {\bfseries Medium\+Purple3\+Bis} = 98
+, \newline
+{\bfseries Medium\+Purple4} = 60
+, {\bfseries Medium\+Spring\+Green} = 49
+, {\bfseries Medium\+Turquoise} = 80
+, {\bfseries Medium\+Violet\+Red} = 126
+, \newline
+{\bfseries Misty\+Rose1} = 224
+, {\bfseries Misty\+Rose3} = 181
+, {\bfseries Navajo\+White1} = 223
+, {\bfseries Navajo\+White3} = 144
+, \newline
+{\bfseries Navy\+Blue} = 17
+, {\bfseries Orange1} = 214
+, {\bfseries Orange3} = 172
+, {\bfseries Orange4} = 58
+, \newline
+{\bfseries Orange4\+Bis} = 94
+, {\bfseries Orange\+Red1} = 202
+, {\bfseries Orchid} = 170
+, {\bfseries Orchid1} = 213
+, \newline
+{\bfseries Orchid2} = 212
+, {\bfseries Pale\+Green1} = 121
+, {\bfseries Pale\+Green1\+Bis} = 156
+, {\bfseries Pale\+Green3} = 114
+, \newline
+{\bfseries Pale\+Green3\+Bis} = 77
+, {\bfseries Pale\+Turquoise1} = 159
+, {\bfseries Pale\+Turquoise4} = 66
+, {\bfseries Pale\+Violet\+Red1} = 211
+, \newline
+{\bfseries Pink1} = 218
+, {\bfseries Pink3} = 175
+, {\bfseries Plum1} = 219
+, {\bfseries Plum2} = 183
+, \newline
+{\bfseries Plum3} = 176
+, {\bfseries Plum4} = 96
+, {\bfseries Purple} = 129
+, {\bfseries Purple3} = 56
+, \newline
+{\bfseries Purple4} = 54
+, {\bfseries Purple4\+Bis} = 55
+, {\bfseries Purple\+Bis} = 93
+, {\bfseries Red1} = 196
+, \newline
+{\bfseries Red3} = 124
+, {\bfseries Red3\+Bis} = 160
+, {\bfseries Rosy\+Brown} = 138
+, {\bfseries Royal\+Blue1} = 63
+, \newline
+{\bfseries Salmon1} = 209
+, {\bfseries Sandy\+Brown} = 215
+, {\bfseries Sea\+Green1} = 84
+, {\bfseries Sea\+Green1\+Bis} = 85
+, \newline
+{\bfseries Sea\+Green2} = 83
+, {\bfseries Sea\+Green3} = 78
+, {\bfseries Sky\+Blue1} = 117
+, {\bfseries Sky\+Blue2} = 111
+, \newline
+{\bfseries Sky\+Blue3} = 74
+, {\bfseries Slate\+Blue1} = 99
+, {\bfseries Slate\+Blue3} = 61
+, {\bfseries Slate\+Blue3\+Bis} = 62
+, \newline
+{\bfseries Spring\+Green1} = 48
+, {\bfseries Spring\+Green2} = 42
+, {\bfseries Spring\+Green2\+Bis} = 47
+, {\bfseries Spring\+Green3} = 35
+, \newline
+{\bfseries Spring\+Green3\+Bis} = 41
+, {\bfseries Spring\+Green4} = 29
+, {\bfseries Steel\+Blue} = 67
+, {\bfseries Steel\+Blue1} = 75
+, \newline
+{\bfseries Steel\+Blue1\+Bis} = 81
+, {\bfseries Steel\+Blue3} = 68
+, {\bfseries Tan} = 180
+, {\bfseries Thistle1} = 225
+, \newline
+{\bfseries Thistle3} = 182
+, {\bfseries Turquoise2} = 45
+, {\bfseries Turquoise4} = 30
+, {\bfseries Violet} = 177
+, \newline
+{\bfseries Wheat1} = 229
+, {\bfseries Wheat4} = 101
+, {\bfseries Yellow1} = 226
+, {\bfseries Yellow2} = 190
+, \newline
+{\bfseries Yellow3} = 148
+, {\bfseries Yellow3\+Bis} = 184
+, {\bfseries Yellow4} = 100
+, {\bfseries Yellow4\+Bis} = 106
+, \newline
+{\bfseries Aquamarine1} = 122
+, {\bfseries Aquamarine1\+Bis} = 86
+, {\bfseries Aquamarine3} = 79
+, {\bfseries Blue1} = 21
+, \newline
+{\bfseries Blue3} = 19
+, {\bfseries Blue3\+Bis} = 20
+, {\bfseries Blue\+Violet} = 57
+, {\bfseries Cadet\+Blue} = 72
+, \newline
+{\bfseries Cadet\+Blue\+Bis} = 73
+, {\bfseries Chartreuse1} = 118
+, {\bfseries Chartreuse2} = 112
+, {\bfseries Chartreuse2\+Bis} = 82
+, \newline
+{\bfseries Chartreuse3} = 70
+, {\bfseries Chartreuse3\+Bis} = 76
+, {\bfseries Chartreuse4} = 64
+, {\bfseries Cornflower\+Blue} = 69
+, \newline
+{\bfseries Cornsilk1} = 230
+, {\bfseries Cyan1} = 51
+, {\bfseries Cyan2} = 50
+, {\bfseries Cyan3} = 43
+, \newline
+{\bfseries Dark\+Blue} = 18
+, {\bfseries Dark\+Cyan} = 36
+, {\bfseries Dark\+Goldenrod} = 136
+, {\bfseries Dark\+Green} = 22
+, \newline
+{\bfseries Dark\+Khaki} = 143
+, {\bfseries Dark\+Magenta} = 90
+, {\bfseries Dark\+Magenta\+Bis} = 91
+, {\bfseries Dark\+Olive\+Green1} = 191
+, \newline
+{\bfseries Dark\+Olive\+Green1\+Bis} = 192
+, {\bfseries Dark\+Olive\+Green2} = 155
+, {\bfseries Dark\+Olive\+Green3} = 107
+, {\bfseries Dark\+Olive\+Green3\+Bis} = 113
+, \newline
+{\bfseries Dark\+Olive\+Green3\+Ter} = 149
+, {\bfseries Dark\+Orange} = 208
+, {\bfseries Dark\+Orange3} = 130
+, {\bfseries Dark\+Orange3\+Bis} = 166
+, \newline
+{\bfseries Dark\+Red} = 52
+, {\bfseries Dark\+Red\+Bis} = 88
+, {\bfseries Dark\+Sea\+Green} = 108
+, {\bfseries Dark\+Sea\+Green1} = 158
+, \newline
+{\bfseries Dark\+Sea\+Green1\+Bis} = 193
+, {\bfseries Dark\+Sea\+Green2} = 151
+, {\bfseries Dark\+Sea\+Green2\+Bis} = 157
+, {\bfseries Dark\+Sea\+Green3} = 115
+, \newline
+{\bfseries Dark\+Sea\+Green3\+Bis} = 150
+, {\bfseries Dark\+Sea\+Green4} = 65
+, {\bfseries Dark\+Sea\+Green4\+Bis} = 71
+, {\bfseries Dark\+Slate\+Gray1} = 123
+, \newline
+{\bfseries Dark\+Slate\+Gray2} = 87
+, {\bfseries Dark\+Slate\+Gray3} = 116
+, {\bfseries Dark\+Turquoise} = 44
+, {\bfseries Dark\+Violet} = 128
+, \newline
+{\bfseries Dark\+Violet\+Bis} = 92
+, {\bfseries Deep\+Pink1} = 198
+, {\bfseries Deep\+Pink1\+Bis} = 199
+, {\bfseries Deep\+Pink2} = 197
+, \newline
+{\bfseries Deep\+Pink3} = 161
+, {\bfseries Deep\+Pink3\+Bis} = 162
+, {\bfseries Deep\+Pink4} = 125
+, {\bfseries Deep\+Pink4\+Bis} = 89
+, \newline
+{\bfseries Deep\+Pink4\+Ter} = 53
+, {\bfseries Deep\+Sky\+Blue1} = 39
+, {\bfseries Deep\+Sky\+Blue2} = 38
+, {\bfseries Deep\+Sky\+Blue3} = 31
+, \newline
+{\bfseries Deep\+Sky\+Blue3\+Bis} = 32
+, {\bfseries Deep\+Sky\+Blue4} = 23
+, {\bfseries Deep\+Sky\+Blue4\+Bis} = 24
+, {\bfseries Deep\+Sky\+Blue4\+Ter} = 25
+, \newline
+{\bfseries Dodger\+Blue1} = 33
+, {\bfseries Dodger\+Blue2} = 27
+, {\bfseries Dodger\+Blue3} = 26
+, {\bfseries Gold1} = 220
+, \newline
+{\bfseries Gold3} = 142
+, {\bfseries Gold3\+Bis} = 178
+, {\bfseries Green1} = 46
+, {\bfseries Green3} = 34
+, \newline
+{\bfseries Green3\+Bis} = 40
+, {\bfseries Green4} = 28
+, {\bfseries Green\+Yellow} = 154
+, {\bfseries Grey0} = 16
+, \newline
+{\bfseries Grey100} = 231
+, {\bfseries Grey11} = 234
+, {\bfseries Grey15} = 235
+, {\bfseries Grey19} = 236
+, \newline
+{\bfseries Grey23} = 237
+, {\bfseries Grey27} = 238
+, {\bfseries Grey3} = 232
+, {\bfseries Grey30} = 239
+, \newline
+{\bfseries Grey35} = 240
+, {\bfseries Grey37} = 59
+, {\bfseries Grey39} = 241
+, {\bfseries Grey42} = 242
+, \newline
+{\bfseries Grey46} = 243
+, {\bfseries Grey50} = 244
+, {\bfseries Grey53} = 102
+, {\bfseries Grey54} = 245
+, \newline
+{\bfseries Grey58} = 246
+, {\bfseries Grey62} = 247
+, {\bfseries Grey63} = 139
+, {\bfseries Grey66} = 248
+, \newline
+{\bfseries Grey69} = 145
+, {\bfseries Grey7} = 233
+, {\bfseries Grey70} = 249
+, {\bfseries Grey74} = 250
+, \newline
+{\bfseries Grey78} = 251
+, {\bfseries Grey82} = 252
+, {\bfseries Grey84} = 188
+, {\bfseries Grey85} = 253
+, \newline
+{\bfseries Grey89} = 254
+, {\bfseries Grey93} = 255
+, {\bfseries Honeydew2} = 194
+, {\bfseries Hot\+Pink} = 205
+, \newline
+{\bfseries Hot\+Pink2} = 169
+, {\bfseries Hot\+Pink3} = 132
+, {\bfseries Hot\+Pink3\+Bis} = 168
+, {\bfseries Hot\+Pink\+Bis} = 206
+, \newline
+{\bfseries Indian\+Red} = 131
+, {\bfseries Indian\+Red1} = 203
+, {\bfseries Indian\+Red1\+Bis} = 204
+, {\bfseries Indian\+Red\+Bis} = 167
+, \newline
+{\bfseries Khaki1} = 228
+, {\bfseries Khaki3} = 185
+, {\bfseries Light\+Coral} = 210
+, {\bfseries Light\+Cyan1\+Bis} = 195
+, \newline
+{\bfseries Light\+Cyan3} = 152
+, {\bfseries Light\+Goldenrod1} = 227
+, {\bfseries Light\+Goldenrod2} = 186
+, {\bfseries Light\+Goldenrod2\+Bis} = 221
+, \newline
+{\bfseries Light\+Goldenrod2\+Ter} = 222
+, {\bfseries Light\+Goldenrod3} = 179
+, {\bfseries Light\+Green} = 119
+, {\bfseries Light\+Green\+Bis} = 120
+, \newline
+{\bfseries Light\+Pink1} = 217
+, {\bfseries Light\+Pink3} = 174
+, {\bfseries Light\+Pink4} = 95
+, {\bfseries Light\+Salmon1} = 216
+, \newline
+{\bfseries Light\+Salmon3} = 137
+, {\bfseries Light\+Salmon3\+Bis} = 173
+, {\bfseries Light\+Sea\+Green} = 37
+, {\bfseries Light\+Sky\+Blue1} = 153
+, \newline
+{\bfseries Light\+Sky\+Blue3} = 109
+, {\bfseries Light\+Sky\+Blue3\+Bis} = 110
+, {\bfseries Light\+Slate\+Blue} = 105
+, {\bfseries Light\+Slate\+Grey} = 103
+, \newline
+{\bfseries Light\+Steel\+Blue} = 147
+, {\bfseries Light\+Steel\+Blue1} = 189
+, {\bfseries Light\+Steel\+Blue3} = 146
+, {\bfseries Light\+Yellow3} = 187
+, \newline
+{\bfseries Magenta1} = 201
+, {\bfseries Magenta2} = 165
+, {\bfseries Magenta2\+Bis} = 200
+, {\bfseries Magenta3} = 127
+, \newline
+{\bfseries Magenta3\+Bis} = 163
+, {\bfseries Magenta3\+Ter} = 164
+, {\bfseries Medium\+Orchid} = 134
+, {\bfseries Medium\+Orchid1} = 171
+, \newline
+{\bfseries Medium\+Orchid1\+Bis} = 207
+, {\bfseries Medium\+Orchid3} = 133
+, {\bfseries Medium\+Purple} = 104
+, {\bfseries Medium\+Purple1} = 141
+, \newline
+{\bfseries Medium\+Purple2} = 135
+, {\bfseries Medium\+Purple2\+Bis} = 140
+, {\bfseries Medium\+Purple3} = 97
+, {\bfseries Medium\+Purple3\+Bis} = 98
+, \newline
+{\bfseries Medium\+Purple4} = 60
+, {\bfseries Medium\+Spring\+Green} = 49
+, {\bfseries Medium\+Turquoise} = 80
+, {\bfseries Medium\+Violet\+Red} = 126
+, \newline
+{\bfseries Misty\+Rose1} = 224
+, {\bfseries Misty\+Rose3} = 181
+, {\bfseries Navajo\+White1} = 223
+, {\bfseries Navajo\+White3} = 144
+, \newline
+{\bfseries Navy\+Blue} = 17
+, {\bfseries Orange1} = 214
+, {\bfseries Orange3} = 172
+, {\bfseries Orange4} = 58
+, \newline
+{\bfseries Orange4\+Bis} = 94
+, {\bfseries Orange\+Red1} = 202
+, {\bfseries Orchid} = 170
+, {\bfseries Orchid1} = 213
+, \newline
+{\bfseries Orchid2} = 212
+, {\bfseries Pale\+Green1} = 121
+, {\bfseries Pale\+Green1\+Bis} = 156
+, {\bfseries Pale\+Green3} = 114
+, \newline
+{\bfseries Pale\+Green3\+Bis} = 77
+, {\bfseries Pale\+Turquoise1} = 159
+, {\bfseries Pale\+Turquoise4} = 66
+, {\bfseries Pale\+Violet\+Red1} = 211
+, \newline
+{\bfseries Pink1} = 218
+, {\bfseries Pink3} = 175
+, {\bfseries Plum1} = 219
+, {\bfseries Plum2} = 183
+, \newline
+{\bfseries Plum3} = 176
+, {\bfseries Plum4} = 96
+, {\bfseries Purple} = 129
+, {\bfseries Purple3} = 56
+, \newline
+{\bfseries Purple4} = 54
+, {\bfseries Purple4\+Bis} = 55
+, {\bfseries Purple\+Bis} = 93
+, {\bfseries Red1} = 196
+, \newline
+{\bfseries Red3} = 124
+, {\bfseries Red3\+Bis} = 160
+, {\bfseries Rosy\+Brown} = 138
+, {\bfseries Royal\+Blue1} = 63
+, \newline
+{\bfseries Salmon1} = 209
+, {\bfseries Sandy\+Brown} = 215
+, {\bfseries Sea\+Green1} = 84
+, {\bfseries Sea\+Green1\+Bis} = 85
+, \newline
+{\bfseries Sea\+Green2} = 83
+, {\bfseries Sea\+Green3} = 78
+, {\bfseries Sky\+Blue1} = 117
+, {\bfseries Sky\+Blue2} = 111
+, \newline
+{\bfseries Sky\+Blue3} = 74
+, {\bfseries Slate\+Blue1} = 99
+, {\bfseries Slate\+Blue3} = 61
+, {\bfseries Slate\+Blue3\+Bis} = 62
+, \newline
+{\bfseries Spring\+Green1} = 48
+, {\bfseries Spring\+Green2} = 42
+, {\bfseries Spring\+Green2\+Bis} = 47
+, {\bfseries Spring\+Green3} = 35
+, \newline
+{\bfseries Spring\+Green3\+Bis} = 41
+, {\bfseries Spring\+Green4} = 29
+, {\bfseries Steel\+Blue} = 67
+, {\bfseries Steel\+Blue1} = 75
+, \newline
+{\bfseries Steel\+Blue1\+Bis} = 81
+, {\bfseries Steel\+Blue3} = 68
+, {\bfseries Tan} = 180
+, {\bfseries Thistle1} = 225
+, \newline
+{\bfseries Thistle3} = 182
+, {\bfseries Turquoise2} = 45
+, {\bfseries Turquoise4} = 30
+, {\bfseries Violet} = 177
+, \newline
+{\bfseries Wheat1} = 229
+, {\bfseries Wheat4} = 101
+, {\bfseries Yellow1} = 226
+, {\bfseries Yellow2} = 190
+, \newline
+{\bfseries Yellow3} = 148
+, {\bfseries Yellow3\+Bis} = 184
+, {\bfseries Yellow4} = 100
+, {\bfseries Yellow4\+Bis} = 106
+, \newline
+{\bfseries Aquamarine1} = 122
+, {\bfseries Aquamarine1\+Bis} = 86
+, {\bfseries Aquamarine3} = 79
+, {\bfseries Blue1} = 21
+, \newline
+{\bfseries Blue3} = 19
+, {\bfseries Blue3\+Bis} = 20
+, {\bfseries Blue\+Violet} = 57
+, {\bfseries Cadet\+Blue} = 72
+, \newline
+{\bfseries Cadet\+Blue\+Bis} = 73
+, {\bfseries Chartreuse1} = 118
+, {\bfseries Chartreuse2} = 112
+, {\bfseries Chartreuse2\+Bis} = 82
+, \newline
+{\bfseries Chartreuse3} = 70
+, {\bfseries Chartreuse3\+Bis} = 76
+, {\bfseries Chartreuse4} = 64
+, {\bfseries Cornflower\+Blue} = 69
+, \newline
+{\bfseries Cornsilk1} = 230
+, {\bfseries Cyan1} = 51
+, {\bfseries Cyan2} = 50
+, {\bfseries Cyan3} = 43
+, \newline
+{\bfseries Dark\+Blue} = 18
+, {\bfseries Dark\+Cyan} = 36
+, {\bfseries Dark\+Goldenrod} = 136
+, {\bfseries Dark\+Green} = 22
+, \newline
+{\bfseries Dark\+Khaki} = 143
+, {\bfseries Dark\+Magenta} = 90
+, {\bfseries Dark\+Magenta\+Bis} = 91
+, {\bfseries Dark\+Olive\+Green1} = 191
+, \newline
+{\bfseries Dark\+Olive\+Green1\+Bis} = 192
+, {\bfseries Dark\+Olive\+Green2} = 155
+, {\bfseries Dark\+Olive\+Green3} = 107
+, {\bfseries Dark\+Olive\+Green3\+Bis} = 113
+, \newline
+{\bfseries Dark\+Olive\+Green3\+Ter} = 149
+, {\bfseries Dark\+Orange} = 208
+, {\bfseries Dark\+Orange3} = 130
+, {\bfseries Dark\+Orange3\+Bis} = 166
+, \newline
+{\bfseries Dark\+Red} = 52
+, {\bfseries Dark\+Red\+Bis} = 88
+, {\bfseries Dark\+Sea\+Green} = 108
+, {\bfseries Dark\+Sea\+Green1} = 158
+, \newline
+{\bfseries Dark\+Sea\+Green1\+Bis} = 193
+, {\bfseries Dark\+Sea\+Green2} = 151
+, {\bfseries Dark\+Sea\+Green2\+Bis} = 157
+, {\bfseries Dark\+Sea\+Green3} = 115
+, \newline
+{\bfseries Dark\+Sea\+Green3\+Bis} = 150
+, {\bfseries Dark\+Sea\+Green4} = 65
+, {\bfseries Dark\+Sea\+Green4\+Bis} = 71
+, {\bfseries Dark\+Slate\+Gray1} = 123
+, \newline
+{\bfseries Dark\+Slate\+Gray2} = 87
+, {\bfseries Dark\+Slate\+Gray3} = 116
+, {\bfseries Dark\+Turquoise} = 44
+, {\bfseries Dark\+Violet} = 128
+, \newline
+{\bfseries Dark\+Violet\+Bis} = 92
+, {\bfseries Deep\+Pink1} = 198
+, {\bfseries Deep\+Pink1\+Bis} = 199
+, {\bfseries Deep\+Pink2} = 197
+, \newline
+{\bfseries Deep\+Pink3} = 161
+, {\bfseries Deep\+Pink3\+Bis} = 162
+, {\bfseries Deep\+Pink4} = 125
+, {\bfseries Deep\+Pink4\+Bis} = 89
+, \newline
+{\bfseries Deep\+Pink4\+Ter} = 53
+, {\bfseries Deep\+Sky\+Blue1} = 39
+, {\bfseries Deep\+Sky\+Blue2} = 38
+, {\bfseries Deep\+Sky\+Blue3} = 31
+, \newline
+{\bfseries Deep\+Sky\+Blue3\+Bis} = 32
+, {\bfseries Deep\+Sky\+Blue4} = 23
+, {\bfseries Deep\+Sky\+Blue4\+Bis} = 24
+, {\bfseries Deep\+Sky\+Blue4\+Ter} = 25
+, \newline
+{\bfseries Dodger\+Blue1} = 33
+, {\bfseries Dodger\+Blue2} = 27
+, {\bfseries Dodger\+Blue3} = 26
+, {\bfseries Gold1} = 220
+, \newline
+{\bfseries Gold3} = 142
+, {\bfseries Gold3\+Bis} = 178
+, {\bfseries Green1} = 46
+, {\bfseries Green3} = 34
+, \newline
+{\bfseries Green3\+Bis} = 40
+, {\bfseries Green4} = 28
+, {\bfseries Green\+Yellow} = 154
+, {\bfseries Grey0} = 16
+, \newline
+{\bfseries Grey100} = 231
+, {\bfseries Grey11} = 234
+, {\bfseries Grey15} = 235
+, {\bfseries Grey19} = 236
+, \newline
+{\bfseries Grey23} = 237
+, {\bfseries Grey27} = 238
+, {\bfseries Grey3} = 232
+, {\bfseries Grey30} = 239
+, \newline
+{\bfseries Grey35} = 240
+, {\bfseries Grey37} = 59
+, {\bfseries Grey39} = 241
+, {\bfseries Grey42} = 242
+, \newline
+{\bfseries Grey46} = 243
+, {\bfseries Grey50} = 244
+, {\bfseries Grey53} = 102
+, {\bfseries Grey54} = 245
+, \newline
+{\bfseries Grey58} = 246
+, {\bfseries Grey62} = 247
+, {\bfseries Grey63} = 139
+, {\bfseries Grey66} = 248
+, \newline
+{\bfseries Grey69} = 145
+, {\bfseries Grey7} = 233
+, {\bfseries Grey70} = 249
+, {\bfseries Grey74} = 250
+, \newline
+{\bfseries Grey78} = 251
+, {\bfseries Grey82} = 252
+, {\bfseries Grey84} = 188
+, {\bfseries Grey85} = 253
+, \newline
+{\bfseries Grey89} = 254
+, {\bfseries Grey93} = 255
+, {\bfseries Honeydew2} = 194
+, {\bfseries Hot\+Pink} = 205
+, \newline
+{\bfseries Hot\+Pink2} = 169
+, {\bfseries Hot\+Pink3} = 132
+, {\bfseries Hot\+Pink3\+Bis} = 168
+, {\bfseries Hot\+Pink\+Bis} = 206
+, \newline
+{\bfseries Indian\+Red} = 131
+, {\bfseries Indian\+Red1} = 203
+, {\bfseries Indian\+Red1\+Bis} = 204
+, {\bfseries Indian\+Red\+Bis} = 167
+, \newline
+{\bfseries Khaki1} = 228
+, {\bfseries Khaki3} = 185
+, {\bfseries Light\+Coral} = 210
+, {\bfseries Light\+Cyan1\+Bis} = 195
+, \newline
+{\bfseries Light\+Cyan3} = 152
+, {\bfseries Light\+Goldenrod1} = 227
+, {\bfseries Light\+Goldenrod2} = 186
+, {\bfseries Light\+Goldenrod2\+Bis} = 221
+, \newline
+{\bfseries Light\+Goldenrod2\+Ter} = 222
+, {\bfseries Light\+Goldenrod3} = 179
+, {\bfseries Light\+Green} = 119
+, {\bfseries Light\+Green\+Bis} = 120
+, \newline
+{\bfseries Light\+Pink1} = 217
+, {\bfseries Light\+Pink3} = 174
+, {\bfseries Light\+Pink4} = 95
+, {\bfseries Light\+Salmon1} = 216
+, \newline
+{\bfseries Light\+Salmon3} = 137
+, {\bfseries Light\+Salmon3\+Bis} = 173
+, {\bfseries Light\+Sea\+Green} = 37
+, {\bfseries Light\+Sky\+Blue1} = 153
+, \newline
+{\bfseries Light\+Sky\+Blue3} = 109
+, {\bfseries Light\+Sky\+Blue3\+Bis} = 110
+, {\bfseries Light\+Slate\+Blue} = 105
+, {\bfseries Light\+Slate\+Grey} = 103
+, \newline
+{\bfseries Light\+Steel\+Blue} = 147
+, {\bfseries Light\+Steel\+Blue1} = 189
+, {\bfseries Light\+Steel\+Blue3} = 146
+, {\bfseries Light\+Yellow3} = 187
+, \newline
+{\bfseries Magenta1} = 201
+, {\bfseries Magenta2} = 165
+, {\bfseries Magenta2\+Bis} = 200
+, {\bfseries Magenta3} = 127
+, \newline
+{\bfseries Magenta3\+Bis} = 163
+, {\bfseries Magenta3\+Ter} = 164
+, {\bfseries Medium\+Orchid} = 134
+, {\bfseries Medium\+Orchid1} = 171
+, \newline
+{\bfseries Medium\+Orchid1\+Bis} = 207
+, {\bfseries Medium\+Orchid3} = 133
+, {\bfseries Medium\+Purple} = 104
+, {\bfseries Medium\+Purple1} = 141
+, \newline
+{\bfseries Medium\+Purple2} = 135
+, {\bfseries Medium\+Purple2\+Bis} = 140
+, {\bfseries Medium\+Purple3} = 97
+, {\bfseries Medium\+Purple3\+Bis} = 98
+, \newline
+{\bfseries Medium\+Purple4} = 60
+, {\bfseries Medium\+Spring\+Green} = 49
+, {\bfseries Medium\+Turquoise} = 80
+, {\bfseries Medium\+Violet\+Red} = 126
+, \newline
+{\bfseries Misty\+Rose1} = 224
+, {\bfseries Misty\+Rose3} = 181
+, {\bfseries Navajo\+White1} = 223
+, {\bfseries Navajo\+White3} = 144
+, \newline
+{\bfseries Navy\+Blue} = 17
+, {\bfseries Orange1} = 214
+, {\bfseries Orange3} = 172
+, {\bfseries Orange4} = 58
+, \newline
+{\bfseries Orange4\+Bis} = 94
+, {\bfseries Orange\+Red1} = 202
+, {\bfseries Orchid} = 170
+, {\bfseries Orchid1} = 213
+, \newline
+{\bfseries Orchid2} = 212
+, {\bfseries Pale\+Green1} = 121
+, {\bfseries Pale\+Green1\+Bis} = 156
+, {\bfseries Pale\+Green3} = 114
+, \newline
+{\bfseries Pale\+Green3\+Bis} = 77
+, {\bfseries Pale\+Turquoise1} = 159
+, {\bfseries Pale\+Turquoise4} = 66
+, {\bfseries Pale\+Violet\+Red1} = 211
+, \newline
+{\bfseries Pink1} = 218
+, {\bfseries Pink3} = 175
+, {\bfseries Plum1} = 219
+, {\bfseries Plum2} = 183
+, \newline
+{\bfseries Plum3} = 176
+, {\bfseries Plum4} = 96
+, {\bfseries Purple} = 129
+, {\bfseries Purple3} = 56
+, \newline
+{\bfseries Purple4} = 54
+, {\bfseries Purple4\+Bis} = 55
+, {\bfseries Purple\+Bis} = 93
+, {\bfseries Red1} = 196
+, \newline
+{\bfseries Red3} = 124
+, {\bfseries Red3\+Bis} = 160
+, {\bfseries Rosy\+Brown} = 138
+, {\bfseries Royal\+Blue1} = 63
+, \newline
+{\bfseries Salmon1} = 209
+, {\bfseries Sandy\+Brown} = 215
+, {\bfseries Sea\+Green1} = 84
+, {\bfseries Sea\+Green1\+Bis} = 85
+, \newline
+{\bfseries Sea\+Green2} = 83
+, {\bfseries Sea\+Green3} = 78
+, {\bfseries Sky\+Blue1} = 117
+, {\bfseries Sky\+Blue2} = 111
+, \newline
+{\bfseries Sky\+Blue3} = 74
+, {\bfseries Slate\+Blue1} = 99
+, {\bfseries Slate\+Blue3} = 61
+, {\bfseries Slate\+Blue3\+Bis} = 62
+, \newline
+{\bfseries Spring\+Green1} = 48
+, {\bfseries Spring\+Green2} = 42
+, {\bfseries Spring\+Green2\+Bis} = 47
+, {\bfseries Spring\+Green3} = 35
+, \newline
+{\bfseries Spring\+Green3\+Bis} = 41
+, {\bfseries Spring\+Green4} = 29
+, {\bfseries Steel\+Blue} = 67
+, {\bfseries Steel\+Blue1} = 75
+, \newline
+{\bfseries Steel\+Blue1\+Bis} = 81
+, {\bfseries Steel\+Blue3} = 68
+, {\bfseries Tan} = 180
+, {\bfseries Thistle1} = 225
+, \newline
+{\bfseries Thistle3} = 182
+, {\bfseries Turquoise2} = 45
+, {\bfseries Turquoise4} = 30
+, {\bfseries Violet} = 177
+, \newline
+{\bfseries Wheat1} = 229
+, {\bfseries Wheat4} = 101
+, {\bfseries Yellow1} = 226
+, {\bfseries Yellow2} = 190
+, \newline
+{\bfseries Yellow3} = 148
+, {\bfseries Yellow3\+Bis} = 184
+, {\bfseries Yellow4} = 100
+, {\bfseries Yellow4\+Bis} = 106
+ \}
+\item 
+\Hypertarget{classftxui_1_1Color_ab43fa19fc42558bc57e1c6f5147a0143}\label{classftxui_1_1Color_ab43fa19fc42558bc57e1c6f5147a0143} 
+enum {\bfseries Palette1} \+: uint8\+\_\+t \{ {\bfseries Default}
+, {\bfseries Default}
+, {\bfseries Default}
+ \}
+\item 
+\Hypertarget{classftxui_1_1Color_ac86e752483b7f2d91f21a1c498503abb}\label{classftxui_1_1Color_ac86e752483b7f2d91f21a1c498503abb} 
+enum {\bfseries Palette16} \+: uint8\+\_\+t \{ \newline
+{\bfseries Black} = 0
+, {\bfseries Red} = 1
+, {\bfseries Green} = 2
+, {\bfseries Yellow} = 3
+, \newline
+{\bfseries Blue} = 4
+, {\bfseries Magenta} = 5
+, {\bfseries Cyan} = 6
+, {\bfseries Gray\+Light} = 7
+, \newline
+{\bfseries Gray\+Dark} = 8
+, {\bfseries Red\+Light} = 9
+, {\bfseries Green\+Light} = 10
+, {\bfseries Yellow\+Light} = 11
+, \newline
+{\bfseries Blue\+Light} = 12
+, {\bfseries Magenta\+Light} = 13
+, {\bfseries Cyan\+Light} = 14
+, {\bfseries White} = 15
+, \newline
+{\bfseries Black} = 0
+, {\bfseries Red} = 1
+, {\bfseries Green} = 2
+, {\bfseries Yellow} = 3
+, \newline
+{\bfseries Blue} = 4
+, {\bfseries Magenta} = 5
+, {\bfseries Cyan} = 6
+, {\bfseries Gray\+Light} = 7
+, \newline
+{\bfseries Gray\+Dark} = 8
+, {\bfseries Red\+Light} = 9
+, {\bfseries Green\+Light} = 10
+, {\bfseries Yellow\+Light} = 11
+, \newline
+{\bfseries Blue\+Light} = 12
+, {\bfseries Magenta\+Light} = 13
+, {\bfseries Cyan\+Light} = 14
+, {\bfseries White} = 15
+, \newline
+{\bfseries Black} = 0
+, {\bfseries Red} = 1
+, {\bfseries Green} = 2
+, {\bfseries Yellow} = 3
+, \newline
+{\bfseries Blue} = 4
+, {\bfseries Magenta} = 5
+, {\bfseries Cyan} = 6
+, {\bfseries Gray\+Light} = 7
+, \newline
+{\bfseries Gray\+Dark} = 8
+, {\bfseries Red\+Light} = 9
+, {\bfseries Green\+Light} = 10
+, {\bfseries Yellow\+Light} = 11
+, \newline
+{\bfseries Blue\+Light} = 12
+, {\bfseries Magenta\+Light} = 13
+, {\bfseries Cyan\+Light} = 14
+, {\bfseries White} = 15
+ \}
+\item 
+\Hypertarget{classftxui_1_1Color_ab5027212f1ff50f9a38c5e2006b5bd0c}\label{classftxui_1_1Color_ab5027212f1ff50f9a38c5e2006b5bd0c} 
+enum {\bfseries Palette256} \+: uint8\+\_\+t \{ \newline
+{\bfseries Aquamarine1} = 122
+, {\bfseries Aquamarine1\+Bis} = 86
+, {\bfseries Aquamarine3} = 79
+, {\bfseries Blue1} = 21
+, \newline
+{\bfseries Blue3} = 19
+, {\bfseries Blue3\+Bis} = 20
+, {\bfseries Blue\+Violet} = 57
+, {\bfseries Cadet\+Blue} = 72
+, \newline
+{\bfseries Cadet\+Blue\+Bis} = 73
+, {\bfseries Chartreuse1} = 118
+, {\bfseries Chartreuse2} = 112
+, {\bfseries Chartreuse2\+Bis} = 82
+, \newline
+{\bfseries Chartreuse3} = 70
+, {\bfseries Chartreuse3\+Bis} = 76
+, {\bfseries Chartreuse4} = 64
+, {\bfseries Cornflower\+Blue} = 69
+, \newline
+{\bfseries Cornsilk1} = 230
+, {\bfseries Cyan1} = 51
+, {\bfseries Cyan2} = 50
+, {\bfseries Cyan3} = 43
+, \newline
+{\bfseries Dark\+Blue} = 18
+, {\bfseries Dark\+Cyan} = 36
+, {\bfseries Dark\+Goldenrod} = 136
+, {\bfseries Dark\+Green} = 22
+, \newline
+{\bfseries Dark\+Khaki} = 143
+, {\bfseries Dark\+Magenta} = 90
+, {\bfseries Dark\+Magenta\+Bis} = 91
+, {\bfseries Dark\+Olive\+Green1} = 191
+, \newline
+{\bfseries Dark\+Olive\+Green1\+Bis} = 192
+, {\bfseries Dark\+Olive\+Green2} = 155
+, {\bfseries Dark\+Olive\+Green3} = 107
+, {\bfseries Dark\+Olive\+Green3\+Bis} = 113
+, \newline
+{\bfseries Dark\+Olive\+Green3\+Ter} = 149
+, {\bfseries Dark\+Orange} = 208
+, {\bfseries Dark\+Orange3} = 130
+, {\bfseries Dark\+Orange3\+Bis} = 166
+, \newline
+{\bfseries Dark\+Red} = 52
+, {\bfseries Dark\+Red\+Bis} = 88
+, {\bfseries Dark\+Sea\+Green} = 108
+, {\bfseries Dark\+Sea\+Green1} = 158
+, \newline
+{\bfseries Dark\+Sea\+Green1\+Bis} = 193
+, {\bfseries Dark\+Sea\+Green2} = 151
+, {\bfseries Dark\+Sea\+Green2\+Bis} = 157
+, {\bfseries Dark\+Sea\+Green3} = 115
+, \newline
+{\bfseries Dark\+Sea\+Green3\+Bis} = 150
+, {\bfseries Dark\+Sea\+Green4} = 65
+, {\bfseries Dark\+Sea\+Green4\+Bis} = 71
+, {\bfseries Dark\+Slate\+Gray1} = 123
+, \newline
+{\bfseries Dark\+Slate\+Gray2} = 87
+, {\bfseries Dark\+Slate\+Gray3} = 116
+, {\bfseries Dark\+Turquoise} = 44
+, {\bfseries Dark\+Violet} = 128
+, \newline
+{\bfseries Dark\+Violet\+Bis} = 92
+, {\bfseries Deep\+Pink1} = 198
+, {\bfseries Deep\+Pink1\+Bis} = 199
+, {\bfseries Deep\+Pink2} = 197
+, \newline
+{\bfseries Deep\+Pink3} = 161
+, {\bfseries Deep\+Pink3\+Bis} = 162
+, {\bfseries Deep\+Pink4} = 125
+, {\bfseries Deep\+Pink4\+Bis} = 89
+, \newline
+{\bfseries Deep\+Pink4\+Ter} = 53
+, {\bfseries Deep\+Sky\+Blue1} = 39
+, {\bfseries Deep\+Sky\+Blue2} = 38
+, {\bfseries Deep\+Sky\+Blue3} = 31
+, \newline
+{\bfseries Deep\+Sky\+Blue3\+Bis} = 32
+, {\bfseries Deep\+Sky\+Blue4} = 23
+, {\bfseries Deep\+Sky\+Blue4\+Bis} = 24
+, {\bfseries Deep\+Sky\+Blue4\+Ter} = 25
+, \newline
+{\bfseries Dodger\+Blue1} = 33
+, {\bfseries Dodger\+Blue2} = 27
+, {\bfseries Dodger\+Blue3} = 26
+, {\bfseries Gold1} = 220
+, \newline
+{\bfseries Gold3} = 142
+, {\bfseries Gold3\+Bis} = 178
+, {\bfseries Green1} = 46
+, {\bfseries Green3} = 34
+, \newline
+{\bfseries Green3\+Bis} = 40
+, {\bfseries Green4} = 28
+, {\bfseries Green\+Yellow} = 154
+, {\bfseries Grey0} = 16
+, \newline
+{\bfseries Grey100} = 231
+, {\bfseries Grey11} = 234
+, {\bfseries Grey15} = 235
+, {\bfseries Grey19} = 236
+, \newline
+{\bfseries Grey23} = 237
+, {\bfseries Grey27} = 238
+, {\bfseries Grey3} = 232
+, {\bfseries Grey30} = 239
+, \newline
+{\bfseries Grey35} = 240
+, {\bfseries Grey37} = 59
+, {\bfseries Grey39} = 241
+, {\bfseries Grey42} = 242
+, \newline
+{\bfseries Grey46} = 243
+, {\bfseries Grey50} = 244
+, {\bfseries Grey53} = 102
+, {\bfseries Grey54} = 245
+, \newline
+{\bfseries Grey58} = 246
+, {\bfseries Grey62} = 247
+, {\bfseries Grey63} = 139
+, {\bfseries Grey66} = 248
+, \newline
+{\bfseries Grey69} = 145
+, {\bfseries Grey7} = 233
+, {\bfseries Grey70} = 249
+, {\bfseries Grey74} = 250
+, \newline
+{\bfseries Grey78} = 251
+, {\bfseries Grey82} = 252
+, {\bfseries Grey84} = 188
+, {\bfseries Grey85} = 253
+, \newline
+{\bfseries Grey89} = 254
+, {\bfseries Grey93} = 255
+, {\bfseries Honeydew2} = 194
+, {\bfseries Hot\+Pink} = 205
+, \newline
+{\bfseries Hot\+Pink2} = 169
+, {\bfseries Hot\+Pink3} = 132
+, {\bfseries Hot\+Pink3\+Bis} = 168
+, {\bfseries Hot\+Pink\+Bis} = 206
+, \newline
+{\bfseries Indian\+Red} = 131
+, {\bfseries Indian\+Red1} = 203
+, {\bfseries Indian\+Red1\+Bis} = 204
+, {\bfseries Indian\+Red\+Bis} = 167
+, \newline
+{\bfseries Khaki1} = 228
+, {\bfseries Khaki3} = 185
+, {\bfseries Light\+Coral} = 210
+, {\bfseries Light\+Cyan1\+Bis} = 195
+, \newline
+{\bfseries Light\+Cyan3} = 152
+, {\bfseries Light\+Goldenrod1} = 227
+, {\bfseries Light\+Goldenrod2} = 186
+, {\bfseries Light\+Goldenrod2\+Bis} = 221
+, \newline
+{\bfseries Light\+Goldenrod2\+Ter} = 222
+, {\bfseries Light\+Goldenrod3} = 179
+, {\bfseries Light\+Green} = 119
+, {\bfseries Light\+Green\+Bis} = 120
+, \newline
+{\bfseries Light\+Pink1} = 217
+, {\bfseries Light\+Pink3} = 174
+, {\bfseries Light\+Pink4} = 95
+, {\bfseries Light\+Salmon1} = 216
+, \newline
+{\bfseries Light\+Salmon3} = 137
+, {\bfseries Light\+Salmon3\+Bis} = 173
+, {\bfseries Light\+Sea\+Green} = 37
+, {\bfseries Light\+Sky\+Blue1} = 153
+, \newline
+{\bfseries Light\+Sky\+Blue3} = 109
+, {\bfseries Light\+Sky\+Blue3\+Bis} = 110
+, {\bfseries Light\+Slate\+Blue} = 105
+, {\bfseries Light\+Slate\+Grey} = 103
+, \newline
+{\bfseries Light\+Steel\+Blue} = 147
+, {\bfseries Light\+Steel\+Blue1} = 189
+, {\bfseries Light\+Steel\+Blue3} = 146
+, {\bfseries Light\+Yellow3} = 187
+, \newline
+{\bfseries Magenta1} = 201
+, {\bfseries Magenta2} = 165
+, {\bfseries Magenta2\+Bis} = 200
+, {\bfseries Magenta3} = 127
+, \newline
+{\bfseries Magenta3\+Bis} = 163
+, {\bfseries Magenta3\+Ter} = 164
+, {\bfseries Medium\+Orchid} = 134
+, {\bfseries Medium\+Orchid1} = 171
+, \newline
+{\bfseries Medium\+Orchid1\+Bis} = 207
+, {\bfseries Medium\+Orchid3} = 133
+, {\bfseries Medium\+Purple} = 104
+, {\bfseries Medium\+Purple1} = 141
+, \newline
+{\bfseries Medium\+Purple2} = 135
+, {\bfseries Medium\+Purple2\+Bis} = 140
+, {\bfseries Medium\+Purple3} = 97
+, {\bfseries Medium\+Purple3\+Bis} = 98
+, \newline
+{\bfseries Medium\+Purple4} = 60
+, {\bfseries Medium\+Spring\+Green} = 49
+, {\bfseries Medium\+Turquoise} = 80
+, {\bfseries Medium\+Violet\+Red} = 126
+, \newline
+{\bfseries Misty\+Rose1} = 224
+, {\bfseries Misty\+Rose3} = 181
+, {\bfseries Navajo\+White1} = 223
+, {\bfseries Navajo\+White3} = 144
+, \newline
+{\bfseries Navy\+Blue} = 17
+, {\bfseries Orange1} = 214
+, {\bfseries Orange3} = 172
+, {\bfseries Orange4} = 58
+, \newline
+{\bfseries Orange4\+Bis} = 94
+, {\bfseries Orange\+Red1} = 202
+, {\bfseries Orchid} = 170
+, {\bfseries Orchid1} = 213
+, \newline
+{\bfseries Orchid2} = 212
+, {\bfseries Pale\+Green1} = 121
+, {\bfseries Pale\+Green1\+Bis} = 156
+, {\bfseries Pale\+Green3} = 114
+, \newline
+{\bfseries Pale\+Green3\+Bis} = 77
+, {\bfseries Pale\+Turquoise1} = 159
+, {\bfseries Pale\+Turquoise4} = 66
+, {\bfseries Pale\+Violet\+Red1} = 211
+, \newline
+{\bfseries Pink1} = 218
+, {\bfseries Pink3} = 175
+, {\bfseries Plum1} = 219
+, {\bfseries Plum2} = 183
+, \newline
+{\bfseries Plum3} = 176
+, {\bfseries Plum4} = 96
+, {\bfseries Purple} = 129
+, {\bfseries Purple3} = 56
+, \newline
+{\bfseries Purple4} = 54
+, {\bfseries Purple4\+Bis} = 55
+, {\bfseries Purple\+Bis} = 93
+, {\bfseries Red1} = 196
+, \newline
+{\bfseries Red3} = 124
+, {\bfseries Red3\+Bis} = 160
+, {\bfseries Rosy\+Brown} = 138
+, {\bfseries Royal\+Blue1} = 63
+, \newline
+{\bfseries Salmon1} = 209
+, {\bfseries Sandy\+Brown} = 215
+, {\bfseries Sea\+Green1} = 84
+, {\bfseries Sea\+Green1\+Bis} = 85
+, \newline
+{\bfseries Sea\+Green2} = 83
+, {\bfseries Sea\+Green3} = 78
+, {\bfseries Sky\+Blue1} = 117
+, {\bfseries Sky\+Blue2} = 111
+, \newline
+{\bfseries Sky\+Blue3} = 74
+, {\bfseries Slate\+Blue1} = 99
+, {\bfseries Slate\+Blue3} = 61
+, {\bfseries Slate\+Blue3\+Bis} = 62
+, \newline
+{\bfseries Spring\+Green1} = 48
+, {\bfseries Spring\+Green2} = 42
+, {\bfseries Spring\+Green2\+Bis} = 47
+, {\bfseries Spring\+Green3} = 35
+, \newline
+{\bfseries Spring\+Green3\+Bis} = 41
+, {\bfseries Spring\+Green4} = 29
+, {\bfseries Steel\+Blue} = 67
+, {\bfseries Steel\+Blue1} = 75
+, \newline
+{\bfseries Steel\+Blue1\+Bis} = 81
+, {\bfseries Steel\+Blue3} = 68
+, {\bfseries Tan} = 180
+, {\bfseries Thistle1} = 225
+, \newline
+{\bfseries Thistle3} = 182
+, {\bfseries Turquoise2} = 45
+, {\bfseries Turquoise4} = 30
+, {\bfseries Violet} = 177
+, \newline
+{\bfseries Wheat1} = 229
+, {\bfseries Wheat4} = 101
+, {\bfseries Yellow1} = 226
+, {\bfseries Yellow2} = 190
+, \newline
+{\bfseries Yellow3} = 148
+, {\bfseries Yellow3\+Bis} = 184
+, {\bfseries Yellow4} = 100
+, {\bfseries Yellow4\+Bis} = 106
+, \newline
+{\bfseries Aquamarine1} = 122
+, {\bfseries Aquamarine1\+Bis} = 86
+, {\bfseries Aquamarine3} = 79
+, {\bfseries Blue1} = 21
+, \newline
+{\bfseries Blue3} = 19
+, {\bfseries Blue3\+Bis} = 20
+, {\bfseries Blue\+Violet} = 57
+, {\bfseries Cadet\+Blue} = 72
+, \newline
+{\bfseries Cadet\+Blue\+Bis} = 73
+, {\bfseries Chartreuse1} = 118
+, {\bfseries Chartreuse2} = 112
+, {\bfseries Chartreuse2\+Bis} = 82
+, \newline
+{\bfseries Chartreuse3} = 70
+, {\bfseries Chartreuse3\+Bis} = 76
+, {\bfseries Chartreuse4} = 64
+, {\bfseries Cornflower\+Blue} = 69
+, \newline
+{\bfseries Cornsilk1} = 230
+, {\bfseries Cyan1} = 51
+, {\bfseries Cyan2} = 50
+, {\bfseries Cyan3} = 43
+, \newline
+{\bfseries Dark\+Blue} = 18
+, {\bfseries Dark\+Cyan} = 36
+, {\bfseries Dark\+Goldenrod} = 136
+, {\bfseries Dark\+Green} = 22
+, \newline
+{\bfseries Dark\+Khaki} = 143
+, {\bfseries Dark\+Magenta} = 90
+, {\bfseries Dark\+Magenta\+Bis} = 91
+, {\bfseries Dark\+Olive\+Green1} = 191
+, \newline
+{\bfseries Dark\+Olive\+Green1\+Bis} = 192
+, {\bfseries Dark\+Olive\+Green2} = 155
+, {\bfseries Dark\+Olive\+Green3} = 107
+, {\bfseries Dark\+Olive\+Green3\+Bis} = 113
+, \newline
+{\bfseries Dark\+Olive\+Green3\+Ter} = 149
+, {\bfseries Dark\+Orange} = 208
+, {\bfseries Dark\+Orange3} = 130
+, {\bfseries Dark\+Orange3\+Bis} = 166
+, \newline
+{\bfseries Dark\+Red} = 52
+, {\bfseries Dark\+Red\+Bis} = 88
+, {\bfseries Dark\+Sea\+Green} = 108
+, {\bfseries Dark\+Sea\+Green1} = 158
+, \newline
+{\bfseries Dark\+Sea\+Green1\+Bis} = 193
+, {\bfseries Dark\+Sea\+Green2} = 151
+, {\bfseries Dark\+Sea\+Green2\+Bis} = 157
+, {\bfseries Dark\+Sea\+Green3} = 115
+, \newline
+{\bfseries Dark\+Sea\+Green3\+Bis} = 150
+, {\bfseries Dark\+Sea\+Green4} = 65
+, {\bfseries Dark\+Sea\+Green4\+Bis} = 71
+, {\bfseries Dark\+Slate\+Gray1} = 123
+, \newline
+{\bfseries Dark\+Slate\+Gray2} = 87
+, {\bfseries Dark\+Slate\+Gray3} = 116
+, {\bfseries Dark\+Turquoise} = 44
+, {\bfseries Dark\+Violet} = 128
+, \newline
+{\bfseries Dark\+Violet\+Bis} = 92
+, {\bfseries Deep\+Pink1} = 198
+, {\bfseries Deep\+Pink1\+Bis} = 199
+, {\bfseries Deep\+Pink2} = 197
+, \newline
+{\bfseries Deep\+Pink3} = 161
+, {\bfseries Deep\+Pink3\+Bis} = 162
+, {\bfseries Deep\+Pink4} = 125
+, {\bfseries Deep\+Pink4\+Bis} = 89
+, \newline
+{\bfseries Deep\+Pink4\+Ter} = 53
+, {\bfseries Deep\+Sky\+Blue1} = 39
+, {\bfseries Deep\+Sky\+Blue2} = 38
+, {\bfseries Deep\+Sky\+Blue3} = 31
+, \newline
+{\bfseries Deep\+Sky\+Blue3\+Bis} = 32
+, {\bfseries Deep\+Sky\+Blue4} = 23
+, {\bfseries Deep\+Sky\+Blue4\+Bis} = 24
+, {\bfseries Deep\+Sky\+Blue4\+Ter} = 25
+, \newline
+{\bfseries Dodger\+Blue1} = 33
+, {\bfseries Dodger\+Blue2} = 27
+, {\bfseries Dodger\+Blue3} = 26
+, {\bfseries Gold1} = 220
+, \newline
+{\bfseries Gold3} = 142
+, {\bfseries Gold3\+Bis} = 178
+, {\bfseries Green1} = 46
+, {\bfseries Green3} = 34
+, \newline
+{\bfseries Green3\+Bis} = 40
+, {\bfseries Green4} = 28
+, {\bfseries Green\+Yellow} = 154
+, {\bfseries Grey0} = 16
+, \newline
+{\bfseries Grey100} = 231
+, {\bfseries Grey11} = 234
+, {\bfseries Grey15} = 235
+, {\bfseries Grey19} = 236
+, \newline
+{\bfseries Grey23} = 237
+, {\bfseries Grey27} = 238
+, {\bfseries Grey3} = 232
+, {\bfseries Grey30} = 239
+, \newline
+{\bfseries Grey35} = 240
+, {\bfseries Grey37} = 59
+, {\bfseries Grey39} = 241
+, {\bfseries Grey42} = 242
+, \newline
+{\bfseries Grey46} = 243
+, {\bfseries Grey50} = 244
+, {\bfseries Grey53} = 102
+, {\bfseries Grey54} = 245
+, \newline
+{\bfseries Grey58} = 246
+, {\bfseries Grey62} = 247
+, {\bfseries Grey63} = 139
+, {\bfseries Grey66} = 248
+, \newline
+{\bfseries Grey69} = 145
+, {\bfseries Grey7} = 233
+, {\bfseries Grey70} = 249
+, {\bfseries Grey74} = 250
+, \newline
+{\bfseries Grey78} = 251
+, {\bfseries Grey82} = 252
+, {\bfseries Grey84} = 188
+, {\bfseries Grey85} = 253
+, \newline
+{\bfseries Grey89} = 254
+, {\bfseries Grey93} = 255
+, {\bfseries Honeydew2} = 194
+, {\bfseries Hot\+Pink} = 205
+, \newline
+{\bfseries Hot\+Pink2} = 169
+, {\bfseries Hot\+Pink3} = 132
+, {\bfseries Hot\+Pink3\+Bis} = 168
+, {\bfseries Hot\+Pink\+Bis} = 206
+, \newline
+{\bfseries Indian\+Red} = 131
+, {\bfseries Indian\+Red1} = 203
+, {\bfseries Indian\+Red1\+Bis} = 204
+, {\bfseries Indian\+Red\+Bis} = 167
+, \newline
+{\bfseries Khaki1} = 228
+, {\bfseries Khaki3} = 185
+, {\bfseries Light\+Coral} = 210
+, {\bfseries Light\+Cyan1\+Bis} = 195
+, \newline
+{\bfseries Light\+Cyan3} = 152
+, {\bfseries Light\+Goldenrod1} = 227
+, {\bfseries Light\+Goldenrod2} = 186
+, {\bfseries Light\+Goldenrod2\+Bis} = 221
+, \newline
+{\bfseries Light\+Goldenrod2\+Ter} = 222
+, {\bfseries Light\+Goldenrod3} = 179
+, {\bfseries Light\+Green} = 119
+, {\bfseries Light\+Green\+Bis} = 120
+, \newline
+{\bfseries Light\+Pink1} = 217
+, {\bfseries Light\+Pink3} = 174
+, {\bfseries Light\+Pink4} = 95
+, {\bfseries Light\+Salmon1} = 216
+, \newline
+{\bfseries Light\+Salmon3} = 137
+, {\bfseries Light\+Salmon3\+Bis} = 173
+, {\bfseries Light\+Sea\+Green} = 37
+, {\bfseries Light\+Sky\+Blue1} = 153
+, \newline
+{\bfseries Light\+Sky\+Blue3} = 109
+, {\bfseries Light\+Sky\+Blue3\+Bis} = 110
+, {\bfseries Light\+Slate\+Blue} = 105
+, {\bfseries Light\+Slate\+Grey} = 103
+, \newline
+{\bfseries Light\+Steel\+Blue} = 147
+, {\bfseries Light\+Steel\+Blue1} = 189
+, {\bfseries Light\+Steel\+Blue3} = 146
+, {\bfseries Light\+Yellow3} = 187
+, \newline
+{\bfseries Magenta1} = 201
+, {\bfseries Magenta2} = 165
+, {\bfseries Magenta2\+Bis} = 200
+, {\bfseries Magenta3} = 127
+, \newline
+{\bfseries Magenta3\+Bis} = 163
+, {\bfseries Magenta3\+Ter} = 164
+, {\bfseries Medium\+Orchid} = 134
+, {\bfseries Medium\+Orchid1} = 171
+, \newline
+{\bfseries Medium\+Orchid1\+Bis} = 207
+, {\bfseries Medium\+Orchid3} = 133
+, {\bfseries Medium\+Purple} = 104
+, {\bfseries Medium\+Purple1} = 141
+, \newline
+{\bfseries Medium\+Purple2} = 135
+, {\bfseries Medium\+Purple2\+Bis} = 140
+, {\bfseries Medium\+Purple3} = 97
+, {\bfseries Medium\+Purple3\+Bis} = 98
+, \newline
+{\bfseries Medium\+Purple4} = 60
+, {\bfseries Medium\+Spring\+Green} = 49
+, {\bfseries Medium\+Turquoise} = 80
+, {\bfseries Medium\+Violet\+Red} = 126
+, \newline
+{\bfseries Misty\+Rose1} = 224
+, {\bfseries Misty\+Rose3} = 181
+, {\bfseries Navajo\+White1} = 223
+, {\bfseries Navajo\+White3} = 144
+, \newline
+{\bfseries Navy\+Blue} = 17
+, {\bfseries Orange1} = 214
+, {\bfseries Orange3} = 172
+, {\bfseries Orange4} = 58
+, \newline
+{\bfseries Orange4\+Bis} = 94
+, {\bfseries Orange\+Red1} = 202
+, {\bfseries Orchid} = 170
+, {\bfseries Orchid1} = 213
+, \newline
+{\bfseries Orchid2} = 212
+, {\bfseries Pale\+Green1} = 121
+, {\bfseries Pale\+Green1\+Bis} = 156
+, {\bfseries Pale\+Green3} = 114
+, \newline
+{\bfseries Pale\+Green3\+Bis} = 77
+, {\bfseries Pale\+Turquoise1} = 159
+, {\bfseries Pale\+Turquoise4} = 66
+, {\bfseries Pale\+Violet\+Red1} = 211
+, \newline
+{\bfseries Pink1} = 218
+, {\bfseries Pink3} = 175
+, {\bfseries Plum1} = 219
+, {\bfseries Plum2} = 183
+, \newline
+{\bfseries Plum3} = 176
+, {\bfseries Plum4} = 96
+, {\bfseries Purple} = 129
+, {\bfseries Purple3} = 56
+, \newline
+{\bfseries Purple4} = 54
+, {\bfseries Purple4\+Bis} = 55
+, {\bfseries Purple\+Bis} = 93
+, {\bfseries Red1} = 196
+, \newline
+{\bfseries Red3} = 124
+, {\bfseries Red3\+Bis} = 160
+, {\bfseries Rosy\+Brown} = 138
+, {\bfseries Royal\+Blue1} = 63
+, \newline
+{\bfseries Salmon1} = 209
+, {\bfseries Sandy\+Brown} = 215
+, {\bfseries Sea\+Green1} = 84
+, {\bfseries Sea\+Green1\+Bis} = 85
+, \newline
+{\bfseries Sea\+Green2} = 83
+, {\bfseries Sea\+Green3} = 78
+, {\bfseries Sky\+Blue1} = 117
+, {\bfseries Sky\+Blue2} = 111
+, \newline
+{\bfseries Sky\+Blue3} = 74
+, {\bfseries Slate\+Blue1} = 99
+, {\bfseries Slate\+Blue3} = 61
+, {\bfseries Slate\+Blue3\+Bis} = 62
+, \newline
+{\bfseries Spring\+Green1} = 48
+, {\bfseries Spring\+Green2} = 42
+, {\bfseries Spring\+Green2\+Bis} = 47
+, {\bfseries Spring\+Green3} = 35
+, \newline
+{\bfseries Spring\+Green3\+Bis} = 41
+, {\bfseries Spring\+Green4} = 29
+, {\bfseries Steel\+Blue} = 67
+, {\bfseries Steel\+Blue1} = 75
+, \newline
+{\bfseries Steel\+Blue1\+Bis} = 81
+, {\bfseries Steel\+Blue3} = 68
+, {\bfseries Tan} = 180
+, {\bfseries Thistle1} = 225
+, \newline
+{\bfseries Thistle3} = 182
+, {\bfseries Turquoise2} = 45
+, {\bfseries Turquoise4} = 30
+, {\bfseries Violet} = 177
+, \newline
+{\bfseries Wheat1} = 229
+, {\bfseries Wheat4} = 101
+, {\bfseries Yellow1} = 226
+, {\bfseries Yellow2} = 190
+, \newline
+{\bfseries Yellow3} = 148
+, {\bfseries Yellow3\+Bis} = 184
+, {\bfseries Yellow4} = 100
+, {\bfseries Yellow4\+Bis} = 106
+, \newline
+{\bfseries Aquamarine1} = 122
+, {\bfseries Aquamarine1\+Bis} = 86
+, {\bfseries Aquamarine3} = 79
+, {\bfseries Blue1} = 21
+, \newline
+{\bfseries Blue3} = 19
+, {\bfseries Blue3\+Bis} = 20
+, {\bfseries Blue\+Violet} = 57
+, {\bfseries Cadet\+Blue} = 72
+, \newline
+{\bfseries Cadet\+Blue\+Bis} = 73
+, {\bfseries Chartreuse1} = 118
+, {\bfseries Chartreuse2} = 112
+, {\bfseries Chartreuse2\+Bis} = 82
+, \newline
+{\bfseries Chartreuse3} = 70
+, {\bfseries Chartreuse3\+Bis} = 76
+, {\bfseries Chartreuse4} = 64
+, {\bfseries Cornflower\+Blue} = 69
+, \newline
+{\bfseries Cornsilk1} = 230
+, {\bfseries Cyan1} = 51
+, {\bfseries Cyan2} = 50
+, {\bfseries Cyan3} = 43
+, \newline
+{\bfseries Dark\+Blue} = 18
+, {\bfseries Dark\+Cyan} = 36
+, {\bfseries Dark\+Goldenrod} = 136
+, {\bfseries Dark\+Green} = 22
+, \newline
+{\bfseries Dark\+Khaki} = 143
+, {\bfseries Dark\+Magenta} = 90
+, {\bfseries Dark\+Magenta\+Bis} = 91
+, {\bfseries Dark\+Olive\+Green1} = 191
+, \newline
+{\bfseries Dark\+Olive\+Green1\+Bis} = 192
+, {\bfseries Dark\+Olive\+Green2} = 155
+, {\bfseries Dark\+Olive\+Green3} = 107
+, {\bfseries Dark\+Olive\+Green3\+Bis} = 113
+, \newline
+{\bfseries Dark\+Olive\+Green3\+Ter} = 149
+, {\bfseries Dark\+Orange} = 208
+, {\bfseries Dark\+Orange3} = 130
+, {\bfseries Dark\+Orange3\+Bis} = 166
+, \newline
+{\bfseries Dark\+Red} = 52
+, {\bfseries Dark\+Red\+Bis} = 88
+, {\bfseries Dark\+Sea\+Green} = 108
+, {\bfseries Dark\+Sea\+Green1} = 158
+, \newline
+{\bfseries Dark\+Sea\+Green1\+Bis} = 193
+, {\bfseries Dark\+Sea\+Green2} = 151
+, {\bfseries Dark\+Sea\+Green2\+Bis} = 157
+, {\bfseries Dark\+Sea\+Green3} = 115
+, \newline
+{\bfseries Dark\+Sea\+Green3\+Bis} = 150
+, {\bfseries Dark\+Sea\+Green4} = 65
+, {\bfseries Dark\+Sea\+Green4\+Bis} = 71
+, {\bfseries Dark\+Slate\+Gray1} = 123
+, \newline
+{\bfseries Dark\+Slate\+Gray2} = 87
+, {\bfseries Dark\+Slate\+Gray3} = 116
+, {\bfseries Dark\+Turquoise} = 44
+, {\bfseries Dark\+Violet} = 128
+, \newline
+{\bfseries Dark\+Violet\+Bis} = 92
+, {\bfseries Deep\+Pink1} = 198
+, {\bfseries Deep\+Pink1\+Bis} = 199
+, {\bfseries Deep\+Pink2} = 197
+, \newline
+{\bfseries Deep\+Pink3} = 161
+, {\bfseries Deep\+Pink3\+Bis} = 162
+, {\bfseries Deep\+Pink4} = 125
+, {\bfseries Deep\+Pink4\+Bis} = 89
+, \newline
+{\bfseries Deep\+Pink4\+Ter} = 53
+, {\bfseries Deep\+Sky\+Blue1} = 39
+, {\bfseries Deep\+Sky\+Blue2} = 38
+, {\bfseries Deep\+Sky\+Blue3} = 31
+, \newline
+{\bfseries Deep\+Sky\+Blue3\+Bis} = 32
+, {\bfseries Deep\+Sky\+Blue4} = 23
+, {\bfseries Deep\+Sky\+Blue4\+Bis} = 24
+, {\bfseries Deep\+Sky\+Blue4\+Ter} = 25
+, \newline
+{\bfseries Dodger\+Blue1} = 33
+, {\bfseries Dodger\+Blue2} = 27
+, {\bfseries Dodger\+Blue3} = 26
+, {\bfseries Gold1} = 220
+, \newline
+{\bfseries Gold3} = 142
+, {\bfseries Gold3\+Bis} = 178
+, {\bfseries Green1} = 46
+, {\bfseries Green3} = 34
+, \newline
+{\bfseries Green3\+Bis} = 40
+, {\bfseries Green4} = 28
+, {\bfseries Green\+Yellow} = 154
+, {\bfseries Grey0} = 16
+, \newline
+{\bfseries Grey100} = 231
+, {\bfseries Grey11} = 234
+, {\bfseries Grey15} = 235
+, {\bfseries Grey19} = 236
+, \newline
+{\bfseries Grey23} = 237
+, {\bfseries Grey27} = 238
+, {\bfseries Grey3} = 232
+, {\bfseries Grey30} = 239
+, \newline
+{\bfseries Grey35} = 240
+, {\bfseries Grey37} = 59
+, {\bfseries Grey39} = 241
+, {\bfseries Grey42} = 242
+, \newline
+{\bfseries Grey46} = 243
+, {\bfseries Grey50} = 244
+, {\bfseries Grey53} = 102
+, {\bfseries Grey54} = 245
+, \newline
+{\bfseries Grey58} = 246
+, {\bfseries Grey62} = 247
+, {\bfseries Grey63} = 139
+, {\bfseries Grey66} = 248
+, \newline
+{\bfseries Grey69} = 145
+, {\bfseries Grey7} = 233
+, {\bfseries Grey70} = 249
+, {\bfseries Grey74} = 250
+, \newline
+{\bfseries Grey78} = 251
+, {\bfseries Grey82} = 252
+, {\bfseries Grey84} = 188
+, {\bfseries Grey85} = 253
+, \newline
+{\bfseries Grey89} = 254
+, {\bfseries Grey93} = 255
+, {\bfseries Honeydew2} = 194
+, {\bfseries Hot\+Pink} = 205
+, \newline
+{\bfseries Hot\+Pink2} = 169
+, {\bfseries Hot\+Pink3} = 132
+, {\bfseries Hot\+Pink3\+Bis} = 168
+, {\bfseries Hot\+Pink\+Bis} = 206
+, \newline
+{\bfseries Indian\+Red} = 131
+, {\bfseries Indian\+Red1} = 203
+, {\bfseries Indian\+Red1\+Bis} = 204
+, {\bfseries Indian\+Red\+Bis} = 167
+, \newline
+{\bfseries Khaki1} = 228
+, {\bfseries Khaki3} = 185
+, {\bfseries Light\+Coral} = 210
+, {\bfseries Light\+Cyan1\+Bis} = 195
+, \newline
+{\bfseries Light\+Cyan3} = 152
+, {\bfseries Light\+Goldenrod1} = 227
+, {\bfseries Light\+Goldenrod2} = 186
+, {\bfseries Light\+Goldenrod2\+Bis} = 221
+, \newline
+{\bfseries Light\+Goldenrod2\+Ter} = 222
+, {\bfseries Light\+Goldenrod3} = 179
+, {\bfseries Light\+Green} = 119
+, {\bfseries Light\+Green\+Bis} = 120
+, \newline
+{\bfseries Light\+Pink1} = 217
+, {\bfseries Light\+Pink3} = 174
+, {\bfseries Light\+Pink4} = 95
+, {\bfseries Light\+Salmon1} = 216
+, \newline
+{\bfseries Light\+Salmon3} = 137
+, {\bfseries Light\+Salmon3\+Bis} = 173
+, {\bfseries Light\+Sea\+Green} = 37
+, {\bfseries Light\+Sky\+Blue1} = 153
+, \newline
+{\bfseries Light\+Sky\+Blue3} = 109
+, {\bfseries Light\+Sky\+Blue3\+Bis} = 110
+, {\bfseries Light\+Slate\+Blue} = 105
+, {\bfseries Light\+Slate\+Grey} = 103
+, \newline
+{\bfseries Light\+Steel\+Blue} = 147
+, {\bfseries Light\+Steel\+Blue1} = 189
+, {\bfseries Light\+Steel\+Blue3} = 146
+, {\bfseries Light\+Yellow3} = 187
+, \newline
+{\bfseries Magenta1} = 201
+, {\bfseries Magenta2} = 165
+, {\bfseries Magenta2\+Bis} = 200
+, {\bfseries Magenta3} = 127
+, \newline
+{\bfseries Magenta3\+Bis} = 163
+, {\bfseries Magenta3\+Ter} = 164
+, {\bfseries Medium\+Orchid} = 134
+, {\bfseries Medium\+Orchid1} = 171
+, \newline
+{\bfseries Medium\+Orchid1\+Bis} = 207
+, {\bfseries Medium\+Orchid3} = 133
+, {\bfseries Medium\+Purple} = 104
+, {\bfseries Medium\+Purple1} = 141
+, \newline
+{\bfseries Medium\+Purple2} = 135
+, {\bfseries Medium\+Purple2\+Bis} = 140
+, {\bfseries Medium\+Purple3} = 97
+, {\bfseries Medium\+Purple3\+Bis} = 98
+, \newline
+{\bfseries Medium\+Purple4} = 60
+, {\bfseries Medium\+Spring\+Green} = 49
+, {\bfseries Medium\+Turquoise} = 80
+, {\bfseries Medium\+Violet\+Red} = 126
+, \newline
+{\bfseries Misty\+Rose1} = 224
+, {\bfseries Misty\+Rose3} = 181
+, {\bfseries Navajo\+White1} = 223
+, {\bfseries Navajo\+White3} = 144
+, \newline
+{\bfseries Navy\+Blue} = 17
+, {\bfseries Orange1} = 214
+, {\bfseries Orange3} = 172
+, {\bfseries Orange4} = 58
+, \newline
+{\bfseries Orange4\+Bis} = 94
+, {\bfseries Orange\+Red1} = 202
+, {\bfseries Orchid} = 170
+, {\bfseries Orchid1} = 213
+, \newline
+{\bfseries Orchid2} = 212
+, {\bfseries Pale\+Green1} = 121
+, {\bfseries Pale\+Green1\+Bis} = 156
+, {\bfseries Pale\+Green3} = 114
+, \newline
+{\bfseries Pale\+Green3\+Bis} = 77
+, {\bfseries Pale\+Turquoise1} = 159
+, {\bfseries Pale\+Turquoise4} = 66
+, {\bfseries Pale\+Violet\+Red1} = 211
+, \newline
+{\bfseries Pink1} = 218
+, {\bfseries Pink3} = 175
+, {\bfseries Plum1} = 219
+, {\bfseries Plum2} = 183
+, \newline
+{\bfseries Plum3} = 176
+, {\bfseries Plum4} = 96
+, {\bfseries Purple} = 129
+, {\bfseries Purple3} = 56
+, \newline
+{\bfseries Purple4} = 54
+, {\bfseries Purple4\+Bis} = 55
+, {\bfseries Purple\+Bis} = 93
+, {\bfseries Red1} = 196
+, \newline
+{\bfseries Red3} = 124
+, {\bfseries Red3\+Bis} = 160
+, {\bfseries Rosy\+Brown} = 138
+, {\bfseries Royal\+Blue1} = 63
+, \newline
+{\bfseries Salmon1} = 209
+, {\bfseries Sandy\+Brown} = 215
+, {\bfseries Sea\+Green1} = 84
+, {\bfseries Sea\+Green1\+Bis} = 85
+, \newline
+{\bfseries Sea\+Green2} = 83
+, {\bfseries Sea\+Green3} = 78
+, {\bfseries Sky\+Blue1} = 117
+, {\bfseries Sky\+Blue2} = 111
+, \newline
+{\bfseries Sky\+Blue3} = 74
+, {\bfseries Slate\+Blue1} = 99
+, {\bfseries Slate\+Blue3} = 61
+, {\bfseries Slate\+Blue3\+Bis} = 62
+, \newline
+{\bfseries Spring\+Green1} = 48
+, {\bfseries Spring\+Green2} = 42
+, {\bfseries Spring\+Green2\+Bis} = 47
+, {\bfseries Spring\+Green3} = 35
+, \newline
+{\bfseries Spring\+Green3\+Bis} = 41
+, {\bfseries Spring\+Green4} = 29
+, {\bfseries Steel\+Blue} = 67
+, {\bfseries Steel\+Blue1} = 75
+, \newline
+{\bfseries Steel\+Blue1\+Bis} = 81
+, {\bfseries Steel\+Blue3} = 68
+, {\bfseries Tan} = 180
+, {\bfseries Thistle1} = 225
+, \newline
+{\bfseries Thistle3} = 182
+, {\bfseries Turquoise2} = 45
+, {\bfseries Turquoise4} = 30
+, {\bfseries Violet} = 177
+, \newline
+{\bfseries Wheat1} = 229
+, {\bfseries Wheat4} = 101
+, {\bfseries Yellow1} = 226
+, {\bfseries Yellow2} = 190
+, \newline
+{\bfseries Yellow3} = 148
+, {\bfseries Yellow3\+Bis} = 184
+, {\bfseries Yellow4} = 100
+, {\bfseries Yellow4\+Bis} = 106
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classftxui_1_1Color_afa1676ff15c48927d27751829396f491}\label{classftxui_1_1Color_afa1676ff15c48927d27751829396f491} 
+{\bfseries Color} ()
+\begin{DoxyCompactList}\small\item\em Build a transparent color. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Color_a06c87e74325cb19e55ea9dd4fe320677}\label{classftxui_1_1Color_a06c87e74325cb19e55ea9dd4fe320677} 
+{\bfseries Color} (Palette1 index)
+\begin{DoxyCompactList}\small\item\em Build a transparent color. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Color_a95b8b3e462762308b6c46de49a02ff0f}\label{classftxui_1_1Color_a95b8b3e462762308b6c46de49a02ff0f} 
+{\bfseries Color} (Palette16 index)
+\begin{DoxyCompactList}\small\item\em Build a transparent using Palette16 colors. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Color_a78bcc3c9eae07ce8e407907220bd3fe6}\label{classftxui_1_1Color_a78bcc3c9eae07ce8e407907220bd3fe6} 
+{\bfseries Color} (Palette256 index)
+\begin{DoxyCompactList}\small\item\em Build a transparent using Palette256 colors. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classftxui_1_1Color_ad05434bb33f46d9f52be1b4d05b72c23}{Color}} (uint8\+\_\+t red, uint8\+\_\+t green, uint8\+\_\+t blue)
+\begin{DoxyCompactList}\small\item\em Build a \doxylink{classftxui_1_1Color}{Color} from its RGB representation. \href{https://en.wikipedia.org/wiki/RGB_color_model}{\texttt{ https\+://en.\+wikipedia.\+org/wiki/\+RGB\+\_\+color\+\_\+model}}. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Color_af7f6f401c71f0af6cd77034f08444ff0}\label{classftxui_1_1Color_af7f6f401c71f0af6cd77034f08444ff0} 
+bool {\bfseries operator==} (const \mbox{\hyperlink{classftxui_1_1Color}{Color}} \&rhs) const
+\item 
+\Hypertarget{classftxui_1_1Color_a50600837b7f648657cd9a94d63aba52e}\label{classftxui_1_1Color_a50600837b7f648657cd9a94d63aba52e} 
+bool {\bfseries operator!=} (const \mbox{\hyperlink{classftxui_1_1Color}{Color}} \&rhs) const
+\item 
+\Hypertarget{classftxui_1_1Color_aa43788407320c8631f559daa7cdd641b}\label{classftxui_1_1Color_aa43788407320c8631f559daa7cdd641b} 
+std\+::string {\bfseries Print} (bool is\+\_\+background\+\_\+color) const
+\item 
+\Hypertarget{classftxui_1_1Color_a06c87e74325cb19e55ea9dd4fe320677}\label{classftxui_1_1Color_a06c87e74325cb19e55ea9dd4fe320677} 
+{\bfseries Color} (Palette1 index)
+\item 
+\Hypertarget{classftxui_1_1Color_a95b8b3e462762308b6c46de49a02ff0f}\label{classftxui_1_1Color_a95b8b3e462762308b6c46de49a02ff0f} 
+{\bfseries Color} (Palette16 index)
+\item 
+\Hypertarget{classftxui_1_1Color_a78bcc3c9eae07ce8e407907220bd3fe6}\label{classftxui_1_1Color_a78bcc3c9eae07ce8e407907220bd3fe6} 
+{\bfseries Color} (Palette256 index)
+\item 
+\Hypertarget{classftxui_1_1Color_ad05434bb33f46d9f52be1b4d05b72c23}\label{classftxui_1_1Color_ad05434bb33f46d9f52be1b4d05b72c23} 
+{\bfseries Color} (uint8\+\_\+t red, uint8\+\_\+t green, uint8\+\_\+t blue)
+\item 
+\Hypertarget{classftxui_1_1Color_af7f6f401c71f0af6cd77034f08444ff0}\label{classftxui_1_1Color_af7f6f401c71f0af6cd77034f08444ff0} 
+bool {\bfseries operator==} (const \mbox{\hyperlink{classftxui_1_1Color}{Color}} \&rhs) const
+\item 
+\Hypertarget{classftxui_1_1Color_a50600837b7f648657cd9a94d63aba52e}\label{classftxui_1_1Color_a50600837b7f648657cd9a94d63aba52e} 
+bool {\bfseries operator!=} (const \mbox{\hyperlink{classftxui_1_1Color}{Color}} \&rhs) const
+\item 
+\Hypertarget{classftxui_1_1Color_aa43788407320c8631f559daa7cdd641b}\label{classftxui_1_1Color_aa43788407320c8631f559daa7cdd641b} 
+std\+::string {\bfseries Print} (bool is\+\_\+background\+\_\+color) const
+\item 
+\Hypertarget{classftxui_1_1Color_a06c87e74325cb19e55ea9dd4fe320677}\label{classftxui_1_1Color_a06c87e74325cb19e55ea9dd4fe320677} 
+{\bfseries Color} (Palette1 index)
+\item 
+\Hypertarget{classftxui_1_1Color_a95b8b3e462762308b6c46de49a02ff0f}\label{classftxui_1_1Color_a95b8b3e462762308b6c46de49a02ff0f} 
+{\bfseries Color} (Palette16 index)
+\item 
+\Hypertarget{classftxui_1_1Color_a78bcc3c9eae07ce8e407907220bd3fe6}\label{classftxui_1_1Color_a78bcc3c9eae07ce8e407907220bd3fe6} 
+{\bfseries Color} (Palette256 index)
+\item 
+\Hypertarget{classftxui_1_1Color_ad05434bb33f46d9f52be1b4d05b72c23}\label{classftxui_1_1Color_ad05434bb33f46d9f52be1b4d05b72c23} 
+{\bfseries Color} (uint8\+\_\+t red, uint8\+\_\+t green, uint8\+\_\+t blue)
+\item 
+\Hypertarget{classftxui_1_1Color_af7f6f401c71f0af6cd77034f08444ff0}\label{classftxui_1_1Color_af7f6f401c71f0af6cd77034f08444ff0} 
+bool {\bfseries operator==} (const \mbox{\hyperlink{classftxui_1_1Color}{Color}} \&rhs) const
+\item 
+\Hypertarget{classftxui_1_1Color_a50600837b7f648657cd9a94d63aba52e}\label{classftxui_1_1Color_a50600837b7f648657cd9a94d63aba52e} 
+bool {\bfseries operator!=} (const \mbox{\hyperlink{classftxui_1_1Color}{Color}} \&rhs) const
+\item 
+\Hypertarget{classftxui_1_1Color_aa43788407320c8631f559daa7cdd641b}\label{classftxui_1_1Color_aa43788407320c8631f559daa7cdd641b} 
+std\+::string {\bfseries Print} (bool is\+\_\+background\+\_\+color) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{classftxui_1_1Color}{Color}} \mbox{\hyperlink{classftxui_1_1Color_a73ea9ba5427b2e53a5e91c26c256b5bf}{RGB}} (uint8\+\_\+t red, uint8\+\_\+t green, uint8\+\_\+t blue)
+\begin{DoxyCompactList}\small\item\em Build a \doxylink{classftxui_1_1Color}{Color} from its RGB representation. \href{https://en.wikipedia.org/wiki/RGB_color_model}{\texttt{ https\+://en.\+wikipedia.\+org/wiki/\+RGB\+\_\+color\+\_\+model}}. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{classftxui_1_1Color}{Color}} \mbox{\hyperlink{classftxui_1_1Color_a3ec30f8faab02896b42e580765b2719e}{HSV}} (uint8\+\_\+t hue, uint8\+\_\+t saturation, uint8\+\_\+t value)
+\begin{DoxyCompactList}\small\item\em Build a \doxylink{classftxui_1_1Color}{Color} from its HSV representation. \href{https://en.wikipedia.org/wiki/HSL_and_HSV}{\texttt{ https\+://en.\+wikipedia.\+org/wiki/\+HSL\+\_\+and\+\_\+\+HSV}}. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Color_a95ac5de91407cc3ce9af281ddc1298bb}\label{classftxui_1_1Color_a95ac5de91407cc3ce9af281ddc1298bb} 
+static \mbox{\hyperlink{classftxui_1_1Color}{Color}} {\bfseries Interpolate} (float t, const \mbox{\hyperlink{classftxui_1_1Color}{Color}} \&a, const \mbox{\hyperlink{classftxui_1_1Color}{Color}} \&b)
+\item 
+\Hypertarget{classftxui_1_1Color_aa279358e671c3fd54daee8ff73d40cd3}\label{classftxui_1_1Color_aa279358e671c3fd54daee8ff73d40cd3} 
+static \mbox{\hyperlink{classftxui_1_1Color}{Color}} {\bfseries RGB} (uint8\+\_\+t red, uint8\+\_\+t green, uint8\+\_\+t blue)
+\item 
+\Hypertarget{classftxui_1_1Color_a8d439380ef4a91790eacd2481baaa280}\label{classftxui_1_1Color_a8d439380ef4a91790eacd2481baaa280} 
+static \mbox{\hyperlink{classftxui_1_1Color}{Color}} {\bfseries HSV} (uint8\+\_\+t hue, uint8\+\_\+t saturation, uint8\+\_\+t value)
+\item 
+\Hypertarget{classftxui_1_1Color_ae52f28dbfb0a684bdf3f3698ddf7ede4}\label{classftxui_1_1Color_ae52f28dbfb0a684bdf3f3698ddf7ede4} 
+static \mbox{\hyperlink{classftxui_1_1Color}{Color}} {\bfseries Interpolate} (float t, const \mbox{\hyperlink{classftxui_1_1Color}{Color}} \&a, const \mbox{\hyperlink{classftxui_1_1Color}{Color}} \&b)
+\item 
+\Hypertarget{classftxui_1_1Color_aa279358e671c3fd54daee8ff73d40cd3}\label{classftxui_1_1Color_aa279358e671c3fd54daee8ff73d40cd3} 
+static \mbox{\hyperlink{classftxui_1_1Color}{Color}} {\bfseries RGB} (uint8\+\_\+t red, uint8\+\_\+t green, uint8\+\_\+t blue)
+\item 
+\Hypertarget{classftxui_1_1Color_a8d439380ef4a91790eacd2481baaa280}\label{classftxui_1_1Color_a8d439380ef4a91790eacd2481baaa280} 
+static \mbox{\hyperlink{classftxui_1_1Color}{Color}} {\bfseries HSV} (uint8\+\_\+t hue, uint8\+\_\+t saturation, uint8\+\_\+t value)
+\item 
+\Hypertarget{classftxui_1_1Color_ae52f28dbfb0a684bdf3f3698ddf7ede4}\label{classftxui_1_1Color_ae52f28dbfb0a684bdf3f3698ddf7ede4} 
+static \mbox{\hyperlink{classftxui_1_1Color}{Color}} {\bfseries Interpolate} (float t, const \mbox{\hyperlink{classftxui_1_1Color}{Color}} \&a, const \mbox{\hyperlink{classftxui_1_1Color}{Color}} \&b)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A class representing terminal colors. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classftxui_1_1Color_ad05434bb33f46d9f52be1b4d05b72c23}\index{ftxui::Color@{ftxui::Color}!Color@{Color}}
+\index{Color@{Color}!ftxui::Color@{ftxui::Color}}
+\doxysubsubsection{\texorpdfstring{Color()}{Color()}}
+{\footnotesize\ttfamily \label{classftxui_1_1Color_ad05434bb33f46d9f52be1b4d05b72c23} 
+ftxui\+::\+Color\+::\+Color (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{red}{, }\item[{uint8\+\_\+t}]{green}{, }\item[{uint8\+\_\+t}]{blue}{}\end{DoxyParamCaption})}
+
+
+
+Build a \doxylink{classftxui_1_1Color}{Color} from its RGB representation. \href{https://en.wikipedia.org/wiki/RGB_color_model}{\texttt{ https\+://en.\+wikipedia.\+org/wiki/\+RGB\+\_\+color\+\_\+model}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em red} & The quantity of red \mbox{[}0,255\mbox{]} \\
+\hline
+{\em green} & The quantity of green \mbox{[}0,255\mbox{]} \\
+\hline
+{\em blue} & The quantity of blue \mbox{[}0,255\mbox{]} \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classftxui_1_1Color_a3ec30f8faab02896b42e580765b2719e}\index{ftxui::Color@{ftxui::Color}!HSV@{HSV}}
+\index{HSV@{HSV}!ftxui::Color@{ftxui::Color}}
+\doxysubsubsection{\texorpdfstring{HSV()}{HSV()}}
+{\footnotesize\ttfamily \label{classftxui_1_1Color_a3ec30f8faab02896b42e580765b2719e} 
+\mbox{\hyperlink{classftxui_1_1Color}{Color}} ftxui\+::\+Color\+::\+HSV (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{h}{, }\item[{uint8\+\_\+t}]{s}{, }\item[{uint8\+\_\+t}]{v}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Build a \doxylink{classftxui_1_1Color}{Color} from its HSV representation. \href{https://en.wikipedia.org/wiki/HSL_and_HSV}{\texttt{ https\+://en.\+wikipedia.\+org/wiki/\+HSL\+\_\+and\+\_\+\+HSV}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em h} & The hue of the color \mbox{[}0,255\mbox{]} \\
+\hline
+{\em s} & The "{}colorfulness"{} \mbox{[}0,255\mbox{]}. \\
+\hline
+{\em v} & The "{}\+Lightness"{} \mbox{[}0,255\mbox{]} \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classftxui_1_1Color_a73ea9ba5427b2e53a5e91c26c256b5bf}\index{ftxui::Color@{ftxui::Color}!RGB@{RGB}}
+\index{RGB@{RGB}!ftxui::Color@{ftxui::Color}}
+\doxysubsubsection{\texorpdfstring{RGB()}{RGB()}}
+{\footnotesize\ttfamily \label{classftxui_1_1Color_a73ea9ba5427b2e53a5e91c26c256b5bf} 
+\mbox{\hyperlink{classftxui_1_1Color}{Color}} ftxui\+::\+Color\+::\+RGB (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{red}{, }\item[{uint8\+\_\+t}]{green}{, }\item[{uint8\+\_\+t}]{blue}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Build a \doxylink{classftxui_1_1Color}{Color} from its RGB representation. \href{https://en.wikipedia.org/wiki/RGB_color_model}{\texttt{ https\+://en.\+wikipedia.\+org/wiki/\+RGB\+\_\+color\+\_\+model}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em red} & The quantity of red \mbox{[}0,255\mbox{]} \\
+\hline
+{\em green} & The quantity of green \mbox{[}0,255\mbox{]} \\
+\hline
+{\em blue} & The quantity of blue \mbox{[}0,255\mbox{]} \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+build-\/dbg/\+\_\+deps/ftxui-\/src/include/ftxui/screen/color.\+hpp\item 
+build/\+\_\+deps/ftxui-\/src/include/ftxui/screen/color.\+hpp\item 
+build\+\_\+emscripten/\+\_\+deps/ftxui-\/src/include/ftxui/screen/color.\+hpp\item 
+build-\/dbg/\+\_\+deps/ftxui-\/src/src/ftxui/screen/color.\+cpp\item 
+build/\+\_\+deps/ftxui-\/src/src/ftxui/screen/color.\+cpp\item 
+build\+\_\+emscripten/\+\_\+deps/ftxui-\/src/src/ftxui/screen/color.\+cpp\end{DoxyCompactItemize}

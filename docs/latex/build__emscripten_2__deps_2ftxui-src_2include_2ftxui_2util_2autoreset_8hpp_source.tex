@@ -1,0 +1,33 @@
+\doxysection{autoreset.\+hpp}
+\hypertarget{build__emscripten_2__deps_2ftxui-src_2include_2ftxui_2util_2autoreset_8hpp_source}{}\label{build__emscripten_2__deps_2ftxui-src_2include_2ftxui_2util_2autoreset_8hpp_source}\index{build\_emscripten/\_deps/ftxui-\/src/include/ftxui/util/autoreset.hpp@{build\_emscripten/\_deps/ftxui-\/src/include/ftxui/util/autoreset.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2020\ Arthur\ Sonzogni.\ All\ rights\ reserved.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Use\ of\ this\ source\ code\ is\ governed\ by\ the\ MIT\ license\ that\ can\ be\ found\ in}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ the\ LICENSE\ file.}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ FTXUI\_UTIL\_AUTORESET\_HPP}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ FTXUI\_UTIL\_AUTORESET\_HPP}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }ftxui\ \{}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00013\ \textcolor{keyword}{class\ }AutoReset\ \{}
+\DoxyCodeLine{00014\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00015\ \ \ AutoReset(T*\ variable,\ T\ new\_value)}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ :\ variable\_(variable),\ previous\_value\_(std::move(*variable))\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ *variable\_\ =\ std::move(new\_value);}
+\DoxyCodeLine{00018\ \ \ \}}
+\DoxyCodeLine{00019\ \ \ \string~AutoReset()\ \{\ *variable\_\ =\ std::move(previous\_value\_);\ \}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00022\ \ \ T*\ variable\_;}
+\DoxyCodeLine{00023\ \ \ T\ previous\_value\_;}
+\DoxyCodeLine{00024\ \};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \}\ \ \textcolor{comment}{//\ namespace\ ftxui}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ end\ of\ include\ guard:\ FTXUI\_UTIL\_AUTORESET\_HPP\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,53 @@
+\doxysection{src/dirsort/taglib\+\_\+parser.h File Reference}
+\hypertarget{taglib__parser_8h}{}\label{taglib__parser_8h}\index{src/dirsort/taglib\_parser.h@{src/dirsort/taglib\_parser.h}}
+{\ttfamily \#include $<$filesystem$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$sys/stat.\+h$>$}\newline
+{\ttfamily \#include $<$taglib/fileref.\+h$>$}\newline
+{\ttfamily \#include $<$taglib/tag.\+h$>$}\newline
+{\ttfamily \#include $<$taglib/tpropertymap.\+h$>$}\newline
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structMetadata}{Metadata}}
+\item 
+class \mbox{\hyperlink{classTagLibParser}{Tag\+Lib\+Parser}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{taglib__parser_8h_a1dd3093763fba77a033971b138eda516}{print\+Metadata}} (const \mbox{\hyperlink{structMetadata}{Metadata}} \&metadata)
+\item 
+void \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{send\+Err\+Msg}} (std\+::string \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debug\+Log\+Bool\+Str}}, std\+::string err\+Msg)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debug\+Log\+Bool\+Str}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{taglib__parser_8h_a1dd3093763fba77a033971b138eda516}\index{taglib\_parser.h@{taglib\_parser.h}!printMetadata@{printMetadata}}
+\index{printMetadata@{printMetadata}!taglib\_parser.h@{taglib\_parser.h}}
+\doxysubsubsection{\texorpdfstring{printMetadata()}{printMetadata()}}
+{\footnotesize\ttfamily \label{taglib__parser_8h_a1dd3093763fba77a033971b138eda516} 
+void print\+Metadata (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structMetadata}{Metadata}} \&}]{metadata}{}\end{DoxyParamCaption})}
+
+\Hypertarget{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}\index{taglib\_parser.h@{taglib\_parser.h}!sendErrMsg@{sendErrMsg}}
+\index{sendErrMsg@{sendErrMsg}!taglib\_parser.h@{taglib\_parser.h}}
+\doxysubsubsection{\texorpdfstring{sendErrMsg()}{sendErrMsg()}}
+{\footnotesize\ttfamily \label{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b} 
+void send\+Err\+Msg (\begin{DoxyParamCaption}\item[{std\+::string}]{debug\+Log\+Bool\+Str}{, }\item[{std\+::string}]{err\+Msg}{}\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}\index{taglib\_parser.h@{taglib\_parser.h}!debugLogBoolStr@{debugLogBoolStr}}
+\index{debugLogBoolStr@{debugLogBoolStr}!taglib\_parser.h@{taglib\_parser.h}}
+\doxysubsubsection{\texorpdfstring{debugLogBoolStr}{debugLogBoolStr}}
+{\footnotesize\ttfamily \label{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b} 
+std\+::string debug\+Log\+Bool\+Str}
+

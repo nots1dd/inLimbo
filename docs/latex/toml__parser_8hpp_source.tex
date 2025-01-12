@@ -1,0 +1,79 @@
+\doxysection{toml\+\_\+parser.\+hpp}
+\hypertarget{toml__parser_8hpp_source}{}\label{toml__parser_8hpp_source}\index{src/parser/toml\_parser.hpp@{src/parser/toml\_parser.hpp}}
+\mbox{\hyperlink{toml__parser_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ TOML\_PARSER\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ TOML\_PARSER\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}toml.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <filesystem>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{using\ namespace\ }std;}
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }fs\ =\ std::filesystem;}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ PARENT\_LIB\ \ \ \ \ \ \ \ \ \ \ \ "{}library"{}\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ PARENT\_LIB\_FIELD\_NAME\ "{}name"{}\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ PARENT\_LIB\_FIELD\_DIR\ \ "{}directory"{}\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ PARENT\_FTP\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}ftp"{}\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ PARENT\_FTP\_FIELD\_USER\ \ \ \ \ "{}username"{}\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ PARENT\_FTP\_FIELD\_SALT\ \ \ \ \ "{}salt"{}\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ PARENT\_FTP\_FIELD\_PWD\_HASH\ "{}password\_hash"{}\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ PARENT\_DBG\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}debug"{}\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ PARENT\_DBG\_FIELD\_PARSER\_LOG\ "{}parser\_log"{}\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{/*\ SPECIAL\ KEYBINDS\ MACROS\ */}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ PARENT\_KEYBINDS\ \ \ \ \ \ \ \ \ \ \ "{}keybinds"{}\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ SPECIAL\_KEYBIND\_ENTER\_STR\ "{}Enter"{}\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ SPECIAL\_KEYBIND\_TAB\_STR\ \ \ "{}Tab"{}\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ SPECIAL\_KEYBIND\_SPACE\_STR\ "{}Space"{}\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ PARENT\_COLORS\ "{}colors"{}\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00047\ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{toml__parser_8hpp_ac64fc49e7109184bcb320cfb361219af}{getConfigPath}}(\textcolor{keywordtype}{string}\ fileName)}
+\DoxyCodeLine{00048\ \{}
+\DoxyCodeLine{00049\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ homeDir\ =\ std::getenv(\textcolor{stringliteral}{"{}HOME"{}});}
+\DoxyCodeLine{00050\ \ \ \textcolor{keywordflow}{if}\ (!homeDir)}
+\DoxyCodeLine{00051\ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ cerr\ <<\ \textcolor{stringliteral}{"{}ERROR:\ HOME\ environment\ variable\ not\ found."{}}\ <<\ endl;}
+\DoxyCodeLine{00053\ \ \ \ \ exit(EXIT\_FAILURE);\ }
+\DoxyCodeLine{00054\ \ \ \}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \textcolor{comment}{//\ Construct\ the\ path\ to\ the\ config.toml\ in\ \$HOME/.config/inLimbo/}}
+\DoxyCodeLine{00057\ \ \ \textcolor{keywordtype}{string}\ configFilePath\ =\ string(homeDir)\ +\ \textcolor{stringliteral}{"{}/.config/inLimbo/"{}}\ +\ fileName;}
+\DoxyCodeLine{00058\ \ \ \textcolor{keywordflow}{return}\ configFilePath;}
+\DoxyCodeLine{00059\ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00069\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{toml__parser_8hpp_a9ae7f1652e5197b6891b1f3417f3a4e9}{configFileExists}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\&\ filePath)\ \{\ \textcolor{keywordflow}{return}\ fs::exists(filePath);\ \}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00080\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{toml__parser_8hpp_ab0f9ee0b01e2b1ec3208d0323ee8957b}{loadConfig}}()}
+\DoxyCodeLine{00081\ \{}
+\DoxyCodeLine{00082\ \ \ \textcolor{keywordtype}{string}\ configFilePath\ =\ \mbox{\hyperlink{toml__parser_8hpp_ac64fc49e7109184bcb320cfb361219af}{getConfigPath}}(\textcolor{stringliteral}{"{}config.toml"{}});}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{toml__parser_8hpp_a9ae7f1652e5197b6891b1f3417f3a4e9}{configFileExists}}(configFilePath))}
+\DoxyCodeLine{00085\ \ \ \{}
+\DoxyCodeLine{00086\ \ \ \ \ cerr\ <<\ \textcolor{stringliteral}{"{}ERROR:\ config.toml\ not\ found\ in\ "{}}\ <<\ configFilePath\ <<\ endl;}
+\DoxyCodeLine{00087\ \ \ \ \ exit(EXIT\_FAILURE);\ \textcolor{comment}{//\ Exit\ gracefully\ if\ the\ file\ is\ not\ found}}
+\DoxyCodeLine{00088\ \ \ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \textcolor{keywordflow}{return}\ toml::parse\_file(configFilePath);}
+\DoxyCodeLine{00091\ \}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00094\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{toml__parser_8hpp_a9635b1b895fa15bcf1184ca6dac8476b}{config}}\ =\ \mbox{\hyperlink{toml__parser_8hpp_ab0f9ee0b01e2b1ec3208d0323ee8957b}{loadConfig}}();}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00106\ string\_view\ \mbox{\hyperlink{toml__parser_8hpp_a19930571a1aced24a71d9a1d6e7c710a}{parseTOMLField}}(\textcolor{keywordtype}{string}\ parent,\ \textcolor{keywordtype}{string}\ field)}
+\DoxyCodeLine{00107\ \{}
+\DoxyCodeLine{00108\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{toml__parser_8hpp_a9635b1b895fa15bcf1184ca6dac8476b}{config}}[parent][field].value\_or(\textcolor{stringliteral}{"{}"{}}sv);\ }
+\DoxyCodeLine{00109\ \}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00121\ int64\_t\ \mbox{\hyperlink{toml__parser_8hpp_a0032a51dfcdddb12160bf671f29001f1}{parseTOMLFieldInt}}(\textcolor{keywordtype}{string}\ parent,\ \textcolor{keywordtype}{string}\ field)}
+\DoxyCodeLine{00122\ \{}
+\DoxyCodeLine{00123\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{toml__parser_8hpp_a9635b1b895fa15bcf1184ca6dac8476b}{config}}[parent][field].value\_or(-\/1);\ }
+\DoxyCodeLine{00124\ \}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

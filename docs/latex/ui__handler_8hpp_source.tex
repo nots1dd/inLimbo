@@ -1,0 +1,1510 @@
+\doxysection{ui\+\_\+handler.\+hpp}
+\hypertarget{ui__handler_8hpp_source}{}\label{ui__handler_8hpp_source}\index{src/ui/ui\_handler.hpp@{src/ui/ui\_handler.hpp}}
+\mbox{\hyperlink{ui__handler_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ FTXUI\_HANDLER\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ FTXUI\_HANDLER\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{audio__playback_8hpp}{../music/audio\_playback.hpp}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{scroller_8hpp}{./components/scroller.hpp}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{keymaps_8hpp}{keymaps.hpp}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{misc_8hpp}{misc.hpp}}"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{mpris-service_8hpp}{../dbus/mpris-\/service.hpp}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <future>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <iomanip>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <unordered\_set>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{using\ namespace\ }\mbox{\hyperlink{namespaceftxui}{ftxui}};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ STATUS\_PLAYING\ \ \ "{}<>"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ STATUS\_PAUSED\ \ \ \ "{}!!"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ LYRICS\_AVAIL\ \ \ \ \ "{}L*"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ ADDN\_PROPS\_AVAIL\ "{}\&*"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ STATUS\_BAR\_DELIM\ "{}\ |\ "{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ MAX\_LENGTH\_SONG\_NAME\ \ \ 50}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ MAX\_LENGTH\_ARTIST\_NAME\ 30}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ SHOW\_MAIN\_UI\ \ \ \ \ \ \ 0}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ SHOW\_HELP\_SCREEN\ \ \ 1}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ SHOW\_LYRICS\_SCREEN\ 2}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ SHOW\_QUEUE\_SCREEN\ \ 3}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ MIN\_DEBOUNCE\_TIME\_IN\_MS\ 500}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classMusicPlayer_aee98450231e7c0041c86dc25caa35c40}{MusicPlayer}}}
+\DoxyCodeLine{00044\ \{}
+\DoxyCodeLine{00045\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00046\ \ \ \mbox{\hyperlink{classMusicPlayer_aee98450231e7c0041c86dc25caa35c40}{MusicPlayer}}(}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{const}\ std::map<std::string,}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<std::string,\ std::map<\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int},\ std::map<unsigned\ int,\ Song>>>>\&}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ initial\_library)}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ :\ library(initial\_library)}
+\DoxyCodeLine{00051\ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ InitializeData();}
+\DoxyCodeLine{00053\ \ \ \ \ CreateComponents();}
+\DoxyCodeLine{00054\ \ \ \}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMusicPlayer_a70498c66baa2c8419a3ec018338e2378}{Run}}()}
+\DoxyCodeLine{00057\ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ mprisService\ =\ std::make\_unique<MPRISService>(\textcolor{stringliteral}{"{}inLimbo"{}});}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ std::thread\ mpris\_dbus\_thread([\&]\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ GMainLoop*\ loop\ =\ g\_main\_loop\_new(\textcolor{keyword}{nullptr},\ FALSE);}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ g\_main\_loop\_run(loop);}
+\DoxyCodeLine{00063\ \ \ \ \ \});}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ mpris\_dbus\_thread.detach();}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{auto}\ screen\ =\ ScreenInteractive::Fullscreen();}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00070\ \ \ \ \ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ std::thread\ refresh\_thread(}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ [\&]}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (!should\_quit)}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ namespace\ }std::chrono\_literals;}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Safely\ update\ volume}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ UpdateVolume();}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::this\_thread::sleep\_for(0.1s);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_playing)}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ current\_position\ +=\ 0.1;}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_position\ >=\ GetCurrentSongDuration())}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PlayNextSong();}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ UpdatePlayingState();}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Post\ a\ custom\ event\ to\ refresh\ the\ UI}}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ screen.PostEvent(Event::Custom);}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::exception\&\ e)}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ show\_dialog\ \ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ dialog\_message\ =\ \textcolor{stringliteral}{"{}Error\ in\ refresh\ thread:\ "{}}\ +\ std::string(e.what());}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (...)}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ show\_dialog\ \ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ dialog\_message\ =\ \textcolor{stringliteral}{"{}Unknown\ error\ occurred\ in\ refresh\ thread."{}};}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \ \ refresh\_thread.detach();\ \textcolor{comment}{//\ Detach\ thread\ to\ run\ independently}}
+\DoxyCodeLine{00112\ \ \ \ \ \}}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::exception\&\ e)}
+\DoxyCodeLine{00114\ \ \ \ \ \{}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ dialog\_message\ =\ \textcolor{stringliteral}{"{}Error\ starting\ refresh\ thread:\ "{}}\ +\ std::string(e.what());}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ show\_dialog\ \ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00117\ \ \ \ \ \}}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordflow}{catch}\ (...)}
+\DoxyCodeLine{00119\ \ \ \ \ \{}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ dialog\_message\ =\ \textcolor{stringliteral}{"{}Unknown\ error\ occurred\ while\ starting\ refresh\ thread."{}};}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ show\_dialog\ \ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00122\ \ \ \ \ \}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ screen\_\ =\ \&screen;}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00127\ \ \ \ \ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ screen.Loop(renderer);}
+\DoxyCodeLine{00129\ \ \ \ \ \}}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::exception\&\ e)}
+\DoxyCodeLine{00131\ \ \ \ \ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ dialog\_message\ =\ \textcolor{stringliteral}{"{}Error\ in\ UI\ loop:\ "{}}\ +\ std::string(e.what());}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ show\_dialog\ \ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00134\ \ \ \ \ \}}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordflow}{catch}\ (...)}
+\DoxyCodeLine{00136\ \ \ \ \ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ dialog\_message\ =\ \textcolor{stringliteral}{"{}Unknown\ error\ occurred\ in\ UI\ loop."{}};}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ show\_dialog\ \ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00139\ \ \ \ \ \}}
+\DoxyCodeLine{00140\ \ \ \}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00143\ \ \ \textcolor{keyword}{struct\ }PlayingState}
+\DoxyCodeLine{00144\ \ \ \{}
+\DoxyCodeLine{00145\ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ artist;}
+\DoxyCodeLine{00146\ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ title;}
+\DoxyCodeLine{00147\ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ genre;}
+\DoxyCodeLine{00148\ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ album;}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ has\_comment\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ has\_lyrics\ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ duration;}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ year\ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ track\ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ discNumber\ =\ 0;}
+\DoxyCodeLine{00155\ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lyrics;}
+\DoxyCodeLine{00156\ \ \ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ comment;}
+\DoxyCodeLine{00157\ \ \ \ \ std::unordered\_map<std::string,\ std::string>\ additionalProperties;}
+\DoxyCodeLine{00158\ \ \ \};}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ PlayingState\ current\_playing\_state;}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ std::unique\_ptr<MPRISService>\ mprisService;}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ Keybinds\ \ \ \ \ \ global\_keybinds\ =\ \mbox{\hyperlink{keymaps_8hpp_a140e0fecc49876baa6c265621cf96518}{parseKeybinds}}();}
+\DoxyCodeLine{00165\ \ \ InLimboColors\ global\_colors\ \ \ =\ \mbox{\hyperlink{colors_8hpp_a637d01c5fd950275d85073732fec1d08}{parseColors}}();}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ std::unique\_ptr<MiniAudioPlayer>\ audio\_player;}
+\DoxyCodeLine{00168\ \ \ std::mutex\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ play\_mutex;}
+\DoxyCodeLine{00169\ \ \ std::atomic<bool>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\_processing\{\textcolor{keyword}{false}\};}
+\DoxyCodeLine{00170\ \ \ std::atomic<bool>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\_playing\{\textcolor{keyword}{false}\};}
+\DoxyCodeLine{00171\ \ \ std::future<void>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ play\_future;}
+\DoxyCodeLine{00172\ \ \ std::atomic<bool>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\_thread\_running\{\textcolor{keyword}{false}\};}
+\DoxyCodeLine{00173\ \ \ std::thread\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ audio\_thread;}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ std::vector<Song>\ song\_queue;}
+\DoxyCodeLine{00176\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ current\_song\_queue\_index\ =\ 0;}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \textcolor{comment}{//\ Main\ data\ structure}}
+\DoxyCodeLine{00179\ \ \ std::map<std::string,\ std::map<std::string,\ std::map<unsigned\ int,\ std::map<unsigned\ int,\ Song>>>>}
+\DoxyCodeLine{00180\ \ \ \ \ library;}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \textcolor{comment}{//\ Navigation\ state}}
+\DoxyCodeLine{00183\ \ \ std::string\ \ current\_artist;}
+\DoxyCodeLine{00184\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ current\_disc\ \ =\ 1;}
+\DoxyCodeLine{00185\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ current\_track\ =\ 1;}
+\DoxyCodeLine{00186\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ show\_dialog\ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00187\ \ \ std::string\ \ dialog\_message;}
+\DoxyCodeLine{00188\ \ \ \textcolor{keywordtype}{double}\ \ \ \ \ \ \ seekBuffer;}
+\DoxyCodeLine{00189\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ first\_g\_pressed\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ Track\ the\ state\ of\ the\ first\ 'g'\ press}}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \textcolor{comment}{//\ Current\ view\ lists}}
+\DoxyCodeLine{00192\ \ \ std::vector<std::string>\ \ current\_artist\_names;}
+\DoxyCodeLine{00193\ \ \ std::vector<std::string>\ \ song\_queue\_names;}
+\DoxyCodeLine{00194\ \ \ std::vector<std::string>\ \ lyricLines;}
+\DoxyCodeLine{00195\ \ \ std::vector<Element>\ \ \ \ \ \ current\_song\_elements;}
+\DoxyCodeLine{00196\ \ \ std::vector<unsigned\ int>\ current\_inodes;}
+\DoxyCodeLine{00197\ \ \ std::unordered\_set<int>\ \ \ album\_name\_indices;}
+\DoxyCodeLine{00198\ \ \ \textcolor{keywordtype}{int}\ albums\_indices\_traversed\ =\ 1;\ \textcolor{comment}{//\ first\ element\ of\ current\_song\_elements\ is\ always\ an\ album}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \textcolor{comment}{//\ Player\ state}}
+\DoxyCodeLine{00201\ \ \ \textcolor{keywordtype}{int}\ selected\_artist\ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00202\ \ \ \textcolor{keywordtype}{int}\ selected\_song\_queue\ =\ 0;}
+\DoxyCodeLine{00203\ \ \ \textcolor{keywordtype}{int}\ selected\_inode\ \ \ \ \ \ =\ 1;\ \textcolor{comment}{//\ First\ element\ is\ always\ going\ to\ album\ name\ so\ we\ ignore\ it}}
+\DoxyCodeLine{00204\ \ \ \textcolor{keywordtype}{int}\ current\_lyric\_line\ \ =\ 0;}
+\DoxyCodeLine{00205\ \ \ std::vector<Element>\ lyricElements;}
+\DoxyCodeLine{00206\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ volume\ \ \ \ \ \ \ \ \ \ \ =\ 50;}
+\DoxyCodeLine{00207\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ muted\ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00208\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lastVolume\ \ \ \ \ \ \ =\ volume;}
+\DoxyCodeLine{00209\ \ \ \textcolor{keywordtype}{double}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ current\_position\ =\ 0;}
+\DoxyCodeLine{00210\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ active\_screen\ =}
+\DoxyCodeLine{00211\ \ \ \ \ 0;\ \textcolor{comment}{//\ 0\ -\/>\ Main\ UI\ ;\ 1\ -\/>\ Show\ help\ ;\ 2\ -\/>\ Show\ lyrics;\ 3\ -\/>\ Songs\ queue\ screen}}
+\DoxyCodeLine{00212\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ should\_quit\ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00213\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ focus\_on\_artists\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00214\ \ \ ScreenInteractive*\ screen\_\ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \ \ \textcolor{comment}{//\ UI\ Components}}
+\DoxyCodeLine{00217\ \ \ Component\ artists\_list;}
+\DoxyCodeLine{00218\ \ \ Component\ songs\_list;}
+\DoxyCodeLine{00219\ \ \ Component\ songs\_queue\_comp;}
+\DoxyCodeLine{00220\ \ \ Component\ scroller;}
+\DoxyCodeLine{00221\ \ \ Component\ lyrics\_scroller;}
+\DoxyCodeLine{00222\ \ \ Component\ renderer;}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \textcolor{keywordtype}{void}\ InitializeData()}
+\DoxyCodeLine{00225\ \ \ \{}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{comment}{//\ Initialize\ current\_artist\_names\ from\ library}}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ artist\_pair\ :\ library)}
+\DoxyCodeLine{00228\ \ \ \ \ \{}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ current\_artist\_names.push\_back(artist\_pair.first);}
+\DoxyCodeLine{00230\ \ \ \ \ \}}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{comment}{//\ Sort\ artist\ names\ alphabetically}}
+\DoxyCodeLine{00233\ \ \ \ \ std::sort(current\_artist\_names.begin(),\ current\_artist\_names.end());}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{comment}{//\ Initialize\ first\ artist's\ songs\ if\ available}}
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keywordflow}{if}\ (!current\_artist\_names.empty())}
+\DoxyCodeLine{00237\ \ \ \ \ \{}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ UpdateSongsForArtist(current\_artist\_names[0]);}
+\DoxyCodeLine{00239\ \ \ \ \ \}}
+\DoxyCodeLine{00240\ \ \ \}}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \textcolor{comment}{/*\ Miniaudio\ class\ integrations\ */}}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \textcolor{keywordtype}{void}\ PlayCurrentSong()}
+\DoxyCodeLine{00245\ \ \ \{}
+\DoxyCodeLine{00246\ \ \ \ \ \{}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(play\_mutex);}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_processing)}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};\ \textcolor{comment}{//\ Another\ invocation\ is\ already\ running}}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ is\_processing\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00253\ \ \ \ \ \}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \ \ \ \ play\_future\ =}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ std::async(std::launch::async,}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [\textcolor{keyword}{this}]()}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(play\_mutex);}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!audio\_player)}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ audio\_player\ =\ std::make\_unique<MiniAudioPlayer>();}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Song*\ current\_song\ =\ GetCurrentSongFromQueue();}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!current\_song)}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Error:\ No\ current\ song\ found."{}});}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ file\_path\ =\ current\_song-\/>\mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}}.\mbox{\hyperlink{structMetadata_a107cf834ce2cbac4def960a2f922cfae}{filePath}};}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (file\_path.empty())}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Error:\ Invalid\ file\ path."{}});}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(play\_mutex);}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_playing)}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ audio\_player-\/>stop();\ \textcolor{comment}{//\ Stop\ the\ current\ song\ if\ playing}}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\_playing\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Load\ the\ audio\ file}}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ loadAudioFileStatus\ =\ audio\_player-\/>loadFile(file\_path);}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (loadAudioFileStatus\ ==\ -\/1)}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Error:\ Failed\ to\ load\ the\ audio\ file."{}});}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(play\_mutex);}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\_playing\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ audio\_player-\/>play();\ \textcolor{comment}{//\ Play\ the\ song\ (it\ will\ play\ in\ a\ separate\ thread)}}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ current\_playing\_state.duration\ =\ audio\_player-\/>getDuration();}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(play\_mutex);}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Simulate\ setting\ duration\ or\ other\ playback\ state}}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::exception\&\ e)}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(play\_mutex);}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ show\_dialog\ \ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dialog\_message\ =\ e.what();}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\_playing\ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(play\_mutex);}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\_processing\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00325\ \ \ \}}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \textcolor{keywordtype}{void}\ TogglePlayback()}
+\DoxyCodeLine{00328\ \ \ \{}
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{keywordflow}{if}\ (!audio\_player)}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_playing)}
+\DoxyCodeLine{00333\ \ \ \ \ \{}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ audio\_player-\/>pause();}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ is\_playing\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00336\ \ \ \ \ \}}
+\DoxyCodeLine{00337\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00338\ \ \ \ \ \{}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (audio\_player)}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ audio\_player-\/>resume();}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ PlayCurrentSong();}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ UpdatePlayingState();}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ is\_playing\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00349\ \ \ \ \ \}}
+\DoxyCodeLine{00350\ \ \ \}}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \ \ \textcolor{keywordtype}{void}\ UpdateVolume()}
+\DoxyCodeLine{00353\ \ \ \{}
+\DoxyCodeLine{00354\ \ \ \ \ \textcolor{keywordflow}{if}\ (audio\_player)}
+\DoxyCodeLine{00355\ \ \ \ \ \{}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ audio\_player-\/>setVolume(volume\ /\ 100.0f);}
+\DoxyCodeLine{00357\ \ \ \ \ \}}
+\DoxyCodeLine{00358\ \ \ \}}
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00360\ \ \ \textcolor{keywordtype}{void}\ PlayNextSong()}
+\DoxyCodeLine{00361\ \ \ \{}
+\DoxyCodeLine{00362\ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_song\_queue\_index\ +\ 1\ <\ song\_queue.size())}
+\DoxyCodeLine{00363\ \ \ \ \ \{}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ current\_song\_queue\_index++;}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Song*\ current\_song\ =\ GetCurrentSongFromQueue())}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ current\_position\ =\ 0;}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ PlayCurrentSong();}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ UpdatePlayingState();}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00371\ \ \ \ \ \}}
+\DoxyCodeLine{00372\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00373\ \ \ \ \ \{}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ show\_dialog\ \ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ dialog\_message\ =\ \textcolor{stringliteral}{"{}Error:\ No\ more\ songs\ in\ the\ queue."{}};}
+\DoxyCodeLine{00376\ \ \ \ \ \}}
+\DoxyCodeLine{00377\ \ \ \}}
+\DoxyCodeLine{00378\ }
+\DoxyCodeLine{00379\ \ \ \textcolor{keywordtype}{void}\ ReplaySong()}
+\DoxyCodeLine{00380\ \ \ \{}
+\DoxyCodeLine{00381\ \ \ \ \ current\_position\ =\ 0;}
+\DoxyCodeLine{00382\ \ \ \ \ PlayCurrentSong();}
+\DoxyCodeLine{00383\ \ \ \ \ UpdatePlayingState();}
+\DoxyCodeLine{00384\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00385\ \ \ \}}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \ \ \textcolor{keywordtype}{void}\ PlayPreviousSong()}
+\DoxyCodeLine{00388\ \ \ \{}
+\DoxyCodeLine{00389\ \ \ \ \ \textcolor{comment}{//\ If\ rewinding\ within\ the\ current\ song}}
+\DoxyCodeLine{00390\ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_position\ >\ 3.0)}
+\DoxyCodeLine{00391\ \ \ \ \ \{}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ ReplaySong();}
+\DoxyCodeLine{00393\ \ \ \ \ \}}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \ \ \ \ \textcolor{comment}{//\ Move\ to\ the\ previous\ song\ if\ possible}}
+\DoxyCodeLine{00396\ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_song\_queue\_index\ >\ 0)}
+\DoxyCodeLine{00397\ \ \ \ \ \{}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ current\_song\_queue\_index-\/-\/;}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ current\_position\ =\ 0;}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ PlayCurrentSong();}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ UpdatePlayingState();}
+\DoxyCodeLine{00402\ \ \ \ \ \}}
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00404\ \ \ \ \ \{}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ show\_dialog\ \ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ dialog\_message\ =\ \textcolor{stringliteral}{"{}Error:\ No\ previous\ song\ available."{}};}
+\DoxyCodeLine{00407\ \ \ \ \ \}}
+\DoxyCodeLine{00408\ \ \ \}}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ \ \ \textcolor{comment}{/*\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ */}}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00412\ \ \ \textcolor{keywordtype}{void}\ UpdateSongsForArtist(\textcolor{keyword}{const}\ std::string\&\ artist)}
+\DoxyCodeLine{00413\ \ \ \{}
+\DoxyCodeLine{00414\ \ \ \ \ current\_inodes.clear();}
+\DoxyCodeLine{00415\ \ \ \ \ current\_song\_elements.clear();}
+\DoxyCodeLine{00416\ \ \ \ \ album\_name\_indices.clear();}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ \ \ \ \ \textcolor{keywordflow}{if}\ (library.count(artist)\ >\ 0)}
+\DoxyCodeLine{00419\ \ \ \ \ \{}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \textcolor{comment}{//\ Group\ songs\ by\ album\ and\ year}}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ std::map<std::string,\ std::map<unsigned\ int,\ std::map<unsigned\ int,\ Song>>>\ albums;}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ album\_pair\ :\ library.at(artist))}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ album\_name\ =\ album\_pair.first;}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ disc\_pair\ :\ album\_pair.second)}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ track\_pair\ :\ disc\_pair.second)}
+\DoxyCodeLine{00428\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00429\ \ \ \ \ \ \ \ \ \ \ \ \ albums[album\_name][disc\_pair.first][track\_pair.first]\ =\ track\_pair.second;}
+\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \textcolor{comment}{//\ Format\ the\ album\ and\ song\ display}}
+\DoxyCodeLine{00435\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [album\_name,\ discs]\ :\ albums)}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ year\ from\ the\ first\ song\ in\ the\ album}}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Song\&\ first\_song\ =\ discs.begin()-\/>second.begin()-\/>second;}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ current\_song\_elements.push\_back(}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{misc_8hpp_a40a9888f76354b21ca85f69ffe014750}{renderAlbumName}}(album\_name,\ first\_song.\mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}}.\mbox{\hyperlink{structMetadata_a0f53b33fb05426a436767b71a7bb7f13}{year}},\ global\_colors.album\_name\_bg));}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ album\_name\_indices.insert(current\_song\_elements.size()\ -\/\ 1);}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [disc\_number,\ tracks]\ :\ discs)}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [track\_number,\ song]\ :\ tracks)}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ disc\_track\_info\ =}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::to\_string(disc\_number)\ +\ \textcolor{stringliteral}{"{}-\/"{}}\ +\ std::to\_string(track\_number)\ +\ \textcolor{stringliteral}{"{}\ \ "{}};}
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ \ \ \ \ current\_inodes.push\_back(song.inode);}
+\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ \ \ \ \ current\_song\_elements.push\_back(}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{misc_8hpp_adcfcdc4bf50bc48f25cc0e8df2e80822}{renderSongName}}(disc\_track\_info,\ song.metadata.title,\ song.metadata.duration));}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00455\ \ \ \ \ \}}
+\DoxyCodeLine{00456\ }
+\DoxyCodeLine{00457\ \ \ \ \ current\_artist\ =\ artist;}
+\DoxyCodeLine{00458\ \ \ \}}
+\DoxyCodeLine{00459\ }
+\DoxyCodeLine{00460\ \ \ \textcolor{keywordtype}{void}\ ClearQueue()}
+\DoxyCodeLine{00461\ \ \ \{}
+\DoxyCodeLine{00462\ \ \ \ \ song\_queue.clear();}
+\DoxyCodeLine{00463\ \ \ \ \ current\_song\_queue\_index\ =\ 0;}
+\DoxyCodeLine{00464\ \ \ \}}
+\DoxyCodeLine{00465\ }
+\DoxyCodeLine{00466\ \ \ \textcolor{keyword}{const}\ Song\&\ GetCurrentSong(\textcolor{keyword}{const}\ std::string\&\ artist)}
+\DoxyCodeLine{00467\ \ \ \{}
+\DoxyCodeLine{00468\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ artist\_data\ =\ library.at(artist);}
+\DoxyCodeLine{00469\ }
+\DoxyCodeLine{00470\ \ \ \ \ \textcolor{comment}{//\ Iterate\ through\ all\ albums,\ discs,\ and\ tracks}}
+\DoxyCodeLine{00471\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ album\_pair\ :\ artist\_data)}
+\DoxyCodeLine{00472\ \ \ \ \ \{}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ disc\_pair\ :\ album\_pair.second)}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ track\_pair\ :\ disc\_pair.second)}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Song\&\ song\ =\ track\_pair.second;}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_inodes[selected\_inode\ -\/\ albums\_indices\_traversed]\ ==\ song.\mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}})}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ song;\ \textcolor{comment}{//\ Return\ a\ reference\ to\ the\ matched\ song.}}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00485\ \ \ \ \ \}}
+\DoxyCodeLine{00486\ }
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Song\ not\ found."{}});}
+\DoxyCodeLine{00488\ \ \ \}}
+\DoxyCodeLine{00489\ }
+\DoxyCodeLine{00490\ \ \ \textcolor{keywordtype}{void}\ PlayThisSongNext(\textcolor{keyword}{const}\ std::string\&\ artist)}
+\DoxyCodeLine{00491\ \ \ \{}
+\DoxyCodeLine{00492\ \ \ \ \ \textcolor{keyword}{const}\ Song\&\ get\_curr\_song\ =\ GetCurrentSong(artist);}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00494\ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ song\_queue.insert(song\_queue.begin()\ +\ current\_song\_queue\_index\ +\ 1,\ get\_curr\_song);}
+\DoxyCodeLine{00496\ \ \ \ \ \}}
+\DoxyCodeLine{00497\ \ \ \ \ \textcolor{keywordflow}{catch}\ (std::exception\ e)\ \{}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ dialog\_message\ =\ \textcolor{stringliteral}{"{}Could\ not\ play\ this\ song\ next!"{}};}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ show\_dialog\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00500\ \ \ \ \ \}}
+\DoxyCodeLine{00501\ }
+\DoxyCodeLine{00502\ \ \ \ \ current\_song\_queue\_index++;}
+\DoxyCodeLine{00503\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00504\ \ \ \}}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \ \ \textcolor{keywordtype}{void}\ EnqueueAllSongsByArtist(\textcolor{keyword}{const}\ std::string\&\ artist,\ \textcolor{keywordtype}{bool}\ clearQueue)}
+\DoxyCodeLine{00507\ \ \ \{}
+\DoxyCodeLine{00508\ \ \ \ \ \textcolor{comment}{//\ Clear\ the\ existing\ song\ list}}
+\DoxyCodeLine{00509\ \ \ \ \ \textcolor{keywordflow}{if}\ (clearQueue)}
+\DoxyCodeLine{00510\ \ \ \ \ \ \ ClearQueue();}
+\DoxyCodeLine{00511\ }
+\DoxyCodeLine{00512\ \ \ \ \ \textcolor{keywordtype}{bool}\ start\_enqueue\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00513\ }
+\DoxyCodeLine{00514\ \ \ \ \ \textcolor{comment}{//\ Check\ if\ the\ artist\ exists\ in\ the\ library}}
+\DoxyCodeLine{00515\ \ \ \ \ \textcolor{keywordflow}{if}\ (library.find(artist)\ ==\ library.end())}
+\DoxyCodeLine{00516\ \ \ \ \ \{}
+\DoxyCodeLine{00517\ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Artist\ not\ found\ in\ the\ library:\ "{}}\ <<\ artist\ <<\ std::endl;}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00519\ \ \ \ \ \}}
+\DoxyCodeLine{00520\ }
+\DoxyCodeLine{00521\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ artist\_data\ =\ library.at(artist);}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00523\ \ \ \ \ \textcolor{comment}{//\ Iterate\ through\ all\ albums,\ discs,\ and\ tracks}}
+\DoxyCodeLine{00524\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ album\_pair\ :\ artist\_data)}
+\DoxyCodeLine{00525\ \ \ \ \ \{}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ disc\_pair\ :\ album\_pair.second)}
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ track\_pair\ :\ disc\_pair.second)}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Song\&\ song\ =\ track\_pair.second;}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_inodes[selected\_inode\ -\/\ albums\_indices\_traversed]\ ==\ song.\mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}})}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \ \ \ \ start\_enqueue\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ the\ song\ to\ the\ list}}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (start\_enqueue)}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \ \ \ \ song\_queue.push\_back(song);}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00541\ \ \ \ \ \}}
+\DoxyCodeLine{00542\ \ \ \}}
+\DoxyCodeLine{00543\ }
+\DoxyCodeLine{00544\ \ \ \textcolor{keywordtype}{void}\ AddSongToQueue()}
+\DoxyCodeLine{00545\ \ \ \{}
+\DoxyCodeLine{00546\ \ \ \ \ \textcolor{comment}{//\ Validate\ indices\ to\ prevent\ out-\/of-\/range\ access}}
+\DoxyCodeLine{00547\ \ \ \ \ \textcolor{keywordflow}{if}\ (selected\_artist\ >=\ current\_artist\_names.size()\ ||}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ selected\_inode\ -\/\ albums\_indices\_traversed\ >=\ current\_inodes.size())}
+\DoxyCodeLine{00549\ \ \ \ \ \{}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Invalid\ artist\ or\ song\ selection."{}});}
+\DoxyCodeLine{00551\ \ \ \ \ \}}
+\DoxyCodeLine{00552\ }
+\DoxyCodeLine{00553\ \ \ \ \ \textcolor{comment}{//\ Get\ a\ const\ reference\ to\ the\ current\ song}}
+\DoxyCodeLine{00554\ \ \ \ \ \textcolor{keyword}{const}\ Song\&\ current\_preview\_song\ =\ GetCurrentSong(current\_artist\_names[selected\_artist]);}
+\DoxyCodeLine{00555\ }
+\DoxyCodeLine{00556\ \ \ \ \ \textcolor{comment}{//\ Add\ a\ copy\ of\ the\ song\ to\ the\ queue}}
+\DoxyCodeLine{00557\ \ \ \ \ song\_queue.push\_back(current\_preview\_song);}
+\DoxyCodeLine{00558\ }
+\DoxyCodeLine{00559\ \ \ \ \ NavigateSongMenu(\textcolor{keyword}{true});}
+\DoxyCodeLine{00560\ \ \ \}}
+\DoxyCodeLine{00561\ }
+\DoxyCodeLine{00562\ \ \ \textcolor{keywordtype}{void}\ RemoveSongFromQueue()}
+\DoxyCodeLine{00563\ \ \ \{}
+\DoxyCodeLine{00564\ \ \ \ \ \textcolor{keywordflow}{if}\ (selected\_song\_queue\ ==\ current\_song\_queue\_index)}
+\DoxyCodeLine{00565\ \ \ \ \ \{}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ dialog\_message\ =\ \textcolor{stringliteral}{"{}Unable\ to\ remove\ song...\ This\ is\ playing\ right\ now!"{}};}
+\DoxyCodeLine{00567\ \ \ \ \ \ \ show\_dialog\ \ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00568\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00569\ \ \ \ \ \}}
+\DoxyCodeLine{00570\ \ \ \ \ \textcolor{keywordflow}{if}\ (selected\_song\_queue\ <\ song\_queue.size())}
+\DoxyCodeLine{00571\ \ \ \ \ \{}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ song\_queue.erase(song\_queue.begin()\ +\ selected\_song\_queue);}
+\DoxyCodeLine{00573\ \ \ \ \ \}}
+\DoxyCodeLine{00574\ \ \ \}}
+\DoxyCodeLine{00575\ }
+\DoxyCodeLine{00576\ \ \ Song*\ GetCurrentSongFromQueue()}
+\DoxyCodeLine{00577\ \ \ \{}
+\DoxyCodeLine{00578\ \ \ \ \ \textcolor{keywordflow}{if}\ (!song\_queue.empty()\ \&\&\ current\_song\_queue\_index\ <\ song\_queue.size())}
+\DoxyCodeLine{00579\ \ \ \ \ \{}
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \&song\_queue[current\_song\_queue\_index];}
+\DoxyCodeLine{00581\ \ \ \ \ \}}
+\DoxyCodeLine{00582\ }
+\DoxyCodeLine{00583\ \ \ \ \ dialog\_message\ =\ \textcolor{stringliteral}{"{}Something\ went\ worng"{}};}
+\DoxyCodeLine{00584\ \ \ \ \ show\_dialog\ \ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00585\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00586\ \ \ \}}
+\DoxyCodeLine{00587\ }
+\DoxyCodeLine{00588\ \ \ \textcolor{keywordtype}{int}\ GetCurrentSongDuration()}
+\DoxyCodeLine{00589\ \ \ \{}
+\DoxyCodeLine{00590\ \ \ \ \ \textcolor{keywordflow}{if}\ (!current\_inodes.empty()\ \&\&\ audio\_player)}
+\DoxyCodeLine{00591\ \ \ \ \ \{}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ current\_playing\_state.duration;}
+\DoxyCodeLine{00593\ \ \ \ \ \}}
+\DoxyCodeLine{00594\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00595\ \ \ \}}
+\DoxyCodeLine{00596\ }
+\DoxyCodeLine{00597\ \ \ \textcolor{keywordtype}{void}\ UpdatePlayingState()}
+\DoxyCodeLine{00598\ \ \ \{}
+\DoxyCodeLine{00599\ \ \ \ \ \textcolor{keywordflow}{if}\ (Song*\ current\_song\ =\ GetCurrentSongFromQueue())}
+\DoxyCodeLine{00600\ \ \ \ \ \{}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ metadata\ =\ current\_song-\/>\mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}};}
+\DoxyCodeLine{00602\ }
+\DoxyCodeLine{00603\ \ \ \ \ \ \ current\_playing\_state.\mbox{\hyperlink{structMetadata_a9c925474f678d140c0e0eef6213a160b}{artist}}\ \ \ \ \ \ =\ metadata.artist;}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ current\_playing\_state.title\ \ \ \ \ \ \ =\ metadata.title;}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ current\_playing\_state.album\ \ \ \ \ \ \ =\ metadata.album;}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ current\_playing\_state.genre\ \ \ \ \ \ \ =\ metadata.genre;}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ current\_playing\_state.comment\ \ \ \ \ =\ metadata.comment;}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ current\_playing\_state.year\ \ \ \ \ \ \ \ =\ metadata.year;}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ current\_playing\_state.track\ \ \ \ \ \ \ =\ metadata.track;}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ current\_playing\_state.discNumber\ \ =\ metadata.discNumber;}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ current\_playing\_state.lyrics\ \ \ \ \ \ =\ metadata.lyrics;}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ current\_playing\_state.has\_comment\ =\ (metadata.comment\ !=\ \textcolor{stringliteral}{"{}No\ Comment"{}});}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ current\_playing\_state.has\_lyrics\ \ =\ (metadata.lyrics\ !=\ \textcolor{stringliteral}{"{}No\ Lyrics"{}});}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \textcolor{comment}{//\ duration\ gets\ updated\ in\ the\ PlayCurrentSong()\ thread\ itself}}
+\DoxyCodeLine{00615\ }
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \textcolor{comment}{//\ If\ there's\ additional\ properties,\ you\ can\ either\ copy\ them\ or\ process\ as\ needed}}
+\DoxyCodeLine{00617\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [key,\ value]\ :\ metadata.additionalProperties)}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ current\_playing\_state.additionalProperties[key]\ =\ value;}
+\DoxyCodeLine{00620\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00621\ \ \ \ \ \}}
+\DoxyCodeLine{00622\ }
+\DoxyCodeLine{00623\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ mprisSongTitle\ =\ current\_playing\_state.title;}
+\DoxyCodeLine{00624\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ mprisSongArtist\ =\ current\_playing\_state.artist;}
+\DoxyCodeLine{00625\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ mprisSongAlbum\ =\ current\_playing\_state.album;}
+\DoxyCodeLine{00626\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ mprisSongComment\ =\ current\_playing\_state.comment;}
+\DoxyCodeLine{00627\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ mprisSongGenre\ =\ current\_playing\_state.genre;}
+\DoxyCodeLine{00628\ }
+\DoxyCodeLine{00629\ \ \ \ \ mprisService-\/>updateMetadata(mprisSongTitle,\ mprisSongArtist,\ mprisSongAlbum,\ \textcolor{keyword}{static\_cast<}int64\_t\textcolor{keyword}{>}(GetCurrentSongFromQueue()-\/>metadata.duration),\ mprisSongComment,\ mprisSongGenre,\ current\_playing\_state.track,\ current\_playing\_state.discNumber);}
+\DoxyCodeLine{00630\ \ \ \}}
+\DoxyCodeLine{00631\ }
+\DoxyCodeLine{00632\ \ \ \textcolor{keywordtype}{void}\ CreateComponents()}
+\DoxyCodeLine{00633\ \ \ \{}
+\DoxyCodeLine{00634\ \ \ \ \ MenuOption\ artist\_menu\_options;}
+\DoxyCodeLine{00635\ \ \ \ \ artist\_menu\_options.on\_change\ =\ [\&]()}
+\DoxyCodeLine{00636\ \ \ \ \ \{}
+\DoxyCodeLine{00637\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (focus\_on\_artists\ \&\&\ selected\_artist\ <\ current\_artist\_names.size())}
+\DoxyCodeLine{00638\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ UpdateSongsForArtist(current\_artist\_names[selected\_artist]);}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00641\ \ \ \ \ \};}
+\DoxyCodeLine{00642\ \ \ \ \ artist\_menu\_options.focused\_entry\ =\ \&selected\_artist;}
+\DoxyCodeLine{00643\ }
+\DoxyCodeLine{00644\ \ \ \ \ MenuOption\ song\_menu\_options;}
+\DoxyCodeLine{00645\ \ \ \ \ song\_menu\_options.on\_change\ \ \ \ \ =\ [\&]()\ \{\};}
+\DoxyCodeLine{00646\ \ \ \ \ song\_menu\_options.focused\_entry\ =\ \&selected\_inode;}
+\DoxyCodeLine{00647\ }
+\DoxyCodeLine{00648\ \ \ \ \ artists\_list\ =\ Menu(\&current\_artist\_names,\ \&selected\_artist,\ artist\_menu\_options);}
+\DoxyCodeLine{00649\ \ \ \ \ songs\_list\ \ \ =\ Renderer(}
+\DoxyCodeLine{00650\ \ \ \ \ \ \ [\&]()\ \textcolor{keyword}{mutable}}
+\DoxyCodeLine{00651\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00652\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{misc_8hpp_ae177f32772c1011c09dfce5f982c7f64}{RenderSongMenu}}(current\_song\_elements,\ \&selected\_inode,}
+\DoxyCodeLine{00653\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ global\_colors.menu\_cursor\_bg);\ \textcolor{comment}{//\ This\ should\ return\ an\ Element}}
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00655\ }
+\DoxyCodeLine{00656\ \ \ \ \ \textcolor{keyword}{auto}\ main\_container\ =\ Container::Horizontal(\{artists\_list,\ songs\_list\});}
+\DoxyCodeLine{00657\ }
+\DoxyCodeLine{00658\ \ \ \ \ \textcolor{comment}{/*\ Adding\ DEBOUNCE\ TIME\ (Invoking\ PlayCurrentSong()\ too\ fast\ causes\ resources\ to\ not\ be\ freed)}}
+\DoxyCodeLine{00659\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00660\ }
+\DoxyCodeLine{00661\ \ \ \ \ \textcolor{keyword}{auto}\ last\_event\_time\ =\ std::chrono::steady\_clock::now();\ \textcolor{comment}{//\ Tracks\ the\ last\ event\ time}}
+\DoxyCodeLine{00662\ \ \ \ \ \textcolor{keywordtype}{int}\ \ debounce\_time\ =\ std::stoi(std::string(\mbox{\hyperlink{toml__parser_8hpp_a19930571a1aced24a71d9a1d6e7c710a}{parseTOMLField}}(\mbox{\hyperlink{toml__parser_8hpp_a10265fc668d386d5d02e91115db9a7cc}{PARENT\_DBG}},\ \textcolor{stringliteral}{"{}debounce\_time\_in\_ms"{}})));}
+\DoxyCodeLine{00663\ \ \ \ \ \textcolor{keywordflow}{if}\ (debounce\_time\ <\ \mbox{\hyperlink{ui__handler_8hpp_a2599a56212bf57db1c1039fd3b2cf367}{MIN\_DEBOUNCE\_TIME\_IN\_MS}})}
+\DoxyCodeLine{00664\ \ \ \ \ \ \ debounce\_time\ =\ \mbox{\hyperlink{ui__handler_8hpp_a2599a56212bf57db1c1039fd3b2cf367}{MIN\_DEBOUNCE\_TIME\_IN\_MS}};\ \textcolor{comment}{//\ min\ debounce\ time\ is\ 0.5s}}
+\DoxyCodeLine{00665\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ final\_debounce\_time\ =\ debounce\_time;}
+\DoxyCodeLine{00666\ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ debounce\_duration\ \ \ =\ std::chrono::milliseconds(final\_debounce\_time);}
+\DoxyCodeLine{00667\ }
+\DoxyCodeLine{00668\ \ \ \ \ main\_container\ |=\ CatchEvent(}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ [\&](Event\ event)}
+\DoxyCodeLine{00670\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00671\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ is\_keybind\_match\ =\ [\&](\textcolor{keywordtype}{char}\ key)\ -\/>\ \textcolor{keywordtype}{bool}}
+\DoxyCodeLine{00672\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00673\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (event.is\_character()\ \&\&\ event.character()\ ==\ std::string(1,\ key))\ ||}
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{event}\ ==\ Event::Special(std::string(1,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(key))));}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00676\ }
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (active\_screen\ ==\ \mbox{\hyperlink{ui__handler_8hpp_abfd022c0da8ae34ff96773141ac69756}{SHOW\_HELP\_SCREEN}})}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (event.is\_character()\ \&\&\ (event.character()[0]\ ==\ global\_keybinds.show\_help\ ||}
+\DoxyCodeLine{00680\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::toupper(global\_keybinds.quit\_app)\ ||}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ event.character()[0]\ ==\ global\_keybinds.quit\_app))}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \ \ \ \ active\_screen\ =\ \mbox{\hyperlink{ui__handler_8hpp_ab1e2d4655431d80420094738cb479ba9}{SHOW\_MAIN\_UI}};}
+\DoxyCodeLine{00684\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00686\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ Prevent\ other\ keys\ from\ working}}
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00688\ }
+\DoxyCodeLine{00689\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (active\_screen\ ==\ \mbox{\hyperlink{ui__handler_8hpp_a965b2db45eda447f0b343c73672533fd}{SHOW\_LYRICS\_SCREEN}})}
+\DoxyCodeLine{00690\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00691\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.goto\_main\_screen))}
+\DoxyCodeLine{00692\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00693\ \ \ \ \ \ \ \ \ \ \ \ \ active\_screen\ =\ \mbox{\hyperlink{ui__handler_8hpp_ab1e2d4655431d80420094738cb479ba9}{SHOW\_MAIN\_UI}};}
+\DoxyCodeLine{00694\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00695\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00696\ }
+\DoxyCodeLine{00697\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.scroll\_down))}
+\DoxyCodeLine{00698\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00699\ \ \ \ \ \ \ \ \ \ \ \ \ NavigateList(\textcolor{keyword}{true});}
+\DoxyCodeLine{00700\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00701\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00702\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.scroll\_up))}
+\DoxyCodeLine{00703\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00704\ \ \ \ \ \ \ \ \ \ \ \ \ NavigateList(\textcolor{keyword}{false});}
+\DoxyCodeLine{00705\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00706\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00707\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(\textcolor{charliteral}{'g'}))}
+\DoxyCodeLine{00708\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00709\ }
+\DoxyCodeLine{00710\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!first\_g\_pressed)}
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00712\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ First\ 'g'\ press}}
+\DoxyCodeLine{00713\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ first\_g\_pressed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00714\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00715\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00716\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00717\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Second\ 'g'\ press}}
+\DoxyCodeLine{00718\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NavigateListToTop(\textcolor{keyword}{true});}
+\DoxyCodeLine{00719\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ first\_g\_pressed\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ Reset\ the\ state}}
+\DoxyCodeLine{00720\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00721\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00722\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00723\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(\textcolor{charliteral}{'G'}))}
+\DoxyCodeLine{00724\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00725\ \ \ \ \ \ \ \ \ \ \ \ \ NavigateListToTop(\textcolor{keyword}{false});}
+\DoxyCodeLine{00726\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00728\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00729\ }
+\DoxyCodeLine{00730\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (active\_screen\ ==\ \mbox{\hyperlink{ui__handler_8hpp_a9c8fdd860223a430f7ef232c1987a890}{SHOW\_QUEUE\_SCREEN}})}
+\DoxyCodeLine{00731\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00732\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.remove\_song\_from\_queue))}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \ \ \ \ RemoveSongFromQueue();}
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.scroll\_down))}
+\DoxyCodeLine{00738\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ \ \ \ \ NavigateList(\textcolor{keyword}{true});}
+\DoxyCodeLine{00740\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00741\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.scroll\_up))}
+\DoxyCodeLine{00743\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00744\ \ \ \ \ \ \ \ \ \ \ \ \ NavigateList(\textcolor{keyword}{false});}
+\DoxyCodeLine{00745\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00746\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00747\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(\textcolor{charliteral}{'g'}))}
+\DoxyCodeLine{00748\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00749\ }
+\DoxyCodeLine{00750\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!first\_g\_pressed)}
+\DoxyCodeLine{00751\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00752\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ First\ 'g'\ press}}
+\DoxyCodeLine{00753\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ first\_g\_pressed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00754\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00755\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00756\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00757\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Second\ 'g'\ press}}
+\DoxyCodeLine{00758\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NavigateListToTop(\textcolor{keyword}{true});}
+\DoxyCodeLine{00759\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ first\_g\_pressed\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ Reset\ the\ state}}
+\DoxyCodeLine{00760\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00761\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00762\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(\textcolor{charliteral}{'G'}))}
+\DoxyCodeLine{00764\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \ \ \ \ NavigateListToTop(\textcolor{keyword}{false});}
+\DoxyCodeLine{00766\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00767\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00768\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.goto\_main\_screen))}
+\DoxyCodeLine{00769\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00770\ \ \ \ \ \ \ \ \ \ \ \ \ active\_screen\ =\ \mbox{\hyperlink{ui__handler_8hpp_ab1e2d4655431d80420094738cb479ba9}{SHOW\_MAIN\_UI}};}
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00772\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00773\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(\textcolor{charliteral}{'x'}))}
+\DoxyCodeLine{00774\ \ \ \ \ \ \ \ \ \ \ \{\ \textcolor{comment}{//\ Add\ key\ to\ dismiss\ dialog}}
+\DoxyCodeLine{00775\ \ \ \ \ \ \ \ \ \ \ \ \ show\_dialog\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00776\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00777\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00778\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00779\ }
+\DoxyCodeLine{00780\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (event.is\_mouse())}
+\DoxyCodeLine{00781\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00782\ }
+\DoxyCodeLine{00783\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (active\_screen\ ==\ \mbox{\hyperlink{ui__handler_8hpp_ab1e2d4655431d80420094738cb479ba9}{SHOW\_MAIN\_UI}})}
+\DoxyCodeLine{00784\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00785\ }
+\DoxyCodeLine{00786\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.play\_song)\ \&\&\ !focus\_on\_artists)}
+\DoxyCodeLine{00787\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00788\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!current\_artist.empty())}
+\DoxyCodeLine{00789\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00790\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EnqueueAllSongsByArtist(current\_artist,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00791\ }
+\DoxyCodeLine{00792\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Song*\ current\_song\ =\ GetCurrentSongFromQueue())}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Enqueue\ all\ songs\ by\ the\ current\ artist}}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ current\_position\ =\ 0;}
+\DoxyCodeLine{00796\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PlayCurrentSong();}
+\DoxyCodeLine{00797\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ UpdatePlayingState();}
+\DoxyCodeLine{00798\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00799\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00800\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00801\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00802\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ show\_dialog\ \ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00803\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dialog\_message\ =\ \textcolor{stringliteral}{"{}No\ artist\ selected\ to\ play\ songs\ from."{}};}
+\DoxyCodeLine{00804\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00805\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00806\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00807\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ against\ keybinds\ using\ if-\/else\ instead\ of\ switch}}
+\DoxyCodeLine{00808\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.quit\_app)\ ||}
+\DoxyCodeLine{00809\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\_keybind\_match(std::toupper(global\_keybinds.quit\_app)))}
+\DoxyCodeLine{00810\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00811\ \ \ \ \ \ \ \ \ \ \ \ \ Quit();}
+\DoxyCodeLine{00812\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00813\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00814\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.toggle\_play))}
+\DoxyCodeLine{00815\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00816\ \ \ \ \ \ \ \ \ \ \ \ \ TogglePlayback();}
+\DoxyCodeLine{00817\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00819\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.play\_song\_next))}
+\DoxyCodeLine{00820\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ now\ =\ std::chrono::steady\_clock::now();}
+\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (now\ -\/\ last\_event\_time\ <\ debounce\_duration)}
+\DoxyCodeLine{00823\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00824\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ audio\_player-\/>stop();}
+\DoxyCodeLine{00825\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00826\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00827\ \ \ \ \ \ \ \ \ \ \ \ \ PlayNextSong();}
+\DoxyCodeLine{00828\ \ \ \ \ \ \ \ \ \ \ \ \ last\_event\_time\ =\ now;\ \textcolor{comment}{//\ Update\ the\ last\ event\ time}}
+\DoxyCodeLine{00829\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00830\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00831\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.play\_song\_prev))}
+\DoxyCodeLine{00832\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00833\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ now\ =\ std::chrono::steady\_clock::now();}
+\DoxyCodeLine{00834\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (now\ -\/\ last\_event\_time\ <\ debounce\_duration)}
+\DoxyCodeLine{00835\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00836\ \ \ \ \ \ \ \ \ \ \ \ \ last\_event\_time\ =\ now;}
+\DoxyCodeLine{00837\ \ \ \ \ \ \ \ \ \ \ \ \ PlayPreviousSong();}
+\DoxyCodeLine{00838\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00839\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00840\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.seek\_ahead\_5))}
+\DoxyCodeLine{00841\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00842\ \ \ \ \ \ \ \ \ \ \ \ \ seekBuffer\ =\ audio\_player-\/>seekTime(5);}
+\DoxyCodeLine{00843\ \ \ \ \ \ \ \ \ \ \ \ \ current\_position\ +=\ seekBuffer;}
+\DoxyCodeLine{00844\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00845\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.seek\_behind\_5))}
+\DoxyCodeLine{00846\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00847\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_position\ >\ 5)}
+\DoxyCodeLine{00848\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00849\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ seekBuffer\ =\ audio\_player-\/>seekTime(-\/5);}
+\DoxyCodeLine{00850\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ current\_position\ +=\ seekBuffer;}
+\DoxyCodeLine{00851\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00852\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00853\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00854\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ReplaySong();}
+\DoxyCodeLine{00855\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00856\ \ \ \ \ \ \ \ \ \ \ \ \ UpdatePlayingState();}
+\DoxyCodeLine{00857\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00858\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.replay\_song))}
+\DoxyCodeLine{00859\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00860\ \ \ \ \ \ \ \ \ \ \ \ \ ReplaySong();}
+\DoxyCodeLine{00861\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00862\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00863\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.vol\_up))}
+\DoxyCodeLine{00864\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00865\ \ \ \ \ \ \ \ \ \ \ \ \ volume\ =\ std::min(100,\ volume\ +\ 5);}
+\DoxyCodeLine{00866\ \ \ \ \ \ \ \ \ \ \ \ \ UpdateVolume();}
+\DoxyCodeLine{00867\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00868\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00869\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.vol\_down))}
+\DoxyCodeLine{00870\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00871\ \ \ \ \ \ \ \ \ \ \ \ \ volume\ =\ std::max(0,\ volume\ -\/\ 5);}
+\DoxyCodeLine{00872\ \ \ \ \ \ \ \ \ \ \ \ \ UpdateVolume();}
+\DoxyCodeLine{00873\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00874\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00875\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.toggle\_mute))}
+\DoxyCodeLine{00876\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00877\ \ \ \ \ \ \ \ \ \ \ \ \ muted\ =\ !muted;}
+\DoxyCodeLine{00878\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (muted)}
+\DoxyCodeLine{00879\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00880\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lastVolume\ =\ volume;}
+\DoxyCodeLine{00881\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ volume\ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00882\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00884\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00885\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ volume\ =\ lastVolume;}
+\DoxyCodeLine{00886\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00887\ \ \ \ \ \ \ \ \ \ \ \ \ UpdateVolume();}
+\DoxyCodeLine{00888\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00889\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00890\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.show\_help))}
+\DoxyCodeLine{00891\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00892\ \ \ \ \ \ \ \ \ \ \ \ \ active\_screen\ =\ \mbox{\hyperlink{ui__handler_8hpp_abfd022c0da8ae34ff96773141ac69756}{SHOW\_HELP\_SCREEN}};}
+\DoxyCodeLine{00893\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00894\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00895\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.scroll\_down))}
+\DoxyCodeLine{00896\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00897\ \ \ \ \ \ \ \ \ \ \ \ \ NavigateList(\textcolor{keyword}{true});}
+\DoxyCodeLine{00898\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00899\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00900\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.scroll\_up))}
+\DoxyCodeLine{00901\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00902\ \ \ \ \ \ \ \ \ \ \ \ \ NavigateList(\textcolor{keyword}{false});}
+\DoxyCodeLine{00903\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00904\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00905\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(\textcolor{charliteral}{'x'}))}
+\DoxyCodeLine{00906\ \ \ \ \ \ \ \ \ \ \ \{\ \textcolor{comment}{//\ Add\ key\ to\ dismiss\ dialog}}
+\DoxyCodeLine{00907\ \ \ \ \ \ \ \ \ \ \ \ \ show\_dialog\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00908\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00909\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00910\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.view\_lyrics)\ \&\&}
+\DoxyCodeLine{00911\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (current\_playing\_state.has\_lyrics\ ||\ current\_playing\_state.has\_comment))}
+\DoxyCodeLine{00912\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00913\ \ \ \ \ \ \ \ \ \ \ \ \ active\_screen\ =\ \mbox{\hyperlink{ui__handler_8hpp_a965b2db45eda447f0b343c73672533fd}{SHOW\_LYRICS\_SCREEN}};}
+\DoxyCodeLine{00914\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00915\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00916\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.view\_song\_queue)\ \&\&\ !song\_queue.empty())}
+\DoxyCodeLine{00917\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00918\ \ \ \ \ \ \ \ \ \ \ \ \ active\_screen\ =\ \mbox{\hyperlink{ui__handler_8hpp_a9c8fdd860223a430f7ef232c1987a890}{SHOW\_QUEUE\_SCREEN}};}
+\DoxyCodeLine{00919\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00920\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00921\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.goto\_main\_screen))}
+\DoxyCodeLine{00922\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00923\ \ \ \ \ \ \ \ \ \ \ \ \ active\_screen\ =\ \mbox{\hyperlink{ui__handler_8hpp_ab1e2d4655431d80420094738cb479ba9}{SHOW\_MAIN\_UI}};}
+\DoxyCodeLine{00924\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00925\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00926\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Some\ default\ keybinds}}
+\DoxyCodeLine{00927\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(\textcolor{charliteral}{'g'}))}
+\DoxyCodeLine{00928\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00929\ }
+\DoxyCodeLine{00930\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!first\_g\_pressed)}
+\DoxyCodeLine{00931\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00932\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ First\ 'g'\ press}}
+\DoxyCodeLine{00933\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ first\_g\_pressed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00934\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00935\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00936\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00937\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Second\ 'g'\ press}}
+\DoxyCodeLine{00938\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NavigateListToTop(\textcolor{keyword}{true});}
+\DoxyCodeLine{00939\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ first\_g\_pressed\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ Reset\ the\ state}}
+\DoxyCodeLine{00940\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00941\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00942\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00943\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(\textcolor{charliteral}{'G'}))}
+\DoxyCodeLine{00944\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00945\ \ \ \ \ \ \ \ \ \ \ \ \ NavigateListToTop(\textcolor{keyword}{false});}
+\DoxyCodeLine{00946\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00947\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00948\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.toggle\_focus))}
+\DoxyCodeLine{00949\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00950\ \ \ \ \ \ \ \ \ \ \ \ \ focus\_on\_artists\ =\ !focus\_on\_artists;}
+\DoxyCodeLine{00951\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (focus\_on\_artists)}
+\DoxyCodeLine{00952\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00953\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ artists\_list-\/>TakeFocus();}
+\DoxyCodeLine{00954\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00955\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00956\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00957\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ songs\_list-\/>TakeFocus();}
+\DoxyCodeLine{00958\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00959\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00960\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00961\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.add\_song\_to\_queue))}
+\DoxyCodeLine{00962\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00963\ \ \ \ \ \ \ \ \ \ \ \ \ AddSongToQueue();}
+\DoxyCodeLine{00964\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00965\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00966\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.add\_artists\_songs\_to\_queue)\ \&\&\ focus\_on\_artists)}
+\DoxyCodeLine{00967\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00968\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*selected\_inode\ =\ 0;\ //\ sanity\ check,\ the\ current\ song\ pane's\ index\ should\ start\ from\ top\ to\ enqueue\ all\ songs*/}}
+\DoxyCodeLine{00969\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*albums\_indices\_traversed\ =\ 1;*/}}
+\DoxyCodeLine{00970\ \ \ \ \ \ \ \ \ \ \ \ \ EnqueueAllSongsByArtist(current\_artist\_names[selected\_artist],\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00971\ \ \ \ \ \ \ \ \ \ \ \ \ NavigateList(\textcolor{keyword}{true});}
+\DoxyCodeLine{00972\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00973\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00974\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (is\_keybind\_match(global\_keybinds.play\_this\_song\_next)\ \&\&\ !focus\_on\_artists)}
+\DoxyCodeLine{00975\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00976\ \ \ \ \ \ \ \ \ \ \ \ \ PlayThisSongNext(current\_artist\_names[selected\_artist]);}
+\DoxyCodeLine{00977\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00978\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00979\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00980\ }
+\DoxyCodeLine{00981\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*if\ (event\ ==\ Event::ArrowDown\ \&\&\ active\_screen\ ==\ SHOW\_QUEUE\_SCREEN)*/}}
+\DoxyCodeLine{00982\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\{*/}}
+\DoxyCodeLine{00983\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ NavigateList(true);*/}}
+\DoxyCodeLine{00984\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ return\ true;*/}}
+\DoxyCodeLine{00985\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\}*/}}
+\DoxyCodeLine{00986\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*if\ (event\ ==\ Event::ArrowUp\ \&\&\ active\_screen\ ==\ SHOW\_QUEUE\_SCREEN)*/}}
+\DoxyCodeLine{00987\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\{*/}}
+\DoxyCodeLine{00988\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ NavigateList(false);*/}}
+\DoxyCodeLine{00989\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ return\ true;*/}}
+\DoxyCodeLine{00990\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\}*/}}
+\DoxyCodeLine{00991\ }
+\DoxyCodeLine{00992\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00993\ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00994\ }
+\DoxyCodeLine{00995\ \ \ \ \ renderer\ =}
+\DoxyCodeLine{00996\ \ \ \ \ \ \ Renderer(main\_container,}
+\DoxyCodeLine{00997\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [\&]}
+\DoxyCodeLine{00998\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00999\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ duration\ =\ GetCurrentSongDuration();}
+\DoxyCodeLine{01000\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ progress\ =\ duration\ >\ 0\ ?\ (float)current\_position\ /\ duration\ :\ 0;}
+\DoxyCodeLine{01001\ }
+\DoxyCodeLine{01002\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Element\ interface;}
+\DoxyCodeLine{01003\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (active\_screen\ ==\ \mbox{\hyperlink{ui__handler_8hpp_abfd022c0da8ae34ff96773141ac69756}{SHOW\_HELP\_SCREEN}})}
+\DoxyCodeLine{01004\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01005\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{interface\ }=\ RenderHelpScreen();}
+\DoxyCodeLine{01006\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01007\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (active\_screen\ ==\ \mbox{\hyperlink{ui__handler_8hpp_ab1e2d4655431d80420094738cb479ba9}{SHOW\_MAIN\_UI}})}
+\DoxyCodeLine{01008\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01009\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{interface\ }=\ RenderMainInterface(progress);}
+\DoxyCodeLine{01010\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01011\ }
+\DoxyCodeLine{01012\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (active\_screen\ ==\ \mbox{\hyperlink{ui__handler_8hpp_a965b2db45eda447f0b343c73672533fd}{SHOW\_LYRICS\_SCREEN}})}
+\DoxyCodeLine{01013\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01014\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ Fix\ lyrics\ scroll}}
+\DoxyCodeLine{01015\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{interface\ }=\ RenderLyricsAndInfoView();}
+\DoxyCodeLine{01016\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (active\_screen\ ==\ \mbox{\hyperlink{ui__handler_8hpp_a9c8fdd860223a430f7ef232c1987a890}{SHOW\_QUEUE\_SCREEN}})}
+\DoxyCodeLine{01018\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{interface\ }=\ RenderQueueScreen();}
+\DoxyCodeLine{01020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (show\_dialog)}
+\DoxyCodeLine{01022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Create\ a\ semi-\/transparent\ overlay\ with\ the\ dialog\ box}}
+\DoxyCodeLine{01024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{interface\ }=}
+\DoxyCodeLine{01025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dbox(\{}
+\DoxyCodeLine{01026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ interface,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dim\ the\ background}}
+\DoxyCodeLine{01027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ RenderDialog()\ |\ center\ \textcolor{comment}{//\ Center\ the\ dialog\ both\ horizontally\ and\ vertically}}
+\DoxyCodeLine{01028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \})\ |}
+\DoxyCodeLine{01029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da25a81701fbfa4a1efdf660a950c1d006}{TrueColors::Color::White}})\ |\ flex;}
+\DoxyCodeLine{01030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01031\ }
+\DoxyCodeLine{01032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vbox(interface);}
+\DoxyCodeLine{01033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{01034\ \ \ \}}
+\DoxyCodeLine{01035\ }
+\DoxyCodeLine{01036\ \ \ Element\ RenderDialog()}
+\DoxyCodeLine{01037\ \ \ \{}
+\DoxyCodeLine{01038\ \ \ \ \ \textcolor{keywordflow}{return}\ window(}
+\DoxyCodeLine{01039\ \ \ \ \ \ \ \ \ \ \ \ \ \ text(\textcolor{stringliteral}{"{}\ File\ Information\ "{}})\ |\ bold\ |\ center\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da25a81701fbfa4a1efdf660a950c1d006}{TrueColors::Color::White}})\ |}
+\DoxyCodeLine{01040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{misc_8hpp_a32a29b442a57acc73893a7b2be55dec9}{getTrueBGColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da994ae1d9731cebe455aff211bcb25b93}{TrueColors::Color::Gray}}),}
+\DoxyCodeLine{01041\ \ \ \ \ \ \ \ \ \ \ \ \ \ vbox(\{}
+\DoxyCodeLine{01042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text(dialog\_message)\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da61db47dac8aefe03fc67ee1b65ecd8f6}{TrueColors::Color::Coral}}),}
+\DoxyCodeLine{01043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ separator()\ |\ color(Color::GrayLight),}
+\DoxyCodeLine{01044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text(\textcolor{stringliteral}{"{}Press\ 'x'\ to\ close"{}})\ |\ dim\ |\ center\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da8dc5344bc0746e1cc5abf896ca03bbdf}{TrueColors::Color::Pink}}),}
+\DoxyCodeLine{01045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \})\ |}
+\DoxyCodeLine{01046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ center)\ |}
+\DoxyCodeLine{01047\ \ \ \ \ \ \ \ \ \ \ \ size(WIDTH,\ LESS\_THAN,\ 60)\ |\ size(HEIGHT,\ LESS\_THAN,\ 8)\ |}
+\DoxyCodeLine{01048\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{misc_8hpp_a32a29b442a57acc73893a7b2be55dec9}{getTrueBGColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae90dfb84e30edf611e326eeb04d680de}{TrueColors::Color::Black}})\ |\ borderHeavy;}
+\DoxyCodeLine{01049\ \ \ \}}
+\DoxyCodeLine{01050\ }
+\DoxyCodeLine{01051\ \ \ \textcolor{keywordtype}{void}\ UpdateLyrics()}
+\DoxyCodeLine{01052\ \ \ \{}
+\DoxyCodeLine{01053\ \ \ \ \ lyricLines.clear();}
+\DoxyCodeLine{01054\ \ \ \ \ lyricLines\ =\ \mbox{\hyperlink{misc_8hpp_a624a33fe79ca546dc4abb6e0735586ce}{formatLyrics}}(current\_playing\_state.lyrics);}
+\DoxyCodeLine{01055\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01056\ \ \ \}}
+\DoxyCodeLine{01057\ }
+\DoxyCodeLine{01058\ \ \ Element\ RenderLyricsAndInfoView()}
+\DoxyCodeLine{01059\ \ \ \{}
+\DoxyCodeLine{01060\ }
+\DoxyCodeLine{01061\ \ \ \ \ std::vector<Element>\ additionalPropertiesText;}
+\DoxyCodeLine{01062\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [key,\ value]\ :\ current\_playing\_state.additionalProperties)}
+\DoxyCodeLine{01063\ \ \ \ \ \{}
+\DoxyCodeLine{01064\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key\ !=\ \textcolor{stringliteral}{"{}LYRICS"{}})}
+\DoxyCodeLine{01065\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01066\ \ \ \ \ \ \ \ \ additionalPropertiesText.push\_back(hbox(\{text(key\ +\ \textcolor{stringliteral}{"{}:\ "{}}),\ text(value)\ |\ dim\}));}
+\DoxyCodeLine{01067\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01068\ \ \ \ \ \}}
+\DoxyCodeLine{01069\ }
+\DoxyCodeLine{01070\ \ \ \ \ MenuOption\ lyrics\_menu\_options;}
+\DoxyCodeLine{01071\ \ \ \ \ lyrics\_menu\_options.on\_change\ \ \ \ \ =\ [\&]()\ \{\};}
+\DoxyCodeLine{01072\ \ \ \ \ lyrics\_menu\_options.focused\_entry\ =\ \&current\_lyric\_line;}
+\DoxyCodeLine{01073\ \ \ \ \ lyrics\_scroller\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ Menu(\&lyricLines,\ \&current\_lyric\_line,\ lyrics\_menu\_options);}
+\DoxyCodeLine{01074\ }
+\DoxyCodeLine{01075\ \ \ \ \ UpdateLyrics();}
+\DoxyCodeLine{01076\ }
+\DoxyCodeLine{01077\ \ \ \ \ std::string\ end\_text\ =\ \textcolor{stringliteral}{"{}Use\ arrow\ keys\ to\ scroll,\ Press\ '"{}}\ +}
+\DoxyCodeLine{01078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string(1,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(global\_keybinds.goto\_main\_screen))\ +}
+\DoxyCodeLine{01079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ to\ go\ back\ home."{}};}
+\DoxyCodeLine{01080\ }
+\DoxyCodeLine{01081\ \ \ \ \ \textcolor{keyword}{auto}\ lyrics\_pane\ =\ vbox(\{}
+\DoxyCodeLine{01082\ \ \ \ \ \ \ lyrics\_scroller-\/>Render()\ |\ flex,}
+\DoxyCodeLine{01083\ \ \ \ \ \});}
+\DoxyCodeLine{01084\ }
+\DoxyCodeLine{01085\ \ \ \ \ \textcolor{keyword}{auto}\ info\_pane\ =\ window(text(\textcolor{stringliteral}{"{}\ Additional\ Info\ "{}})\ |\ bold\ |\ center\ |\ inverted,}
+\DoxyCodeLine{01086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vbox(additionalPropertiesText)\ |\ frame\ |\ flex);}
+\DoxyCodeLine{01087\ }
+\DoxyCodeLine{01088\ \ \ \ \ \textcolor{keywordflow}{return}\ hbox(\{}
+\DoxyCodeLine{01089\ \ \ \ \ \ \ \ \ vbox(\{}
+\DoxyCodeLine{01090\ \ \ \ \ \ \ \ \ \ \ lyrics\_pane\ |\ flex\ |\ border,}
+\DoxyCodeLine{01091\ \ \ \ \ \ \ \ \ \ \ separator(),}
+\DoxyCodeLine{01092\ \ \ \ \ \ \ \ \ \ \ text(end\_text)\ |\ dim\ |\ center,}
+\DoxyCodeLine{01093\ \ \ \ \ \ \ \ \ \})\ |\ flex,}
+\DoxyCodeLine{01094\ \ \ \ \ \ \ \ \ vbox(\{info\_pane\})\ |\ flex}
+\DoxyCodeLine{01095\ \ \ \ \ \ \ \})\ |\ flex;}
+\DoxyCodeLine{01096\ \ \ \}}
+\DoxyCodeLine{01097\ }
+\DoxyCodeLine{01098\ \ \ \textcolor{keywordtype}{void}\ UpdateSongQueueList()}
+\DoxyCodeLine{01099\ \ \ \{}
+\DoxyCodeLine{01100\ \ \ \ \ song\_queue\_names.clear();}
+\DoxyCodeLine{01101\ }
+\DoxyCodeLine{01102\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\ =\ current\_song\_queue\_index;\ i\ <\ song\_queue.size();\ i++)}
+\DoxyCodeLine{01103\ \ \ \ \ \{}
+\DoxyCodeLine{01104\ \ \ \ \ \ \ std::string\ eleName\ =\ song\_queue[i].metadata.title\ +\ \textcolor{stringliteral}{"{}\ by\ "{}}\ +\ song\_queue[i].metadata.artist;}
+\DoxyCodeLine{01105\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ ==\ current\_song\_queue\_index)}
+\DoxyCodeLine{01106\ \ \ \ \ \ \ \ \ eleName\ +=\ \textcolor{stringliteral}{"{}\ \ *"{}};}
+\DoxyCodeLine{01107\ \ \ \ \ \ \ song\_queue\_names.push\_back(eleName);}
+\DoxyCodeLine{01108\ \ \ \ \ \}}
+\DoxyCodeLine{01109\ }
+\DoxyCodeLine{01110\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01111\ \ \ \}}
+\DoxyCodeLine{01112\ }
+\DoxyCodeLine{01113\ \ \ Element\ RenderQueueScreen()}
+\DoxyCodeLine{01114\ \ \ \{}
+\DoxyCodeLine{01115\ \ \ \ \ MenuOption\ song\_queue\_comp\_options;}
+\DoxyCodeLine{01116\ \ \ \ \ song\_queue\_comp\_options.on\_change\ \ \ \ \ =\ [\&]()\ \{\};}
+\DoxyCodeLine{01117\ \ \ \ \ song\_queue\_comp\_options.focused\_entry\ =\ \&selected\_song\_queue;}
+\DoxyCodeLine{01118\ \ \ \ \ songs\_queue\_comp\ =\ Menu(\&song\_queue\_names,\ \&selected\_song\_queue,\ song\_queue\_comp\_options);}
+\DoxyCodeLine{01119\ \ \ \ \ UpdateSongQueueList();}
+\DoxyCodeLine{01120\ }
+\DoxyCodeLine{01121\ \ \ \ \ \textcolor{keyword}{auto}\ title\ =\ text(\textcolor{stringliteral}{"{}\ Song\ Queue\ "{}})\ |\ bold\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da4d7ff7393a484a7b9ed2e381f5cdeaf7}{TrueColors::Color::LightBlue}})\ |}
+\DoxyCodeLine{01122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ underlined\ |\ center;}
+\DoxyCodeLine{01123\ }
+\DoxyCodeLine{01124\ \ \ \ \ \textcolor{keyword}{auto}\ separator\_line\ =\ separator()\ |\ dim\ |\ flex;}
+\DoxyCodeLine{01125\ }
+\DoxyCodeLine{01126\ \ \ \ \ std::string\ end\_text\ =\ \textcolor{stringliteral}{"{}Use\ '"{}}\ +\ \mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.remove\_song\_from\_queue)\ +\ \textcolor{stringliteral}{"{}'\ to\ remove\ selected\ song\ from\ queue,\ Press\ '"{}}\ +}
+\DoxyCodeLine{01127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string(1,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(global\_keybinds.goto\_main\_screen))\ +}
+\DoxyCodeLine{01128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ to\ go\ back\ home."{}};}
+\DoxyCodeLine{01129\ }
+\DoxyCodeLine{01130\ \ \ \ \ \textcolor{keyword}{auto}\ queue\_container\ =\ vbox(\{}
+\DoxyCodeLine{01131\ \ \ \ \ \ \ songs\_queue\_comp-\/>Render()\ |\ border\ |\ flex\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafb55202637692de4a494e9ade4cff2dd}{TrueColors::Color::LightGray}}),}
+\DoxyCodeLine{01132\ \ \ \ \ \ \ separator(),}
+\DoxyCodeLine{01133\ \ \ \ \ \});}
+\DoxyCodeLine{01134\ }
+\DoxyCodeLine{01135\ \ \ \ \ \textcolor{keywordflow}{return}\ vbox(\{}
+\DoxyCodeLine{01136\ \ \ \ \ \ \ \ \ \ \ title,}
+\DoxyCodeLine{01137\ \ \ \ \ \ \ \ \ \ \ queue\_container\ |\ frame\ |\ flex,}
+\DoxyCodeLine{01138\ \ \ \ \ \ \ \ \ \ \ text(end\_text)\ |\ dim\ |\ center,}
+\DoxyCodeLine{01139\ \ \ \ \ \ \ \ \ \})\ |\ flex;}
+\DoxyCodeLine{01140\ \ \ \}}
+\DoxyCodeLine{01141\ }
+\DoxyCodeLine{01142\ \ \ \textcolor{keywordtype}{void}\ NavigateSongMenu(\textcolor{keywordtype}{bool}\ move\_down)}
+\DoxyCodeLine{01143\ \ \ \{}
+\DoxyCodeLine{01144\ \ \ \ \ \textcolor{keywordtype}{int}\ initial\_inode\ =\ selected\_inode;\ \textcolor{comment}{//\ Store\ the\ initial\ index\ to\ detect\ infinite\ loops}}
+\DoxyCodeLine{01145\ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{01146\ \ \ \ \ \{}
+\DoxyCodeLine{01147\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (move\_down)}
+\DoxyCodeLine{01148\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01149\ \ \ \ \ \ \ \ \ selected\_inode\ =\ (selected\_inode\ +\ 1)\ \%\ current\_song\_elements.size();}
+\DoxyCodeLine{01150\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01151\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01152\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01153\ \ \ \ \ \ \ \ \ selected\_inode\ =}
+\DoxyCodeLine{01154\ \ \ \ \ \ \ \ \ \ \ (selected\_inode\ -\/\ 1\ +\ current\_song\_elements.size())\ \%\ current\_song\_elements.size();}
+\DoxyCodeLine{01155\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01156\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (album\_name\_indices.find(selected\_inode)\ !=\ album\_name\_indices.end())}
+\DoxyCodeLine{01157\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01158\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (move\_down)}
+\DoxyCodeLine{01159\ \ \ \ \ \ \ \ \ \ \ albums\_indices\_traversed++;}
+\DoxyCodeLine{01160\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01161\ \ \ \ \ \ \ \ \ \ \ albums\_indices\_traversed-\/-\/;}
+\DoxyCodeLine{01162\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01163\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (selected\_inode\ ==\ 0\ \&\&\ move\_down)}
+\DoxyCodeLine{01164\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01165\ \ \ \ \ \ \ \ \ albums\_indices\_traversed\ =\ 1;}
+\DoxyCodeLine{01166\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01167\ \ \ \ \ \ \ \textcolor{comment}{//\ Break\ the\ loop\ if\ we\ traverse\ all\ elements\ (prevent\ infinite\ loop)}}
+\DoxyCodeLine{01168\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (selected\_inode\ ==\ initial\_inode)}
+\DoxyCodeLine{01169\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01170\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01171\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01172\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (album\_name\_indices.find(selected\_inode)\ !=}
+\DoxyCodeLine{01173\ \ \ \ \ \ \ \ \ \ \ \ \ \ album\_name\_indices.end());\ \textcolor{comment}{//\ Skip\ album\ name\ indices}}
+\DoxyCodeLine{01174\ \ \ \}}
+\DoxyCodeLine{01175\ }
+\DoxyCodeLine{01176\ \ \ \textcolor{keywordtype}{void}\ NavigateList(\textcolor{keywordtype}{bool}\ move\_down)}
+\DoxyCodeLine{01177\ \ \ \{}
+\DoxyCodeLine{01178\ \ \ \ \ \textcolor{keywordflow}{if}\ (active\_screen\ ==\ \mbox{\hyperlink{ui__handler_8hpp_ab1e2d4655431d80420094738cb479ba9}{SHOW\_MAIN\_UI}})}
+\DoxyCodeLine{01179\ \ \ \ \ \{}
+\DoxyCodeLine{01180\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (focus\_on\_artists)}
+\DoxyCodeLine{01181\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01182\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!current\_artist\_names.empty())}
+\DoxyCodeLine{01183\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01184\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (move\_down)}
+\DoxyCodeLine{01185\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01186\ \ \ \ \ \ \ \ \ \ \ \ \ selected\_artist\ =\ (selected\_artist\ +\ 1)\ \%\ current\_artist\_names.size();}
+\DoxyCodeLine{01187\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01188\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01189\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01190\ \ \ \ \ \ \ \ \ \ \ \ \ selected\_artist\ =}
+\DoxyCodeLine{01191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (selected\_artist\ -\/\ 1\ +\ current\_artist\_names.size())\ \%\ current\_artist\_names.size();}
+\DoxyCodeLine{01192\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01193\ \ \ \ \ \ \ \ \ \ \ UpdateSongsForArtist(current\_artist\_names[selected\_artist]);}
+\DoxyCodeLine{01194\ \ \ \ \ \ \ \ \ \ \ selected\_inode\ \ \ \ \ \ \ \ \ \ \ =\ 1;\ \textcolor{comment}{//\ Reset\ to\ the\ first\ song}}
+\DoxyCodeLine{01195\ \ \ \ \ \ \ \ \ \ \ albums\_indices\_traversed\ =\ 1;}
+\DoxyCodeLine{01196\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01197\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01198\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01199\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01200\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!current\_inodes.empty())}
+\DoxyCodeLine{01201\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01202\ \ \ \ \ \ \ \ \ \ \ NavigateSongMenu(move\_down);}
+\DoxyCodeLine{01203\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01204\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01205\ \ \ \ \ \}}
+\DoxyCodeLine{01206\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (active\_screen\ ==\ \mbox{\hyperlink{ui__handler_8hpp_a9c8fdd860223a430f7ef232c1987a890}{SHOW\_QUEUE\_SCREEN}})}
+\DoxyCodeLine{01207\ \ \ \ \ \{}
+\DoxyCodeLine{01208\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (move\_down)}
+\DoxyCodeLine{01209\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01210\ \ \ \ \ \ \ \ \ selected\_song\_queue\ =\ (selected\_song\_queue\ +\ 1)\ \%\ song\_queue\_names.size();}
+\DoxyCodeLine{01211\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01212\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01213\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01214\ \ \ \ \ \ \ \ \ selected\_song\_queue\ =}
+\DoxyCodeLine{01215\ \ \ \ \ \ \ \ \ \ \ (selected\_song\_queue\ -\/\ 1\ +\ song\_queue\_names.size())\ \%\ song\_queue\_names.size();}
+\DoxyCodeLine{01216\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01217\ \ \ \ \ \}}
+\DoxyCodeLine{01218\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (active\_screen\ ==\ \mbox{\hyperlink{ui__handler_8hpp_a965b2db45eda447f0b343c73672533fd}{SHOW\_LYRICS\_SCREEN}})}
+\DoxyCodeLine{01219\ \ \ \ \ \{}
+\DoxyCodeLine{01220\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (move\_down)}
+\DoxyCodeLine{01221\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01222\ \ \ \ \ \ \ \ \ current\_lyric\_line\ =\ (current\_lyric\_line\ +\ 1)\ \%\ lyricLines.size();}
+\DoxyCodeLine{01223\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01224\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01225\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01226\ \ \ \ \ \ \ \ \ current\_lyric\_line\ =\ (current\_lyric\_line\ -\/\ 1\ +\ lyricLines.size())\ \%\ lyricLines.size();}
+\DoxyCodeLine{01227\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01228\ \ \ \ \ \}}
+\DoxyCodeLine{01229\ \ \ \}}
+\DoxyCodeLine{01230\ }
+\DoxyCodeLine{01231\ \ \ \textcolor{keywordtype}{void}\ NavigateListToTop(\textcolor{keywordtype}{bool}\ move\_up)}
+\DoxyCodeLine{01232\ \ \ \{}
+\DoxyCodeLine{01233\ \ \ \ \ \textcolor{keywordflow}{if}\ (active\_screen\ ==\ \mbox{\hyperlink{ui__handler_8hpp_ab1e2d4655431d80420094738cb479ba9}{SHOW\_MAIN\_UI}})}
+\DoxyCodeLine{01234\ \ \ \ \ \{}
+\DoxyCodeLine{01235\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (focus\_on\_artists)}
+\DoxyCodeLine{01236\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01237\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!current\_artist\_names.empty())}
+\DoxyCodeLine{01238\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01239\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Navigate\ to\ the\ top\ of\ the\ artist\ list}}
+\DoxyCodeLine{01240\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (move\_up)}
+\DoxyCodeLine{01241\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01242\ \ \ \ \ \ \ \ \ \ \ \ \ selected\_artist\ =\ 0;}
+\DoxyCodeLine{01243\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01244\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01245\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01246\ \ \ \ \ \ \ \ \ \ \ \ \ selected\_artist\ =\ current\_artist\_names.size()\ -\/\ 1;}
+\DoxyCodeLine{01247\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01248\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01249\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01250\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01251\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01252\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!current\_inodes.empty())}
+\DoxyCodeLine{01253\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01254\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (move\_up)}
+\DoxyCodeLine{01255\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01256\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Navigate\ to\ the\ first\ valid\ song,\ skipping\ headers}}
+\DoxyCodeLine{01257\ \ \ \ \ \ \ \ \ \ \ \ \ selected\_inode\ \ \ \ \ \ \ \ \ \ \ =\ 1;}
+\DoxyCodeLine{01258\ \ \ \ \ \ \ \ \ \ \ \ \ albums\_indices\_traversed\ =\ 1;}
+\DoxyCodeLine{01259\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01260\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01261\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01262\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Navigate\ to\ the\ last\ valid\ song}}
+\DoxyCodeLine{01263\ \ \ \ \ \ \ \ \ \ \ \ \ selected\_inode\ \ \ \ \ \ \ \ \ \ \ =\ current\_song\_elements.size()\ -\/\ 1;}
+\DoxyCodeLine{01264\ \ \ \ \ \ \ \ \ \ \ \ \ albums\_indices\_traversed\ =\ album\_name\_indices.size();}
+\DoxyCodeLine{01265\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01266\ }
+\DoxyCodeLine{01267\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (selected\_inode\ <\ 0\ ||\ selected\_inode\ >=\ current\_song\_elements.size())}
+\DoxyCodeLine{01268\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01269\ \ \ \ \ \ \ \ \ \ \ \ \ selected\_inode\ \ \ \ \ \ \ \ \ \ \ =\ 1;\ \textcolor{comment}{//\ Fallback}}
+\DoxyCodeLine{01270\ \ \ \ \ \ \ \ \ \ \ \ \ albums\_indices\_traversed\ =\ 1;}
+\DoxyCodeLine{01271\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01272\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01273\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01274\ \ \ \ \ \}}
+\DoxyCodeLine{01275\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (active\_screen\ ==\ \mbox{\hyperlink{ui__handler_8hpp_a9c8fdd860223a430f7ef232c1987a890}{SHOW\_QUEUE\_SCREEN}})}
+\DoxyCodeLine{01276\ \ \ \ \ \{}
+\DoxyCodeLine{01277\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (move\_up)}
+\DoxyCodeLine{01278\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01279\ \ \ \ \ \ \ \ \ selected\_song\_queue\ =\ 0;}
+\DoxyCodeLine{01280\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01281\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01282\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01283\ \ \ \ \ \ \ \ \ selected\_song\_queue\ =\ song\_queue\_names.size()\ -\/\ 1;}
+\DoxyCodeLine{01284\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01285\ \ \ \ \ \}}
+\DoxyCodeLine{01286\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (active\_screen\ ==\ \mbox{\hyperlink{ui__handler_8hpp_a965b2db45eda447f0b343c73672533fd}{SHOW\_LYRICS\_SCREEN}})}
+\DoxyCodeLine{01287\ \ \ \ \ \{}
+\DoxyCodeLine{01288\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (move\_up)}
+\DoxyCodeLine{01289\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01290\ \ \ \ \ \ \ \ \ current\_lyric\_line\ =\ 0;}
+\DoxyCodeLine{01291\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01292\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01293\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01294\ \ \ \ \ \ \ \ \ current\_lyric\_line\ =\ lyricLines.size()\ -\/\ 1;}
+\DoxyCodeLine{01295\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01296\ \ \ \ \ \}}
+\DoxyCodeLine{01297\ \ \ \}}
+\DoxyCodeLine{01298\ }
+\DoxyCodeLine{01299\ \ \ Element\ RenderHelpScreen()}
+\DoxyCodeLine{01300\ \ \ \{}
+\DoxyCodeLine{01301\ \ \ \ \ \textcolor{keyword}{auto}\ title\ =\ text(\textcolor{stringliteral}{"{}inLimbo\ Controls"{}})\ |\ bold\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae20385a2b41df1743f787ebef18222b8}{TrueColors::Color::Teal}});}
+\DoxyCodeLine{01302\ }
+\DoxyCodeLine{01303\ \ \ \ \ \textcolor{comment}{//\ Helper\ function\ to\ create\ a\ single\ keybind\ row}}
+\DoxyCodeLine{01304\ \ \ \ \ \textcolor{keyword}{auto}\ createRow\ =}
+\DoxyCodeLine{01305\ \ \ \ \ \ \ [\&](\textcolor{keyword}{const}\ std::string\&\ key,\ \textcolor{keyword}{const}\ std::string\&\ description,\ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{TrueColors::Color}}\ color)}
+\DoxyCodeLine{01306\ \ \ \ \ \{}
+\DoxyCodeLine{01307\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hbox(\{}
+\DoxyCodeLine{01308\ \ \ \ \ \ \ \ \ text(key)\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(color),}
+\DoxyCodeLine{01309\ \ \ \ \ \ \ \ \ text(\textcolor{stringliteral}{"{}\ \ -\/-\/\ \ "{}})\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da994ae1d9731cebe455aff211bcb25b93}{TrueColors::Color::Gray}}),}
+\DoxyCodeLine{01310\ \ \ \ \ \ \ \ \ text(description)\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da25a81701fbfa4a1efdf660a950c1d006}{TrueColors::Color::White}}),}
+\DoxyCodeLine{01311\ \ \ \ \ \ \ \});}
+\DoxyCodeLine{01312\ \ \ \ \ \};}
+\DoxyCodeLine{01313\ }
+\DoxyCodeLine{01314\ \ \ \ \ \textcolor{keyword}{auto}\ controls\_list\ =}
+\DoxyCodeLine{01315\ \ \ \ \ \ \ vbox(\{}
+\DoxyCodeLine{01316\ \ \ \ \ \ \ \ \ createRow(\mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.toggle\_play),\ \textcolor{stringliteral}{"{}Toggle\ playback"{}},}
+\DoxyCodeLine{01317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae20385a2b41df1743f787ebef18222b8}{TrueColors::Color::Teal}}),}
+\DoxyCodeLine{01318\ \ \ \ \ \ \ \ \ createRow(\mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.play\_song\_next),\ \textcolor{stringliteral}{"{}Next\ song"{}},}
+\DoxyCodeLine{01319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dac37b5ce4ba80a097d82726ae74d34b13}{TrueColors::Color::LightCyan}}),}
+\DoxyCodeLine{01320\ \ \ \ \ \ \ \ \ createRow(\mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.play\_song\_prev),\ \textcolor{stringliteral}{"{}Previous\ song"{}},}
+\DoxyCodeLine{01321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dac37b5ce4ba80a097d82726ae74d34b13}{TrueColors::Color::LightCyan}}),}
+\DoxyCodeLine{01322\ \ \ \ \ \ \ \ \ createRow(\textcolor{stringliteral}{"{}r"{}},\ \textcolor{stringliteral}{"{}Cycle\ repeat\ mode"{}},\ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daf1ec64ef9f82e9fb86b094f8b548f9f1}{TrueColors::Color::LightMagenta}}),}
+\DoxyCodeLine{01323\ \ \ \ \ \ \ \ \ createRow(\mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.vol\_up),\ \textcolor{stringliteral}{"{}Volume\ up"{}},\ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da7a6a38bec67cbc2a39ce22f34e4ed8e2}{TrueColors::Color::LightGreen}}),}
+\DoxyCodeLine{01324\ \ \ \ \ \ \ \ \ createRow(\mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.vol\_down),\ \textcolor{stringliteral}{"{}Volume\ down"{}},}
+\DoxyCodeLine{01325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da7a6a38bec67cbc2a39ce22f34e4ed8e2}{TrueColors::Color::LightGreen}}),}
+\DoxyCodeLine{01326\ \ \ \ \ \ \ \ \ createRow(\mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.toggle\_mute),}
+\DoxyCodeLine{01327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Toggle\ muting\ the\ current\ instance\ of\ miniaudio"{}},\ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daf9a96fb667261a141d10021a66d6ad0f}{TrueColors::Color::LightRed}}),}
+\DoxyCodeLine{01328\ \ \ \ \ \ \ \ \ createRow(\mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.toggle\_focus),\ \textcolor{stringliteral}{"{}Switch\ focus"{}},}
+\DoxyCodeLine{01329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafaf948b65bda38f44b17d156177d1728}{TrueColors::Color::LightYellow}}),}
+\DoxyCodeLine{01330\ \ \ \ \ \ \ \ \ createRow(\textcolor{stringliteral}{"{}gg"{}},\ \textcolor{stringliteral}{"{}Go\ to\ top\ of\ the\ current\ list"{}},\ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da4d7ff7393a484a7b9ed2e381f5cdeaf7}{TrueColors::Color::LightBlue}}),}
+\DoxyCodeLine{01331\ \ \ \ \ \ \ \ \ createRow(\textcolor{stringliteral}{"{}G"{}},\ \textcolor{stringliteral}{"{}Go\ to\ bottom\ of\ the\ current\ list"{}},\ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da4d7ff7393a484a7b9ed2e381f5cdeaf7}{TrueColors::Color::LightBlue}}),}
+\DoxyCodeLine{01332\ \ \ \ \ \ \ \ \ createRow(\mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.seek\_ahead\_5),\ \textcolor{stringliteral}{"{}Seek\ ahead\ by\ 5s"{}},}
+\DoxyCodeLine{01333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da909cea0c97058cfe2e3ea8d675cb08e1}{TrueColors::Color::Orange}}),}
+\DoxyCodeLine{01334\ \ \ \ \ \ \ \ \ createRow(\mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.seek\_behind\_5),\ \textcolor{stringliteral}{"{}Seek\ behind\ by\ 5s"{}},}
+\DoxyCodeLine{01335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da909cea0c97058cfe2e3ea8d675cb08e1}{TrueColors::Color::Orange}}),}
+\DoxyCodeLine{01336\ \ \ \ \ \ \ \ \ createRow(\mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.replay\_song),\ \textcolor{stringliteral}{"{}Replay\ current\ song"{}},}
+\DoxyCodeLine{01337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da909cea0c97058cfe2e3ea8d675cb08e1}{TrueColors::Color::Orange}}),}
+\DoxyCodeLine{01338\ \ \ \ \ \ \ \ \ createRow(\mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.quit\_app),\ \textcolor{stringliteral}{"{}Quit"{}},\ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daf9a96fb667261a141d10021a66d6ad0f}{TrueColors::Color::LightRed}}),}
+\DoxyCodeLine{01339\ \ \ \ \ \ \ \ \ createRow(\mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.show\_help),\ \textcolor{stringliteral}{"{}Toggle\ this\ help"{}},}
+\DoxyCodeLine{01340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da023c239d2f2538f140a20e72c7b73f20}{TrueColors::Color::Cyan}}),}
+\DoxyCodeLine{01341\ \ \ \ \ \ \ \ \ createRow(\mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.add\_song\_to\_queue),\ \textcolor{stringliteral}{"{}Add\ song\ to\ queue"{}},}
+\DoxyCodeLine{01342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dab9c31a17936f5966fd4fbe74f9b09012}{TrueColors::Color::LightPink}}),}
+\DoxyCodeLine{01343\ \ \ \ \ \ \ \ \ createRow(\mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.goto\_main\_screen),\ \textcolor{stringliteral}{"{}Go\ to\ song\ tree\ view"{}},}
+\DoxyCodeLine{01344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae20385a2b41df1743f787ebef18222b8}{TrueColors::Color::Teal}}),}
+\DoxyCodeLine{01345\ \ \ \ \ \ \ \})\ |}
+\DoxyCodeLine{01346\ \ \ \ \ \ \ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da7a6a38bec67cbc2a39ce22f34e4ed8e2}{TrueColors::Color::LightGreen}});}
+\DoxyCodeLine{01347\ }
+\DoxyCodeLine{01348\ \ \ \ \ \textcolor{keyword}{auto}\ symbols\_explanation\ =\ vbox(\{}
+\DoxyCodeLine{01349\ \ \ \ \ \ \ hbox(\{text(\mbox{\hyperlink{ui__handler_8hpp_aba56a61f453fc60302c6c87189871467}{LYRICS\_AVAIL}}),\ text(\textcolor{stringliteral}{"{}\ -\/>\ "{}}),\ text(\textcolor{stringliteral}{"{}The\ current\ song\ has\ lyrics\ metadata."{}})\})\ |}
+\DoxyCodeLine{01350\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dac37b5ce4ba80a097d82726ae74d34b13}{TrueColors::Color::LightCyan}}),}
+\DoxyCodeLine{01351\ \ \ \ \ \ \ hbox(\{text(\mbox{\hyperlink{ui__handler_8hpp_ad1801a0eef7108118fc5a54e6098ebfa}{ADDN\_PROPS\_AVAIL}}),\ text(\textcolor{stringliteral}{"{}\ \ -\/>\ "{}}),}
+\DoxyCodeLine{01352\ \ \ \ \ \ \ \ \ \ \ \ \ text(\textcolor{stringliteral}{"{}The\ current\ song\ has\ additional\ properties\ metadata."{}})\})\ |}
+\DoxyCodeLine{01353\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafaf948b65bda38f44b17d156177d1728}{TrueColors::Color::LightYellow}}),}
+\DoxyCodeLine{01354\ \ \ \ \ \});}
+\DoxyCodeLine{01355\ }
+\DoxyCodeLine{01356\ \ \ \ \ std::string\ footer\_text\ =}
+\DoxyCodeLine{01357\ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Press\ '"{}}\ +\ \mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(global\_keybinds.show\_help)\ +\ \textcolor{stringliteral}{"{}'\ to\ return\ to\ inLimbo."{}};}
+\DoxyCodeLine{01358\ \ \ \ \ \textcolor{keyword}{auto}\ footer\ =\ text(footer\_text)\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafaf948b65bda38f44b17d156177d1728}{TrueColors::Color::LightYellow}})\ |\ center;}
+\DoxyCodeLine{01359\ }
+\DoxyCodeLine{01360\ \ \ \ \ \textcolor{keywordflow}{return}\ vbox(\{}
+\DoxyCodeLine{01361\ \ \ \ \ \ \ \ \ \ \ \ \ \ title,}
+\DoxyCodeLine{01362\ \ \ \ \ \ \ \ \ \ \ \ \ \ controls\_list\ |\ border\ |\ flex,}
+\DoxyCodeLine{01363\ \ \ \ \ \ \ \ \ \ \ \ \ \ text(\textcolor{stringliteral}{"{}Symbols\ Legend"{}})\ |\ bold\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da4d7ff7393a484a7b9ed2e381f5cdeaf7}{TrueColors::Color::LightBlue}}),}
+\DoxyCodeLine{01364\ \ \ \ \ \ \ \ \ \ \ \ \ \ symbols\_explanation\ |\ border\ |\ flex,}
+\DoxyCodeLine{01365\ \ \ \ \ \ \ \ \ \ \ \ \ \ footer,}
+\DoxyCodeLine{01366\ \ \ \ \ \ \ \ \ \ \ \ \})\ |}
+\DoxyCodeLine{01367\ \ \ \ \ \ \ \ \ \ \ \ flex;}
+\DoxyCodeLine{01368\ \ \ \}}
+\DoxyCodeLine{01369\ }
+\DoxyCodeLine{01370\ \ \ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{Color}}\ GetCurrWinColor(\textcolor{keywordtype}{bool}\ focused)}
+\DoxyCodeLine{01371\ \ \ \{}
+\DoxyCodeLine{01372\ \ \ \ \ \textcolor{keywordflow}{return}\ focused\ ?\ global\_colors.active\_win\_color\ :\ global\_colors.inactive\_win\_color;}
+\DoxyCodeLine{01373\ \ \ \}}
+\DoxyCodeLine{01374\ }
+\DoxyCodeLine{01375\ \ \ Element\ RenderMainInterface(\textcolor{keywordtype}{float}\ progress)}
+\DoxyCodeLine{01376\ \ \ \{}
+\DoxyCodeLine{01377\ \ \ \ \ std::string\ current\_song\_info;}
+\DoxyCodeLine{01378\ \ \ \ \ std::string\ year\_info;}
+\DoxyCodeLine{01379\ \ \ \ \ std::string\ additional\_info;}
+\DoxyCodeLine{01380\ }
+\DoxyCodeLine{01381\ \ \ \ \ \textcolor{keywordflow}{if}\ (!current\_playing\_state.artist.empty())}
+\DoxyCodeLine{01382\ \ \ \ \ \{}
+\DoxyCodeLine{01383\ \ \ \ \ \ \ current\_song\_info\ =\ \textcolor{stringliteral}{"{}\ -\/\ "{}}\ +\ current\_playing\_state.title;}
+\DoxyCodeLine{01384\ \ \ \ \ \ \ year\_info\ \ \ \ \ \ \ \ \ =\ std::to\_string(current\_playing\_state.year)\ +\ \textcolor{stringliteral}{"{}\ "{}};}
+\DoxyCodeLine{01385\ }
+\DoxyCodeLine{01386\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_playing\_state.genre\ !=\ \textcolor{stringliteral}{"{}Unknown\ Genre"{}})}
+\DoxyCodeLine{01387\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01388\ \ \ \ \ \ \ \ \ additional\_info\ +=\ \textcolor{stringliteral}{"{}Genre:\ "{}}\ +\ current\_playing\_state.genre\ +\ \mbox{\hyperlink{ui__handler_8hpp_ae404e170bcac700cdc2e87d1c5ba04f5}{STATUS\_BAR\_DELIM}};}
+\DoxyCodeLine{01389\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01390\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_playing\_state.has\_comment)}
+\DoxyCodeLine{01391\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01392\ \ \ \ \ \ \ \ \ additional\_info\ +=\ \mbox{\hyperlink{ui__handler_8hpp_ad1801a0eef7108118fc5a54e6098ebfa}{ADDN\_PROPS\_AVAIL}};}
+\DoxyCodeLine{01393\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01394\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_playing\_state.has\_lyrics)}
+\DoxyCodeLine{01395\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01396\ \ \ \ \ \ \ \ \ additional\_info\ +=\ \mbox{\hyperlink{ui__handler_8hpp_ae404e170bcac700cdc2e87d1c5ba04f5}{STATUS\_BAR\_DELIM}};}
+\DoxyCodeLine{01397\ \ \ \ \ \ \ \ \ additional\_info\ +=\ \mbox{\hyperlink{ui__handler_8hpp_aba56a61f453fc60302c6c87189871467}{LYRICS\_AVAIL}};}
+\DoxyCodeLine{01398\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01399\ \ \ \ \ \ \ additional\_info\ +=\ \mbox{\hyperlink{ui__handler_8hpp_ae404e170bcac700cdc2e87d1c5ba04f5}{STATUS\_BAR\_DELIM}};}
+\DoxyCodeLine{01400\ \ \ \ \ \}}
+\DoxyCodeLine{01401\ }
+\DoxyCodeLine{01402\ \ \ \ \ std::string\ status\ =\ std::string(\textcolor{stringliteral}{"{}\ \ "{}})\ +\ (is\_playing\ ?\ \mbox{\hyperlink{ui__handler_8hpp_af8d79d91bf9f2edeb736c974183720ce}{STATUS\_PLAYING}}\ :\ \mbox{\hyperlink{ui__handler_8hpp_a103ed232a5c657b9a072c989787856bb}{STATUS\_PAUSED}})\ +\ \textcolor{stringliteral}{"{}\ \ "{}};}
+\DoxyCodeLine{01403\ }
+\DoxyCodeLine{01404\ \ \ \ \ \textcolor{keyword}{auto}\ left\_pane\ =}
+\DoxyCodeLine{01405\ \ \ \ \ \ \ vbox(\{}
+\DoxyCodeLine{01406\ \ \ \ \ \ \ \ \ text(\textcolor{stringliteral}{"{}\ Artists"{}})\ |\ bold\ |\ color(global\_colors.artists\_title\_bg)\ |\ inverted,}
+\DoxyCodeLine{01407\ \ \ \ \ \ \ \ \ separator(),}
+\DoxyCodeLine{01408\ \ \ \ \ \ \ \ \ artists\_list-\/>Render()\ |\ frame\ |\ flex\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da25a81701fbfa4a1efdf660a950c1d006}{TrueColors::Color::White}}),}
+\DoxyCodeLine{01409\ \ \ \ \ \ \ \})\ |}
+\DoxyCodeLine{01410\ \ \ \ \ \ \ borderHeavy\ |\ color(GetCurrWinColor(focus\_on\_artists));}
+\DoxyCodeLine{01411\ }
+\DoxyCodeLine{01412\ \ \ \ \ \textcolor{keyword}{auto}\ right\_pane\ =}
+\DoxyCodeLine{01413\ \ \ \ \ \ \ vbox(\{}
+\DoxyCodeLine{01414\ \ \ \ \ \ \ \ \ text(\textcolor{stringliteral}{"{}\ Songs"{}})\ |\ bold\ |\ color(global\_colors.songs\_title\_bg)\ |\ inverted,}
+\DoxyCodeLine{01415\ \ \ \ \ \ \ \ \ separator(),}
+\DoxyCodeLine{01416\ \ \ \ \ \ \ \ \ songs\_list-\/>Render()\ |\ frame\ |\ flex\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da25a81701fbfa4a1efdf660a950c1d006}{TrueColors::Color::White}}),}
+\DoxyCodeLine{01417\ \ \ \ \ \ \ \})\ |}
+\DoxyCodeLine{01418\ \ \ \ \ \ \ borderHeavy\ |\ color(GetCurrWinColor(!focus\_on\_artists));}
+\DoxyCodeLine{01419\ }
+\DoxyCodeLine{01420\ \ \ \ \ \textcolor{keyword}{auto}\ panes\ =\ vbox(\{hbox(\{}
+\DoxyCodeLine{01421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ left\_pane\ |\ size(WIDTH,\ EQUAL,\ 100)\ |\ size(HEIGHT,\ EQUAL,\ 100)\ |\ flex,}
+\DoxyCodeLine{01422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ right\_pane\ |\ size(WIDTH,\ EQUAL,\ 100)\ |\ size(HEIGHT,\ EQUAL,\ 100)\ |\ flex,}
+\DoxyCodeLine{01423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \})\ |}
+\DoxyCodeLine{01424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flex\})\ |}
+\DoxyCodeLine{01425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flex;}
+\DoxyCodeLine{01426\ }
+\DoxyCodeLine{01427\ \ \ \ \ \textcolor{keyword}{auto}\ progress\_style\ =\ is\_playing\ ?\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dac375f3201e4105d841391a86cc3f1fc5}{TrueColors::Color::SlateBlue}})}
+\DoxyCodeLine{01428\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(TrueColors::\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{Color}}::\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da2e24b6a6dcc7ea9356fb274402296a06}{Crimson}});}
+\DoxyCodeLine{01429\ \ \ \ \ \textcolor{keyword}{auto}\ progress\_bar\ \ \ =\ hbox(\{}
+\DoxyCodeLine{01430\ \ \ \ \ \ \ text(\mbox{\hyperlink{misc_8hpp_a76d3e10fc086b99d9046b6406baf51da}{FormatTime}}((\textcolor{keywordtype}{int})current\_position))\ |\ progress\_style,}
+\DoxyCodeLine{01431\ \ \ \ \ \ \ gauge(progress)\ |\ flex\ |\ progress\_style,}
+\DoxyCodeLine{01432\ \ \ \ \ \ \ text(\mbox{\hyperlink{misc_8hpp_a76d3e10fc086b99d9046b6406baf51da}{FormatTime}}(GetCurrentSongDuration()))\ |\ progress\_style,}
+\DoxyCodeLine{01433\ \ \ \ \ \});}
+\DoxyCodeLine{01434\ }
+\DoxyCodeLine{01435\ \ \ \ \ \textcolor{keyword}{auto}\ volume\_bar\ =\ hbox(\{}
+\DoxyCodeLine{01436\ \ \ \ \ \ \ text(\textcolor{stringliteral}{"{}\ Vol:\ "{}})\ |\ dim,}
+\DoxyCodeLine{01437\ \ \ \ \ \ \ gauge(volume\ /\ 100.0)\ |\ size(WIDTH,\ EQUAL,\ 10)\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafaf948b65bda38f44b17d156177d1728}{TrueColors::Color::LightYellow}}),}
+\DoxyCodeLine{01438\ \ \ \ \ \ \ text(std::to\_string(volume)\ +\ \textcolor{stringliteral}{"{}\%"{}})\ |\ dim,}
+\DoxyCodeLine{01439\ \ \ \ \ \});}
+\DoxyCodeLine{01440\ }
+\DoxyCodeLine{01441\ \ \ \ \ std::string\ queue\_info\ =\ \textcolor{stringliteral}{"{}\ "{}};}
+\DoxyCodeLine{01442\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ songs\_left\ =\ song\_queue.size()\ -\/\ current\_song\_queue\_index\ -\/\ 1;}
+\DoxyCodeLine{01443\ \ \ \ \ \textcolor{keywordflow}{if}\ (songs\_left\ >\ song\_queue.size())}
+\DoxyCodeLine{01444\ \ \ \ \ \ \ songs\_left\ =\ 0;}
+\DoxyCodeLine{01445\ \ \ \ \ queue\_info\ +=\ std::to\_string(songs\_left)\ +\ \textcolor{stringliteral}{"{}\ songs\ left."{}};}
+\DoxyCodeLine{01446\ \ \ \ \ std::string\ up\_next\_song\ =\ \textcolor{stringliteral}{"{}\ Next\ up:\ "{}};}
+\DoxyCodeLine{01447\ \ \ \ \ \textcolor{keywordflow}{if}\ (song\_queue.size()\ >\ 1\ \&\&\ song\_queue[current\_song\_queue\_index\ +\ 1].metadata.title\ !=\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{01448\ \ \ \ \ \ \ up\_next\_song\ +=\ song\_queue[current\_song\_queue\_index\ +\ 1].metadata.title\ +\ \textcolor{stringliteral}{"{}\ by\ "{}}\ +}
+\DoxyCodeLine{01449\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ song\_queue[current\_song\_queue\_index\ +\ 1].metadata.artist;}
+\DoxyCodeLine{01450\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01451\ \ \ \ \ \ \ up\_next\_song\ +=\ \textcolor{stringliteral}{"{}Next\ song\ not\ available."{}};}
+\DoxyCodeLine{01452\ \ \ \ \ \textcolor{keyword}{auto}\ queue\_bar\ =\ hbox(\{}
+\DoxyCodeLine{01453\ \ \ \ \ \ \ text(queue\_info)\ |\ dim\ |\ border\ |\ bold,}
+\DoxyCodeLine{01454\ \ \ \ \ \ \ text(up\_next\_song)\ |\ dim\ |\ border\ |\ flex\ |\ size(WIDTH,\ LESS\_THAN,\ \mbox{\hyperlink{ui__handler_8hpp_ac5fe6a723443d277de55e15b8e2a30d2}{MAX\_LENGTH\_SONG\_NAME}}),}
+\DoxyCodeLine{01455\ \ \ \ \ \});}
+\DoxyCodeLine{01456\ }
+\DoxyCodeLine{01457\ \ \ \ \ \textcolor{keyword}{auto}\ status\_bar\ =}
+\DoxyCodeLine{01458\ \ \ \ \ \ \ hbox(\{text(status)\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae90dfb84e30edf611e326eeb04d680de}{TrueColors::Color::Black}}),}
+\DoxyCodeLine{01459\ \ \ \ \ \ \ \ \ \ \ \ \ text(current\_playing\_state.artist)\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da9768feb3fdb1f267b06093bc572952dd}{TrueColors::Color::Gold}})\ |\ bold\ |}
+\DoxyCodeLine{01460\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ size(WIDTH,\ LESS\_THAN,\ \mbox{\hyperlink{ui__handler_8hpp_a6199aa5ef4a8655f98529342f12e188f}{MAX\_LENGTH\_ARTIST\_NAME}}),}
+\DoxyCodeLine{01461\ \ \ \ \ \ \ \ \ \ \ \ \ text(current\_song\_info)\ |\ bold\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daf9a96fb667261a141d10021a66d6ad0f}{TrueColors::Color::LightRed}})\ |}
+\DoxyCodeLine{01462\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ size(WIDTH,\ LESS\_THAN,\ \mbox{\hyperlink{ui__handler_8hpp_ac5fe6a723443d277de55e15b8e2a30d2}{MAX\_LENGTH\_SONG\_NAME}}),}
+\DoxyCodeLine{01463\ \ \ \ \ \ \ \ \ \ \ \ \ filler(),\ \textcolor{comment}{//\ Push\ the\ right-\/aligned\ content\ to\ the\ end}}
+\DoxyCodeLine{01464\ \ \ \ \ \ \ \ \ \ \ \ \ hbox(\{text(additional\_info)\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae90dfb84e30edf611e326eeb04d680de}{TrueColors::Color::Black}})\ |\ flex,}
+\DoxyCodeLine{01465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text(year\_info)\ |\ \mbox{\hyperlink{misc_8hpp_a8322ea931342052157aab9682d60a14f}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae90dfb84e30edf611e326eeb04d680de}{TrueColors::Color::Black}})\ |}
+\DoxyCodeLine{01466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ size(WIDTH,\ LESS\_THAN,\ 15),}
+\DoxyCodeLine{01467\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text(\textcolor{stringliteral}{"{}\ "{}})\})\ |}
+\DoxyCodeLine{01468\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ align\_right\})\ |}
+\DoxyCodeLine{01469\ \ \ \ \ \ \ size(HEIGHT,\ EQUAL,\ 1)\ |\ \mbox{\hyperlink{misc_8hpp_a32a29b442a57acc73893a7b2be55dec9}{getTrueBGColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da25a81701fbfa4a1efdf660a950c1d006}{TrueColors::Color::White}});}
+\DoxyCodeLine{01470\ }
+\DoxyCodeLine{01471\ \ \ \ \ \textcolor{keywordflow}{return}\ vbox(\{}
+\DoxyCodeLine{01472\ \ \ \ \ \ \ \ \ \ \ \ \ \ panes,}
+\DoxyCodeLine{01473\ \ \ \ \ \ \ \ \ \ \ \ \ \ hbox(\{}
+\DoxyCodeLine{01474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ progress\_bar\ |\ border\ |\ flex,}
+\DoxyCodeLine{01475\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ volume\_bar\ |\ border,}
+\DoxyCodeLine{01476\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ queue\_bar,}
+\DoxyCodeLine{01477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \}),}
+\DoxyCodeLine{01478\ \ \ \ \ \ \ \ \ \ \ \ \ \ status\_bar,}
+\DoxyCodeLine{01479\ \ \ \ \ \ \ \ \ \ \ \ \})\ |}
+\DoxyCodeLine{01480\ \ \ \ \ \ \ \ \ \ \ \ flex;}
+\DoxyCodeLine{01481\ \ \ \}}
+\DoxyCodeLine{01482\ }
+\DoxyCodeLine{01483\ \ \ \textcolor{keywordtype}{void}\ Quit()}
+\DoxyCodeLine{01484\ \ \ \{}
+\DoxyCodeLine{01485\ \ \ \ \ should\_quit\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{01486\ }
+\DoxyCodeLine{01487\ \ \ \ \ \{}
+\DoxyCodeLine{01488\ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(play\_mutex);}
+\DoxyCodeLine{01489\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (audio\_player)}
+\DoxyCodeLine{01490\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01491\ \ \ \ \ \ \ \ \ audio\_player-\/>stop();}
+\DoxyCodeLine{01492\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01493\ \ \ \ \ \}}
+\DoxyCodeLine{01494\ }
+\DoxyCodeLine{01495\ \ \ \ \ \textcolor{keywordflow}{if}\ (play\_future.valid())}
+\DoxyCodeLine{01496\ \ \ \ \ \{}
+\DoxyCodeLine{01497\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ status\ =\ play\_future.wait\_for(std::chrono::seconds(1));}
+\DoxyCodeLine{01498\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (status\ !=\ std::future\_status::ready)}
+\DoxyCodeLine{01499\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01500\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Handle\ timeout\ -\/\ future\ didn't\ complete\ in\ time}}
+\DoxyCodeLine{01501\ \ \ \ \ \ \ \ \ dialog\_message\ =\ \textcolor{stringliteral}{"{}Warning:\ Audio\ shutdown\ timed\ out"{}};}
+\DoxyCodeLine{01502\ \ \ \ \ \ \ \ \ show\_dialog\ \ \ \ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{01503\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01504\ \ \ \ \ \}}
+\DoxyCodeLine{01505\ }
+\DoxyCodeLine{01506\ \ \ \ \ \textcolor{keywordflow}{if}\ (screen\_)}
+\DoxyCodeLine{01507\ \ \ \ \ \{}
+\DoxyCodeLine{01508\ \ \ \ \ \ \ screen\_-\/>ExitLoopClosure()();}
+\DoxyCodeLine{01509\ \ \ \ \ \}}
+\DoxyCodeLine{01510\ \ \ \}}
+\DoxyCodeLine{01511\ \};}
+\DoxyCodeLine{01512\ }
+\DoxyCodeLine{01513\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ FTXUI\_HANDLER\_HPP}}
+
+\end{DoxyCode}

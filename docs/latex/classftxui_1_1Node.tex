@@ -1,0 +1,193 @@
+\doxysection{ftxui\+::Node Class Reference}
+\hypertarget{classftxui_1_1Node}{}\label{classftxui_1_1Node}\index{ftxui::Node@{ftxui::Node}}
+Inheritance diagram for ftxui\+::Node\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classftxui_1_1Node}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structftxui_1_1Node_1_1Status}{Status}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classftxui_1_1Node_a16076f16a5875633731555fac0b18899}\label{classftxui_1_1Node_a16076f16a5875633731555fac0b18899} 
+{\bfseries Node} (Elements children)
+\item 
+\Hypertarget{classftxui_1_1Node_aa0ffadd6283b85d85eb368f10fec4586}\label{classftxui_1_1Node_aa0ffadd6283b85d85eb368f10fec4586} 
+{\bfseries Node} (const \mbox{\hyperlink{classftxui_1_1Node}{Node}} \&)=delete
+\item 
+\Hypertarget{classftxui_1_1Node_a19f767522b844664809a63dfb16895f9}\label{classftxui_1_1Node_a19f767522b844664809a63dfb16895f9} 
+{\bfseries Node} (const \mbox{\hyperlink{classftxui_1_1Node}{Node}} \&\&)=delete
+\item 
+\Hypertarget{classftxui_1_1Node_a21e2dfa97f98ab5f6baf97572cf61991}\label{classftxui_1_1Node_a21e2dfa97f98ab5f6baf97572cf61991} 
+\mbox{\hyperlink{classftxui_1_1Node}{Node}} \& {\bfseries operator=} (const \mbox{\hyperlink{classftxui_1_1Node}{Node}} \&)=delete
+\item 
+\Hypertarget{classftxui_1_1Node_aa05657e8c1c8c8659bc3e523c20a7257}\label{classftxui_1_1Node_aa05657e8c1c8c8659bc3e523c20a7257} 
+\mbox{\hyperlink{classftxui_1_1Node}{Node}} \& {\bfseries operator=} (const \mbox{\hyperlink{classftxui_1_1Node}{Node}} \&\&)=delete
+\item 
+virtual void \mbox{\hyperlink{classftxui_1_1Node_a33d77039cccf7ad7a6e735a7e7cf18ca}{Compute\+Requirement}} ()
+\begin{DoxyCompactList}\small\item\em Compute how much space an elements needs. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Node_aec7a55e342f68c22380ad2e556a98783}\label{classftxui_1_1Node_aec7a55e342f68c22380ad2e556a98783} 
+\mbox{\hyperlink{structftxui_1_1Requirement}{Requirement}} {\bfseries requirement} ()
+\item 
+virtual void \mbox{\hyperlink{classftxui_1_1Node_a479035e42e36b160aa8a2db95c48f32e}{Set\+Box}} (\mbox{\hyperlink{structftxui_1_1Box}{Box}} box)
+\begin{DoxyCompactList}\small\item\em Assign a position and a dimension to an element for drawing. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Node_a58d187beeaa76631d4f5262faeaf4197}\label{classftxui_1_1Node_a58d187beeaa76631d4f5262faeaf4197} 
+virtual void {\bfseries Render} (\mbox{\hyperlink{classftxui_1_1Screen}{Screen}} \&screen)
+\begin{DoxyCompactList}\small\item\em Display an element on a \doxylink{classftxui_1_1Screen}{ftxui\+::\+Screen}. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Node_ac3486b833721fcb6040fade1f178afbf}\label{classftxui_1_1Node_ac3486b833721fcb6040fade1f178afbf} 
+virtual void {\bfseries Check} (\mbox{\hyperlink{structftxui_1_1Node_1_1Status}{Status}} \texorpdfstring{$\ast$}{*}status)
+\item 
+\Hypertarget{classftxui_1_1Node_a1ec609f27961f83f5a07c23f77e8e114}\label{classftxui_1_1Node_a1ec609f27961f83f5a07c23f77e8e114} 
+{\bfseries Node} (Elements children)
+\item 
+\Hypertarget{classftxui_1_1Node_aa0ffadd6283b85d85eb368f10fec4586}\label{classftxui_1_1Node_aa0ffadd6283b85d85eb368f10fec4586} 
+{\bfseries Node} (const \mbox{\hyperlink{classftxui_1_1Node}{Node}} \&)=delete
+\item 
+\Hypertarget{classftxui_1_1Node_a19f767522b844664809a63dfb16895f9}\label{classftxui_1_1Node_a19f767522b844664809a63dfb16895f9} 
+{\bfseries Node} (const \mbox{\hyperlink{classftxui_1_1Node}{Node}} \&\&)=delete
+\item 
+\Hypertarget{classftxui_1_1Node_a21e2dfa97f98ab5f6baf97572cf61991}\label{classftxui_1_1Node_a21e2dfa97f98ab5f6baf97572cf61991} 
+\mbox{\hyperlink{classftxui_1_1Node}{Node}} \& {\bfseries operator=} (const \mbox{\hyperlink{classftxui_1_1Node}{Node}} \&)=delete
+\item 
+\Hypertarget{classftxui_1_1Node_aa05657e8c1c8c8659bc3e523c20a7257}\label{classftxui_1_1Node_aa05657e8c1c8c8659bc3e523c20a7257} 
+\mbox{\hyperlink{classftxui_1_1Node}{Node}} \& {\bfseries operator=} (const \mbox{\hyperlink{classftxui_1_1Node}{Node}} \&\&)=delete
+\item 
+virtual void \mbox{\hyperlink{classftxui_1_1Node_ad63492430296d0885b1eb8619e941102}{Compute\+Requirement}} ()
+\item 
+\Hypertarget{classftxui_1_1Node_aec7a55e342f68c22380ad2e556a98783}\label{classftxui_1_1Node_aec7a55e342f68c22380ad2e556a98783} 
+\mbox{\hyperlink{structftxui_1_1Requirement}{Requirement}} {\bfseries requirement} ()
+\item 
+virtual void \mbox{\hyperlink{classftxui_1_1Node_a0010259b5b9df944511fadb6b9cab549}{Set\+Box}} (\mbox{\hyperlink{structftxui_1_1Box}{Box}} box)
+\item 
+\Hypertarget{classftxui_1_1Node_a58af7d2d91ffe15332dba40e9e399b9a}\label{classftxui_1_1Node_a58af7d2d91ffe15332dba40e9e399b9a} 
+virtual void {\bfseries Render} (\mbox{\hyperlink{classftxui_1_1Screen}{Screen}} \&screen)
+\item 
+\Hypertarget{classftxui_1_1Node_ab8c17389398a3b6c405ccb8e79be1736}\label{classftxui_1_1Node_ab8c17389398a3b6c405ccb8e79be1736} 
+virtual void {\bfseries Check} (\mbox{\hyperlink{structftxui_1_1Node_1_1Status}{Status}} \texorpdfstring{$\ast$}{*}status)
+\item 
+\Hypertarget{classftxui_1_1Node_a1ec609f27961f83f5a07c23f77e8e114}\label{classftxui_1_1Node_a1ec609f27961f83f5a07c23f77e8e114} 
+{\bfseries Node} (Elements children)
+\item 
+\Hypertarget{classftxui_1_1Node_aa0ffadd6283b85d85eb368f10fec4586}\label{classftxui_1_1Node_aa0ffadd6283b85d85eb368f10fec4586} 
+{\bfseries Node} (const \mbox{\hyperlink{classftxui_1_1Node}{Node}} \&)=delete
+\item 
+\Hypertarget{classftxui_1_1Node_a19f767522b844664809a63dfb16895f9}\label{classftxui_1_1Node_a19f767522b844664809a63dfb16895f9} 
+{\bfseries Node} (const \mbox{\hyperlink{classftxui_1_1Node}{Node}} \&\&)=delete
+\item 
+\Hypertarget{classftxui_1_1Node_a21e2dfa97f98ab5f6baf97572cf61991}\label{classftxui_1_1Node_a21e2dfa97f98ab5f6baf97572cf61991} 
+\mbox{\hyperlink{classftxui_1_1Node}{Node}} \& {\bfseries operator=} (const \mbox{\hyperlink{classftxui_1_1Node}{Node}} \&)=delete
+\item 
+\Hypertarget{classftxui_1_1Node_aa05657e8c1c8c8659bc3e523c20a7257}\label{classftxui_1_1Node_aa05657e8c1c8c8659bc3e523c20a7257} 
+\mbox{\hyperlink{classftxui_1_1Node}{Node}} \& {\bfseries operator=} (const \mbox{\hyperlink{classftxui_1_1Node}{Node}} \&\&)=delete
+\item 
+virtual void \mbox{\hyperlink{classftxui_1_1Node_ad63492430296d0885b1eb8619e941102}{Compute\+Requirement}} ()
+\item 
+\Hypertarget{classftxui_1_1Node_aec7a55e342f68c22380ad2e556a98783}\label{classftxui_1_1Node_aec7a55e342f68c22380ad2e556a98783} 
+\mbox{\hyperlink{structftxui_1_1Requirement}{Requirement}} {\bfseries requirement} ()
+\item 
+virtual void \mbox{\hyperlink{classftxui_1_1Node_a0010259b5b9df944511fadb6b9cab549}{Set\+Box}} (\mbox{\hyperlink{structftxui_1_1Box}{Box}} box)
+\item 
+\Hypertarget{classftxui_1_1Node_a58af7d2d91ffe15332dba40e9e399b9a}\label{classftxui_1_1Node_a58af7d2d91ffe15332dba40e9e399b9a} 
+virtual void {\bfseries Render} (\mbox{\hyperlink{classftxui_1_1Screen}{Screen}} \&screen)
+\item 
+\Hypertarget{classftxui_1_1Node_ab8c17389398a3b6c405ccb8e79be1736}\label{classftxui_1_1Node_ab8c17389398a3b6c405ccb8e79be1736} 
+virtual void {\bfseries Check} (\mbox{\hyperlink{structftxui_1_1Node_1_1Status}{Status}} \texorpdfstring{$\ast$}{*}status)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classftxui_1_1Node_a36541da58d585c57692d01a5a28386d1}\label{classftxui_1_1Node_a36541da58d585c57692d01a5a28386d1} 
+Elements {\bfseries children\+\_\+}
+\item 
+\Hypertarget{classftxui_1_1Node_a6cea9738aa367d84fc2f850a70cf064f}\label{classftxui_1_1Node_a6cea9738aa367d84fc2f850a70cf064f} 
+\mbox{\hyperlink{structftxui_1_1Requirement}{Requirement}} {\bfseries requirement\+\_\+}
+\item 
+\Hypertarget{classftxui_1_1Node_a4ac5c3f8f376ad46149593a5dcf3de28}\label{classftxui_1_1Node_a4ac5c3f8f376ad46149593a5dcf3de28} 
+\mbox{\hyperlink{structftxui_1_1Box}{Box}} {\bfseries box\+\_\+}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classftxui_1_1Node_a33d77039cccf7ad7a6e735a7e7cf18ca}\index{ftxui::Node@{ftxui::Node}!ComputeRequirement@{ComputeRequirement}}
+\index{ComputeRequirement@{ComputeRequirement}!ftxui::Node@{ftxui::Node}}
+\doxysubsubsection{\texorpdfstring{ComputeRequirement()}{ComputeRequirement()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{classftxui_1_1Node_a33d77039cccf7ad7a6e735a7e7cf18ca} 
+void Node\+::\+Compute\+Requirement (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Compute how much space an elements needs. 
+
+
+
+Reimplemented in \mbox{\hyperlink{classftxui_1_1NodeDecorator_a48877d895634b3a3fdb2b12f69ce47e4}{ftxui\+::\+Node\+Decorator}}, \mbox{\hyperlink{classftxui_1_1NodeDecorator_a48877d895634b3a3fdb2b12f69ce47e4}{ftxui\+::\+Node\+Decorator}}, and \mbox{\hyperlink{classftxui_1_1NodeDecorator_a48877d895634b3a3fdb2b12f69ce47e4}{ftxui\+::\+Node\+Decorator}}.
+
+\Hypertarget{classftxui_1_1Node_ad63492430296d0885b1eb8619e941102}\index{ftxui::Node@{ftxui::Node}!ComputeRequirement@{ComputeRequirement}}
+\index{ComputeRequirement@{ComputeRequirement}!ftxui::Node@{ftxui::Node}}
+\doxysubsubsection{\texorpdfstring{ComputeRequirement()}{ComputeRequirement()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{classftxui_1_1Node_ad63492430296d0885b1eb8619e941102} 
+virtual void ftxui\+::\+Node\+::\+Compute\+Requirement (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{classftxui_1_1NodeDecorator_a48877d895634b3a3fdb2b12f69ce47e4}{ftxui\+::\+Node\+Decorator}}, \mbox{\hyperlink{classftxui_1_1NodeDecorator_a48877d895634b3a3fdb2b12f69ce47e4}{ftxui\+::\+Node\+Decorator}}, and \mbox{\hyperlink{classftxui_1_1NodeDecorator_a48877d895634b3a3fdb2b12f69ce47e4}{ftxui\+::\+Node\+Decorator}}.
+
+\Hypertarget{classftxui_1_1Node_ad63492430296d0885b1eb8619e941102}\index{ftxui::Node@{ftxui::Node}!ComputeRequirement@{ComputeRequirement}}
+\index{ComputeRequirement@{ComputeRequirement}!ftxui::Node@{ftxui::Node}}
+\doxysubsubsection{\texorpdfstring{ComputeRequirement()}{ComputeRequirement()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{classftxui_1_1Node_ad63492430296d0885b1eb8619e941102} 
+virtual void ftxui\+::\+Node\+::\+Compute\+Requirement (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{classftxui_1_1NodeDecorator_a48877d895634b3a3fdb2b12f69ce47e4}{ftxui\+::\+Node\+Decorator}}, \mbox{\hyperlink{classftxui_1_1NodeDecorator_a48877d895634b3a3fdb2b12f69ce47e4}{ftxui\+::\+Node\+Decorator}}, and \mbox{\hyperlink{classftxui_1_1NodeDecorator_a48877d895634b3a3fdb2b12f69ce47e4}{ftxui\+::\+Node\+Decorator}}.
+
+\Hypertarget{classftxui_1_1Node_a479035e42e36b160aa8a2db95c48f32e}\index{ftxui::Node@{ftxui::Node}!SetBox@{SetBox}}
+\index{SetBox@{SetBox}!ftxui::Node@{ftxui::Node}}
+\doxysubsubsection{\texorpdfstring{SetBox()}{SetBox()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{classftxui_1_1Node_a479035e42e36b160aa8a2db95c48f32e} 
+void Node\+::\+Set\+Box (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structftxui_1_1Box}{Box}}}]{box}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Assign a position and a dimension to an element for drawing. 
+
+
+
+Reimplemented in \mbox{\hyperlink{classftxui_1_1NodeDecorator_a61250411759297f1fdf058369867f96a}{ftxui\+::\+Node\+Decorator}}, \mbox{\hyperlink{classftxui_1_1NodeDecorator_a61250411759297f1fdf058369867f96a}{ftxui\+::\+Node\+Decorator}}, and \mbox{\hyperlink{classftxui_1_1NodeDecorator_a61250411759297f1fdf058369867f96a}{ftxui\+::\+Node\+Decorator}}.
+
+\Hypertarget{classftxui_1_1Node_a0010259b5b9df944511fadb6b9cab549}\index{ftxui::Node@{ftxui::Node}!SetBox@{SetBox}}
+\index{SetBox@{SetBox}!ftxui::Node@{ftxui::Node}}
+\doxysubsubsection{\texorpdfstring{SetBox()}{SetBox()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{classftxui_1_1Node_a0010259b5b9df944511fadb6b9cab549} 
+virtual void ftxui\+::\+Node\+::\+Set\+Box (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structftxui_1_1Box}{Box}}}]{box}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{classftxui_1_1NodeDecorator_a61250411759297f1fdf058369867f96a}{ftxui\+::\+Node\+Decorator}}, \mbox{\hyperlink{classftxui_1_1NodeDecorator_a61250411759297f1fdf058369867f96a}{ftxui\+::\+Node\+Decorator}}, and \mbox{\hyperlink{classftxui_1_1NodeDecorator_a61250411759297f1fdf058369867f96a}{ftxui\+::\+Node\+Decorator}}.
+
+\Hypertarget{classftxui_1_1Node_a0010259b5b9df944511fadb6b9cab549}\index{ftxui::Node@{ftxui::Node}!SetBox@{SetBox}}
+\index{SetBox@{SetBox}!ftxui::Node@{ftxui::Node}}
+\doxysubsubsection{\texorpdfstring{SetBox()}{SetBox()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{classftxui_1_1Node_a0010259b5b9df944511fadb6b9cab549} 
+virtual void ftxui\+::\+Node\+::\+Set\+Box (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structftxui_1_1Box}{Box}}}]{box}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{classftxui_1_1NodeDecorator_a61250411759297f1fdf058369867f96a}{ftxui\+::\+Node\+Decorator}}, \mbox{\hyperlink{classftxui_1_1NodeDecorator_a61250411759297f1fdf058369867f96a}{ftxui\+::\+Node\+Decorator}}, and \mbox{\hyperlink{classftxui_1_1NodeDecorator_a61250411759297f1fdf058369867f96a}{ftxui\+::\+Node\+Decorator}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+build-\/dbg/\+\_\+deps/ftxui-\/src/include/ftxui/dom/node.\+hpp\item 
+build/\+\_\+deps/ftxui-\/src/include/ftxui/dom/node.\+hpp\item 
+build\+\_\+emscripten/\+\_\+deps/ftxui-\/src/include/ftxui/dom/node.\+hpp\item 
+build-\/dbg/\+\_\+deps/ftxui-\/src/src/ftxui/dom/node.\+cpp\item 
+build/\+\_\+deps/ftxui-\/src/src/ftxui/dom/node.\+cpp\item 
+build\+\_\+emscripten/\+\_\+deps/ftxui-\/src/src/ftxui/dom/node.\+cpp\end{DoxyCompactItemize}

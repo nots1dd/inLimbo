@@ -1,0 +1,331 @@
+\doxysection{ftxui\+::Screen Class Reference}
+\hypertarget{classftxui_1_1Screen}{}\label{classftxui_1_1Screen}\index{ftxui::Screen@{ftxui::Screen}}
+
+
+A rectangular grid of \doxylink{structftxui_1_1Pixel}{Pixel}.  
+
+
+
+
+{\ttfamily \#include $<$screen.\+hpp$>$}
+
+Inheritance diagram for ftxui\+::Screen\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classftxui_1_1Screen}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classftxui_1_1Screen_aaffc479db0ae9dff28e099d93d88fe4a}\label{classftxui_1_1Screen_aaffc479db0ae9dff28e099d93d88fe4a} 
+{\bfseries Screen} (int dimx, int dimy)
+\item 
+std\+::string \& \mbox{\hyperlink{classftxui_1_1Screen_a5c3599734d14e7e10595a48bd6dbf1cf}{at}} (int x, int y)
+\begin{DoxyCompactList}\small\item\em Access a character in a cell at a given position. \end{DoxyCompactList}\item 
+const std\+::string \& \mbox{\hyperlink{classftxui_1_1Screen_af43f669b2be081010849cb296ef30f94}{at}} (int x, int y) const
+\begin{DoxyCompactList}\small\item\em Access a character in a cell at a given position. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} \& \mbox{\hyperlink{classftxui_1_1Screen_ae26bf6fc1c0d9a6931db7da43da461dd}{Pixel\+At}} (int x, int y)
+\begin{DoxyCompactList}\small\item\em Access a cell (\doxylink{structftxui_1_1Pixel}{Pixel}) at a given position. \end{DoxyCompactList}\item 
+const \mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} \& \mbox{\hyperlink{classftxui_1_1Screen_aba3f46e9965895278573af54d9285f37}{Pixel\+At}} (int x, int y) const
+\begin{DoxyCompactList}\small\item\em Access a cell (\doxylink{structftxui_1_1Pixel}{Pixel}) at a given position. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classftxui_1_1Screen_a99aaed52447e5693a3819c382fc69abf}{To\+String}} () const
+\item 
+\Hypertarget{classftxui_1_1Screen_a36891d28125a7aeb663b68b56c27040c}\label{classftxui_1_1Screen_a36891d28125a7aeb663b68b56c27040c} 
+void {\bfseries Print} () const
+\item 
+\Hypertarget{classftxui_1_1Screen_aae589217677a3180cb00abe7ab50132b}\label{classftxui_1_1Screen_aae589217677a3180cb00abe7ab50132b} 
+int {\bfseries dimx} () const
+\item 
+\Hypertarget{classftxui_1_1Screen_a0961ce01eb213eb86c80d2c2b20c0e11}\label{classftxui_1_1Screen_a0961ce01eb213eb86c80d2c2b20c0e11} 
+int {\bfseries dimy} () const
+\item 
+std\+::string \mbox{\hyperlink{classftxui_1_1Screen_a9ef960333b62c0377ba70e6c8aea5f42}{Reset\+Position}} (bool clear=false) const
+\begin{DoxyCompactList}\small\item\em Return a string to be printed in order to reset the cursor position to the beginning of the screen. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Screen_a709b61edfa9f4ccf474135d5492cbb06}\label{classftxui_1_1Screen_a709b61edfa9f4ccf474135d5492cbb06} 
+void {\bfseries Clear} ()
+\begin{DoxyCompactList}\small\item\em Clear all the pixel from the screen. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Screen_a522881491317c92cdb8fccdff80bd460}\label{classftxui_1_1Screen_a522881491317c92cdb8fccdff80bd460} 
+void {\bfseries Apply\+Shader} ()
+\item 
+\Hypertarget{classftxui_1_1Screen_a02147d571724c0391c701398db4b4030}\label{classftxui_1_1Screen_a02147d571724c0391c701398db4b4030} 
+\mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}} {\bfseries cursor} () const
+\item 
+\Hypertarget{classftxui_1_1Screen_a7b13d1fe11cbc94ece825c5cf341e1c7}\label{classftxui_1_1Screen_a7b13d1fe11cbc94ece825c5cf341e1c7} 
+void {\bfseries Set\+Cursor} (\mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}} cursor)
+\item 
+\Hypertarget{classftxui_1_1Screen_ac0eb7ef4108f9dec438211285b7d40da}\label{classftxui_1_1Screen_ac0eb7ef4108f9dec438211285b7d40da} 
+uint8\+\_\+t {\bfseries Register\+Hyperlink} (const std\+::string \&link)
+\item 
+\Hypertarget{classftxui_1_1Screen_a8632406ff9e2d7f369571b6f5e8e2bda}\label{classftxui_1_1Screen_a8632406ff9e2d7f369571b6f5e8e2bda} 
+const std\+::string \& {\bfseries Hyperlink} (uint8\+\_\+t id) const
+\item 
+\Hypertarget{classftxui_1_1Screen_aaffc479db0ae9dff28e099d93d88fe4a}\label{classftxui_1_1Screen_aaffc479db0ae9dff28e099d93d88fe4a} 
+{\bfseries Screen} (int dimx, int dimy)
+\item 
+\Hypertarget{classftxui_1_1Screen_a5c3599734d14e7e10595a48bd6dbf1cf}\label{classftxui_1_1Screen_a5c3599734d14e7e10595a48bd6dbf1cf} 
+std\+::string \& {\bfseries at} (int x, int y)
+\item 
+\Hypertarget{classftxui_1_1Screen_af43f669b2be081010849cb296ef30f94}\label{classftxui_1_1Screen_af43f669b2be081010849cb296ef30f94} 
+const std\+::string \& {\bfseries at} (int x, int y) const
+\item 
+\Hypertarget{classftxui_1_1Screen_ae26bf6fc1c0d9a6931db7da43da461dd}\label{classftxui_1_1Screen_ae26bf6fc1c0d9a6931db7da43da461dd} 
+\mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} \& {\bfseries Pixel\+At} (int x, int y)
+\item 
+\Hypertarget{classftxui_1_1Screen_aba3f46e9965895278573af54d9285f37}\label{classftxui_1_1Screen_aba3f46e9965895278573af54d9285f37} 
+const \mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} \& {\bfseries Pixel\+At} (int x, int y) const
+\item 
+\Hypertarget{classftxui_1_1Screen_a99aaed52447e5693a3819c382fc69abf}\label{classftxui_1_1Screen_a99aaed52447e5693a3819c382fc69abf} 
+std\+::string {\bfseries To\+String} () const
+\item 
+\Hypertarget{classftxui_1_1Screen_a36891d28125a7aeb663b68b56c27040c}\label{classftxui_1_1Screen_a36891d28125a7aeb663b68b56c27040c} 
+void {\bfseries Print} () const
+\item 
+\Hypertarget{classftxui_1_1Screen_aae589217677a3180cb00abe7ab50132b}\label{classftxui_1_1Screen_aae589217677a3180cb00abe7ab50132b} 
+int {\bfseries dimx} () const
+\item 
+\Hypertarget{classftxui_1_1Screen_a0961ce01eb213eb86c80d2c2b20c0e11}\label{classftxui_1_1Screen_a0961ce01eb213eb86c80d2c2b20c0e11} 
+int {\bfseries dimy} () const
+\item 
+\Hypertarget{classftxui_1_1Screen_a9ef960333b62c0377ba70e6c8aea5f42}\label{classftxui_1_1Screen_a9ef960333b62c0377ba70e6c8aea5f42} 
+std\+::string {\bfseries Reset\+Position} (bool clear=false) const
+\item 
+\Hypertarget{classftxui_1_1Screen_a709b61edfa9f4ccf474135d5492cbb06}\label{classftxui_1_1Screen_a709b61edfa9f4ccf474135d5492cbb06} 
+void {\bfseries Clear} ()
+\item 
+\Hypertarget{classftxui_1_1Screen_a522881491317c92cdb8fccdff80bd460}\label{classftxui_1_1Screen_a522881491317c92cdb8fccdff80bd460} 
+void {\bfseries Apply\+Shader} ()
+\item 
+\Hypertarget{classftxui_1_1Screen_a02147d571724c0391c701398db4b4030}\label{classftxui_1_1Screen_a02147d571724c0391c701398db4b4030} 
+\mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}} {\bfseries cursor} () const
+\item 
+\Hypertarget{classftxui_1_1Screen_a7b13d1fe11cbc94ece825c5cf341e1c7}\label{classftxui_1_1Screen_a7b13d1fe11cbc94ece825c5cf341e1c7} 
+void {\bfseries Set\+Cursor} (\mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}} cursor)
+\item 
+\Hypertarget{classftxui_1_1Screen_ac0eb7ef4108f9dec438211285b7d40da}\label{classftxui_1_1Screen_ac0eb7ef4108f9dec438211285b7d40da} 
+uint8\+\_\+t {\bfseries Register\+Hyperlink} (const std\+::string \&link)
+\item 
+\Hypertarget{classftxui_1_1Screen_a8632406ff9e2d7f369571b6f5e8e2bda}\label{classftxui_1_1Screen_a8632406ff9e2d7f369571b6f5e8e2bda} 
+const std\+::string \& {\bfseries Hyperlink} (uint8\+\_\+t id) const
+\item 
+\Hypertarget{classftxui_1_1Screen_aaffc479db0ae9dff28e099d93d88fe4a}\label{classftxui_1_1Screen_aaffc479db0ae9dff28e099d93d88fe4a} 
+{\bfseries Screen} (int dimx, int dimy)
+\item 
+\Hypertarget{classftxui_1_1Screen_a5c3599734d14e7e10595a48bd6dbf1cf}\label{classftxui_1_1Screen_a5c3599734d14e7e10595a48bd6dbf1cf} 
+std\+::string \& {\bfseries at} (int x, int y)
+\item 
+\Hypertarget{classftxui_1_1Screen_af43f669b2be081010849cb296ef30f94}\label{classftxui_1_1Screen_af43f669b2be081010849cb296ef30f94} 
+const std\+::string \& {\bfseries at} (int x, int y) const
+\item 
+\Hypertarget{classftxui_1_1Screen_ae26bf6fc1c0d9a6931db7da43da461dd}\label{classftxui_1_1Screen_ae26bf6fc1c0d9a6931db7da43da461dd} 
+\mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} \& {\bfseries Pixel\+At} (int x, int y)
+\item 
+\Hypertarget{classftxui_1_1Screen_aba3f46e9965895278573af54d9285f37}\label{classftxui_1_1Screen_aba3f46e9965895278573af54d9285f37} 
+const \mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} \& {\bfseries Pixel\+At} (int x, int y) const
+\item 
+\Hypertarget{classftxui_1_1Screen_a99aaed52447e5693a3819c382fc69abf}\label{classftxui_1_1Screen_a99aaed52447e5693a3819c382fc69abf} 
+std\+::string {\bfseries To\+String} () const
+\item 
+\Hypertarget{classftxui_1_1Screen_a36891d28125a7aeb663b68b56c27040c}\label{classftxui_1_1Screen_a36891d28125a7aeb663b68b56c27040c} 
+void {\bfseries Print} () const
+\item 
+\Hypertarget{classftxui_1_1Screen_aae589217677a3180cb00abe7ab50132b}\label{classftxui_1_1Screen_aae589217677a3180cb00abe7ab50132b} 
+int {\bfseries dimx} () const
+\item 
+\Hypertarget{classftxui_1_1Screen_a0961ce01eb213eb86c80d2c2b20c0e11}\label{classftxui_1_1Screen_a0961ce01eb213eb86c80d2c2b20c0e11} 
+int {\bfseries dimy} () const
+\item 
+\Hypertarget{classftxui_1_1Screen_a9ef960333b62c0377ba70e6c8aea5f42}\label{classftxui_1_1Screen_a9ef960333b62c0377ba70e6c8aea5f42} 
+std\+::string {\bfseries Reset\+Position} (bool clear=false) const
+\item 
+\Hypertarget{classftxui_1_1Screen_a709b61edfa9f4ccf474135d5492cbb06}\label{classftxui_1_1Screen_a709b61edfa9f4ccf474135d5492cbb06} 
+void {\bfseries Clear} ()
+\item 
+\Hypertarget{classftxui_1_1Screen_a522881491317c92cdb8fccdff80bd460}\label{classftxui_1_1Screen_a522881491317c92cdb8fccdff80bd460} 
+void {\bfseries Apply\+Shader} ()
+\item 
+\Hypertarget{classftxui_1_1Screen_a02147d571724c0391c701398db4b4030}\label{classftxui_1_1Screen_a02147d571724c0391c701398db4b4030} 
+\mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}} {\bfseries cursor} () const
+\item 
+\Hypertarget{classftxui_1_1Screen_a7b13d1fe11cbc94ece825c5cf341e1c7}\label{classftxui_1_1Screen_a7b13d1fe11cbc94ece825c5cf341e1c7} 
+void {\bfseries Set\+Cursor} (\mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}} cursor)
+\item 
+\Hypertarget{classftxui_1_1Screen_ac0eb7ef4108f9dec438211285b7d40da}\label{classftxui_1_1Screen_ac0eb7ef4108f9dec438211285b7d40da} 
+uint8\+\_\+t {\bfseries Register\+Hyperlink} (const std\+::string \&link)
+\item 
+\Hypertarget{classftxui_1_1Screen_a8632406ff9e2d7f369571b6f5e8e2bda}\label{classftxui_1_1Screen_a8632406ff9e2d7f369571b6f5e8e2bda} 
+const std\+::string \& {\bfseries Hyperlink} (uint8\+\_\+t id) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classftxui_1_1Screen_a30202b424ac0644edb0c7333f8836e06}\label{classftxui_1_1Screen_a30202b424ac0644edb0c7333f8836e06} 
+static \mbox{\hyperlink{classftxui_1_1Screen}{Screen}} {\bfseries Create} (\mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} dimension)
+\begin{DoxyCompactList}\small\item\em Create a screen with the given dimension. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Screen_a797ab0c2ab6387e66ff4d7ac14a3e9b4}\label{classftxui_1_1Screen_a797ab0c2ab6387e66ff4d7ac14a3e9b4} 
+static \mbox{\hyperlink{classftxui_1_1Screen}{Screen}} {\bfseries Create} (\mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} width, \mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} height)
+\begin{DoxyCompactList}\small\item\em Create a screen with the given dimension along the x-\/axis and y-\/axis. \end{DoxyCompactList}\item 
+\Hypertarget{classftxui_1_1Screen_aa4a3550ac3ac753d50f7e1c0bdb80dd1}\label{classftxui_1_1Screen_aa4a3550ac3ac753d50f7e1c0bdb80dd1} 
+static \mbox{\hyperlink{classftxui_1_1Screen}{Screen}} {\bfseries Create} (\mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} dimension)
+\item 
+\Hypertarget{classftxui_1_1Screen_ab775c96eeb08b70e38f624582cf3a110}\label{classftxui_1_1Screen_ab775c96eeb08b70e38f624582cf3a110} 
+static \mbox{\hyperlink{classftxui_1_1Screen}{Screen}} {\bfseries Create} (\mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} width, \mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} height)
+\item 
+\Hypertarget{classftxui_1_1Screen_aa4a3550ac3ac753d50f7e1c0bdb80dd1}\label{classftxui_1_1Screen_aa4a3550ac3ac753d50f7e1c0bdb80dd1} 
+static \mbox{\hyperlink{classftxui_1_1Screen}{Screen}} {\bfseries Create} (\mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} dimension)
+\item 
+\Hypertarget{classftxui_1_1Screen_ab775c96eeb08b70e38f624582cf3a110}\label{classftxui_1_1Screen_ab775c96eeb08b70e38f624582cf3a110} 
+static \mbox{\hyperlink{classftxui_1_1Screen}{Screen}} {\bfseries Create} (\mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} width, \mbox{\hyperlink{structftxui_1_1Dimensions}{Dimensions}} height)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classftxui_1_1Screen_a517d89f5ed6b84ca53a9f0962ba60826}\label{classftxui_1_1Screen_a517d89f5ed6b84ca53a9f0962ba60826} 
+\mbox{\hyperlink{structftxui_1_1Box}{Box}} {\bfseries stencil}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classftxui_1_1Screen_a9c81fa4c61ca1e80e6b6e694683f072a}\label{classftxui_1_1Screen_a9c81fa4c61ca1e80e6b6e694683f072a} 
+int {\bfseries dimx\+\_\+}
+\item 
+\Hypertarget{classftxui_1_1Screen_a7ee8efe01c6def75659736e7ad70507b}\label{classftxui_1_1Screen_a7ee8efe01c6def75659736e7ad70507b} 
+int {\bfseries dimy\+\_\+}
+\item 
+\Hypertarget{classftxui_1_1Screen_af26e789a8f90211050bff0e7bb53bbec}\label{classftxui_1_1Screen_af26e789a8f90211050bff0e7bb53bbec} 
+std\+::vector$<$ std\+::vector$<$ \mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} $>$ $>$ {\bfseries pixels\+\_\+}
+\item 
+\Hypertarget{classftxui_1_1Screen_a058e886ab0e0e1939e94cfa11f5c21ab}\label{classftxui_1_1Screen_a058e886ab0e0e1939e94cfa11f5c21ab} 
+\mbox{\hyperlink{structftxui_1_1Screen_1_1Cursor}{Cursor}} {\bfseries cursor\+\_\+}
+\item 
+\Hypertarget{classftxui_1_1Screen_adb5be36876df345e1e7ad3a7b372a988}\label{classftxui_1_1Screen_adb5be36876df345e1e7ad3a7b372a988} 
+std\+::vector$<$ std\+::string $>$ {\bfseries hyperlinks\+\_\+} = \{"{}"{}\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A rectangular grid of \doxylink{structftxui_1_1Pixel}{Pixel}. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classftxui_1_1Screen_a5c3599734d14e7e10595a48bd6dbf1cf}\index{ftxui::Screen@{ftxui::Screen}!at@{at}}
+\index{at@{at}!ftxui::Screen@{ftxui::Screen}}
+\doxysubsubsection{\texorpdfstring{at()}{at()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classftxui_1_1Screen_a5c3599734d14e7e10595a48bd6dbf1cf} 
+std\+::string \& ftxui\+::\+Screen\+::at (\begin{DoxyParamCaption}\item[{int}]{x}{, }\item[{int}]{y}{}\end{DoxyParamCaption})}
+
+
+
+Access a character in a cell at a given position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The cell position along the x-\/axis. \\
+\hline
+{\em y} & The cell position along the y-\/axis. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classftxui_1_1Screen_af43f669b2be081010849cb296ef30f94}\index{ftxui::Screen@{ftxui::Screen}!at@{at}}
+\index{at@{at}!ftxui::Screen@{ftxui::Screen}}
+\doxysubsubsection{\texorpdfstring{at()}{at()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classftxui_1_1Screen_af43f669b2be081010849cb296ef30f94} 
+const std\+::string \& ftxui\+::\+Screen\+::at (\begin{DoxyParamCaption}\item[{int}]{x}{, }\item[{int}]{y}{}\end{DoxyParamCaption}) const}
+
+
+
+Access a character in a cell at a given position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The cell position along the x-\/axis. \\
+\hline
+{\em y} & The cell position along the y-\/axis. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classftxui_1_1Screen_ae26bf6fc1c0d9a6931db7da43da461dd}\index{ftxui::Screen@{ftxui::Screen}!PixelAt@{PixelAt}}
+\index{PixelAt@{PixelAt}!ftxui::Screen@{ftxui::Screen}}
+\doxysubsubsection{\texorpdfstring{PixelAt()}{PixelAt()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classftxui_1_1Screen_ae26bf6fc1c0d9a6931db7da43da461dd} 
+\mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} \& ftxui\+::\+Screen\+::\+Pixel\+At (\begin{DoxyParamCaption}\item[{int}]{x}{, }\item[{int}]{y}{}\end{DoxyParamCaption})}
+
+
+
+Access a cell (\doxylink{structftxui_1_1Pixel}{Pixel}) at a given position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The cell position along the x-\/axis. \\
+\hline
+{\em y} & The cell position along the y-\/axis. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classftxui_1_1Screen_aba3f46e9965895278573af54d9285f37}\index{ftxui::Screen@{ftxui::Screen}!PixelAt@{PixelAt}}
+\index{PixelAt@{PixelAt}!ftxui::Screen@{ftxui::Screen}}
+\doxysubsubsection{\texorpdfstring{PixelAt()}{PixelAt()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classftxui_1_1Screen_aba3f46e9965895278573af54d9285f37} 
+const \mbox{\hyperlink{structftxui_1_1Pixel}{Pixel}} \& ftxui\+::\+Screen\+::\+Pixel\+At (\begin{DoxyParamCaption}\item[{int}]{x}{, }\item[{int}]{y}{}\end{DoxyParamCaption}) const}
+
+
+
+Access a cell (\doxylink{structftxui_1_1Pixel}{Pixel}) at a given position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The cell position along the x-\/axis. \\
+\hline
+{\em y} & The cell position along the y-\/axis. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classftxui_1_1Screen_a9ef960333b62c0377ba70e6c8aea5f42}\index{ftxui::Screen@{ftxui::Screen}!ResetPosition@{ResetPosition}}
+\index{ResetPosition@{ResetPosition}!ftxui::Screen@{ftxui::Screen}}
+\doxysubsubsection{\texorpdfstring{ResetPosition()}{ResetPosition()}}
+{\footnotesize\ttfamily \label{classftxui_1_1Screen_a9ef960333b62c0377ba70e6c8aea5f42} 
+std\+::string ftxui\+::\+Screen\+::\+Reset\+Position (\begin{DoxyParamCaption}\item[{bool}]{clear}{ = {\ttfamily false}}\end{DoxyParamCaption}) const}
+
+
+
+Return a string to be printed in order to reset the cursor position to the beginning of the screen. 
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{std::string\ reset\_position;}
+\DoxyCodeLine{\textcolor{keywordflow}{while}(\textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{\ \ \textcolor{keyword}{auto}\ document\ =\ render();}
+\DoxyCodeLine{\ \ \textcolor{keyword}{auto}\ screen\ =\ \mbox{\hyperlink{classftxui_1_1Screen_a30202b424ac0644edb0c7333f8836e06}{Screen::Create}}(\mbox{\hyperlink{namespaceftxui_1_1Dimension_a0c623fd10d626c738604cf997582ed33}{Dimension::Full}}(),\ \mbox{\hyperlink{namespaceftxui_1_1Dimension_ae00f07872702a9e40622bf2583e824ab}{Dimension::Fit}}(document));}
+\DoxyCodeLine{\ \ Render(screen,\ document);}
+\DoxyCodeLine{\ \ std::cout\ <<\ reset\_position\ <<\ screen.ToString()\ <<\ std::flush;}
+\DoxyCodeLine{\ \ reset\_position\ =\ screen.ResetPosition();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \textcolor{keyword}{using\ namespace\ }std::chrono\_literals;}
+\DoxyCodeLine{\ \ std::this\_thread::sleep\_for(0.01s);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\begin{DoxyReturn}{Returns}
+The string to print in order to reset the cursor position to the beginning. 
+\end{DoxyReturn}
+\Hypertarget{classftxui_1_1Screen_a99aaed52447e5693a3819c382fc69abf}\index{ftxui::Screen@{ftxui::Screen}!ToString@{ToString}}
+\index{ToString@{ToString}!ftxui::Screen@{ftxui::Screen}}
+\doxysubsubsection{\texorpdfstring{ToString()}{ToString()}}
+{\footnotesize\ttfamily \label{classftxui_1_1Screen_a99aaed52447e5693a3819c382fc69abf} 
+std\+::string ftxui\+::\+Screen\+::\+To\+String (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+Produce a std\+::string that can be used to print the \doxylink{classftxui_1_1Screen}{Screen} on the terminal. \begin{DoxyNote}{Note}
+Don\textquotesingle{}t forget to flush stdout. Alternatively, you can use Screen\+::\+Print(); 
+\end{DoxyNote}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+build-\/dbg/\+\_\+deps/ftxui-\/src/include/ftxui/screen/screen.\+hpp\item 
+build/\+\_\+deps/ftxui-\/src/include/ftxui/screen/screen.\+hpp\item 
+build\+\_\+emscripten/\+\_\+deps/ftxui-\/src/include/ftxui/screen/screen.\+hpp\item 
+build-\/dbg/\+\_\+deps/ftxui-\/src/src/ftxui/screen/screen.\+cpp\item 
+build/\+\_\+deps/ftxui-\/src/src/ftxui/screen/screen.\+cpp\item 
+build\+\_\+emscripten/\+\_\+deps/ftxui-\/src/src/ftxui/screen/screen.\+cpp\end{DoxyCompactItemize}

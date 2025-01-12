@@ -1,0 +1,57 @@
+\doxysection{Song\+Tree Class Reference}
+\hypertarget{classSongTree}{}\label{classSongTree}\index{SongTree@{SongTree}}
+
+
+{\ttfamily \#include $<$songmap.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classSongTree_a5acb6d9c937a04cb784a6fc55fd3f0a3}{add\+Song}} (const \mbox{\hyperlink{structSong}{Song}} \&song)
+\item 
+void \mbox{\hyperlink{classSongTree_a573bb3b4b0372c52b4924212f6db5f2b}{display}} () const
+\item 
+std\+::vector$<$ \mbox{\hyperlink{structSong}{Song}} $>$ \mbox{\hyperlink{classSongTree_a68e2d5ad41be86701f5839d0abfceac9}{get\+Songs\+By\+Artist}} (const std\+::string \&artist) const
+\item 
+std\+::vector$<$ \mbox{\hyperlink{structSong}{Song}} $>$ \mbox{\hyperlink{classSongTree_ac2bffb761329095f22aacab4121746db}{get\+Songs\+By\+Album}} (const std\+::string \&artist, const std\+::string \&album) const
+\item 
+std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, std\+::map$<$ unsigned int, std\+::map$<$ unsigned int, \mbox{\hyperlink{structSong}{Song}} $>$ $>$ $>$ $>$ \mbox{\hyperlink{classSongTree_a73d358fd0d3b765d8cfbd50b8d6e2b2a}{return\+Song\+Map}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classSongTree_a5acb6d9c937a04cb784a6fc55fd3f0a3}\index{SongTree@{SongTree}!addSong@{addSong}}
+\index{addSong@{addSong}!SongTree@{SongTree}}
+\doxysubsubsection{\texorpdfstring{addSong()}{addSong()}}
+{\footnotesize\ttfamily \label{classSongTree_a5acb6d9c937a04cb784a6fc55fd3f0a3} 
+void Song\+Tree\+::add\+Song (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structSong}{Song}} \&}]{song}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classSongTree_a573bb3b4b0372c52b4924212f6db5f2b}\index{SongTree@{SongTree}!display@{display}}
+\index{display@{display}!SongTree@{SongTree}}
+\doxysubsubsection{\texorpdfstring{display()}{display()}}
+{\footnotesize\ttfamily \label{classSongTree_a573bb3b4b0372c52b4924212f6db5f2b} 
+void Song\+Tree\+::display (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classSongTree_ac2bffb761329095f22aacab4121746db}\index{SongTree@{SongTree}!getSongsByAlbum@{getSongsByAlbum}}
+\index{getSongsByAlbum@{getSongsByAlbum}!SongTree@{SongTree}}
+\doxysubsubsection{\texorpdfstring{getSongsByAlbum()}{getSongsByAlbum()}}
+{\footnotesize\ttfamily \label{classSongTree_ac2bffb761329095f22aacab4121746db} 
+std\+::vector$<$ \mbox{\hyperlink{structSong}{Song}} $>$ Song\+Tree\+::get\+Songs\+By\+Album (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{artist}{, }\item[{const std\+::string \&}]{album}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classSongTree_a68e2d5ad41be86701f5839d0abfceac9}\index{SongTree@{SongTree}!getSongsByArtist@{getSongsByArtist}}
+\index{getSongsByArtist@{getSongsByArtist}!SongTree@{SongTree}}
+\doxysubsubsection{\texorpdfstring{getSongsByArtist()}{getSongsByArtist()}}
+{\footnotesize\ttfamily \label{classSongTree_a68e2d5ad41be86701f5839d0abfceac9} 
+std\+::vector$<$ \mbox{\hyperlink{structSong}{Song}} $>$ Song\+Tree\+::get\+Songs\+By\+Artist (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{artist}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classSongTree_a73d358fd0d3b765d8cfbd50b8d6e2b2a}\index{SongTree@{SongTree}!returnSongMap@{returnSongMap}}
+\index{returnSongMap@{returnSongMap}!SongTree@{SongTree}}
+\doxysubsubsection{\texorpdfstring{returnSongMap()}{returnSongMap()}}
+{\footnotesize\ttfamily \label{classSongTree_a73d358fd0d3b765d8cfbd50b8d6e2b2a} 
+std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, std\+::map$<$ unsigned int, std\+::map$<$ unsigned int, \mbox{\hyperlink{structSong}{Song}} $>$ $>$ $>$ $>$ Song\+Tree\+::return\+Song\+Map (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/dirsort/\mbox{\hyperlink{songmap_8hpp}{songmap.\+hpp}}\end{DoxyCompactItemize}
