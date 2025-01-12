@@ -12,37 +12,55 @@
 #include <string>
 #include <vector>
 
+struct ComponentState
+{
+  Component artists_list;
+  Component songs_list;
+  Component songs_queue_comp;
+  Component lyrics_scroller;
+  Component MainRenderer; 
+};
+
 std::vector<std::string> formatLyrics(const std::string& lyrics)
 {
   std::vector<std::string> lines;
   std::string              currentLine;
-  bool                     insideBrackets     = false;
+  bool                     insideSquareBrackets     = false;
+  bool                     insideCurlBrackets     = false;
   bool                     lastWasUppercase   = false;
   bool                     lastWasSpecialChar = false; // Tracks special characters within words
   char                     previousChar       = '\0';
 
   for (char c : lyrics)
   {
-    if (c == '[')
+    if (c == '[' || c == '(')
     {
       if (!currentLine.empty())
       {
         lines.push_back(currentLine);
         currentLine.clear();
       }
-      insideBrackets = true;
+      if (c == '[') insideSquareBrackets = true;
+      else insideCurlBrackets = true;
       currentLine += c;
       continue;
     }
 
-    if (insideBrackets)
+    if (insideSquareBrackets || insideCurlBrackets)
     {
       currentLine += c;
-      if (c == ']')
+      if (c == ']' && insideSquareBrackets)
       {
         lines.push_back(currentLine);
         currentLine.clear();
-        insideBrackets = false;
+        insideSquareBrackets = false;
+      }
+
+      else if (c == ')' && insideCurlBrackets)
+      {
+        lines.push_back(currentLine);
+        currentLine.clear();
+        insideCurlBrackets = false;
       }
       continue;
     }
@@ -142,6 +160,15 @@ Element renderSongName(const std::string& disc_track_info, const std::string& so
                text(FormatTime(duration)) | align_right});
 }
 
+Component CreateMenu(const std::vector<std::string>* vecLines, int *currLine)
+{
+    MenuOption menu_options;
+    menu_options.on_change     = [&]() {};
+    menu_options.focused_entry = currLine;
+    
+    return Menu(vecLines, currLine, menu_options);
+}
+
 // TODO: Make Song Menu dynamically scrollable
 auto RenderSongMenu(const std::vector<Element>& items, int* selected_index, ftxui::Color sel_color)
 {
@@ -153,7 +180,7 @@ auto RenderSongMenu(const std::vector<Element>& items, int* selected_index, ftxu
     auto style          = is_selected ? color(sel_color) : nothing;
     auto inverted_style = is_selected ? inverted : nothing;
     /*auto playing_style = is_playing ? getTrueColor(playing_color) : nothing;*/
-    rendered_items.push_back(items[i] | style | inverted_style);
+    rendered_items.push_back(items[i] | style | inverted_style | frame);
   }
 
   return vbox(std::move(rendered_items));

@@ -147,19 +147,22 @@ public:
 
   ~MPRISService()
   {
-    if (connection_)
-    {
-      g_object_unref(connection_);
-    }
-    if (introspection_data_)
-    {
-      g_dbus_node_info_unref(introspection_data_);
-    }
-    if (current_metadata_)
-    {
-      g_variant_unref(current_metadata_);
-    }
-    std::cout << "-- MPRISService cleaned up." << std::endl;
+      if (connection_)
+      {
+          g_object_unref(connection_);
+          connection_ = nullptr;
+      }
+      if (introspection_data_)
+      {
+          g_dbus_node_info_unref(introspection_data_);
+          introspection_data_ = nullptr;
+      }
+      if (current_metadata_)
+      {
+          g_variant_unref(current_metadata_);
+          current_metadata_ = nullptr;
+      }
+      std::cout << "-- MPRISService cleaned up." << std::endl;
   }
 
   /**

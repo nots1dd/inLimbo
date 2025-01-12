@@ -182,14 +182,22 @@ ftxui::Color GetColor(Color color)
 
 struct InLimboColors
 {
-  ftxui::Color active_win_color;
-  ftxui::Color inactive_win_color;
+  ftxui::Color active_win_border_color;
+  ftxui::Color inactive_win_border_color;
   ftxui::Color album_name_bg;
   ftxui::Color menu_cursor_bg;
   ftxui::Color artists_title_bg;
   ftxui::Color artists_title_fg;
   ftxui::Color songs_title_bg;
   ftxui::Color songs_title_fg;
+  ftxui::Color song_queue_menu_bor_col;
+  ftxui::Color song_queue_menu_fg;
+  ftxui::Color progress_bar_playing_col;
+  ftxui::Color progress_bar_not_playing_col;
+  ftxui::Color volume_bar_col;
+  ftxui::Color status_bar_bg;
+  ftxui::Color status_bar_artist_col;
+  ftxui::Color status_bar_song_col;
 };
 
 /**
@@ -302,14 +310,24 @@ InLimboColors parseColors()
 
   // Mapping of fields in the InLimboColors struct
   const std::unordered_map<std::string, ftxui::Color*> field_map = {
-    {"active_win_color", &colors.active_win_color},
-    {"inactive_win_color", &colors.inactive_win_color},
+    {"active_win_border_color", &colors.active_win_border_color},
+    {"inactive_win_border_color", &colors.inactive_win_border_color},
     {"album_name_bg", &colors.album_name_bg},
     {"menu_cursor_bg", &colors.menu_cursor_bg},
     {"artists_title_bg", &colors.artists_title_bg},
     {"artists_title_fg", &colors.artists_title_fg},
     {"songs_title_bg", &colors.songs_title_bg},
-    {"songs_title_fg", &colors.songs_title_fg}};
+    {"songs_title_fg", &colors.songs_title_fg},
+    {"song_queue_menu_bor_col", &colors.song_queue_menu_bor_col},
+    {"song_queue_menu_fg", &colors.song_queue_menu_fg},
+    {"progress_bar_playing_col", &colors.progress_bar_playing_col},
+    {"progress_bar_not_playing_col", &colors.progress_bar_not_playing_col},
+    {"volume_bar_col", &colors.volume_bar_col},
+    {"status_bar_bg", &colors.status_bar_bg},
+    {"status_bar_artist_col", &colors.status_bar_artist_col},
+    {"status_bar_song_col", &colors.status_bar_song_col},
+
+  };
 
   for (const auto& [field, member_color] : field_map)
   {

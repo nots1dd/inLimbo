@@ -559,3 +559,34 @@ Weird commit that sets up for better and more transparent way of understanding t
 - Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
 
 ---
+
+## [ALPHA 1.7] --- 13-01-2025
+
+### Added
+- `src/ui/thread_manager.hpp` -> To handle concurrency in UI with testing + doxygen docs setup
+
+- A LOT of new color fields to `config.toml` (Check it out) with subsequent integration in `src/ui/colors.hpp` and `src/ui/ui_handler.hpp`
+
+- Some object deletion and freeing when calling MPRISService destructor 
+
+- `src/signal` -> To catch all signals and handle gracefully (**FULL INTEGRATION NOT DONE YET**)
+
+- Some changes to format lyrics function and added ComponentState in `src/ui/misc.hpp` to keep track of all components of UI together
+
+### Changed
+- Added more functions in misc.hpp to refactor code in ui_handler
+
+### Fixed
+- Finally fixed scrolling lyrics menu issue, now it completely works with testing
+
+- Weird issue with deletion of song from queue is fully fixed with testing
+
+### Removed
+**NIL**
+
+Sizeable commit with refactoring and more configuration options as its priority, more such commits expected in future
+
+### Known Issues to fix in immediate commits
+- Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
+
+---
