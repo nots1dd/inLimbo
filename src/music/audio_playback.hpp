@@ -116,7 +116,6 @@ public:
 
   void resume()
   {
-    std::unique_lock<std::mutex> lock(mtx); // Protect shared state
     if (wasPaused)
     {
       // Seek to the stored position and start playing again
