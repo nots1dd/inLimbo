@@ -7,7 +7,7 @@
 int main(int argc, char* argv[])
 {
   SignalHandler::getInstance().setup();
-  string          directoryPath = string(parseTOMLField(PARENT_LIB, PARENT_LIB_FIELD_DIR));
+  auto         directoryPath = string(parseTOMLField(PARENT_LIB, PARENT_LIB_FIELD_DIR));
   string          libSyncPath   = getConfigPath(LIB_SYNC_NAME);
   RedBlackTree    rbt;
   InodeFileMapper mapper(libSyncPath, "false");

@@ -18,18 +18,18 @@ struct ComponentState
   Component songs_list;
   Component songs_queue_comp;
   Component lyrics_scroller;
-  Component MainRenderer; 
+  Component MainRenderer;
 };
 
-std::vector<std::string> formatLyrics(const std::string& lyrics)
+auto formatLyrics(const std::string& lyrics)
 {
   std::vector<std::string> lines;
   std::string              currentLine;
-  bool                     insideSquareBrackets     = false;
-  bool                     insideCurlBrackets     = false;
-  bool                     lastWasUppercase   = false;
-  bool                     lastWasSpecialChar = false; // Tracks special characters within words
-  char                     previousChar       = '\0';
+  bool                     insideSquareBrackets = false;
+  bool                     insideCurlBrackets   = false;
+  bool                     lastWasUppercase     = false;
+  bool                     lastWasSpecialChar   = false; // Tracks special characters within words
+  char                     previousChar         = '\0';
 
   for (char c : lyrics)
   {
@@ -40,8 +40,10 @@ std::vector<std::string> formatLyrics(const std::string& lyrics)
         lines.push_back(currentLine);
         currentLine.clear();
       }
-      if (c == '[') insideSquareBrackets = true;
-      else insideCurlBrackets = true;
+      if (c == '[')
+        insideSquareBrackets = true;
+      else
+        insideCurlBrackets = true;
       currentLine += c;
       continue;
     }
@@ -125,7 +127,7 @@ std::string charToStr(char ch)
   }
 }
 
-std::string FormatTime(int seconds)
+auto FormatTime(int seconds)
 {
   int minutes = seconds / 60;
   seconds     = seconds % 60;
@@ -135,38 +137,32 @@ std::string FormatTime(int seconds)
   return ss.str();
 }
 
-ftxui::Decorator getTrueColor(TrueColors::Color color)
-{
-  return ftxui::color(TrueColors::GetColor(color));
-}
+auto getTrueColor(TrueColors::Color color) { return ftxui::color(TrueColors::GetColor(color)); }
 
-ftxui::Decorator getTrueBGColor(TrueColors::Color color)
-{
-  return ftxui::bgcolor(TrueColors::GetColor(color));
-}
+auto getTrueBGColor(TrueColors::Color color) { return ftxui::bgcolor(TrueColors::GetColor(color)); }
 
-Element renderAlbumName(const std::string& album_name, const int& year, ftxui::Color sel_color)
+auto renderAlbumName(const std::string& album_name, const int& year, ftxui::Color sel_color)
 {
   return hbox({text(" "), text(album_name) | bold, filler(),
                text(std::to_string(year)) | dim | align_right, text(" ")}) |
          inverted | color(sel_color) | dim;
 }
 
-Element renderSongName(const std::string& disc_track_info, const std::string& song_name,
-                       const int& duration)
+auto renderSongName(const std::string& disc_track_info, const std::string& song_name,
+                    const int& duration)
 {
   return hbox({text(disc_track_info) | dim, text(song_name) | bold | flex_grow,
                filler(), // Spacer for dynamic layout
                text(FormatTime(duration)) | align_right});
 }
 
-Component CreateMenu(const std::vector<std::string>* vecLines, int *currLine)
+auto CreateMenu(const std::vector<std::string>* vecLines, int* currLine)
 {
-    MenuOption menu_options;
-    menu_options.on_change     = [&]() {};
-    menu_options.focused_entry = currLine;
-    
-    return Menu(vecLines, currLine, menu_options);
+  MenuOption menu_options;
+  menu_options.on_change     = [&]() {};
+  menu_options.focused_entry = currLine;
+
+  return Menu(vecLines, currLine, menu_options);
 }
 
 auto RenderSongMenu(const std::vector<Element>& items)

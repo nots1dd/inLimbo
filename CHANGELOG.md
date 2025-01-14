@@ -590,3 +590,28 @@ Sizeable commit with refactoring and more configuration options as its priority,
 - Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
 
 ---
+
+## [ALPHA 1.8] --- 13-01-2025
+
+### Added
+- `.clang-tidy` file for better code practice
+
+### Changed
+- SignalHandler class now sends all errors with backtrace and other information to a log file in `$HOME/.cache/inLimbo/` directory
+
+- Added unlockPlayMutex in `src/ui/thread_manager.hpp` with doxygen docs
+
+- Formatting and other refactoring changes (small)
+
+### Fixed
+**NIL**
+
+### Removed
+**NIL**
+
+Small commit that may fix codeql CI issue, going for refactor + small feature updates like cache, playlists, etc. (before the network integration)
+
+### Known Issues to fix in immediate commits
+- Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
+
+---

@@ -1,0 +1,6 @@
+Checks:          '-*,clang-analyzer-*,modernize-*'
+CheckOptions:
+  - key:             modernize-use-auto.IgnoreMacros
+    value:           '1'
+WarningsAsErrors:  ''
+FormatStyle:       file

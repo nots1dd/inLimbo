@@ -1,12 +1,12 @@
 #ifndef FTXUI_HANDLER_HPP
 #define FTXUI_HANDLER_HPP
 
+#include "../dbus/mpris-service.hpp"
 #include "../music/audio_playback.hpp"
 #include "./components/scroller.hpp"
+#include "./thread_manager.hpp"
 #include "keymaps.hpp"
 #include "misc.hpp"
-#include "../dbus/mpris-service.hpp"
-#include "./thread_manager.hpp"
 #include <iomanip>
 #include <sstream>
 #include <unordered_set>
@@ -46,9 +46,8 @@ public:
     const std::map<std::string,
                    std::map<std::string, std::map<unsigned int, std::map<unsigned int, Song>>>>&
       initial_library)
-      : library(initial_library),
-      INL_Thread_Manager(std::make_unique<ThreadManager>()),
-      INL_Thread_State(INL_Thread_Manager->getThreadState())
+      : library(initial_library), INL_Thread_Manager(std::make_unique<ThreadManager>()),
+        INL_Thread_State(INL_Thread_Manager->getThreadState())
   {
     InitializeData();
     CreateComponents();
@@ -58,12 +57,15 @@ public:
   {
     mprisService = std::make_unique<MPRISService>("inLimbo");
 
-    std::thread mpris_dbus_thread([&] {
-      GMainLoop* loop = g_main_loop_new(nullptr, FALSE);
-      g_main_loop_run(loop);
-    });
+    std::thread mpris_dbus_thread(
+      [&]
+      {
+        GMainLoop* loop = g_main_loop_new(nullptr, FALSE);
+        g_main_loop_run(loop);
+      });
 
-    mpris_dbus_thread.detach();
+    mpris_dbus_thread
+      .detach(); // We will not monitor this thread, it can just run without our concern
 
     auto screen = ScreenInteractive::Fullscreen();
 
@@ -166,8 +168,8 @@ private:
   InLimboColors global_colors   = parseColors();
 
   std::unique_ptr<MiniAudioPlayer> audio_player;
-  std::unique_ptr<ThreadManager> INL_Thread_Manager; // Smart pointer to ThreadManager
-  ThreadManager::ThreadState& INL_Thread_State;
+  std::unique_ptr<ThreadManager>   INL_Thread_Manager; // Smart pointer to ThreadManager
+  ThreadManager::ThreadState&      INL_Thread_State;
 
   std::vector<Song> song_queue;
   int               current_song_queue_index = 0;
@@ -235,14 +237,13 @@ private:
 
   void PlayCurrentSong()
   {
+    INL_Thread_Manager->lockPlayMutex(INL_Thread_State);
+    if (INL_Thread_State.is_processing)
     {
-      INL_Thread_Manager->lockPlayMutex(INL_Thread_State);
-      if (INL_Thread_State.is_processing)
-      {
-        return; // Another invocation is already running
-      }
-      INL_Thread_State.is_processing = true;
+      INL_Thread_Manager->unlockPlayMutex(INL_Thread_State);
+      return; // Another invocation is already running
     }
+    INL_Thread_State.is_processing = true;
 
     INL_Thread_State.play_future =
       std::async(std::launch::async,
@@ -250,12 +251,9 @@ private:
                  {
                    try
                    {
+                     if (!audio_player)
                      {
-                       INL_Thread_Manager->lockPlayMutex(INL_Thread_State);
-                       if (!audio_player)
-                       {
-                         audio_player = std::make_unique<MiniAudioPlayer>();
-                       }
+                       audio_player = std::make_unique<MiniAudioPlayer>();
                      }
 
                      Song* current_song = GetCurrentSongFromQueue();
@@ -270,13 +268,11 @@ private:
                        throw std::runtime_error("Error: Invalid file path.");
                      }
 
+                     // Stop previous song if any
+                     if (INL_Thread_State.is_playing)
                      {
-                       INL_Thread_Manager->lockPlayMutex(INL_Thread_State);
-                       if (INL_Thread_State.is_playing)
-                       {
-                         audio_player->stop(); // Stop the current song if playing
-                         INL_Thread_State.is_playing = false;
-                       }
+                       audio_player->stop();
+                       INL_Thread_State.is_playing = false;
                      }
 
                      // Load the audio file
@@ -286,34 +282,24 @@ private:
                        throw std::runtime_error("Error: Failed to load the audio file.");
                      }
 
-                     {
-                       INL_Thread_Manager->lockPlayMutex(INL_Thread_State);
-                       INL_Thread_State.is_playing = true;
-                     }
+                     INL_Thread_State.is_playing = true;
 
                      audio_player->play(); // Play the song (it will play in a separate thread)
                      current_playing_state.duration = audio_player->getDuration();
-
-                     {
-                       INL_Thread_Manager->lockPlayMutex(INL_Thread_State);
-                       // Simulate setting duration or other playback state
-                     }
                    }
                    catch (const std::exception& e)
                    {
-                     {
-                       INL_Thread_Manager->lockPlayMutex(INL_Thread_State);
-                       show_dialog    = true;
-                       dialog_message = e.what();
-                       INL_Thread_State.is_playing     = false;
-                     }
+                     show_dialog                 = true;
+                     dialog_message              = e.what();
+                     INL_Thread_State.is_playing = false;
                    }
 
-                   {
-                     INL_Thread_Manager->lockPlayMutex(INL_Thread_State);
-                     INL_Thread_State.is_processing = false;
-                   }
+                   INL_Thread_Manager->lockPlayMutex(INL_Thread_State);
+                   INL_Thread_State.is_processing = false;
+                   INL_Thread_Manager->unlockPlayMutex(INL_Thread_State);
                  });
+
+    INL_Thread_Manager->unlockPlayMutex(INL_Thread_State);
   }
 
   void TogglePlayback()
@@ -483,12 +469,14 @@ private:
   {
     const Song& get_curr_song = GetCurrentSong(artist);
 
-    try {
+    try
+    {
       song_queue.insert(song_queue.begin() + current_song_queue_index + 1, get_curr_song);
     }
-    catch (std::exception e) {
+    catch (std::exception e)
+    {
       dialog_message = "Could not play this song next!";
-      show_dialog = true;
+      show_dialog    = true;
     }
 
     current_song_queue_index++;
@@ -612,13 +600,16 @@ private:
       }
     }
 
-    const std::string& mprisSongTitle = current_playing_state.title;
-    const std::string& mprisSongArtist = current_playing_state.artist;
-    const std::string& mprisSongAlbum = current_playing_state.album;
+    const std::string& mprisSongTitle   = current_playing_state.title;
+    const std::string& mprisSongArtist  = current_playing_state.artist;
+    const std::string& mprisSongAlbum   = current_playing_state.album;
     const std::string& mprisSongComment = current_playing_state.comment;
-    const std::string& mprisSongGenre = current_playing_state.genre;
+    const std::string& mprisSongGenre   = current_playing_state.genre;
 
-    mprisService->updateMetadata(mprisSongTitle, mprisSongArtist, mprisSongAlbum, static_cast<int64_t>(GetCurrentSongFromQueue()->metadata.duration), mprisSongComment, mprisSongGenre, current_playing_state.track, current_playing_state.discNumber);
+    mprisService->updateMetadata(mprisSongTitle, mprisSongArtist, mprisSongAlbum,
+                                 static_cast<int64_t>(GetCurrentSongFromQueue()->metadata.duration),
+                                 mprisSongComment, mprisSongGenre, current_playing_state.track,
+                                 current_playing_state.discNumber);
 
     current_lyric_line = 0;
   }
@@ -639,14 +630,18 @@ private:
     song_menu_options.on_change     = [&]() {};
     song_menu_options.focused_entry = &selected_inode;
 
-    INL_Component_State.artists_list = Menu(&current_artist_names, &selected_artist, artist_menu_options);
-    INL_Component_State.songs_list   = Scroller(Renderer(
-      [&]() mutable
-      {
-        return RenderSongMenu(current_song_elements); // This should return an Element
-      }), &selected_inode, global_colors.menu_cursor_bg);
+    INL_Component_State.artists_list =
+      Menu(&current_artist_names, &selected_artist, artist_menu_options);
+    INL_Component_State.songs_list =
+      Scroller(Renderer(
+                 [&]() mutable
+                 {
+                   return RenderSongMenu(current_song_elements); // This should return an Element
+                 }),
+               &selected_inode, global_colors.menu_cursor_bg);
 
-    auto main_container = Container::Horizontal({INL_Component_State.artists_list, INL_Component_State.songs_list});
+    auto main_container =
+      Container::Horizontal({INL_Component_State.artists_list, INL_Component_State.songs_list});
 
     /* Adding DEBOUNCE TIME (Invoking PlayCurrentSong() too fast causes resources to not be freed)
      */
@@ -958,7 +953,8 @@ private:
           }
           else if (is_keybind_match(global_keybinds.add_artists_songs_to_queue) && focus_on_artists)
           {
-            /*selected_inode = 0; // sanity check, the current song pane's index should start from top to enqueue all songs*/
+            /*selected_inode = 0; // sanity check, the current song pane's index should start from
+             * top to enqueue all songs*/
             /*albums_indices_traversed = 1;*/
             EnqueueAllSongsByArtist(current_artist_names[selected_artist], false);
             NavigateList(true);
@@ -1059,7 +1055,7 @@ private:
       }
     }
 
-    INL_Component_State.lyrics_scroller                   = CreateMenu(&lyricLines, &current_lyric_line);
+    INL_Component_State.lyrics_scroller = CreateMenu(&lyricLines, &current_lyric_line);
 
     UpdateLyrics();
 
@@ -1074,14 +1070,14 @@ private:
     auto info_pane = window(text(" Additional Info ") | bold | center | inverted,
                             vbox(additionalPropertiesText) | frame | flex);
 
-    return hbox({
-        vbox({
-          lyrics_pane | frame | flex | border,
-          separator(),
-          text(end_text) | dim | center | border,
-        }) | flex,
-        vbox({info_pane}) | flex
-      }) | flex;
+    return hbox({vbox({
+                   lyrics_pane | frame | flex | border,
+                   separator(),
+                   text(end_text) | dim | center | border,
+                 }) |
+                   flex,
+                 vbox({info_pane}) | flex}) |
+           flex;
   }
 
   void UpdateSongQueueList()
@@ -1109,20 +1105,23 @@ private:
 
     auto separator_line = separator() | dim | flex;
 
-    std::string end_text = "Use '" + charToStr(global_keybinds.remove_song_from_queue) + "' to remove selected song from queue, Press '" +
-                       charToStr(global_keybinds.goto_main_screen) +
-                       "' to go back home.";
+    std::string end_text = "Use '" + charToStr(global_keybinds.remove_song_from_queue) +
+                           "' to remove selected song from queue, Press '" +
+                           charToStr(global_keybinds.goto_main_screen) + "' to go back home.";
 
     auto queue_container = vbox({
-      INL_Component_State.songs_queue_comp->Render() | color(global_colors.song_queue_menu_fg) | flex,
-    }) | border | color(global_colors.song_queue_menu_bor_col);
+                             INL_Component_State.songs_queue_comp->Render() |
+                               color(global_colors.song_queue_menu_fg) | flex,
+                           }) |
+                           border | color(global_colors.song_queue_menu_bor_col);
 
     return vbox({
-          title,
-          queue_container | frame | flex,
-          separator(),
-          text(end_text) | dim | center,
-        }) | flex;
+             title,
+             queue_container | frame | flex,
+             separator(),
+             text(end_text) | dim | center,
+           }) |
+           flex;
   }
 
   void NavigateSongMenu(bool move_down)
@@ -1357,7 +1356,8 @@ private:
 
   Color GetCurrWinColor(bool focused)
   {
-    return focused ? global_colors.active_win_border_color : global_colors.inactive_win_border_color;
+    return focused ? global_colors.active_win_border_color
+                   : global_colors.inactive_win_border_color;
   }
 
   Element RenderMainInterface(float progress)
@@ -1387,23 +1387,24 @@ private:
       additional_info += STATUS_BAR_DELIM;
     }
 
-    std::string status = std::string("  ") + (INL_Thread_State.is_playing ? STATUS_PLAYING : STATUS_PAUSED) + "  ";
+    std::string status =
+      std::string("  ") + (INL_Thread_State.is_playing ? STATUS_PLAYING : STATUS_PAUSED) + "  ";
 
-    auto left_pane =
-      vbox({
-        text(" Artists") | bold | color(global_colors.artists_title_bg) | inverted,
-        separator(),
-        INL_Component_State.artists_list->Render() | frame | flex | getTrueColor(TrueColors::Color::White),
-      }) |
-      borderHeavy | color(GetCurrWinColor(focus_on_artists));
+    auto left_pane = vbox({
+                       text(" Artists") | bold | color(global_colors.artists_title_bg) | inverted,
+                       separator(),
+                       INL_Component_State.artists_list->Render() | frame | flex |
+                         getTrueColor(TrueColors::Color::White),
+                     }) |
+                     borderHeavy | color(GetCurrWinColor(focus_on_artists));
 
-    auto right_pane =
-      vbox({
-        text(" Songs") | bold | color(global_colors.songs_title_bg) | inverted,
-        separator(),
-        INL_Component_State.songs_list->Render() | frame | flex | getTrueColor(TrueColors::Color::White),
-      }) |
-      borderHeavy | color(GetCurrWinColor(!focus_on_artists));
+    auto right_pane = vbox({
+                        text(" Songs") | bold | color(global_colors.songs_title_bg) | inverted,
+                        separator(),
+                        INL_Component_State.songs_list->Render() | frame | flex |
+                          getTrueColor(TrueColors::Color::White),
+                      }) |
+                      borderHeavy | color(GetCurrWinColor(!focus_on_artists));
 
     auto panes = vbox({hbox({
                          left_pane | size(WIDTH, EQUAL, 100) | size(HEIGHT, EQUAL, 100) | flex,
@@ -1412,8 +1413,9 @@ private:
                        flex}) |
                  flex;
 
-    auto progress_style = INL_Thread_State.is_playing ? color(global_colors.progress_bar_playing_col)
-                                     : color(global_colors.progress_bar_not_playing_col);
+    auto progress_style = INL_Thread_State.is_playing
+                            ? color(global_colors.progress_bar_playing_col)
+                            : color(global_colors.progress_bar_not_playing_col);
     auto progress_bar   = hbox({
       text(FormatTime((int)current_position)) | progress_style,
       gauge(progress) | flex | progress_style,
