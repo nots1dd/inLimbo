@@ -169,18 +169,12 @@ Component CreateMenu(const std::vector<std::string>* vecLines, int *currLine)
     return Menu(vecLines, currLine, menu_options);
 }
 
-// TODO: Make Song Menu dynamically scrollable
-auto RenderSongMenu(const std::vector<Element>& items, int* selected_index, ftxui::Color sel_color)
+auto RenderSongMenu(const std::vector<Element>& items)
 {
   Elements rendered_items;
   for (int i = 0; i < items.size(); ++i)
   {
-    bool is_selected = (i == *selected_index);
-    /*bool is_playing     = (i == *playing_index);*/
-    auto style          = is_selected ? color(sel_color) : nothing;
-    auto inverted_style = is_selected ? inverted : nothing;
-    /*auto playing_style = is_playing ? getTrueColor(playing_color) : nothing;*/
-    rendered_items.push_back(items[i] | style | inverted_style | frame);
+    rendered_items.push_back(items[i] | frame);
   }
 
   return vbox(std::move(rendered_items));

@@ -16,7 +16,7 @@
 #include <ftxui/screen/box.hpp>       // for Box
 
 namespace ftxui {
-  Component Scroller(Component child);
+  Component Scroller(Component child, int* external_selected, Color menu_cursor_bg);
 }
 
 #endif

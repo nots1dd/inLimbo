@@ -7,7 +7,6 @@
 #include "misc.hpp"
 #include "../dbus/mpris-service.hpp"
 #include "./thread_manager.hpp"
-#include <algorithm>
 #include <iomanip>
 #include <sstream>
 #include <unordered_set>
@@ -641,12 +640,11 @@ private:
     song_menu_options.focused_entry = &selected_inode;
 
     INL_Component_State.artists_list = Menu(&current_artist_names, &selected_artist, artist_menu_options);
-    INL_Component_State.songs_list   = Renderer(
+    INL_Component_State.songs_list   = Scroller(Renderer(
       [&]() mutable
       {
-        return RenderSongMenu(current_song_elements, &selected_inode,
-                                global_colors.menu_cursor_bg); // This should return an Element
-      });
+        return RenderSongMenu(current_song_elements); // This should return an Element
+      }), &selected_inode, global_colors.menu_cursor_bg);
 
     auto main_container = Container::Horizontal({INL_Component_State.artists_list, INL_Component_State.songs_list});
 
@@ -1006,7 +1004,6 @@ private:
 
                  if (active_screen == SHOW_LYRICS_SCREEN)
                  {
-                   // TODO: Fix lyrics scroll
                    interface = RenderLyricsAndInfoView();
                  }
                  if (active_screen == SHOW_QUEUE_SCREEN)
