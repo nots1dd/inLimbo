@@ -10,6 +10,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+add_library(tiv
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ui/components/libs/tiv_lib.cpp
+)
+
 # --- Fetch FTXUI --------------------------------------------------------------
 include(FetchContent)
 
@@ -40,6 +44,8 @@ endif()
 add_executable(${EXECUTABLE_NAME}
   src/main.cpp
   src/ui/components/scroller.cpp
+  src/ui/components/image_view.cpp
+  src/ui/components/libs/tiv_lib.cpp
 )
 
 # Set include directories for source files
@@ -141,6 +147,8 @@ add_definitions(${GLIB_CFLAGS_OTHER})
 
 # Link libraries for native build
 target_link_libraries(${EXECUTABLE_NAME}
+  PRIVATE tiv 
+  PRIVATE X11
   PRIVATE ftxui::screen
   PRIVATE ftxui::dom
   PRIVATE ftxui::component
@@ -152,4 +160,7 @@ target_link_libraries(${EXECUTABLE_NAME}
 if (NOT EXISTS "$ENV{HOME}/.config/inLimbo/config.toml")
   file(MAKE_DIRECTORY "$ENV{HOME}/.config/inLimbo")
   configure_file("${CMAKE_SOURCE_DIR}/src/parser/examples/config.toml" "$ENV{HOME}/.config/inLimbo/config.toml" COPYONLY)
+endif()
+if (NOT EXISTS "$ENV{HOME}/.cache/inLimbo/")
+  file(MAKE_DIRECTORY "$ENV{HOME}/.cache/inLimbo")
 endif()

@@ -51,7 +51,7 @@ private:
         return std::string(buffer);
     }
 
-    static void createLogDirectory(const std::string& path) {
+    static void createCacheDirectory(const std::string& path) {
       struct stat info;
       if (stat(path.c_str(), &info) != 0 || !(info.st_mode & S_IFDIR)) {
           mkdir(path.c_str(), 0755); // Create directory with rwx permissions
@@ -100,7 +100,7 @@ private:
         }
 
         std::string logDir = std::string(std::getenv("HOME")) + "/.cache/inLimbo/";
-        createLogDirectory(logDir);  // Ensure the directory exists
+        createCacheDirectory(logDir);  // Ensure the directory exists
 
         std::string logFileName = logDir +"debug-" + std::to_string(signal) + ".log";
         std::ofstream logFile(logFileName, std::ios::out | std::ios::app);

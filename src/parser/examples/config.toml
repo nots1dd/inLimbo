@@ -43,6 +43,7 @@ add_artists_songs_to_queue = "e"
 remove_song_from_queue = "d"
 play_this_song_next = "b"
 view_song_queue = "3"
+view_current_song_info = "i"
 
 # Colors format: Solid Colors and Hexadecimal values of format `#RRGGBB`
 [colors]

@@ -22,7 +22,7 @@
 > and no stable release is present as of yet.
 > 
 
-A possible revamp of LiteMus
+The inLimbo project aims to be a new upcoming TUI music player for UNIX based systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.
 
 ## Features
 
@@ -43,10 +43,13 @@ A possible revamp of LiteMus
 
 ## DEPENDENCIES 
 
-1. TagLib     ==> [here](https://taglib.org/)                                   [libtag1-dev for Ubuntu]        
-2. Gio        ==> [here](https://docs.gtk.org/gio/)                             [libgio-2.0-dev for Ubuntu]
-3. GLib       ==> [here](https://docs.gtk.org/glib/)                            [libglib-2.0-dev for Ubuntu]
-4. pkg-config ==> [here](https://www.freedesktop.org/wiki/Software/pkg-config/) [pkg-config for Ubuntu]
+| Dependency      | Ubuntu                    | Fedora                        | Arch Linux                   |
+|-----------------|---------------------------|-------------------------------|------------------------------|
+| **TagLib**      | `libtag1-dev`             | `taglib-devel`                | `taglib`                     |
+| **Gio**         | `libgio-2.0-dev`          | `glib2-devel`                 | `glib2`                      |
+| **GLib**        | `libglib-2.0-dev`         | `glib2-devel`                 | `glib2`                      |
+| **pkg-config**  | `pkg-config`              | `pkgconf`                     | `pkgconf`                    |
+| **ImageMagick** | `imagemagick`             | `ImageMagick`                 | `imagemagick`                |
 
 **FTXUI** is fetched from GitHub [here](https://github.com/ArthurSonzogni/FTXUI/) itself during building so **NO** need to install it separately.
 

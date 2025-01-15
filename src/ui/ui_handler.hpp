@@ -25,10 +25,11 @@ using namespace ftxui;
 #define MAX_LENGTH_ARTIST_NAME 30
 
 /** SCREEN MACROS */
-#define SHOW_MAIN_UI       0
-#define SHOW_HELP_SCREEN   1
-#define SHOW_LYRICS_SCREEN 2
-#define SHOW_QUEUE_SCREEN  3
+#define SHOW_MAIN_UI          0
+#define SHOW_HELP_SCREEN      1
+#define SHOW_LYRICS_SCREEN    2
+#define SHOW_QUEUE_SCREEN     3
+#define SHOW_SONG_INFO_SCREEN 4
 
 #define MIN_DEBOUNCE_TIME_IN_MS 500
 
@@ -158,6 +159,7 @@ private:
     std::string                                  lyrics;
     std::string                                  comment;
     std::unordered_map<std::string, std::string> additionalProperties;
+    std::string                                  filePath;
   };
 
   PlayingState current_playing_state;
@@ -591,6 +593,7 @@ private:
       current_playing_state.lyrics      = metadata.lyrics;
       current_playing_state.has_comment = (metadata.comment != "No Comment");
       current_playing_state.has_lyrics  = (metadata.lyrics != "No Lyrics");
+      current_playing_state.filePath    = metadata.filePath;
       // duration gets updated in the PlayCurrentSong() thread itself
 
       // If there's additional properties, you can either copy them or process as needed
@@ -768,6 +771,15 @@ private:
         else if (event.is_mouse())
           return false;
 
+        else if (active_screen == SHOW_SONG_INFO_SCREEN)
+        {
+          if (is_keybind_match(global_keybinds.goto_main_screen))
+          {
+            active_screen = SHOW_MAIN_UI;
+            return true;
+          }
+        }
+
         else if (active_screen == SHOW_MAIN_UI)
         {
 
@@ -911,6 +923,11 @@ private:
             active_screen = SHOW_MAIN_UI;
             return true;
           }
+          else if (is_keybind_match(global_keybinds.view_current_song_info))
+          {
+            active_screen = SHOW_SONG_INFO_SCREEN;
+            return true;
+          }
           // Some default keybinds
           else if (is_keybind_match('g'))
           {
@@ -1005,6 +1022,14 @@ private:
                  if (active_screen == SHOW_QUEUE_SCREEN)
                  {
                    interface = RenderQueueScreen();
+                 }
+                 if (active_screen == SHOW_SONG_INFO_SCREEN)
+                 {
+                   interface = RenderThumbnail(
+                     current_playing_state.filePath, getCachePath(), current_playing_state.title,
+                     current_playing_state.artist, current_playing_state.album,
+                     current_playing_state.genre, current_playing_state.year,
+                     current_playing_state.track, current_playing_state.discNumber, progress);
                  }
                  if (show_dialog)
                  {

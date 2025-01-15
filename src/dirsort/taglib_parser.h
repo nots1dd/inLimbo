@@ -2,13 +2,18 @@
 #define TAGLIB_PARSER_H
 
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <sys/stat.h>
 #ifndef __EMSCRIPTEN__
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/mpegfile.h>
+#include <taglib/attachedpictureframe.h>
 #include <taglib/tpropertymap.h>
+#include <png.h>
 #endif
 #include <unordered_map>
 
@@ -184,6 +189,52 @@ void printMetadata(const Metadata& metadata) {
   std::cout << "Disc Number: " << metadata.discNumber << std::endl;
   std::cout << "Lyrics: " << std::endl << metadata.lyrics << std::endl;
   std::cout << "+++++++++++++++++++++++++++" << std::endl;
+}
+
+bool extractThumbnail(const std::string& audioFilePath, const std::string& outputImagePath) {
+    // Open the file using TagLib
+    TagLib::MPEG::File file(audioFilePath.c_str());
+    if (!file.isValid()) {
+        std::cerr << "Error: Could not open audio file." << std::endl;
+        return false;
+    }
+
+    // Ensure the file has ID3v2 tags
+    TagLib::ID3v2::Tag* id3v2Tag = file.ID3v2Tag();
+    if (!id3v2Tag) {
+        std::cerr << "Error: No ID3v2 tags found in the audio file." << std::endl;
+        return false;
+    }
+
+    // Search for the APIC (Attached Picture) frame
+    const TagLib::ID3v2::FrameList& frameList = id3v2Tag->frameListMap()["APIC"];
+    if (frameList.isEmpty()) {
+        std::cerr << "Error: No embedded album art found in the audio file." << std::endl;
+        return false;
+    }
+
+    // Extract the first APIC frame (album art)
+    auto* apicFrame = dynamic_cast<TagLib::ID3v2::AttachedPictureFrame*>(frameList.front());
+    if (!apicFrame) {
+        std::cerr << "Error: Failed to retrieve album art." << std::endl;
+        return false;
+    }
+
+    // Get the picture data and MIME type
+    const auto& pictureData = apicFrame->picture();
+    const std::string mimeType = apicFrame->mimeType().toCString(true);
+
+    // Save the picture data to a file
+    std::ofstream outputFile(outputImagePath, std::ios::binary);
+    if (!outputFile) {
+        std::cerr << "Error: Could not create output image file." << std::endl;
+        return false;
+    }
+
+    outputFile.write(reinterpret_cast<const char*>(pictureData.data()), pictureData.size());
+    outputFile.close();
+
+    return true;
 }
 
 #endif // TAGLIB_PARSER_H

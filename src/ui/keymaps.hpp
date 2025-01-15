@@ -36,6 +36,7 @@ struct Keybinds
   char remove_song_from_queue;     /**< Key for removing a song from the queue */
   char play_this_song_next;        /**< Key for playing a song next */
   char view_song_queue;            /**< Key for viewing the song queue */
+  char view_current_song_info;     /**< Key for viewing in-depth song info */
 };
 
 /**
@@ -126,7 +127,8 @@ Keybinds parseKeybinds()
     {"add_artists_songs_to_queue", &keybinds.add_artists_songs_to_queue},
     {"remove_song_from_queue", &keybinds.remove_song_from_queue},
     {"play_this_song_next", &keybinds.play_this_song_next},
-    {"view_song_queue", &keybinds.view_song_queue}};
+    {"view_song_queue", &keybinds.view_song_queue},
+    {"view_current_song_info", &keybinds.view_current_song_info}};
 
   // Populate the keybinds struct by reading the fields from the TOML configuration
   for (const auto& [field, member_ptr] : field_map)

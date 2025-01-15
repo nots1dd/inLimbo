@@ -1,7 +1,9 @@
 #ifndef MISC_HEADER
 #define MISC_HEADER
 
+#include "../dirsort/taglib_parser.h"
 #include "./colors.hpp"
+#include "components/image_view.hpp"
 #include <cctype>
 #include <ftxui/component/captured_mouse.hpp>
 #include <ftxui/component/component.hpp>
@@ -19,6 +21,7 @@ struct ComponentState
   Component songs_queue_comp;
   Component lyrics_scroller;
   Component MainRenderer;
+  Component ThumbnailRenderer;
 };
 
 auto formatLyrics(const std::string& lyrics)
@@ -174,6 +177,64 @@ auto RenderSongMenu(const std::vector<Element>& items)
   }
 
   return vbox(std::move(rendered_items));
+}
+
+auto RenderThumbnail(const std::string& songFilePath, const std::string& cacheDirPath,
+                     const std::string& songTitle, const std::string& artistName,
+                     const std::string& albumName, const std::string& genre, unsigned int year,
+                     unsigned int trackNumber, unsigned int discNumber,
+                     float progress) // progress: a value between 0.0 (0%) and 1.0 (100%)
+{
+  auto thumbnailFilePath = cacheDirPath + "thumbnail.png";
+
+  if (extractThumbnail(songFilePath, thumbnailFilePath))
+  {
+    auto thumbnail = Renderer(
+      [&]
+      {
+        return vbox({image_view(thumbnailFilePath)}) |
+               center; // [TODO] Is not being centered properly
+      });
+
+    auto metadataView = vbox({
+      hbox({text(albumName) | bold | underlined}) | center,
+      hbox({text(songTitle) | bold, text(" by "), text(artistName) | bold, text(" ["),
+            text(std::to_string(year)), text("]"), text(" ("),
+            text(std::to_string(discNumber)) | bold, text("/"),
+            text(std::to_string(trackNumber)) | bold, text(")")}) |
+        center,
+      hbox({text("Seems like a "), text(genre) | bold, text(" type of song...")}) | center, // Genre
+    });
+
+    auto progressBar = hbox({
+      text("Progress: ") | bold,
+      gauge(progress) | flex, // Progress bar
+      text(" "),
+      text(std::to_string(static_cast<int>(progress * 100)) + "%"),
+    });
+
+    auto thumbNailEle = vbox({thumbnail->Render()});
+
+    auto modernUI = vbox({
+                      thumbNailEle | flex_shrink, // Centered and scaled thumbnail
+                      separator(),
+                      metadataView | borderRounded, // Metadata in a rounded bordered box
+                      separator(),
+                      progressBar, // Progress bar below the metadata
+                    }) |
+                    borderRounded;
+
+    return modernUI;
+  }
+
+  // Fallback for when thumbnail extraction fails
+  auto errorView = vbox({
+    text("Error: Thumbnail not found!") | center | dim,
+    separator(),
+    text("Please ensure the file has embedded artwork.") | center,
+  });
+
+  return errorView;
 }
 
 #endif

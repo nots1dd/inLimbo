@@ -615,3 +615,36 @@ Small commit that may fix codeql CI issue, going for refactor + small feature up
 - Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
 
 ---
+
+## [ALPHA 1.9] --- 14-01-2025
+
+### Added
+- Image Template processing kit `CImg.h` and `ftxui::image_view` component in `src/ui/components/` and `src/ui/components/libs`
+
+- Thumbnail parsing function using taglib
+
+### Changed
+- New screen (SHOW_SONG_INFO_SCREEN) with thumbnail and currently playing song info with progress bar
+
+- New field in `config.toml` to view song info screen (subsequent changes to `keymaps.hpp` and `ui_handler.hpp`)
+
+- Modifications to build file (`CMakeLists.txt`) to include the component as library for proper linking 
+
+- Readme changes
+
+- `imagemagick` is now a required dependency for the inLimbo project
+
+### Fixed
+**NIL**
+
+### Removed
+**NIL**
+
+Medium commit with a new screen, I should really start to refactor now...
+
+### Known Issues to fix in immediate commits
+- Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
+
+- Centering of the image_view
+
+---
