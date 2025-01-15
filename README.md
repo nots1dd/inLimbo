@@ -51,6 +51,7 @@ The inLimbo project aims to be a new upcoming TUI music player for UNIX based sy
 | **pkg-config**  | `pkg-config`              | `pkgconf`                     | `pkgconf`                    |
 | **ImageMagick** | `imagemagick`             | `ImageMagick`                 | `imagemagick`                |
 | **X11**         | `libx11-dev`              | `libX11-devel`                | `libx11`                     |
+| **PNG**         | `libpng-dev`              | `libpng-devel`                | `libpng`                     |
 
 **FTXUI** is fetched from GitHub [here](https://github.com/ArthurSonzogni/FTXUI/) itself during building so **NO** need to install it separately.
 

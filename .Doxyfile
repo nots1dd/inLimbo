@@ -1103,7 +1103,8 @@ RECURSIVE              = YES
 # run.
 
 EXCLUDE                = src/music/miniaudio.h \
-                         src/parser/toml.hpp
+                         src/parser/toml.hpp \
+                         src/ui/components/libs/CImg.h \
                          build/
                          build-dbg/
                          build_emscripten/
