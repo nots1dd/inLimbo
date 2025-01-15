@@ -13,6 +13,7 @@ RESET="\033[0m"
 # Some URL definitions
 TOML_PARSER_URL="https://raw.githubusercontent.com/marzer/tomlplusplus/master/toml.hpp"
 MINIAUDIO_URL="https://raw.githubusercontent.com/mackron/miniaudio/master/miniaudio.h"
+CIMG_URL="https://raw.githubusercontent.com/GreycLab/CImg/refs/heads/master/CImg.h"
 
 echo -e "${CYAN}------------------ Initializing inLimbo Repository --------------------${RESET}"
 
@@ -47,5 +48,6 @@ show_msg() {
 # Example usage
 show_msg "1. Download header 'toml.hpp'" $TOML_PARSER_URL "./src/parser/"
 show_msg "2. Download header 'miniaudio.h'" $MINIAUDIO_URL "./src/music/"
+show_msg "3. Download header 'CImg.h'" $CIMG_URL "./src/ui/components/libs/"
 
 echo -e "${CYAN}------------------ Initialization DONE --------------------${RESET}"

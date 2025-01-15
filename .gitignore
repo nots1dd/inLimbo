@@ -12,4 +12,5 @@ src/network/*.pem
 src/parser/*.out
 src/parser/toml.hpp
 src/music/miniaudio.h
+src/ui/components/libs/CImg.h
 docs/
