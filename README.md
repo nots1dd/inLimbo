@@ -8,9 +8,17 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/License-GNU GPL%20v3-blue" alt="License" />
-  <img src="https://img.shields.io/badge/Version-1.2%20alpha-red" alt="Version" />
+  <img src="https://img.shields.io/badge/Version-2.0%20alpha-red" alt="Version" />
   <img src="https://img.shields.io/badge/Build-passing-brightgreen" alt="Build" />
 </p>
+<p align="center">
+  <a href="https://nots1dd.github.io/inLimbo">Documentation</a> ·
+  <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#features">Features</a> ·
+  <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#looks">Looks</a> .
+  <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#building">Get Started</a> ·
+  <a href="https://github.com/nots1dd/inLimbo/issues">Report a bug</a>
+</p>
+
 
 ----
 
