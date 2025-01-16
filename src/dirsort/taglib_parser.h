@@ -1,3 +1,12 @@
+/**
+ * @file taglib_parser.h
+ * @brief A header file for the TagLibParser class and Metadata structure, used to parse metadata from audio files.
+ *
+ * This file defines a `Metadata` structure for storing song information such as title, artist, album, and more. It also defines the `TagLibParser` class for reading and extracting metadata from audio files using the TagLib library.
+ * In addition, the file provides utility functions for printing metadata, handling error messages, and extracting thumbnails from audio files.
+ *
+ * **Note**: In the Emscripten build, dummy functions are used because TagLib must be compiled using Emscripten to function correctly in a web environment.
+ */
 #ifndef TAGLIB_PARSER_H
 #define TAGLIB_PARSER_H
 
@@ -19,38 +28,84 @@
 
 namespace fs = std::filesystem;
 
-// Metadata structure
+/**
+ * @brief A structure to hold metadata information for a song.
+ *
+ * This structure contains various attributes related to a song, such as title, artist, album, genre, and more.
+ * It also allows additional properties and file path to be stored, along with the song's duration.
+ */
+
 struct Metadata
 {
-  std::string                                  title      = "Unknown Title";
-  std::string                                  artist     = "Unknown Artist";
-  std::string                                  album      = "Unknown Album";
-  std::string                                  genre      = "Unknown Genre";
-  std::string                                  comment    = "No Comment";
-  unsigned int                                 year       = 0;
-  unsigned int                                 track      = 0;
-  unsigned int                                 discNumber = 0;
-  std::string                                  lyrics     = "No Lyrics";
-  std::unordered_map<std::string, std::string> additionalProperties;
-  std::string                                  filePath;
-  float duration = 0.0f;
+  std::string title = "Unknown Title"; /**< The title of the song */
+  std::string artist = "Unknown Artist"; /**< The artist of the song */
+  std::string album = "Unknown Album"; /**< The album the song is part of */
+  std::string genre = "Unknown Genre"; /**< The genre of the song */
+  std::string comment = "No Comment"; /**< The comment associated with the song */
+  unsigned int year = 0; /**< The year of release */
+  unsigned int track = 0; /**< The track number */
+  unsigned int discNumber = 0; /**< The disc number in a multi-disc set */
+  std::string lyrics = "No Lyrics"; /**< The lyrics of the song */
+  std::unordered_map<std::string, std::string> additionalProperties; /**< Any additional properties from the song's metadata */
+  std::string filePath; /**< The file path of the song */
+  float duration = 0.0f; /**< The duration of the song in seconds */
+
+  /**
+   * @brief Serialization function for Metadata.
+   * @param ar The archive used for serialization.
+   */
+  template <class Archive>
+  void serialize(Archive& ar)
+  {
+    ar(title, artist, album, genre, comment, year, track, discNumber, lyrics, additionalProperties, filePath, duration);
+  }
 };
 
-// TagLibParser class for parsing metadata
+/**
+ * @brief A class for parsing metadata from audio files.
+ *
+ * The `TagLibParser` class uses the TagLib library to extract metadata from audio files.
+ * It supports parsing tags, including title, artist, album, genre, year, and track information.
+ * Additionally, it can parse metadata from files using inode information.
+ */
 class TagLibParser
 {
 public:
+  /**
+   * @brief Constructor for TagLibParser.
+   * @param debugString A string to enable or disable debug logs.
+   */
   explicit TagLibParser(const std::string& debugString);
 
+  /**
+   * @brief Parse metadata from an audio file.
+   * @param filePath The path to the audio file.
+   * @param metadata A reference to a Metadata object where parsed data will be stored.
+   * @return `true` if parsing was successful, `false` otherwise.
+   */
   bool parseFile(const std::string& filePath, Metadata& metadata);
 
+  /**
+   * @brief Parse metadata from files in a directory based on inode.
+   * @param inode The inode of the file to search for.
+   * @param directory The directory to search in.
+   * @return A map of file paths to corresponding metadata.
+   */
   std::unordered_map<std::string, Metadata> parseFromInode(ino_t              inode,
                                                            const std::string& directory);
 };
 
-// Function to print metadata
+/**
+ * @brief Prints the metadata of a song to the console.
+ * @param metadata The metadata of the song to print.
+ */
 void printMetadata(const Metadata& metadata);
 
+/**
+ * @brief Sends an error message based on the debug log setting.
+ * @param debugLogBoolStr The debug log setting ("true" or "false").
+ * @param errMsg The error message to send.
+ */
 void sendErrMsg(std::string debugLogBoolStr, std::string errMsg);
 
 // variable to keep track of user's preference of debug logs
@@ -165,11 +220,23 @@ std::unordered_map<std::string, Metadata> TagLibParser::parseFromInode(ino_t ino
 
 #else // Stub implementations for Emscripten
 
+/**
+ * @brief Dummy implementation for `parseFile` when compiled with Emscripten.
+ * @param filePath The path to the audio file.
+ * @param metadata A reference to a Metadata object (not populated in this dummy implementation).
+ * @return Always returns `false` as TagLib is not available.
+ */
 bool TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) {
   sendErrMsg(debugLogBoolStr, "TagLib is not available in this build.");
   return false;
 }
 
+/**
+ * @brief Dummy implementation for `parseFromInode` when compiled with Emscripten.
+ * @param inode The inode of the file to search for.
+ * @param directory The directory to search in.
+ * @return Always returns an empty map as TagLib is not available.
+ */
 std::unordered_map<std::string, Metadata> TagLibParser::parseFromInode(ino_t inode, const std::string& directory) {
   sendErrMsg(debugLogBoolStr, "TagLib is not available in this build.");
   return {};
@@ -191,6 +258,12 @@ void printMetadata(const Metadata& metadata) {
   std::cout << "+++++++++++++++++++++++++++" << std::endl;
 }
 
+/**
+ * @brief Extracts the thumbnail (album art) from an audio file and saves it to an image file.
+ * @param audioFilePath The path to the audio file containing embedded album art.
+ * @param outputImagePath The path where the extracted album art image will be saved.
+ * @return `true` if the thumbnail was successfully extracted, `false` otherwise.
+ */
 bool extractThumbnail(const std::string& audioFilePath, const std::string& outputImagePath) {
     // Open the file using TagLib
     TagLib::MPEG::File file(audioFilePath.c_str());

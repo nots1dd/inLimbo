@@ -52,6 +52,18 @@ The inLimbo project aims to be a new upcoming TUI music player for UNIX based sy
 | **ImageMagick** | `imagemagick`             | `ImageMagick`                 | `imagemagick`                |
 | **X11**         | `libx11-dev`              | `libX11-devel`                | `libx11`                     |
 | **PNG**         | `libpng-dev`              | `libpng-devel`                | `libpng`                     |
+| **cereal**      | `libcereal-dev`           | `libcereal-devel`             | `cereal`                     |
+
+> [!NOTE]
+> 
+> If cereal is **NOT** available in your linux distribution,
+> 
+> ```bash
+> git clone https://github.com/USCiLab/cereal.git # download cereal 
+> mv cereal/include/* /usr/include/ # moves include/cereal headers to your include directory 
+> # If you find that risky, just modify CMakeLists.txt to include cereal's directory for building
+> ```
+> 
 
 **FTXUI** is fetched from GitHub [here](https://github.com/ArthurSonzogni/FTXUI/) itself during building so **NO** need to install it separately.
 

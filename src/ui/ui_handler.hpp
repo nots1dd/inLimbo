@@ -424,7 +424,7 @@ private:
         {
           for (const auto& [track_number, song] : tracks)
           {
-            std::string disc_track_info =
+            std::string disc_track_info = " " +
               std::to_string(disc_number) + "-" + std::to_string(track_number) + "  ";
             current_inodes.push_back(song.inode);
             current_song_elements.push_back(

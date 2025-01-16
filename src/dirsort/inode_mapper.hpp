@@ -15,6 +15,7 @@
 using namespace std;
 
 #define LIB_SYNC_NAME "lib.sync"
+#define LIB_BIN_NAME  "lib.bin"
 
 class InodeFileMapper
 {

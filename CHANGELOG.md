@@ -648,3 +648,28 @@ Medium commit with a new screen, I should really start to refactor now...
 - Centering of the image_view
 
 ---
+
+## [ALPHA 2.0] --- 16-01-2025
+
+### Added
+- Added `cereal` serialization and deserialization library (header only) to load songs statically (it is insanely fast as hoped)
+
+### Changed
+- inLimbo will now always try to load songs from a `$HOME/.config/inLimbo/lib.bin` file (static load) if not found dynamic load 
+
+- Added documentation for `src/dirsort` headers
+
+### Fixed
+**NIL**
+
+### Removed
+**NIL**
+
+Small commit that adds a new dependency and a greatly needed feature of caching the song directory
+
+### Known Issues to fix in immediate commits
+- Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
+
+- Centering of the image_view
+
+---
