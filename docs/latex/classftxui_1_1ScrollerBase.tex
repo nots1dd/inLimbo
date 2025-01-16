@@ -1,5 +1,10 @@
 \doxysection{ftxui\+::Scroller\+Base Class Reference}
 \hypertarget{classftxui_1_1ScrollerBase}{}\label{classftxui_1_1ScrollerBase}\index{ftxui::ScrollerBase@{ftxui::ScrollerBase}}
+
+
+A custom scroller component that synchronizes with an external index and applies a custom cursor background color.  
+
+
 Inheritance diagram for ftxui\+::Scroller\+Base\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -9,17 +14,35 @@ Inheritance diagram for ftxui\+::Scroller\+Base\+:\begin{figure}[H]
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{classftxui_1_1ScrollerBase_a5ca407c631031b88b8d5686890e49943}{Scroller\+Base}} (Component child)
-\end{DoxyCompactItemize}
+\mbox{\hyperlink{classftxui_1_1ScrollerBase_a48489d65f758e71109ee111b69082c37}{Scroller\+Base}} (Component child, int \texorpdfstring{$\ast$}{*}external\+\_\+selected, Color cursor\+\_\+bg)
+\begin{DoxyCompactList}\small\item\em Constructor for the \doxylink{classftxui_1_1ScrollerBase}{Scroller\+Base} class. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
+
+\doxysubsection{Detailed Description}
+A custom scroller component that synchronizes with an external index and applies a custom cursor background color. 
+
+The {\ttfamily \doxylink{classftxui_1_1ScrollerBase}{Scroller\+Base}} component disables internal navigation and allows the scroll state to be controlled externally using an external index ({\ttfamily external\+\_\+selected\+\_\+}). It also supports custom styling for the focused element using a background color ({\ttfamily cursor\+\_\+bg\+\_\+}). 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\Hypertarget{classftxui_1_1ScrollerBase_a5ca407c631031b88b8d5686890e49943}\index{ftxui::ScrollerBase@{ftxui::ScrollerBase}!ScrollerBase@{ScrollerBase}}
+\Hypertarget{classftxui_1_1ScrollerBase_a48489d65f758e71109ee111b69082c37}\index{ftxui::ScrollerBase@{ftxui::ScrollerBase}!ScrollerBase@{ScrollerBase}}
 \index{ScrollerBase@{ScrollerBase}!ftxui::ScrollerBase@{ftxui::ScrollerBase}}
 \doxysubsubsection{\texorpdfstring{ScrollerBase()}{ScrollerBase()}}
-{\footnotesize\ttfamily \label{classftxui_1_1ScrollerBase_a5ca407c631031b88b8d5686890e49943} 
-ftxui\+::\+Scroller\+Base\+::\+Scroller\+Base (\begin{DoxyParamCaption}\item[{Component}]{child}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily \label{classftxui_1_1ScrollerBase_a48489d65f758e71109ee111b69082c37} 
+ftxui\+::\+Scroller\+Base\+::\+Scroller\+Base (\begin{DoxyParamCaption}\item[{Component}]{child}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{external\+\_\+selected}{, }\item[{Color}]{cursor\+\_\+bg}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+Constructor for the \doxylink{classftxui_1_1ScrollerBase}{Scroller\+Base} class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em child} & The child component to be rendered inside the scroller. \\
+\hline
+{\em external\+\_\+selected} & A pointer to an external integer that controls the selected index. \\
+\hline
+{\em cursor\+\_\+bg} & The background color to apply to the focused element. \\
+\hline
+\end{DoxyParams}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

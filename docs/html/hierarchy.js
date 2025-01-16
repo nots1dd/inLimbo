@@ -1,5 +1,6 @@
 var hierarchy =
 [
+    [ "tiv::CharData", "structtiv_1_1CharData.html", null ],
     [ "CommandLineArgs", "classCommandLineArgs.html", null ],
     [ "ComponentBase", null, [
       [ "ftxui::ScrollerBase", "classftxui_1_1ScrollerBase.html", null ]
@@ -18,6 +19,7 @@ var hierarchy =
     [ "SimpleHTTPRequestHandler", null, [
       [ "run_webassembly.CustomHTTPRequestHandler", "classrun__webassembly_1_1CustomHTTPRequestHandler.html", null ]
     ] ],
+    [ "tiv::size", "structtiv_1_1size.html", null ],
     [ "Song", "structSong.html", null ],
     [ "SongTree", "classSongTree.html", null ],
     [ "TagLibParser", "classTagLibParser.html", null ],

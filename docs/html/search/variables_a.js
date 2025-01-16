@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['remove_5fsong_5ffrom_5fqueue_0',['remove_song_from_queue',['../structKeybinds.html#ad6ba797ddc2c738d59acb8ad745d7c50',1,'Keybinds']]],
-  ['replay_5fsong_1',['replay_song',['../structKeybinds.html#a6002f357b11c6ecc415595d3e4cd35b4',1,'Keybinds']]],
-  ['right_2',['right',['../structNode.html#afe5916d969cd32f7de1e4ba15580c989',1,'Node']]]
+  ['mainrenderer_0',['MainRenderer',['../structComponentState.html#a3c119b5fc09869b46271ef866886d4f1',1,'ComponentState']]],
+  ['menu_5fcursor_5fbg_1',['menu_cursor_bg',['../structInLimboColors.html#a69d1f12d371522229fbfb13c7f9ab92f',1,'InLimboColors']]],
+  ['metadata_2',['metadata',['../structSong.html#a3d14b92a3f45b281bde7283fe169215d',1,'Song']]]
 ];

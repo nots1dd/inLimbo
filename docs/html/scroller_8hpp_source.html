@@ -110,27 +110,28 @@ $(function(){initNavTree('scroller_8hpp_source.html',''); initResizable(true); }
 <a href="scroller_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef SCROLLER_H</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define SCROLLER_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;algorithm&gt;</span>                           <span class="comment">// for max, min</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;ftxui/component/component_base.hpp&gt;</span>  <span class="comment">// for Component, ComponentBase</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;ftxui/component/event.hpp&gt;</span>  <span class="comment">// for Event, Event::ArrowDown, Event::ArrowUp, Event::End, Event::Home, Event::PageDown, Event::PageUp</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;memory&gt;</span>   <span class="comment">// for shared_ptr, allocator, __shared_ptr_access</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;utility&gt;</span>  <span class="comment">// for move</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;algorithm&gt;</span>                          <span class="comment">// for max, min</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;ftxui/component/component_base.hpp&gt;</span> <span class="comment">// for Component, ComponentBase</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;ftxui/component/event.hpp&gt;</span> <span class="comment">// for Event, Event::ArrowDown, Event::ArrowUp, Event::End, Event::Home, Event::PageDown, Event::PageUp</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;memory&gt;</span>                    <span class="comment">// for shared_ptr, allocator, __shared_ptr_access</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;utility&gt;</span>                   <span class="comment">// for move</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;ftxui/component/component.hpp&gt;</span>  <span class="comment">// for Make</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;ftxui/component/mouse.hpp&gt;</span>  <span class="comment">// for Mouse, Mouse::WheelDown, Mouse::WheelUp</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;ftxui/dom/deprecated.hpp&gt;</span>  <span class="comment">// for text</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;ftxui/dom/elements.hpp&gt;</span>  <span class="comment">// for operator|, Element, size, vbox, EQUAL, HEIGHT, dbox, reflect, focus, inverted, nothing, select, vscroll_indicator, yflex, yframe</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;ftxui/dom/node.hpp&gt;</span>      <span class="comment">// for Node</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;ftxui/dom/requirement.hpp&gt;</span>  <span class="comment">// for Requirement</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;ftxui/screen/box.hpp&gt;</span>       <span class="comment">// for Box</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;ftxui/component/component.hpp&gt;</span> <span class="comment">// for Make</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;ftxui/component/mouse.hpp&gt;</span>     <span class="comment">// for Mouse, Mouse::WheelDown, Mouse::WheelUp</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;ftxui/dom/deprecated.hpp&gt;</span>      <span class="comment">// for text</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;ftxui/dom/elements.hpp&gt;</span> <span class="comment">// for operator|, Element, size, vbox, EQUAL, HEIGHT, dbox, reflect, focus, inverted, nothing, select, vscroll_indicator, yflex, yframe</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;ftxui/dom/node.hpp&gt;</span>     <span class="comment">// for Node</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;ftxui/dom/requirement.hpp&gt;</span> <span class="comment">// for Requirement</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;ftxui/screen/box.hpp&gt;</span>      <span class="comment">// for Box</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceftxui.html">ftxui</a> {</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  Component <a class="code hl_function" href="namespaceftxui.html#a73611b3deb516cb8ba88afd9cf058a76">Scroller</a>(Component child);</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>}</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="anamespaceftxui_html"><div class="ttname"><a href="namespaceftxui.html">ftxui</a></div><div class="ttdef"><b>Definition</b> scroller.cpp:3</div></div>
-<div class="ttc" id="anamespaceftxui_html_a73611b3deb516cb8ba88afd9cf058a76"><div class="ttname"><a href="namespaceftxui.html#a73611b3deb516cb8ba88afd9cf058a76">ftxui::Scroller</a></div><div class="ttdeci">Component Scroller(Component child)</div><div class="ttdef"><b>Definition</b> scroller.cpp:60</div></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceftxui.html">ftxui</a></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>{</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>Component <a class="code hl_function" href="namespaceftxui.html#a3d2d6a133d15925103623b265f874db4">Scroller</a>(Component child, <span class="keywordtype">int</span>* external_selected, Color menu_cursor_bg);</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>}</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="anamespaceftxui_html"><div class="ttname"><a href="namespaceftxui.html">ftxui</a></div><div class="ttdef"><b>Definition</b> image_view.cpp:21</div></div>
+<div class="ttc" id="anamespaceftxui_html_a3d2d6a133d15925103623b265f874db4"><div class="ttname"><a href="namespaceftxui.html#a3d2d6a133d15925103623b265f874db4">ftxui::Scroller</a></div><div class="ttdeci">Component Scroller(Component child, int *external_selected, Color cursor_bg)</div><div class="ttdoc">Factory function to create a Scroller component.</div><div class="ttdef"><b>Definition</b> scroller.cpp:104</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

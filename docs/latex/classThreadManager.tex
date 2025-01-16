@@ -20,7 +20,9 @@ struct \mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}}
 \mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}} \& \mbox{\hyperlink{classThreadManager_a68d674d82375bbf4cbaeda427df036a2}{get\+Thread\+State}} ()
 \begin{DoxyCompactList}\small\item\em Retrieves the thread state managed by this \doxylink{classThreadManager}{Thread\+Manager}. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classThreadManager_a8c0b77d668ea526a62b556b42751a5a6}{lock\+Play\+Mutex}} (\mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}} \&thread\+\_\+state)
-\begin{DoxyCompactList}\small\item\em Locks the play mutex for the provided thread state. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Locks the play mutex for the provided thread state. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classThreadManager_a0e12c9882625107d2b7059bd9816305c}{unlock\+Play\+Mutex}} (\mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}} \&thread\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Unlocks the play mutex for the provided thread state. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -57,6 +59,26 @@ This function uses a unique lock to ensure that the play mutex is safely locked 
 {\em thread\+\_\+state} & A reference to the \doxylink{structThreadManager_1_1ThreadState}{Thread\+State} object whose mutex is to be locked. \\
 \hline
 \end{DoxyParams}
+\Hypertarget{classThreadManager_a0e12c9882625107d2b7059bd9816305c}\index{ThreadManager@{ThreadManager}!unlockPlayMutex@{unlockPlayMutex}}
+\index{unlockPlayMutex@{unlockPlayMutex}!ThreadManager@{ThreadManager}}
+\doxysubsubsection{\texorpdfstring{unlockPlayMutex()}{unlockPlayMutex()}}
+{\footnotesize\ttfamily \label{classThreadManager_a0e12c9882625107d2b7059bd9816305c} 
+void Thread\+Manager\+::unlock\+Play\+Mutex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}} \&}]{thread\+\_\+state}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Unlocks the play mutex for the provided thread state. 
+
+This function releases the lock on the play mutex that was previously acquired using {\ttfamily lock\+Play\+Mutex}. The play mutex will be unlocked after this function is called.
+
+
+\begin{DoxyParams}{Parameters}
+{\em thread\+\_\+state} & A reference to the \doxylink{structThreadManager_1_1ThreadState}{Thread\+State} object whose mutex is to be unlocked. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This function should be used in conjunction with {\ttfamily lock\+Play\+Mutex} to ensure proper synchronization. 
+\end{DoxyNote}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

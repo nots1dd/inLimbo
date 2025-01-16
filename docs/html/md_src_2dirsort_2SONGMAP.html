@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>inLimbo: SONGMAP</title>
+<title>inLimbo: &lt;strong&gt;inLimbo Music Player - Song Map Flow&lt;/strong&gt;</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -104,10 +104,119 @@ $(function(){initNavTree('md_src_2dirsort_2SONGMAP.html',''); initResizable(true
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">SONGMAP</div></div>
+  <div class="headertitle"><div class="title">&lt;strong&gt;inLimbo Music Player - Song Map Flow&lt;/strong&gt;</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"></div></div><!-- contents -->
+<div class="textblock"><p><a class="anchor" id="autotoc_md0"></a></p>
+<p>This document explains the flow of acquiring the song map in the <b>inLimbo Music Player</b>. The process involves mapping inodes to file paths, traversing a Red-Black Tree (RBT) to organize song metadata, and eventually serializing the data into a binary file that can be parsed by the UI. Below is a step-by-step diagrammatic explanation of the flow, which includes how the inodes are mapped, metadata is processed, and the final song map is prepared for display.</p>
+<hr  />
+<h1><a class="anchor" id="autotoc_md2"></a>
+<b>High-Level Flow Overview</b></h1>
+<div class="fragment"><div class="line">graph TD</div>
+<div class="line">    A[Inode Mapping] --&gt; B[Red-Black Tree Insertion]</div>
+<div class="line">    B --&gt; C[In-Order Traversal &amp; Metadata Extraction]</div>
+<div class="line">    C --&gt; D[Serialization]</div>
+<div class="line">    D --&gt; E[Song Map Construction]</div>
+</div><!-- fragment --><p>The process of acquiring and displaying the song map follows these general stages:</p>
+<ol type="1">
+<li><b>Inode Mapping</b> - We map the inodes of all music files in a directory to their respective file paths.</li>
+<li><b>Red-Black Tree (RBT) Insertion</b> - We use the inodes to insert nodes into a Red-Black Tree to maintain an ordered structure.</li>
+<li><b><a class="el" href="structMetadata.html" title="A structure to hold metadata information for a song.">Metadata</a> Extraction</b> - Once the tree is populated, we traverse it in an inorder fashion and extract metadata from the files using <code><a class="el" href="classTagLibParser.html" title="A class for parsing metadata from audio files.">TagLibParser</a></code>.</li>
+<li><b>Serialization</b> - The parsed metadata is serialized into a binary file (<code>lib.bin</code>) for easy access.</li>
+<li><b><a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> Map Construction</b> - The song map is created and used by the UI to display music files.</li>
+</ol>
+<hr  />
+<h1><a class="anchor" id="autotoc_md4"></a>
+<b>Step-by-Step Detailed Flow</b></h1>
+<h2><a class="anchor" id="autotoc_md5"></a>
+<b>1. Inode Mapping with <code>InodeFileMapper</code></b></h2>
+<p>We begin by processing directories and mapping inodes to their respective file paths. This is achieved through the <code><a class="el" href="classInodeFileMapper.html">InodeFileMapper</a></code> class, which stores the mappings in an internal <code>unordered_map</code> and writes them to a synchronization file (<code>lib.sync</code>).</p>
+<div class="fragment"><div class="line">graph TD</div>
+<div class="line">    A[Directory Process] --&gt; B[InodeFileMapper]</div>
+<div class="line">    B --&gt; C[Add Mapping]</div>
+<div class="line">    C --&gt; D[Sync File Writing]</div>
+<div class="line">    A --&gt; E[Directory Entry]</div>
+<div class="line">    E --&gt; F[Get Inode and File Path]</div>
+<div class="line">    F --&gt; G[Stat &amp; Add to Tree]</div>
+<div class="line">    G --&gt; H[Add Mapping to InodeFileMapper]</div>
+</div><!-- fragment --><ol type="1">
+<li><b>Process Directory</b>: The <code>processDirectory</code> function reads each file in the specified directory, retrieves the inode using <code>stat()</code>, and adds it to the Red-Black Tree.</li>
+<li><b>Add Mapping</b>: Each inode is mapped to its file path using the <code>addMapping</code> method of <code><a class="el" href="classInodeFileMapper.html">InodeFileMapper</a></code>.</li>
+</ol>
+<hr  />
+<h2><a class="anchor" id="autotoc_md7"></a>
+<b>2. Inode Insertion into Red-Black Tree</b></h2>
+<p>The inodes obtained from the previous step are inserted into a Red-Black Tree (<code><a class="el" href="classRedBlackTree.html">RedBlackTree</a></code> class) to maintain a balanced structure.</p>
+<div class="fragment"><div class="line">graph TD</div>
+<div class="line">    A[Red-Black Tree] --&gt; B[Insert Inode]</div>
+<div class="line">    B --&gt; C[Fix Tree Balancing]</div>
+<div class="line">    C --&gt; D[Tree Balancing (fixInsert)]</div>
+<div class="line">    B --&gt; E[Node (Inode Data)]</div>
+<div class="line">    E --&gt; F[Left, Right Child, Color (RED/BLACK)]</div>
+</div><!-- fragment --><ol type="1">
+<li><b>Insert</b>: Each inode is inserted into the <code><a class="el" href="classRedBlackTree.html">RedBlackTree</a></code> via the <code>insert()</code> method.</li>
+<li><b>Balancing</b>: After each insertion, the tree is balanced using the <code>fixInsert()</code> method to ensure that Red-Black Tree properties (such as node color and structure) are maintained.</li>
+</ol>
+<hr  />
+<h2><a class="anchor" id="autotoc_md9"></a>
+<b>3. In-Order Traversal and Metadata Extraction</b></h2>
+<p>Once the tree is populated, we traverse it in an inorder fashion. During this traversal, we extract metadata for each file using the <code><a class="el" href="classTagLibParser.html" title="A class for parsing metadata from audio files.">TagLibParser</a></code> class. This metadata typically includes information such as the song title, artist, album, and more.</p>
+<div class="fragment"><div class="line">graph TD</div>
+<div class="line">    A[Red-Black Tree] --&gt; B[In-Order Traversal]</div>
+<div class="line">    B --&gt; C[Extract Song Metadata]</div>
+<div class="line">    C --&gt; D[Add Metadata to SongTree]</div>
+<div class="line">    C --&gt; E[TagLibParser]</div>
+<div class="line">    E --&gt; F[Parse File Information]</div>
+<div class="line">    F --&gt; G[Store Metadata in SongTree]</div>
+<div class="line">    B --&gt; H[Node (Inode Data)]</div>
+<div class="line">    H --&gt; I[Metadata Extraction]</div>
+</div><!-- fragment --><ol type="1">
+<li><b>In-Order Traversal</b>: We perform an inorder traversal of the Red-Black Tree (<code>inorderHelper()</code> method).</li>
+<li><b>Extract <a class="el" href="structMetadata.html" title="A structure to hold metadata information for a song.">Metadata</a></b>: For each inode, we use <code><a class="el" href="classTagLibParser.html" title="A class for parsing metadata from audio files.">TagLibParser</a></code> to extract metadata from the corresponding file (song title, artist, etc.).</li>
+<li><b>Add <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> to <a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a></b>: The parsed metadata is added to a <code><a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a></code>, which stores the songs in a structured manner.</li>
+</ol>
+<hr  />
+<h2><a class="anchor" id="autotoc_md11"></a>
+<b>4. Serialization into <code>lib.bin</code></b></h2>
+<p>After collecting the song metadata, we serialize the data into a binary file (<code>lib.bin</code>). This file is saved in the user's home directory (<code>$HOME/.config/inLimbo</code>) for future use.</p>
+<div class="fragment"><div class="line">graph TD</div>
+<div class="line">    A[SongTree] --&gt; B[Serialize to lib.bin]</div>
+<div class="line">    B --&gt; C[Write to lib.bin]</div>
+<div class="line">    C --&gt; D[Store in $HOME/.config/inLimbo]</div>
+</div><!-- fragment --><ol type="1">
+<li><b>Serialize</b>: The <code><a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a></code> is serialized into the <code>lib.bin</code> file for persistent storage.</li>
+<li><b>Store</b>: The serialized binary data is stored in the <code>$HOME/.config/inLimbo/</code> directory.</li>
+</ol>
+<hr  />
+<h2><a class="anchor" id="autotoc_md13"></a>
+<b>5. UI Parsing the Song Map</b></h2>
+<p>Finally, the <code>lib.bin</code> file is loaded by the UI, which parses the data structure to provide an interactive and user-friendly interface for browsing and controlling the music files.</p>
+<div class="fragment"><div class="line">graph TD</div>
+<div class="line">    A[UI] --&gt; B[Parse lib.bin]</div>
+<div class="line">    B --&gt; C[Display Song Map]</div>
+<div class="line">    C --&gt; D[Song Map (UI View)]</div>
+<div class="line">    D --&gt; E[Display Metadata]</div>
+</div><!-- fragment --><ol type="1">
+<li><b>Parse lib.bin</b>: The UI parses the <code>lib.bin</code> file to retrieve the stored song metadata.</li>
+<li><b>Display <a class="el" href="structMetadata.html" title="A structure to hold metadata information for a song.">Metadata</a></b>: The parsed song metadata is presented in the UI for the user to interact with.</li>
+</ol>
+<hr  />
+<dl class="section note"><dt>Note</dt><dd><br  />
+ Some stats about loading songs in a serialized way: <br  />
+<br  />
+ <b>IT IS INCREDIBLY FAST</b> For ~300 songs it takes these average times: <br  />
+<br  />
+<ol type="1">
+<li>12-15ms &ndash; Deserializing <code>lib.bin</code> as a cache file (static load of songmap)</li>
+<li>180-200ms &ndash; Loading the song directory, storing and parsing each inode (dynamic load of songmap) <br  />
+<br  />
+</li>
+</ol>
+</dd></dl>
+<h1><a class="anchor" id="autotoc_md15"></a>
+<b>Conclusion</b></h1>
+<p>The flow from mapping inodes to building the song map is a multi-step process involving directory traversal, inode mapping, Red-Black Tree insertion, metadata extraction, serialization, and finally UI display. This ensures that <b>inLimbo</b> can efficiently process and manage large music libraries, making metadata accessible in a user-friendly manner. </p>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->

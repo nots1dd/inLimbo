@@ -1,2 +1,165 @@
-\chapter{SONGMAP}
-\hypertarget{md_src_2dirsort_2SONGMAP}{}\label{md_src_2dirsort_2SONGMAP}\index{SONGMAP@{SONGMAP}}
+\chapter{\texorpdfstring{$<$}{<}strong\texorpdfstring{$>$}{>}in\+Limbo Music Player -\/ Song Map Flow\texorpdfstring{$<$}{<}/strong\texorpdfstring{$>$}{>}}
+\hypertarget{md_src_2dirsort_2SONGMAP}{}\label{md_src_2dirsort_2SONGMAP}\index{$<$strong$>$inLimbo Music Player -\/ Song Map Flow$<$/strong$>$@{$<$strong$>$inLimbo Music Player -\/ Song Map Flow$<$/strong$>$}}
+\label{md_src_2dirsort_2SONGMAP_autotoc_md0}%
+\Hypertarget{md_src_2dirsort_2SONGMAP_autotoc_md0}%
+
+
+This document explains the flow of acquiring the song map in the {\bfseries{in\+Limbo Music Player}}. The process involves mapping inodes to file paths, traversing a Red-\/\+Black Tree (RBT) to organize song metadata, and eventually serializing the data into a binary file that can be parsed by the UI. Below is a step-\/by-\/step diagrammatic explanation of the flow, which includes how the inodes are mapped, metadata is processed, and the final song map is prepared for display.
+
+\DoxyHorRuler{0}
+\hypertarget{md_src_2dirsort_2SONGMAP_autotoc_md2}{}\doxysection{\texorpdfstring{{\bfseries{High-\/\+Level Flow Overview}}}{{\bfseries{High-\/\+Level Flow Overview}}}}\label{md_src_2dirsort_2SONGMAP_autotoc_md2}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{graph\ TD}
+\DoxyCodeLine{\ \ \ \ A[Inode\ Mapping]\ -\/-\/>\ B[Red-\/Black\ Tree\ Insertion]}
+\DoxyCodeLine{\ \ \ \ B\ -\/-\/>\ C[In-\/Order\ Traversal\ \&\ Metadata\ Extraction]}
+\DoxyCodeLine{\ \ \ \ C\ -\/-\/>\ D[Serialization]}
+\DoxyCodeLine{\ \ \ \ D\ -\/-\/>\ E[Song\ Map\ Construction]}
+
+\end{DoxyCode}
+
+
+The process of acquiring and displaying the song map follows these general stages\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Inode Mapping}} -\/ We map the inodes of all music files in a directory to their respective file paths.
+\item {\bfseries{Red-\/\+Black Tree (RBT) Insertion}} -\/ We use the inodes to insert nodes into a Red-\/\+Black Tree to maintain an ordered structure.
+\item {\bfseries{\doxylink{structMetadata}{Metadata} Extraction}} -\/ Once the tree is populated, we traverse it in an inorder fashion and extract metadata from the files using {\ttfamily \doxylink{classTagLibParser}{Tag\+Lib\+Parser}}.
+\item {\bfseries{Serialization}} -\/ The parsed metadata is serialized into a binary file ({\ttfamily lib.\+bin}) for easy access.
+\item {\bfseries{\doxylink{structSong}{Song} Map Construction}} -\/ The song map is created and used by the UI to display music files.
+\end{DoxyEnumerate}
+
+\DoxyHorRuler{0}
+\hypertarget{md_src_2dirsort_2SONGMAP_autotoc_md4}{}\doxysection{\texorpdfstring{{\bfseries{Step-\/by-\/\+Step Detailed Flow}}}{{\bfseries{Step-\/by-\/\+Step Detailed Flow}}}}\label{md_src_2dirsort_2SONGMAP_autotoc_md4}
+\hypertarget{md_src_2dirsort_2SONGMAP_autotoc_md5}{}\doxysubsection{\texorpdfstring{{\bfseries{1. Inode Mapping with {\ttfamily Inode\+File\+Mapper}}}}{{\bfseries{1. Inode Mapping with {\ttfamily Inode\+File\+Mapper}}}}}\label{md_src_2dirsort_2SONGMAP_autotoc_md5}
+We begin by processing directories and mapping inodes to their respective file paths. This is achieved through the {\ttfamily \doxylink{classInodeFileMapper}{Inode\+File\+Mapper}} class, which stores the mappings in an internal {\ttfamily unordered\+\_\+map} and writes them to a synchronization file ({\ttfamily lib.\+sync}).
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{graph\ TD}
+\DoxyCodeLine{\ \ \ \ A[Directory\ Process]\ -\/-\/>\ B[InodeFileMapper]}
+\DoxyCodeLine{\ \ \ \ B\ -\/-\/>\ C[Add\ Mapping]}
+\DoxyCodeLine{\ \ \ \ C\ -\/-\/>\ D[Sync\ File\ Writing]}
+\DoxyCodeLine{\ \ \ \ A\ -\/-\/>\ E[Directory\ Entry]}
+\DoxyCodeLine{\ \ \ \ E\ -\/-\/>\ F[Get\ Inode\ and\ File\ Path]}
+\DoxyCodeLine{\ \ \ \ F\ -\/-\/>\ G[Stat\ \&\ Add\ to\ Tree]}
+\DoxyCodeLine{\ \ \ \ G\ -\/-\/>\ H[Add\ Mapping\ to\ InodeFileMapper]}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Process Directory}}\+: The {\ttfamily process\+Directory} function reads each file in the specified directory, retrieves the inode using {\ttfamily stat()}, and adds it to the Red-\/\+Black Tree.
+\item {\bfseries{Add Mapping}}\+: Each inode is mapped to its file path using the {\ttfamily add\+Mapping} method of {\ttfamily \doxylink{classInodeFileMapper}{Inode\+File\+Mapper}}.
+\end{DoxyEnumerate}
+
+\DoxyHorRuler{0}
+\hypertarget{md_src_2dirsort_2SONGMAP_autotoc_md7}{}\doxysubsection{\texorpdfstring{{\bfseries{2. Inode Insertion into Red-\/\+Black Tree}}}{{\bfseries{2. Inode Insertion into Red-\/\+Black Tree}}}}\label{md_src_2dirsort_2SONGMAP_autotoc_md7}
+The inodes obtained from the previous step are inserted into a Red-\/\+Black Tree ({\ttfamily \doxylink{classRedBlackTree}{Red\+Black\+Tree}} class) to maintain a balanced structure.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{graph\ TD}
+\DoxyCodeLine{\ \ \ \ A[Red-\/Black\ Tree]\ -\/-\/>\ B[Insert\ Inode]}
+\DoxyCodeLine{\ \ \ \ B\ -\/-\/>\ C[Fix\ Tree\ Balancing]}
+\DoxyCodeLine{\ \ \ \ C\ -\/-\/>\ D[Tree\ Balancing\ (fixInsert)]}
+\DoxyCodeLine{\ \ \ \ B\ -\/-\/>\ E[Node\ (Inode\ Data)]}
+\DoxyCodeLine{\ \ \ \ E\ -\/-\/>\ F[Left,\ Right\ Child,\ Color\ (RED/BLACK)]}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Insert}}\+: Each inode is inserted into the {\ttfamily \doxylink{classRedBlackTree}{Red\+Black\+Tree}} via the {\ttfamily insert()} method.
+\item {\bfseries{Balancing}}\+: After each insertion, the tree is balanced using the {\ttfamily fix\+Insert()} method to ensure that Red-\/\+Black Tree properties (such as node color and structure) are maintained.
+\end{DoxyEnumerate}
+
+\DoxyHorRuler{0}
+\hypertarget{md_src_2dirsort_2SONGMAP_autotoc_md9}{}\doxysubsection{\texorpdfstring{{\bfseries{3. In-\/\+Order Traversal and Metadata Extraction}}}{{\bfseries{3. In-\/\+Order Traversal and Metadata Extraction}}}}\label{md_src_2dirsort_2SONGMAP_autotoc_md9}
+Once the tree is populated, we traverse it in an inorder fashion. During this traversal, we extract metadata for each file using the {\ttfamily \doxylink{classTagLibParser}{Tag\+Lib\+Parser}} class. This metadata typically includes information such as the song title, artist, album, and more.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{graph\ TD}
+\DoxyCodeLine{\ \ \ \ A[Red-\/Black\ Tree]\ -\/-\/>\ B[In-\/Order\ Traversal]}
+\DoxyCodeLine{\ \ \ \ B\ -\/-\/>\ C[Extract\ Song\ Metadata]}
+\DoxyCodeLine{\ \ \ \ C\ -\/-\/>\ D[Add\ Metadata\ to\ SongTree]}
+\DoxyCodeLine{\ \ \ \ C\ -\/-\/>\ E[TagLibParser]}
+\DoxyCodeLine{\ \ \ \ E\ -\/-\/>\ F[Parse\ File\ Information]}
+\DoxyCodeLine{\ \ \ \ F\ -\/-\/>\ G[Store\ Metadata\ in\ SongTree]}
+\DoxyCodeLine{\ \ \ \ B\ -\/-\/>\ H[Node\ (Inode\ Data)]}
+\DoxyCodeLine{\ \ \ \ H\ -\/-\/>\ I[Metadata\ Extraction]}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{In-\/\+Order Traversal}}\+: We perform an inorder traversal of the Red-\/\+Black Tree ({\ttfamily inorder\+Helper()} method).
+\item {\bfseries{Extract \doxylink{structMetadata}{Metadata}}}\+: For each inode, we use {\ttfamily \doxylink{classTagLibParser}{Tag\+Lib\+Parser}} to extract metadata from the corresponding file (song title, artist, etc.).
+\item {\bfseries{Add \doxylink{structSong}{Song} to \doxylink{classSongTree}{Song\+Tree}}}\+: The parsed metadata is added to a {\ttfamily \doxylink{classSongTree}{Song\+Tree}}, which stores the songs in a structured manner.
+\end{DoxyEnumerate}
+
+\DoxyHorRuler{0}
+\hypertarget{md_src_2dirsort_2SONGMAP_autotoc_md11}{}\doxysubsection{\texorpdfstring{{\bfseries{4. Serialization into {\ttfamily lib.\+bin}}}}{{\bfseries{4. Serialization into {\ttfamily lib.\+bin}}}}}\label{md_src_2dirsort_2SONGMAP_autotoc_md11}
+After collecting the song metadata, we serialize the data into a binary file ({\ttfamily lib.\+bin}). This file is saved in the user\textquotesingle{}s home directory ({\ttfamily \$HOME/.config/in\+Limbo}) for future use.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{graph\ TD}
+\DoxyCodeLine{\ \ \ \ A[SongTree]\ -\/-\/>\ B[Serialize\ to\ lib.bin]}
+\DoxyCodeLine{\ \ \ \ B\ -\/-\/>\ C[Write\ to\ lib.bin]}
+\DoxyCodeLine{\ \ \ \ C\ -\/-\/>\ D[Store\ in\ \$HOME/.config/inLimbo]}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Serialize}}\+: The {\ttfamily \doxylink{classSongTree}{Song\+Tree}} is serialized into the {\ttfamily lib.\+bin} file for persistent storage.
+\item {\bfseries{Store}}\+: The serialized binary data is stored in the {\ttfamily \$HOME/.config/in\+Limbo/} directory.
+\end{DoxyEnumerate}
+
+\DoxyHorRuler{0}
+\hypertarget{md_src_2dirsort_2SONGMAP_autotoc_md13}{}\doxysubsection{\texorpdfstring{{\bfseries{5. UI Parsing the Song Map}}}{{\bfseries{5. UI Parsing the Song Map}}}}\label{md_src_2dirsort_2SONGMAP_autotoc_md13}
+Finally, the {\ttfamily lib.\+bin} file is loaded by the UI, which parses the data structure to provide an interactive and user-\/friendly interface for browsing and controlling the music files.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{graph\ TD}
+\DoxyCodeLine{\ \ \ \ A[UI]\ -\/-\/>\ B[Parse\ lib.bin]}
+\DoxyCodeLine{\ \ \ \ B\ -\/-\/>\ C[Display\ Song\ Map]}
+\DoxyCodeLine{\ \ \ \ C\ -\/-\/>\ D[Song\ Map\ (UI\ View)]}
+\DoxyCodeLine{\ \ \ \ D\ -\/-\/>\ E[Display\ Metadata]}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Parse lib.\+bin}}\+: The UI parses the {\ttfamily lib.\+bin} file to retrieve the stored song metadata.
+\item {\bfseries{Display \doxylink{structMetadata}{Metadata}}}\+: The parsed song metadata is presented in the UI for the user to interact with.
+\end{DoxyEnumerate}
+
+\DoxyHorRuler{0}
+
+
+\begin{DoxyNote}{Note}
+~\newline
+ Some stats about loading songs in a serialized way\+: ~\newline
+~\newline
+ {\bfseries{IT IS INCREDIBLY FAST}} For \texorpdfstring{$\sim$}{\string~}300 songs it takes these average times\+: ~\newline
+~\newline
+
+\begin{DoxyEnumerate}
+\item 12-\/15ms -- Deserializing {\ttfamily lib.\+bin} as a cache file (static load of songmap)
+\item 180-\/200ms -- Loading the song directory, storing and parsing each inode (dynamic load of songmap) ~\newline
+~\newline
+
+\end{DoxyEnumerate}
+\end{DoxyNote}
+\hypertarget{md_src_2dirsort_2SONGMAP_autotoc_md15}{}\doxysection{\texorpdfstring{{\bfseries{Conclusion}}}{{\bfseries{Conclusion}}}}\label{md_src_2dirsort_2SONGMAP_autotoc_md15}
+The flow from mapping inodes to building the song map is a multi-\/step process involving directory traversal, inode mapping, Red-\/\+Black Tree insertion, metadata extraction, serialization, and finally UI display. This ensures that {\bfseries{in\+Limbo}} can efficiently process and manage large music libraries, making metadata accessible in a user-\/friendly manner. 

@@ -1,12 +1,11 @@
 \doxysection{src/ui/ui\+\_\+handler.hpp File Reference}
 \hypertarget{ui__handler_8hpp}{}\label{ui__handler_8hpp}\index{src/ui/ui\_handler.hpp@{src/ui/ui\_handler.hpp}}
+{\ttfamily \#include "{}../dbus/mpris-\/service.\+hpp"{}}\newline
 {\ttfamily \#include "{}../music/audio\+\_\+playback.\+hpp"{}}\newline
 {\ttfamily \#include "{}./components/scroller.\+hpp"{}}\newline
+{\ttfamily \#include "{}./thread\+\_\+manager.\+hpp"{}}\newline
 {\ttfamily \#include "{}keymaps.\+hpp"{}}\newline
 {\ttfamily \#include "{}misc.\+hpp"{}}\newline
-{\ttfamily \#include "{}../dbus/mpris-\/service.\+hpp"{}}\newline
-{\ttfamily \#include "{}./thread\+\_\+manager.\+hpp"{}}\newline
-{\ttfamily \#include $<$algorithm$>$}\newline
 {\ttfamily \#include $<$iomanip$>$}\newline
 {\ttfamily \#include $<$sstream$>$}\newline
 {\ttfamily \#include $<$unordered\+\_\+set$>$}\newline
@@ -39,6 +38,8 @@ class \mbox{\hyperlink{classMusicPlayer}{Music\+Player}}
 \#define \mbox{\hyperlink{ui__handler_8hpp_a965b2db45eda447f0b343c73672533fd}{SHOW\+\_\+\+LYRICS\+\_\+\+SCREEN}}~2
 \item 
 \#define \mbox{\hyperlink{ui__handler_8hpp_a9c8fdd860223a430f7ef232c1987a890}{SHOW\+\_\+\+QUEUE\+\_\+\+SCREEN}}~3
+\item 
+\#define \mbox{\hyperlink{ui__handler_8hpp_a6b14eb33959e2e18990f68dd88278345}{SHOW\+\_\+\+SONG\+\_\+\+INFO\+\_\+\+SCREEN}}~4
 \item 
 \#define \mbox{\hyperlink{ui__handler_8hpp_a2599a56212bf57db1c1039fd3b2cf367}{MIN\+\_\+\+DEBOUNCE\+\_\+\+TIME\+\_\+\+IN\+\_\+\+MS}}~500
 \end{DoxyCompactItemize}
@@ -98,6 +99,12 @@ SCREEN MACROS \Hypertarget{ui__handler_8hpp_a9c8fdd860223a430f7ef232c1987a890}\i
 \doxysubsubsection{\texorpdfstring{SHOW\_QUEUE\_SCREEN}{SHOW\_QUEUE\_SCREEN}}
 {\footnotesize\ttfamily \label{ui__handler_8hpp_a9c8fdd860223a430f7ef232c1987a890} 
 \#define SHOW\+\_\+\+QUEUE\+\_\+\+SCREEN~3}
+
+\Hypertarget{ui__handler_8hpp_a6b14eb33959e2e18990f68dd88278345}\index{ui\_handler.hpp@{ui\_handler.hpp}!SHOW\_SONG\_INFO\_SCREEN@{SHOW\_SONG\_INFO\_SCREEN}}
+\index{SHOW\_SONG\_INFO\_SCREEN@{SHOW\_SONG\_INFO\_SCREEN}!ui\_handler.hpp@{ui\_handler.hpp}}
+\doxysubsubsection{\texorpdfstring{SHOW\_SONG\_INFO\_SCREEN}{SHOW\_SONG\_INFO\_SCREEN}}
+{\footnotesize\ttfamily \label{ui__handler_8hpp_a6b14eb33959e2e18990f68dd88278345} 
+\#define SHOW\+\_\+\+SONG\+\_\+\+INFO\+\_\+\+SCREEN~4}
 
 \Hypertarget{ui__handler_8hpp_ae404e170bcac700cdc2e87d1c5ba04f5}\index{ui\_handler.hpp@{ui\_handler.hpp}!STATUS\_BAR\_DELIM@{STATUS\_BAR\_DELIM}}
 \index{STATUS\_BAR\_DELIM@{STATUS\_BAR\_DELIM}!ui\_handler.hpp@{ui\_handler.hpp}}

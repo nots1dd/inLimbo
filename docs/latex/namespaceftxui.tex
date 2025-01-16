@@ -4,18 +4,44 @@
 \begin{DoxyCompactItemize}
 \item 
 class \mbox{\hyperlink{classftxui_1_1ScrollerBase}{Scroller\+Base}}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em A custom scroller component that synchronizes with an external index and applies a custom cursor background color. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-Component \mbox{\hyperlink{namespaceftxui_a73611b3deb516cb8ba88afd9cf058a76}{Scroller}} (Component child)
-\end{DoxyCompactItemize}
+Element \mbox{\hyperlink{namespaceftxui_ac5cec639fa2c2e6aec38f6c74d8691bb}{image\+\_\+view}} (std\+::string\+\_\+view url)
+\item 
+Component \mbox{\hyperlink{namespaceftxui_a3d2d6a133d15925103623b265f874db4}{Scroller}} (Component child, int \texorpdfstring{$\ast$}{*}external\+\_\+selected, Color cursor\+\_\+bg)
+\begin{DoxyCompactList}\small\item\em Factory function to create a Scroller component. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Function Documentation}
-\Hypertarget{namespaceftxui_a73611b3deb516cb8ba88afd9cf058a76}\index{ftxui@{ftxui}!Scroller@{Scroller}}
+\Hypertarget{namespaceftxui_ac5cec639fa2c2e6aec38f6c74d8691bb}\index{ftxui@{ftxui}!image\_view@{image\_view}}
+\index{image\_view@{image\_view}!ftxui@{ftxui}}
+\doxysubsubsection{\texorpdfstring{image\_view()}{image\_view()}}
+{\footnotesize\ttfamily \label{namespaceftxui_ac5cec639fa2c2e6aec38f6c74d8691bb} 
+Element ftxui\+::image\+\_\+view (\begin{DoxyParamCaption}\item[{std\+::string\+\_\+view}]{url}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespaceftxui_a3d2d6a133d15925103623b265f874db4}\index{ftxui@{ftxui}!Scroller@{Scroller}}
 \index{Scroller@{Scroller}!ftxui@{ftxui}}
 \doxysubsubsection{\texorpdfstring{Scroller()}{Scroller()}}
-{\footnotesize\ttfamily \label{namespaceftxui_a73611b3deb516cb8ba88afd9cf058a76} 
-Component ftxui\+::\+Scroller (\begin{DoxyParamCaption}\item[{Component}]{child}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{namespaceftxui_a3d2d6a133d15925103623b265f874db4} 
+Component ftxui\+::\+Scroller (\begin{DoxyParamCaption}\item[{Component}]{child}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{external\+\_\+selected}{, }\item[{Color}]{cursor\+\_\+bg}{}\end{DoxyParamCaption})}
 
+
+
+Factory function to create a Scroller component. 
+
+This function creates an instance of {\ttfamily \doxylink{classftxui_1_1ScrollerBase}{Scroller\+Base}} with external index control and a custom cursor background color.
+
+
+\begin{DoxyParams}{Parameters}
+{\em child} & The child component to be rendered inside the scroller. \\
+\hline
+{\em external\+\_\+selected} & A pointer to an external integer that controls the selected index. \\
+\hline
+{\em cursor\+\_\+bg} & The background color to apply to the focused element. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A {\ttfamily Component} instance representing the scroller. 
+\end{DoxyReturn}

@@ -1,0 +1,119 @@
+\doxysection{tiv\+\_\+lib.\+h}
+\hypertarget{tiv__lib_8h_source}{}\label{tiv__lib_8h_source}\index{src/ui/components/libs/tiv\_lib.h@{src/ui/components/libs/tiv\_lib.h}}
+\mbox{\hyperlink{tiv__lib_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2017-\/2023,\ Stefan\ Haustein,\ Aaron\ Liu}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ \ \ \ \ This\ file\ is\ free\ software:\ you\ may\ copy,\ redistribute\ and/or\ modify\ it}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ \ \ \ \ under\ the\ terms\ of\ the\ GNU\ General\ Public\ License\ as\ published\ by\ the}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ \ \ \ \ Free\ Software\ Foundation,\ either\ version\ 3\ of\ the\ License,\ or\ (at\ your}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ \ \ \ \ option)\ any\ later\ version.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ \ \ \ \ This\ file\ is\ distributed\ in\ the\ hope\ that\ it\ will\ be\ useful,\ but}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ \ \ \ \ WITHOUT\ ANY\ WARRANTY;\ without\ even\ the\ implied\ warranty\ of}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ \ \ \ \ MERCHANTABILITY\ or\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE.\ \ See\ the\ GNU}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ \ \ \ \ General\ Public\ License\ for\ more\ details.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ \ \ \ \ You\ should\ have\ received\ a\ copy\ of\ the\ GNU\ General\ Public\ License}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ \ \ \ \ along\ with\ this\ program.\ \ If\ not,\ see\ <https://www.gnu.org/licenses/>.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ Alternatively,\ you\ may\ copy,\ redistribute\ and/or\ modify\ this\ file\ under}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ the\ terms\ of\ the\ Apache\ License,\ version\ 2.0:}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ \ \ \ \ Licensed\ under\ the\ Apache\ License,\ Version\ 2.0\ (the\ "{}License"{});}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *\ \ \ \ \ you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ \ \ \ \ You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ https://www.apache.org/licenses/LICENSE-\/2.0}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ *\ \ \ \ \ Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ *\ \ \ \ \ distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *\ \ \ \ \ WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *\ \ \ \ \ See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ *\ \ \ \ \ limitations\ under\ the\ License.}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#ifndef\ TIV\_LIB\_H}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ TIV\_LIB\_H}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ "{}CImg.h"{}}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacetiv}{tiv}}}
+\DoxyCodeLine{00044\ \{}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtiv_1_1size_a4bb1904e5b03e77a4c0af0ca0d157045}{size}}\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \mbox{\hyperlink{structtiv_1_1size_a4bb1904e5b03e77a4c0af0ca0d157045}{size}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ in\_width,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ in\_height)}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{structtiv_1_1size_ad75dbea80086f652a6cac20c533a9610}{width}}(in\_width),\ \mbox{\hyperlink{structtiv_1_1size_acdd4846573496f9ecc1f958e765048c1}{height}}(in\_height)\ \{\}}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{structtiv_1_1size_afd1f6a7927d6ae3bf4179a2afbbe3c58}{size}}(cimg\_library::CImg<unsigned\ int>\ img)}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{structtiv_1_1size_ad75dbea80086f652a6cac20c533a9610}{width}}(img.\mbox{\hyperlink{structtiv_1_1size_ad75dbea80086f652a6cac20c533a9610}{width}}()),\ \mbox{\hyperlink{structtiv_1_1size_acdd4846573496f9ecc1f958e765048c1}{height}}(img.\mbox{\hyperlink{structtiv_1_1size_acdd4846573496f9ecc1f958e765048c1}{height}}())\ \{\}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtiv_1_1size_ad75dbea80086f652a6cac20c533a9610}{width}};}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtiv_1_1size_acdd4846573496f9ecc1f958e765048c1}{height}};}
+\DoxyCodeLine{00053\ \ \ \ \ \mbox{\hyperlink{structtiv_1_1size_a4bb1904e5b03e77a4c0af0ca0d157045}{size}}\ \mbox{\hyperlink{structtiv_1_1size_a359af7148de45272e9c27d6d9fe3ad0e}{scaled}}(\textcolor{keywordtype}{double}\ scale)\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structtiv_1_1size_a4bb1904e5b03e77a4c0af0ca0d157045}{size}}(\mbox{\hyperlink{structtiv_1_1size_ad75dbea80086f652a6cac20c533a9610}{width}}\ *\ scale,\ \mbox{\hyperlink{structtiv_1_1size_acdd4846573496f9ecc1f958e765048c1}{height}}\ *\ scale);\ \}}
+\DoxyCodeLine{00054\ \ \ \ \ \mbox{\hyperlink{structtiv_1_1size_a4bb1904e5b03e77a4c0af0ca0d157045}{size}}\ \mbox{\hyperlink{structtiv_1_1size_a84e015e08eddbb0dffd6e3f20cd048c0}{fitted\_within}}(\mbox{\hyperlink{structtiv_1_1size_a4bb1904e5b03e77a4c0af0ca0d157045}{size}}\ container)\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ scale\ =\ std::min(container.\mbox{\hyperlink{structtiv_1_1size_ad75dbea80086f652a6cac20c533a9610}{width}}\ /\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(\mbox{\hyperlink{structtiv_1_1size_ad75dbea80086f652a6cac20c533a9610}{width}}),}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ container.\mbox{\hyperlink{structtiv_1_1size_acdd4846573496f9ecc1f958e765048c1}{height}}\ /\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(\mbox{\hyperlink{structtiv_1_1size_acdd4846573496f9ecc1f958e765048c1}{height}}));}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structtiv_1_1size_a359af7148de45272e9c27d6d9fe3ad0e}{scaled}}(scale);}
+\DoxyCodeLine{00058\ \ \ \ \ \}}
+\DoxyCodeLine{00059\ \};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ Implementation\ of\ flag\ representation\ for\ flags\ in\ the\ main()\ method}}
+\DoxyCodeLine{00062\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacetiv_af1f6d0aa06b42778013faeebd6297bfd}{FLAG\_FG}}\ =\ 1;}
+\DoxyCodeLine{00063\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacetiv_a18ddcca182a373b345385f5454728174}{FLAG\_BG}}\ =\ 2;}
+\DoxyCodeLine{00064\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacetiv_ab63ee96f45b16d539a8096cc2267da87}{FLAG\_MODE\_256}}\ =\ 4;\ \ \ \textcolor{comment}{//\ Limit\ colors\ to\ 256-\/color\ mode}}
+\DoxyCodeLine{00065\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacetiv_ab022888bcc6ff74e00603b9347b91c00}{FLAG\_24BIT}}\ =\ 8;\ \ \ \ \ \ \textcolor{comment}{//\ 24-\/bit\ color\ mode}}
+\DoxyCodeLine{00066\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacetiv_aeacdf1f9febf3e31e2c39cbebe2fabcf}{FLAG\_NOOPT}}\ =\ 16;\ \ \ \ \ \textcolor{comment}{//\ Only\ use\ the\ same\ half-\/block\ character}}
+\DoxyCodeLine{00067\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacetiv_a01dd4f4f1ed1389d0f78dbf79262e5e2}{FLAG\_TELETEXT}}\ =\ 32;\ \ \textcolor{comment}{//\ Use\ teletext\ characters}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{comment}{//\ Color\ saturation\ value\ steps\ from\ 0\ to\ 255}}
+\DoxyCodeLine{00071\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacetiv_a1e525d22eb6e7ac62b1ed045a075f59a}{COLOR\_STEP\_COUNT}}\ =\ 6;}
+\DoxyCodeLine{00072\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacetiv_a5a770a0650752a81581d38e0885a2e84}{COLOR\_STEPS}}[\mbox{\hyperlink{namespacetiv_a1e525d22eb6e7ac62b1ed045a075f59a}{COLOR\_STEP\_COUNT}}]\ =\ \{0,\ 0x5f,\ 0x87,\ 0xaf,\ 0xd7,\ 0xff\};}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{comment}{//\ Grayscale\ saturation\ value\ steps\ from\ 0\ to\ 255}}
+\DoxyCodeLine{00075\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacetiv_ae4b194150d4420bdd915d0fe26dbf0c4}{GRAYSCALE\_STEP\_COUNT}}\ =\ 24;}
+\DoxyCodeLine{00076\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacetiv_ad9bf0ddf3b6b011646c056e84b0b07d0}{GRAYSCALE\_STEPS}}[\mbox{\hyperlink{namespacetiv_ae4b194150d4420bdd915d0fe26dbf0c4}{GRAYSCALE\_STEP\_COUNT}}]\ =\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ 0x08,\ 0x12,\ 0x1c,\ 0x26,\ 0x30,\ 0x3a,\ 0x44,\ 0x4e,\ 0x58,\ 0x62,\ 0x6c,\ 0x76,}
+\DoxyCodeLine{00078\ \ \ \ \ 0x80,\ 0x8a,\ 0x94,\ 0x9e,\ 0xa8,\ 0xb2,\ 0xbc,\ 0xc6,\ 0xd0,\ 0xda,\ 0xe4,\ 0xee\};}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{keyword}{typedef}\ std::function<\textcolor{keywordtype}{unsigned}\ long(\textcolor{keywordtype}{int},\ \textcolor{keywordtype}{int})>\ \mbox{\hyperlink{namespacetiv_a583c69b0d11f69257d82ea76842fc16b}{GetPixelFunction}};}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacetiv_a742c5e71d079f8f20256485e875bfc0a}{clamp\_byte}}(\textcolor{keywordtype}{int}\ value);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacetiv_a7a701cc6268c5eef965b3e0636aa3268}{best\_index}}(\textcolor{keywordtype}{int}\ value,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ STEPS[],\ \textcolor{keywordtype}{int}\ count);}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespacetiv_a8598249dc19387c043e7806969e02d8e}{sqr}}(\textcolor{keywordtype}{double}\ n);}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00095\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtiv_1_1CharData}{CharData}}\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ std::array<int,\ 3>\ \mbox{\hyperlink{structtiv_1_1CharData_a3e20ac572021d95ac44152b06b7f3542}{fgColor}}\ =\ std::array<int,\ 3>\{0,\ 0,\ 0\};}
+\DoxyCodeLine{00097\ \ \ \ \ std::array<int,\ 3>\ \mbox{\hyperlink{structtiv_1_1CharData_a8f136f6c6b0efb2bd108f15a8f2d50a8}{bgColor}}\ =\ std::array<int,\ 3>\{0,\ 0,\ 0\};}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structtiv_1_1CharData_a0cce744233056e1abad862f22883765d}{codePoint}};}
+\DoxyCodeLine{00099\ \};}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{comment}{//\ Return\ a\ CharData\ struct\ with\ the\ given\ code\ point\ and\ corresponding\ averag}}
+\DoxyCodeLine{00102\ \textcolor{comment}{//\ fg\ and\ bg\ colors.}}
+\DoxyCodeLine{00103\ \mbox{\hyperlink{structtiv_1_1CharData}{CharData}}\ \mbox{\hyperlink{namespacetiv_a30f7d86e26281bf435419d3ec39c3b54}{createCharData}}(\mbox{\hyperlink{namespacetiv_a583c69b0d11f69257d82ea76842fc16b}{GetPixelFunction}}\ get\_pixel,\ \textcolor{keywordtype}{int}\ x0,\ \textcolor{keywordtype}{int}\ y0,}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ codepoint,\ \textcolor{keywordtype}{int}\ pattern);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00116\ \mbox{\hyperlink{structtiv_1_1CharData}{CharData}}\ \mbox{\hyperlink{namespacetiv_a13e83391e442fa0a1c92aac63fda3ef3}{findCharData}}(\mbox{\hyperlink{namespacetiv_a583c69b0d11f69257d82ea76842fc16b}{GetPixelFunction}}\ get\_pixel,\ \textcolor{keywordtype}{int}\ x0,\ \textcolor{keywordtype}{int}\ y0,}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&flags);}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ cimg\_library::CImg<unsigned\ char>\ \mbox{\hyperlink{namespacetiv_ac938afb95da3b8f9a8af3bbd57404782}{load\_rgb\_CImg}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\textcolor{keyword}{const}\ \&filename);}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetiv_a034a9a602e5de11184ade0899ac7bc6c}{printTermColor}}(std::ostream\&\ os,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&flags,\ \textcolor{keywordtype}{int}\ r,\ \textcolor{keywordtype}{int}\ g,\ \textcolor{keywordtype}{int}\ b);}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetiv_a5c2df04f4aec956c13e561a44e464313}{printCodepoint}}(std::ostream\&\ os,\ \textcolor{keywordtype}{int}\ codepoint);}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetiv_ab4f09794adc816104f1304d276cc6383}{printImage}}(\textcolor{keyword}{const}\ cimg\_library::CImg<unsigned\ char>\ \&image,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \&flags);}
+\DoxyCodeLine{00126\ std::pair<int,\ int>\ \mbox{\hyperlink{namespacetiv_ad579b19af64942e8aad26aa09ef38076}{get\_windows\_size}}();}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#endif\ }}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \}\ \textcolor{comment}{//\ namespace\ tiv}}
+
+\end{DoxyCode}

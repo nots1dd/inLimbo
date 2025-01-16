@@ -15,6 +15,7 @@ var toml__parser_8hpp =
     [ "SPECIAL_KEYBIND_SPACE_STR", "toml__parser_8hpp.html#aac0a4c91d4fed2417a52d531798d7367", null ],
     [ "SPECIAL_KEYBIND_TAB_STR", "toml__parser_8hpp.html#a02f4670d2039e360c451f232420182ac", null ],
     [ "configFileExists", "toml__parser_8hpp.html#a9ae7f1652e5197b6891b1f3417f3a4e9", null ],
+    [ "getCachePath", "toml__parser_8hpp.html#a52da76b1cc7e2b996b1cadab35d4e567", null ],
     [ "getConfigPath", "toml__parser_8hpp.html#ac64fc49e7109184bcb320cfb361219af", null ],
     [ "loadConfig", "toml__parser_8hpp.html#ab0f9ee0b01e2b1ec3208d0323ee8957b", null ],
     [ "parseTOMLField", "toml__parser_8hpp.html#a19930571a1aced24a71d9a1d6e7c710a", null ],

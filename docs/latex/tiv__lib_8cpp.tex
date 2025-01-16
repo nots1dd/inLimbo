@@ -1,0 +1,50 @@
+\doxysection{src/ui/components/libs/tiv\+\_\+lib.cpp File Reference}
+\hypertarget{tiv__lib_8cpp}{}\label{tiv__lib_8cpp}\index{src/ui/components/libs/tiv\_lib.cpp@{src/ui/components/libs/tiv\_lib.cpp}}
+{\ttfamily \#include "{}tiv\+\_\+lib.\+h"{}}\newline
+{\ttfamily \#include $<$array$>$}\newline
+{\ttfamily \#include $<$bitset$>$}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+{\ttfamily \#include $<$filesystem$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$functional$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacetiv}{tiv}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+unsigned char \mbox{\hyperlink{namespacetiv_aa8ebe32e61657806ccc63e8983482b20}{tiv\+::get\+\_\+channel}} (unsigned long rgb, int index)
+\item 
+\mbox{\hyperlink{structtiv_1_1CharData}{Char\+Data}} \mbox{\hyperlink{namespacetiv_a30f7d86e26281bf435419d3ec39c3b54}{tiv\+::create\+Char\+Data}} (\mbox{\hyperlink{namespacetiv_a583c69b0d11f69257d82ea76842fc16b}{Get\+Pixel\+Function}} get\+\_\+pixel, int x0, int y0, int codepoint, int pattern)
+\item 
+\mbox{\hyperlink{structtiv_1_1CharData}{Char\+Data}} \mbox{\hyperlink{namespacetiv_a13e83391e442fa0a1c92aac63fda3ef3}{tiv\+::find\+Char\+Data}} (\mbox{\hyperlink{namespacetiv_a583c69b0d11f69257d82ea76842fc16b}{Get\+Pixel\+Function}} get\+\_\+pixel, int x0, int y0, const int \&flags)
+\begin{DoxyCompactList}\small\item\em Find the best character and colors for a 4x8 part of the image at the given position. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacetiv_a034a9a602e5de11184ade0899ac7bc6c}{tiv\+::print\+Term\+Color}} (std\+::ostream \&os, const int \&flags, int r, int g, int b)
+\item 
+int \mbox{\hyperlink{namespacetiv_a742c5e71d079f8f20256485e875bfc0a}{tiv\+::clamp\+\_\+byte}} (int value)
+\item 
+double \mbox{\hyperlink{namespacetiv_a8598249dc19387c043e7806969e02d8e}{tiv\+::sqr}} (double n)
+\item 
+int \mbox{\hyperlink{namespacetiv_a7a701cc6268c5eef965b3e0636aa3268}{tiv\+::best\+\_\+index}} (int value, const int STEPS\mbox{[}$\,$\mbox{]}, int count)
+\item 
+cimg\+\_\+library\+::\+CImg$<$ unsigned char $>$ \mbox{\hyperlink{namespacetiv_ac938afb95da3b8f9a8af3bbd57404782}{tiv\+::load\+\_\+rgb\+\_\+\+CImg}} (const char \texorpdfstring{$\ast$}{*}const \&filename)
+\item 
+void \mbox{\hyperlink{namespacetiv_a5c2df04f4aec956c13e561a44e464313}{tiv\+::print\+Codepoint}} (std\+::ostream \&os, int codepoint)
+\item 
+void \mbox{\hyperlink{namespacetiv_ab4f09794adc816104f1304d276cc6383}{tiv\+::print\+Image}} (const cimg\+\_\+library\+::\+CImg$<$ unsigned char $>$ \&image, const int \&flags)
+\item 
+std\+::pair$<$ int, int $>$ \mbox{\hyperlink{namespacetiv_ad579b19af64942e8aad26aa09ef38076}{tiv\+::get\+\_\+windows\+\_\+size}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const int \mbox{\hyperlink{namespacetiv_a22b625959209d0ccdf34816800f53e6f}{tiv\+::\+END\+\_\+\+MARKER}} = 0
+\item 
+constexpr unsigned int \mbox{\hyperlink{namespacetiv_a8c71c9cf4ef7f290a91d81db12aaf1e5}{tiv\+::\+BITMAPS}} \mbox{[}$\,$\mbox{]}
+\end{DoxyCompactItemize}

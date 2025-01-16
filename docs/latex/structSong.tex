@@ -2,15 +2,22 @@
 \hypertarget{structSong}{}\label{structSong}\index{Song@{Song}}
 
 
+Represents a song with associated metadata and inode.  
+
+
+
+
 {\ttfamily \#include $<$songmap.\+hpp$>$}
 
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{structSong_adacc2058bb6263b4f0b68ce61c232b87}{Song}} (unsigned int \mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}}, const \mbox{\hyperlink{structMetadata}{Metadata}} \&\mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}})
-\item 
+\begin{DoxyCompactList}\small\item\em Constructs a \doxylink{structSong}{Song} with the given inode and metadata. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{structSong_a1a73ff262627ce78860ec622859cf249}{Song}} ()
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Default constructor for a \doxylink{structSong}{Song}, initializing with default values. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class Archive$>$ }\\void \mbox{\hyperlink{structSong_ac5e11ba0cbf3fd7ac6c649c0e582c621}{serialize}} (Archive \&ar)
+\begin{DoxyCompactList}\small\item\em Serializes the \doxylink{structSong}{Song} object. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -20,6 +27,11 @@ unsigned int \mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inod
 \end{DoxyCompactItemize}
 
 
+\doxysubsection{Detailed Description}
+Represents a song with associated metadata and inode. 
+
+The \doxylink{structSong}{Song} struct contains an inode identifier and a \doxylink{structMetadata}{Metadata} object that holds the metadata for a song. The metadata includes details such as title, artist, album, genre, and track number. 
+
 \doxysubsection{Constructor \& Destructor Documentation}
 \Hypertarget{structSong_adacc2058bb6263b4f0b68ce61c232b87}\index{Song@{Song}!Song@{Song}}
 \index{Song@{Song}!Song@{Song}}
@@ -27,12 +39,48 @@ unsigned int \mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inod
 {\footnotesize\ttfamily \label{structSong_adacc2058bb6263b4f0b68ce61c232b87} 
 Song\+::\+Song (\begin{DoxyParamCaption}\item[{unsigned int}]{inode}{, }\item[{const \mbox{\hyperlink{structMetadata}{Metadata}} \&}]{metadata}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+Constructs a \doxylink{structSong}{Song} with the given inode and metadata. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em inode} & The inode of the song. \\
+\hline
+{\em metadata} & The metadata associated with the song. \\
+\hline
+\end{DoxyParams}
 \Hypertarget{structSong_a1a73ff262627ce78860ec622859cf249}\index{Song@{Song}!Song@{Song}}
 \index{Song@{Song}!Song@{Song}}
 \doxysubsubsection{\texorpdfstring{Song()}{Song()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily \label{structSong_a1a73ff262627ce78860ec622859cf249} 
 Song\+::\+Song (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+Default constructor for a \doxylink{structSong}{Song}, initializing with default values. 
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structSong_ac5e11ba0cbf3fd7ac6c649c0e582c621}\index{Song@{Song}!serialize@{serialize}}
+\index{serialize@{serialize}!Song@{Song}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily \label{structSong_ac5e11ba0cbf3fd7ac6c649c0e582c621} 
+template$<$class Archive$>$ \\
+void Song\+::serialize (\begin{DoxyParamCaption}\item[{Archive \&}]{ar}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Serializes the \doxylink{structSong}{Song} object. 
+
+This function is used by the Cereal library to serialize the \doxylink{structSong}{Song} object for saving to a file or transmission.
+
+
+\begin{DoxyParams}{Parameters}
+{\em ar} & The archive object used for serialization. \\
+\hline
+\end{DoxyParams}
 
 
 \doxysubsection{Member Data Documentation}
@@ -42,13 +90,13 @@ Song\+::\+Song (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm
 {\footnotesize\ttfamily \label{structSong_a2f6cde83cc3ad57dad90d1de5eca0010} 
 unsigned int Song\+::inode}
 
-\Hypertarget{structSong_a3d14b92a3f45b281bde7283fe169215d}\index{Song@{Song}!metadata@{metadata}}
+The inode of the file representing the song \Hypertarget{structSong_a3d14b92a3f45b281bde7283fe169215d}\index{Song@{Song}!metadata@{metadata}}
 \index{metadata@{metadata}!Song@{Song}}
 \doxysubsubsection{\texorpdfstring{metadata}{metadata}}
 {\footnotesize\ttfamily \label{structSong_a3d14b92a3f45b281bde7283fe169215d} 
 \mbox{\hyperlink{structMetadata}{Metadata}} Song\+::metadata}
 
-
+\doxylink{structMetadata}{Metadata} information for the song 
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 

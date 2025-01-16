@@ -10,6 +10,7 @@ var ui__handler_8hpp =
     [ "SHOW_LYRICS_SCREEN", "ui__handler_8hpp.html#a965b2db45eda447f0b343c73672533fd", null ],
     [ "SHOW_MAIN_UI", "ui__handler_8hpp.html#ab1e2d4655431d80420094738cb479ba9", null ],
     [ "SHOW_QUEUE_SCREEN", "ui__handler_8hpp.html#a9c8fdd860223a430f7ef232c1987a890", null ],
+    [ "SHOW_SONG_INFO_SCREEN", "ui__handler_8hpp.html#a6b14eb33959e2e18990f68dd88278345", null ],
     [ "STATUS_BAR_DELIM", "ui__handler_8hpp.html#ae404e170bcac700cdc2e87d1c5ba04f5", null ],
     [ "STATUS_PAUSED", "ui__handler_8hpp.html#a103ed232a5c657b9a072c989787856bb", null ],
     [ "STATUS_PLAYING", "ui__handler_8hpp.html#af8d79d91bf9f2edeb736c974183720ce", null ]

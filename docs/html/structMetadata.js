@@ -1,5 +1,6 @@
 var structMetadata =
 [
+    [ "serialize", "structMetadata.html#a80ccc1f2c4ea520ea929e1b52501adc1", null ],
     [ "additionalProperties", "structMetadata.html#aa903f78de79e265504cef7be279342ac", null ],
     [ "album", "structMetadata.html#ad0bb399c882458d760b09c02842d7f09", null ],
     [ "artist", "structMetadata.html#a9c925474f678d140c0e0eef6213a160b", null ],

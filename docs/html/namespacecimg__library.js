@@ -1,0 +1,25 @@
+var namespacecimg__library =
+[
+    [ "cimg", "namespacecimg__library_1_1cimg.html", "namespacecimg__library_1_1cimg" ],
+    [ "CImg", "structcimg__library_1_1CImg.html", "structcimg__library_1_1CImg" ],
+    [ "CImgAbortException", "structcimg__library_1_1CImgAbortException.html", "structcimg__library_1_1CImgAbortException" ],
+    [ "CImgArgumentException", "structcimg__library_1_1CImgArgumentException.html", "structcimg__library_1_1CImgArgumentException" ],
+    [ "CImgDisplayException", "structcimg__library_1_1CImgDisplayException.html", "structcimg__library_1_1CImgDisplayException" ],
+    [ "CImgException", "structcimg__library_1_1CImgException.html", "structcimg__library_1_1CImgException" ],
+    [ "CImgInstanceException", "structcimg__library_1_1CImgInstanceException.html", "structcimg__library_1_1CImgInstanceException" ],
+    [ "CImgIOException", "structcimg__library_1_1CImgIOException.html", "structcimg__library_1_1CImgIOException" ],
+    [ "CImgList", "structcimg__library_1_1CImgList.html", "structcimg__library_1_1CImgList" ],
+    [ "CImgWarningException", "structcimg__library_1_1CImgWarningException.html", "structcimg__library_1_1CImgWarningException" ],
+    [ "_cimg_create_operator", "namespacecimg__library.html#a6055a8b9c55af8ad9410fdd6e43a8a8a", null ],
+    [ "invert", "namespacecimg__library.html#ab53079faa7059e3ac3a4049f9cb2a6e2", null ],
+    [ "operator!=", "namespacecimg__library.html#ae4f713ed681924cb3286ac67e4983e25", null ],
+    [ "operator&", "namespacecimg__library.html#a839394449be8d67ab30c2a0081841d51", null ],
+    [ "operator*", "namespacecimg__library.html#a10db3fc43a14f25e2a8739b4ef43abe5", null ],
+    [ "operator-", "namespacecimg__library.html#ab8743a18d8e9f70e3aaab20d3e187cf0", null ],
+    [ "operator/", "namespacecimg__library.html#af7c9bf6c2edd21837c099d6d33472990", null ],
+    [ "operator==", "namespacecimg__library.html#aab542f496b2994f75a7bb099cbaca218", null ],
+    [ "operator^", "namespacecimg__library.html#ae4b7c7791a55b084e5842677fe3c8457", null ],
+    [ "operator|", "namespacecimg__library.html#ad3af5c6decbbd0d89f806245bf7525f9", null ],
+    [ "transpose", "namespacecimg__library.html#a41d13d5911ea8b06ce4d8be277e00177", null ],
+    [ "img", "namespacecimg__library.html#aff6e86f25b2615655070e2de4913e63e", null ]
+];

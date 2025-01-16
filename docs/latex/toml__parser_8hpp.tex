@@ -40,6 +40,8 @@
 \item 
 string \mbox{\hyperlink{toml__parser_8hpp_ac64fc49e7109184bcb320cfb361219af}{get\+Config\+Path}} (string file\+Name)
 \begin{DoxyCompactList}\small\item\em Retrieves the path to the configuration file. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{toml__parser_8hpp_a52da76b1cc7e2b996b1cadab35d4e567}{get\+Cache\+Path}} ()
+\item 
 bool \mbox{\hyperlink{toml__parser_8hpp_a9ae7f1652e5197b6891b1f3417f3a4e9}{config\+File\+Exists}} (const string \&file\+Path)
 \begin{DoxyCompactList}\small\item\em Checks if the configuration file exists. \end{DoxyCompactList}\item 
 auto \mbox{\hyperlink{toml__parser_8hpp_ab0f9ee0b01e2b1ec3208d0323ee8957b}{load\+Config}} ()
@@ -167,7 +169,13 @@ This function checks if the {\ttfamily config.\+toml} file exists at the given f
 \begin{DoxyReturn}{Returns}
 {\ttfamily true} if the file exists, otherwise {\ttfamily false}. 
 \end{DoxyReturn}
-\Hypertarget{toml__parser_8hpp_ac64fc49e7109184bcb320cfb361219af}\index{toml\_parser.hpp@{toml\_parser.hpp}!getConfigPath@{getConfigPath}}
+\Hypertarget{toml__parser_8hpp_a52da76b1cc7e2b996b1cadab35d4e567}\index{toml\_parser.hpp@{toml\_parser.hpp}!getCachePath@{getCachePath}}
+\index{getCachePath@{getCachePath}!toml\_parser.hpp@{toml\_parser.hpp}}
+\doxysubsubsection{\texorpdfstring{getCachePath()}{getCachePath()}}
+{\footnotesize\ttfamily \label{toml__parser_8hpp_a52da76b1cc7e2b996b1cadab35d4e567} 
+string get\+Cache\+Path (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\texorpdfstring{$<$}{<} Exit gracefully if the HOME environment variable is not set.\Hypertarget{toml__parser_8hpp_ac64fc49e7109184bcb320cfb361219af}\index{toml\_parser.hpp@{toml\_parser.hpp}!getConfigPath@{getConfigPath}}
 \index{getConfigPath@{getConfigPath}!toml\_parser.hpp@{toml\_parser.hpp}}
 \doxysubsubsection{\texorpdfstring{getConfigPath()}{getConfigPath()}}
 {\footnotesize\ttfamily \label{toml__parser_8hpp_ac64fc49e7109184bcb320cfb361219af} 

@@ -112,14 +112,23 @@ $(function(){initNavTree('structSong.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
+<p>Represents a song with associated metadata and inode.  
+ <a href="#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="songmap_8hpp_source.html">songmap.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:adacc2058bb6263b4f0b68ce61c232b87" id="r_adacc2058bb6263b4f0b68ce61c232b87"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adacc2058bb6263b4f0b68ce61c232b87">Song</a> (unsigned int <a class="el" href="#a2f6cde83cc3ad57dad90d1de5eca0010">inode</a>, const <a class="el" href="structMetadata.html">Metadata</a> &amp;<a class="el" href="#a3d14b92a3f45b281bde7283fe169215d">metadata</a>)</td></tr>
+<tr class="memdesc:adacc2058bb6263b4f0b68ce61c232b87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> with the given inode and metadata.  <br /></td></tr>
 <tr class="separator:adacc2058bb6263b4f0b68ce61c232b87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a73ff262627ce78860ec622859cf249" id="r_a1a73ff262627ce78860ec622859cf249"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a73ff262627ce78860ec622859cf249">Song</a> ()</td></tr>
+<tr class="memdesc:a1a73ff262627ce78860ec622859cf249"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor for a <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a>, initializing with default values.  <br /></td></tr>
 <tr class="separator:a1a73ff262627ce78860ec622859cf249"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5e11ba0cbf3fd7ac6c649c0e582c621" id="r_ac5e11ba0cbf3fd7ac6c649c0e582c621"><td class="memTemplParams" colspan="2">template&lt;class Archive&gt; </td></tr>
+<tr class="memitem:ac5e11ba0cbf3fd7ac6c649c0e582c621"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ac5e11ba0cbf3fd7ac6c649c0e582c621">serialize</a> (Archive &amp;ar)</td></tr>
+<tr class="memdesc:ac5e11ba0cbf3fd7ac6c649c0e582c621"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes the <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> object.  <br /></td></tr>
+<tr class="separator:ac5e11ba0cbf3fd7ac6c649c0e582c621"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -128,7 +137,10 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a3d14b92a3f45b281bde7283fe169215d" id="r_a3d14b92a3f45b281bde7283fe169215d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structMetadata.html">Metadata</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d14b92a3f45b281bde7283fe169215d">metadata</a></td></tr>
 <tr class="separator:a3d14b92a3f45b281bde7283fe169215d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Represents a song with associated metadata and inode. </p>
+<p>The <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> struct contains an inode identifier and a <a class="el" href="structMetadata.html" title="A structure to hold metadata information for a song.">Metadata</a> object that holds the metadata for a song. The metadata includes details such as title, artist, album, genre, and track number. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="adacc2058bb6263b4f0b68ce61c232b87" name="adacc2058bb6263b4f0b68ce61c232b87"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adacc2058bb6263b4f0b68ce61c232b87">&#9670;&#160;</a></span>Song() <span class="overload">[1/2]</span></h2>
 
@@ -156,6 +168,15 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Constructs a <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> with the given inode and metadata. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inode</td><td>The inode of the song. </td></tr>
+    <tr><td class="paramname">metadata</td><td>The metadata associated with the song. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a1a73ff262627ce78860ec622859cf249" name="a1a73ff262627ce78860ec622859cf249"></a>
@@ -181,6 +202,45 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Default constructor for a <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a>, initializing with default values. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac5e11ba0cbf3fd7ac6c649c0e582c621" name="ac5e11ba0cbf3fd7ac6c649c0e582c621"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5e11ba0cbf3fd7ac6c649c0e582c621">&#9670;&#160;</a></span>serialize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Archive&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Song::serialize </td>
+          <td>(</td>
+          <td class="paramtype">Archive &amp;</td>          <td class="paramname"><span class="paramname"><em>ar</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Serializes the <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> object. </p>
+<p>This function is used by the Cereal library to serialize the <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> object for saving to a file or transmission.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ar</td><td>The archive object used for serialization. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -195,6 +255,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The inode of the file representing the song </p>
 
 </div>
 </div>
@@ -209,6 +270,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p><a class="el" href="structMetadata.html" title="A structure to hold metadata information for a song.">Metadata</a> information for the song </p>
 
 </div>
 </div>

@@ -110,13 +110,12 @@ $(function(){initNavTree('ui__handler_8hpp.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">ui_handler.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="audio__playback_8hpp_source.html">../music/audio_playback.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="mpris-service_8hpp_source.html">../dbus/mpris-service.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="audio__playback_8hpp_source.html">../music/audio_playback.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="scroller_8hpp_source.html">./components/scroller.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="thread__manager_8hpp_source.html">./thread_manager.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="keymaps_8hpp_source.html">keymaps.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="misc_8hpp_source.html">misc.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="mpris-service_8hpp_source.html">../dbus/mpris-service.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="thread__manager_8hpp_source.html">./thread_manager.hpp</a>&quot;</code><br />
-<code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;iomanip&gt;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
 <code>#include &lt;unordered_set&gt;</code><br />
@@ -153,6 +152,8 @@ Macros</h2></td></tr>
 <tr class="separator:a965b2db45eda447f0b343c73672533fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c8fdd860223a430f7ef232c1987a890" id="r_a9c8fdd860223a430f7ef232c1987a890"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c8fdd860223a430f7ef232c1987a890">SHOW_QUEUE_SCREEN</a>&#160;&#160;&#160;3</td></tr>
 <tr class="separator:a9c8fdd860223a430f7ef232c1987a890"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b14eb33959e2e18990f68dd88278345" id="r_a6b14eb33959e2e18990f68dd88278345"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b14eb33959e2e18990f68dd88278345">SHOW_SONG_INFO_SCREEN</a>&#160;&#160;&#160;4</td></tr>
+<tr class="separator:a6b14eb33959e2e18990f68dd88278345"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2599a56212bf57db1c1039fd3b2cf367" id="r_a2599a56212bf57db1c1039fd3b2cf367"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2599a56212bf57db1c1039fd3b2cf367">MIN_DEBOUNCE_TIME_IN_MS</a>&#160;&#160;&#160;500</td></tr>
 <tr class="separator:a2599a56212bf57db1c1039fd3b2cf367"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -279,6 +280,20 @@ Macros</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">#define SHOW_QUEUE_SCREEN&#160;&#160;&#160;3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6b14eb33959e2e18990f68dd88278345" name="a6b14eb33959e2e18990f68dd88278345"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b14eb33959e2e18990f68dd88278345">&#9670;&#160;</a></span>SHOW_SONG_INFO_SCREEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SHOW_SONG_INFO_SCREEN&#160;&#160;&#160;4</td>
         </tr>
       </table>
 </div><div class="memdoc">

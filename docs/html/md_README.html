@@ -117,8 +117,8 @@ $(function(){initNavTree('md_README.html',''); initResizable(true); });
  Most aspects of the project are under heavy development and no stable release is present as of yet. <br  />
 <br  />
 </dd></dl>
-<p>A possible revamp of LiteMus</p>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<p>The inLimbo project aims to be a new upcoming TUI music player for UNIX based systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.</p>
+<h2><a class="anchor" id="autotoc_md21"></a>
 Features</h2>
 <ul>
 <li><b>Fully configurable</b>: <a class="el" href="structKeybinds.html" title="Struct to hold keybinding mappings.">Keybinds</a>, library, FTP credentials, and more, all in one <code>config.toml</code> file located in <code>$HOME/.config/inLimbo/config.toml</code></li>
@@ -129,19 +129,30 @@ Features</h2>
 <li><b>Plays and caters to many audio file formats</b>: Compatible with a variety of audio formats, depending on the capabilities of <a href="https://github.com/mackron/miniaudio">miniaudio</a>.</li>
 <li><b>Customizable</b>: Add your own color palette to inLimbo ;)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md22"></a>
 LOOKS</h2>
-<div align="center"> <img src="assets/gifs/inLimbo-1.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> <img src="assets/gifs/inLimbo-3.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md7"></a>
+<div align="center"> <img src="assets/gifs/inLimbo-1.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> <img src="assets/gifs/inLimbo-3.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md23"></a>
 DEPENDENCIES</h2>
-<ol type="1">
-<li>TagLib ==&gt; <a href="https://taglib.org/">here</a> [libtag1-dev for Ubuntu] <br  />
-</li>
-<li>Gio ==&gt; <a href="https://docs.gtk.org/gio/">here</a> [libgio-2.0-dev for Ubuntu]</li>
-<li>GLib ==&gt; <a href="https://docs.gtk.org/glib/">here</a> [libglib-2.0-dev for Ubuntu]</li>
-<li>pkg-config ==&gt; <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">here</a> [pkg-config for Ubuntu]</li>
-</ol>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Dependency   </th><th class="markdownTableHeadNone">Ubuntu   </th><th class="markdownTableHeadNone">Fedora   </th><th class="markdownTableHeadNone">Arch Linux    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>TagLib</b>   </td><td class="markdownTableBodyNone"><code>libtag1-dev</code>   </td><td class="markdownTableBodyNone"><code>taglib-devel</code>   </td><td class="markdownTableBodyNone"><code>taglib</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>Gio</b>   </td><td class="markdownTableBodyNone"><code>libgio-2.0-dev</code>   </td><td class="markdownTableBodyNone"><code>glib2-devel</code>   </td><td class="markdownTableBodyNone"><code>glib2</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>GLib</b>   </td><td class="markdownTableBodyNone"><code>libglib-2.0-dev</code>   </td><td class="markdownTableBodyNone"><code>glib2-devel</code>   </td><td class="markdownTableBodyNone"><code>glib2</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>pkg-config</b>   </td><td class="markdownTableBodyNone"><code>pkg-config</code>   </td><td class="markdownTableBodyNone"><code>pkgconf</code>   </td><td class="markdownTableBodyNone"><code>pkgconf</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>ImageMagick</b>   </td><td class="markdownTableBodyNone"><code>imagemagick</code>   </td><td class="markdownTableBodyNone"><code>ImageMagick</code>   </td><td class="markdownTableBodyNone"><code>imagemagick</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>X11</b>   </td><td class="markdownTableBodyNone"><code>libx11-dev</code>   </td><td class="markdownTableBodyNone"><code>libX11-devel</code>   </td><td class="markdownTableBodyNone"><code>libx11</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>PNG</b>   </td><td class="markdownTableBodyNone"><code>libpng-dev</code>   </td><td class="markdownTableBodyNone"><code>libpng-devel</code>   </td><td class="markdownTableBodyNone"><code>libpng</code>   </td></tr>
+</table>
 <p><b>FTXUI</b> is fetched from GitHub <a href="https://github.com/ArthurSonzogni/FTXUI/">here</a> itself during building so <b>NO</b> need to install it separately.</p>
-<h2><a class="anchor" id="autotoc_md8"></a>
+<h2><a class="anchor" id="autotoc_md24"></a>
 GOAL</h2>
 <p>The goal of this project is just to find peace and solitude for me as I try to create something I wanted for a long time</p>
 <p>Here are a few novelties that may or may not have been added yet:</p>
@@ -152,7 +163,7 @@ GOAL</h2>
 <li>Fast and efficient loading of your song directory with everything you need :)</li>
 <li>TUI over the web?? (Why would you want this)</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md9"></a>
+<h2><a class="anchor" id="autotoc_md25"></a>
 BUILDING</h2>
 <p>You will need CMake for this (and git obvi)</p>
 <div class="fragment"><div class="line">git clone https://github.com/nots1dd/inLimbo.git </div>
@@ -178,7 +189,7 @@ BUILDING</h2>
  To try debug build check out <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#debugging">DEBUGGING</a> <br  />
 <br  />
 </dd></dl>
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="autotoc_md26"></a>
 DEBUGGING</h2>
 <p>inLimbo is in active development and is prone to having <em>A LOT</em> of issues</p>
 <p>To try out <b>DEBUG BUILD</b> to find bugs/issues:</p>
@@ -202,7 +213,7 @@ DEBUGGING</h2>
 <p>-&gt; Threads</p>
 <p>-&gt; Address Sanitation (ASan)</p>
 <p>-&gt; Undefined Behaviour Sanitation (UBSan)</p>
-<h2><a class="anchor" id="autotoc_md11"></a>
+<h2><a class="anchor" id="autotoc_md27"></a>
 CONFIGURATION</h2>
 <p>There is quite a lot to configure in the inLimbo project. A basic config file will be setup in your <code>$HOME/.config/inLimbo/</code> directory while using CMake to build</p>
 <dl class="section important"><dt>Important</dt><dd><br  />
@@ -218,7 +229,7 @@ CONFIGURATION</h2>
  For <a class="el" href="namespaceTrueColors.html">TrueColors</a>, check out <a href="https://github.com/nots1dd/inLimbo/blob/main/COLORS.md">COLORS</a> for more information on how to set up colors in <code>inLimbo</code> <br  />
 <br  />
 </dd></dl>
-<div align="center"> <img src="assets/gifs/inLimbo-2.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md12"></a>
+<div align="center"> <img src="assets/gifs/inLimbo-2.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md28"></a>
 DIRECTORY SORTING</h2>
 <p>Currently uses <code>rbtrees</code> and <code>unordered_map</code> to store and write the current inodes in given directory to <code>lib.sync</code> file</p>
 <p>-&gt; rbtree will contain all the inodes at runtime</p>
@@ -236,7 +247,7 @@ DIRECTORY SORTING</h2>
 </div><!-- fragment --> <br  />
 <br  />
 </dd></dl>
-<h2><a class="anchor" id="autotoc_md13"></a>
+<h2><a class="anchor" id="autotoc_md29"></a>
 DOCUMENTATION</h2>
 <p>Currently I am setting up a Doxygen documentation page that should really make it easy to understand the flow of the project</p>
 <p>Man page is also under progress</p>
@@ -248,7 +259,7 @@ DOCUMENTATION</h2>
 </div><!-- fragment --><p>It is much easier to use the script <code>make_docs.sh</code></p>
 <div class="fragment"><div class="line">./make_docs.sh</div>
 </div><!-- fragment --><p>Or you could just visit <a href="https://nots1dd.github.io/inLimbo/">inLimbo Website</a></p>
-<h2><a class="anchor" id="autotoc_md14"></a>
+<h2><a class="anchor" id="autotoc_md30"></a>
 CREDITS</h2>
 <p><b>LOGO</b>:</p>
 <p><em>DISCLAIMER</em>: This is not an original logo nor was it commisioned by me</p>

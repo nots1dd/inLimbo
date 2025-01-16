@@ -111,22 +111,43 @@ $(function(){initNavTree('classSongTree.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
+<p>Represents a hierarchical tree structure to store songs by artist, album, disc number, and track number.  
+ <a href="#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="songmap_8hpp_source.html">songmap.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5acb6d9c937a04cb784a6fc55fd3f0a3" id="r_a5acb6d9c937a04cb784a6fc55fd3f0a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5acb6d9c937a04cb784a6fc55fd3f0a3">addSong</a> (const <a class="el" href="structSong.html">Song</a> &amp;song)</td></tr>
+<tr class="memdesc:a5acb6d9c937a04cb784a6fc55fd3f0a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a song to the tree.  <br /></td></tr>
 <tr class="separator:a5acb6d9c937a04cb784a6fc55fd3f0a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a573bb3b4b0372c52b4924212f6db5f2b" id="r_a573bb3b4b0372c52b4924212f6db5f2b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a573bb3b4b0372c52b4924212f6db5f2b">display</a> () const</td></tr>
+<tr class="memdesc:a573bb3b4b0372c52b4924212f6db5f2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Displays all songs in the tree hierarchically.  <br /></td></tr>
 <tr class="separator:a573bb3b4b0372c52b4924212f6db5f2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68e2d5ad41be86701f5839d0abfceac9" id="r_a68e2d5ad41be86701f5839d0abfceac9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structSong.html">Song</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68e2d5ad41be86701f5839d0abfceac9">getSongsByArtist</a> (const std::string &amp;artist) const</td></tr>
+<tr class="memdesc:a68e2d5ad41be86701f5839d0abfceac9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves all songs by a specific artist.  <br /></td></tr>
 <tr class="separator:a68e2d5ad41be86701f5839d0abfceac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2bffb761329095f22aacab4121746db" id="r_ac2bffb761329095f22aacab4121746db"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structSong.html">Song</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac2bffb761329095f22aacab4121746db">getSongsByAlbum</a> (const std::string &amp;artist, const std::string &amp;album) const</td></tr>
+<tr class="memdesc:ac2bffb761329095f22aacab4121746db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves all songs from a specific album by a given artist.  <br /></td></tr>
 <tr class="separator:ac2bffb761329095f22aacab4121746db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73d358fd0d3b765d8cfbd50b8d6e2b2a" id="r_a73d358fd0d3b765d8cfbd50b8d6e2b2a"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::map&lt; std::string, std::map&lt; unsigned int, std::map&lt; unsigned int, <a class="el" href="structSong.html">Song</a> &gt; &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73d358fd0d3b765d8cfbd50b8d6e2b2a">returnSongMap</a> ()</td></tr>
+<tr class="memdesc:a73d358fd0d3b765d8cfbd50b8d6e2b2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the internal song map.  <br /></td></tr>
 <tr class="separator:a73d358fd0d3b765d8cfbd50b8d6e2b2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44501c33435ae05c476616427d407135" id="r_a44501c33435ae05c476616427d407135"><td class="memTemplParams" colspan="2">template&lt;class Archive&gt; </td></tr>
+<tr class="memitem:a44501c33435ae05c476616427d407135"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a44501c33435ae05c476616427d407135">serialize</a> (Archive &amp;ar)</td></tr>
+<tr class="memdesc:a44501c33435ae05c476616427d407135"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes the <a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a> object.  <br /></td></tr>
+<tr class="separator:a44501c33435ae05c476616427d407135"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82129099237b6deeb36c05fd67ad49b8" id="r_a82129099237b6deeb36c05fd67ad49b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a82129099237b6deeb36c05fd67ad49b8">saveToFile</a> (const std::string &amp;filename) const</td></tr>
+<tr class="memdesc:a82129099237b6deeb36c05fd67ad49b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the <a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a> to a file.  <br /></td></tr>
+<tr class="separator:a82129099237b6deeb36c05fd67ad49b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab91097161c9b864f5d5888ae963de4b3" id="r_ab91097161c9b864f5d5888ae963de4b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab91097161c9b864f5d5888ae963de4b3">loadFromFile</a> (const std::string &amp;filename)</td></tr>
+<tr class="memdesc:ab91097161c9b864f5d5888ae963de4b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a <a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a> from a file.  <br /></td></tr>
+<tr class="separator:ab91097161c9b864f5d5888ae963de4b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Represents a hierarchical tree structure to store songs by artist, album, disc number, and track number. </p>
+<p>The <a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a> class organizes songs in a map structure where the keys are artist names, album titles, disc numbers, and track numbers. The tree structure allows for easy retrieval of songs by artist, album, and track number. Songs can be added to the tree, displayed, and serialized or deserialized from a file. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a5acb6d9c937a04cb784a6fc55fd3f0a3" name="a5acb6d9c937a04cb784a6fc55fd3f0a3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5acb6d9c937a04cb784a6fc55fd3f0a3">&#9670;&#160;</a></span>addSong()</h2>
 
@@ -149,6 +170,15 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Adds a song to the tree. </p>
+<p>This function inserts a <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> into the appropriate location in the tree based on its artist, album, disc number, and track number.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">song</td><td>The song to be added to the tree. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -174,6 +204,9 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Displays all songs in the tree hierarchically. </p>
+<p>This function prints the entire song tree to the console in a human-readable format, displaying the artist, album, disc number, track number, title, and other metadata for each song. </p>
 
 </div>
 </div>
@@ -204,6 +237,17 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Retrieves all songs from a specific album by a given artist. </p>
+<p>This function returns a vector of all songs from a particular album by an artist.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">artist</td><td>The name of the artist whose album's songs are to be retrieved. </td></tr>
+    <tr><td class="paramname">album</td><td>The title of the album whose songs are to be retrieved. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A vector of <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> objects from the specified album by the specified artist. </dd></dl>
+
 </div>
 </div>
 <a id="a68e2d5ad41be86701f5839d0abfceac9" name="a68e2d5ad41be86701f5839d0abfceac9"></a>
@@ -229,6 +273,56 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Retrieves all songs by a specific artist. </p>
+<p>This function returns a vector of all songs by a given artist, organized by album, disc number, and track number.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">artist</td><td>The name of the artist whose songs are to be retrieved. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A vector of <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> objects by the specified artist. </dd></dl>
+
+</div>
+</div>
+<a id="ab91097161c9b864f5d5888ae963de4b3" name="ab91097161c9b864f5d5888ae963de4b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab91097161c9b864f5d5888ae963de4b3">&#9670;&#160;</a></span>loadFromFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SongTree::loadFromFile </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>filename</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Loads a <a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a> from a file. </p>
+<p>This function loads the serialized <a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a> object from a binary file.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>The name of the file to load the <a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a> from. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>If the file cannot be opened for loading. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a73d358fd0d3b765d8cfbd50b8d6e2b2a" name="a73d358fd0d3b765d8cfbd50b8d6e2b2a"></a>
@@ -253,6 +347,86 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Returns the internal song map. </p>
+<p>This function returns the entire nested map structure containing all the songs.</p>
+<dl class="section return"><dt>Returns</dt><dd>The nested map structure of songs. </dd></dl>
+
+</div>
+</div>
+<a id="a82129099237b6deeb36c05fd67ad49b8" name="a82129099237b6deeb36c05fd67ad49b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82129099237b6deeb36c05fd67ad49b8">&#9670;&#160;</a></span>saveToFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SongTree::saveToFile </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>filename</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Saves the <a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a> to a file. </p>
+<p>This function saves the serialized <a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a> object to a binary file.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>The name of the file to save the <a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a> to. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>If the file cannot be opened for saving. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a44501c33435ae05c476616427d407135" name="a44501c33435ae05c476616427d407135"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44501c33435ae05c476616427d407135">&#9670;&#160;</a></span>serialize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Archive&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SongTree::serialize </td>
+          <td>(</td>
+          <td class="paramtype">Archive &amp;</td>          <td class="paramname"><span class="paramname"><em>ar</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Serializes the <a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a> object. </p>
+<p>This function serializes the <a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a> object into a binary format for storage or transmission.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ar</td><td>The archive object used for serialization. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

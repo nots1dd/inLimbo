@@ -1,13 +1,23 @@
 var searchData=
 [
-  ['read_5fpassword_0',['read_password',['../client_8cpp.html#a4b0db2ddc56f01fd232e11c7a337564a',1,'client.cpp']]],
-  ['receive_5ffile_1',['receive_file',['../client_8cpp.html#a0e91db1333a10b3cb462ae3e59941a80',1,'client.cpp']]],
-  ['redblacktree_2',['RedBlackTree',['../classRedBlackTree.html#a16706b7c753cf2d86514cda01840abd9',1,'RedBlackTree']]],
-  ['renderalbumname_3',['renderAlbumName',['../misc_8hpp.html#a40a9888f76354b21ca85f69ffe014750',1,'misc.hpp']]],
-  ['rendersongmenu_4',['RenderSongMenu',['../misc_8hpp.html#ae177f32772c1011c09dfce5f982c7f64',1,'misc.hpp']]],
-  ['rendersongname_5',['renderSongName',['../misc_8hpp.html#adcfcdc4bf50bc48f25cc0e8df2e80822',1,'misc.hpp']]],
-  ['resume_6',['resume',['../classMiniAudioPlayer.html#a76e2cf58ef484743383411c267d1e6b3',1,'MiniAudioPlayer']]],
-  ['returnsongmap_7',['returnSongMap',['../classSongTree.html#a73d358fd0d3b765d8cfbd50b8d6e2b2a',1,'SongTree']]],
-  ['returnsongtree_8',['returnSongTree',['../classRedBlackTree.html#a508f5c1b1620edebcd456c019a5960ed',1,'RedBlackTree']]],
-  ['run_9',['Run',['../classMusicPlayer.html#a70498c66baa2c8419a3ec018338e2378',1,'MusicPlayer']]]
+  ['parsecolor_0',['parseColor',['../colors_8hpp.html#adf73c6c8342b58af9e25838c451bc575',1,'colors.hpp']]],
+  ['parsecolors_1',['parseColors',['../colors_8hpp.html#a637d01c5fd950275d85073732fec1d08',1,'colors.hpp']]],
+  ['parsefile_2',['parseFile',['../classTagLibParser.html#a42f060c96746baf0e495bb8bed4a2778',1,'TagLibParser']]],
+  ['parsefrominode_3',['parseFromInode',['../classTagLibParser.html#ac7e0277f5bf46433d1bf64b9e0154641',1,'TagLibParser']]],
+  ['parsehexcolor_4',['parseHexColor',['../colors_8hpp.html#a38d72813e90e14f8b18e88cd4af7c9da',1,'colors.hpp']]],
+  ['parsekeybinds_5',['parseKeybinds',['../keymaps_8hpp.html#a140e0fecc49876baa6c265621cf96518',1,'keymaps.hpp']]],
+  ['parsetomlfield_6',['parseTOMLField',['../toml__parser_8hpp.html#a19930571a1aced24a71d9a1d6e7c710a',1,'toml_parser.hpp']]],
+  ['parsetomlfieldint_7',['parseTOMLFieldInt',['../toml__parser_8hpp.html#a0032a51dfcdddb12160bf671f29001f1',1,'toml_parser.hpp']]],
+  ['pause_8',['pause',['../classMiniAudioPlayer.html#a9e0326f4904c8dc484730a9f1588d60d',1,'MiniAudioPlayer']]],
+  ['play_9',['play',['../classMiniAudioPlayer.html#afaed2fe579e6ec80066056d622f42b8a',1,'MiniAudioPlayer']]],
+  ['print_5fhelp_10',['print_help',['../client_8cpp.html#a853216ac51aa181669ff4d3de74058a7',1,'client.cpp']]],
+  ['printcodepoint_11',['printCodepoint',['../namespacetiv.html#a5c2df04f4aec956c13e561a44e464313',1,'tiv']]],
+  ['printimage_12',['printImage',['../namespacetiv.html#ab4f09794adc816104f1304d276cc6383',1,'tiv']]],
+  ['printmappings_13',['printMappings',['../classInodeFileMapper.html#af03894b8d412a4322cc2780e6db9f027',1,'InodeFileMapper']]],
+  ['printmetadata_14',['printMetadata',['../taglib__parser_8h.html#a1dd3093763fba77a033971b138eda516',1,'taglib_parser.h']]],
+  ['printsongtree_15',['printSongTree',['../classRedBlackTree.html#a8f4ba956f5d362be9c06fe1df84e07b3',1,'RedBlackTree']]],
+  ['printtermcolor_16',['printTermColor',['../namespacetiv.html#a034a9a602e5de11184ade0899ac7bc6c',1,'tiv']]],
+  ['printusage_17',['printUsage',['../classCommandLineArgs.html#a23bfeb76513b5a88ec4af37d6f60269e',1,'CommandLineArgs']]],
+  ['processcachefile_18',['processCacheFile',['../inode__mapper_8hpp.html#a7fcab8a19693d3b4acb8f105ec870a2b',1,'inode_mapper.hpp']]],
+  ['processdirectory_19',['processDirectory',['../inode__mapper_8hpp.html#a3544c46090c2831e910d9e6a2dba569d',1,'inode_mapper.hpp']]]
 ];

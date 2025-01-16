@@ -1,10 +1,9 @@
 var searchData=
 [
-  ['data_0',['data',['../structNode.html#a6d09fd9edb15897f94cece0242d42b7a',1,'Node']]],
-  ['debug_5flog_5fparse_1',['DEBUG_LOG_PARSE',['../rbtree_8hpp.html#a3200e6f22db9908dba1dbb7761e7e1b2',1,'rbtree.hpp']]],
-  ['debuglogboolstr_2',['debugLogBoolStr',['../taglib__parser_8h.html#a273c56409c0777c9b2750bb3f59f076b',1,'taglib_parser.h']]],
-  ['directory_3',['DIRECTORY',['../server_8cpp.html#ac785d6bd2e210b6fb928489b48741e91',1,'server.cpp']]],
-  ['directory_5ffield_4',['DIRECTORY_FIELD',['../rbtree_8hpp.html#a4e5a70aee06dc4617ec426e02bf9bb00',1,'rbtree.hpp']]],
-  ['discnumber_5',['discNumber',['../structMetadata.html#a777a78e4b78994e5b0015f7c3d21bc08',1,'Metadata']]],
-  ['duration_6',['duration',['../structMetadata.html#a771632db88529039cf44cb65af7ecaba',1,'Metadata']]]
+  ['codepoint_0',['codePoint',['../structtiv_1_1CharData.html#a0cce744233056e1abad862f22883765d',1,'tiv::CharData']]],
+  ['color_1',['color',['../structNode.html#aecc6e56aa9a6dc5e725f03f017f51722',1,'Node']]],
+  ['color_5fstep_5fcount_2',['COLOR_STEP_COUNT',['../namespacetiv.html#a1e525d22eb6e7ac62b1ed045a075f59a',1,'tiv']]],
+  ['color_5fsteps_3',['COLOR_STEPS',['../namespacetiv.html#a5a770a0650752a81581d38e0885a2e84',1,'tiv']]],
+  ['comment_4',['comment',['../structMetadata.html#a526f9ca995119be7b51da282f09d6f64',1,'Metadata']]],
+  ['config_5',['config',['../toml__parser_8hpp.html#a9635b1b895fa15bcf1184ca6dac8476b',1,'toml_parser.hpp']]]
 ];

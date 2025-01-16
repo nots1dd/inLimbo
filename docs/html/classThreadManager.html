@@ -131,6 +131,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8c0b77d668ea526a62b556b42751a5a6" id="r_a8c0b77d668ea526a62b556b42751a5a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c0b77d668ea526a62b556b42751a5a6">lockPlayMutex</a> (<a class="el" href="structThreadManager_1_1ThreadState.html">ThreadState</a> &amp;thread_state)</td></tr>
 <tr class="memdesc:a8c0b77d668ea526a62b556b42751a5a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Locks the play mutex for the provided thread state.  <br /></td></tr>
 <tr class="separator:a8c0b77d668ea526a62b556b42751a5a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e12c9882625107d2b7059bd9816305c" id="r_a0e12c9882625107d2b7059bd9816305c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e12c9882625107d2b7059bd9816305c">unlockPlayMutex</a> (<a class="el" href="structThreadManager_1_1ThreadState.html">ThreadState</a> &amp;thread_state)</td></tr>
+<tr class="memdesc:a0e12c9882625107d2b7059bd9816305c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlocks the play mutex for the provided thread state.  <br /></td></tr>
+<tr class="separator:a0e12c9882625107d2b7059bd9816305c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A class that manages thread states and provides utilities for thread handling. </p>
@@ -194,6 +197,41 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a0e12c9882625107d2b7059bd9816305c" name="a0e12c9882625107d2b7059bd9816305c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e12c9882625107d2b7059bd9816305c">&#9670;&#160;</a></span>unlockPlayMutex()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ThreadManager::unlockPlayMutex </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structThreadManager_1_1ThreadState.html">ThreadState</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>thread_state</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Unlocks the play mutex for the provided thread state. </p>
+<p>This function releases the lock on the play mutex that was previously acquired using <code>lockPlayMutex</code>. The play mutex will be unlocked after this function is called.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">thread_state</td><td>A reference to the <a class="el" href="structThreadManager_1_1ThreadState.html" title="Represents the state of a thread managed by ThreadManager.">ThreadState</a> object whose mutex is to be unlocked. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This function should be used in conjunction with <code>lockPlayMutex</code> to ensure proper synchronization. </dd></dl>
 
 </div>
 </div>

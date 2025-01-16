@@ -110,6 +110,11 @@ $(function(){initNavTree('songmap_8hpp.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="taglib__parser_8h_source.html">taglib_parser.h</a>&quot;</code><br />
+<code>#include &lt;cereal/archives/binary.hpp&gt;</code><br />
+<code>#include &lt;cereal/types/map.hpp&gt;</code><br />
+<code>#include &lt;cereal/types/string.hpp&gt;</code><br />
+<code>#include &lt;cereal/types/vector.hpp&gt;</code><br />
+<code>#include &lt;fstream&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;map&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
@@ -120,8 +125,10 @@ $(function(){initNavTree('songmap_8hpp.html',''); initResizable(true); });
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSong.html">Song</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a song with associated metadata and inode.  <a href="structSong.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSongTree.html">SongTree</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a hierarchical tree structure to store songs by artist, album, disc number, and track number.  <a href="classSongTree.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

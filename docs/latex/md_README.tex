@@ -21,7 +21,7 @@
 ~\newline
 
 \end{DoxyImportant}
-A possible revamp of Lite\+Mus\hypertarget{md_README_autotoc_md5}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{md_README_autotoc_md5}
+The in\+Limbo project aims to be a new upcoming TUI music player for UNIX based systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.\hypertarget{md_README_autotoc_md21}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{md_README_autotoc_md21}
 
 \begin{DoxyItemize}
 \item {\bfseries{Fully configurable}}\+: \doxylink{structKeybinds}{Keybinds}, library, FTP credentials, and more, all in one {\ttfamily config.\+toml} file located in {\ttfamily \$HOME/.config/in\+Limbo/config.\+toml}
@@ -31,18 +31,29 @@ A possible revamp of Lite\+Mus\hypertarget{md_README_autotoc_md5}{}\doxysubsecti
 \item {\bfseries{Showcases all the metadata}}\+: Displays song metadata, including lyrics, genre, and more, for every file in your library.
 \item {\bfseries{Plays and caters to many audio file formats}}\+: Compatible with a variety of audio formats, depending on the capabilities of \href{https://github.com/mackron/miniaudio}{\texttt{ miniaudio}}.
 \item {\bfseries{Customizable}}\+: Add your own color palette to in\+Limbo ;)
-\end{DoxyItemize}\hypertarget{md_README_autotoc_md6}{}\doxysubsection{\texorpdfstring{LOOKS}{LOOKS}}\label{md_README_autotoc_md6}
-   \hypertarget{md_README_autotoc_md7}{}\doxysubsection{\texorpdfstring{DEPENDENCIES}{DEPENDENCIES}}\label{md_README_autotoc_md7}
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md22}{}\doxysubsection{\texorpdfstring{LOOKS}{LOOKS}}\label{md_README_autotoc_md22}
+   \hypertarget{md_README_autotoc_md23}{}\doxysubsection{\texorpdfstring{DEPENDENCIES}{DEPENDENCIES}}\label{md_README_autotoc_md23}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Dependency   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Ubuntu   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Fedora   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Arch Linux    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Dependency   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Ubuntu   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Fedora   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Arch Linux    }\\\cline{1-4}
+\endhead
+{\bfseries{Tag\+Lib}}   &{\ttfamily libtag1-\/dev}   &{\ttfamily taglib-\/devel}   &{\ttfamily taglib}    \\\cline{1-4}
+{\bfseries{Gio}}   &{\ttfamily libgio-\/2.\+0-\/dev}   &{\ttfamily glib2-\/devel}   &{\ttfamily glib2}    \\\cline{1-4}
+{\bfseries{GLib}}   &{\ttfamily libglib-\/2.\+0-\/dev}   &{\ttfamily glib2-\/devel}   &{\ttfamily glib2}    \\\cline{1-4}
+{\bfseries{pkg-\/config}}   &{\ttfamily pkg-\/config}   &{\ttfamily pkgconf}   &{\ttfamily pkgconf}    \\\cline{1-4}
+{\bfseries{Image\+Magick}}   &{\ttfamily imagemagick}   &{\ttfamily Image\+Magick}   &{\ttfamily imagemagick}    \\\cline{1-4}
+{\bfseries{X11}}   &{\ttfamily libx11-\/dev}   &{\ttfamily lib\+X11-\/devel}   &{\ttfamily libx11}    \\\cline{1-4}
+{\bfseries{PNG}}   &{\ttfamily libpng-\/dev}   &{\ttfamily libpng-\/devel}   &{\ttfamily libpng}   \\\cline{1-4}
+\end{longtabu}
 
-\begin{DoxyEnumerate}
-\item Tag\+Lib ==\texorpdfstring{$>$}{>} \href{https://taglib.org/}{\texttt{ here}} \mbox{[}libtag1-\/dev for Ubuntu\mbox{]} ~\newline
 
-\item Gio ==\texorpdfstring{$>$}{>} \href{https://docs.gtk.org/gio/}{\texttt{ here}} \mbox{[}libgio-\/2.\+0-\/dev for Ubuntu\mbox{]}
-\item GLib ==\texorpdfstring{$>$}{>} \href{https://docs.gtk.org/glib/}{\texttt{ here}} \mbox{[}libglib-\/2.\+0-\/dev for Ubuntu\mbox{]}
-\item pkg-\/config ==\texorpdfstring{$>$}{>} \href{https://www.freedesktop.org/wiki/Software/pkg-config/}{\texttt{ here}} \mbox{[}pkg-\/config for Ubuntu\mbox{]}
-\end{DoxyEnumerate}
-
-{\bfseries{FTXUI}} is fetched from Git\+Hub \href{https://github.com/ArthurSonzogni/FTXUI/}{\texttt{ here}} itself during building so {\bfseries{NO}} need to install it separately.\hypertarget{md_README_autotoc_md8}{}\doxysubsection{\texorpdfstring{GOAL}{GOAL}}\label{md_README_autotoc_md8}
+{\bfseries{FTXUI}} is fetched from Git\+Hub \href{https://github.com/ArthurSonzogni/FTXUI/}{\texttt{ here}} itself during building so {\bfseries{NO}} need to install it separately.\hypertarget{md_README_autotoc_md24}{}\doxysubsection{\texorpdfstring{GOAL}{GOAL}}\label{md_README_autotoc_md24}
 The goal of this project is just to find peace and solitude for me as I try to create something I wanted for a long time
 
 Here are a few novelties that may or may not have been added yet\+:
@@ -54,7 +65,7 @@ Here are a few novelties that may or may not have been added yet\+:
 \item Simple and easy network transfer of your favourite songs over to another device
 \item Fast and efficient loading of your song directory with everything you need \+:)
 \item TUI over the web?? (Why would you want this)
-\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md9}{}\doxysubsection{\texorpdfstring{BUILDING}{BUILDING}}\label{md_README_autotoc_md9}
+\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md25}{}\doxysubsection{\texorpdfstring{BUILDING}{BUILDING}}\label{md_README_autotoc_md25}
 You will need CMake for this (and git obvi)
 
 
@@ -104,7 +115,7 @@ To build its web-\/assembly, you will need \href{https://github.com/emscripten-c
 ~\newline
 
 \end{DoxyNote}
-\hypertarget{md_README_autotoc_md10}{}\doxysubsection{\texorpdfstring{DEBUGGING}{DEBUGGING}}\label{md_README_autotoc_md10}
+\hypertarget{md_README_autotoc_md26}{}\doxysubsection{\texorpdfstring{DEBUGGING}{DEBUGGING}}\label{md_README_autotoc_md26}
 in\+Limbo is in active development and is prone to having {\itshape A LOT} of issues
 
 To try out {\bfseries{DEBUG BUILD}} to find bugs/issues\+:
@@ -147,7 +158,7 @@ The {\bfseries{DEBUG BUILD}} will account for the following issues\+:
 
 -\/\texorpdfstring{$>$}{>} Address Sanitation (ASan)
 
--\/\texorpdfstring{$>$}{>} Undefined Behaviour Sanitation (UBSan)\hypertarget{md_README_autotoc_md11}{}\doxysubsection{\texorpdfstring{CONFIGURATION}{CONFIGURATION}}\label{md_README_autotoc_md11}
+-\/\texorpdfstring{$>$}{>} Undefined Behaviour Sanitation (UBSan)\hypertarget{md_README_autotoc_md27}{}\doxysubsection{\texorpdfstring{CONFIGURATION}{CONFIGURATION}}\label{md_README_autotoc_md27}
 There is quite a lot to configure in the in\+Limbo project. A basic config file will be setup in your {\ttfamily \$HOME/.config/in\+Limbo/} directory while using CMake to build
 
 \begin{DoxyImportant}{Important}
@@ -170,7 +181,7 @@ There is quite a lot to configure in the in\+Limbo project. A basic config file 
 ~\newline
 
 \end{DoxyNote}
-  \hypertarget{md_README_autotoc_md12}{}\doxysubsection{\texorpdfstring{DIRECTORY SORTING}{DIRECTORY SORTING}}\label{md_README_autotoc_md12}
+  \hypertarget{md_README_autotoc_md28}{}\doxysubsection{\texorpdfstring{DIRECTORY SORTING}{DIRECTORY SORTING}}\label{md_README_autotoc_md28}
 Currently uses {\ttfamily rbtrees} and {\ttfamily unordered\+\_\+map} to store and write the current inodes in given directory to {\ttfamily lib.\+sync} file
 
 -\/\texorpdfstring{$>$}{>} rbtree will contain all the inodes at runtime
@@ -203,7 +214,7 @@ To test out the creation of the song map of your chosen directory\+:
 ~\newline
 
 \end{DoxyNote}
-\hypertarget{md_README_autotoc_md13}{}\doxysubsection{\texorpdfstring{DOCUMENTATION}{DOCUMENTATION}}\label{md_README_autotoc_md13}
+\hypertarget{md_README_autotoc_md29}{}\doxysubsection{\texorpdfstring{DOCUMENTATION}{DOCUMENTATION}}\label{md_README_autotoc_md29}
 Currently I am setting up a Doxygen documentation page that should really make it easy to understand the flow of the project
 
 Man page is also under progress
@@ -229,7 +240,7 @@ It is much easier to use the script {\ttfamily make\+\_\+docs.\+sh}
 \end{DoxyCode}
 
 
-Or you could just visit \href{https://nots1dd.github.io/inLimbo/}{\texttt{ in\+Limbo Website}}\hypertarget{md_README_autotoc_md14}{}\doxysubsection{\texorpdfstring{CREDITS}{CREDITS}}\label{md_README_autotoc_md14}
+Or you could just visit \href{https://nots1dd.github.io/inLimbo/}{\texttt{ in\+Limbo Website}}\hypertarget{md_README_autotoc_md30}{}\doxysubsection{\texorpdfstring{CREDITS}{CREDITS}}\label{md_README_autotoc_md30}
 {\bfseries{LOGO}}\+:
 
 {\itshape DISCLAIMER}\+: This is not an original logo nor was it commisioned by me

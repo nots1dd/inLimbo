@@ -110,6 +110,9 @@ $(function(){initNavTree('classftxui_1_1ScrollerBase.html',''); initResizable(tr
   <div class="headertitle"><div class="title">ftxui::ScrollerBase Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>A custom scroller component that synchronizes with an external index and applies a custom cursor background color.  
+ <a href="#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for ftxui::ScrollerBase:</div>
 <div class="dyncontent">
@@ -119,12 +122,16 @@ Inheritance diagram for ftxui::ScrollerBase:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5ca407c631031b88b8d5686890e49943" id="r_a5ca407c631031b88b8d5686890e49943"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ca407c631031b88b8d5686890e49943">ScrollerBase</a> (Component child)</td></tr>
-<tr class="separator:a5ca407c631031b88b8d5686890e49943"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48489d65f758e71109ee111b69082c37" id="r_a48489d65f758e71109ee111b69082c37"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a48489d65f758e71109ee111b69082c37">ScrollerBase</a> (Component child, int *external_selected, Color cursor_bg)</td></tr>
+<tr class="memdesc:a48489d65f758e71109ee111b69082c37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <a class="el" href="classftxui_1_1ScrollerBase.html" title="A custom scroller component that synchronizes with an external index and applies a custom cursor back...">ScrollerBase</a> class.  <br /></td></tr>
+<tr class="separator:a48489d65f758e71109ee111b69082c37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a5ca407c631031b88b8d5686890e49943" name="a5ca407c631031b88b8d5686890e49943"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ca407c631031b88b8d5686890e49943">&#9670;&#160;</a></span>ScrollerBase()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A custom scroller component that synchronizes with an external index and applies a custom cursor background color. </p>
+<p>The <code><a class="el" href="classftxui_1_1ScrollerBase.html" title="A custom scroller component that synchronizes with an external index and applies a custom cursor back...">ScrollerBase</a></code> component disables internal navigation and allows the scroll state to be controlled externally using an external index (<code>external_selected_</code>). It also supports custom styling for the focused element using a background color (<code>cursor_bg_</code>). </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a48489d65f758e71109ee111b69082c37" name="a48489d65f758e71109ee111b69082c37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48489d65f758e71109ee111b69082c37">&#9670;&#160;</a></span>ScrollerBase()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -135,8 +142,17 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">ftxui::ScrollerBase::ScrollerBase </td>
           <td>(</td>
-          <td class="paramtype">Component</td>          <td class="paramname"><span class="paramname"><em>child</em></span></td><td>)</td>
+          <td class="paramtype">Component</td>          <td class="paramname"><span class="paramname"><em>child</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>external_selected</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Color</td>          <td class="paramname"><span class="paramname"><em>cursor_bg</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -145,6 +161,16 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Constructor for the <a class="el" href="classftxui_1_1ScrollerBase.html" title="A custom scroller component that synchronizes with an external index and applies a custom cursor back...">ScrollerBase</a> class. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">child</td><td>The child component to be rendered inside the scroller. </td></tr>
+    <tr><td class="paramname">external_selected</td><td>A pointer to an external integer that controls the selected index. </td></tr>
+    <tr><td class="paramname">cursor_bg</td><td>The background color to apply to the focused element. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

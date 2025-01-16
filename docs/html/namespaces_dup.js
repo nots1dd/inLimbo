@@ -2,6 +2,7 @@ var namespaces_dup =
 [
     [ "ftxui", "namespaceftxui.html", "namespaceftxui" ],
     [ "run_webassembly", "namespacerun__webassembly.html", "namespacerun__webassembly" ],
+    [ "tiv", "namespacetiv.html", "namespacetiv" ],
     [ "TrueColors", "namespaceTrueColors.html", [
       [ "Color", "namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6d", [
         [ "Black", "namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6dae90dfb84e30edf611e326eeb04d680de", null ],

@@ -2,18 +2,28 @@
 \hypertarget{classTagLibParser}{}\label{classTagLibParser}\index{TagLibParser@{TagLibParser}}
 
 
+A class for parsing metadata from audio files.  
+
+
+
+
 {\ttfamily \#include $<$taglib\+\_\+parser.\+h$>$}
 
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{classTagLibParser_ae17fbbefed079d5457c3a53af0328080}{Tag\+Lib\+Parser}} (const std\+::string \&debug\+String)
-\item 
+\begin{DoxyCompactList}\small\item\em Constructor for \doxylink{classTagLibParser}{Tag\+Lib\+Parser}. \end{DoxyCompactList}\item 
 bool \mbox{\hyperlink{classTagLibParser_a42f060c96746baf0e495bb8bed4a2778}{parse\+File}} (const std\+::string \&file\+Path, \mbox{\hyperlink{structMetadata}{Metadata}} \&metadata)
-\item 
+\begin{DoxyCompactList}\small\item\em Parse metadata from an audio file. \end{DoxyCompactList}\item 
 std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{structMetadata}{Metadata}} $>$ \mbox{\hyperlink{classTagLibParser_ac7e0277f5bf46433d1bf64b9e0154641}{parse\+From\+Inode}} (ino\+\_\+t inode, const std\+::string \&directory)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Parse metadata from files in a directory based on inode. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
+
+\doxysubsection{Detailed Description}
+A class for parsing metadata from audio files. 
+
+The {\ttfamily \doxylink{classTagLibParser}{Tag\+Lib\+Parser}} class uses the Tag\+Lib library to extract metadata from audio files. It supports parsing tags, including title, artist, album, genre, year, and track information. Additionally, it can parse metadata from files using inode information. 
 
 \doxysubsection{Constructor \& Destructor Documentation}
 \Hypertarget{classTagLibParser_ae17fbbefed079d5457c3a53af0328080}\index{TagLibParser@{TagLibParser}!TagLibParser@{TagLibParser}}
@@ -24,6 +34,15 @@ Tag\+Lib\+Parser\+::\+Tag\+Lib\+Parser (\begin{DoxyParamCaption}\item[{const std
 
 
 
+Constructor for \doxylink{classTagLibParser}{Tag\+Lib\+Parser}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em debug\+String} & A string to enable or disable debug logs. \\
+\hline
+\end{DoxyParams}
+
+
 \doxysubsection{Member Function Documentation}
 \Hypertarget{classTagLibParser_a42f060c96746baf0e495bb8bed4a2778}\index{TagLibParser@{TagLibParser}!parseFile@{parseFile}}
 \index{parseFile@{parseFile}!TagLibParser@{TagLibParser}}
@@ -31,12 +50,40 @@ Tag\+Lib\+Parser\+::\+Tag\+Lib\+Parser (\begin{DoxyParamCaption}\item[{const std
 {\footnotesize\ttfamily \label{classTagLibParser_a42f060c96746baf0e495bb8bed4a2778} 
 bool Tag\+Lib\+Parser\+::parse\+File (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+Path}{, }\item[{\mbox{\hyperlink{structMetadata}{Metadata}} \&}]{metadata}{}\end{DoxyParamCaption})}
 
+
+
+Parse metadata from an audio file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+Path} & The path to the audio file. \\
+\hline
+{\em metadata} & A reference to a \doxylink{structMetadata}{Metadata} object where parsed data will be stored. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if parsing was successful, {\ttfamily false} otherwise. 
+\end{DoxyReturn}
 \Hypertarget{classTagLibParser_ac7e0277f5bf46433d1bf64b9e0154641}\index{TagLibParser@{TagLibParser}!parseFromInode@{parseFromInode}}
 \index{parseFromInode@{parseFromInode}!TagLibParser@{TagLibParser}}
 \doxysubsubsection{\texorpdfstring{parseFromInode()}{parseFromInode()}}
 {\footnotesize\ttfamily \label{classTagLibParser_ac7e0277f5bf46433d1bf64b9e0154641} 
 std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{structMetadata}{Metadata}} $>$ Tag\+Lib\+Parser\+::parse\+From\+Inode (\begin{DoxyParamCaption}\item[{ino\+\_\+t}]{inode}{, }\item[{const std\+::string \&}]{directory}{}\end{DoxyParamCaption})}
 
+
+
+Parse metadata from files in a directory based on inode. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em inode} & The inode of the file to search for. \\
+\hline
+{\em directory} & The directory to search in. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A map of file paths to corresponding metadata. 
+\end{DoxyReturn}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

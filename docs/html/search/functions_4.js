@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['formatlyrics_0',['formatLyrics',['../misc_8hpp.html#a624a33fe79ca546dc4abb6e0735586ce',1,'misc.hpp']]],
-  ['formattime_1',['FormatTime',['../misc_8hpp.html#a76d3e10fc086b99d9046b6406baf51da',1,'misc.hpp']]]
+  ['end_5fheaders_0',['end_headers',['../classrun__webassembly_1_1CustomHTTPRequestHandler.html#a94a2cb3a17356975514b749e89488f0c',1,'run_webassembly::CustomHTTPRequestHandler']]],
+  ['extractthumbnail_1',['extractThumbnail',['../taglib__parser_8h.html#a663081b243b450cd9b222d681eb112bf',1,'taglib_parser.h']]]
 ];

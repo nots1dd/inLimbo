@@ -1,27 +1,39 @@
 \doxysection{src/dirsort/taglib\+\_\+parser.h File Reference}
 \hypertarget{taglib__parser_8h}{}\label{taglib__parser_8h}\index{src/dirsort/taglib\_parser.h@{src/dirsort/taglib\_parser.h}}
+
+
+A header file for the \doxylink{classTagLibParser}{Tag\+Lib\+Parser} class and \doxylink{structMetadata}{Metadata} structure, used to parse metadata from audio files.  
+
+
 {\ttfamily \#include $<$filesystem$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
 {\ttfamily \#include $<$iostream$>$}\newline
 {\ttfamily \#include $<$string$>$}\newline
 {\ttfamily \#include $<$sys/stat.\+h$>$}\newline
 {\ttfamily \#include $<$taglib/fileref.\+h$>$}\newline
 {\ttfamily \#include $<$taglib/tag.\+h$>$}\newline
+{\ttfamily \#include $<$taglib/id3v2tag.\+h$>$}\newline
+{\ttfamily \#include $<$taglib/mpegfile.\+h$>$}\newline
+{\ttfamily \#include $<$taglib/attachedpictureframe.\+h$>$}\newline
 {\ttfamily \#include $<$taglib/tpropertymap.\+h$>$}\newline
+{\ttfamily \#include $<$png.\+h$>$}\newline
 {\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
 \doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
 struct \mbox{\hyperlink{structMetadata}{Metadata}}
-\item 
+\begin{DoxyCompactList}\small\item\em A structure to hold metadata information for a song. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classTagLibParser}{Tag\+Lib\+Parser}}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em A class for parsing metadata from audio files. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 void \mbox{\hyperlink{taglib__parser_8h_a1dd3093763fba77a033971b138eda516}{print\+Metadata}} (const \mbox{\hyperlink{structMetadata}{Metadata}} \&metadata)
-\item 
+\begin{DoxyCompactList}\small\item\em Prints the metadata of a song to the console. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{send\+Err\+Msg}} (std\+::string \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debug\+Log\+Bool\+Str}}, std\+::string err\+Msg)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Sends an error message based on the debug log setting. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{taglib__parser_8h_a663081b243b450cd9b222d681eb112bf}{extract\+Thumbnail}} (const std\+::string \&audio\+File\+Path, const std\+::string \&output\+Image\+Path)
+\begin{DoxyCompactList}\small\item\em Extracts the thumbnail (album art) from an audio file and saves it to an image file. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -29,19 +41,66 @@ std\+::string \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f07
 \end{DoxyCompactItemize}
 
 
+\doxysubsection{Detailed Description}
+A header file for the \doxylink{classTagLibParser}{Tag\+Lib\+Parser} class and \doxylink{structMetadata}{Metadata} structure, used to parse metadata from audio files. 
+
+This file defines a {\ttfamily \doxylink{structMetadata}{Metadata}} structure for storing song information such as title, artist, album, and more. It also defines the {\ttfamily \doxylink{classTagLibParser}{Tag\+Lib\+Parser}} class for reading and extracting metadata from audio files using the Tag\+Lib library. In addition, the file provides utility functions for printing metadata, handling error messages, and extracting thumbnails from audio files.
+
+{\bfseries{Note}}\+: In the Emscripten build, dummy functions are used because Tag\+Lib must be compiled using Emscripten to function correctly in a web environment. 
+
 \doxysubsection{Function Documentation}
+\Hypertarget{taglib__parser_8h_a663081b243b450cd9b222d681eb112bf}\index{taglib\_parser.h@{taglib\_parser.h}!extractThumbnail@{extractThumbnail}}
+\index{extractThumbnail@{extractThumbnail}!taglib\_parser.h@{taglib\_parser.h}}
+\doxysubsubsection{\texorpdfstring{extractThumbnail()}{extractThumbnail()}}
+{\footnotesize\ttfamily \label{taglib__parser_8h_a663081b243b450cd9b222d681eb112bf} 
+bool extract\+Thumbnail (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{audio\+File\+Path}{, }\item[{const std\+::string \&}]{output\+Image\+Path}{}\end{DoxyParamCaption})}
+
+
+
+Extracts the thumbnail (album art) from an audio file and saves it to an image file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em audio\+File\+Path} & The path to the audio file containing embedded album art. \\
+\hline
+{\em output\+Image\+Path} & The path where the extracted album art image will be saved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the thumbnail was successfully extracted, {\ttfamily false} otherwise. 
+\end{DoxyReturn}
 \Hypertarget{taglib__parser_8h_a1dd3093763fba77a033971b138eda516}\index{taglib\_parser.h@{taglib\_parser.h}!printMetadata@{printMetadata}}
 \index{printMetadata@{printMetadata}!taglib\_parser.h@{taglib\_parser.h}}
 \doxysubsubsection{\texorpdfstring{printMetadata()}{printMetadata()}}
 {\footnotesize\ttfamily \label{taglib__parser_8h_a1dd3093763fba77a033971b138eda516} 
 void print\+Metadata (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structMetadata}{Metadata}} \&}]{metadata}{}\end{DoxyParamCaption})}
 
+
+
+Prints the metadata of a song to the console. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em metadata} & The metadata of the song to print. \\
+\hline
+\end{DoxyParams}
 \Hypertarget{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}\index{taglib\_parser.h@{taglib\_parser.h}!sendErrMsg@{sendErrMsg}}
 \index{sendErrMsg@{sendErrMsg}!taglib\_parser.h@{taglib\_parser.h}}
 \doxysubsubsection{\texorpdfstring{sendErrMsg()}{sendErrMsg()}}
 {\footnotesize\ttfamily \label{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b} 
 void send\+Err\+Msg (\begin{DoxyParamCaption}\item[{std\+::string}]{debug\+Log\+Bool\+Str}{, }\item[{std\+::string}]{err\+Msg}{}\end{DoxyParamCaption})}
 
+
+
+Sends an error message based on the debug log setting. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em debug\+Log\+Bool\+Str} & The debug log setting ("{}true"{} or "{}false"{}). \\
+\hline
+{\em err\+Msg} & The error message to send. \\
+\hline
+\end{DoxyParams}
 
 
 \doxysubsection{Variable Documentation}

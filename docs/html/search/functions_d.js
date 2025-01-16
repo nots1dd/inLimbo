@@ -1,15 +1,14 @@
 var searchData=
 [
-  ['sanitize_5fpath_0',['sanitize_path',['../server_8cpp.html#a9998d2e34efea3d056ba878ed625885d',1,'server.cpp']]],
-  ['scroller_1',['Scroller',['../namespaceftxui.html#a73611b3deb516cb8ba88afd9cf058a76',1,'ftxui']]],
-  ['scrollerbase_2',['ScrollerBase',['../classftxui_1_1ScrollerBase.html#a5ca407c631031b88b8d5686890e49943',1,'ftxui::ScrollerBase']]],
-  ['seektime_3',['seekTime',['../classMiniAudioPlayer.html#ac173876d6e4accb4100ecd7fa1e0ac69',1,'MiniAudioPlayer']]],
-  ['send_5ffile_4',['send_file',['../server_8cpp.html#a0327db77418719101e85a182f6d5afe3',1,'server.cpp']]],
-  ['send_5fprotocol_5fmessage_5',['send_protocol_message',['../protocols_8h.html#a6980d7a77bd2125c8778cfe09f28049e',1,'protocols.h']]],
-  ['senderrmsg_6',['sendErrMsg',['../taglib__parser_8h.html#afff220fe53f14744f741b6945e3e765b',1,'taglib_parser.h']]],
-  ['setup_7',['setup',['../classSignalHandler.html#ad382cbdc2da359850415019ffc970e02',1,'SignalHandler']]],
-  ['setvolume_8',['setVolume',['../classMiniAudioPlayer.html#ab2c4bae21c2ea00b2f3af8b697835950',1,'MiniAudioPlayer']]],
-  ['sha256_9',['sha256',['../client_8cpp.html#ab5831cf37681f7fdc032960a380fdcd1',1,'sha256(const std::string &amp;str):&#160;client.cpp'],['../server_8cpp.html#ab5831cf37681f7fdc032960a380fdcd1',1,'sha256(const std::string &amp;str):&#160;server.cpp']]],
-  ['song_10',['Song',['../structSong.html#adacc2058bb6263b4f0b68ce61c232b87',1,'Song::Song(unsigned int inode, const Metadata &amp;metadata)'],['../structSong.html#a1a73ff262627ce78860ec622859cf249',1,'Song::Song()']]],
-  ['stop_11',['stop',['../classMiniAudioPlayer.html#a8233c5e0b8bb3a14402dc89281719029',1,'MiniAudioPlayer']]]
+  ['read_5fpassword_0',['read_password',['../client_8cpp.html#a4b0db2ddc56f01fd232e11c7a337564a',1,'client.cpp']]],
+  ['receive_5ffile_1',['receive_file',['../client_8cpp.html#a0e91db1333a10b3cb462ae3e59941a80',1,'client.cpp']]],
+  ['redblacktree_2',['RedBlackTree',['../classRedBlackTree.html#a16706b7c753cf2d86514cda01840abd9',1,'RedBlackTree']]],
+  ['renderalbumname_3',['renderAlbumName',['../misc_8hpp.html#aa0e7f463ba7f6a6f02a1bd7bd7e33054',1,'misc.hpp']]],
+  ['rendersongmenu_4',['RenderSongMenu',['../misc_8hpp.html#a8cf36d4dbe5e1c02b0afc2ca2b33e6cf',1,'misc.hpp']]],
+  ['rendersongname_5',['renderSongName',['../misc_8hpp.html#a62d9f40a75073b83bbdb4c23378a211b',1,'misc.hpp']]],
+  ['renderthumbnail_6',['RenderThumbnail',['../misc_8hpp.html#a3c3039a58e757a40c335b936c371e767',1,'misc.hpp']]],
+  ['resume_7',['resume',['../classMiniAudioPlayer.html#a76e2cf58ef484743383411c267d1e6b3',1,'MiniAudioPlayer']]],
+  ['returnsongmap_8',['returnSongMap',['../classSongTree.html#a73d358fd0d3b765d8cfbd50b8d6e2b2a',1,'SongTree']]],
+  ['returnsongtree_9',['returnSongTree',['../classRedBlackTree.html#a508f5c1b1620edebcd456c019a5960ed',1,'RedBlackTree']]],
+  ['run_10',['Run',['../classMusicPlayer.html#a70498c66baa2c8419a3ec018338e2378',1,'MusicPlayer']]]
 ];

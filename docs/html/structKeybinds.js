@@ -18,6 +18,7 @@ var structKeybinds =
     [ "toggle_focus", "structKeybinds.html#aeebdafcff1d774e95b25c184b229128c", null ],
     [ "toggle_mute", "structKeybinds.html#a3d0f9af37b9cf78a2da4bfdc56bbe629", null ],
     [ "toggle_play", "structKeybinds.html#ad10b5a9637dc1cd70cfce5fa8362cb03", null ],
+    [ "view_current_song_info", "structKeybinds.html#afbfca5b80fd58ffbc08822c518bc4ec2", null ],
     [ "view_lyrics", "structKeybinds.html#ab7c2068f6c21a4b2d228e0720cbe8ed5", null ],
     [ "view_song_queue", "structKeybinds.html#a928d27528bc64d0d67e4871733e37779", null ],
     [ "vol_down", "structKeybinds.html#a911e1c12013e8a608c8a1b5f7b7c5be2", null ],

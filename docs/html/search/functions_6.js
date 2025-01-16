@@ -1,5 +1,19 @@
 var searchData=
 [
-  ['handle_5fclient_0',['handle_client',['../server_8cpp.html#a54d42acfde6afb956fe0883927723577',1,'server.cpp']]],
-  ['hasflag_1',['hasFlag',['../classCommandLineArgs.html#a9e468eecc878b283c0a2070858868f0f',1,'CommandLineArgs']]]
+  ['get_0',['get',['../classCommandLineArgs.html#aed48cc4e9324c706042acb43ace91a1e',1,'CommandLineArgs']]],
+  ['get_5fchannel_1',['get_channel',['../namespacetiv.html#aa8ebe32e61657806ccc63e8983482b20',1,'tiv']]],
+  ['get_5ferror_5fmessage_2',['get_error_message',['../protocols_8h.html#aeb2c0f525e4da8c6b9a66d71d02cd96e',1,'protocols.h']]],
+  ['get_5fwindows_5fsize_3',['get_windows_size',['../namespacetiv.html#ad579b19af64942e8aad26aa09ef38076',1,'tiv']]],
+  ['getcachepath_4',['getCachePath',['../toml__parser_8hpp.html#a52da76b1cc7e2b996b1cadab35d4e567',1,'toml_parser.hpp']]],
+  ['getcolor_5',['GetColor',['../namespaceTrueColors.html#a5e3fb4538a96657fee0d7ffb9a92fb96',1,'TrueColors']]],
+  ['getconfigpath_6',['getConfigPath',['../toml__parser_8hpp.html#ac64fc49e7109184bcb320cfb361219af',1,'toml_parser.hpp']]],
+  ['getduration_7',['getDuration',['../classMiniAudioPlayer.html#af23b5fbce361c592b6916bc2955db1e5',1,'MiniAudioPlayer']]],
+  ['getinstance_8',['getInstance',['../classSignalHandler.html#ad6546efa2f5495086a9b4c53f34d0429',1,'SignalHandler']]],
+  ['getpositionalargs_9',['getPositionalArgs',['../classCommandLineArgs.html#ad49f8db1c03381d9f87a8ffd48546cf8',1,'CommandLineArgs']]],
+  ['getsongsbyalbum_10',['getSongsByAlbum',['../classSongTree.html#ac2bffb761329095f22aacab4121746db',1,'SongTree']]],
+  ['getsongsbyartist_11',['getSongsByArtist',['../classSongTree.html#a68e2d5ad41be86701f5839d0abfceac9',1,'SongTree']]],
+  ['getthreadstate_12',['getThreadState',['../classThreadManager.html#a68d674d82375bbf4cbaeda427df036a2',1,'ThreadManager']]],
+  ['gettruebgcolor_13',['getTrueBGColor',['../misc_8hpp.html#a1895c5b44b9fcf7e8609b74d59f1333c',1,'misc.hpp']]],
+  ['gettruecolor_14',['getTrueColor',['../misc_8hpp.html#a1dd4ac00b301270766d69bfd131b1a8a',1,'misc.hpp']]],
+  ['getvolume_15',['getVolume',['../classMiniAudioPlayer.html#a0ba783ad7c4b8b695298ff5d554e1922',1,'MiniAudioPlayer']]]
 ];

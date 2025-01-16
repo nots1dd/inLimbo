@@ -2,12 +2,13 @@ var misc_8hpp =
 [
     [ "ComponentState", "structComponentState.html", "structComponentState" ],
     [ "charToStr", "misc_8hpp.html#a2e2246f99124f69740c8012be4b75c36", null ],
-    [ "CreateMenu", "misc_8hpp.html#a6bb02df78ce571092937657c5b25de61", null ],
-    [ "formatLyrics", "misc_8hpp.html#a624a33fe79ca546dc4abb6e0735586ce", null ],
-    [ "FormatTime", "misc_8hpp.html#a76d3e10fc086b99d9046b6406baf51da", null ],
-    [ "getTrueBGColor", "misc_8hpp.html#a32a29b442a57acc73893a7b2be55dec9", null ],
-    [ "getTrueColor", "misc_8hpp.html#a8322ea931342052157aab9682d60a14f", null ],
-    [ "renderAlbumName", "misc_8hpp.html#a40a9888f76354b21ca85f69ffe014750", null ],
-    [ "RenderSongMenu", "misc_8hpp.html#ae177f32772c1011c09dfce5f982c7f64", null ],
-    [ "renderSongName", "misc_8hpp.html#adcfcdc4bf50bc48f25cc0e8df2e80822", null ]
+    [ "CreateMenu", "misc_8hpp.html#ac17ffa793bef7aa522f2efc1e40be89a", null ],
+    [ "formatLyrics", "misc_8hpp.html#acf1411473752280ae12e7bbeb259ca4c", null ],
+    [ "FormatTime", "misc_8hpp.html#acbc96af0b52cf5c1b6921dbaa39454a9", null ],
+    [ "getTrueBGColor", "misc_8hpp.html#a1895c5b44b9fcf7e8609b74d59f1333c", null ],
+    [ "getTrueColor", "misc_8hpp.html#a1dd4ac00b301270766d69bfd131b1a8a", null ],
+    [ "renderAlbumName", "misc_8hpp.html#aa0e7f463ba7f6a6f02a1bd7bd7e33054", null ],
+    [ "RenderSongMenu", "misc_8hpp.html#a8cf36d4dbe5e1c02b0afc2ca2b33e6cf", null ],
+    [ "renderSongName", "misc_8hpp.html#a62d9f40a75073b83bbdb4c23378a211b", null ],
+    [ "RenderThumbnail", "misc_8hpp.html#a3c3039a58e757a40c335b936c371e767", null ]
 ];

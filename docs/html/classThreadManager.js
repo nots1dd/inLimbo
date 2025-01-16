@@ -2,5 +2,6 @@ var classThreadManager =
 [
     [ "ThreadState", "structThreadManager_1_1ThreadState.html", "structThreadManager_1_1ThreadState" ],
     [ "getThreadState", "classThreadManager.html#a68d674d82375bbf4cbaeda427df036a2", null ],
-    [ "lockPlayMutex", "classThreadManager.html#a8c0b77d668ea526a62b556b42751a5a6", null ]
+    [ "lockPlayMutex", "classThreadManager.html#a8c0b77d668ea526a62b556b42751a5a6", null ],
+    [ "unlockPlayMutex", "classThreadManager.html#a0e12c9882625107d2b7059bd9816305c", null ]
 ];
