@@ -6,17 +6,18 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <algorithm>
 
 class CommandLineArgs
 {
 private:
     std::map<std::string, std::string> args;   // flag-value pairs
-    std::vector<std::string> positionalArgs;  // pos args
-    std::vector<std::string> validFlags;      // Valid flags for error checking
+    std::vector<std::string> positionalArgs;  // positional arguments
 
 public:
-    CommandLineArgs(int argc, char* argv[], const std::vector<std::string>& allowedFlags = {})
-        : validFlags(allowedFlags)
+    static const std::vector<std::string> validFlags; // Valid flags
+
+    CommandLineArgs(int argc, char* argv[])
     {
         parseArgs(argc, argv);
     }
@@ -43,7 +44,8 @@ public:
 
     void printUsage(const std::string& programName) const
     {
-        std::cerr << "Usage: " << programName << " [options] [positional arguments]\n";
+        std::cerr << "Music player that keeps you in Limbo.\n";
+        std::cerr << "Usage: " << programName << " [options] [positional arguments]\n\n";
         if (!validFlags.empty())
         {
             std::cerr << "Valid options:\n";
@@ -72,8 +74,8 @@ private:
                     value = argv[++i]; // Consume the next argument as the value
                 }
 
-                // Validate the flag if a list of valid flags is provided
-                if (!validFlags.empty() && std::find(validFlags.begin(), validFlags.end(), flag) == validFlags.end())
+                // Validate the flag
+                if (std::find(validFlags.begin(), validFlags.end(), flag) == validFlags.end())
                 {
                     throw std::invalid_argument("Invalid flag: " + flag);
                 }
@@ -86,6 +88,12 @@ private:
             }
         }
     }
+};
+
+// Define valid flags globally
+const std::vector<std::string> CommandLineArgs::validFlags = {
+    "--help", "--show-dbus-name", "--version", "--clear-cache", 
+    "--show-config-file", "--show-log-dir"
 };
 
 #endif // COMMAND_LINE_ARGS_HPP

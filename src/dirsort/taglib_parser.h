@@ -18,10 +18,12 @@
 #ifndef __EMSCRIPTEN__
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
+#include <taglib/tag_c.h>
 #include <taglib/id3v2tag.h>
 #include <taglib/mpegfile.h>
 #include <taglib/attachedpictureframe.h>
 #include <taglib/tpropertymap.h>
+#include <taglib/flacfile.h>
 #include <png.h>
 #endif
 #include <unordered_map>
@@ -259,53 +261,77 @@ void printMetadata(const Metadata& metadata) {
 }
 
 /**
- * @brief Extracts the thumbnail (album art) from an audio file and saves it to an image file.
+ * @brief Extracts the thumbnail (album art) from an audio file and saves it to an image file. (Works for mp3 and flac)
  * @param audioFilePath The path to the audio file containing embedded album art.
  * @param outputImagePath The path where the extracted album art image will be saved.
  * @return `true` if the thumbnail was successfully extracted, `false` otherwise.
  */
 bool extractThumbnail(const std::string& audioFilePath, const std::string& outputImagePath) {
-    // Open the file using TagLib
-    TagLib::MPEG::File file(audioFilePath.c_str());
-    if (!file.isValid()) {
-        std::cerr << "Error: Could not open audio file." << std::endl;
+    // Determine the file type based on the extension
+    std::string extension = audioFilePath.substr(audioFilePath.find_last_of('.') + 1);
+
+    if (extension == "mp3") {
+        // Handle MP3 files (ID3v2 tag)
+        TagLib::MPEG::File mpegFile(audioFilePath.c_str());
+        if (!mpegFile.isValid()) {
+            std::cerr << "Error: Could not open MP3 file." << std::endl;
+            return false;
+        }
+
+        TagLib::ID3v2::Tag* id3v2Tag = mpegFile.ID3v2Tag();
+        if (!id3v2Tag) {
+            std::cerr << "Error: No ID3v2 tags found in the MP3 file." << std::endl;
+            return false;
+        }
+
+        const TagLib::ID3v2::FrameList& frameList = id3v2Tag->frameListMap()["APIC"];
+        if (frameList.isEmpty()) {
+            std::cerr << "Error: No embedded album art found in the MP3 file." << std::endl;
+            return false;
+        }
+
+        auto* apicFrame = dynamic_cast<TagLib::ID3v2::AttachedPictureFrame*>(frameList.front());
+        if (!apicFrame) {
+            std::cerr << "Error: Failed to retrieve album art from MP3." << std::endl;
+            return false;
+        }
+
+        const auto& pictureData = apicFrame->picture();
+        std::ofstream outputFile(outputImagePath, std::ios::binary);
+        if (!outputFile) {
+            std::cerr << "Error: Could not create output image file." << std::endl;
+            return false;
+        }
+
+        outputFile.write(reinterpret_cast<const char*>(pictureData.data()), pictureData.size());
+        outputFile.close();
+    } else if (extension == "flac") {
+        // Handle FLAC files
+        TagLib::FLAC::File flacFile(audioFilePath.c_str(), true);
+        if (!flacFile.isValid()) {
+            std::cerr << "Error: Could not open FLAC file." << std::endl;
+            return false;
+        }
+
+        const TagLib::List<TagLib::FLAC::Picture*>& pictureList = flacFile.pictureList();
+        if (pictureList.isEmpty()) {
+            std::cerr << "Error: No album art found in the FLAC file." << std::endl;
+            return false;
+        }
+
+        const auto& pictureData = pictureList.front()->data();
+        std::ofstream outputFile(outputImagePath, std::ios::binary);
+        if (!outputFile) {
+            std::cerr << "Error: Could not create output image file." << std::endl;
+            return false;
+        }
+
+        outputFile.write(reinterpret_cast<const char*>(pictureData.data()), pictureData.size());
+        outputFile.close();
+    } else {
+        std::cerr << "Error: Unsupported file format. Only MP3 and FLAC are supported." << std::endl;
         return false;
     }
-
-    // Ensure the file has ID3v2 tags
-    TagLib::ID3v2::Tag* id3v2Tag = file.ID3v2Tag();
-    if (!id3v2Tag) {
-        std::cerr << "Error: No ID3v2 tags found in the audio file." << std::endl;
-        return false;
-    }
-
-    // Search for the APIC (Attached Picture) frame
-    const TagLib::ID3v2::FrameList& frameList = id3v2Tag->frameListMap()["APIC"];
-    if (frameList.isEmpty()) {
-        std::cerr << "Error: No embedded album art found in the audio file." << std::endl;
-        return false;
-    }
-
-    // Extract the first APIC frame (album art)
-    auto* apicFrame = dynamic_cast<TagLib::ID3v2::AttachedPictureFrame*>(frameList.front());
-    if (!apicFrame) {
-        std::cerr << "Error: Failed to retrieve album art." << std::endl;
-        return false;
-    }
-
-    // Get the picture data and MIME type
-    const auto& pictureData = apicFrame->picture();
-    const std::string mimeType = apicFrame->mimeType().toCString(true);
-
-    // Save the picture data to a file
-    std::ofstream outputFile(outputImagePath, std::ios::binary);
-    if (!outputFile) {
-        std::cerr << "Error: Could not create output image file." << std::endl;
-        return false;
-    }
-
-    outputFile.write(reinterpret_cast<const char*>(pictureData.data()), pictureData.size());
-    outputFile.close();
 
     return true;
 }

@@ -673,3 +673,26 @@ Small commit that adds a new dependency and a greatly needed feature of caching 
 - Centering of the image_view
 
 ---
+
+## [ALPHA 2.1] --- 17-01-2025
+
+### Added
+- Added `src/arg-handler.hpp` and modified bash completions
+
+### Changed
+- Command line arguments setup with subsequent changes to `src/cmg-line-args.hpp` and `main.cpp`
+
+### Fixed
+- Issue with flac file thumbnail extraction
+
+### Removed
+**NIL**
+
+Small commit with some issues + cmd line args setup
+
+### Known Issues to fix in immediate commits
+- Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread
+
+- Centering of the image_view
+
+---

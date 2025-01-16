@@ -1,6 +1,7 @@
 #include "dirsort/inode_mapper.hpp"
 #include "signal/signalHandler.hpp"
 #include "ui/ui_handler.hpp"
+#include "./arg-handler.hpp"
 #include <memory>
 #include <random>
 
@@ -9,7 +10,11 @@ int main(int argc, char* argv[])
   SignalHandler::getInstance().setup();
   auto            directoryPath = string(parseTOMLField(PARENT_LIB, PARENT_LIB_FIELD_DIR));
   string          libSyncPath  = getConfigPath(LIB_SYNC_NAME);
+  string          configPath   = getConfigPath("config.toml");
+  string          cacheDir     = getCachePath();
   string          libBinPath   = getConfigPath(LIB_BIN_NAME);
+  CommandLineArgs cmdArgs(argc, argv);
+  ArgumentHandler::handleArguments(cmdArgs, argv[0], configPath, libBinPath, cacheDir);
   RedBlackTree    rbt;
   InodeFileMapper mapper(libSyncPath, "false");
 
@@ -22,7 +27,7 @@ int main(int argc, char* argv[])
   try
   {
     song_tree.loadFromFile(libBinPath);
-    cout << "-- Successfully loaded song tree from file." << endl;
+    cout << "-- Successfully loaded song tree from cache file." << endl;
   }
   catch (const std::exception& e)
   {
