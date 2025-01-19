@@ -144,7 +144,7 @@ public:
    * @param artist The name of the artist whose songs are to be retrieved.
    * @return A vector of Song objects by the specified artist.
    */
-  std::vector<Song> getSongsByArtist(const std::string& artist) const
+  auto getSongsByArtist(const std::string& artist) const
   {
     std::vector<Song> result;
     auto              artistIt = tree.find(artist);
@@ -173,7 +173,7 @@ public:
    * @param album The title of the album whose songs are to be retrieved.
    * @return A vector of Song objects from the specified album by the specified artist.
    */
-  std::vector<Song> getSongsByAlbum(const std::string& artist, const std::string& album) const
+  auto getSongsByAlbum(const std::string& artist, const std::string& album) const
   {
     std::vector<Song> result;
     auto              artistIt = tree.find(artist);
@@ -201,8 +201,7 @@ public:
    *
    * @return The nested map structure of songs.
    */
-  std::map<std::string, std::map<std::string, std::map<unsigned int, std::map<unsigned int, Song>>>>
-  returnSongMap()
+  auto returnSongMap()
   {
     return tree;
   }

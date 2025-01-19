@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=inLimbo
+GenericName=Music Player
+Comment=Music Player that keeps you in Limbo.
+Exec=/usr/bin/inLimbo
+Terminal=true
+Type=Application
+Categories=Audio;Music;Player;ConsoleOnly;
+Icon=inLimbo-Logo

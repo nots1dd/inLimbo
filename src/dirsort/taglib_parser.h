@@ -18,7 +18,6 @@
 #ifndef __EMSCRIPTEN__
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
-#include <taglib/tag_c.h>
 #include <taglib/id3v2tag.h>
 #include <taglib/mpegfile.h>
 #include <taglib/attachedpictureframe.h>

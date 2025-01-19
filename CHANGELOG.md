@@ -696,3 +696,36 @@ Small commit with some issues + cmd line args setup
 - Centering of the image_view
 
 ---
+
+## [ALPHA 2.2] --- 19-01-2025
+
+### Added
+- `assets/completions/inLimbo-completions.fish` and `assets/inLimbo.desktop`
+
+### Changed
+- Refactored the arg-handler and cmd-line-args headers
+
+- Completions for `BASH`, `ZSH` and `FISH` shells work with testing
+
+- inLimbo.desktop setup works (with rofi, not ags for some reason) 
+
+- `init.sh` now sets up the preferred shell for command line args completion
+
+- Added option to build globally 
+
+### Fixed
+- Completions for BASH and ZSH 
+
+- Removed unnecessary header that broke CodeQL CI
+
+### Removed
+**NIL**
+
+Small commit with some nice touch ups for user interaction with the binary
+
+### Known Issues to fix in immediate commits
+- Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread (BIG)
+
+- Centering of the image_view (NOT THAT BIG)
+
+---

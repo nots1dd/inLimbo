@@ -14,6 +14,9 @@ add_library(tiv
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ui/components/libs/tiv_lib.cpp
 )
 
+# Option to select between local or global build
+option(BUILD_GLOBAL "Build globally and install" OFF)
+
 # --- Fetch FTXUI --------------------------------------------------------------
 include(FetchContent)
 
@@ -106,6 +109,23 @@ if (EMSCRIPTEN)
   message(STATUS "Building for Emscripten: TagLib will be excluded")
 else()
   target_link_libraries(${EXECUTABLE_NAME})
+endif()
+
+# --- Handle Global Build ---------------------------------------------------------
+if(BUILD_GLOBAL)
+  set(CMAKE_INSTALL_PREFIX "/usr/")
+  message(STATUS "Starting GLOBAL_BUILD for inLimbo...")
+
+  install(TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
+
+  install(FILES assets/inLimbo.desktop DESTINATION share/applications)
+  install(FILES assets/logo/inLimbo.png DESTINATION share/icons/hicolor/256x256/apps)
+
+else()
+  # Local build (build in ./build directory)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/build")
+
+  message(STATUS "Building locally, binaries will be located in ./build/")
 endif()
 
 # Ensure that pkg-config is available

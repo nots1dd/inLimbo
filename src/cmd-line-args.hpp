@@ -1,99 +1,138 @@
 #ifndef COMMAND_LINE_ARGS_HPP
 #define COMMAND_LINE_ARGS_HPP
 
+#include <algorithm>
 #include <iostream>
 #include <map>
 #include <string>
 #include <vector>
-#include <stdexcept>
-#include <algorithm>
 
 class CommandLineArgs
 {
 private:
-    std::map<std::string, std::string> args;   // flag-value pairs
-    std::vector<std::string> positionalArgs;  // positional arguments
+  std::map<std::string, std::string> args;
+  std::vector<std::string>           positionalArgs;
+  bool                               hasError = false;
+  std::string                        errorMessage;
 
 public:
-    static const std::vector<std::string> validFlags; // Valid flags
+  static const std::vector<std::string> validFlags;
 
-    CommandLineArgs(int argc, char* argv[])
+  CommandLineArgs(int argc, char* argv[])
+  {
+    parseArgs(argc, argv);
+    if (hasError)
     {
-        parseArgs(argc, argv);
+      std::cerr << "\033[31mError: " << errorMessage << "\033[0m\n\n";
+      printUsage(argv[0]);
+      exit(1);
     }
+  }
 
-    std::string get(const std::string& flag, const std::string& defaultValue = "") const
-    {
-        auto it = args.find(flag);
-        if (it != args.end())
-        {
-            return it->second;
-        }
-        return defaultValue;
-    }
+  std::string get(const std::string& flag, const std::string& defaultValue = "") const
+  {
+    auto it = args.find(flag);
+    return (it != args.end()) ? it->second : defaultValue;
+  }
 
-    bool hasFlag(const std::string& flag) const
-    {
-        return args.find(flag) != args.end();
-    }
+  bool hasFlag(const std::string& flag) const { return args.find(flag) != args.end(); }
 
-    const std::vector<std::string>& getPositionalArgs() const
-    {
-        return positionalArgs;
-    }
+  const std::vector<std::string>& getPositionalArgs() const { return positionalArgs; }
 
-    void printUsage(const std::string& programName) const
+  void printUsage(const std::string& programName) const
+  {
+    std::cout << "\033[1mMusic player that keeps you in Limbo.\033[0m\n";
+    std::cout << "\033[1mUsage:\033[0m " << programName << " [options] [positional arguments]\n\n";
+
+    if (!validFlags.empty())
     {
-        std::cerr << "Music player that keeps you in Limbo.\n";
-        std::cerr << "Usage: " << programName << " [options] [positional arguments]\n\n";
-        if (!validFlags.empty())
-        {
-            std::cerr << "Valid options:\n";
-            for (const auto& flag : validFlags)
-            {
-                std::cerr << "  " << flag << "\n";
-            }
-        }
+      std::cout << "\033[1mValid options:\033[0m\n";
+      for (const auto& flag : validFlags)
+      {
+        std::cout << "  " << flag << "\n";
+      }
     }
+    std::cout << "\n";
+  }
 
 private:
-    void parseArgs(int argc, char* argv[])
+  void parseArgs(int argc, char* argv[])
+  {
+    for (int i = 1; i < argc; ++i)
     {
-        for (int i = 1; i < argc; ++i) // Skip argv[0] (program name)
+      std::string arg = argv[i];
+
+      if (arg[0] == '-')
+      {
+        std::string flag = arg;
+        std::string value;
+
+        if (i + 1 < argc && argv[i + 1][0] != '-')
         {
-            std::string arg = argv[i];
-
-            if (arg[0] == '-') // It's a flag
-            {
-                std::string flag = arg;
-                std::string value;
-
-                // Check if the flag has a value
-                if (i + 1 < argc && argv[i + 1][0] != '-')
-                {
-                    value = argv[++i]; // Consume the next argument as the value
-                }
-
-                // Validate the flag
-                if (std::find(validFlags.begin(), validFlags.end(), flag) == validFlags.end())
-                {
-                    throw std::invalid_argument("Invalid flag: " + flag);
-                }
-
-                args[flag] = value;
-            }
-            else // It's a positional argument
-            {
-                positionalArgs.push_back(arg);
-            }
+          value = argv[++i];
         }
+
+        // Find closest matching flag for error message
+        if (std::find(validFlags.begin(), validFlags.end(), flag) == validFlags.end())
+        {
+          hasError = true;
+
+          // Find the closest matching flag for a helpful suggestion
+          std::string closestMatch = findClosestMatch(flag);
+          if (!closestMatch.empty())
+          {
+            errorMessage = "Invalid flag: '" + flag + "'. Did you mean '" + closestMatch + "'?";
+          }
+          else
+          {
+            errorMessage = "Invalid flag: '" + flag + "'";
+          }
+          return;
+        }
+
+        args[flag] = value;
+      }
+      else
+      {
+        positionalArgs.push_back(arg);
+      }
     }
+  }
+
+  // Helper function to find the closest matching valid flag
+  std::string findClosestMatch(const std::string& invalidFlag) const
+  {
+    std::string bestMatch;
+    size_t      minDiff = std::string::npos;
+
+    for (const auto& validFlag : validFlags)
+    {
+      // Simple distance calculation - how many characters are different
+      size_t diff   = 0;
+      size_t minLen = std::min(invalidFlag.length(), validFlag.length());
+
+      for (size_t i = 0; i < minLen; ++i)
+      {
+        if (invalidFlag[i] != validFlag[i])
+          diff++;
+      }
+      diff += std::abs(int(invalidFlag.length() - validFlag.length()));
+
+      if (diff < minDiff)
+      {
+        minDiff   = diff;
+        bestMatch = validFlag;
+      }
+    }
+
+    // Only suggest if the match is reasonably close
+    return (minDiff <= 3) ? bestMatch : "";
+  }
 };
 
 // Define valid flags globally
 const std::vector<std::string> CommandLineArgs::validFlags = {
-    "--help", "--show-dbus-name", "--version", "--clear-cache", 
-    "--show-config-file", "--show-log-dir"
-};
+  "--help",        "--show-dbus-name",   "--version",
+  "--clear-cache", "--show-config-file", "--show-log-dir"};
 
 #endif // COMMAND_LINE_ARGS_HPP

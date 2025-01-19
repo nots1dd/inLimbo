@@ -105,6 +105,15 @@ cmake --build build/
 ./build/inLimbo
 ```
 
+To build inLimbo **GLOBALLY**:
+
+```bash 
+cmake -S . -B build -DBUILD_GLOBAL=ON 
+cmake --build build/ 
+cd build 
+sudo make install # will put the binary in /usr/bin and respective inLimbo.desktop and logo in /usr/share
+```
+
 To build its web-assembly, you will need [emscripten](https://github.com/emscripten-core/emscripten)
 
 > [!IMPORTANT]

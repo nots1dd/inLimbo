@@ -2,88 +2,120 @@
 #define ARGUMENT_HANDLER_HPP
 
 #include "./cmd-line-args.hpp"
+#include <filesystem>
 #include <iostream>
 #include <stdexcept>
-#include <filesystem>
+#include <string_view>
+#include <unordered_map>
 
-#define DBUS_SERVICE_NAME "org.mpris.MediaPlayer2.inLimbo"
+// Constants
+constexpr const char* DBUS_SERVICE_NAME = "org.mpris.MediaPlayer2.inLimbo";
+constexpr const char* VERSION           = "2.2 (ALPHA)";
 
-// ANSI color codes for output
-#define COLOR_RESET "\033[0m"
-#define COLOR_GREEN "\033[32m"
-#define COLOR_BLUE "\033[34m"
-#define COLOR_YELLOW "\033[33m"
-#define COLOR_RED "\033[31m"
-#define COLOR_CYAN "\033[36m"
-#define COLOR_MAGENTA "\033[35m"
+enum class ConsoleColor
+{
+  Reset,
+  Green,
+  Blue,
+  Yellow,
+  Red,
+  Cyan,
+  Magenta
+};
+
+class ColorManager
+{
+public:
+  static std::string_view getColor(ConsoleColor color)
+  {
+    static const std::unordered_map<ConsoleColor, std::string_view> colorCodes = {
+      {ConsoleColor::Reset, "\033[0m"},   {ConsoleColor::Green, "\033[32m"},
+      {ConsoleColor::Blue, "\033[34m"},   {ConsoleColor::Yellow, "\033[33m"},
+      {ConsoleColor::Red, "\033[31m"},    {ConsoleColor::Cyan, "\033[36m"},
+      {ConsoleColor::Magenta, "\033[35m"}};
+    return colorCodes.at(color);
+  }
+};
 
 class ArgumentHandler
 {
 public:
-    static void handleArguments(const CommandLineArgs& cmdArgs, const std::string& programName, const std::string& configPath, const std::string& libBinPath, const std::string& cacheDir)
+  struct Paths
+  {
+    std::string configPath;
+    std::string libBinPath;
+    std::string cacheDir;
+  };
+
+  static void handleArguments(const CommandLineArgs& cmdArgs, const std::string& programName,
+                              const Paths& paths)
+  {
+    const std::unordered_map<std::string, std::function<void()>> argumentHandlers = {
+      {"--help", [&]() { handleHelp(cmdArgs, programName); }},
+      {"--version", [&]() { handleVersion(); }},
+      {"--clear-cache", [&]() { handleClearCache(paths.libBinPath); }},
+      {"--show-config-file", [&]() { handleShowConfig(paths.configPath); }},
+      {"--show-log-dir", [&]() { handleShowLogDir(paths.cacheDir); }},
+      {"--show-dbus-name", [&]() { handleShowDBusName(); }}};
+
+    for (const auto& [flag, handler] : argumentHandlers)
     {
-        if (cmdArgs.hasFlag("--help"))
-        {
-            printUsage(cmdArgs, programName);
-            exit(0);
-        }
-
-        if (cmdArgs.hasFlag("--version"))
-        {
-            std::cout << COLOR_CYAN << "inLimbo version: ALPHA 2.0" << COLOR_RESET << "\n";
-            exit(0);
-        }
-
-        if (cmdArgs.hasFlag("--clear-cache"))
-        {
-            clearCache(libBinPath);
-            exit(0);
-        }
-
-        if (cmdArgs.hasFlag("--show-config-file"))
-        {
-            std::cout << COLOR_GREEN << "Config file location: " << COLOR_RESET << configPath << "\n";
-            exit(0);
-        }
-
-        if (cmdArgs.hasFlag("--show-log-dir"))
-        {
-            std::cout << COLOR_BLUE << "Log directory: " << COLOR_RESET << cacheDir << "\n";
-            exit(0);
-        }
-
-        if (cmdArgs.hasFlag("--show-dbus-name"))
-        {
-            std::cout << COLOR_MAGENTA << "DBus name: " << COLOR_RESET << DBUS_SERVICE_NAME << "\n";
-            exit(0);
-        }
+      if (cmdArgs.hasFlag(flag))
+      {
+        handler();
+        exit(0);
+      }
     }
+  }
 
 private:
-    static void printUsage(const CommandLineArgs& cmdArgs, const std::string& programName)
-    {
-        cmdArgs.printUsage(programName);
-    }
+  static void colorPrint(ConsoleColor color, std::string_view label, std::string_view value = "")
+  {
+    std::cout << ColorManager::getColor(color) << label
+              << ColorManager::getColor(ConsoleColor::Reset) << value << "\n";
+  }
 
-    static void clearCache(const std::string& libBinPath)
+  static void handleHelp(const CommandLineArgs& cmdArgs, const std::string& programName)
+  {
+    cmdArgs.printUsage(programName);
+  }
+
+  static void handleVersion() { colorPrint(ConsoleColor::Cyan, "inLimbo version: ", VERSION); }
+
+  static void handleShowConfig(const std::string& configPath)
+  {
+    colorPrint(ConsoleColor::Green, "Config file location: ", configPath);
+  }
+
+  static void handleShowLogDir(const std::string& cacheDir)
+  {
+    colorPrint(ConsoleColor::Blue, "Log directory: ", cacheDir);
+  }
+
+  static void handleShowDBusName()
+  {
+    colorPrint(ConsoleColor::Magenta, "DBus name: ", DBUS_SERVICE_NAME);
+  }
+
+  static void handleClearCache(const std::string& libBinPath)
+  {
+    try
     {
-        try
-        {
-            if (std::filesystem::exists(libBinPath))
-            {
-                std::filesystem::remove(libBinPath);
-                std::cout << COLOR_GREEN << "Cache cleared successfully: " << COLOR_RESET << libBinPath << "\n";
-            }
-            else
-            {
-                std::cout << COLOR_YELLOW << "No cache file found to clear: " << COLOR_RESET << libBinPath << "\n";
-            }
-        }
-        catch (const std::filesystem::filesystem_error& e)
-        {
-            std::cerr << COLOR_RED << "Error clearing cache: " << COLOR_RESET << e.what() << "\n";
-        }
+      if (std::filesystem::exists(libBinPath))
+      {
+        std::filesystem::remove(libBinPath);
+        colorPrint(ConsoleColor::Green, "Cache cleared successfully: ", libBinPath);
+      }
+      else
+      {
+        colorPrint(ConsoleColor::Yellow, "No cache file found to clear: ", libBinPath);
+      }
     }
+    catch (const std::filesystem::filesystem_error& e)
+    {
+      colorPrint(ConsoleColor::Red, "Error clearing cache: ", e.what());
+    }
+  }
 };
 
 #endif // ARGUMENT_HANDLER_HPP

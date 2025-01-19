@@ -14,7 +14,8 @@ int main(int argc, char* argv[])
   string          cacheDir     = getCachePath();
   string          libBinPath   = getConfigPath(LIB_BIN_NAME);
   CommandLineArgs cmdArgs(argc, argv);
-  ArgumentHandler::handleArguments(cmdArgs, argv[0], configPath, libBinPath, cacheDir);
+  ArgumentHandler::Paths paths{ .configPath = configPath, .libBinPath = libBinPath, .cacheDir = cacheDir };
+  ArgumentHandler::handleArguments(cmdArgs, argv[0], paths);
   RedBlackTree    rbt;
   InodeFileMapper mapper(libSyncPath, "false");
 
