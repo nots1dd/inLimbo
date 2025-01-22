@@ -17,7 +17,7 @@
 
 namespace ftxui
 {
-Component Scroller(Component child, int* external_selected, Color menu_cursor_bg);
+Component Scroller(Component child, int* external_selected, Color menu_cursor_bg, Color inactive_menu_cursor_bg);
 }
 
 #endif

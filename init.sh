@@ -33,6 +33,12 @@ show_msg() {
   local target_dir=$3
   local filename=$(basename "$url")
 
+  if [[ -f "$target_dir/$filename" ]]; then
+    echo -e "${GREEN}✓ ${filename} already exists in ${target_dir}, skipping download.${RESET}"
+    print_delim
+    return 0
+  fi
+
   print_delim
   echo -e "${YELLOW}${message}${RESET}"
   echo -e "${CYAN}Downloading to ${target_dir}...${RESET}"

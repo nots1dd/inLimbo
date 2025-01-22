@@ -4,6 +4,7 @@
 #include "../dbus/mpris-service.hpp"
 #include "../music/audio_playback.hpp"
 #include "./components/scroller.hpp"
+#include "./properties.hpp"
 #include "./thread_manager.hpp"
 #include "keymaps.hpp"
 #include "misc.hpp"
@@ -89,7 +90,7 @@ public:
               if (INL_Thread_State.is_playing)
               {
                 current_position += 0.1;
-                if (current_position >= GetCurrentSongDuration())
+                if (current_position >= GetCurrentSongDuration() && song_queue.size() > 1)
                 {
                   PlayNextSong();
                   UpdatePlayingState();
@@ -153,6 +154,7 @@ private:
     bool                                         has_comment = false;
     bool                                         has_lyrics  = false;
     int                                          duration;
+    int                                          bitrate;
     unsigned int                                 year       = 0;
     unsigned int                                 track      = 0;
     unsigned int                                 discNumber = 0;
@@ -167,6 +169,7 @@ private:
   std::unique_ptr<MPRISService> mprisService;
 
   Keybinds      global_keybinds = parseKeybinds();
+  GlobalProps   global_props    = parseProps();
   InLimboColors global_colors   = parseColors();
 
   std::unique_ptr<MiniAudioPlayer> audio_player;
@@ -424,8 +427,8 @@ private:
         {
           for (const auto& [track_number, song] : tracks)
           {
-            std::string disc_track_info = " " +
-              std::to_string(disc_number) + "-" + std::to_string(track_number) + "  ";
+            std::string disc_track_info =
+              " " + std::to_string(disc_number) + "-" + std::to_string(track_number) + "  ";
             current_inodes.push_back(song.inode);
             current_song_elements.push_back(
               renderSongName(disc_track_info, song.metadata.title, song.metadata.duration));
@@ -594,6 +597,7 @@ private:
       current_playing_state.has_comment = (metadata.comment != "No Comment");
       current_playing_state.has_lyrics  = (metadata.lyrics != "No Lyrics");
       current_playing_state.filePath    = metadata.filePath;
+      current_playing_state.bitrate     = metadata.bitrate;
       // duration gets updated in the PlayCurrentSong() thread itself
 
       // If there's additional properties, you can either copy them or process as needed
@@ -641,7 +645,7 @@ private:
                  {
                    return RenderSongMenu(current_song_elements); // This should return an Element
                  }),
-               &selected_inode, global_colors.menu_cursor_bg);
+               &selected_inode, global_colors.menu_cursor_bg, global_colors.inactive_menu_cursor_bg);
 
     auto main_container =
       Container::Horizontal({INL_Component_State.artists_list, INL_Component_State.songs_list});
@@ -1408,6 +1412,11 @@ private:
       {
         additional_info += STATUS_BAR_DELIM;
         additional_info += LYRICS_AVAIL;
+      }
+      if (global_props.show_bitrate)
+      {
+        additional_info += STATUS_BAR_DELIM;
+        additional_info += std::to_string(current_playing_state.bitrate) + " kbps";
       }
       additional_info += STATUS_BAR_DELIM;
     }

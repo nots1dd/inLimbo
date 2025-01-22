@@ -34,6 +34,8 @@ namespace fs = std::filesystem;
 
 #define PARENT_COLORS "colors" /**< Parent section for color settings */
 
+#define PARENT_UI "ui" /**< Parent section for ui settings */
+
 /**
  * @brief Retrieves the path to the configuration file.
  *

@@ -23,8 +23,8 @@ class ScrollerBase : public ComponentBase {
    * @param external_selected A pointer to an external integer that controls the selected index.
    * @param cursor_bg The background color to apply to the focused element.
    */
-  ScrollerBase(Component child, int* external_selected, Color cursor_bg)
-      : external_selected_(external_selected), cursor_bg_(cursor_bg) {
+  ScrollerBase(Component child, int* external_selected, Color cursor_bg, Color inactive_menu_cursor_bg)
+      : external_selected_(external_selected), cursor_bg_(cursor_bg), inactive_menu_cursor_bg_(inactive_menu_cursor_bg) {
     Add(child);
   }
 
@@ -41,9 +41,9 @@ class ScrollerBase : public ComponentBase {
     auto focused = Focused() ? focus : ftxui::select;
 
     // Use the cursor background color when focused
-    auto style = Focused() ? color(cursor_bg_) : nothing;
+    auto style = Focused() ? color(cursor_bg_) : color(inactive_menu_cursor_bg_);
 
-    auto inverted_style = Focused() ? inverted : nothing;
+    auto inverted_style = Focused() ? inverted : inverted;
 
     // Sync selected_ with external_selected_
     selected_ = *external_selected_;
@@ -87,6 +87,7 @@ class ScrollerBase : public ComponentBase {
   int size_ = 0;                 ///< The size of the child component.
   int* external_selected_;       ///< Pointer to the external selected index.
   Color cursor_bg_;              ///< Background color for the focused element.
+  Color inactive_menu_cursor_bg_;///< Background color for the current element which is unfocused.
   Box box_;                      ///< The bounding box of the scroller.
 };
 
@@ -101,8 +102,8 @@ class ScrollerBase : public ComponentBase {
  * @param cursor_bg The background color to apply to the focused element.
  * @return A `Component` instance representing the scroller.
  */
-Component Scroller(Component child, int* external_selected, Color cursor_bg) {
-  return Make<ScrollerBase>(std::move(child), external_selected, cursor_bg);
+Component Scroller(Component child, int* external_selected, Color cursor_bg, Color inactive_menu_cursor_bg) {
+  return Make<ScrollerBase>(std::move(child), external_selected, cursor_bg, inactive_menu_cursor_bg);
 }
 
 }  // namespace ftxui

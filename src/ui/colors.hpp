@@ -186,6 +186,7 @@ struct InLimboColors
   ftxui::Color inactive_win_border_color;
   ftxui::Color album_name_bg;
   ftxui::Color menu_cursor_bg;
+  ftxui::Color inactive_menu_cursor_bg;
   ftxui::Color artists_title_bg;
   ftxui::Color artists_title_fg;
   ftxui::Color songs_title_bg;
@@ -314,6 +315,7 @@ InLimboColors parseColors()
     {"inactive_win_border_color", &colors.inactive_win_border_color},
     {"album_name_bg", &colors.album_name_bg},
     {"menu_cursor_bg", &colors.menu_cursor_bg},
+    {"inactive_menu_cursor_bg", &colors.inactive_menu_cursor_bg},
     {"artists_title_bg", &colors.artists_title_bg},
     {"artists_title_fg", &colors.artists_title_fg},
     {"songs_title_bg", &colors.songs_title_bg},

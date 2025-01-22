@@ -22,7 +22,7 @@
 
 ----
 
-> [!IMPORTANT]
+> [!WARNING]
 > 
 > inLimbo is a WIP
 > 
@@ -89,7 +89,43 @@ Here are a few novelties that may or may not have been added yet:
 
 ## BUILDING
 
-You will need CMake for this (and git obvi)
+You will need CMake and Make (GNU Make for BSD) for this (and git obvi)
+
+### **USING MAKE** (Preferred):
+
+The following Make commands will make building inLimbo very easy:
+
+```bash 
+make all # to build EVERYTHING from scratch (and RUNS ./init.sh)
+```
+
+```bash 
+make build # A fresh build of inLimbo (DOES NOT RUN ./init.sh) 
+```
+
+```bash 
+make rebuild # A quick rebuild of the project (DOES NOT RUN ./init.sh)
+```
+
+```bash 
+make init # Runs the init script to download required headers
+```
+
+```bash 
+make clean # wipes the build clean.
+```
+
+> [!NOTE]
+> 
+> Debug building using make needs to be setup, will be available soon.
+> 
+
+### **MANUAL BUILD**:
+
+> [!WARNING]
+> 
+> Proceed with manual build **ONLY** if you know what you are doing.
+> 
 
 ```bash
 git clone https://github.com/nots1dd/inLimbo.git 
@@ -202,32 +238,7 @@ There is quite a lot to configure in the inLimbo project. A basic config file wi
 
 ## DIRECTORY SORTING 
 
-Currently uses `rbtrees` and `unordered_map` to store and write the current inodes in given directory to `lib.sync` file 
-
--> rbtree will contain all the inodes at runtime
-
--> cached to `lib.sync` for future use and faster data fetch
-
-To test out the creation of the song map of your chosen directory:
-
-```bash
-cd src/dirsort/
-make
-./dirsort-test # change the directory in $HOME/.config/inLimbo/config.toml to test out
-```
-
-> [!NOTE]
-> 
-> src/dirsort/ has the current implementation of
-> how the chosen songs directory will be cached and 
-> read into memory to display in ftxui TUI
-> 
-> To use dirsort/ source files separately:
-> 
-> ```bash 
-> make
-> ```
-> 
+To know more about inLimbo Project's logical flow on creating a song map, visit [SONGMAP](https://github.com/nots1dd/inLimbo/blob/main/src/dirsort/SONGMAP.md)
 
 ## DOCUMENTATION
 

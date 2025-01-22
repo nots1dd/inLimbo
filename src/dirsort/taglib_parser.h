@@ -43,6 +43,7 @@ struct Metadata
   std::string album = "Unknown Album"; /**< The album the song is part of */
   std::string genre = "Unknown Genre"; /**< The genre of the song */
   std::string comment = "No Comment"; /**< The comment associated with the song */
+  std::string fileType = "NULL";
   unsigned int year = 0; /**< The year of release */
   unsigned int track = 0; /**< The track number */
   unsigned int discNumber = 0; /**< The disc number in a multi-disc set */
@@ -50,6 +51,7 @@ struct Metadata
   std::unordered_map<std::string, std::string> additionalProperties; /**< Any additional properties from the song's metadata */
   std::string filePath; /**< The file path of the song */
   float duration = 0.0f; /**< The duration of the song in seconds */
+  int bitrate = 0; /**< The bitrate of the song (not calculated) */
 
   /**
    * @brief Serialization function for Metadata.
@@ -58,7 +60,7 @@ struct Metadata
   template <class Archive>
   void serialize(Archive& ar)
   {
-    ar(title, artist, album, genre, comment, year, track, discNumber, lyrics, additionalProperties, filePath, duration);
+    ar(title, artist, album, genre, comment, year, track, discNumber, lyrics, additionalProperties, filePath, duration, bitrate);
   }
 };
 
@@ -164,6 +166,7 @@ bool TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) {
   TagLib::AudioProperties *audioProperties = file.audioProperties();
   if (audioProperties) {
     metadata.duration = audioProperties->length(); // Duration in seconds
+    metadata.bitrate = (audioProperties->bitrate() == 0) ? -1 : audioProperties->bitrate();
   }
 
   // Keep track of file path

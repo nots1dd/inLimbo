@@ -56,6 +56,7 @@ album_name_bg = "#83A598"                 # Muted cyan for background
 
 # Menu Cursor
 menu_cursor_bg = "#8EC07C"                # Soft green for cursor background
+inactive_cursor_bg = "#FFADDF"
 
 # Artists Title Section
 artists_title_bg = "#458588"              # Deep teal for background
@@ -80,3 +81,6 @@ volume_bar_col = "#8EC07C"                # Soft green for volume bar
 status_bar_bg = "#504945"                 # Dark gray for background
 status_bar_artist_col = "#FB4934"         # Bright red for artist name
 status_bar_song_col = "#FABD2F"           # Bright yellow for song name
+
+[ui]
+show_bitrate = "true"

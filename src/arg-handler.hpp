@@ -10,7 +10,9 @@
 
 // Constants
 constexpr const char* DBUS_SERVICE_NAME = "org.mpris.MediaPlayer2.inLimbo";
-constexpr const char* VERSION           = "2.2 (ALPHA)";
+constexpr const char* VERSION           = "2.3 (ALPHA)";
+
+bool shouldRunApp = false;
 
 enum class ConsoleColor
 {
@@ -56,14 +58,16 @@ public:
       {"--clear-cache", [&]() { handleClearCache(paths.libBinPath); }},
       {"--show-config-file", [&]() { handleShowConfig(paths.configPath); }},
       {"--show-log-dir", [&]() { handleShowLogDir(paths.cacheDir); }},
-      {"--show-dbus-name", [&]() { handleShowDBusName(); }}};
+      {"--show-dbus-name", [&]() { handleShowDBusName(); }},
+      {"--update-cache-run", [&]() { handleUpdateCacheRun(paths.libBinPath); }}};
 
     for (const auto& [flag, handler] : argumentHandlers)
     {
       if (cmdArgs.hasFlag(flag))
       {
         handler();
-        exit(0);
+        if (!shouldRunApp)
+          exit(0);
       }
     }
   }
@@ -116,6 +120,14 @@ private:
       colorPrint(ConsoleColor::Red, "Error clearing cache: ", e.what());
     }
   }
+
+  static void handleUpdateCacheRun(const std::string& libBinPath)
+  {
+    std::cout << ColorManager::getColor(ConsoleColor::Blue) << "-- Updating Cache and running app..." << ColorManager::getColor(ConsoleColor::Reset) << std::endl;
+    handleClearCache(libBinPath);
+    shouldRunApp = true;
+  }
+
 };
 
 #endif // ARGUMENT_HANDLER_HPP

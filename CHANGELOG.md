@@ -729,3 +729,36 @@ Small commit with some nice touch ups for user interaction with the binary
 - Centering of the image_view (NOT THAT BIG)
 
 ---
+
+## [ALPHA 2.3] --- 22-01-2025
+
+### Added
+- `src/ui/properties.hpp` -- To parse global properties from config.toml and subsequent changes to `ui_handler`
+
+- `Makefile` for easier building without a hassle, subsequent changes to README
+
+### Changed
+- Added new color field (inactive_menu_cursor_bg) and complete integration
+
+- New cmd-line-arg `--update-cache-run` :- Removes cache then reads the directory from config.toml and runs the application (subsequent changes to completions, `cmd-line-args.hpp`, `arg-handler.hpp`)
+
+- Parsing bitrate using TagLib integrated and tested `mp3` and `flac` files
+
+- Audio file MIME types are found and displayed in SongInfoScreen
+
+- UI should not try to PlayNextSong() in Run() function if song_queue is empty.
+
+### Fixed
+**NIL**
+
+### Removed
+**NIL**
+
+Sizeable commit with new fields, changes and features that bring the app together
+
+### Known Issues to fix in immediate commits
+- Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread (BIG)
+
+- Centering of the image_view (NOT THAT BIG)
+
+---

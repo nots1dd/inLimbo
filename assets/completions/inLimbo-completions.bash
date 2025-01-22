@@ -13,6 +13,7 @@ _inLimbo_completions() {
         "--show-config-file   Show the configuration file path"
         "--show-log-dir       Show the log directory path"
         "--show-dbus-name     Show the DBus service name"
+        "--update-cache-run   Update the cache file and run the application"
     )
 
     # Provide completion for options

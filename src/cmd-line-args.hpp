@@ -52,6 +52,20 @@ public:
         std::cout << "  " << flag << "\n";
       }
     }
+
+    std::cout << "\n";
+
+    // Project details and additional information
+    std::cout << "\033[1mProject Information:\033[0m\n";
+    std::cout << "-  Name: inLimbo - Terminal-based Music Player\n";
+    std::cout << "-  Author: Siddharth Karnam (nots1dd)\n";
+    std::cout << "-  License: GNU GPL v3\n";
+    std::cout << "-  Website: https://nots1dd.github.io/inLimbo/ (has Doxygen documentation)\n";
+    std::cout << "For any issues visit <https://github.com/nots1dd/inLimbo>\n";
+    std::cout << std::endl;
+
+    std::cout << "\033[1mDescription:\033[0m\n";
+    std::cout << "  inLimbo is a TUI music player that supports seamless playback and efficient metadata handling.\n  Designed for minimalism and ease of use.\n\n\033[1mKeeps YOU in Limbo...\033[0m";
     std::cout << "\n";
   }
 
@@ -133,6 +147,6 @@ private:
 // Define valid flags globally
 const std::vector<std::string> CommandLineArgs::validFlags = {
   "--help",        "--show-dbus-name",   "--version",
-  "--clear-cache", "--show-config-file", "--show-log-dir"};
+  "--clear-cache", "--show-config-file", "--show-log-dir", "--update-cache-run"};
 
 #endif // COMMAND_LINE_ARGS_HPP

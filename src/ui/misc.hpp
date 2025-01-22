@@ -179,6 +179,30 @@ auto RenderSongMenu(const std::vector<Element>& items)
   return vbox(std::move(rendered_items));
 }
 
+std::string getMimeTypeFromExtension(const std::string& filePath)
+{
+  // Map file extensions to MIME types
+  static std::map<std::string, std::string> mimeTypes = {
+    {".mp3", "audio/mpeg"},  {".flac", "audio/flac"},    {".wav", "audio/wav"},
+    {".ogg", "audio/ogg"},   {".aac", "audio/aac"},      {".m4a", "audio/mp4"},
+    {".opus", "audio/opus"}, {".wma", "audio/x-ms-wma"}, {".alac", "audio/alac"}};
+
+  // Extract the file extension
+  std::string::size_type idx = filePath.rfind('.');
+  if (idx != std::string::npos)
+  {
+    std::string extension = filePath.substr(idx);
+    auto        it        = mimeTypes.find(extension);
+    if (it != mimeTypes.end())
+    {
+      return it->second;
+    }
+  }
+
+  // Default MIME type if the extension is unknown
+  return "application/octet-stream";
+}
+
 auto RenderThumbnail(const std::string& songFilePath, const std::string& cacheDirPath,
                      const std::string& songTitle, const std::string& artistName,
                      const std::string& albumName, const std::string& genre, unsigned int year,
@@ -201,7 +225,8 @@ auto RenderThumbnail(const std::string& songFilePath, const std::string& cacheDi
       hbox({text(songTitle) | bold, text(" by "), text(artistName) | bold, text(" ["),
             text(std::to_string(year)), text("]"), text(" ("),
             text(std::to_string(discNumber)) | bold, text("/"),
-            text(std::to_string(trackNumber)) | bold, text(")")}) |
+            text(std::to_string(trackNumber)) | bold, text(") -- {"),
+            text(getMimeTypeFromExtension(songFilePath)) | bold, text("}")}) |
         center,
       hbox({text("Seems like a "), text(genre) | bold, text(" type of song...")}) | center, // Genre
     });

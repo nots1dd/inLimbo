@@ -131,6 +131,7 @@ public:
           }
         });
     }
+    mtx.unlock();
   }
 
   /**
