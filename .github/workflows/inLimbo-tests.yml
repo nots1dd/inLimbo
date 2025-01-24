@@ -22,16 +22,8 @@ jobs:
       # Install dependencies
       - name: Install Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            build-essential \
-            cmake \
-            g++ \
-            libgtest-dev \
-            pkg-config \
-            libglib2.0-dev \
-            libgio-2.0-dev \
-            libpthread-stubs0-dev
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake libtag1-dev git libglib2.0-dev imagemagick libx11-dev libpng-dev libcereal-dev  # Example dependencies, modify as needed
 
       # Run initialization script (if needed)
       - name: Run tests from Makefile
