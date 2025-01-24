@@ -19,12 +19,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      # Set up CMake
-      - name: Set up CMake
-        uses: scivision/cmake-action@v2
-        with:
-          cmake-version: '3.22'
-
       # Install dependencies
       - name: Install Dependencies
         run: |
