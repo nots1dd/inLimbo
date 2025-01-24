@@ -1,4 +1,4 @@
-name: "CodeQL Analysis for inLimbo in Ubuntu"
+name: "CodeQL Analysis for inLimbo in Ubuntu (x86 arch - GCC)"
 
 on:
   push:
