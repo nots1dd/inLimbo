@@ -44,6 +44,7 @@ remove_song_from_queue = "d"
 play_this_song_next = "b"
 view_song_queue = "3"
 view_current_song_info = "i"
+toggle_audio_devices = "w"
 
 # Colors format: Solid Colors and Hexadecimal values of format `#RRGGBB`
 [colors]

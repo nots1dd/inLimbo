@@ -10,6 +10,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+enable_testing()
+
 add_library(tiv
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ui/components/libs/tiv_lib.cpp
 )
@@ -112,7 +114,7 @@ else()
 endif()
 
 # --- Handle Global Build ---------------------------------------------------------
-if(BUILD_GLOBAL)
+if(DEFINED GLOBAL_BUILD AND GLOBAL_BUILD)
   set(CMAKE_INSTALL_PREFIX "/usr/")
   message(STATUS "Starting GLOBAL_BUILD for inLimbo...")
 
@@ -183,4 +185,12 @@ if (NOT EXISTS "$ENV{HOME}/.config/inLimbo/config.toml")
 endif()
 if (NOT EXISTS "$ENV{HOME}/.cache/inLimbo/")
   file(MAKE_DIRECTORY "$ENV{HOME}/.cache/inLimbo")
+endif()
+
+# --- Add Tests Directory Only if INLIMBO_TESTING is Defined ----------------------
+if(DEFINED INLIMBO_TESTING AND INLIMBO_TESTING)
+  message("--> Enabling TESTING for INLIMBO...")
+  add_subdirectory(tests)
+else()
+  message("--> TESTING is disabled for INLIMBO.")
 endif()

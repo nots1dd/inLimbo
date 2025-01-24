@@ -2,8 +2,6 @@
 #include "signal/signalHandler.hpp"
 #include "ui/ui_handler.hpp"
 #include "./arg-handler.hpp"
-#include <memory>
-#include <random>
 
 int main(int argc, char* argv[])
 {

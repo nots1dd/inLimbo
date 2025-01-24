@@ -1,9 +1,7 @@
 #ifndef COLORS_HPP
 #define COLORS_HPP
 
-#include <cstdint> // For uint8_t
 #include <ftxui/screen/color.hpp>
-#include <iomanip>
 #include <iostream>
 #include <regex>
 #include <string>

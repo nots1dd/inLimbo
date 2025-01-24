@@ -6,8 +6,10 @@
 #ifndef THREAD_MANAGER_HPP
 #define THREAD_MANAGER_HPP
 
+#include "../threads/workers.hpp"
 #include <atomic>
 #include <future>
+#include <memory>
 #include <mutex>
 #include <thread>
 
@@ -24,26 +26,27 @@ public:
    */
   struct ThreadState
   {
-    /**
-     * @brief A mutex to synchronize access to the play state.
-     */
-    std::mutex play_mutex;
+    std::mutex play_mutex;        ///< Mutex for synchronizing play state.
+    std::mutex queue_mutex;       ///< Mutex for synchronizing queue operations.
+    std::mutex audioDevicesMutex; ///< Mutex for synchronizing audio device access.
 
-    /**
-     * @brief Indicates whether the thread is currently processing.
-     */
-    std::atomic<bool> is_processing{false};
+    std::atomic<bool> is_processing{false}; ///< Indicates whether the thread is processing.
+    std::atomic<bool> is_playing{false};    ///< Indicates whether the thread is playing.
 
-    /**
-     * @brief Indicates whether the thread is currently playing.
-     */
-    std::atomic<bool> is_playing{false};
-
-    /**
-     * @brief A future object associated with the play operation.
-     */
-    std::future<void> play_future;
+    std::future<void>            play_future;       ///< Future object for async play operations.
+    std::unique_ptr<std::thread> mpris_dbus_thread; ///< Unique pointer for DBus thread.
+    std::thread playNextSongThread; ///< Thread for handling "play next song" operations.
   };
+
+  /**
+   * @brief Construct a ThreadManager with a worker thread pool.
+   */
+  ThreadManager() : worker_pool(std::make_unique<WorkerThreadPool>()) {}
+
+  /**
+   * @brief Destructor to clean up resources and threads.
+   */
+  ~ThreadManager() { cleanupAllThreads(); }
 
   /**
    * @brief Retrieves the thread state managed by this ThreadManager.
@@ -52,34 +55,63 @@ public:
   ThreadState& getThreadState() { return thread_state; }
 
   /**
+   * @brief Get the worker thread pool.
+   * @return Reference to the WorkerThreadPool.
+   */
+  WorkerThreadPool& getWorkerThreadPool() { return *worker_pool; }
+
+  /**
    * @brief Locks the play mutex for the provided thread state.
-   *
-   * This function uses a unique lock to ensure that the play mutex
-   * is safely locked while performing operations on the thread state.
-   *
-   * @param thread_state A reference to the ThreadState object whose mutex is to be locked.
+   * @param thread_state Reference to the ThreadState object whose mutex is to be locked.
    */
   void lockPlayMutex(ThreadState& thread_state)
   {
-    std::unique_lock<std::mutex> lock(thread_state.play_mutex);
+    std::lock_guard<std::mutex> lock(thread_state.play_mutex);
   }
+
   /**
-   * @brief Unlocks the play mutex for the provided thread state.
-   *
-   * This function releases the lock on the play mutex that was previously acquired
-   * using `lockPlayMutex`. The play mutex will be unlocked after this function is called.
-   *
-   * @param thread_state A reference to the ThreadState object whose mutex is to be unlocked.
-   * @note This function should be used in conjunction with `lockPlayMutex` to ensure proper
-   * synchronization.
+   * @brief Locks the queue mutex for the provided thread state.
+   * @param thread_state Reference to the ThreadState object whose mutex is to be locked.
    */
-  void unlockPlayMutex(ThreadState& thread_state) { thread_state.play_mutex.unlock(); }
+  void lockQueueMutex(ThreadState& thread_state)
+  {
+    std::lock_guard<std::mutex> lock(thread_state.queue_mutex);
+  }
 
 private:
+  /**
+   * @brief Cleans up all threads managed by the ThreadManager.
+   */
+  void cleanupAllThreads()
+  {
+    try
+    {
+      // Clean up playNextSongThread if joinable.
+      if (thread_state.playNextSongThread.joinable())
+      {
+        thread_state.playNextSongThread.join();
+      }
+    }
+    catch (const std::exception& e)
+    {
+      // Log exceptions during cleanup (adjust logging mechanism as needed).
+      std::cerr << "Exception during thread cleanup: " << e.what() << std::endl;
+    }
+    catch (...)
+    {
+      std::cerr << "Unknown exception during thread cleanup." << std::endl;
+    }
+  }
+
   /**
    * @brief The thread state managed by this instance of ThreadManager.
    */
   ThreadState thread_state;
+
+  /**
+   * @brief The worker thread pool.
+   */
+  std::unique_ptr<WorkerThreadPool> worker_pool;
 };
 
 #endif // THREAD_MANAGER_HPP

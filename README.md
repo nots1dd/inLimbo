@@ -144,7 +144,7 @@ cmake --build build/
 To build inLimbo **GLOBALLY**:
 
 ```bash 
-cmake -S . -B build -DBUILD_GLOBAL=ON 
+cmake -S . -B build -DGLOBAL_BUILD=ON 
 cmake --build build/ 
 cd build 
 sudo make install # will put the binary in /usr/bin and respective inLimbo.desktop and logo in /usr/share

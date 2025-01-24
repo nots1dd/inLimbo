@@ -22,6 +22,7 @@ struct ComponentState
   Component lyrics_scroller;
   Component MainRenderer;
   Component ThumbnailRenderer;
+  Component audioDeviceMenu;
 };
 
 auto formatLyrics(const std::string& lyrics)

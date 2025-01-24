@@ -762,3 +762,46 @@ Sizeable commit with new fields, changes and features that bring the app togethe
 - Centering of the image_view (NOT THAT BIG)
 
 ---
+
+## [ALPHA 2.4] --- 24-01-2025
+
+### Added
+- Added tests/ directory to perform unit tests using GTest and subsequent new files and test suites
+
+- `src/threads/` created to have a worker thread system for better concurrency handling
+
+- Added a new screen to view current audio sinks (outputs)  
+
+- Added a destructor to ThreadManager class to properly join all non-detached threads
+
+### Changed
+- Cleanups in `src/ui` , `src/music` `src/dirsort`
+
+- Changed ThreadManager drastically
+
+- Modified Run function in ui_handler to NOT be detached
+
+- Got rid of mutex unlock and used lock_guard instead + more concurrency changes
+
+- New field in config.toml -> toggle_audio_devices (will change this name later)
+
+- Made mpris_dbus_thread a unique thread
+
+- PlayCurrentSong now uses the WorkerThread Pool to enqueue all tasks and has a more robust way to handle concurrency
+
+- New workflow to build tests
+
+### Fixed
+**NIL**
+
+### Removed
+**NIL**
+
+Huge commit (I have not mentioned a lot changes here do read the commit history)
+
+### Known Issues to fix in immediate commits
+- Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread (BIG) [Seems to be solvable]
+
+- Centering of the image_view (NOT THAT BIG)
+
+---

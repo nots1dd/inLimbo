@@ -9,6 +9,18 @@
 #include <stdexcept>
 #include <string>
 #include <thread>
+#include <vector>
+#include <filesystem>
+
+/**
+ * @struct AudioDevice
+ * @brief A structure representing an audio playback device.
+ */
+struct AudioDevice
+{
+  std::string  name; /**< The name of the audio device. */
+  ma_device_id id;   /**< The MiniAudio device ID. */
+};
 
 /**
  * @class MiniAudioPlayer
@@ -22,13 +34,21 @@
 class MiniAudioPlayer
 {
 private:
-  ma_engine   engine;         /**< The MiniAudio engine object used to manage sound playback. */
-  ma_sound    sound;          /**< The sound object representing the audio file being played. */
-  bool        isPlaying;      /**< Flag to track if the sound is currently playing. */
-  bool        wasPaused;      /**< Flag to track if the sound was paused. */
+  ma_engine        engine; /**< The MiniAudio engine object used to manage sound playback. */
+  ma_sound         sound;  /**< The sound object representing the audio file being played. */
+  ma_device        device;
+  ma_context       context;
+  ma_engine_config engine_config;
+  ma_device_id     deviceID; /**< Selected audio device ID for playback. */
+  ma_device_config deviceConfig;
+  ma_sound_config  soundConfig;
+  bool             isPlaying; /**< Flag to track if the sound is currently playing. */
+  bool             deviceSet; /**< Flag to check if an audio device is set or not. */
+  bool             wasPaused; /**< Flag to track if the sound was paused. */
   uint64_t    pausePosition;  /**< Stores the position in PCM frames where the sound was paused. */
-  std::thread playbackThread; /**< A thread for monitoring the playback state in the background. */
-  std::mutex  mtx;            /**< Mutex to protect shared state between methods and threads. */
+  std::thread playbackThread, audioDeviceThread; /**< A thread for monitoring the playback state in the background. */
+  std::mutex  mtx, devicesMutex;            /**< Mutex to protect shared state between methods and threads. */
+  std::vector<AudioDevice> devices;
 
 public:
   /**
@@ -38,11 +58,28 @@ public:
    *
    * @throws std::runtime_error If the MiniAudio engine cannot be initialized.
    */
-  MiniAudioPlayer() : isPlaying(false), wasPaused(false), pausePosition(0)
+  MiniAudioPlayer() : isPlaying(false), wasPaused(false), pausePosition(0), deviceSet(false)
   {
-    if (ma_engine_init(NULL, &engine) != MA_SUCCESS)
+    engine_config = ma_engine_config_init();
+    if (ma_engine_init(&engine_config, &engine) != MA_SUCCESS)
     {
       throw std::runtime_error("Failed to initialize MiniAudio engine.");
+    }
+
+    deviceConfig                    = ma_device_config_init(ma_device_type_playback);
+    if (ma_context_init(nullptr, 0, nullptr, &context) != MA_SUCCESS)
+    {
+      throw std::runtime_error("Failed to initialize audio context.");
+    }
+
+    if (ma_device_init(nullptr, &deviceConfig, &device) != MA_SUCCESS) 
+    {
+        throw std::runtime_error("Failed to initialize playback device.");
+    }
+
+    if (ma_device_start(&device) != MA_SUCCESS) {
+        ma_device_uninit(&device);
+        throw std::runtime_error("Failed to start playback device.");
     }
   }
 
@@ -55,8 +92,63 @@ public:
   ~MiniAudioPlayer()
   {
     stop();
-    ma_sound_uninit(&sound);
+    ma_device_uninit(&device);
+    ma_context_uninit(&context);
     ma_engine_uninit(&engine);
+  }
+
+  std::vector<AudioDevice> enumerateDevices()
+  {
+      std::vector<AudioDevice> localDevices;
+
+      audioDeviceThread = std::thread([this, &localDevices]() {
+          try {
+              ma_device_info* playbackDevices;
+              ma_uint32 playbackDeviceCount;
+
+              // Enumerate devices
+              ma_result result = ma_context_get_devices(&context, &playbackDevices, &playbackDeviceCount, nullptr, nullptr);
+              if (result != MA_SUCCESS)
+              {
+                  throw std::runtime_error("Failed to enumerate playback devices.");
+              }
+
+              // Log device info for debugging
+              std::cout << "Found " << playbackDeviceCount << " playback devices:\n";
+              for (ma_uint32 i = 0; i < playbackDeviceCount; ++i) {
+                  std::cout << "Device " << i << ": " << playbackDevices[i].name << std::endl;
+              }
+
+              // Safely copy devices
+              {
+                  std::lock_guard<std::mutex> lock(devicesMutex);
+                  devices.clear();
+                  for (ma_uint32 i = 0; i < playbackDeviceCount; ++i) {
+                      devices.push_back({playbackDevices[i].name, playbackDevices[i].id});
+                  }
+                  localDevices = devices;
+              }
+
+          } catch (const std::exception& e) {
+              std::cerr << "Error in enumerateDevices thread: " << e.what() << "\n";
+          }
+      });
+
+      if (audioDeviceThread.joinable()) audioDeviceThread.join(); // Wait for the thread to finish
+      return localDevices;
+  }
+
+  /**
+   * @brief Sets the device ID for playback.
+   *
+   * @param id The device ID to set for playback.
+   */
+  void setDevice(const ma_device_id& id)
+  {
+    std::unique_lock<std::mutex> lock(mtx);
+    deviceID  = id;
+    deviceConfig.playback.pDeviceID = &deviceID;
+    deviceSet = true;
   }
 
   /**
@@ -70,23 +162,34 @@ public:
    * @return 0 on success, -1 on failure.
    * @throws std::runtime_error If the audio file cannot be loaded.
    */
-  int loadFile(const std::string& filePath)
+  int loadFile(const std::string& filePath, bool reloadNextFile)
   {
-    std::unique_lock<std::mutex> lock(mtx); // Protect shared state
+    std::unique_lock<std::mutex> lock(mtx);
 
     if (isPlaying)
     {
       stop();
     }
 
-    ma_sound_uninit(&sound);
+    if (!std::filesystem::exists(filePath))
+    {
+        throw std::runtime_error("File does not exist: " + filePath);
+    }
+    
+    if (reloadNextFile)
+      ma_sound_uninit(&sound);
+    if (deviceSet)
+    {
+      deviceConfig.playback.pDeviceID = &deviceID;
+    }
 
-    if (ma_sound_init_from_file(&engine, filePath.c_str(), MA_SOUND_FLAG_STREAM, NULL, NULL,
+    if (ma_sound_init_from_file(&engine, filePath.c_str(), MA_SOUND_FLAG_STREAM, nullptr, nullptr,
                                 &sound) != MA_SUCCESS)
     {
       throw std::runtime_error("Failed to load audio file: " + filePath);
       return -1;
     }
+
     return 0;
   }
 
@@ -101,6 +204,7 @@ public:
   void play()
   {
     std::unique_lock<std::mutex> lock(mtx); // Protect shared state
+    deviceConfig.playback.pDeviceID = &deviceID;
     if (!isPlaying)
     {
       if (ma_sound_start(&sound) != MA_SUCCESS)
@@ -109,11 +213,7 @@ public:
       }
       isPlaying = true;
 
-      // Stop any existing playback thread
-      if (playbackThread.joinable())
-      {
-        playbackThread.join();
-      }
+      if (playbackThread.joinable()) playbackThread.join();
 
       // Start a new playback thread
       playbackThread = std::thread(
@@ -161,6 +261,10 @@ public:
       {
         playbackThread.join();
       }
+    }
+    else 
+    {
+      throw std::runtime_error("No song is playing...");
     }
   }
 
@@ -280,39 +384,46 @@ public:
    */
   double seekTime(int seconds)
   {
-    std::unique_lock<std::mutex> lock(mtx); // Protect shared state
-
-    // Get the sample rate of the sound
-    ma_uint32 sampleRate = ma_engine_get_sample_rate(&engine);
-
-    // Get the total length of the sound in PCM frames
-    ma_uint64 totalFrames;
-    ma_result result = ma_sound_get_length_in_pcm_frames(&sound, &totalFrames);
-    if (result != MA_SUCCESS)
+    if (isPlaying)
     {
-      std::cerr << "Failed to get total PCM frames." << std::endl;
+      std::unique_lock<std::mutex> lock(mtx); // Protect shared state
+
+      // Get the sample rate of the sound
+      ma_uint32 sampleRate = ma_engine_get_sample_rate(&engine);
+
+      // Get the total length of the sound in PCM frames
+      ma_uint64 totalFrames;
+      ma_result result = ma_sound_get_length_in_pcm_frames(&sound, &totalFrames);
+      if (result != MA_SUCCESS)
+      {
+        std::cerr << "Failed to get total PCM frames." << std::endl;
+      }
+
+      // Get the current position in PCM frames
+      ma_uint64 currentFrames = ma_sound_get_time_in_pcm_frames(&sound);
+
+      // Calculate the new position in PCM frames
+      ma_int64 newFrames =
+        static_cast<ma_int64>(currentFrames) + static_cast<ma_int64>(seconds) * sampleRate;
+
+      // Clamp the new position to valid bounds
+      if (newFrames < 0)
+        newFrames = seconds = 0;
+      if (static_cast<ma_uint64>(newFrames) > totalFrames)
+        newFrames = totalFrames;
+
+      result = ma_sound_seek_to_pcm_frame(&sound, static_cast<ma_uint64>(newFrames));
+      if (result != MA_SUCCESS)
+      {
+        std::cerr << "Failed to seek sound." << std::endl;
+      }
+
+      return (double)seconds;
     }
-
-    // Get the current position in PCM frames
-    ma_uint64 currentFrames = ma_sound_get_time_in_pcm_frames(&sound);
-
-    // Calculate the new position in PCM frames
-    ma_int64 newFrames =
-      static_cast<ma_int64>(currentFrames) + static_cast<ma_int64>(seconds) * sampleRate;
-
-    // Clamp the new position to valid bounds
-    if (newFrames < 0)
-      newFrames = seconds = 0;
-    if (static_cast<ma_uint64>(newFrames) > totalFrames)
-      newFrames = totalFrames;
-
-    result = ma_sound_seek_to_pcm_frame(&sound, static_cast<ma_uint64>(newFrames));
-    if (result != MA_SUCCESS)
-    {
-      std::cerr << "Failed to seek sound." << std::endl;
+    else 
+    {  
+      throw std::runtime_error("-- Audio is not playing, cannot seek time");
     }
-
-    return (double)seconds;
   }
 };
 

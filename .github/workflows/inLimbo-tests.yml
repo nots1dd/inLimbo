@@ -1,0 +1,48 @@
+name: Build and Test inLimbo Functions (x86 - GCC)
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # Set up CMake
+      - name: Set up CMake
+        uses: scivision/cmake-action@v2
+        with:
+          cmake-version: '3.22'
+
+      # Install dependencies
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            g++ \
+            libgtest-dev \
+            pkg-config \
+            libglib2.0-dev \
+            libgio-2.0-dev \
+            libpthread-stubs0-dev
+
+      # Run initialization script (if needed)
+      - name: Run tests from Makefile
+        run: make build-tests
+
+      # Optionally, you can also clean up after the build if desired
+      - name: Clean up
+        run: rm -rf build

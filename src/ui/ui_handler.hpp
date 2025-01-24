@@ -8,8 +8,7 @@
 #include "./thread_manager.hpp"
 #include "keymaps.hpp"
 #include "misc.hpp"
-#include <iomanip>
-#include <sstream>
+#include <ftxui/dom/elements.hpp>
 #include <unordered_set>
 
 using namespace ftxui;
@@ -26,11 +25,12 @@ using namespace ftxui;
 #define MAX_LENGTH_ARTIST_NAME 30
 
 /** SCREEN MACROS */
-#define SHOW_MAIN_UI          0
-#define SHOW_HELP_SCREEN      1
-#define SHOW_LYRICS_SCREEN    2
-#define SHOW_QUEUE_SCREEN     3
-#define SHOW_SONG_INFO_SCREEN 4
+#define SHOW_MAIN_UI           0
+#define SHOW_HELP_SCREEN       1
+#define SHOW_LYRICS_SCREEN     2
+#define SHOW_QUEUE_SCREEN      3
+#define SHOW_SONG_INFO_SCREEN  4
+#define SHOW_AUDIO_CONF_SCREEN 5
 
 #define MIN_DEBOUNCE_TIME_IN_MS 500
 
@@ -59,72 +59,56 @@ public:
   {
     mprisService = std::make_unique<MPRISService>("inLimbo");
 
-    std::thread mpris_dbus_thread(
-      [&]
+    INL_Thread_State.mpris_dbus_thread = std::make_unique<std::thread>(
+      [this]
       {
         GMainLoop* loop = g_main_loop_new(nullptr, FALSE);
         g_main_loop_run(loop);
+        g_main_loop_unref(loop);
       });
 
-    mpris_dbus_thread
-      .detach(); // We will not monitor this thread, it can just run without our concern
+    INL_Thread_State.mpris_dbus_thread->detach(); // We will not be concerned with this thread entirely, hence it is detached
 
-    auto screen = ScreenInteractive::Fullscreen();
+    auto              screen = ScreenInteractive::Fullscreen();
+    std::atomic<bool> screen_active{true};
 
-    try
-    {
-      std::thread refresh_thread(
-        [&]
+    std::thread refresh_thread(
+      [&]()
+      {
+        while (screen_active)
         {
           try
           {
-            while (!should_quit)
+            using namespace std::chrono_literals;
+
+            // Safely update shared resources
+            UpdateVolume();
+
+            std::this_thread::sleep_for(0.1s);
+
+            if (INL_Thread_State.is_playing)
             {
-              using namespace std::chrono_literals;
-
-              // Safely update volume
-              UpdateVolume();
-
-              std::this_thread::sleep_for(0.1s);
-
-              if (INL_Thread_State.is_playing)
+              std::lock_guard<std::mutex> lock(state_mutex);
+              current_position += 0.1;
+              if (current_position >= GetCurrentSongDuration())
               {
-                current_position += 0.1;
-                if (current_position >= GetCurrentSongDuration() && song_queue.size() > 1)
-                {
-                  PlayNextSong();
-                  UpdatePlayingState();
-                }
+                PlayNextSong();
+                UpdatePlayingState();
               }
-
-              // Post a custom event to refresh the UI
-              screen.PostEvent(Event::Custom);
             }
+
+            SafePostEvent(screen, Event::Custom);
           }
           catch (const std::exception& e)
           {
-            show_dialog    = true;
-            dialog_message = "Error in refresh thread: " + std::string(e.what());
+            SetDialogMessage("Error in refresh thread: " + std::string(e.what()));
           }
           catch (...)
           {
-            show_dialog    = true;
-            dialog_message = "Unknown error occurred in refresh thread.";
+            SetDialogMessage("Unknown error occurred in refresh thread.");
           }
-        });
-
-      refresh_thread.detach(); // Detach thread to run independently
-    }
-    catch (const std::exception& e)
-    {
-      dialog_message = "Error starting refresh thread: " + std::string(e.what());
-      show_dialog    = true;
-    }
-    catch (...)
-    {
-      dialog_message = "Unknown error occurred while starting refresh thread.";
-      show_dialog    = true;
-    }
+        }
+      });
 
     screen_ = &screen;
 
@@ -134,13 +118,18 @@ public:
     }
     catch (const std::exception& e)
     {
-      dialog_message = "Error in UI loop: " + std::string(e.what());
-      show_dialog    = true;
+      SetDialogMessage("Error in UI loop: " + std::string(e.what()));
     }
     catch (...)
     {
-      dialog_message = "Unknown error occurred in UI loop.";
-      show_dialog    = true;
+      SetDialogMessage("Unknown error occurred in UI loop.");
+    }
+
+    // Signal the thread to stop and wait for cleanup (Should be better than detaching the thread)
+    screen_active = false;
+    if (refresh_thread.joinable())
+    {
+      refresh_thread.join();
     }
   }
 
@@ -172,7 +161,7 @@ private:
   GlobalProps   global_props    = parseProps();
   InLimboColors global_colors   = parseColors();
 
-  std::unique_ptr<MiniAudioPlayer> audio_player;
+  std::shared_ptr<MiniAudioPlayer> audio_player;
   std::unique_ptr<ThreadManager>   INL_Thread_Manager; // Smart pointer to ThreadManager
   ThreadManager::ThreadState&      INL_Thread_State;
 
@@ -185,9 +174,10 @@ private:
 
   // Navigation state
   std::string  current_artist;
-  unsigned int current_disc  = 1;
-  unsigned int current_track = 1;
-  bool         show_dialog   = false;
+  unsigned int current_disc       = 1;
+  unsigned int current_track      = 1;
+  bool         show_dialog        = false;
+  bool         show_audio_devices = false;
   std::string  dialog_message;
   double       seekBuffer;
   bool         first_g_pressed = false; // Track the state of the first 'g' press
@@ -196,16 +186,22 @@ private:
   std::vector<std::string>  current_artist_names;
   std::vector<std::string>  song_queue_names;
   std::vector<std::string>  lyricLines;
+  std::vector<std::string>  audioDevices;
+  std::vector<AudioDevice>  audioDeviceMap;
   std::vector<Element>      current_song_elements;
   std::vector<unsigned int> current_inodes;
   std::unordered_set<int>   album_name_indices;
   int albums_indices_traversed = 1; // first element of current_song_elements is always an album
 
+  std::mutex               state_mutex, event_mutex;
+  std::queue<ftxui::Event> event_queue;
+
   // Player state
-  int selected_artist     = 0;
-  int selected_song_queue = 0;
-  int selected_inode      = 1; // First element is always going to album name so we ignore it
-  int current_lyric_line  = 0;
+  int selected_artist         = 0;
+  int selected_song_queue     = 0;
+  int selected_audio_dev_line = 0;
+  int selected_inode          = 1; // First element is always going to album name so we ignore it
+  int current_lyric_line      = 0;
   std::vector<Element> lyricElements;
   int                  volume           = 50;
   bool                 muted            = false;
@@ -238,73 +234,97 @@ private:
     }
   }
 
+  void SetDialogMessage(const std::string& message)
+  {
+    std::lock_guard<std::mutex> lock(state_mutex);
+    dialog_message = message;
+    show_dialog    = true;
+  }
+
+  void SafePostEvent(ScreenInteractive& screen, const ftxui::Event& event)
+  {
+    {
+      std::lock_guard<std::mutex> lock(event_mutex);
+      event_queue.push(event);
+    }
+    screen.PostEvent(event);
+  }
+
+  void ProcessEvents(ScreenInteractive& screen)
+  {
+    std::lock_guard<std::mutex> lock(event_mutex);
+    while (!event_queue.empty())
+    {
+      // Process the event if needed
+      event_queue.pop();
+    }
+  }
+
   /* Miniaudio class integrations */
+
+  std::shared_ptr<MiniAudioPlayer> getOrCreateAudioPlayer()
+  {
+    static std::mutex           player_mutex;
+    std::lock_guard<std::mutex> lock(player_mutex);
+    if (!audio_player)
+    {
+      audio_player = std::make_shared<MiniAudioPlayer>();
+    }
+    return audio_player;
+  }
 
   void PlayCurrentSong()
   {
     INL_Thread_Manager->lockPlayMutex(INL_Thread_State);
     if (INL_Thread_State.is_processing)
     {
-      INL_Thread_Manager->unlockPlayMutex(INL_Thread_State);
       return; // Another invocation is already running
     }
     INL_Thread_State.is_processing = true;
 
-    INL_Thread_State.play_future =
-      std::async(std::launch::async,
-                 [this]()
-                 {
-                   try
-                   {
-                     if (!audio_player)
-                     {
-                       audio_player = std::make_unique<MiniAudioPlayer>();
-                     }
+    // Enqueue the song playback task
+    INL_Thread_Manager->getWorkerThreadPool().enqueue(
+      [this]()
+      {
+        try
+        {
+          audio_player       = getOrCreateAudioPlayer();
+          audioDeviceMap     = audio_player->enumerateDevices();
+          Song* current_song = GetCurrentSongFromQueue();
+          if (!current_song)
+          {
+            throw std::runtime_error("Error: No current song found.");
+          }
+          const std::string& file_path = current_song->metadata.filePath;
+          if (file_path.empty())
+          {
+            throw std::runtime_error("Error: Invalid file path.");
+          }
+          // Stop previous song if any
+          if (INL_Thread_State.is_playing)
+          {
+            audio_player->stop();
+            INL_Thread_State.is_playing = false;
+          }
+          // Load the audio file
+          int loadAudioFileStatus = audio_player->loadFile(file_path, true);
+          if (loadAudioFileStatus == -1)
+          {
+            throw std::runtime_error("Error: Failed to load the audio file.");
+          }
+          INL_Thread_State.is_playing = true;
+          audio_player->play(); // Play the song (it will play in a separate thread)
+          current_playing_state.duration = audio_player->getDuration();
+        }
+        catch (const std::exception& e)
+        {
+          SetDialogMessage(e.what());
+          INL_Thread_State.is_playing = false;
+        }
 
-                     Song* current_song = GetCurrentSongFromQueue();
-                     if (!current_song)
-                     {
-                       throw std::runtime_error("Error: No current song found.");
-                     }
-
-                     const std::string& file_path = current_song->metadata.filePath;
-                     if (file_path.empty())
-                     {
-                       throw std::runtime_error("Error: Invalid file path.");
-                     }
-
-                     // Stop previous song if any
-                     if (INL_Thread_State.is_playing)
-                     {
-                       audio_player->stop();
-                       INL_Thread_State.is_playing = false;
-                     }
-
-                     // Load the audio file
-                     int loadAudioFileStatus = audio_player->loadFile(file_path);
-                     if (loadAudioFileStatus == -1)
-                     {
-                       throw std::runtime_error("Error: Failed to load the audio file.");
-                     }
-
-                     INL_Thread_State.is_playing = true;
-
-                     audio_player->play(); // Play the song (it will play in a separate thread)
-                     current_playing_state.duration = audio_player->getDuration();
-                   }
-                   catch (const std::exception& e)
-                   {
-                     show_dialog                 = true;
-                     dialog_message              = e.what();
-                     INL_Thread_State.is_playing = false;
-                   }
-
-                   INL_Thread_Manager->lockPlayMutex(INL_Thread_State);
-                   INL_Thread_State.is_processing = false;
-                   INL_Thread_Manager->unlockPlayMutex(INL_Thread_State);
-                 });
-
-    INL_Thread_Manager->unlockPlayMutex(INL_Thread_State);
+        // Reset processing state
+        INL_Thread_State.is_processing = false;
+      });
   }
 
   void TogglePlayback()
@@ -342,20 +362,43 @@ private:
 
   void PlayNextSong()
   {
-    if (current_song_queue_index + 1 < song_queue.size())
+    try
     {
-      current_song_queue_index++;
-      if (Song* current_song = GetCurrentSongFromQueue())
+      // Queue state validations
+      if (song_queue.empty())
       {
-        current_position = 0;
-        PlayCurrentSong();
-        UpdatePlayingState();
+        SetDialogMessage("Error: Queue is empty.");
+        INL_Thread_State.is_playing = false;
+        return;
       }
+
+      if (current_song_queue_index + 1 >= song_queue.size())
+      {
+        SetDialogMessage("Error: No more songs in the queue.");
+        return;
+      }
+
+      // Increment song index
+      current_song_queue_index++;
+
+      // Get current song
+      Song* current_song = GetCurrentSongFromQueue();
+      if (!current_song)
+      {
+        INL_Thread_State.is_playing = false;
+        SetDialogMessage("Error: Invalid song in queue.");
+        return;
+      }
+
+      current_position = 0;
+      PlayCurrentSong();
+      UpdatePlayingState();
     }
-    else
+    catch (std::exception e)
     {
       show_dialog    = true;
-      dialog_message = "Error: No more songs in the queue.";
+      dialog_message = "Error: Invalid!!.";
+      return;
     }
   }
 
@@ -369,12 +412,6 @@ private:
 
   void PlayPreviousSong()
   {
-    // If rewinding within the current song
-    if (current_position > 3.0)
-    {
-      ReplaySong();
-    }
-
     // Move to the previous song if possible
     if (current_song_queue_index > 0)
     {
@@ -385,9 +422,33 @@ private:
     }
     else
     {
-      show_dialog    = true;
-      dialog_message = "Error: No previous song available.";
+      SetDialogMessage("Error: No previous song available.");
     }
+  }
+
+  void findAudioSinks()
+  {
+    audioDevices.clear();
+    for (const auto& device : audioDeviceMap)
+    {
+      audioDevices.push_back(device.name);
+    }
+    return;
+  }
+
+  Element listAudioSinks()
+  {
+    INL_Component_State.audioDeviceMenu = CreateMenu(&audioDevices, &selected_audio_dev_line);
+    findAudioSinks();
+    if (audioDevices.empty())
+      return vbox({text("No sinks available.") | bold | border});
+
+    auto title = text(" Audio Devices ") | bold | getTrueColor(TrueColors::Color::LightBlue) |
+                 underlined | center;
+
+    auto audioDevComp = vbox({INL_Component_State.audioDeviceMenu->Render() | flex}) | border;
+
+    return vbox({title, separator(), audioDevComp | frame | flex}) | flex;
   }
 
   /* ------------------------------- */
@@ -480,8 +541,7 @@ private:
     }
     catch (std::exception e)
     {
-      dialog_message = "Could not play this song next!";
-      show_dialog    = true;
+      SetDialogMessage("Could not play this song next!");
     }
 
     current_song_queue_index++;
@@ -548,8 +608,7 @@ private:
   {
     if (selected_song_queue == 0)
     {
-      dialog_message = "Unable to remove song... This is playing right now!";
-      show_dialog    = true;
+      SetDialogMessage("Unable to remove song... This is playing right now!");
       return;
     }
     if (selected_song_queue < song_queue.size())
@@ -565,8 +624,7 @@ private:
       return &song_queue[current_song_queue_index];
     }
 
-    dialog_message = "Something went worng";
-    show_dialog    = true;
+    SetDialogMessage("Something went wrong");
     return nullptr;
   }
 
@@ -601,6 +659,7 @@ private:
       // duration gets updated in the PlayCurrentSong() thread itself
 
       // If there's additional properties, you can either copy them or process as needed
+      current_playing_state.additionalProperties.clear();
       for (const auto& [key, value] : metadata.additionalProperties)
       {
         current_playing_state.additionalProperties[key] = value;
@@ -639,18 +698,19 @@ private:
 
     INL_Component_State.artists_list =
       Menu(&current_artist_names, &selected_artist, artist_menu_options);
-    INL_Component_State.songs_list =
-      Scroller(Renderer(
-                 [&]() mutable
-                 {
-                   return RenderSongMenu(current_song_elements); // This should return an Element
-                 }),
-               &selected_inode, global_colors.menu_cursor_bg, global_colors.inactive_menu_cursor_bg);
+    INL_Component_State.songs_list = Scroller(
+      Renderer(
+        [&]() mutable
+        {
+          return RenderSongMenu(current_song_elements); // This should return an Element
+        }),
+      &selected_inode, global_colors.menu_cursor_bg, global_colors.inactive_menu_cursor_bg);
 
     auto main_container =
       Container::Horizontal({INL_Component_State.artists_list, INL_Component_State.songs_list});
 
     /* Adding DEBOUNCE TIME (Invoking PlayCurrentSong() too fast causes resources to not be freed)
+     * [TODO] REMOVED DEBOUNCE FOR NOW
      */
 
     auto last_event_time = std::chrono::steady_clock::now(); // Tracks the last event time
@@ -784,6 +844,16 @@ private:
           }
         }
 
+        else if (active_screen == SHOW_AUDIO_CONF_SCREEN)
+        {
+          if (is_keybind_match(global_keybinds.goto_main_screen))
+          {
+            show_audio_devices = false;
+            active_screen      = SHOW_MAIN_UI;
+            return true;
+          }
+        }
+
         else if (active_screen == SHOW_MAIN_UI)
         {
 
@@ -803,8 +873,7 @@ private:
             }
             else
             {
-              show_dialog    = true;
-              dialog_message = "No artist selected to play songs from.";
+              SetDialogMessage("No artist selected to play songs from.");
             }
             return true;
           }
@@ -822,22 +891,22 @@ private:
           }
           else if (is_keybind_match(global_keybinds.play_song_next))
           {
-            auto now = std::chrono::steady_clock::now();
-            if (now - last_event_time < debounce_duration)
-            {
-              audio_player->stop();
-              return false;
-            }
+            /*auto now = std::chrono::steady_clock::now();*/
+            /*if (now - last_event_time < debounce_duration)*/
+            /*{*/
+            /*  audio_player->stop();*/
+            /*  return false;*/
+            /*}*/
             PlayNextSong();
-            last_event_time = now; // Update the last event time
+            /*last_event_time = now; // Update the last event time*/
             return true;
           }
           else if (is_keybind_match(global_keybinds.play_song_prev))
           {
-            auto now = std::chrono::steady_clock::now();
-            if (now - last_event_time < debounce_duration)
-              return false;
-            last_event_time = now;
+            /*auto now = std::chrono::steady_clock::now();*/
+            /*if (now - last_event_time < debounce_duration)*/
+            /*  return false;*/
+            /*last_event_time = now;*/
             PlayPreviousSong();
             return true;
           }
@@ -911,6 +980,19 @@ private:
             show_dialog = false;
             return true;
           }
+          else if (is_keybind_match(global_keybinds.toggle_audio_devices))
+          {
+            show_audio_devices = !show_audio_devices;
+            if (show_audio_devices)
+            {
+              active_screen = SHOW_AUDIO_CONF_SCREEN;
+            }
+            else
+            {
+              active_screen = SHOW_MAIN_UI;
+            }
+            return true;
+          }
           else if (is_keybind_match(global_keybinds.view_lyrics) &&
                    (current_playing_state.has_lyrics || current_playing_state.has_comment))
           {
@@ -974,9 +1056,6 @@ private:
           }
           else if (is_keybind_match(global_keybinds.add_artists_songs_to_queue) && focus_on_artists)
           {
-            /*selected_inode = 0; // sanity check, the current song pane's index should start from
-             * top to enqueue all songs*/
-            /*albums_indices_traversed = 1;*/
             EnqueueAllSongsByArtist(current_artist_names[selected_artist], false);
             NavigateList(true);
             return true;
@@ -1018,7 +1097,6 @@ private:
                  {
                    interface = RenderMainInterface(progress);
                  }
-
                  if (active_screen == SHOW_LYRICS_SCREEN)
                  {
                    interface = RenderLyricsAndInfoView();
@@ -1026,6 +1104,10 @@ private:
                  if (active_screen == SHOW_QUEUE_SCREEN)
                  {
                    interface = RenderQueueScreen();
+                 }
+                 if (active_screen == SHOW_AUDIO_CONF_SCREEN)
+                 {
+                   interface = listAudioSinks();
                  }
                  if (active_screen == SHOW_SONG_INFO_SCREEN)
                  {
@@ -1509,7 +1591,7 @@ private:
     should_quit = true;
 
     {
-      std::unique_lock<std::mutex> lock(INL_Thread_State.play_mutex);
+      INL_Thread_Manager->lockPlayMutex(INL_Thread_State);
       if (audio_player)
       {
         audio_player->stop();
@@ -1518,12 +1600,11 @@ private:
 
     if (INL_Thread_State.play_future.valid())
     {
-      auto status = INL_Thread_State.play_future.wait_for(std::chrono::seconds(1));
+      auto status = INL_Thread_State.play_future.wait_for(std::chrono::milliseconds(50));
       if (status != std::future_status::ready)
       {
         // Handle timeout - future didn't complete in time
-        dialog_message = "Warning: Audio shutdown timed out";
-        show_dialog    = true;
+        SetDialogMessage("Warning: Audio shutdown timed out");
       }
     }
 

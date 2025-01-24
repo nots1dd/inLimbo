@@ -3,13 +3,10 @@
 
 #include "../parser/toml_parser.hpp"
 #include "songmap.hpp"
-#include <chrono>
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
 #include <dirent.h>
-#include <fstream>
-#include <iostream>
 #include <sys/stat.h>
 #include <unordered_map>
 #include <vector>
