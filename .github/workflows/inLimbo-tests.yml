@@ -26,7 +26,7 @@ jobs:
           sudo apt-get install -y build-essential cmake libtag1-dev git libglib2.0-dev imagemagick libx11-dev libpng-dev libcereal-dev  
 
       - name: inLimbo Test Suite (x86 arch - GCC)
-        run: make build-tests
+        run: make build-test
 
       - name: Clean up
         run: rm -rf build
