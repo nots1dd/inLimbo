@@ -12,136 +12,135 @@
 \DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <unistd.h>}}
 \DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <fstream>}}
 \DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <string>}}
-\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <filesystem>}}
-\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <ctime>}\ \textcolor{comment}{//\ For\ timestamps}}
-\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <sys/resource.h>}\ \textcolor{comment}{//\ For\ resource\ usage}}
-\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <sys/utsname.h>}\ \textcolor{comment}{//\ For\ system\ info}}
-\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <pthread.h>}\ \textcolor{comment}{//\ For\ thread\ info}}
-\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <unistd.h>}\ \textcolor{comment}{//\ For\ getpid,\ getppid}}
-\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <limits.h>}\ \textcolor{comment}{//\ For\ PATH\_MAX}}
-\DoxyCodeLine{00018\ }
-\DoxyCodeLine{00019\ \textcolor{keyword}{class\ }SignalHandler\ \{}
-\DoxyCodeLine{00020\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00021\ \ \ \ \ \textcolor{comment}{//\ Singleton\ instance\ getter}}
-\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{static}\ SignalHandler\&\ \mbox{\hyperlink{classSignalHandler_ad6546efa2f5495086a9b4c53f34d0429}{getInstance}}()\ \{}
-\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ SignalHandler\ instance;}
-\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ instance;}
-\DoxyCodeLine{00025\ \ \ \ \ \}}
-\DoxyCodeLine{00026\ }
-\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{//\ Initialize\ the\ signal\ handler}}
-\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSignalHandler_ad382cbdc2da359850415019ffc970e02}{setup}}()\ \{}
-\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }sigaction\ sa;}
-\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ sa.sa\_sigaction\ =\ SignalHandler::handleSignal;\ \textcolor{comment}{//\ Use\ static\ member\ function}}
-\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ sigemptyset(\&sa.sa\_mask);}
-\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ sa.sa\_flags\ =\ SA\_SIGINFO;\ \textcolor{comment}{//\ Use\ siginfo\_t\ for\ extended\ info}}
-\DoxyCodeLine{00033\ }
-\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ sigaction(SIGABRT,\ \&sa,\ \textcolor{keyword}{nullptr});\ \textcolor{comment}{//\ Catch\ SIGABRT}}
-\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ sigaction(SIGSEGV,\ \&sa,\ \textcolor{keyword}{nullptr});\ \textcolor{comment}{//\ Catch\ SIGSEGV}}
-\DoxyCodeLine{00036\ \ \ \ \ \}}
-\DoxyCodeLine{00037\ }
-\DoxyCodeLine{00038\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{classSignalHandler}{SignalHandler}}()\ =\ \textcolor{keywordflow}{default};\ \textcolor{comment}{//\ Private\ constructor\ for\ singleton}}
-\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{classSignalHandler}{\string~SignalHandler}}()\ =\ \textcolor{keywordflow}{default};}
-\DoxyCodeLine{00041\ }
-\DoxyCodeLine{00042\ \ \ \ \ \textcolor{comment}{//\ Non-\/copyable\ and\ non-\/movable}}
-\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{classSignalHandler}{SignalHandler}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classSignalHandler}{SignalHandler}}\&)\ =\ \textcolor{keyword}{delete};}
-\DoxyCodeLine{00044\ \ \ \ \ \mbox{\hyperlink{classSignalHandler}{SignalHandler}}\&\ operator=(\textcolor{keyword}{const}\ \mbox{\hyperlink{classSignalHandler}{SignalHandler}}\&)\ =\ \textcolor{keyword}{delete};}
-\DoxyCodeLine{00045\ }
-\DoxyCodeLine{00046\ \ \ \ \ \textcolor{comment}{//\ Get\ current\ timestamp\ as\ a\ string}}
-\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ getCurrentTimestamp()\ \{}
-\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ std::time\_t\ now\ =\ std::time(\textcolor{keyword}{nullptr});}
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ buffer[100];}
-\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ std::strftime(buffer,\ \textcolor{keyword}{sizeof}(buffer),\ \textcolor{stringliteral}{"{}\%Y-\/\%m-\/\%d\ \%H:\%M:\%S"{}},\ std::localtime(\&now));}
-\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::string(buffer);}
-\DoxyCodeLine{00052\ \ \ \ \ \}}
-\DoxyCodeLine{00053\ }
-\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ createCacheDirectory(\textcolor{keyword}{const}\ std::string\&\ path)\ \{}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \textcolor{keyword}{struct\ }stat\ info;}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stat(path.c\_str(),\ \&info)\ !=\ 0\ ||\ !(info.st\_mode\ \&\ S\_IFDIR))\ \{}
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ mkdir(path.c\_str(),\ 0755);\ \textcolor{comment}{//\ Create\ directory\ with\ rwx\ permissions}}
-\DoxyCodeLine{00058\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00059\ \ \ \ \ \}}
-\DoxyCodeLine{00060\ }
-\DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{//\ Get\ system\ and\ environment\ details}}
-\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ logSystemInfo(std::ofstream\&\ logFile)\ \{}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Process\ and\ thread\ information}}
-\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Process\ ID:\ "{}}\ <<\ getpid()\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Parent\ Process\ ID:\ "{}}\ <<\ getppid()\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Thread\ ID:\ "{}}\ <<\ pthread\_self()\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00067\ }
-\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Current\ working\ directory}}
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ cwd[PATH\_MAX];}
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (getcwd(cwd,\ \textcolor{keyword}{sizeof}(cwd)))\ \{}
-\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Current\ Working\ Directory:\ "{}}\ <<\ cwd\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00073\ }
-\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ System\ information}}
-\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }utsname\ sysInfo;}
-\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (uname(\&sysInfo)\ ==\ 0)\ \{}
-\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}System\ Name:\ "{}}\ <<\ sysInfo.sysname\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Node\ Name:\ "{}}\ <<\ sysInfo.nodename\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Release:\ "{}}\ <<\ sysInfo.release\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Version:\ "{}}\ <<\ sysInfo.version\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Machine:\ "{}}\ <<\ sysInfo.machine\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00083\ }
-\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Resource\ usage}}
-\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }rusage\ usage;}
-\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (getrusage(RUSAGE\_SELF,\ \&usage)\ ==\ 0)\ \{}
-\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}CPU\ Time\ Used\ (user):\ "{}}\ <<\ usage.ru\_utime.tv\_sec\ <<\ \textcolor{stringliteral}{"{}s\ "{}}\ <<\ usage.ru\_utime.tv\_usec\ <<\ \textcolor{stringliteral}{"{}us\(\backslash\)n"{}};}
-\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}CPU\ Time\ Used\ (system):\ "{}}\ <<\ usage.ru\_stime.tv\_sec\ <<\ \textcolor{stringliteral}{"{}s\ "{}}\ <<\ usage.ru\_stime.tv\_usec\ <<\ \textcolor{stringliteral}{"{}us\(\backslash\)n"{}};}
-\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Max\ Resident\ Set\ Size:\ "{}}\ <<\ usage.ru\_maxrss\ <<\ \textcolor{stringliteral}{"{}\ KB\(\backslash\)n"{}};}
-\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00091\ \ \ \ \ \}}
-\DoxyCodeLine{00092\ }
-\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{//\ Signal\ handling\ function}}
-\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleSignal(\textcolor{keywordtype}{int}\ signal,\ siginfo\_t*\ info,\ \textcolor{keywordtype}{void}*\ context)\ \{}
-\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ signalName\ =\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (signal)\ \{}
-\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SIGABRT:\ signalName\ =\ \textcolor{stringliteral}{"{}SIGABRT"{}};\ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SIGSEGV:\ signalName\ =\ \textcolor{stringliteral}{"{}SIGSEGV"{}};\ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:\ signalName\ =\ \textcolor{stringliteral}{"{}Unknown"{}};\ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00101\ }
-\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ std::string\ logDir\ =\ std::string(std::getenv(\textcolor{stringliteral}{"{}HOME"{}}))\ +\ \textcolor{stringliteral}{"{}/.cache/inLimbo/"{}};}
-\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ createCacheDirectory(logDir);\ \ \textcolor{comment}{//\ Ensure\ the\ directory\ exists}}
-\DoxyCodeLine{00104\ }
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ std::string\ logFileName\ =\ logDir\ +\textcolor{stringliteral}{"{}debug-\/"{}}\ +\ std::to\_string(signal)\ +\ \textcolor{stringliteral}{"{}.log"{}};}
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ std::ofstream\ logFile(logFileName,\ std::ios::out\ |\ std::ios::app);}
-\DoxyCodeLine{00107\ }
-\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (logFile.is\_open())\ \{}
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}===\ Signal\ Caught\ ===\(\backslash\)n"{}};}
-\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Timestamp:\ "{}}\ <<\ getCurrentTimestamp()\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Signal:\ "{}}\ <<\ signalName\ <<\ \textcolor{stringliteral}{"{}\ ("{}}\ <<\ signal\ <<\ \textcolor{stringliteral}{"{})\(\backslash\)n"{}};}
-\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (info)\ \{}
-\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Address\ causing\ signal:\ "{}}\ <<\ info-\/>si\_addr\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00115\ }
-\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Log\ system\ and\ environment\ information}}
-\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ logSystemInfo(logFile);}
-\DoxyCodeLine{00118\ }
-\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Generate\ a\ backtrace}}
-\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ buffer[128];}
-\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ size\ =\ backtrace(buffer,\ 128);}
-\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Backtrace\ ("{}}\ <<\ size\ <<\ \textcolor{stringliteral}{"{}\ frames):\(\backslash\)n"{}};}
-\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}**\ symbols\ =\ backtrace\_symbols(buffer,\ size);}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ size;\ ++i)\ \{}
-\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ symbols[i]\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ free(symbols);}
-\DoxyCodeLine{00128\ }
-\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ logFile.close();}
-\DoxyCodeLine{00130\ }
-\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Critical\ error\ occurred.\ See\ "{}}\ <<\ logFileName\ <<\ \textcolor{stringliteral}{"{}\ for\ details.\(\backslash\)n"{}}\ <<\ \textcolor{stringliteral}{"{}Exiting..."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Failed\ to\ write\ to\ log\ file:\ "{}}\ <<\ logFileName\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00135\ }
-\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Clean\ termination}}
-\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \_Exit(EXIT\_FAILURE);}
-\DoxyCodeLine{00138\ \ \ \ \ \}}
-\DoxyCodeLine{00139\ \};}
-\DoxyCodeLine{00140\ }
-\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <ctime>}\ \textcolor{comment}{//\ For\ timestamps}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <sys/resource.h>}\ \textcolor{comment}{//\ For\ resource\ usage}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <sys/utsname.h>}\ \textcolor{comment}{//\ For\ system\ info}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <pthread.h>}\ \textcolor{comment}{//\ For\ thread\ info}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <unistd.h>}\ \textcolor{comment}{//\ For\ getpid,\ getppid}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <climits>}\ \textcolor{comment}{//\ For\ PATH\_MAX}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{class\ }SignalHandler\ \{}
+\DoxyCodeLine{00019\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{comment}{//\ Singleton\ instance\ getter}}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{static}\ SignalHandler\&\ \mbox{\hyperlink{classSignalHandler_ad6546efa2f5495086a9b4c53f34d0429}{getInstance}}()\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ SignalHandler\ instance;}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ instance;}
+\DoxyCodeLine{00024\ \ \ \ \ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//\ Initialize\ the\ signal\ handler}}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSignalHandler_ad382cbdc2da359850415019ffc970e02}{setup}}()\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }sigaction\ sa;}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ sa.sa\_sigaction\ =\ SignalHandler::handleSignal;\ \textcolor{comment}{//\ Use\ static\ member\ function}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ sigemptyset(\&sa.sa\_mask);}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ sa.sa\_flags\ =\ SA\_SIGINFO;\ \textcolor{comment}{//\ Use\ siginfo\_t\ for\ extended\ info}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ sigaction(SIGABRT,\ \&sa,\ \textcolor{keyword}{nullptr});\ \textcolor{comment}{//\ Catch\ SIGABRT}}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ sigaction(SIGSEGV,\ \&sa,\ \textcolor{keyword}{nullptr});\ \textcolor{comment}{//\ Catch\ SIGSEGV}}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{classSignalHandler}{SignalHandler}}()\ =\ \textcolor{keywordflow}{default};\ \textcolor{comment}{//\ Private\ constructor\ for\ singleton}}
+\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{classSignalHandler}{\string~SignalHandler}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{comment}{//\ Non-\/copyable\ and\ non-\/movable}}
+\DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{classSignalHandler}{SignalHandler}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classSignalHandler}{SignalHandler}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{classSignalHandler}{SignalHandler}}\&\ operator=(\textcolor{keyword}{const}\ \mbox{\hyperlink{classSignalHandler}{SignalHandler}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{//\ Get\ current\ timestamp\ as\ a\ string}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ getCurrentTimestamp()\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ std::time\_t\ now\ =\ std::time(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ buffer[100];}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ std::strftime(buffer,\ \textcolor{keyword}{sizeof}(buffer),\ \textcolor{stringliteral}{"{}\%Y-\/\%m-\/\%d\ \%H:\%M:\%S"{}},\ std::localtime(\&now));}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::string(buffer);}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ createCacheDirectory(\textcolor{keyword}{const}\ std::string\&\ path)\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \textcolor{keyword}{struct\ }stat\ info;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stat(path.c\_str(),\ \&info)\ !=\ 0\ ||\ !(info.st\_mode\ \&\ S\_IFDIR))\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ mkdir(path.c\_str(),\ 0755);\ \textcolor{comment}{//\ Create\ directory\ with\ rwx\ permissions}}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{//\ Get\ system\ and\ environment\ details}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ logSystemInfo(std::ofstream\&\ logFile)\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Process\ and\ thread\ information}}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Process\ ID:\ "{}}\ <<\ getpid()\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Parent\ Process\ ID:\ "{}}\ <<\ getppid()\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Thread\ ID:\ "{}}\ <<\ pthread\_self()\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Current\ working\ directory}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ cwd[PATH\_MAX];}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (getcwd(cwd,\ \textcolor{keyword}{sizeof}(cwd)))\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Current\ Working\ Directory:\ "{}}\ <<\ cwd\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ System\ information}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }utsname\ sysInfo;}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (uname(\&sysInfo)\ ==\ 0)\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}System\ Name:\ "{}}\ <<\ sysInfo.sysname\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Node\ Name:\ "{}}\ <<\ sysInfo.nodename\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Release:\ "{}}\ <<\ sysInfo.release\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Version:\ "{}}\ <<\ sysInfo.version\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Machine:\ "{}}\ <<\ sysInfo.machine\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Resource\ usage}}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }rusage\ usage;}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (getrusage(RUSAGE\_SELF,\ \&usage)\ ==\ 0)\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}CPU\ Time\ Used\ (user):\ "{}}\ <<\ usage.ru\_utime.tv\_sec\ <<\ \textcolor{stringliteral}{"{}s\ "{}}\ <<\ usage.ru\_utime.tv\_usec\ <<\ \textcolor{stringliteral}{"{}us\(\backslash\)n"{}};}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}CPU\ Time\ Used\ (system):\ "{}}\ <<\ usage.ru\_stime.tv\_sec\ <<\ \textcolor{stringliteral}{"{}s\ "{}}\ <<\ usage.ru\_stime.tv\_usec\ <<\ \textcolor{stringliteral}{"{}us\(\backslash\)n"{}};}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Max\ Resident\ Set\ Size:\ "{}}\ <<\ usage.ru\_maxrss\ <<\ \textcolor{stringliteral}{"{}\ KB\(\backslash\)n"{}};}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00090\ \ \ \ \ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{//\ Signal\ handling\ function}}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleSignal(\textcolor{keywordtype}{int}\ signal,\ siginfo\_t*\ info,\ \textcolor{keywordtype}{void}*\ context)\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ signalName\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (signal)\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SIGABRT:\ signalName\ =\ \textcolor{stringliteral}{"{}SIGABRT"{}};\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SIGSEGV:\ signalName\ =\ \textcolor{stringliteral}{"{}SIGSEGV"{}};\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:\ signalName\ =\ \textcolor{stringliteral}{"{}Unknown"{}};\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ std::string\ logDir\ =\ std::string(std::getenv(\textcolor{stringliteral}{"{}HOME"{}}))\ +\ \textcolor{stringliteral}{"{}/.cache/inLimbo/"{}};}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ createCacheDirectory(logDir);\ \ \textcolor{comment}{//\ Ensure\ the\ directory\ exists}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ std::string\ logFileName\ =\ logDir\ +\textcolor{stringliteral}{"{}debug-\/"{}}\ +\ std::to\_string(signal)\ +\ \textcolor{stringliteral}{"{}.log"{}};}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ std::ofstream\ logFile(logFileName,\ std::ios::out\ |\ std::ios::app);}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (logFile.is\_open())\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}===\ Signal\ Caught\ ===\(\backslash\)n"{}};}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Timestamp:\ "{}}\ <<\ getCurrentTimestamp()\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Signal:\ "{}}\ <<\ signalName\ <<\ \textcolor{stringliteral}{"{}\ ("{}}\ <<\ signal\ <<\ \textcolor{stringliteral}{"{})\(\backslash\)n"{}};}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (info)\ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Address\ causing\ signal:\ "{}}\ <<\ info-\/>si\_addr\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Log\ system\ and\ environment\ information}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ logSystemInfo(logFile);}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Generate\ a\ backtrace}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ buffer[128];}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ size\ =\ backtrace(buffer,\ 128);}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ \textcolor{stringliteral}{"{}Backtrace\ ("{}}\ <<\ size\ <<\ \textcolor{stringliteral}{"{}\ frames):\(\backslash\)n"{}};}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}**\ symbols\ =\ backtrace\_symbols(buffer,\ size);}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ size;\ ++i)\ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ logFile\ <<\ symbols[i]\ <<\ \textcolor{charliteral}{'\(\backslash\)n'};}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ free(symbols);}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ logFile.close();}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}**\ Critical\ error\ occurred.\ See\ "{}}\ <<\ logFileName\ <<\ \textcolor{stringliteral}{"{}\ for\ details.\(\backslash\)n"{}}\ <<\ \textcolor{stringliteral}{"{}Exiting...\ **"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}-\/-\/\ Failed\ to\ write\ to\ log\ file:\ "{}}\ <<\ logFileName\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Clean\ termination}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \_Exit(EXIT\_FAILURE);}
+\DoxyCodeLine{00137\ \ \ \ \ \}}
+\DoxyCodeLine{00138\ \};}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

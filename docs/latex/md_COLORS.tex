@@ -1,12 +1,12 @@
 \chapter{COLORS in\+Limbo}
 \hypertarget{md_COLORS}{}\label{md_COLORS}\index{COLORS inLimbo@{COLORS inLimbo}}
-\label{md_COLORS_autotoc_md32}%
-\Hypertarget{md_COLORS_autotoc_md32}%
+\label{md_COLORS_autotoc_md61}%
+\Hypertarget{md_COLORS_autotoc_md61}%
 
 
 Color Schema Documentation for in\+Limbo
 
-This document explains the color schema used in \href{https://github.com/nots1dd/inLimbo}{\texttt{ {\bfseries{in\+Limbo}}}}, including all available colors, their respective RGB values, and how to configure them in the {\ttfamily config.\+toml} file.\hypertarget{md_COLORS_autotoc_md33}{}\doxysection{\texorpdfstring{Overview}{Overview}}\label{md_COLORS_autotoc_md33}
+This document explains the color schema used in \href{https://github.com/nots1dd/inLimbo}{\texttt{ {\bfseries{in\+Limbo}}}}, including all available colors, their respective RGB values, and how to configure them in the {\ttfamily config.\+toml} file.\hypertarget{md_COLORS_autotoc_md62}{}\doxysection{\texorpdfstring{Overview}{Overview}}\label{md_COLORS_autotoc_md62}
 The in\+Limbo project uses a set of predefined true colors, each mapped to an {\ttfamily ftxui\+::\+Color\+::\+RGB} value (True Color Palette). This allows for a variety of colors to be used within the application to enhance the user interface.
 
 \begin{DoxyNote}{Note}
@@ -19,7 +19,7 @@ The in\+Limbo project uses a set of predefined true colors, each mapped to an {\
 ~\newline
 
 \end{DoxyNote}
-\hypertarget{md_COLORS_autotoc_md34}{}\doxysubsection{\texorpdfstring{How to Set Colors in {\ttfamily config.\+toml}}{How to Set Colors in {\ttfamily config.\+toml}}}\label{md_COLORS_autotoc_md34}
+\hypertarget{md_COLORS_autotoc_md63}{}\doxysubsection{\texorpdfstring{How to Set Colors in {\ttfamily config.\+toml}}{How to Set Colors in {\ttfamily config.\+toml}}}\label{md_COLORS_autotoc_md63}
 To set a color in the {\ttfamily \$HOME/.config/in\+Limbo/config.\+toml} file, use the corresponding color name defined in the color enum. The color name must be set under the appropriate section in the TOML file.
 
 For example, if you want to change the active window color to {\ttfamily Red}, you would include the following in your {\ttfamily config.\+toml}\+:
@@ -38,7 +38,7 @@ For example, if you want to change the active window color to {\ttfamily Red}, y
 ~\newline
 
 \end{DoxyImportant}
-\hypertarget{md_COLORS_autotoc_md35}{}\doxysubsection{\texorpdfstring{Available Colors and Their RGB Values}{Available Colors and Their RGB Values}}\label{md_COLORS_autotoc_md35}
+\hypertarget{md_COLORS_autotoc_md64}{}\doxysubsection{\texorpdfstring{Available Colors and Their RGB Values}{Available Colors and Their RGB Values}}\label{md_COLORS_autotoc_md64}
 Here’s a list of all available colors and their respective RGB values\+:
 
 \tabulinesep=1mm
@@ -95,7 +95,7 @@ Sunset\+Orange   &RGB(255, 99, 71)    \\\cline{1-2}
 Turquoise   &RGB(64, 224, 208)    \\\cline{1-2}
 Light\+Turquoise   &RGB(175, 238, 238)   \\\cline{1-2}
 \end{longtabu}
-\hypertarget{md_COLORS_autotoc_md36}{}\doxysubsection{\texorpdfstring{How to Use Colors in the in\+Limbo}{How to Use Colors in the in\+Limbo}}\label{md_COLORS_autotoc_md36}
+\hypertarget{md_COLORS_autotoc_md65}{}\doxysubsection{\texorpdfstring{How to Use Colors in the in\+Limbo}{How to Use Colors in the in\+Limbo}}\label{md_COLORS_autotoc_md65}
 Once the color is defined in the {\ttfamily config.\+toml} file, the {\ttfamily parse\+Colors} function in the code will map the string to the corresponding {\ttfamily \doxylink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{True\+Colors\+::\+Color}} enum value. The color is then used within the in\+Limbo wherever needed.
 
 For example, setting the {\ttfamily active\+\_\+win\+\_\+color} in the {\ttfamily config.\+toml} like this\+:
@@ -108,7 +108,7 @@ For example, setting the {\ttfamily active\+\_\+win\+\_\+color} in the {\ttfamil
 \end{DoxyCode}
 
 
-This will configure the in\+Limbo to use the color {\ttfamily Blue} (RGB(0, 0, 255)) for the active window color.\hypertarget{md_COLORS_autotoc_md37}{}\doxysubsection{\texorpdfstring{Example of {\ttfamily config.\+toml}}{Example of {\ttfamily config.\+toml}}}\label{md_COLORS_autotoc_md37}
+This will configure the in\+Limbo to use the color {\ttfamily Blue} (RGB(0, 0, 255)) for the active window color.\hypertarget{md_COLORS_autotoc_md66}{}\doxysubsection{\texorpdfstring{Example of {\ttfamily config.\+toml}}{Example of {\ttfamily config.\+toml}}}\label{md_COLORS_autotoc_md66}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{[colors]}

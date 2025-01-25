@@ -16,6 +16,7 @@ A header file for the \doxylink{classTagLibParser}{Tag\+Lib\+Parser} class and \
 {\ttfamily \#include $<$taglib/mpegfile.\+h$>$}\newline
 {\ttfamily \#include $<$taglib/attachedpictureframe.\+h$>$}\newline
 {\ttfamily \#include $<$taglib/tpropertymap.\+h$>$}\newline
+{\ttfamily \#include $<$taglib/flacfile.\+h$>$}\newline
 {\ttfamily \#include $<$png.\+h$>$}\newline
 {\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
 \doxysubsubsection*{Classes}
@@ -33,7 +34,7 @@ void \mbox{\hyperlink{taglib__parser_8h_a1dd3093763fba77a033971b138eda516}{print
 void \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{send\+Err\+Msg}} (std\+::string \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debug\+Log\+Bool\+Str}}, std\+::string err\+Msg)
 \begin{DoxyCompactList}\small\item\em Sends an error message based on the debug log setting. \end{DoxyCompactList}\item 
 bool \mbox{\hyperlink{taglib__parser_8h_a663081b243b450cd9b222d681eb112bf}{extract\+Thumbnail}} (const std\+::string \&audio\+File\+Path, const std\+::string \&output\+Image\+Path)
-\begin{DoxyCompactList}\small\item\em Extracts the thumbnail (album art) from an audio file and saves it to an image file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Extracts the thumbnail (album art) from an audio file and saves it to an image file. (Works for mp3 and flac) \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -57,7 +58,7 @@ bool extract\+Thumbnail (\begin{DoxyParamCaption}\item[{const std\+::string \&}]
 
 
 
-Extracts the thumbnail (album art) from an audio file and saves it to an image file. 
+Extracts the thumbnail (album art) from an audio file and saves it to an image file. (Works for mp3 and flac) 
 
 
 \begin{DoxyParams}{Parameters}

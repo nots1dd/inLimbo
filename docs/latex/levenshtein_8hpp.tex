@@ -1,0 +1,53 @@
+\doxysection{src/helpers/levenshtein.hpp File Reference}
+\hypertarget{levenshtein_8hpp}{}\label{levenshtein_8hpp}\index{src/helpers/levenshtein.hpp@{src/helpers/levenshtein.hpp}}
+{\ttfamily \#include $<$algorithm$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+size\+\_\+t \mbox{\hyperlink{levenshtein_8hpp_af6b965a635feedead81476d39ac9d867}{levenshtein\+Distance}} (const std\+::string \&s1, const std\+::string \&s2)
+\begin{DoxyCompactList}\small\item\em Computes the Levenshtein distance between two strings. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{levenshtein_8hpp_af6b965a635feedead81476d39ac9d867}\index{levenshtein.hpp@{levenshtein.hpp}!levenshteinDistance@{levenshteinDistance}}
+\index{levenshteinDistance@{levenshteinDistance}!levenshtein.hpp@{levenshtein.hpp}}
+\doxysubsubsection{\texorpdfstring{levenshteinDistance()}{levenshteinDistance()}}
+{\footnotesize\ttfamily \label{levenshtein_8hpp_af6b965a635feedead81476d39ac9d867} 
+size\+\_\+t levenshtein\+Distance (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{s1}{, }\item[{const std\+::string \&}]{s2}{}\end{DoxyParamCaption})}
+
+
+
+Computes the Levenshtein distance between two strings. 
+
+The Levenshtein distance is calculated by finding the minimum number of operations required to transform one string into another. The allowed operations are\+:
+\begin{DoxyItemize}
+\item {\bfseries{Insertion}}\+: Insert a character into one string.
+\item {\bfseries{Deletion}}\+: Delete a character from one string.
+\item {\bfseries{Substitution}}\+: Replace a character in one string with another.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em s1} & The first string. \\
+\hline
+{\em s2} & The second string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The Levenshtein distance between the two strings.
+\end{DoxyReturn}
+This implementation uses dynamic programming to compute the Levenshtein distance. A 2D table is constructed, where each entry at \mbox{[}i\mbox{]}\mbox{[}j\mbox{]} contains the distance between the first i characters of s1 and the first j characters of s2. The final distance is found at the bottom-\/right corner of the table. The time complexity of this algorithm is O(m \texorpdfstring{$\ast$}{*} n), where m and n are the lengths of the two input strings. \texorpdfstring{$<$}{<} Length of the first string.
+
+\texorpdfstring{$<$}{<} Length of the second string.
+
+\texorpdfstring{$<$}{<} Cost of deleting characters from s1 to match empty s2.
+
+\texorpdfstring{$<$}{<} Cost of inserting characters into s1 to match s2.
+
+\texorpdfstring{$<$}{<} Deletion
+
+\texorpdfstring{$<$}{<} Insertion
+
+\texorpdfstring{$<$}{<} Substitution

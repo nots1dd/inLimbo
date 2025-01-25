@@ -2,30 +2,58 @@
 \hypertarget{classCommandLineArgs}{}\label{classCommandLineArgs}\index{CommandLineArgs@{CommandLineArgs}}
 
 
+Parses and validates command-\/line arguments.  
+
+
+
+
 {\ttfamily \#include $<$cmd-\/line-\/args.\+hpp$>$}
 
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{classCommandLineArgs_ab739e1f1edffb125acdce9d556f19199}{Command\+Line\+Args}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]}, const std\+::vector$<$ std\+::string $>$ \&allowed\+Flags=\{\})
-\item 
+\mbox{\hyperlink{classCommandLineArgs_a1c67b951a142614aac165c87a9804e1a}{Command\+Line\+Args}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Constructs a \doxylink{classCommandLineArgs}{Command\+Line\+Args} object and parses command-\/line arguments. \end{DoxyCompactList}\item 
 std\+::string \mbox{\hyperlink{classCommandLineArgs_aed48cc4e9324c706042acb43ace91a1e}{get}} (const std\+::string \&flag, const std\+::string \&default\+Value="{}"{}) const
-\item 
+\begin{DoxyCompactList}\small\item\em Retrieves the value associated with a flag. \end{DoxyCompactList}\item 
 bool \mbox{\hyperlink{classCommandLineArgs_a9e468eecc878b283c0a2070858868f0f}{has\+Flag}} (const std\+::string \&flag) const
-\item 
+\begin{DoxyCompactList}\small\item\em Checks if a specific flag was provided. \end{DoxyCompactList}\item 
 const std\+::vector$<$ std\+::string $>$ \& \mbox{\hyperlink{classCommandLineArgs_ad49f8db1c03381d9f87a8ffd48546cf8}{get\+Positional\+Args}} () const
-\item 
+\begin{DoxyCompactList}\small\item\em Retrieves the list of positional arguments. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classCommandLineArgs_a23bfeb76513b5a88ec4af37d6f60269e}{print\+Usage}} (const std\+::string \&program\+Name) const
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Prints usage information and program details. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{valid\+Flags}}
+\begin{DoxyCompactList}\small\item\em List of valid flags supported by the application. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
+
+\doxysubsection{Detailed Description}
+Parses and validates command-\/line arguments. 
+
+The {\ttfamily \doxylink{classCommandLineArgs}{Command\+Line\+Args}} class handles parsing flags, extracting positional arguments, and providing detailed error messages for invalid flags. It is designed for the in\+Limbo TUI music player and includes project-\/specific details in its usage output. 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\Hypertarget{classCommandLineArgs_ab739e1f1edffb125acdce9d556f19199}\index{CommandLineArgs@{CommandLineArgs}!CommandLineArgs@{CommandLineArgs}}
+\Hypertarget{classCommandLineArgs_a1c67b951a142614aac165c87a9804e1a}\index{CommandLineArgs@{CommandLineArgs}!CommandLineArgs@{CommandLineArgs}}
 \index{CommandLineArgs@{CommandLineArgs}!CommandLineArgs@{CommandLineArgs}}
 \doxysubsubsection{\texorpdfstring{CommandLineArgs()}{CommandLineArgs()}}
-{\footnotesize\ttfamily \label{classCommandLineArgs_ab739e1f1edffb125acdce9d556f19199} 
-Command\+Line\+Args\+::\+Command\+Line\+Args (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}, }\item[{const std\+::vector$<$ std\+::string $>$ \&}]{allowed\+Flags}{ = {\ttfamily \{\}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily \label{classCommandLineArgs_a1c67b951a142614aac165c87a9804e1a} 
+Command\+Line\+Args\+::\+Command\+Line\+Args (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+Constructs a \doxylink{classCommandLineArgs}{Command\+Line\+Args} object and parses command-\/line arguments. 
+
+If parsing fails, an error message is displayed, usage information is printed, and the program exits with an error code.
+
+
+\begin{DoxyParams}{Parameters}
+{\em argc} & The number of command-\/line arguments. \\
+\hline
+{\em argv} & The array of command-\/line arguments. \\
+\hline
+\end{DoxyParams}
 
 
 \doxysubsection{Member Function Documentation}
@@ -35,23 +63,89 @@ Command\+Line\+Args\+::\+Command\+Line\+Args (\begin{DoxyParamCaption}\item[{int
 {\footnotesize\ttfamily \label{classCommandLineArgs_aed48cc4e9324c706042acb43ace91a1e} 
 std\+::string Command\+Line\+Args\+::get (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{flag}{, }\item[{const std\+::string \&}]{default\+Value}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+Retrieves the value associated with a flag. 
+
+If the flag is not present, a default value is returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em flag} & The flag to look up. \\
+\hline
+{\em default\+Value} & The value to return if the flag is not found (default is an empty string). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value associated with the flag or the default value if the flag is not found. 
+\end{DoxyReturn}
 \Hypertarget{classCommandLineArgs_ad49f8db1c03381d9f87a8ffd48546cf8}\index{CommandLineArgs@{CommandLineArgs}!getPositionalArgs@{getPositionalArgs}}
 \index{getPositionalArgs@{getPositionalArgs}!CommandLineArgs@{CommandLineArgs}}
 \doxysubsubsection{\texorpdfstring{getPositionalArgs()}{getPositionalArgs()}}
 {\footnotesize\ttfamily \label{classCommandLineArgs_ad49f8db1c03381d9f87a8ffd48546cf8} 
 const std\+::vector$<$ std\+::string $>$ \& Command\+Line\+Args\+::get\+Positional\+Args (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+Retrieves the list of positional arguments. 
+
+\begin{DoxyReturn}{Returns}
+A reference to a vector containing the positional arguments. 
+\end{DoxyReturn}
 \Hypertarget{classCommandLineArgs_a9e468eecc878b283c0a2070858868f0f}\index{CommandLineArgs@{CommandLineArgs}!hasFlag@{hasFlag}}
 \index{hasFlag@{hasFlag}!CommandLineArgs@{CommandLineArgs}}
 \doxysubsubsection{\texorpdfstring{hasFlag()}{hasFlag()}}
 {\footnotesize\ttfamily \label{classCommandLineArgs_a9e468eecc878b283c0a2070858868f0f} 
 bool Command\+Line\+Args\+::has\+Flag (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{flag}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+Checks if a specific flag was provided. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em flag} & The flag to check. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the flag is present, otherwise {\ttfamily false}. 
+\end{DoxyReturn}
 \Hypertarget{classCommandLineArgs_a23bfeb76513b5a88ec4af37d6f60269e}\index{CommandLineArgs@{CommandLineArgs}!printUsage@{printUsage}}
 \index{printUsage@{printUsage}!CommandLineArgs@{CommandLineArgs}}
 \doxysubsubsection{\texorpdfstring{printUsage()}{printUsage()}}
 {\footnotesize\ttfamily \label{classCommandLineArgs_a23bfeb76513b5a88ec4af37d6f60269e} 
 void Command\+Line\+Args\+::print\+Usage (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{program\+Name}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Prints usage information and program details. 
+
+The output includes a description of the program, valid options, and helpful links for project documentation and support.
+
+
+\begin{DoxyParams}{Parameters}
+{\em program\+Name} & The name of the program (typically {\ttfamily argv\mbox{[}0\mbox{]}}). \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classCommandLineArgs_a78144ae8a840966935964dd323413008}\index{CommandLineArgs@{CommandLineArgs}!validFlags@{validFlags}}
+\index{validFlags@{validFlags}!CommandLineArgs@{CommandLineArgs}}
+\doxysubsubsection{\texorpdfstring{validFlags}{validFlags}}
+{\footnotesize\ttfamily \label{classCommandLineArgs_a78144ae8a840966935964dd323413008} 
+const std\+::vector$<$ std\+::string $>$ Command\+Line\+Args\+::valid\+Flags\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \{}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}-\/-\/help"{}},\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/show-\/dbus-\/name"{}},\ \ \textcolor{stringliteral}{"{}-\/-\/version"{}},\ \textcolor{stringliteral}{"{}-\/-\/clear-\/cache"{}},\ \textcolor{stringliteral}{"{}-\/-\/show-\/config-\/file"{}},}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}-\/-\/show-\/log-\/dir"{}},\ \textcolor{stringliteral}{"{}-\/-\/update-\/cache-\/run"{}}\}}
+
+\end{DoxyCode}
+
+
+List of valid flags supported by the application. 
 
 
 

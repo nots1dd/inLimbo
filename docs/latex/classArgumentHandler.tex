@@ -1,0 +1,55 @@
+\doxysection{Argument\+Handler Class Reference}
+\hypertarget{classArgumentHandler}{}\label{classArgumentHandler}\index{ArgumentHandler@{ArgumentHandler}}
+
+
+Handles processing of command-\/line arguments and executes corresponding actions.  
+
+
+
+
+{\ttfamily \#include $<$arg-\/handler.\+hpp$>$}
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structArgumentHandler_1_1Paths}{Paths}}
+\begin{DoxyCompactList}\small\item\em Represents essential application paths. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{classArgumentHandler_a573a13e5dcb882af4dfc1568be103c72}{handle\+Arguments}} (const \mbox{\hyperlink{classCommandLineArgs}{Command\+Line\+Args}} \&cmd\+Args, const std\+::string \&program\+Name, const \mbox{\hyperlink{structArgumentHandler_1_1Paths}{Paths}} \&paths)
+\begin{DoxyCompactList}\small\item\em Handles command-\/line arguments and executes corresponding actions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handles processing of command-\/line arguments and executes corresponding actions. 
+
+The {\ttfamily \doxylink{classArgumentHandler}{Argument\+Handler}} class is responsible for parsing command-\/line arguments, executing predefined actions for valid flags, and managing application paths. It also includes utilities for colorful console output. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classArgumentHandler_a573a13e5dcb882af4dfc1568be103c72}\index{ArgumentHandler@{ArgumentHandler}!handleArguments@{handleArguments}}
+\index{handleArguments@{handleArguments}!ArgumentHandler@{ArgumentHandler}}
+\doxysubsubsection{\texorpdfstring{handleArguments()}{handleArguments()}}
+{\footnotesize\ttfamily \label{classArgumentHandler_a573a13e5dcb882af4dfc1568be103c72} 
+static void Argument\+Handler\+::handle\+Arguments (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCommandLineArgs}{Command\+Line\+Args}} \&}]{cmd\+Args}{, }\item[{const std\+::string \&}]{program\+Name}{, }\item[{const \mbox{\hyperlink{structArgumentHandler_1_1Paths}{Paths}} \&}]{paths}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Handles command-\/line arguments and executes corresponding actions. 
+
+This method processes all valid flags provided through the {\ttfamily \doxylink{classCommandLineArgs}{Command\+Line\+Args}} object and invokes the corresponding handler functions. For unsupported flags, an error message is displayed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em cmd\+Args} & The {\ttfamily \doxylink{classCommandLineArgs}{Command\+Line\+Args}} object containing parsed command-\/line arguments. \\
+\hline
+{\em program\+Name} & The name of the program (typically {\ttfamily argv\mbox{[}0\mbox{]}}). \\
+\hline
+{\em paths} & The application paths required for handling certain flags. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{arg-handler_8hpp}{arg-\/handler.\+hpp}}\end{DoxyCompactItemize}

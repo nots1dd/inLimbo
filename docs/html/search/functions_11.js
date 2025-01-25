@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['_7einodefilemapper_0',['~InodeFileMapper',['../classInodeFileMapper.html#a2902ff1b5d3c35ba80f4917e22e5984e',1,'InodeFileMapper']]],
-  ['_7eminiaudioplayer_1',['~MiniAudioPlayer',['../classMiniAudioPlayer.html#ade3387406ebf3bf900d561b8e72a2a3c',1,'MiniAudioPlayer']]]
+  ['workerthreadpool_0',['WorkerThreadPool',['../classWorkerThreadPool.html#a060a705b0877a7733c5edf3723ef7705',1,'WorkerThreadPool::WorkerThreadPool(size_t thread_count=std::thread::hardware_concurrency())'],['../classWorkerThreadPool.html#a061dc7111f2c9292a1dc05925f06d81f',1,'WorkerThreadPool::WorkerThreadPool(const WorkerThreadPool &amp;)=delete']]]
 ];

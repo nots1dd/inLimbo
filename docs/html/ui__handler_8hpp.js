@@ -6,6 +6,7 @@ var ui__handler_8hpp =
     [ "MAX_LENGTH_ARTIST_NAME", "ui__handler_8hpp.html#a6199aa5ef4a8655f98529342f12e188f", null ],
     [ "MAX_LENGTH_SONG_NAME", "ui__handler_8hpp.html#ac5fe6a723443d277de55e15b8e2a30d2", null ],
     [ "MIN_DEBOUNCE_TIME_IN_MS", "ui__handler_8hpp.html#a2599a56212bf57db1c1039fd3b2cf367", null ],
+    [ "SHOW_AUDIO_CONF_SCREEN", "ui__handler_8hpp.html#ad76251869caf9c11eaf3cb506af18083", null ],
     [ "SHOW_HELP_SCREEN", "ui__handler_8hpp.html#abfd022c0da8ae34ff96773141ac69756", null ],
     [ "SHOW_LYRICS_SCREEN", "ui__handler_8hpp.html#a965b2db45eda447f0b343c73672533fd", null ],
     [ "SHOW_MAIN_UI", "ui__handler_8hpp.html#ab1e2d4655431d80420094738cb479ba9", null ],

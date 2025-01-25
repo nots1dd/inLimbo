@@ -1,0 +1,47 @@
+\doxysection{Color\+Manager Class Reference}
+\hypertarget{classColorManager}{}\label{classColorManager}\index{ColorManager@{ColorManager}}
+
+
+Provides utilities for managing console colors.  
+
+
+
+
+{\ttfamily \#include $<$arg-\/handler.\+hpp$>$}
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::string\+\_\+view \mbox{\hyperlink{classColorManager_af561fc120beb824a566af0611611754d}{get\+Color}} (\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{Console\+Color}} color)
+\begin{DoxyCompactList}\small\item\em Retrieves the ANSI color code for a given {\ttfamily \doxylink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{Console\+Color}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Provides utilities for managing console colors. 
+
+The {\ttfamily \doxylink{classColorManager}{Color\+Manager}} class contains methods to retrieve ANSI color codes for use in console output. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classColorManager_af561fc120beb824a566af0611611754d}\index{ColorManager@{ColorManager}!getColor@{getColor}}
+\index{getColor@{getColor}!ColorManager@{ColorManager}}
+\doxysubsubsection{\texorpdfstring{getColor()}{getColor()}}
+{\footnotesize\ttfamily \label{classColorManager_af561fc120beb824a566af0611611754d} 
+static std\+::string\+\_\+view Color\+Manager\+::get\+Color (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{Console\+Color}}}]{color}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Retrieves the ANSI color code for a given {\ttfamily \doxylink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{Console\+Color}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em color} & The {\ttfamily \doxylink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{Console\+Color}} enum value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A string view representing the ANSI color code. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{arg-handler_8hpp}{arg-\/handler.\+hpp}}\end{DoxyCompactItemize}

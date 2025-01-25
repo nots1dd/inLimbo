@@ -142,88 +142,91 @@ $(function(){initNavTree('keymaps_8hpp_source.html',''); initResizable(true); })
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="structKeybinds.html#aee5cde9ebf6a1197a7f339471fea0d41">   37</a></span>  <span class="keywordtype">char</span> <a class="code hl_variable" href="structKeybinds.html#aee5cde9ebf6a1197a7f339471fea0d41">play_this_song_next</a>;        </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="structKeybinds.html#a928d27528bc64d0d67e4871733e37779">   38</a></span>  <span class="keywordtype">char</span> <a class="code hl_variable" href="structKeybinds.html#a928d27528bc64d0d67e4871733e37779">view_song_queue</a>;            </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="structKeybinds.html#afbfca5b80fd58ffbc08822c518bc4ec2">   39</a></span>  <span class="keywordtype">char</span> <a class="code hl_variable" href="structKeybinds.html#afbfca5b80fd58ffbc08822c518bc4ec2">view_current_song_info</a>;     </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>};</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="structKeybinds.html#a0c1783894d6ec11de583f0b5396bbde4">   40</a></span>  <span class="keywordtype">char</span> <a class="code hl_variable" href="structKeybinds.html#a0c1783894d6ec11de583f0b5396bbde4">toggle_audio_devices</a>;       </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>};</div>
 </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span></div>
-<div class="foldopen" id="foldopen00050" data-start="{" data-end="}">
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="keymaps_8hpp.html#a140e0fecc49876baa6c265621cf96518">   50</a></span><a class="code hl_struct" href="structKeybinds.html">Keybinds</a> <a class="code hl_function" href="keymaps_8hpp.html#a140e0fecc49876baa6c265621cf96518">parseKeybinds</a>()</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>{</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <a class="code hl_struct" href="structKeybinds.html">Keybinds</a> keybinds;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="comment">// Mapping of special key names to their ASCII values</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="keyword">const</span> std::unordered_map&lt;std::string_view, char&gt; special_keys = {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    {<span class="stringliteral">&quot;Tab&quot;</span>, <span class="charliteral">&#39;\t&#39;</span>},   </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    {<span class="stringliteral">&quot;Space&quot;</span>, <span class="charliteral">&#39; &#39;</span>},  </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    {<span class="stringliteral">&quot;Enter&quot;</span>, <span class="charliteral">&#39;\n&#39;</span>}, </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    {<span class="stringliteral">&quot;Esc&quot;</span>, 27},     </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  };</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keyword">auto</span> reportError = [](<span class="keyword">const</span> std::string&amp; field, <span class="keyword">const</span> std::string_view&amp; key)</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  {</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    std::cerr &lt;&lt; <span class="stringliteral">&quot;Error: Unsupported or empty keybind &#39;&quot;</span> &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot;&#39; detected for field &#39;&quot;</span> &lt;&lt; field</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>              &lt;&lt; <span class="stringliteral">&quot;&#39;. Please check your configuration.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    std::exit(EXIT_FAILURE); </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  };</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keyword">auto</span> handle_special_keys = [&amp;](<span class="keyword">const</span> std::string_view&amp; key, <span class="keyword">const</span> std::string&amp; field) -&gt; <span class="keywordtype">char</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  {</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keywordflow">if</span> (key.empty())</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    {</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      reportError(field, key); </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    }</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordflow">if</span> (special_keys.find(key) != special_keys.end())</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    {</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>      <span class="keywordflow">return</span> special_keys.at(key); </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    }</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="keywordflow">if</span> (key.size() == 1)</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    {</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>      <span class="keywordflow">return</span> key[0]; <span class="comment">// Single-character keys</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    }</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    reportError(field, key); </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keywordflow">return</span> -1;               <span class="comment">// Unreachable case</span></div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  };</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  <span class="comment">// Map each field name to the corresponding member in the Keybinds struct</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="keyword">const</span> std::unordered_map&lt;std::string, char*&gt; field_map = {</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    {<span class="stringliteral">&quot;scroll_up&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a31d353b681721388fa78c974245f983e">scroll_up</a>},</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    {<span class="stringliteral">&quot;scroll_down&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#ac2e5b89bf1db7941a3d3c115d3be6bdb">scroll_down</a>},</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    {<span class="stringliteral">&quot;toggle_focus&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#aeebdafcff1d774e95b25c184b229128c">toggle_focus</a>},</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    {<span class="stringliteral">&quot;show_help&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a11bbc23c21d5fef44f2b13f32cf8d831">show_help</a>},</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    {<span class="stringliteral">&quot;toggle_play&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#ad10b5a9637dc1cd70cfce5fa8362cb03">toggle_play</a>},</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    {<span class="stringliteral">&quot;play_song&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#afed2550f73b5b8481626f25744963d1d">play_song</a>},</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    {<span class="stringliteral">&quot;play_song_next&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#ac8dee0e90b6f40bcbc0fae4be3207736">play_song_next</a>},</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    {<span class="stringliteral">&quot;play_song_prev&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#abcc5064335d6797840983acb99bdb88c">play_song_prev</a>},</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    {<span class="stringliteral">&quot;vol_up&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#af23c42bb55c27be6788ce52935424bb3">vol_up</a>},</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    {<span class="stringliteral">&quot;vol_down&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a911e1c12013e8a608c8a1b5f7b7c5be2">vol_down</a>},</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    {<span class="stringliteral">&quot;toggle_mute&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a3d0f9af37b9cf78a2da4bfdc56bbe629">toggle_mute</a>},</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    {<span class="stringliteral">&quot;quit_app&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#af70444b29352ec2fa20920c6158123f6">quit_app</a>},</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    {<span class="stringliteral">&quot;seek_ahead_5&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a328d188e562cf2d00ca8fdc65af75c6a">seek_ahead_5</a>},</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    {<span class="stringliteral">&quot;seek_behind_5&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#ac01d4cb164309e257c932076a6a65aa6">seek_behind_5</a>},</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    {<span class="stringliteral">&quot;view_lyrics&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#ab7c2068f6c21a4b2d228e0720cbe8ed5">view_lyrics</a>},</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    {<span class="stringliteral">&quot;replay_song&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a6002f357b11c6ecc415595d3e4cd35b4">replay_song</a>},</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    {<span class="stringliteral">&quot;goto_main_screen&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a08813d343f783c66e71f6014d1623218">goto_main_screen</a>},</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    {<span class="stringliteral">&quot;add_song_to_queue&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#af484a422e3e572779060ebb34e736dfc">add_song_to_queue</a>},</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    {<span class="stringliteral">&quot;add_artists_songs_to_queue&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a1558efc3ae95ab185f63dc61859d6923">add_artists_songs_to_queue</a>},</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    {<span class="stringliteral">&quot;remove_song_from_queue&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#ad6ba797ddc2c738d59acb8ad745d7c50">remove_song_from_queue</a>},</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    {<span class="stringliteral">&quot;play_this_song_next&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#aee5cde9ebf6a1197a7f339471fea0d41">play_this_song_next</a>},</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    {<span class="stringliteral">&quot;view_song_queue&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a928d27528bc64d0d67e4871733e37779">view_song_queue</a>},</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    {<span class="stringliteral">&quot;view_current_song_info&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#afbfca5b80fd58ffbc08822c518bc4ec2">view_current_song_info</a>}};</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  <span class="comment">// Populate the keybinds struct by reading the fields from the TOML configuration</span></div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [field, member_ptr] : field_map)</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>  {</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    *member_ptr = handle_special_keys(<a class="code hl_function" href="toml__parser_8hpp.html#a19930571a1aced24a71d9a1d6e7c710a">parseTOMLField</a>(<a class="code hl_define" href="toml__parser_8hpp.html#a68fd11c312f2eb908cc3cf08ae9b9c28">PARENT_KEYBINDS</a>, field),</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                                      field); </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>  }</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>  <span class="keywordflow">return</span> keybinds; </div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>}</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span></div>
+<div class="foldopen" id="foldopen00051" data-start="{" data-end="}">
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="keymaps_8hpp.html#a140e0fecc49876baa6c265621cf96518">   51</a></span><a class="code hl_struct" href="structKeybinds.html">Keybinds</a> <a class="code hl_function" href="keymaps_8hpp.html#a140e0fecc49876baa6c265621cf96518">parseKeybinds</a>()</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>{</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <a class="code hl_struct" href="structKeybinds.html">Keybinds</a> keybinds;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="comment">// Mapping of special key names to their ASCII values</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">const</span> std::unordered_map&lt;std::string_view, char&gt; special_keys = {</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    {<span class="stringliteral">&quot;Tab&quot;</span>, <span class="charliteral">&#39;\t&#39;</span>},   </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    {<span class="stringliteral">&quot;Space&quot;</span>, <span class="charliteral">&#39; &#39;</span>},  </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    {<span class="stringliteral">&quot;Enter&quot;</span>, <span class="charliteral">&#39;\n&#39;</span>}, </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    {<span class="stringliteral">&quot;Esc&quot;</span>, 27},     </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  };</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keyword">auto</span> reportError = [](<span class="keyword">const</span> std::string&amp; field, <span class="keyword">const</span> std::string_view&amp; key)</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    std::cerr &lt;&lt; <span class="stringliteral">&quot;** Error: Unsupported or empty keybind &#39;&quot;</span> &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot;&#39; detected for field &#39;&quot;</span> &lt;&lt; field</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>              &lt;&lt; <span class="stringliteral">&quot;&#39;. Modify or remove that keybind field. **&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    std::exit(EXIT_FAILURE); </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  };</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keyword">auto</span> handle_special_keys = [&amp;](<span class="keyword">const</span> std::string_view&amp; key, <span class="keyword">const</span> std::string&amp; field) -&gt; <span class="keywordtype">char</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  {</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordflow">if</span> (key.empty())</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    {</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>      reportError(field, key); </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    }</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keywordflow">if</span> (special_keys.find(key) != special_keys.end())</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    {</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>      <span class="keywordflow">return</span> special_keys.at(key); </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    }</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keywordflow">if</span> (key.size() == 1)</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    {</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>      <span class="keywordflow">return</span> key[0]; <span class="comment">// Single-character keys</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    }</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    reportError(field, key); </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordflow">return</span> -1;               <span class="comment">// Unreachable case</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  };</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="comment">// Map each field name to the corresponding member in the Keybinds struct</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <span class="keyword">const</span> std::unordered_map&lt;std::string, char*&gt; field_map = {</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    {<span class="stringliteral">&quot;scroll_up&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a31d353b681721388fa78c974245f983e">scroll_up</a>},</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    {<span class="stringliteral">&quot;scroll_down&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#ac2e5b89bf1db7941a3d3c115d3be6bdb">scroll_down</a>},</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    {<span class="stringliteral">&quot;toggle_focus&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#aeebdafcff1d774e95b25c184b229128c">toggle_focus</a>},</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    {<span class="stringliteral">&quot;show_help&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a11bbc23c21d5fef44f2b13f32cf8d831">show_help</a>},</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    {<span class="stringliteral">&quot;toggle_play&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#ad10b5a9637dc1cd70cfce5fa8362cb03">toggle_play</a>},</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    {<span class="stringliteral">&quot;play_song&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#afed2550f73b5b8481626f25744963d1d">play_song</a>},</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    {<span class="stringliteral">&quot;play_song_next&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#ac8dee0e90b6f40bcbc0fae4be3207736">play_song_next</a>},</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    {<span class="stringliteral">&quot;play_song_prev&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#abcc5064335d6797840983acb99bdb88c">play_song_prev</a>},</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    {<span class="stringliteral">&quot;vol_up&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#af23c42bb55c27be6788ce52935424bb3">vol_up</a>},</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    {<span class="stringliteral">&quot;vol_down&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a911e1c12013e8a608c8a1b5f7b7c5be2">vol_down</a>},</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    {<span class="stringliteral">&quot;toggle_mute&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a3d0f9af37b9cf78a2da4bfdc56bbe629">toggle_mute</a>},</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    {<span class="stringliteral">&quot;quit_app&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#af70444b29352ec2fa20920c6158123f6">quit_app</a>},</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    {<span class="stringliteral">&quot;seek_ahead_5&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a328d188e562cf2d00ca8fdc65af75c6a">seek_ahead_5</a>},</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    {<span class="stringliteral">&quot;seek_behind_5&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#ac01d4cb164309e257c932076a6a65aa6">seek_behind_5</a>},</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    {<span class="stringliteral">&quot;view_lyrics&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#ab7c2068f6c21a4b2d228e0720cbe8ed5">view_lyrics</a>},</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    {<span class="stringliteral">&quot;replay_song&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a6002f357b11c6ecc415595d3e4cd35b4">replay_song</a>},</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    {<span class="stringliteral">&quot;goto_main_screen&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a08813d343f783c66e71f6014d1623218">goto_main_screen</a>},</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    {<span class="stringliteral">&quot;add_song_to_queue&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#af484a422e3e572779060ebb34e736dfc">add_song_to_queue</a>},</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    {<span class="stringliteral">&quot;add_artists_songs_to_queue&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a1558efc3ae95ab185f63dc61859d6923">add_artists_songs_to_queue</a>},</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    {<span class="stringliteral">&quot;remove_song_from_queue&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#ad6ba797ddc2c738d59acb8ad745d7c50">remove_song_from_queue</a>},</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    {<span class="stringliteral">&quot;play_this_song_next&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#aee5cde9ebf6a1197a7f339471fea0d41">play_this_song_next</a>},</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    {<span class="stringliteral">&quot;view_song_queue&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a928d27528bc64d0d67e4871733e37779">view_song_queue</a>},</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    {<span class="stringliteral">&quot;view_current_song_info&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#afbfca5b80fd58ffbc08822c518bc4ec2">view_current_song_info</a>},</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    {<span class="stringliteral">&quot;toggle_audio_devices&quot;</span>, &amp;keybinds.<a class="code hl_variable" href="structKeybinds.html#a0c1783894d6ec11de583f0b5396bbde4">toggle_audio_devices</a>}};</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>  <span class="comment">// Populate the keybinds struct by reading the fields from the TOML configuration</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [field, member_ptr] : field_map)</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>  {</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    *member_ptr = handle_special_keys(<a class="code hl_function" href="toml__parser_8hpp.html#a19930571a1aced24a71d9a1d6e7c710a">parseTOMLField</a>(<a class="code hl_define" href="toml__parser_8hpp.html#a68fd11c312f2eb908cc3cf08ae9b9c28">PARENT_KEYBINDS</a>, field),</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                                      field); </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>  }</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  <span class="keywordflow">return</span> keybinds; </div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>}</div>
 </div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="akeymaps_8hpp_html_a140e0fecc49876baa6c265621cf96518"><div class="ttname"><a href="keymaps_8hpp.html#a140e0fecc49876baa6c265621cf96518">parseKeybinds</a></div><div class="ttdeci">Keybinds parseKeybinds()</div><div class="ttdoc">Parses the keybinds from the TOML configuration.</div><div class="ttdef"><b>Definition</b> keymaps.hpp:50</div></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="akeymaps_8hpp_html_a140e0fecc49876baa6c265621cf96518"><div class="ttname"><a href="keymaps_8hpp.html#a140e0fecc49876baa6c265621cf96518">parseKeybinds</a></div><div class="ttdeci">Keybinds parseKeybinds()</div><div class="ttdoc">Parses the keybinds from the TOML configuration.</div><div class="ttdef"><b>Definition</b> keymaps.hpp:51</div></div>
 <div class="ttc" id="astructKeybinds_html"><div class="ttname"><a href="structKeybinds.html">Keybinds</a></div><div class="ttdoc">Struct to hold keybinding mappings.</div><div class="ttdef"><b>Definition</b> keymaps.hpp:16</div></div>
 <div class="ttc" id="astructKeybinds_html_a08813d343f783c66e71f6014d1623218"><div class="ttname"><a href="structKeybinds.html#a08813d343f783c66e71f6014d1623218">Keybinds::goto_main_screen</a></div><div class="ttdeci">char goto_main_screen</div><div class="ttdef"><b>Definition</b> keymaps.hpp:32</div></div>
+<div class="ttc" id="astructKeybinds_html_a0c1783894d6ec11de583f0b5396bbde4"><div class="ttname"><a href="structKeybinds.html#a0c1783894d6ec11de583f0b5396bbde4">Keybinds::toggle_audio_devices</a></div><div class="ttdeci">char toggle_audio_devices</div><div class="ttdef"><b>Definition</b> keymaps.hpp:40</div></div>
 <div class="ttc" id="astructKeybinds_html_a11bbc23c21d5fef44f2b13f32cf8d831"><div class="ttname"><a href="structKeybinds.html#a11bbc23c21d5fef44f2b13f32cf8d831">Keybinds::show_help</a></div><div class="ttdeci">char show_help</div><div class="ttdef"><b>Definition</b> keymaps.hpp:20</div></div>
 <div class="ttc" id="astructKeybinds_html_a1558efc3ae95ab185f63dc61859d6923"><div class="ttname"><a href="structKeybinds.html#a1558efc3ae95ab185f63dc61859d6923">Keybinds::add_artists_songs_to_queue</a></div><div class="ttdeci">char add_artists_songs_to_queue</div><div class="ttdef"><b>Definition</b> keymaps.hpp:35</div></div>
 <div class="ttc" id="astructKeybinds_html_a31d353b681721388fa78c974245f983e"><div class="ttname"><a href="structKeybinds.html#a31d353b681721388fa78c974245f983e">Keybinds::scroll_up</a></div><div class="ttdeci">char scroll_up</div><div class="ttdef"><b>Definition</b> keymaps.hpp:17</div></div>
@@ -247,7 +250,7 @@ $(function(){initNavTree('keymaps_8hpp_source.html',''); initResizable(true); })
 <div class="ttc" id="astructKeybinds_html_afbfca5b80fd58ffbc08822c518bc4ec2"><div class="ttname"><a href="structKeybinds.html#afbfca5b80fd58ffbc08822c518bc4ec2">Keybinds::view_current_song_info</a></div><div class="ttdeci">char view_current_song_info</div><div class="ttdef"><b>Definition</b> keymaps.hpp:39</div></div>
 <div class="ttc" id="astructKeybinds_html_afed2550f73b5b8481626f25744963d1d"><div class="ttname"><a href="structKeybinds.html#afed2550f73b5b8481626f25744963d1d">Keybinds::play_song</a></div><div class="ttdeci">char play_song</div><div class="ttdef"><b>Definition</b> keymaps.hpp:22</div></div>
 <div class="ttc" id="atoml__parser_8hpp_html"><div class="ttname"><a href="toml__parser_8hpp.html">toml_parser.hpp</a></div></div>
-<div class="ttc" id="atoml__parser_8hpp_html_a19930571a1aced24a71d9a1d6e7c710a"><div class="ttname"><a href="toml__parser_8hpp.html#a19930571a1aced24a71d9a1d6e7c710a">parseTOMLField</a></div><div class="ttdeci">string_view parseTOMLField(string parent, string field)</div><div class="ttdoc">Parses a string field from the TOML configuration.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:121</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_a19930571a1aced24a71d9a1d6e7c710a"><div class="ttname"><a href="toml__parser_8hpp.html#a19930571a1aced24a71d9a1d6e7c710a">parseTOMLField</a></div><div class="ttdeci">string_view parseTOMLField(string parent, string field)</div><div class="ttdoc">Parses a string field from the TOML configuration.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:145</div></div>
 <div class="ttc" id="atoml__parser_8hpp_html_a68fd11c312f2eb908cc3cf08ae9b9c28"><div class="ttname"><a href="toml__parser_8hpp.html#a68fd11c312f2eb908cc3cf08ae9b9c28">PARENT_KEYBINDS</a></div><div class="ttdeci">#define PARENT_KEYBINDS</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:30</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

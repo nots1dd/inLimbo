@@ -7,234 +7,231 @@
 \DoxyCodeLine{00003\ }
 \DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{toml__parser_8hpp}{../parser/toml\_parser.hpp}}"{}}}
 \DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{songmap_8hpp}{songmap.hpp}}"{}}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <chrono>}}
-\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
-\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <cstring>}}
-\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <ctime>}}
-\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <dirent.h>}}
-\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <fstream>}}
-\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <iostream>}}
-\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <sys/stat.h>}}
-\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
-\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <vector>}}
-\DoxyCodeLine{00016\ }
-\DoxyCodeLine{00017\ \textcolor{keyword}{using\ namespace\ }std;}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <ctime>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <dirent.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <sys/stat.h>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{using\ namespace\ }std;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ RED\ \ \ 'R'}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ BLACK\ 'B'}}
 \DoxyCodeLine{00018\ }
-\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ RED\ \ \ 'R'}}
-\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ BLACK\ 'B'}}
-\DoxyCodeLine{00021\ }
-\DoxyCodeLine{00022\ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{rbtree_8hpp_a4e5a70aee06dc4617ec426e02bf9bb00}{DIRECTORY\_FIELD}}\ =\ string(\mbox{\hyperlink{toml__parser_8hpp_a19930571a1aced24a71d9a1d6e7c710a}{parseTOMLField}}(}
-\DoxyCodeLine{00023\ \ \ \mbox{\hyperlink{toml__parser_8hpp_aa93a16ba4156c106728f723319c63320}{PARENT\_LIB}},\ \mbox{\hyperlink{toml__parser_8hpp_a7904e33d7508ef59ae38aa75f76493bb}{PARENT\_LIB\_FIELD\_DIR}}));\ \textcolor{comment}{//\ fetches\ the\ directory\ from\ the\ example\ config.toml\ for\ now}}
-\DoxyCodeLine{00024\ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{rbtree_8hpp_a3200e6f22db9908dba1dbb7761e7e1b2}{DEBUG\_LOG\_PARSE}}\ =\ string(\mbox{\hyperlink{toml__parser_8hpp_a19930571a1aced24a71d9a1d6e7c710a}{parseTOMLField}}(\mbox{\hyperlink{toml__parser_8hpp_a10265fc668d386d5d02e91115db9a7cc}{PARENT\_DBG}},\ \mbox{\hyperlink{toml__parser_8hpp_addfc43cbcf5a4328846696cee721a4de}{PARENT\_DBG\_FIELD\_PARSER\_LOG}}));}
-\DoxyCodeLine{00025\ }
-\DoxyCodeLine{00026\ \textcolor{comment}{//\ Node\ structure\ for\ the\ Red-\/Black\ Tree}}
-\DoxyCodeLine{00027\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structNode_a589dd863071448a62021b47bc68a174d}{Node}}}
-\DoxyCodeLine{00028\ \{}
-\DoxyCodeLine{00029\ \ \ ino\_t\ \mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}};\ \textcolor{comment}{//\ Using\ inode\ type\ (ino\_t)\ for\ directory\ entries}}
-\DoxyCodeLine{00030\ \ \ \textcolor{keywordtype}{char}\ \ \mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}};}
-\DoxyCodeLine{00031\ \ \ \mbox{\hyperlink{structNode_a589dd863071448a62021b47bc68a174d}{Node}}\ *\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}},\ *\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}},\ *\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}};}
+\DoxyCodeLine{00019\ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{rbtree_8hpp_a4e5a70aee06dc4617ec426e02bf9bb00}{DIRECTORY\_FIELD}}\ =\ string(\mbox{\hyperlink{toml__parser_8hpp_a19930571a1aced24a71d9a1d6e7c710a}{parseTOMLField}}(}
+\DoxyCodeLine{00020\ \ \ \mbox{\hyperlink{toml__parser_8hpp_aa93a16ba4156c106728f723319c63320}{PARENT\_LIB}},\ \mbox{\hyperlink{toml__parser_8hpp_a7904e33d7508ef59ae38aa75f76493bb}{PARENT\_LIB\_FIELD\_DIR}}));\ \textcolor{comment}{//\ fetches\ the\ directory\ from\ the\ example\ config.toml\ for\ now}}
+\DoxyCodeLine{00021\ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{rbtree_8hpp_a3200e6f22db9908dba1dbb7761e7e1b2}{DEBUG\_LOG\_PARSE}}\ =\ string(\mbox{\hyperlink{toml__parser_8hpp_a19930571a1aced24a71d9a1d6e7c710a}{parseTOMLField}}(\mbox{\hyperlink{toml__parser_8hpp_a10265fc668d386d5d02e91115db9a7cc}{PARENT\_DBG}},\ \mbox{\hyperlink{toml__parser_8hpp_addfc43cbcf5a4328846696cee721a4de}{PARENT\_DBG\_FIELD\_PARSER\_LOG}}));}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ Node\ structure\ for\ the\ Red-\/Black\ Tree}}
+\DoxyCodeLine{00024\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structNode_a589dd863071448a62021b47bc68a174d}{Node}}}
+\DoxyCodeLine{00025\ \{}
+\DoxyCodeLine{00026\ \ \ ino\_t\ \mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}};\ \textcolor{comment}{//\ Using\ inode\ type\ (ino\_t)\ for\ directory\ entries}}
+\DoxyCodeLine{00027\ \ \ \textcolor{keywordtype}{char}\ \ \mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}};}
+\DoxyCodeLine{00028\ \ \ \mbox{\hyperlink{structNode_a589dd863071448a62021b47bc68a174d}{Node}}\ *\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}},\ *\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}},\ *\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \mbox{\hyperlink{structNode_a589dd863071448a62021b47bc68a174d}{Node}}(ino\_t\ \mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}})\ :\ \mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}}(\mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}}),\ \mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}(\mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}}),\ \mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}(nullptr),\ \mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}(nullptr),\ \mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}(nullptr)\ \{\}}
+\DoxyCodeLine{00031\ \};}
 \DoxyCodeLine{00032\ }
-\DoxyCodeLine{00033\ \ \ \mbox{\hyperlink{structNode_a589dd863071448a62021b47bc68a174d}{Node}}(ino\_t\ \mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}})\ :\ \mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}}(\mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}}),\ \mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}(\mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}}),\ \mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}(nullptr),\ \mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}(nullptr),\ \mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}(nullptr)\ \{\}}
-\DoxyCodeLine{00034\ \};}
-\DoxyCodeLine{00035\ }
-\DoxyCodeLine{00036\ \textcolor{comment}{//\ Red-\/Black\ Tree\ class}}
-\DoxyCodeLine{00037\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classRedBlackTree_a16706b7c753cf2d86514cda01840abd9}{RedBlackTree}}}
-\DoxyCodeLine{00038\ \{}
-\DoxyCodeLine{00039\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00040\ \ \ \mbox{\hyperlink{structNode}{Node}}*\ \ \ \ root;}
-\DoxyCodeLine{00041\ \ \ \mbox{\hyperlink{structNode}{Node}}*\ \ \ \ NIL;}
-\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{classSongTree}{SongTree}}\ songTree;}
-\DoxyCodeLine{00043\ }
-\DoxyCodeLine{00044\ \ \ \textcolor{keywordtype}{void}\ leftRotate(\mbox{\hyperlink{structNode}{Node}}*\ x)}
-\DoxyCodeLine{00045\ \ \ \{}
-\DoxyCodeLine{00046\ \ \ \ \ \mbox{\hyperlink{structNode}{Node}}*\ y\ \ =\ x-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}};}
-\DoxyCodeLine{00047\ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}\ =\ y-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}};}
-\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordflow}{if}\ (y-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}\ !=\ NIL)}
-\DoxyCodeLine{00049\ \ \ \ \ \{}
-\DoxyCodeLine{00050\ \ \ \ \ \ \ y-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ =\ x;}
-\DoxyCodeLine{00051\ \ \ \ \ \}}
-\DoxyCodeLine{00052\ \ \ \ \ y-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ =\ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}};}
-\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordflow}{if}\ (x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ ==\ \textcolor{keyword}{nullptr})}
-\DoxyCodeLine{00054\ \ \ \ \ \{}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ root\ =\ y;}
-\DoxyCodeLine{00056\ \ \ \ \ \}}
-\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (x\ ==\ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}})}
-\DoxyCodeLine{00058\ \ \ \ \ \{}
-\DoxyCodeLine{00059\ \ \ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}\ =\ y;}
-\DoxyCodeLine{00060\ \ \ \ \ \}}
-\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00062\ \ \ \ \ \{}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}\ =\ y;}
-\DoxyCodeLine{00064\ \ \ \ \ \}}
-\DoxyCodeLine{00065\ \ \ \ \ y-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}\ \ \ =\ x;}
-\DoxyCodeLine{00066\ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ =\ y;}
-\DoxyCodeLine{00067\ \ \ \}}
-\DoxyCodeLine{00068\ }
-\DoxyCodeLine{00069\ \ \ \textcolor{keywordtype}{void}\ rightRotate(\mbox{\hyperlink{structNode}{Node}}*\ x)}
-\DoxyCodeLine{00070\ \ \ \{}
-\DoxyCodeLine{00071\ \ \ \ \ \mbox{\hyperlink{structNode}{Node}}*\ y\ =\ x-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}};}
-\DoxyCodeLine{00072\ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}\ =\ y-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}};}
-\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordflow}{if}\ (y-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}\ !=\ NIL)}
-\DoxyCodeLine{00074\ \ \ \ \ \{}
-\DoxyCodeLine{00075\ \ \ \ \ \ \ y-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ =\ x;}
-\DoxyCodeLine{00076\ \ \ \ \ \}}
-\DoxyCodeLine{00077\ \ \ \ \ y-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ =\ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}};}
-\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordflow}{if}\ (x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ ==\ \textcolor{keyword}{nullptr})}
-\DoxyCodeLine{00079\ \ \ \ \ \{}
-\DoxyCodeLine{00080\ \ \ \ \ \ \ root\ =\ y;}
-\DoxyCodeLine{00081\ \ \ \ \ \}}
-\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (x\ ==\ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}})}
-\DoxyCodeLine{00083\ \ \ \ \ \{}
-\DoxyCodeLine{00084\ \ \ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}\ =\ y;}
-\DoxyCodeLine{00085\ \ \ \ \ \}}
-\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00087\ \ \ \ \ \{}
-\DoxyCodeLine{00088\ \ \ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}\ =\ y;}
-\DoxyCodeLine{00089\ \ \ \ \ \}}
-\DoxyCodeLine{00090\ \ \ \ \ y-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}\ \ =\ x;}
-\DoxyCodeLine{00091\ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ =\ y;}
-\DoxyCodeLine{00092\ \ \ \}}
-\DoxyCodeLine{00093\ }
-\DoxyCodeLine{00094\ \ \ \textcolor{keywordtype}{void}\ fixInsert(\mbox{\hyperlink{structNode}{Node}}*\ k)}
-\DoxyCodeLine{00095\ \ \ \{}
-\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordflow}{while}\ (k\ !=\ root\ \&\&\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ ==\ \mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}})}
-\DoxyCodeLine{00097\ \ \ \ \ \{}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ ==\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}})}
-\DoxyCodeLine{00099\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structNode}{Node}}*\ u\ =\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}};\ \textcolor{comment}{//\ uncle}}
-\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (u-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ ==\ \mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}})}
-\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ u-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ =\ \mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}};}
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ k\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}};}
-\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (k\ ==\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}})}
-\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ k\ =\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}};}
-\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ leftRotate(k);}
-\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
-\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ =\ \mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}};}
-\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ rightRotate(k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}});}
-\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00119\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00120\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00121\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structNode}{Node}}*\ u\ =\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}};\ \textcolor{comment}{//\ uncle}}
-\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (u-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ ==\ \mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}})}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ u-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ =\ \mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}};}
-\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ k\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}};}
-\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (k\ ==\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}})}
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ k\ =\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}};}
-\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ rightRotate(k);}
-\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
-\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ =\ \mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}};}
-\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ leftRotate(k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}});}
-\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00141\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00142\ \ \ \ \ \}}
-\DoxyCodeLine{00143\ \ \ \ \ root-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
-\DoxyCodeLine{00144\ \ \ \}}
-\DoxyCodeLine{00145\ }
-\DoxyCodeLine{00146\ \ \ \textcolor{keywordtype}{void}\ inorderHelper(\mbox{\hyperlink{structNode}{Node}}*\ node)}
-\DoxyCodeLine{00147\ \ \ \{}
-\DoxyCodeLine{00148\ \ \ \ \ \mbox{\hyperlink{classTagLibParser}{TagLibParser}}\ parser(\mbox{\hyperlink{rbtree_8hpp_a3200e6f22db9908dba1dbb7761e7e1b2}{DEBUG\_LOG\_PARSE}});}
-\DoxyCodeLine{00149\ }
-\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordflow}{if}\ (node\ !=\ NIL)}
-\DoxyCodeLine{00151\ \ \ \ \ \{}
-\DoxyCodeLine{00152\ \ \ \ \ \ \ inorderHelper(node-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}});}
-\DoxyCodeLine{00153\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ metadataMap\ =\ parser.\mbox{\hyperlink{classTagLibParser_ac7e0277f5bf46433d1bf64b9e0154641}{parseFromInode}}(node-\/>\mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}},\ \mbox{\hyperlink{rbtree_8hpp_a4e5a70aee06dc4617ec426e02bf9bb00}{DIRECTORY\_FIELD}});}
-\DoxyCodeLine{00154\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (metadataMap.empty())}
-\DoxyCodeLine{00155\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(\mbox{\hyperlink{rbtree_8hpp_a3200e6f22db9908dba1dbb7761e7e1b2}{DEBUG\_LOG\_PARSE}},}
-\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Error:\ No\ files\ found\ matching\ the\ inode\ or\ no\ metadata\ extracted."{}});}
-\DoxyCodeLine{00158\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00159\ }
-\DoxyCodeLine{00160\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ pair\ :\ metadataMap)}
-\DoxyCodeLine{00161\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*std::cout\ <<\ "{}File:\ "{}\ <<\ pair.first\ <<\ std::endl;\ */}}
-\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ songTree.addSong(\mbox{\hyperlink{structSong}{Song}}(node-\/>\mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}},\ pair.second));}
-\DoxyCodeLine{00164\ \ \ \ \ \ \ \};}
-\DoxyCodeLine{00165\ \ \ \ \ \ \ inorderHelper(node-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}});}
-\DoxyCodeLine{00166\ \ \ \ \ \}}
-\DoxyCodeLine{00167\ \ \ \}}
-\DoxyCodeLine{00168\ }
-\DoxyCodeLine{00169\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00170\ \ \ \mbox{\hyperlink{classRedBlackTree_a16706b7c753cf2d86514cda01840abd9}{RedBlackTree}}()}
-\DoxyCodeLine{00171\ \ \ \{}
-\DoxyCodeLine{00172\ \ \ \ \ NIL\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structNode}{Node}}(0);}
-\DoxyCodeLine{00173\ \ \ \ \ NIL-\/>color\ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
-\DoxyCodeLine{00174\ \ \ \ \ NIL-\/>left\ =\ NIL-\/>right\ =\ NIL;}
-\DoxyCodeLine{00175\ \ \ \ \ root\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ NIL;}
-\DoxyCodeLine{00176\ \ \ \}}
-\DoxyCodeLine{00177\ }
-\DoxyCodeLine{00178\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classRedBlackTree_a1ca890ebbaabdccb45dbeca3443ab279}{insert}}(ino\_t\ data)}
-\DoxyCodeLine{00179\ \ \ \{}
-\DoxyCodeLine{00180\ \ \ \ \ \mbox{\hyperlink{structNode}{Node}}*\ new\_node\ \ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structNode}{Node}}(data);}
-\DoxyCodeLine{00181\ \ \ \ \ new\_node-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}\ \ =\ NIL;}
-\DoxyCodeLine{00182\ \ \ \ \ new\_node-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}\ =\ NIL;}
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ Red-\/Black\ Tree\ class}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classRedBlackTree_a16706b7c753cf2d86514cda01840abd9}{RedBlackTree}}}
+\DoxyCodeLine{00035\ \{}
+\DoxyCodeLine{00036\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{structNode}{Node}}*\ \ \ \ root;}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{structNode}{Node}}*\ \ \ \ NIL;}
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{classSongTree}{SongTree}}\ songTree;}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \textcolor{keywordtype}{void}\ leftRotate(\mbox{\hyperlink{structNode}{Node}}*\ x)}
+\DoxyCodeLine{00042\ \ \ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{structNode}{Node}}*\ y\ \ =\ x-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}};}
+\DoxyCodeLine{00044\ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}\ =\ y-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}};}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordflow}{if}\ (y-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}\ !=\ NIL)}
+\DoxyCodeLine{00046\ \ \ \ \ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ y-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ =\ x;}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \ \ \ \ y-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ =\ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}};}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordflow}{if}\ (x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{00051\ \ \ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ root\ =\ y;}
+\DoxyCodeLine{00053\ \ \ \ \ \}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (x\ ==\ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}})}
+\DoxyCodeLine{00055\ \ \ \ \ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}\ =\ y;}
+\DoxyCodeLine{00057\ \ \ \ \ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00059\ \ \ \ \ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}\ =\ y;}
+\DoxyCodeLine{00061\ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \ y-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}\ \ \ =\ x;}
+\DoxyCodeLine{00063\ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ =\ y;}
+\DoxyCodeLine{00064\ \ \ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \textcolor{keywordtype}{void}\ rightRotate(\mbox{\hyperlink{structNode}{Node}}*\ x)}
+\DoxyCodeLine{00067\ \ \ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \mbox{\hyperlink{structNode}{Node}}*\ y\ =\ x-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}};}
+\DoxyCodeLine{00069\ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}\ =\ y-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}};}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{if}\ (y-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}\ !=\ NIL)}
+\DoxyCodeLine{00071\ \ \ \ \ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ y-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ =\ x;}
+\DoxyCodeLine{00073\ \ \ \ \ \}}
+\DoxyCodeLine{00074\ \ \ \ \ y-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ =\ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}};}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordflow}{if}\ (x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{00076\ \ \ \ \ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ root\ =\ y;}
+\DoxyCodeLine{00078\ \ \ \ \ \}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (x\ ==\ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}})}
+\DoxyCodeLine{00080\ \ \ \ \ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}\ =\ y;}
+\DoxyCodeLine{00082\ \ \ \ \ \}}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00084\ \ \ \ \ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}\ =\ y;}
+\DoxyCodeLine{00086\ \ \ \ \ \}}
+\DoxyCodeLine{00087\ \ \ \ \ y-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}\ \ =\ x;}
+\DoxyCodeLine{00088\ \ \ \ \ x-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ =\ y;}
+\DoxyCodeLine{00089\ \ \ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \textcolor{keywordtype}{void}\ fixInsert(\mbox{\hyperlink{structNode}{Node}}*\ k)}
+\DoxyCodeLine{00092\ \ \ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordflow}{while}\ (k\ !=\ root\ \&\&\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ ==\ \mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}})}
+\DoxyCodeLine{00094\ \ \ \ \ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ ==\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}})}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structNode}{Node}}*\ u\ =\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}};\ \textcolor{comment}{//\ uncle}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (u-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ ==\ \mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}})}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ u-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ =\ \mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}};}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ k\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}};}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (k\ ==\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}})}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ k\ =\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}};}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ leftRotate(k);}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ =\ \mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}};}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ rightRotate(k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}});}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structNode}{Node}}*\ u\ =\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}};\ \textcolor{comment}{//\ uncle}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (u-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ ==\ \mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}})}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ u-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ =\ \mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}};}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ k\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}};}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (k\ ==\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}})}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ k\ =\ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}};}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ rightRotate(k);}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ =\ \mbox{\hyperlink{rbtree_8hpp_a8d23feea868a983c8c2b661e1e16972f}{RED}};}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ leftRotate(k-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}});}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00139\ \ \ \ \ \}}
+\DoxyCodeLine{00140\ \ \ \ \ root-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
+\DoxyCodeLine{00141\ \ \ \}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \textcolor{keywordtype}{void}\ inorderHelper(\mbox{\hyperlink{structNode}{Node}}*\ node)}
+\DoxyCodeLine{00144\ \ \ \{}
+\DoxyCodeLine{00145\ \ \ \ \ \mbox{\hyperlink{classTagLibParser}{TagLibParser}}\ parser(\mbox{\hyperlink{rbtree_8hpp_a3200e6f22db9908dba1dbb7761e7e1b2}{DEBUG\_LOG\_PARSE}});}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordflow}{if}\ (node\ !=\ NIL)}
+\DoxyCodeLine{00148\ \ \ \ \ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ inorderHelper(node-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}});}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ metadataMap\ =\ parser.\mbox{\hyperlink{classTagLibParser_ac7e0277f5bf46433d1bf64b9e0154641}{parseFromInode}}(node-\/>\mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}},\ \mbox{\hyperlink{rbtree_8hpp_a4e5a70aee06dc4617ec426e02bf9bb00}{DIRECTORY\_FIELD}});}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (metadataMap.empty())}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(\mbox{\hyperlink{rbtree_8hpp_a3200e6f22db9908dba1dbb7761e7e1b2}{DEBUG\_LOG\_PARSE}},}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Error:\ No\ files\ found\ matching\ the\ inode\ or\ no\ metadata\ extracted."{}});}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ pair\ :\ metadataMap)}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*std::cout\ <<\ "{}File:\ "{}\ <<\ pair.first\ <<\ std::endl;\ */}}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ songTree.addSong(\mbox{\hyperlink{structSong}{Song}}(node-\/>\mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}},\ pair.second));}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ inorderHelper(node-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}});}
+\DoxyCodeLine{00163\ \ \ \ \ \}}
+\DoxyCodeLine{00164\ \ \ \}}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00167\ \ \ \mbox{\hyperlink{classRedBlackTree_a16706b7c753cf2d86514cda01840abd9}{RedBlackTree}}()}
+\DoxyCodeLine{00168\ \ \ \{}
+\DoxyCodeLine{00169\ \ \ \ \ NIL\ \ \ \ \ \ \ \ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structNode}{Node}}(0);}
+\DoxyCodeLine{00170\ \ \ \ \ NIL-\/>color\ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
+\DoxyCodeLine{00171\ \ \ \ \ NIL-\/>left\ =\ NIL-\/>right\ =\ NIL;}
+\DoxyCodeLine{00172\ \ \ \ \ root\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ NIL;}
+\DoxyCodeLine{00173\ \ \ \}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classRedBlackTree_a1ca890ebbaabdccb45dbeca3443ab279}{insert}}(ino\_t\ data)}
+\DoxyCodeLine{00176\ \ \ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \mbox{\hyperlink{structNode}{Node}}*\ new\_node\ \ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{structNode}{Node}}(data);}
+\DoxyCodeLine{00178\ \ \ \ \ new\_node-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}\ \ =\ NIL;}
+\DoxyCodeLine{00179\ \ \ \ \ new\_node-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}\ =\ NIL;}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \mbox{\hyperlink{structNode}{Node}}*\ parent\ \ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00182\ \ \ \ \ \mbox{\hyperlink{structNode}{Node}}*\ current\ =\ root;}
 \DoxyCodeLine{00183\ }
-\DoxyCodeLine{00184\ \ \ \ \ \mbox{\hyperlink{structNode}{Node}}*\ parent\ \ =\ \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{00185\ \ \ \ \ \mbox{\hyperlink{structNode}{Node}}*\ current\ =\ root;}
-\DoxyCodeLine{00186\ }
-\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keywordflow}{while}\ (current\ !=\ NIL)}
-\DoxyCodeLine{00188\ \ \ \ \ \{}
-\DoxyCodeLine{00189\ \ \ \ \ \ \ parent\ =\ current;}
-\DoxyCodeLine{00190\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (new\_node-\/>\mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}}\ <\ current-\/>\mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}})}
-\DoxyCodeLine{00191\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ current\ =\ current-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}};}
-\DoxyCodeLine{00193\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00194\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00195\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ current\ =\ current-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}};}
-\DoxyCodeLine{00197\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00198\ \ \ \ \ \}}
-\DoxyCodeLine{00199\ }
-\DoxyCodeLine{00200\ \ \ \ \ new\_node-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ =\ parent;}
-\DoxyCodeLine{00201\ }
-\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keywordflow}{if}\ (parent\ ==\ \textcolor{keyword}{nullptr})}
-\DoxyCodeLine{00203\ \ \ \ \ \{}
-\DoxyCodeLine{00204\ \ \ \ \ \ \ root\ =\ new\_node;}
-\DoxyCodeLine{00205\ \ \ \ \ \}}
-\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (new\_node-\/>\mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}}\ <\ parent-\/>\mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}})}
-\DoxyCodeLine{00207\ \ \ \ \ \{}
-\DoxyCodeLine{00208\ \ \ \ \ \ \ parent-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}\ =\ new\_node;}
-\DoxyCodeLine{00209\ \ \ \ \ \}}
-\DoxyCodeLine{00210\ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00211\ \ \ \ \ \{}
-\DoxyCodeLine{00212\ \ \ \ \ \ \ parent-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}\ =\ new\_node;}
-\DoxyCodeLine{00213\ \ \ \ \ \}}
-\DoxyCodeLine{00214\ }
-\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keywordflow}{if}\ (new\_node-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ ==\ \textcolor{keyword}{nullptr})}
-\DoxyCodeLine{00216\ \ \ \ \ \{}
-\DoxyCodeLine{00217\ \ \ \ \ \ \ new\_node-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
-\DoxyCodeLine{00218\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00219\ \ \ \ \ \}}
-\DoxyCodeLine{00220\ }
-\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keywordflow}{if}\ (new\_node-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ ==\ \textcolor{keyword}{nullptr})}
-\DoxyCodeLine{00222\ \ \ \ \ \{}
-\DoxyCodeLine{00223\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00224\ \ \ \ \ \}}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keywordflow}{while}\ (current\ !=\ NIL)}
+\DoxyCodeLine{00185\ \ \ \ \ \{}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ parent\ =\ current;}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (new\_node-\/>\mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}}\ <\ current-\/>\mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}})}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ current\ =\ current-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}};}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ current\ =\ current-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}};}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00195\ \ \ \ \ \}}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \ \ new\_node-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ =\ parent;}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keywordflow}{if}\ (parent\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{00200\ \ \ \ \ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ root\ =\ new\_node;}
+\DoxyCodeLine{00202\ \ \ \ \ \}}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (new\_node-\/>\mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}}\ <\ parent-\/>\mbox{\hyperlink{structNode_a6d09fd9edb15897f94cece0242d42b7a}{data}})}
+\DoxyCodeLine{00204\ \ \ \ \ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ parent-\/>\mbox{\hyperlink{structNode_ab8c667ac8fdb120ed4c031682a9cdaee}{left}}\ =\ new\_node;}
+\DoxyCodeLine{00206\ \ \ \ \ \}}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00208\ \ \ \ \ \{}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ parent-\/>\mbox{\hyperlink{structNode_afe5916d969cd32f7de1e4ba15580c989}{right}}\ =\ new\_node;}
+\DoxyCodeLine{00210\ \ \ \ \ \}}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{keywordflow}{if}\ (new\_node-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{00213\ \ \ \ \ \{}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ new\_node-\/>\mbox{\hyperlink{structNode_aecc6e56aa9a6dc5e725f03f017f51722}{color}}\ =\ \mbox{\hyperlink{rbtree_8hpp_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}};}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00216\ \ \ \ \ \}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keywordflow}{if}\ (new\_node-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}-\/>\mbox{\hyperlink{structNode_acb37d05df604a52126aaed3783e35fb2}{parent}}\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{00219\ \ \ \ \ \{}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00221\ \ \ \ \ \}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \ \ \ \ fixInsert(new\_node);}
+\DoxyCodeLine{00224\ \ \ \}}
 \DoxyCodeLine{00225\ }
-\DoxyCodeLine{00226\ \ \ \ \ fixInsert(new\_node);}
-\DoxyCodeLine{00227\ \ \ \}}
-\DoxyCodeLine{00228\ }
-\DoxyCodeLine{00229\ \ \ \textcolor{keywordtype}{void}\ \ \ \ \ \mbox{\hyperlink{classRedBlackTree_afc9e914fe8c47ba1f441b005104350a2}{inorderStoreMetadata}}()\ \{\ inorderHelper(root);\ \}}
-\DoxyCodeLine{00230\ \ \ \textcolor{keywordtype}{void}\ \ \ \ \ \mbox{\hyperlink{classRedBlackTree_a8f4ba956f5d362be9c06fe1df84e07b3}{printSongTree}}()\ \{\ songTree.display();\ \}}
-\DoxyCodeLine{00231\ \ \ \mbox{\hyperlink{classSongTree}{SongTree}}\ \mbox{\hyperlink{classRedBlackTree_a508f5c1b1620edebcd456c019a5960ed}{returnSongTree}}()\ \{\ \textcolor{keywordflow}{return}\ songTree;\ \}}
-\DoxyCodeLine{00232\ \};}
-\DoxyCodeLine{00233\ }
-\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00226\ \ \ \textcolor{keywordtype}{void}\ \ \ \ \ \mbox{\hyperlink{classRedBlackTree_afc9e914fe8c47ba1f441b005104350a2}{inorderStoreMetadata}}()\ \{\ inorderHelper(root);\ \}}
+\DoxyCodeLine{00227\ \ \ \textcolor{keywordtype}{void}\ \ \ \ \ \mbox{\hyperlink{classRedBlackTree_a8f4ba956f5d362be9c06fe1df84e07b3}{printSongTree}}()\ \{\ songTree.display();\ \}}
+\DoxyCodeLine{00228\ \ \ \mbox{\hyperlink{classSongTree}{SongTree}}\ \mbox{\hyperlink{classRedBlackTree_a508f5c1b1620edebcd456c019a5960ed}{returnSongTree}}()\ \{\ \textcolor{keywordflow}{return}\ songTree;\ \}}
+\DoxyCodeLine{00229\ \};}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

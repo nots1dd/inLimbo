@@ -1,10 +1,7 @@
 var searchData=
 [
-  ['values_0',['Available Colors and Their RGB Values',['../md_COLORS.html#autotoc_md35',1,'']]],
-  ['view_5fcurrent_5fsong_5finfo_1',['view_current_song_info',['../structKeybinds.html#afbfca5b80fd58ffbc08822c518bc4ec2',1,'Keybinds']]],
-  ['view_5flyrics_2',['view_lyrics',['../structKeybinds.html#ab7c2068f6c21a4b2d228e0720cbe8ed5',1,'Keybinds']]],
-  ['view_5fsong_5fqueue_3',['view_song_queue',['../structKeybinds.html#a928d27528bc64d0d67e4871733e37779',1,'Keybinds']]],
-  ['vol_5fdown_4',['vol_down',['../structKeybinds.html#a911e1c12013e8a608c8a1b5f7b7c5be2',1,'Keybinds']]],
-  ['vol_5fup_5',['vol_up',['../structKeybinds.html#af23c42bb55c27be6788ce52935424bb3',1,'Keybinds']]],
-  ['volume_5fbar_5fcol_6',['volume_bar_col',['../structInLimboColors.html#a1b9361baade2607c61ab26b154171b2c',1,'InLimboColors']]]
+  ['ui_20parsing_20the_20song_20map_20strong_0',['&lt;strong&gt;5. UI Parsing the Song Map&lt;/strong&gt;',['../md_src_2dirsort_2SONGMAP.html#autotoc_md13',1,'']]],
+  ['ui_5fhandler_2ehpp_1',['ui_handler.hpp',['../ui__handler_8hpp.html',1,'']]],
+  ['use_20colors_20in_20the_20inlimbo_2',['How to Use Colors in the inLimbo',['../md_COLORS.html#autotoc_md65',1,'']]],
+  ['username_3',['USERNAME',['../client_8cpp.html#a4f9bd9eba9795a3cd6c6915ff298af61',1,'USERNAME:&#160;client.cpp'],['../server_8cpp.html#a4f9bd9eba9795a3cd6c6915ff298af61',1,'USERNAME:&#160;server.cpp']]]
 ];

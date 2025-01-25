@@ -26,221 +26,247 @@
 \DoxyCodeLine{00022\ \ \ Component\ \mbox{\hyperlink{structComponentState_a35b0ecb15c35a5e0ef8bd52d144d9243}{lyrics\_scroller}};}
 \DoxyCodeLine{00023\ \ \ Component\ \mbox{\hyperlink{structComponentState_a3c119b5fc09869b46271ef866886d4f1}{MainRenderer}};}
 \DoxyCodeLine{00024\ \ \ Component\ \mbox{\hyperlink{structComponentState_a9a5a81585b84997e5996210c83caeec1}{ThumbnailRenderer}};}
-\DoxyCodeLine{00025\ \};}
-\DoxyCodeLine{00026\ }
-\DoxyCodeLine{00027\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_acf1411473752280ae12e7bbeb259ca4c}{formatLyrics}}(\textcolor{keyword}{const}\ std::string\&\ lyrics)}
-\DoxyCodeLine{00028\ \{}
-\DoxyCodeLine{00029\ \ \ std::vector<std::string>\ lines;}
-\DoxyCodeLine{00030\ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ currentLine;}
-\DoxyCodeLine{00031\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ insideSquareBrackets\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00032\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ insideCurlBrackets\ \ \ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00033\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lastWasUppercase\ \ \ \ \ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00034\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lastWasSpecialChar\ \ \ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ Tracks\ special\ characters\ within\ words}}
-\DoxyCodeLine{00035\ \ \ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ previousChar\ \ \ \ \ \ \ \ \ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
-\DoxyCodeLine{00036\ }
-\DoxyCodeLine{00037\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{char}\ c\ :\ lyrics)}
-\DoxyCodeLine{00038\ \ \ \{}
-\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'['}\ ||\ c\ ==\ \textcolor{charliteral}{'('})}
-\DoxyCodeLine{00040\ \ \ \ \ \{}
-\DoxyCodeLine{00041\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!currentLine.empty())}
-\DoxyCodeLine{00042\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
-\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ currentLine.clear();}
-\DoxyCodeLine{00045\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00046\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'['})}
-\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ insideSquareBrackets\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00048\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ insideCurlBrackets\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00050\ \ \ \ \ \ \ currentLine\ +=\ c;}
-\DoxyCodeLine{00051\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00052\ \ \ \ \ \}}
-\DoxyCodeLine{00053\ }
-\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordflow}{if}\ (insideSquareBrackets\ ||\ insideCurlBrackets)}
-\DoxyCodeLine{00055\ \ \ \ \ \{}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ currentLine\ +=\ c;}
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{']'}\ \&\&\ insideSquareBrackets)}
-\DoxyCodeLine{00058\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
-\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ currentLine.clear();}
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ insideSquareBrackets\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00063\ }
-\DoxyCodeLine{00064\ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{')'}\ \&\&\ insideCurlBrackets)}
-\DoxyCodeLine{00065\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
-\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ currentLine.clear();}
-\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ insideCurlBrackets\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00069\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00071\ \ \ \ \ \}}
-\DoxyCodeLine{00072\ }
-\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'\(\backslash\)''}\ ||\ c\ ==\ \textcolor{charliteral}{'-\/'})}
-\DoxyCodeLine{00074\ \ \ \ \ \{}
-\DoxyCodeLine{00075\ \ \ \ \ \ \ currentLine\ +=\ c;}
-\DoxyCodeLine{00076\ \ \ \ \ \ \ lastWasSpecialChar\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00077\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{00078\ \ \ \ \ \}}
-\DoxyCodeLine{00079\ }
-\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordflow}{if}\ (std::isupper(c)\ \&\&\ !lastWasUppercase\ \&\&\ !lastWasSpecialChar\ \&\&\ !currentLine.empty()\ \&\&}
-\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ previousChar\ !=\ \textcolor{charliteral}{'\(\backslash\)n'}\ \&\&\ previousChar\ !=\ \textcolor{charliteral}{'\ '})}
-\DoxyCodeLine{00082\ \ \ \ \ \{}
-\DoxyCodeLine{00083\ \ \ \ \ \ \ lines.push\_back(currentLine);}
-\DoxyCodeLine{00084\ \ \ \ \ \ \ currentLine.clear();}
-\DoxyCodeLine{00085\ \ \ \ \ \}}
-\DoxyCodeLine{00086\ }
-\DoxyCodeLine{00087\ \ \ \ \ currentLine\ +=\ c;}
-\DoxyCodeLine{00088\ }
-\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'\(\backslash\)n'})}
-\DoxyCodeLine{00090\ \ \ \ \ \{}
-\DoxyCodeLine{00091\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!currentLine.empty())}
-\DoxyCodeLine{00092\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
-\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ currentLine.clear();}
-\DoxyCodeLine{00095\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00096\ \ \ \ \ \}}
-\DoxyCodeLine{00097\ }
-\DoxyCodeLine{00098\ \ \ \ \ lastWasUppercase\ \ \ =\ std::isupper(c);}
-\DoxyCodeLine{00099\ \ \ \ \ lastWasSpecialChar\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00100\ \ \ \ \ previousChar\ \ \ \ \ \ \ =\ c;}
-\DoxyCodeLine{00101\ \ \ \}}
-\DoxyCodeLine{00102\ }
-\DoxyCodeLine{00103\ \ \ \textcolor{keywordflow}{if}\ (!currentLine.empty())}
-\DoxyCodeLine{00104\ \ \ \{}
-\DoxyCodeLine{00105\ \ \ \ \ lines.push\_back(currentLine);}
-\DoxyCodeLine{00106\ \ \ \}}
-\DoxyCodeLine{00107\ }
-\DoxyCodeLine{00108\ \ \ \textcolor{comment}{//\ Trim\ empty\ lines\ (optional)}}
-\DoxyCodeLine{00109\ \ \ lines.erase(std::remove\_if(lines.begin(),\ lines.end(),}
-\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [](\textcolor{keyword}{const}\ std::string\&\ line)\ \{\ return\ line.empty();\ \}),}
-\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lines.end());}
-\DoxyCodeLine{00112\ }
-\DoxyCodeLine{00113\ \ \ \textcolor{keywordflow}{return}\ lines;}
-\DoxyCodeLine{00114\ \}}
-\DoxyCodeLine{00115\ }
-\DoxyCodeLine{00116\ std::string\ \mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(\textcolor{keywordtype}{char}\ ch)}
-\DoxyCodeLine{00117\ \{}
-\DoxyCodeLine{00118\ \ \ \textcolor{keywordflow}{switch}\ (ch)}
-\DoxyCodeLine{00119\ \ \ \{}
-\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'\(\backslash\)t'}:}
-\DoxyCodeLine{00121\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Tab"{}};}
-\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'\ '}:}
-\DoxyCodeLine{00123\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Space"{}};}
-\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'\(\backslash\)n'}:}
-\DoxyCodeLine{00125\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Enter"{}};}
-\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordflow}{case}\ 27:}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Escape"{}};\ \textcolor{comment}{//\ ASCII\ value\ for\ the\ Escape\ key}}
-\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keywordflow}{default}:}
-\DoxyCodeLine{00129\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::string(1,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(ch));}
-\DoxyCodeLine{00130\ \ \ \}}
-\DoxyCodeLine{00131\ \}}
-\DoxyCodeLine{00132\ }
-\DoxyCodeLine{00133\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_acbc96af0b52cf5c1b6921dbaa39454a9}{FormatTime}}(\textcolor{keywordtype}{int}\ seconds)}
-\DoxyCodeLine{00134\ \{}
-\DoxyCodeLine{00135\ \ \ \textcolor{keywordtype}{int}\ minutes\ =\ seconds\ /\ 60;}
-\DoxyCodeLine{00136\ \ \ seconds\ \ \ \ \ =\ seconds\ \%\ 60;}
-\DoxyCodeLine{00137\ \ \ std::stringstream\ ss;}
-\DoxyCodeLine{00138\ \ \ ss\ <<\ std::setfill(\textcolor{charliteral}{'0'})\ <<\ std::setw(2)\ <<\ minutes\ <<\ \textcolor{stringliteral}{"{}:"{}}\ <<\ std::setfill(\textcolor{charliteral}{'0'})\ <<\ std::setw(2)}
-\DoxyCodeLine{00139\ \ \ \ \ \ <<\ seconds\ <<\ \textcolor{stringliteral}{"{}\ "{}};}
-\DoxyCodeLine{00140\ \ \ \textcolor{keywordflow}{return}\ ss.str();}
-\DoxyCodeLine{00141\ \}}
-\DoxyCodeLine{00142\ }
-\DoxyCodeLine{00143\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_a1dd4ac00b301270766d69bfd131b1a8a}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{TrueColors::Color}}\ color)\ \{\ \textcolor{keywordflow}{return}\ ftxui::color(\mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(color));\ \}}
-\DoxyCodeLine{00144\ }
-\DoxyCodeLine{00145\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_a1895c5b44b9fcf7e8609b74d59f1333c}{getTrueBGColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{TrueColors::Color}}\ color)\ \{\ \textcolor{keywordflow}{return}\ ftxui::bgcolor(\mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(color));\ \}}
-\DoxyCodeLine{00146\ }
-\DoxyCodeLine{00147\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_aa0e7f463ba7f6a6f02a1bd7bd7e33054}{renderAlbumName}}(\textcolor{keyword}{const}\ std::string\&\ album\_name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\&\ year,\ ftxui::Color\ sel\_color)}
-\DoxyCodeLine{00148\ \{}
-\DoxyCodeLine{00149\ \ \ \textcolor{keywordflow}{return}\ hbox(\{text(\textcolor{stringliteral}{"{}\ "{}}),\ text(album\_name)\ |\ bold,\ filler(),}
-\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text(std::to\_string(year))\ |\ dim\ |\ align\_right,\ text(\textcolor{stringliteral}{"{}\ "{}})\})\ |}
-\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ inverted\ |\ color(sel\_color)\ |\ dim;}
-\DoxyCodeLine{00152\ \}}
-\DoxyCodeLine{00153\ }
-\DoxyCodeLine{00154\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_a62d9f40a75073b83bbdb4c23378a211b}{renderSongName}}(\textcolor{keyword}{const}\ std::string\&\ disc\_track\_info,\ \textcolor{keyword}{const}\ std::string\&\ song\_name,}
-\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\&\ duration)}
-\DoxyCodeLine{00156\ \{}
-\DoxyCodeLine{00157\ \ \ \textcolor{keywordflow}{return}\ hbox(\{text(disc\_track\_info)\ |\ dim,\ text(song\_name)\ |\ bold\ |\ flex\_grow,}
-\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ filler(),\ \textcolor{comment}{//\ Spacer\ for\ dynamic\ layout}}
-\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text(\mbox{\hyperlink{misc_8hpp_acbc96af0b52cf5c1b6921dbaa39454a9}{FormatTime}}(duration))\ |\ align\_right\});}
-\DoxyCodeLine{00160\ \}}
-\DoxyCodeLine{00161\ }
-\DoxyCodeLine{00162\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_ac17ffa793bef7aa522f2efc1e40be89a}{CreateMenu}}(\textcolor{keyword}{const}\ std::vector<std::string>*\ vecLines,\ \textcolor{keywordtype}{int}*\ currLine)}
-\DoxyCodeLine{00163\ \{}
-\DoxyCodeLine{00164\ \ \ MenuOption\ menu\_options;}
-\DoxyCodeLine{00165\ \ \ menu\_options.on\_change\ \ \ \ \ =\ [\&]()\ \{\};}
-\DoxyCodeLine{00166\ \ \ menu\_options.focused\_entry\ =\ currLine;}
-\DoxyCodeLine{00167\ }
-\DoxyCodeLine{00168\ \ \ \textcolor{keywordflow}{return}\ Menu(vecLines,\ currLine,\ menu\_options);}
-\DoxyCodeLine{00169\ \}}
-\DoxyCodeLine{00170\ }
-\DoxyCodeLine{00171\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_a8cf36d4dbe5e1c02b0afc2ca2b33e6cf}{RenderSongMenu}}(\textcolor{keyword}{const}\ std::vector<Element>\&\ items)}
-\DoxyCodeLine{00172\ \{}
-\DoxyCodeLine{00173\ \ \ Elements\ rendered\_items;}
-\DoxyCodeLine{00174\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ items.size();\ ++i)}
-\DoxyCodeLine{00175\ \ \ \{}
-\DoxyCodeLine{00176\ \ \ \ \ rendered\_items.push\_back(items[i]\ |\ frame);}
-\DoxyCodeLine{00177\ \ \ \}}
-\DoxyCodeLine{00178\ }
-\DoxyCodeLine{00179\ \ \ \textcolor{keywordflow}{return}\ vbox(std::move(rendered\_items));}
-\DoxyCodeLine{00180\ \}}
-\DoxyCodeLine{00181\ }
-\DoxyCodeLine{00182\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_a3c3039a58e757a40c335b936c371e767}{RenderThumbnail}}(\textcolor{keyword}{const}\ std::string\&\ songFilePath,\ \textcolor{keyword}{const}\ std::string\&\ cacheDirPath,}
-\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ songTitle,\ \textcolor{keyword}{const}\ std::string\&\ artistName,}
-\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ albumName,\ \textcolor{keyword}{const}\ std::string\&\ genre,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ year,}
-\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ trackNumber,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ discNumber,}
-\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ progress)\ \textcolor{comment}{//\ progress:\ a\ value\ between\ 0.0\ (0\%)\ and\ 1.0\ (100\%)}}
-\DoxyCodeLine{00187\ \{}
-\DoxyCodeLine{00188\ \ \ \textcolor{keyword}{auto}\ thumbnailFilePath\ =\ cacheDirPath\ +\ \textcolor{stringliteral}{"{}thumbnail.png"{}};}
-\DoxyCodeLine{00189\ }
-\DoxyCodeLine{00190\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a663081b243b450cd9b222d681eb112bf}{extractThumbnail}}(songFilePath,\ thumbnailFilePath))}
-\DoxyCodeLine{00191\ \ \ \{}
-\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keyword}{auto}\ thumbnail\ =\ Renderer(}
-\DoxyCodeLine{00193\ \ \ \ \ \ \ [\&]}
-\DoxyCodeLine{00194\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vbox(\{\mbox{\hyperlink{namespaceftxui_ac5cec639fa2c2e6aec38f6c74d8691bb}{image\_view}}(thumbnailFilePath)\})\ |}
-\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ center;\ \textcolor{comment}{//\ [TODO]\ Is\ not\ being\ centered\ properly}}
-\DoxyCodeLine{00197\ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00198\ }
-\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keyword}{auto}\ metadataView\ =\ vbox(\{}
-\DoxyCodeLine{00200\ \ \ \ \ \ \ hbox(\{text(albumName)\ |\ bold\ |\ underlined\})\ |\ center,}
-\DoxyCodeLine{00201\ \ \ \ \ \ \ hbox(\{text(songTitle)\ |\ bold,\ text(\textcolor{stringliteral}{"{}\ by\ "{}}),\ text(artistName)\ |\ bold,\ text(\textcolor{stringliteral}{"{}\ ["{}}),}
-\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ text(std::to\_string(year)),\ text(\textcolor{stringliteral}{"{}]"{}}),\ text(\textcolor{stringliteral}{"{}\ ("{}}),}
-\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ text(std::to\_string(discNumber))\ |\ bold,\ text(\textcolor{stringliteral}{"{}/"{}}),}
-\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ text(std::to\_string(trackNumber))\ |\ bold,\ text(\textcolor{stringliteral}{"{})"{}})\})\ |}
-\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ center,}
-\DoxyCodeLine{00206\ \ \ \ \ \ \ hbox(\{text(\textcolor{stringliteral}{"{}Seems\ like\ a\ "{}}),\ text(genre)\ |\ bold,\ text(\textcolor{stringliteral}{"{}\ type\ of\ song..."{}})\})\ |\ center,\ \textcolor{comment}{//\ Genre}}
-\DoxyCodeLine{00207\ \ \ \ \ \});}
-\DoxyCodeLine{00208\ }
-\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keyword}{auto}\ progressBar\ =\ hbox(\{}
-\DoxyCodeLine{00210\ \ \ \ \ \ \ text(\textcolor{stringliteral}{"{}Progress:\ "{}})\ |\ bold,}
-\DoxyCodeLine{00211\ \ \ \ \ \ \ gauge(progress)\ |\ flex,\ \textcolor{comment}{//\ Progress\ bar}}
-\DoxyCodeLine{00212\ \ \ \ \ \ \ text(\textcolor{stringliteral}{"{}\ "{}}),}
-\DoxyCodeLine{00213\ \ \ \ \ \ \ text(std::to\_string(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(progress\ *\ 100))\ +\ \textcolor{stringliteral}{"{}\%"{}}),}
-\DoxyCodeLine{00214\ \ \ \ \ \});}
-\DoxyCodeLine{00215\ }
-\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keyword}{auto}\ thumbNailEle\ =\ vbox(\{thumbnail-\/>Render()\});}
-\DoxyCodeLine{00217\ }
-\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keyword}{auto}\ modernUI\ =\ vbox(\{}
-\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ thumbNailEle\ |\ flex\_shrink,\ \textcolor{comment}{//\ Centered\ and\ scaled\ thumbnail}}
-\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ separator(),}
-\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ metadataView\ |\ borderRounded,\ \textcolor{comment}{//\ Metadata\ in\ a\ rounded\ bordered\ box}}
-\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ separator(),}
-\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ progressBar,\ \textcolor{comment}{//\ Progress\ bar\ below\ the\ metadata}}
-\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \})\ |}
-\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ borderRounded;}
-\DoxyCodeLine{00226\ }
-\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keywordflow}{return}\ modernUI;}
-\DoxyCodeLine{00228\ \ \ \}}
-\DoxyCodeLine{00229\ }
-\DoxyCodeLine{00230\ \ \ \textcolor{comment}{//\ Fallback\ for\ when\ thumbnail\ extraction\ fails}}
-\DoxyCodeLine{00231\ \ \ \textcolor{keyword}{auto}\ errorView\ =\ vbox(\{}
-\DoxyCodeLine{00232\ \ \ \ \ text(\textcolor{stringliteral}{"{}Error:\ Thumbnail\ not\ found!"{}})\ |\ center\ |\ dim,}
-\DoxyCodeLine{00233\ \ \ \ \ separator(),}
-\DoxyCodeLine{00234\ \ \ \ \ text(\textcolor{stringliteral}{"{}Please\ ensure\ the\ file\ has\ embedded\ artwork."{}})\ |\ center,}
-\DoxyCodeLine{00235\ \ \ \});}
-\DoxyCodeLine{00236\ }
-\DoxyCodeLine{00237\ \ \ \textcolor{keywordflow}{return}\ errorView;}
-\DoxyCodeLine{00238\ \}}
-\DoxyCodeLine{00239\ }
-\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00025\ \ \ Component\ \mbox{\hyperlink{structComponentState_a2e25ddbd2d90e63172022584fd8519b4}{audioDeviceMenu}};}
+\DoxyCodeLine{00026\ \};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_acf1411473752280ae12e7bbeb259ca4c}{formatLyrics}}(\textcolor{keyword}{const}\ std::string\&\ lyrics)}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \ \ std::vector<std::string>\ lines;}
+\DoxyCodeLine{00031\ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ currentLine;}
+\DoxyCodeLine{00032\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ insideSquareBrackets\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00033\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ insideCurlBrackets\ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00034\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lastWasUppercase\ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00035\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lastWasSpecialChar\ \ \ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ Tracks\ special\ characters\ within\ words}}
+\DoxyCodeLine{00036\ \ \ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ previousChar\ \ \ \ \ \ \ \ \ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{char}\ c\ :\ lyrics)}
+\DoxyCodeLine{00039\ \ \ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'['}\ ||\ c\ ==\ \textcolor{charliteral}{'('})}
+\DoxyCodeLine{00041\ \ \ \ \ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!currentLine.empty())}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ currentLine.clear();}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'['})}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ insideSquareBrackets\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ insideCurlBrackets\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ currentLine\ +=\ c;}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00053\ \ \ \ \ \}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordflow}{if}\ (insideSquareBrackets\ ||\ insideCurlBrackets)}
+\DoxyCodeLine{00056\ \ \ \ \ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ currentLine\ +=\ c;}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{']'}\ \&\&\ insideSquareBrackets)}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ currentLine.clear();}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ insideSquareBrackets\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{')'}\ \&\&\ insideCurlBrackets)}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ currentLine.clear();}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ insideCurlBrackets\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'\(\backslash\)''}\ ||\ c\ ==\ \textcolor{charliteral}{'-\/'})}
+\DoxyCodeLine{00075\ \ \ \ \ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ currentLine\ +=\ c;}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ lastWasSpecialChar\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordflow}{if}\ (std::isupper(c)\ \&\&\ !lastWasUppercase\ \&\&\ !lastWasSpecialChar\ \&\&\ !currentLine.empty()\ \&\&}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ previousChar\ !=\ \textcolor{charliteral}{'\(\backslash\)n'}\ \&\&\ previousChar\ !=\ \textcolor{charliteral}{'\ '})}
+\DoxyCodeLine{00083\ \ \ \ \ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ currentLine.clear();}
+\DoxyCodeLine{00086\ \ \ \ \ \}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ currentLine\ +=\ c;}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'\(\backslash\)n'})}
+\DoxyCodeLine{00091\ \ \ \ \ \{}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!currentLine.empty())}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ currentLine.clear();}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00097\ \ \ \ \ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ lastWasUppercase\ \ \ =\ std::isupper(c);}
+\DoxyCodeLine{00100\ \ \ \ \ lastWasSpecialChar\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00101\ \ \ \ \ previousChar\ \ \ \ \ \ \ =\ c;}
+\DoxyCodeLine{00102\ \ \ \}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \textcolor{keywordflow}{if}\ (!currentLine.empty())}
+\DoxyCodeLine{00105\ \ \ \{}
+\DoxyCodeLine{00106\ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00107\ \ \ \}}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \textcolor{comment}{//\ Trim\ empty\ lines\ (optional)}}
+\DoxyCodeLine{00110\ \ \ lines.erase(std::remove\_if(lines.begin(),\ lines.end(),}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [](\textcolor{keyword}{const}\ std::string\&\ line)\ \{\ return\ line.empty();\ \}),}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lines.end());}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \textcolor{keywordflow}{return}\ lines;}
+\DoxyCodeLine{00115\ \}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ std::string\ \mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{charToStr}}(\textcolor{keywordtype}{char}\ ch)}
+\DoxyCodeLine{00118\ \{}
+\DoxyCodeLine{00119\ \ \ \textcolor{keywordflow}{switch}\ (ch)}
+\DoxyCodeLine{00120\ \ \ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'\(\backslash\)t'}:}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Tab"{}};}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'\ '}:}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Space"{}};}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'\(\backslash\)n'}:}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Enter"{}};}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordflow}{case}\ 27:}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Escape"{}};\ \textcolor{comment}{//\ ASCII\ value\ for\ the\ Escape\ key}}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::string(1,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(ch));}
+\DoxyCodeLine{00131\ \ \ \}}
+\DoxyCodeLine{00132\ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_acbc96af0b52cf5c1b6921dbaa39454a9}{FormatTime}}(\textcolor{keywordtype}{int}\ seconds)}
+\DoxyCodeLine{00135\ \{}
+\DoxyCodeLine{00136\ \ \ \textcolor{keywordtype}{int}\ minutes\ =\ seconds\ /\ 60;}
+\DoxyCodeLine{00137\ \ \ seconds\ \ \ \ \ =\ seconds\ \%\ 60;}
+\DoxyCodeLine{00138\ \ \ std::stringstream\ ss;}
+\DoxyCodeLine{00139\ \ \ ss\ <<\ std::setfill(\textcolor{charliteral}{'0'})\ <<\ std::setw(2)\ <<\ minutes\ <<\ \textcolor{stringliteral}{"{}:"{}}\ <<\ std::setfill(\textcolor{charliteral}{'0'})\ <<\ std::setw(2)}
+\DoxyCodeLine{00140\ \ \ \ \ \ <<\ seconds\ <<\ \textcolor{stringliteral}{"{}\ "{}};}
+\DoxyCodeLine{00141\ \ \ \textcolor{keywordflow}{return}\ ss.str();}
+\DoxyCodeLine{00142\ \}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_a1dd4ac00b301270766d69bfd131b1a8a}{getTrueColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{TrueColors::Color}}\ color)\ \{\ \textcolor{keywordflow}{return}\ ftxui::color(\mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(color));\ \}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_a1895c5b44b9fcf7e8609b74d59f1333c}{getTrueBGColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{TrueColors::Color}}\ color)\ \{\ \textcolor{keywordflow}{return}\ ftxui::bgcolor(\mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(color));\ \}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_aa0e7f463ba7f6a6f02a1bd7bd7e33054}{renderAlbumName}}(\textcolor{keyword}{const}\ std::string\&\ album\_name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\&\ year,\ ftxui::Color\ sel\_color)}
+\DoxyCodeLine{00149\ \{}
+\DoxyCodeLine{00150\ \ \ \textcolor{keywordflow}{return}\ hbox(\{text(\textcolor{stringliteral}{"{}\ "{}}),\ text(album\_name)\ |\ bold,\ filler(),}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text(std::to\_string(year))\ |\ dim\ |\ align\_right,\ text(\textcolor{stringliteral}{"{}\ "{}})\})\ |}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ inverted\ |\ color(sel\_color)\ |\ dim;}
+\DoxyCodeLine{00153\ \}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_a62d9f40a75073b83bbdb4c23378a211b}{renderSongName}}(\textcolor{keyword}{const}\ std::string\&\ disc\_track\_info,\ \textcolor{keyword}{const}\ std::string\&\ song\_name,}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\&\ duration)}
+\DoxyCodeLine{00157\ \{}
+\DoxyCodeLine{00158\ \ \ \textcolor{keywordflow}{return}\ hbox(\{text(disc\_track\_info)\ |\ dim,\ text(song\_name)\ |\ bold\ |\ flex\_grow,}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ filler(),\ \textcolor{comment}{//\ Spacer\ for\ dynamic\ layout}}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ text(\mbox{\hyperlink{misc_8hpp_acbc96af0b52cf5c1b6921dbaa39454a9}{FormatTime}}(duration))\ |\ align\_right\});}
+\DoxyCodeLine{00161\ \}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_ac17ffa793bef7aa522f2efc1e40be89a}{CreateMenu}}(\textcolor{keyword}{const}\ std::vector<std::string>*\ vecLines,\ \textcolor{keywordtype}{int}*\ currLine)}
+\DoxyCodeLine{00164\ \{}
+\DoxyCodeLine{00165\ \ \ MenuOption\ menu\_options;}
+\DoxyCodeLine{00166\ \ \ menu\_options.on\_change\ \ \ \ \ =\ [\&]()\ \{\};}
+\DoxyCodeLine{00167\ \ \ menu\_options.focused\_entry\ =\ currLine;}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \textcolor{keywordflow}{return}\ Menu(vecLines,\ currLine,\ menu\_options);}
+\DoxyCodeLine{00170\ \}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_a8cf36d4dbe5e1c02b0afc2ca2b33e6cf}{RenderSongMenu}}(\textcolor{keyword}{const}\ std::vector<Element>\&\ items)}
+\DoxyCodeLine{00173\ \{}
+\DoxyCodeLine{00174\ \ \ Elements\ rendered\_items;}
+\DoxyCodeLine{00175\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ items.size();\ ++i)}
+\DoxyCodeLine{00176\ \ \ \{}
+\DoxyCodeLine{00177\ \ \ \ \ rendered\_items.push\_back(items[i]\ |\ frame);}
+\DoxyCodeLine{00178\ \ \ \}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \textcolor{keywordflow}{return}\ vbox(std::move(rendered\_items));}
+\DoxyCodeLine{00181\ \}}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ std::string\ \mbox{\hyperlink{misc_8hpp_aa40cf4a9ca2dd2a38f2086cd49aef14d}{getMimeTypeFromExtension}}(\textcolor{keyword}{const}\ std::string\&\ filePath)}
+\DoxyCodeLine{00184\ \{}
+\DoxyCodeLine{00185\ \ \ \textcolor{comment}{//\ Map\ file\ extensions\ to\ MIME\ types}}
+\DoxyCodeLine{00186\ \ \ \textcolor{keyword}{static}\ std::map<std::string,\ std::string>\ mimeTypes\ =\ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \{\textcolor{stringliteral}{"{}.mp3"{}},\ \textcolor{stringliteral}{"{}audio/mpeg"{}}\},\ \ \{\textcolor{stringliteral}{"{}.flac"{}},\ \textcolor{stringliteral}{"{}audio/flac"{}}\},\ \ \ \ \{\textcolor{stringliteral}{"{}.wav"{}},\ \textcolor{stringliteral}{"{}audio/wav"{}}\},}
+\DoxyCodeLine{00188\ \ \ \ \ \{\textcolor{stringliteral}{"{}.ogg"{}},\ \textcolor{stringliteral}{"{}audio/ogg"{}}\},\ \ \ \{\textcolor{stringliteral}{"{}.aac"{}},\ \textcolor{stringliteral}{"{}audio/aac"{}}\},\ \ \ \ \ \ \{\textcolor{stringliteral}{"{}.m4a"{}},\ \textcolor{stringliteral}{"{}audio/mp4"{}}\},}
+\DoxyCodeLine{00189\ \ \ \ \ \{\textcolor{stringliteral}{"{}.opus"{}},\ \textcolor{stringliteral}{"{}audio/opus"{}}\},\ \{\textcolor{stringliteral}{"{}.wma"{}},\ \textcolor{stringliteral}{"{}audio/x-\/ms-\/wma"{}}\},\ \{\textcolor{stringliteral}{"{}.alac"{}},\ \textcolor{stringliteral}{"{}audio/alac"{}}\}\};}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \textcolor{comment}{//\ Extract\ the\ file\ extension}}
+\DoxyCodeLine{00192\ \ \ std::string::size\_type\ idx\ =\ filePath.rfind(\textcolor{charliteral}{'.'});}
+\DoxyCodeLine{00193\ \ \ \textcolor{keywordflow}{if}\ (idx\ !=\ std::string::npos)}
+\DoxyCodeLine{00194\ \ \ \{}
+\DoxyCodeLine{00195\ \ \ \ \ std::string\ extension\ =\ filePath.substr(idx);}
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ \ \ it\ \ \ \ \ \ \ \ =\ mimeTypes.find(extension);}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ mimeTypes.end())}
+\DoxyCodeLine{00198\ \ \ \ \ \{}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00200\ \ \ \ \ \}}
+\DoxyCodeLine{00201\ \ \ \}}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \textcolor{comment}{//\ Default\ MIME\ type\ if\ the\ extension\ is\ unknown}}
+\DoxyCodeLine{00204\ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}application/octet-\/stream"{}};}
+\DoxyCodeLine{00205\ \}}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{misc_8hpp_a3c3039a58e757a40c335b936c371e767}{RenderThumbnail}}(\textcolor{keyword}{const}\ std::string\&\ songFilePath,\ \textcolor{keyword}{const}\ std::string\&\ cacheDirPath,}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ songTitle,\ \textcolor{keyword}{const}\ std::string\&\ artistName,}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ albumName,\ \textcolor{keyword}{const}\ std::string\&\ genre,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ year,}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ trackNumber,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ discNumber,}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ progress)\ \textcolor{comment}{//\ progress:\ a\ value\ between\ 0.0\ (0\%)\ and\ 1.0\ (100\%)}}
+\DoxyCodeLine{00212\ \{}
+\DoxyCodeLine{00213\ \ \ \textcolor{keyword}{auto}\ thumbnailFilePath\ =\ cacheDirPath\ +\ \textcolor{stringliteral}{"{}thumbnail.png"{}};}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a663081b243b450cd9b222d681eb112bf}{extractThumbnail}}(songFilePath,\ thumbnailFilePath))}
+\DoxyCodeLine{00216\ \ \ \{}
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keyword}{auto}\ thumbnail\ =\ Renderer(}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ [\&]}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vbox(\{\mbox{\hyperlink{namespaceftxui_ac5cec639fa2c2e6aec38f6c74d8691bb}{image\_view}}(thumbnailFilePath)\})\ |}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ center;\ \textcolor{comment}{//\ [TODO]\ Is\ not\ being\ centered\ properly}}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keyword}{auto}\ metadataView\ =\ vbox(\{}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ hbox(\{text(albumName)\ |\ bold\ |\ underlined\})\ |\ center,}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ hbox(\{text(songTitle)\ |\ bold,\ text(\textcolor{stringliteral}{"{}\ by\ "{}}),\ text(artistName)\ |\ bold,\ text(\textcolor{stringliteral}{"{}\ ["{}}),}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ text(std::to\_string(year)),\ text(\textcolor{stringliteral}{"{}]"{}}),\ text(\textcolor{stringliteral}{"{}\ ("{}}),}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ text(std::to\_string(discNumber))\ |\ bold,\ text(\textcolor{stringliteral}{"{}/"{}}),}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ text(std::to\_string(trackNumber))\ |\ bold,\ text(\textcolor{stringliteral}{"{})\ -\/-\/\ \{"{}}),}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ text(\mbox{\hyperlink{misc_8hpp_aa40cf4a9ca2dd2a38f2086cd49aef14d}{getMimeTypeFromExtension}}(songFilePath))\ |\ bold,\ text(\textcolor{stringliteral}{"{}\}"{}})\})\ |}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ center,}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ hbox(\{text(\textcolor{stringliteral}{"{}Seems\ like\ a\ "{}}),\ text(genre)\ |\ bold,\ text(\textcolor{stringliteral}{"{}\ type\ of\ song..."{}})\})\ |\ center,\ \textcolor{comment}{//\ Genre}}
+\DoxyCodeLine{00233\ \ \ \ \ \});}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keyword}{auto}\ progressBar\ =\ hbox(\{}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ text(\textcolor{stringliteral}{"{}Progress:\ "{}})\ |\ bold,}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ gauge(progress)\ |\ flex,\ \textcolor{comment}{//\ Progress\ bar}}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ text(\textcolor{stringliteral}{"{}\ "{}}),}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ text(std::to\_string(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(progress\ *\ 100))\ +\ \textcolor{stringliteral}{"{}\%"{}}),}
+\DoxyCodeLine{00240\ \ \ \ \ \});}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keyword}{auto}\ thumbNailEle\ =\ vbox(\{thumbnail-\/>Render()\});}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{keyword}{auto}\ modernUI\ =\ vbox(\{}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ thumbNailEle\ |\ flex\_shrink,\ \textcolor{comment}{//\ Centered\ and\ scaled\ thumbnail}}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ separator(),}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ metadataView\ |\ borderRounded,\ \textcolor{comment}{//\ Metadata\ in\ a\ rounded\ bordered\ box}}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ separator(),}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ progressBar,\ \textcolor{comment}{//\ Progress\ bar\ below\ the\ metadata}}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \})\ |}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ borderRounded;}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{keywordflow}{return}\ modernUI;}
+\DoxyCodeLine{00254\ \ \ \}}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \ \ \textcolor{comment}{//\ Fallback\ for\ when\ thumbnail\ extraction\ fails}}
+\DoxyCodeLine{00257\ \ \ \textcolor{keyword}{auto}\ errorView\ =\ vbox(\{}
+\DoxyCodeLine{00258\ \ \ \ \ text(\textcolor{stringliteral}{"{}Error:\ Thumbnail\ not\ found!"{}})\ |\ center\ |\ dim,}
+\DoxyCodeLine{00259\ \ \ \ \ separator(),}
+\DoxyCodeLine{00260\ \ \ \ \ text(\textcolor{stringliteral}{"{}Please\ ensure\ the\ file\ has\ embedded\ artwork."{}})\ |\ center,}
+\DoxyCodeLine{00261\ \ \ \});}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \ \ \textcolor{keywordflow}{return}\ errorView;}
+\DoxyCodeLine{00264\ \}}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

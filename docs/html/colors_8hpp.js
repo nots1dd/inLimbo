@@ -47,7 +47,7 @@ var colors_8hpp =
       [ "TrueColors::Color::LightTurquoise", "namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6dae5c96e2ad0520ead9cec1a0664a709a9", null ]
     ] ],
     [ "TrueColors::GetColor", "namespaceTrueColors.html#a5e3fb4538a96657fee0d7ffb9a92fb96", null ],
-    [ "parseColor", "colors_8hpp.html#adf73c6c8342b58af9e25838c451bc575", null ],
+    [ "parseColor", "colors_8hpp.html#a199acdfa1243dcb86ac7e6de0195a7dc", null ],
     [ "parseColors", "colors_8hpp.html#a637d01c5fd950275d85073732fec1d08", null ],
     [ "parseHexColor", "colors_8hpp.html#a38d72813e90e14f8b18e88cd4af7c9da", null ]
 ];

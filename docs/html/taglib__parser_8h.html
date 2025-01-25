@@ -125,6 +125,7 @@ $(function(){initNavTree('taglib__parser_8h.html',''); initResizable(true); });
 <code>#include &lt;taglib/mpegfile.h&gt;</code><br />
 <code>#include &lt;taglib/attachedpictureframe.h&gt;</code><br />
 <code>#include &lt;taglib/tpropertymap.h&gt;</code><br />
+<code>#include &lt;taglib/flacfile.h&gt;</code><br />
 <code>#include &lt;png.h&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
 </div>
@@ -148,7 +149,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:afff220fe53f14744f741b6945e3e765b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an error message based on the debug log setting.  <br /></td></tr>
 <tr class="separator:afff220fe53f14744f741b6945e3e765b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a663081b243b450cd9b222d681eb112bf" id="r_a663081b243b450cd9b222d681eb112bf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a663081b243b450cd9b222d681eb112bf">extractThumbnail</a> (const std::string &amp;audioFilePath, const std::string &amp;outputImagePath)</td></tr>
-<tr class="memdesc:a663081b243b450cd9b222d681eb112bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts the thumbnail (album art) from an audio file and saves it to an image file.  <br /></td></tr>
+<tr class="memdesc:a663081b243b450cd9b222d681eb112bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts the thumbnail (album art) from an audio file and saves it to an image file. (Works for mp3 and flac)  <br /></td></tr>
 <tr class="separator:a663081b243b450cd9b222d681eb112bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
@@ -180,7 +181,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Extracts the thumbnail (album art) from an audio file and saves it to an image file. </p>
+<p>Extracts the thumbnail (album art) from an audio file and saves it to an image file. (Works for mp3 and flac) </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">audioFilePath</td><td>The path to the audio file containing embedded album art. </td></tr>

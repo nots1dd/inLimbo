@@ -16,7 +16,11 @@ A class for playing audio using the Mini\+Audio library.
 \begin{DoxyCompactList}\small\item\em Constructs a \doxylink{classMiniAudioPlayer}{Mini\+Audio\+Player} object and initializes the Mini\+Audio engine. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classMiniAudioPlayer_ade3387406ebf3bf900d561b8e72a2a3c}{\texorpdfstring{$\sim$}{\string~}\+Mini\+Audio\+Player}} ()
 \begin{DoxyCompactList}\small\item\em Destroys the \doxylink{classMiniAudioPlayer}{Mini\+Audio\+Player} object, stopping any playback and cleaning up resources. \end{DoxyCompactList}\item 
-int \mbox{\hyperlink{classMiniAudioPlayer_a5269bc0086c47ca3a23899fd7324433c}{load\+File}} (const std\+::string \&file\+Path)
+std\+::vector$<$ \mbox{\hyperlink{structAudioDevice}{Audio\+Device}} $>$ \mbox{\hyperlink{classMiniAudioPlayer_a54f92bf7ee24754c88ebbcf294fe65e2}{enumerate\+Devices}} ()
+\item 
+void \mbox{\hyperlink{classMiniAudioPlayer_aa8931efed21c3040f70023ff77553d74}{set\+Device}} (const ma\+\_\+device\+\_\+id \&id)
+\begin{DoxyCompactList}\small\item\em Sets the device ID for playback. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classMiniAudioPlayer_add00a354c2bdd42a3d929e8203f5c4f1}{load\+File}} (const std\+::string \&file\+Path, bool reload\+Next\+File)
 \begin{DoxyCompactList}\small\item\em Loads an audio file for playback. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classMiniAudioPlayer_afaed2fe579e6ec80066056d622f42b8a}{play}} ()
 \begin{DoxyCompactList}\small\item\em Starts playback of the loaded audio file. \end{DoxyCompactList}\item 
@@ -74,6 +78,12 @@ Destroys the \doxylink{classMiniAudioPlayer}{Mini\+Audio\+Player} object, stoppi
 This method ensures that the sound is stopped, the engine is uninitialized, and resources are cleaned up. 
 
 \doxysubsection{Member Function Documentation}
+\Hypertarget{classMiniAudioPlayer_a54f92bf7ee24754c88ebbcf294fe65e2}\index{MiniAudioPlayer@{MiniAudioPlayer}!enumerateDevices@{enumerateDevices}}
+\index{enumerateDevices@{enumerateDevices}!MiniAudioPlayer@{MiniAudioPlayer}}
+\doxysubsubsection{\texorpdfstring{enumerateDevices()}{enumerateDevices()}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_a54f92bf7ee24754c88ebbcf294fe65e2} 
+std\+::vector$<$ \mbox{\hyperlink{structAudioDevice}{Audio\+Device}} $>$ Mini\+Audio\+Player\+::enumerate\+Devices (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
 \Hypertarget{classMiniAudioPlayer_af23b5fbce361c592b6916bc2955db1e5}\index{MiniAudioPlayer@{MiniAudioPlayer}!getDuration@{getDuration}}
 \index{getDuration@{getDuration}!MiniAudioPlayer@{MiniAudioPlayer}}
 \doxysubsubsection{\texorpdfstring{getDuration()}{getDuration()}}
@@ -124,11 +134,11 @@ This method returns whether the sound is currently playing.
 \begin{DoxyReturn}{Returns}
 {\ttfamily true} if the sound is playing, {\ttfamily false} otherwise. 
 \end{DoxyReturn}
-\Hypertarget{classMiniAudioPlayer_a5269bc0086c47ca3a23899fd7324433c}\index{MiniAudioPlayer@{MiniAudioPlayer}!loadFile@{loadFile}}
+\Hypertarget{classMiniAudioPlayer_add00a354c2bdd42a3d929e8203f5c4f1}\index{MiniAudioPlayer@{MiniAudioPlayer}!loadFile@{loadFile}}
 \index{loadFile@{loadFile}!MiniAudioPlayer@{MiniAudioPlayer}}
 \doxysubsubsection{\texorpdfstring{loadFile()}{loadFile()}}
-{\footnotesize\ttfamily \label{classMiniAudioPlayer_a5269bc0086c47ca3a23899fd7324433c} 
-int Mini\+Audio\+Player\+::load\+File (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+Path}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_add00a354c2bdd42a3d929e8203f5c4f1} 
+int Mini\+Audio\+Player\+::load\+File (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+Path}{, }\item[{bool}]{reload\+Next\+File}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -213,6 +223,21 @@ This method seeks to a specific position in the audio based on the number of sec
 \begin{DoxyReturn}{Returns}
 The actual time (in seconds) that the sound was seeked to. 
 \end{DoxyReturn}
+\Hypertarget{classMiniAudioPlayer_aa8931efed21c3040f70023ff77553d74}\index{MiniAudioPlayer@{MiniAudioPlayer}!setDevice@{setDevice}}
+\index{setDevice@{setDevice}!MiniAudioPlayer@{MiniAudioPlayer}}
+\doxysubsubsection{\texorpdfstring{setDevice()}{setDevice()}}
+{\footnotesize\ttfamily \label{classMiniAudioPlayer_aa8931efed21c3040f70023ff77553d74} 
+void Mini\+Audio\+Player\+::set\+Device (\begin{DoxyParamCaption}\item[{const ma\+\_\+device\+\_\+id \&}]{id}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the device ID for playback. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & The device ID to set for playback. \\
+\hline
+\end{DoxyParams}
 \Hypertarget{classMiniAudioPlayer_ab2c4bae21c2ea00b2f3af8b697835950}\index{MiniAudioPlayer@{MiniAudioPlayer}!setVolume@{setVolume}}
 \index{setVolume@{setVolume}!MiniAudioPlayer@{MiniAudioPlayer}}
 \doxysubsubsection{\texorpdfstring{setVolume()}{setVolume()}}

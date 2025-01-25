@@ -15,6 +15,7 @@ var structKeybinds =
     [ "seek_ahead_5", "structKeybinds.html#a328d188e562cf2d00ca8fdc65af75c6a", null ],
     [ "seek_behind_5", "structKeybinds.html#ac01d4cb164309e257c932076a6a65aa6", null ],
     [ "show_help", "structKeybinds.html#a11bbc23c21d5fef44f2b13f32cf8d831", null ],
+    [ "toggle_audio_devices", "structKeybinds.html#a0c1783894d6ec11de583f0b5396bbde4", null ],
     [ "toggle_focus", "structKeybinds.html#aeebdafcff1d774e95b25c184b229128c", null ],
     [ "toggle_mute", "structKeybinds.html#a3d0f9af37b9cf78a2da4bfdc56bbe629", null ],
     [ "toggle_play", "structKeybinds.html#ad10b5a9637dc1cd70cfce5fa8362cb03", null ],

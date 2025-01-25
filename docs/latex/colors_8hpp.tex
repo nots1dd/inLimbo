@@ -1,8 +1,6 @@
 \doxysection{src/ui/colors.hpp File Reference}
 \hypertarget{colors_8hpp}{}\label{colors_8hpp}\index{src/ui/colors.hpp@{src/ui/colors.hpp}}
-{\ttfamily \#include $<$cstdint$>$}\newline
 {\ttfamily \#include $<$ftxui/screen/color.\+hpp$>$}\newline
-{\ttfamily \#include $<$iomanip$>$}\newline
 {\ttfamily \#include $<$iostream$>$}\newline
 {\ttfamily \#include $<$regex$>$}\newline
 {\ttfamily \#include $<$string$>$}\newline
@@ -83,18 +81,18 @@ ftxui\+::\+Color \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9
 \begin{DoxyCompactList}\small\item\em Maps a predefined color enum to its corresponding ftxui\+::\+Color\+::\+RGB value. \end{DoxyCompactList}\item 
 ftxui\+::\+Color \mbox{\hyperlink{colors_8hpp_a38d72813e90e14f8b18e88cd4af7c9da}{parse\+Hex\+Color}} (const std\+::string \&hex)
 \begin{DoxyCompactList}\small\item\em Parses a hexadecimal color string into an ftxui\+::\+Color\+::\+RGB value. \end{DoxyCompactList}\item 
-ftxui\+::\+Color \mbox{\hyperlink{colors_8hpp_adf73c6c8342b58af9e25838c451bc575}{parse\+Color}} (const std\+::string \&color\+\_\+name)
+ftxui\+::\+Color \mbox{\hyperlink{colors_8hpp_a199acdfa1243dcb86ac7e6de0195a7dc}{parse\+Color}} (const std\+::string \&color\+\_\+name, const std\+::string \&color\+\_\+field)
 \begin{DoxyCompactList}\small\item\em Parses a color name or hex value into an ftxui\+::\+Color. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{structInLimboColors}{In\+Limbo\+Colors}} \mbox{\hyperlink{colors_8hpp_a637d01c5fd950275d85073732fec1d08}{parse\+Colors}} ()
 \begin{DoxyCompactList}\small\item\em Parses colors from a TOML configuration into an \doxylink{structInLimboColors}{In\+Limbo\+Colors} struct. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Function Documentation}
-\Hypertarget{colors_8hpp_adf73c6c8342b58af9e25838c451bc575}\index{colors.hpp@{colors.hpp}!parseColor@{parseColor}}
+\Hypertarget{colors_8hpp_a199acdfa1243dcb86ac7e6de0195a7dc}\index{colors.hpp@{colors.hpp}!parseColor@{parseColor}}
 \index{parseColor@{parseColor}!colors.hpp@{colors.hpp}}
 \doxysubsubsection{\texorpdfstring{parseColor()}{parseColor()}}
-{\footnotesize\ttfamily \label{colors_8hpp_adf73c6c8342b58af9e25838c451bc575} 
-ftxui\+::\+Color parse\+Color (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{color\+\_\+name}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{colors_8hpp_a199acdfa1243dcb86ac7e6de0195a7dc} 
+ftxui\+::\+Color parse\+Color (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{color\+\_\+name}{, }\item[{const std\+::string \&}]{color\+\_\+field}{}\end{DoxyParamCaption})}
 
 
 
@@ -113,7 +111,7 @@ ftxui\+::\+Color The corresponding RGB color.
 {\em std\+::exit} & on invalid or unsupported colors. \\
 \hline
 \end{DoxyExceptions}
-\Hypertarget{colors_8hpp_a637d01c5fd950275d85073732fec1d08}\index{colors.hpp@{colors.hpp}!parseColors@{parseColors}}
+\texorpdfstring{$<$}{<} Exit the program on invalid keybind\Hypertarget{colors_8hpp_a637d01c5fd950275d85073732fec1d08}\index{colors.hpp@{colors.hpp}!parseColors@{parseColors}}
 \index{parseColors@{parseColors}!colors.hpp@{colors.hpp}}
 \doxysubsubsection{\texorpdfstring{parseColors()}{parseColors()}}
 {\footnotesize\ttfamily \label{colors_8hpp_a637d01c5fd950275d85073732fec1d08} 

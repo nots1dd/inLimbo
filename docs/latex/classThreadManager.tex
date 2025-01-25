@@ -17,16 +17,45 @@ struct \mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}}
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+\mbox{\hyperlink{classThreadManager_a613b13ebf45502e4d86c2f9317ec5871}{Thread\+Manager}} ()
+\begin{DoxyCompactList}\small\item\em Construct a \doxylink{classThreadManager}{Thread\+Manager} with a worker thread pool. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classThreadManager_a18eb12d3d752075318c3672c8efffd5b}{\texorpdfstring{$\sim$}{\string~}\+Thread\+Manager}} ()
+\begin{DoxyCompactList}\small\item\em Destructor to clean up resources and threads. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}} \& \mbox{\hyperlink{classThreadManager_a68d674d82375bbf4cbaeda427df036a2}{get\+Thread\+State}} ()
 \begin{DoxyCompactList}\small\item\em Retrieves the thread state managed by this \doxylink{classThreadManager}{Thread\+Manager}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}} \& \mbox{\hyperlink{classThreadManager_aaa649c0d04519f63cd596cf7fdcaa7de}{get\+Worker\+Thread\+Pool}} ()
+\begin{DoxyCompactList}\small\item\em Get the worker thread pool. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classThreadManager_a8c0b77d668ea526a62b556b42751a5a6}{lock\+Play\+Mutex}} (\mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}} \&thread\+\_\+state)
 \begin{DoxyCompactList}\small\item\em Locks the play mutex for the provided thread state. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classThreadManager_a0e12c9882625107d2b7059bd9816305c}{unlock\+Play\+Mutex}} (\mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}} \&thread\+\_\+state)
-\begin{DoxyCompactList}\small\item\em Unlocks the play mutex for the provided thread state. \end{DoxyCompactList}\end{DoxyCompactItemize}
+void \mbox{\hyperlink{classThreadManager_a45396e761e53aa3960095d0fa1b256cf}{lock\+Queue\+Mutex}} (\mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}} \&thread\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Locks the queue mutex for the provided thread state. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 A class that manages thread states and provides utilities for thread handling. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classThreadManager_a613b13ebf45502e4d86c2f9317ec5871}\index{ThreadManager@{ThreadManager}!ThreadManager@{ThreadManager}}
+\index{ThreadManager@{ThreadManager}!ThreadManager@{ThreadManager}}
+\doxysubsubsection{\texorpdfstring{ThreadManager()}{ThreadManager()}}
+{\footnotesize\ttfamily \label{classThreadManager_a613b13ebf45502e4d86c2f9317ec5871} 
+Thread\+Manager\+::\+Thread\+Manager (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct a \doxylink{classThreadManager}{Thread\+Manager} with a worker thread pool. 
+
+\Hypertarget{classThreadManager_a18eb12d3d752075318c3672c8efffd5b}\index{ThreadManager@{ThreadManager}!````~ThreadManager@{\texorpdfstring{$\sim$}{\string~}ThreadManager}}
+\index{````~ThreadManager@{\texorpdfstring{$\sim$}{\string~}ThreadManager}!ThreadManager@{ThreadManager}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}ThreadManager()}{\string~ThreadManager()}}
+{\footnotesize\ttfamily \label{classThreadManager_a18eb12d3d752075318c3672c8efffd5b} 
+Thread\+Manager\+::\texorpdfstring{$\sim$}{\string~}\+Thread\+Manager (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Destructor to clean up resources and threads. 
+
+
 
 \doxysubsection{Member Function Documentation}
 \Hypertarget{classThreadManager_a68d674d82375bbf4cbaeda427df036a2}\index{ThreadManager@{ThreadManager}!getThreadState@{getThreadState}}
@@ -42,6 +71,19 @@ Retrieves the thread state managed by this \doxylink{classThreadManager}{Thread\
 \begin{DoxyReturn}{Returns}
 A reference to the thread state. 
 \end{DoxyReturn}
+\Hypertarget{classThreadManager_aaa649c0d04519f63cd596cf7fdcaa7de}\index{ThreadManager@{ThreadManager}!getWorkerThreadPool@{getWorkerThreadPool}}
+\index{getWorkerThreadPool@{getWorkerThreadPool}!ThreadManager@{ThreadManager}}
+\doxysubsubsection{\texorpdfstring{getWorkerThreadPool()}{getWorkerThreadPool()}}
+{\footnotesize\ttfamily \label{classThreadManager_aaa649c0d04519f63cd596cf7fdcaa7de} 
+\mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}} \& Thread\+Manager\+::get\+Worker\+Thread\+Pool (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the worker thread pool. 
+
+\begin{DoxyReturn}{Returns}
+Reference to the \doxylink{classWorkerThreadPool}{Worker\+Thread\+Pool}. 
+\end{DoxyReturn}
 \Hypertarget{classThreadManager_a8c0b77d668ea526a62b556b42751a5a6}\index{ThreadManager@{ThreadManager}!lockPlayMutex@{lockPlayMutex}}
 \index{lockPlayMutex@{lockPlayMutex}!ThreadManager@{ThreadManager}}
 \doxysubsubsection{\texorpdfstring{lockPlayMutex()}{lockPlayMutex()}}
@@ -52,33 +94,26 @@ void Thread\+Manager\+::lock\+Play\+Mutex (\begin{DoxyParamCaption}\item[{\mbox{
 
 Locks the play mutex for the provided thread state. 
 
-This function uses a unique lock to ensure that the play mutex is safely locked while performing operations on the thread state.
+
+\begin{DoxyParams}{Parameters}
+{\em thread\+\_\+state} & Reference to the \doxylink{structThreadManager_1_1ThreadState}{Thread\+State} object whose mutex is to be locked. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classThreadManager_a45396e761e53aa3960095d0fa1b256cf}\index{ThreadManager@{ThreadManager}!lockQueueMutex@{lockQueueMutex}}
+\index{lockQueueMutex@{lockQueueMutex}!ThreadManager@{ThreadManager}}
+\doxysubsubsection{\texorpdfstring{lockQueueMutex()}{lockQueueMutex()}}
+{\footnotesize\ttfamily \label{classThreadManager_a45396e761e53aa3960095d0fa1b256cf} 
+void Thread\+Manager\+::lock\+Queue\+Mutex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}} \&}]{thread\+\_\+state}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Locks the queue mutex for the provided thread state. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em thread\+\_\+state} & A reference to the \doxylink{structThreadManager_1_1ThreadState}{Thread\+State} object whose mutex is to be locked. \\
+{\em thread\+\_\+state} & Reference to the \doxylink{structThreadManager_1_1ThreadState}{Thread\+State} object whose mutex is to be locked. \\
 \hline
 \end{DoxyParams}
-\Hypertarget{classThreadManager_a0e12c9882625107d2b7059bd9816305c}\index{ThreadManager@{ThreadManager}!unlockPlayMutex@{unlockPlayMutex}}
-\index{unlockPlayMutex@{unlockPlayMutex}!ThreadManager@{ThreadManager}}
-\doxysubsubsection{\texorpdfstring{unlockPlayMutex()}{unlockPlayMutex()}}
-{\footnotesize\ttfamily \label{classThreadManager_a0e12c9882625107d2b7059bd9816305c} 
-void Thread\+Manager\+::unlock\+Play\+Mutex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}} \&}]{thread\+\_\+state}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-Unlocks the play mutex for the provided thread state. 
-
-This function releases the lock on the play mutex that was previously acquired using {\ttfamily lock\+Play\+Mutex}. The play mutex will be unlocked after this function is called.
-
-
-\begin{DoxyParams}{Parameters}
-{\em thread\+\_\+state} & A reference to the \doxylink{structThreadManager_1_1ThreadState}{Thread\+State} object whose mutex is to be unlocked. \\
-\hline
-\end{DoxyParams}
-\begin{DoxyNote}{Note}
-This function should be used in conjunction with {\ttfamily lock\+Play\+Mutex} to ensure proper synchronization. 
-\end{DoxyNote}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

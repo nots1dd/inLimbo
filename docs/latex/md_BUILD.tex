@@ -1,0 +1,324 @@
+\chapter{in\+Limbo Build Guide}
+\hypertarget{md_BUILD}{}\label{md_BUILD}\index{inLimbo Build Guide@{inLimbo Build Guide}}
+\label{md_BUILD_autotoc_md32}%
+\Hypertarget{md_BUILD_autotoc_md32}%
+
+
+This project uses a {\ttfamily Makefile} to automate the build process. The {\ttfamily Makefile} supports different build configurations to help with development, testing, and production. Below are the various types of builds you can perform and how to use them.
+
+You can build the in\+Limbo in two ways\+:
+
+
+\begin{DoxyEnumerate}
+\item Makefile (uses CMake)
+\item Manually building using CMake commands
+\end{DoxyEnumerate}\hypertarget{md_BUILD_autotoc_md33}{}\doxysection{\texorpdfstring{Available Build Targets}{Available Build Targets}}\label{md_BUILD_autotoc_md33}
+\hypertarget{md_BUILD_autotoc_md34}{}\doxysubsection{\texorpdfstring{1. {\bfseries{all}}}{1. {\bfseries{all}}}}\label{md_BUILD_autotoc_md34}
+This is the default target, and it will perform a full build of the project.
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Command}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ all}
+
+\end{DoxyCode}
+
+\item {\bfseries{Description}}\+: This will run the {\ttfamily build-\/all} target, which first executes the initialization script ({\ttfamily init.\+sh}) and then proceeds with the build.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_BUILD_autotoc_md36}{}\doxysubsection{\texorpdfstring{2. {\bfseries{build}}}{2. {\bfseries{build}}}}\label{md_BUILD_autotoc_md36}
+This target performs a clean build with the default {\ttfamily Release} configuration.
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Command}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ build}
+
+\end{DoxyCode}
+
+\item {\bfseries{Description}}\+:
+\begin{DoxyItemize}
+\item Builds the project using the default {\ttfamily Release} configuration.
+\item The build process uses the {\ttfamily CMake} tool and the {\ttfamily build} directory.
+\item It ensures that testing is disabled.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_BUILD_autotoc_md38}{}\doxysubsection{\texorpdfstring{3. {\bfseries{rebuild}}}{3. {\bfseries{rebuild}}}}\label{md_BUILD_autotoc_md38}
+This target will rebuild the project, even if it was previously built.
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Command}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ rebuild}
+
+\end{DoxyCode}
+
+\item {\bfseries{Description}}\+:
+\begin{DoxyItemize}
+\item Rebuilds the project by running the {\ttfamily CMake} build process again without needing to clean the build directory.
+\item It uses the existing build directory and rebuilds with the same configuration.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_BUILD_autotoc_md40}{}\doxysubsection{\texorpdfstring{4. {\bfseries{asan (Address\+Sanitizer)}}}{4. {\bfseries{asan (Address\+Sanitizer)}}}}\label{md_BUILD_autotoc_md40}
+This target builds the project with {\bfseries{Address\+Sanitizer}}, which helps detect memory errors.
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Command}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ asan}
+
+\end{DoxyCode}
+
+\item {\bfseries{Description}}\+:
+\begin{DoxyItemize}
+\item Builds the project in debug mode with Address\+Sanitizer enabled.
+\item This helps identify memory-\/related issues such as buffer overflows and memory leaks.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_BUILD_autotoc_md42}{}\doxysubsection{\texorpdfstring{5. {\bfseries{asan\+\_\+run}}}{5. {\bfseries{asan\+\_\+run}}}}\label{md_BUILD_autotoc_md42}
+This target runs the Address\+Sanitizer build after it has been built.
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Command}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ asan\_run}
+
+\end{DoxyCode}
+
+\item {\bfseries{Description}}\+:
+\begin{DoxyItemize}
+\item Runs the project with the Address\+Sanitizer build.
+\item Useful for detecting runtime memory issues.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_BUILD_autotoc_md44}{}\doxysubsection{\texorpdfstring{6. {\bfseries{tsan (Thread\+Sanitizer)}}}{6. {\bfseries{tsan (Thread\+Sanitizer)}}}}\label{md_BUILD_autotoc_md44}
+This target builds the project with {\bfseries{Thread\+Sanitizer}}, which detects data races in multi-\/threaded code.
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Command}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ tsan}
+
+\end{DoxyCode}
+
+\item {\bfseries{Description}}\+:
+\begin{DoxyItemize}
+\item Builds the project in debug mode with Thread\+Sanitizer enabled.
+\item This helps detect race conditions and other threading issues in the code.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_BUILD_autotoc_md46}{}\doxysubsection{\texorpdfstring{7. {\bfseries{tsan\+\_\+run}}}{7. {\bfseries{tsan\+\_\+run}}}}\label{md_BUILD_autotoc_md46}
+This target runs the Thread\+Sanitizer build after it has been built.
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Command}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ tsan\_run}
+
+\end{DoxyCode}
+
+\item {\bfseries{Description}}\+:
+\begin{DoxyItemize}
+\item Runs the project with the Thread\+Sanitizer build.
+\item Useful for detecting threading issues during runtime.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_BUILD_autotoc_md48}{}\doxysubsection{\texorpdfstring{8. {\bfseries{build-\/test}}}{8. {\bfseries{build-\/test}}}}\label{md_BUILD_autotoc_md48}
+This target builds the project with testing enabled. (Also useful for rebuilding tests)
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Command}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ build-\/test}
+
+\end{DoxyCode}
+
+\item {\bfseries{Description}}\+:
+\begin{DoxyItemize}
+\item Builds the project with Google Test ({\ttfamily GTest}) enabled.
+\item Useful for running unit tests and validating code functionality.
+\item Will {\bfseries{NOT}} run the {\ttfamily ./init.sh} script
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_BUILD_autotoc_md50}{}\doxysubsection{\texorpdfstring{9. {\bfseries{build-\/test-\/all}}}{9. {\bfseries{build-\/test-\/all}}}}\label{md_BUILD_autotoc_md50}
+This target runs the initialization script and builds the project with testing enabled.
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Command}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ build-\/test-\/all}
+
+\end{DoxyCode}
+
+\item {\bfseries{Description}}\+:
+\begin{DoxyItemize}
+\item Runs the {\ttfamily init.\+sh} script and then builds the project with testing enabled.
+\item The {\ttfamily build-\/test} target is triggered after the script execution.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_BUILD_autotoc_md52}{}\doxysubsection{\texorpdfstring{10. {\bfseries{clean}}}{10. {\bfseries{clean}}}}\label{md_BUILD_autotoc_md52}
+This target removes all build artifacts, effectively cleaning the project.
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Command}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ clean}
+
+\end{DoxyCode}
+
+\item {\bfseries{Description}}\+:
+\begin{DoxyItemize}
+\item Deletes the build directory and all associated files, allowing for a fresh build.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_BUILD_autotoc_md54}{}\doxysubsection{\texorpdfstring{11. {\bfseries{init}}}{11. {\bfseries{init}}}}\label{md_BUILD_autotoc_md54}
+This target runs the initialization script ({\ttfamily init.\+sh}).
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Command}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ init}
+
+\end{DoxyCode}
+
+\item {\bfseries{Description}}\+:
+\begin{DoxyItemize}
+\item Executes the initialization script to set up any necessary environment or configuration before building.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_BUILD_autotoc_md56}{}\doxysubsection{\texorpdfstring{12. {\bfseries{global\+\_\+build}}}{12. {\bfseries{global\+\_\+build}}}}\label{md_BUILD_autotoc_md56}
+This target builds and installs the project globally.
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Command}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ global\_build}
+
+\end{DoxyCode}
+
+\item {\bfseries{Description}}\+:
+\begin{DoxyItemize}
+\item This will configure the build with a {\ttfamily BUILD\+\_\+\+GLOBAL} flag and install the project using {\ttfamily ninja} after the build completes.
+\item Useful for installing the project globally for system-\/wide usage.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_BUILD_autotoc_md58}{}\doxysubsection{\texorpdfstring{13. {\bfseries{verbose}}}{13. {\bfseries{verbose}}}}\label{md_BUILD_autotoc_md58}
+This target enables verbose output during the build process.
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Command}}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ verbose}
+
+\end{DoxyCode}
+
+\item {\bfseries{Description}}\+:
+\begin{DoxyItemize}
+\item Builds the project with verbose output to give more detailed information about the build process.
+\item This is helpful for debugging build issues.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md_BUILD_autotoc_md60}{}\doxysection{\texorpdfstring{{\bfseries{MANUAL BUILD}}\+:}{{\bfseries{MANUAL BUILD}}\+:}}\label{md_BUILD_autotoc_md60}
+\begin{DoxyWarning}{Warning}
+~\newline
+ Proceed with manual build {\bfseries{ONLY}} if you know what you are doing. ~\newline
+~\newline
+
+\end{DoxyWarning}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ clone\ https://github.com/nots1dd/inLimbo.git\ }
+\DoxyCodeLine{cd\ inLimbo/}
+\DoxyCodeLine{./init.sh\ \#\ to\ initialize\ the\ repository\ with\ some\ important\ headers}
+
+\end{DoxyCode}
+
+
+Then building commands\+: ({\bfseries{WILL NOT COMPILE IF {\ttfamily init.\+sh} IS NOT RUN FIRST}})
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S\ .\ -\/B\ build/}
+\DoxyCodeLine{cmake\ -\/-\/build\ build/}
+\DoxyCodeLine{./build/inLimbo}
+
+\end{DoxyCode}
+
+
+To build in\+Limbo {\bfseries{GLOBALLY}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S\ .\ -\/B\ build\ -\/DGLOBAL\_BUILD=ON\ }
+\DoxyCodeLine{cmake\ -\/-\/build\ build/\ }
+\DoxyCodeLine{cd\ build\ }
+\DoxyCodeLine{sudo\ make\ install\ \#\ will\ put\ the\ binary\ in\ /usr/bin\ and\ respective\ inLimbo.desktop\ and\ logo\ in\ /usr/share}
+
+\end{DoxyCode}
+
+
+To build its web-\/assembly, you will need \href{https://github.com/emscripten-core/emscripten}{\texttt{ emscripten}}
+
+\begin{DoxyImportant}{Important}
+~\newline
+ Building the web-\/assembly\+: ~\newline
+~\newline
+ Currently I am not sure how to include and compile taglib into wasm so currently the web build may compile but it will not work as I have dummy methods set up for EMSCRIPTEN build (else it wont even compile to wasm) ~\newline
+~\newline
+
+\end{DoxyImportant}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir\ build\_emscripten\ \&\&\ cd\ build\_emscripten\ }
+\DoxyCodeLine{emcmake\ cmake\ ..}
+\DoxyCodeLine{make\ -\/j}
+\DoxyCodeLine{./run\_webassembly.py\ \#\ assuming\ the\ compilation\ has\ no\ errors}
+\DoxyCodeLine{\#\ This\ will\ run\ in\ port\ 8000}
+
+\end{DoxyCode}
+
+
+\begin{DoxyNote}{Note}
+~\newline
+ Debug building using make needs to be setup, will be available soon. (it may not work using make currently) ~\newline
+~\newline
+ 
+\end{DoxyNote}

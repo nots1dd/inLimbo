@@ -107,10 +107,10 @@ $(function(){initNavTree('md_COLORS.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">COLORS inLimbo</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md32"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md61"></a></p>
 <p>Color Schema Documentation for inLimbo</p>
 <p>This document explains the color schema used in <a href="https://github.com/nots1dd/inLimbo"><b>inLimbo</b></a>, including all available colors, their respective RGB values, and how to configure them in the <code>config.toml</code> file.</p>
-<h1><a class="anchor" id="autotoc_md33"></a>
+<h1><a class="anchor" id="autotoc_md62"></a>
 Overview</h1>
 <p>The inLimbo project uses a set of predefined true colors, each mapped to an <code>ftxui::Color::RGB</code> value (True Color Palette). This allows for a variety of colors to be used within the application to enhance the user interface.</p>
 <dl class="section note"><dt>Note</dt><dd><br  />
@@ -121,7 +121,7 @@ Overview</h1>
  For example, if you have <code>pywal</code> or <code>wallust</code> setup with your terminal, the colors would <b>NOT</b> work as intended with <code>ftxui::Color</code> only <br  />
 <br  />
 </dd></dl>
-<h2><a class="anchor" id="autotoc_md34"></a>
+<h2><a class="anchor" id="autotoc_md63"></a>
 How to Set Colors in <code>config.toml</code></h2>
 <p>To set a color in the <code>$HOME/.config/inLimbo/config.toml</code> file, use the corresponding color name defined in the color enum. The color name must be set under the appropriate section in the TOML file.</p>
 <p>For example, if you want to change the active window color to <code>Red</code>, you would include the following in your <code>config.toml</code>:</p>
@@ -131,7 +131,7 @@ How to Set Colors in <code>config.toml</code></h2>
  The color names are case-sensitive and should match exactly as shown in the available color list below. <br  />
 <br  />
 </dd></dl>
-<h2><a class="anchor" id="autotoc_md35"></a>
+<h2><a class="anchor" id="autotoc_md64"></a>
 Available Colors and Their RGB Values</h2>
 <p>Here’s a list of all available colors and their respective RGB values:</p>
 <table class="markdownTable">
@@ -224,14 +224,14 @@ Available Colors and Their RGB Values</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">LightTurquoise   </td><td class="markdownTableBodyNone">RGB(175, 238, 238)   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md36"></a>
+<h2><a class="anchor" id="autotoc_md65"></a>
 How to Use Colors in the inLimbo</h2>
 <p>Once the color is defined in the <code>config.toml</code> file, the <code>parseColors</code> function in the code will map the string to the corresponding <code><a class="el" href="namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6d" title="Enumeration for predefined true colors.">TrueColors::Color</a></code> enum value. The color is then used within the inLimbo wherever needed.</p>
 <p>For example, setting the <code>active_win_color</code> in the <code>config.toml</code> like this:</p>
 <div class="fragment"><div class="line">[colors]</div>
 <div class="line">active_win_color = &quot;Blue&quot;</div>
 </div><!-- fragment --><p>This will configure the inLimbo to use the color <code>Blue</code> (RGB(0, 0, 255)) for the active window color.</p>
-<h2><a class="anchor" id="autotoc_md37"></a>
+<h2><a class="anchor" id="autotoc_md66"></a>
 Example of <code>config.toml</code></h2>
 <div class="fragment"><div class="line">[colors]</div>
 <div class="line">active_win_color = &quot;Red&quot;</div>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['keybinds_0',['Keybinds',['../structKeybinds.html',1,'']]]
+  ['globalprops_0',['GlobalProps',['../structGlobalProps.html',1,'']]]
 ];

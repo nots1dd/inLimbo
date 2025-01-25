@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['_7einodefilemapper_0',['~InodeFileMapper',['../classInodeFileMapper.html#a2902ff1b5d3c35ba80f4917e22e5984e',1,'InodeFileMapper']]],
-  ['_7eminiaudioplayer_1',['~MiniAudioPlayer',['../classMiniAudioPlayer.html#ade3387406ebf3bf900d561b8e72a2a3c',1,'MiniAudioPlayer']]]
+  ['year_0',['year',['../structMetadata.html#a0f53b33fb05426a436767b71a7bb7f13',1,'Metadata']]],
+  ['yellow_1',['Yellow',['../arg-handler_8hpp.html#a821042d5f30537f776ce823c5d66aadaa51e6cd92b6c45f9affdc158ecca2b8b8',1,'Yellow:&#160;arg-handler.hpp'],['../namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6da51e6cd92b6c45f9affdc158ecca2b8b8',1,'TrueColors::Yellow']]]
 ];

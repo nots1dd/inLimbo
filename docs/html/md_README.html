@@ -109,16 +109,17 @@ $(function(){initNavTree('md_README.html',''); initResizable(true); });
 <div class="contents">
 <div class="textblock"><div align="center"> <img src="assets/logo/inLimbo.jpg" alt="Logo" class="inline"/> </div><div align="center"> <h1 style="font-weight: bold; font-size: 3em; color: #3498db;">inLimbo</h1>
 </div><div align="center"> </div><p align="center"></p>
-<p><img src="https://img.shields.io/badge/License-GNU GPL%20v3-blue" alt="License" class="inline"/> <img src="https://img.shields.io/badge/Version-1.2%20alpha-red" alt="Version" class="inline"/> <img src="https://img.shields.io/badge/Build-passing-brightgreen" alt="Build" class="inline"/> </p>
-<hr  />
-<dl class="section important"><dt>Important</dt><dd><br  />
+<p><img src="https://img.shields.io/badge/License-GNU GPL%20v3-blue" alt="License" class="inline"/> <img src="https://img.shields.io/badge/Version-2.0%20alpha-red" alt="Version" class="inline"/> <img src="https://img.shields.io/badge/Build-passing-brightgreen" alt="Build" class="inline"/> </p>
+<p align="center"></p>
+<p><a href="https://nots1dd.github.io/inLimbo">Documentation</a> · <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#features">Features</a> · <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#looks">Looks</a> . <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#building">Get Started</a> · <a href="https://github.com/nots1dd/inLimbo/issues">Report a bug</a> </p>
+<dl class="section warning"><dt>Warning</dt><dd><br  />
  inLimbo is a WIP <br  />
 <br  />
  Most aspects of the project are under heavy development and no stable release is present as of yet. <br  />
 <br  />
 </dd></dl>
 <p>The inLimbo project aims to be a new upcoming TUI music player for UNIX based systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.</p>
-<h2><a class="anchor" id="autotoc_md21"></a>
+<h2><a class="anchor" id="autotoc_md20"></a>
 Features</h2>
 <ul>
 <li><b>Fully configurable</b>: <a class="el" href="structKeybinds.html" title="Struct to hold keybinding mappings.">Keybinds</a>, library, FTP credentials, and more, all in one <code>config.toml</code> file located in <code>$HOME/.config/inLimbo/config.toml</code></li>
@@ -129,10 +130,16 @@ Features</h2>
 <li><b>Plays and caters to many audio file formats</b>: Compatible with a variety of audio formats, depending on the capabilities of <a href="https://github.com/mackron/miniaudio">miniaudio</a>.</li>
 <li><b>Customizable</b>: Add your own color palette to inLimbo ;)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md22"></a>
+<h2><a class="anchor" id="autotoc_md21"></a>
 LOOKS</h2>
-<div align="center"> <img src="assets/gifs/inLimbo-1.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> <img src="assets/gifs/inLimbo-3.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md23"></a>
+<div align="center"> <img src="assets/gifs/inLimbo-1.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> <img src="assets/gifs/inLimbo-3.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md22"></a>
 DEPENDENCIES</h2>
+<dl class="section important"><dt>Important</dt><dd><br  />
+ It is <b>HIGHLY</b> recommended to have FFmpeg installed in your system <br  />
+<br  />
+ This is required for testing purposes (<code>./tests/</code>), and in the future, inLimbo may have features to embed your desired metadata to an audio file. <br  />
+<br  />
+</dd></dl>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Dependency   </th><th class="markdownTableHeadNone">Ubuntu   </th><th class="markdownTableHeadNone">Fedora   </th><th class="markdownTableHeadNone">Arch Linux    </th></tr>
@@ -149,47 +156,44 @@ DEPENDENCIES</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><b>X11</b>   </td><td class="markdownTableBodyNone"><code>libx11-dev</code>   </td><td class="markdownTableBodyNone"><code>libX11-devel</code>   </td><td class="markdownTableBodyNone"><code>libx11</code>    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><b>PNG</b>   </td><td class="markdownTableBodyNone"><code>libpng-dev</code>   </td><td class="markdownTableBodyNone"><code>libpng-devel</code>   </td><td class="markdownTableBodyNone"><code>libpng</code>   </td></tr>
+<td class="markdownTableBodyNone"><b>PNG</b>   </td><td class="markdownTableBodyNone"><code>libpng-dev</code>   </td><td class="markdownTableBodyNone"><code>libpng-devel</code>   </td><td class="markdownTableBodyNone"><code>libpng</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>cereal</b>   </td><td class="markdownTableBodyNone"><code>libcereal-dev</code>   </td><td class="markdownTableBodyNone"><code>libcereal-devel</code>   </td><td class="markdownTableBodyNone"><code>cereal</code>   </td></tr>
 </table>
+<dl class="section note"><dt>Note</dt><dd><br  />
+ If cereal is <b>NOT</b> available in your linux distribution, <br  />
+<br  />
+ <div class="fragment"><div class="line">git clone https://github.com/USCiLab/cereal.git # download cereal </div>
+<div class="line">mv cereal/include/* /usr/include/ # moves include/cereal headers to your include directory </div>
+<div class="line"># If you find that risky, just modify CMakeLists.txt to include cereal&#39;s directory for building</div>
+</div><!-- fragment --> <br  />
+<br  />
+</dd></dl>
 <p><b>FTXUI</b> is fetched from GitHub <a href="https://github.com/ArthurSonzogni/FTXUI/">here</a> itself during building so <b>NO</b> need to install it separately.</p>
-<h2><a class="anchor" id="autotoc_md24"></a>
+<h2><a class="anchor" id="autotoc_md23"></a>
 GOAL</h2>
 <p>The goal of this project is just to find peace and solitude for me as I try to create something I wanted for a long time</p>
 <p>Here are a few novelties that may or may not have been added yet:</p>
 <ol type="1">
 <li>Cool and amazing TUI experience thanks to FTXUI</li>
-<li>Full use of metadata (lyrics, genre, etc..) and available for display</li>
+<li>Full use of metadata (lyrics, genre, thumbnail, etc..) and available for display</li>
 <li>Simple and easy network transfer of your favourite songs over to another device</li>
 <li>Fast and efficient loading of your song directory with everything you need :)</li>
 <li>TUI over the web?? (Why would you want this)</li>
+<li>Active testing of the codebase using GTest Suite</li>
+<li>Security ensured using CodeQL workflow</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md25"></a>
-BUILDING</h2>
-<p>You will need CMake for this (and git obvi)</p>
-<div class="fragment"><div class="line">git clone https://github.com/nots1dd/inLimbo.git </div>
-<div class="line">cd inLimbo/</div>
-<div class="line">./init.sh # to initialize the repository with some important headers</div>
-</div><!-- fragment --><p>Then building commands: (<b>WILL NOT COMPILE IF <code><a class="el" href="init_8sh.html">init.sh</a></code> IS NOT RUN FIRST</b>)</p>
-<div class="fragment"><div class="line">cmake -S . -B build/</div>
-<div class="line">cmake --build build/</div>
-<div class="line">./build/inLimbo</div>
-</div><!-- fragment --><p>To build its web-assembly, you will need <a href="https://github.com/emscripten-core/emscripten">emscripten</a></p>
-<dl class="section important"><dt>Important</dt><dd><br  />
- Building the web-assembly: <br  />
-<br  />
- Currently I am not sure how to include and compile taglib into wasm so currently the web build may compile but it will not work as I have dummy methods set up for EMSCRIPTEN build (else it wont even compile to wasm) <br  />
-<br  />
-</dd></dl>
-<div class="fragment"><div class="line">mkdir build_emscripten &amp;&amp; cd build_emscripten </div>
-<div class="line">emcmake cmake ..</div>
-<div class="line">make -j</div>
-<div class="line">./run_webassembly.py # assuming the compilation has no errors</div>
-<div class="line"># This will run in port 8000</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><br  />
+<h2><a class="anchor" id="autotoc_md24"></a>
+<b>BUILDING</b></h2>
+<p>You will need CMake and Make (GNU Make for BSD) for this (and git obvi)</p>
+<p>A simple command using makefile should build everything you want:</p>
+<div class="fragment"><div class="line">make build-all</div>
+</div><!-- fragment --><p>Check out <a href="https://github.com/nots1dd/inLimbo/blob/main/BUILD.md">BUILD.md</a> for more options to build targets</p>
+<dl class="section note"><dt>Note</dt><dd><br  />
  To try debug build check out <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#debugging">DEBUGGING</a> <br  />
 <br  />
 </dd></dl>
-<h2><a class="anchor" id="autotoc_md26"></a>
+<h2><a class="anchor" id="autotoc_md25"></a>
 DEBUGGING</h2>
 <p>inLimbo is in active development and is prone to having <em>A LOT</em> of issues</p>
 <p>To try out <b>DEBUG BUILD</b> to find bugs/issues:</p>
@@ -213,7 +217,7 @@ DEBUGGING</h2>
 <p>-&gt; Threads</p>
 <p>-&gt; Address Sanitation (ASan)</p>
 <p>-&gt; Undefined Behaviour Sanitation (UBSan)</p>
-<h2><a class="anchor" id="autotoc_md27"></a>
+<h2><a class="anchor" id="autotoc_md26"></a>
 CONFIGURATION</h2>
 <p>There is quite a lot to configure in the inLimbo project. A basic config file will be setup in your <code>$HOME/.config/inLimbo/</code> directory while using CMake to build</p>
 <dl class="section important"><dt>Important</dt><dd><br  />
@@ -229,27 +233,21 @@ CONFIGURATION</h2>
  For <a class="el" href="namespaceTrueColors.html">TrueColors</a>, check out <a href="https://github.com/nots1dd/inLimbo/blob/main/COLORS.md">COLORS</a> for more information on how to set up colors in <code>inLimbo</code> <br  />
 <br  />
 </dd></dl>
-<div align="center"> <img src="assets/gifs/inLimbo-2.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md28"></a>
+<div align="center"> <img src="assets/gifs/inLimbo-2.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md27"></a>
 DIRECTORY SORTING</h2>
-<p>Currently uses <code>rbtrees</code> and <code>unordered_map</code> to store and write the current inodes in given directory to <code>lib.sync</code> file</p>
-<p>-&gt; rbtree will contain all the inodes at runtime</p>
-<p>-&gt; cached to <code>lib.sync</code> for future use and faster data fetch</p>
-<p>To test out the creation of the song map of your chosen directory:</p>
-<div class="fragment"><div class="line">cd src/dirsort/</div>
-<div class="line">make</div>
-<div class="line">./dirsort-test # change the directory in $HOME/.config/inLimbo/config.toml to test out</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><br  />
- src/dirsort/ has the current implementation of how the chosen songs directory will be cached and read into memory to display in ftxui TUI <br  />
-<br  />
- To use dirsort/ source files separately: <br  />
-<br  />
- <div class="fragment"><div class="line">make</div>
-</div><!-- fragment --> <br  />
-<br  />
-</dd></dl>
+<p>To know more about inLimbo Project's logical flow on creating a song map, visit <a href="https://github.com/nots1dd/inLimbo/blob/main/src/dirsort/SONGMAP.md">SONGMAP</a></p>
+<h2><a class="anchor" id="autotoc_md28"></a>
+TESTING</h2>
+<p>The inLimbo project is aiming to be more aware of how bad its codebase is, hence I am setting up unit tests for most if not all functions/classes that should:</p>
+<ol type="1">
+<li>Give more clarity on how the logical flow of the function/class works in a test suite</li>
+<li>Logical flaws and boundary conditions going unchecked can be understood better</li>
+<li>Should give more confidence in the code structure if such tests pass</li>
+</ol>
+<p>The testing is done using GTest, read <a href="https;//github.com/nots1dd/inLimbo/blob/main/tests/TESTS,md">TESTS.md</a> to understand more on how tests are configured and built</p>
 <h2><a class="anchor" id="autotoc_md29"></a>
 DOCUMENTATION</h2>
-<p>Currently I am setting up a Doxygen documentation page that should really make it easy to understand the flow of the project</p>
+<p>There is a primitive Doxygen documention set up for the inLimbo project, that should explain a lot more about the thought process and idea behind every aspect of the codebase.</p>
 <p>Man page is also under progress</p>
 <p>To generate and view doxygen documentation locally:</p>
 <div class="fragment"><div class="line">doxygen .Doxyfile # ensure that you have doxygen installed first </div>

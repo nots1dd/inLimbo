@@ -13,19 +13,37 @@ Represents the state of a thread managed by \doxylink{classThreadManager}{Thread
 \begin{DoxyCompactItemize}
 \item 
 std\+::mutex \mbox{\hyperlink{structThreadManager_1_1ThreadState_a472cefdd0390050a0f0d411c32e90b62}{play\+\_\+mutex}}
-\begin{DoxyCompactList}\small\item\em A mutex to synchronize access to the play state. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Mutex for synchronizing play state. \end{DoxyCompactList}\item 
+std\+::mutex \mbox{\hyperlink{structThreadManager_1_1ThreadState_a85aac76620190fa170441ee95317f0db}{queue\+\_\+mutex}}
+\begin{DoxyCompactList}\small\item\em Mutex for synchronizing queue operations. \end{DoxyCompactList}\item 
+std\+::mutex \mbox{\hyperlink{structThreadManager_1_1ThreadState_a585ffab57564d2c76a1e5a5c94d9850b}{audio\+Devices\+Mutex}}
+\begin{DoxyCompactList}\small\item\em Mutex for synchronizing audio device access. \end{DoxyCompactList}\item 
 std\+::atomic$<$ bool $>$ \mbox{\hyperlink{structThreadManager_1_1ThreadState_aa65dcf7ed9375055518411ffcf52eab2}{is\+\_\+processing}} \{false\}
-\begin{DoxyCompactList}\small\item\em Indicates whether the thread is currently processing. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Indicates whether the thread is processing. \end{DoxyCompactList}\item 
 std\+::atomic$<$ bool $>$ \mbox{\hyperlink{structThreadManager_1_1ThreadState_acbfe3de9f8e76cfeead80b264b43519c}{is\+\_\+playing}} \{false\}
-\begin{DoxyCompactList}\small\item\em Indicates whether the thread is currently playing. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Indicates whether the thread is playing. \end{DoxyCompactList}\item 
 std\+::future$<$ void $>$ \mbox{\hyperlink{structThreadManager_1_1ThreadState_a1ae196f9c12a605986ac045cfc311d3f}{play\+\_\+future}}
-\begin{DoxyCompactList}\small\item\em A future object associated with the play operation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Future object for async play operations. \end{DoxyCompactList}\item 
+std\+::unique\+\_\+ptr$<$ std\+::thread $>$ \mbox{\hyperlink{structThreadManager_1_1ThreadState_aa25591186fa1d03768bfe32f76063d19}{mpris\+\_\+dbus\+\_\+thread}}
+\begin{DoxyCompactList}\small\item\em Unique pointer for DBus thread. \end{DoxyCompactList}\item 
+std\+::thread \mbox{\hyperlink{structThreadManager_1_1ThreadState_a0ae5594bb4c1ed33073b496b8b8d497d}{play\+Next\+Song\+Thread}}
+\begin{DoxyCompactList}\small\item\em Thread for handling "{}play next song"{} operations. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 Represents the state of a thread managed by \doxylink{classThreadManager}{Thread\+Manager}. 
 
 \doxysubsection{Member Data Documentation}
+\Hypertarget{structThreadManager_1_1ThreadState_a585ffab57564d2c76a1e5a5c94d9850b}\index{ThreadManager::ThreadState@{ThreadManager::ThreadState}!audioDevicesMutex@{audioDevicesMutex}}
+\index{audioDevicesMutex@{audioDevicesMutex}!ThreadManager::ThreadState@{ThreadManager::ThreadState}}
+\doxysubsubsection{\texorpdfstring{audioDevicesMutex}{audioDevicesMutex}}
+{\footnotesize\ttfamily \label{structThreadManager_1_1ThreadState_a585ffab57564d2c76a1e5a5c94d9850b} 
+std\+::mutex Thread\+Manager\+::\+Thread\+State\+::audio\+Devices\+Mutex}
+
+
+
+Mutex for synchronizing audio device access. 
+
 \Hypertarget{structThreadManager_1_1ThreadState_acbfe3de9f8e76cfeead80b264b43519c}\index{ThreadManager::ThreadState@{ThreadManager::ThreadState}!is\_playing@{is\_playing}}
 \index{is\_playing@{is\_playing}!ThreadManager::ThreadState@{ThreadManager::ThreadState}}
 \doxysubsubsection{\texorpdfstring{is\_playing}{is\_playing}}
@@ -34,7 +52,7 @@ std\+::atomic$<$bool$>$ Thread\+Manager\+::\+Thread\+State\+::is\+\_\+playing \{
 
 
 
-Indicates whether the thread is currently playing. 
+Indicates whether the thread is playing. 
 
 \Hypertarget{structThreadManager_1_1ThreadState_aa65dcf7ed9375055518411ffcf52eab2}\index{ThreadManager::ThreadState@{ThreadManager::ThreadState}!is\_processing@{is\_processing}}
 \index{is\_processing@{is\_processing}!ThreadManager::ThreadState@{ThreadManager::ThreadState}}
@@ -44,7 +62,17 @@ std\+::atomic$<$bool$>$ Thread\+Manager\+::\+Thread\+State\+::is\+\_\+processing
 
 
 
-Indicates whether the thread is currently processing. 
+Indicates whether the thread is processing. 
+
+\Hypertarget{structThreadManager_1_1ThreadState_aa25591186fa1d03768bfe32f76063d19}\index{ThreadManager::ThreadState@{ThreadManager::ThreadState}!mpris\_dbus\_thread@{mpris\_dbus\_thread}}
+\index{mpris\_dbus\_thread@{mpris\_dbus\_thread}!ThreadManager::ThreadState@{ThreadManager::ThreadState}}
+\doxysubsubsection{\texorpdfstring{mpris\_dbus\_thread}{mpris\_dbus\_thread}}
+{\footnotesize\ttfamily \label{structThreadManager_1_1ThreadState_aa25591186fa1d03768bfe32f76063d19} 
+std\+::unique\+\_\+ptr$<$std\+::thread$>$ Thread\+Manager\+::\+Thread\+State\+::mpris\+\_\+dbus\+\_\+thread}
+
+
+
+Unique pointer for DBus thread. 
 
 \Hypertarget{structThreadManager_1_1ThreadState_a1ae196f9c12a605986ac045cfc311d3f}\index{ThreadManager::ThreadState@{ThreadManager::ThreadState}!play\_future@{play\_future}}
 \index{play\_future@{play\_future}!ThreadManager::ThreadState@{ThreadManager::ThreadState}}
@@ -54,7 +82,7 @@ std\+::future$<$void$>$ Thread\+Manager\+::\+Thread\+State\+::play\+\_\+future}
 
 
 
-A future object associated with the play operation. 
+Future object for async play operations. 
 
 \Hypertarget{structThreadManager_1_1ThreadState_a472cefdd0390050a0f0d411c32e90b62}\index{ThreadManager::ThreadState@{ThreadManager::ThreadState}!play\_mutex@{play\_mutex}}
 \index{play\_mutex@{play\_mutex}!ThreadManager::ThreadState@{ThreadManager::ThreadState}}
@@ -64,7 +92,27 @@ std\+::mutex Thread\+Manager\+::\+Thread\+State\+::play\+\_\+mutex}
 
 
 
-A mutex to synchronize access to the play state. 
+Mutex for synchronizing play state. 
+
+\Hypertarget{structThreadManager_1_1ThreadState_a0ae5594bb4c1ed33073b496b8b8d497d}\index{ThreadManager::ThreadState@{ThreadManager::ThreadState}!playNextSongThread@{playNextSongThread}}
+\index{playNextSongThread@{playNextSongThread}!ThreadManager::ThreadState@{ThreadManager::ThreadState}}
+\doxysubsubsection{\texorpdfstring{playNextSongThread}{playNextSongThread}}
+{\footnotesize\ttfamily \label{structThreadManager_1_1ThreadState_a0ae5594bb4c1ed33073b496b8b8d497d} 
+std\+::thread Thread\+Manager\+::\+Thread\+State\+::play\+Next\+Song\+Thread}
+
+
+
+Thread for handling "{}play next song"{} operations. 
+
+\Hypertarget{structThreadManager_1_1ThreadState_a85aac76620190fa170441ee95317f0db}\index{ThreadManager::ThreadState@{ThreadManager::ThreadState}!queue\_mutex@{queue\_mutex}}
+\index{queue\_mutex@{queue\_mutex}!ThreadManager::ThreadState@{ThreadManager::ThreadState}}
+\doxysubsubsection{\texorpdfstring{queue\_mutex}{queue\_mutex}}
+{\footnotesize\ttfamily \label{structThreadManager_1_1ThreadState_a85aac76620190fa170441ee95317f0db} 
+std\+::mutex Thread\+Manager\+::\+Thread\+State\+::queue\+\_\+mutex}
+
+
+
+Mutex for synchronizing queue operations. 
 
 
 

@@ -27,6 +27,8 @@ std\+::string \mbox{\hyperlink{structMetadata_af1f1a30b5d78b0b972c9c5c49d493891}
 \item 
 std\+::string \mbox{\hyperlink{structMetadata_a526f9ca995119be7b51da282f09d6f64}{comment}} = "{}No Comment"{}
 \item 
+std\+::string \mbox{\hyperlink{structMetadata_a924a915cd57891725d23d689d0ef2834}{file\+Type}} = "{}NULL"{}
+\item 
 unsigned int \mbox{\hyperlink{structMetadata_a0f53b33fb05426a436767b71a7bb7f13}{year}} = 0
 \item 
 unsigned int \mbox{\hyperlink{structMetadata_a1991c38d1fd88ef2240aa798bb22c253}{track}} = 0
@@ -40,6 +42,8 @@ std\+::unordered\+\_\+map$<$ std\+::string, std\+::string $>$ \mbox{\hyperlink{s
 std\+::string \mbox{\hyperlink{structMetadata_a107cf834ce2cbac4def960a2f922cfae}{file\+Path}}
 \item 
 float \mbox{\hyperlink{structMetadata_a771632db88529039cf44cb65af7ecaba}{duration}} = 0.\+0f
+\item 
+int \mbox{\hyperlink{structMetadata_aa17e49aff3ab62aec124b7d7d52adb0c}{bitrate}} = 0
 \end{DoxyCompactItemize}
 
 
@@ -86,7 +90,13 @@ The album the song is part of \Hypertarget{structMetadata_a9c925474f678d140c0e0e
 {\footnotesize\ttfamily \label{structMetadata_a9c925474f678d140c0e0eef6213a160b} 
 std\+::string Metadata\+::artist = "{}Unknown Artist"{}}
 
-The artist of the song \Hypertarget{structMetadata_a526f9ca995119be7b51da282f09d6f64}\index{Metadata@{Metadata}!comment@{comment}}
+The artist of the song \Hypertarget{structMetadata_aa17e49aff3ab62aec124b7d7d52adb0c}\index{Metadata@{Metadata}!bitrate@{bitrate}}
+\index{bitrate@{bitrate}!Metadata@{Metadata}}
+\doxysubsubsection{\texorpdfstring{bitrate}{bitrate}}
+{\footnotesize\ttfamily \label{structMetadata_aa17e49aff3ab62aec124b7d7d52adb0c} 
+int Metadata\+::bitrate = 0}
+
+The bitrate of the song (not calculated) \Hypertarget{structMetadata_a526f9ca995119be7b51da282f09d6f64}\index{Metadata@{Metadata}!comment@{comment}}
 \index{comment@{comment}!Metadata@{Metadata}}
 \doxysubsubsection{\texorpdfstring{comment}{comment}}
 {\footnotesize\ttfamily \label{structMetadata_a526f9ca995119be7b51da282f09d6f64} 
@@ -110,7 +120,13 @@ The duration of the song in seconds \Hypertarget{structMetadata_a107cf834ce2cbac
 {\footnotesize\ttfamily \label{structMetadata_a107cf834ce2cbac4def960a2f922cfae} 
 std\+::string Metadata\+::file\+Path}
 
-The file path of the song \Hypertarget{structMetadata_af1f1a30b5d78b0b972c9c5c49d493891}\index{Metadata@{Metadata}!genre@{genre}}
+The file path of the song \Hypertarget{structMetadata_a924a915cd57891725d23d689d0ef2834}\index{Metadata@{Metadata}!fileType@{fileType}}
+\index{fileType@{fileType}!Metadata@{Metadata}}
+\doxysubsubsection{\texorpdfstring{fileType}{fileType}}
+{\footnotesize\ttfamily \label{structMetadata_a924a915cd57891725d23d689d0ef2834} 
+std\+::string Metadata\+::file\+Type = "{}NULL"{}}
+
+\Hypertarget{structMetadata_af1f1a30b5d78b0b972c9c5c49d493891}\index{Metadata@{Metadata}!genre@{genre}}
 \index{genre@{genre}!Metadata@{Metadata}}
 \doxysubsubsection{\texorpdfstring{genre}{genre}}
 {\footnotesize\ttfamily \label{structMetadata_af1f1a30b5d78b0b972c9c5c49d493891} 

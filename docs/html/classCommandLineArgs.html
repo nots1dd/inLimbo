@@ -106,29 +106,47 @@ $(function(){initNavTree('classCommandLineArgs.html',''); initResizable(true); }
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classCommandLineArgs-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">CommandLineArgs Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
+<p>Parses and validates command-line arguments.  
+ <a href="#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="cmd-line-args_8hpp_source.html">cmd-line-args.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab739e1f1edffb125acdce9d556f19199" id="r_ab739e1f1edffb125acdce9d556f19199"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab739e1f1edffb125acdce9d556f19199">CommandLineArgs</a> (int argc, char *argv[], const std::vector&lt; std::string &gt; &amp;allowedFlags={})</td></tr>
-<tr class="separator:ab739e1f1edffb125acdce9d556f19199"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c67b951a142614aac165c87a9804e1a" id="r_a1c67b951a142614aac165c87a9804e1a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c67b951a142614aac165c87a9804e1a">CommandLineArgs</a> (int argc, char *argv[])</td></tr>
+<tr class="memdesc:a1c67b951a142614aac165c87a9804e1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classCommandLineArgs.html" title="Parses and validates command-line arguments.">CommandLineArgs</a> object and parses command-line arguments.  <br /></td></tr>
+<tr class="separator:a1c67b951a142614aac165c87a9804e1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed48cc4e9324c706042acb43ace91a1e" id="r_aed48cc4e9324c706042acb43ace91a1e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed48cc4e9324c706042acb43ace91a1e">get</a> (const std::string &amp;flag, const std::string &amp;defaultValue=&quot;&quot;) const</td></tr>
+<tr class="memdesc:aed48cc4e9324c706042acb43ace91a1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the value associated with a flag.  <br /></td></tr>
 <tr class="separator:aed48cc4e9324c706042acb43ace91a1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e468eecc878b283c0a2070858868f0f" id="r_a9e468eecc878b283c0a2070858868f0f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e468eecc878b283c0a2070858868f0f">hasFlag</a> (const std::string &amp;flag) const</td></tr>
+<tr class="memdesc:a9e468eecc878b283c0a2070858868f0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a specific flag was provided.  <br /></td></tr>
 <tr class="separator:a9e468eecc878b283c0a2070858868f0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad49f8db1c03381d9f87a8ffd48546cf8" id="r_ad49f8db1c03381d9f87a8ffd48546cf8"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad49f8db1c03381d9f87a8ffd48546cf8">getPositionalArgs</a> () const</td></tr>
+<tr class="memdesc:ad49f8db1c03381d9f87a8ffd48546cf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the list of positional arguments.  <br /></td></tr>
 <tr class="separator:ad49f8db1c03381d9f87a8ffd48546cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23bfeb76513b5a88ec4af37d6f60269e" id="r_a23bfeb76513b5a88ec4af37d6f60269e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a23bfeb76513b5a88ec4af37d6f60269e">printUsage</a> (const std::string &amp;programName) const</td></tr>
+<tr class="memdesc:a23bfeb76513b5a88ec4af37d6f60269e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints usage information and program details.  <br /></td></tr>
 <tr class="separator:a23bfeb76513b5a88ec4af37d6f60269e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a78144ae8a840966935964dd323413008" id="r_a78144ae8a840966935964dd323413008"><td class="memItemLeft" align="right" valign="top">static const std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a78144ae8a840966935964dd323413008">validFlags</a></td></tr>
+<tr class="memdesc:a78144ae8a840966935964dd323413008"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of valid flags supported by the application.  <br /></td></tr>
+<tr class="separator:a78144ae8a840966935964dd323413008"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ab739e1f1edffb125acdce9d556f19199" name="ab739e1f1edffb125acdce9d556f19199"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab739e1f1edffb125acdce9d556f19199">&#9670;&#160;</a></span>CommandLineArgs()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Parses and validates command-line arguments. </p>
+<p>The <code><a class="el" href="classCommandLineArgs.html" title="Parses and validates command-line arguments.">CommandLineArgs</a></code> class handles parsing flags, extracting positional arguments, and providing detailed error messages for invalid flags. It is designed for the inLimbo TUI music player and includes project-specific details in its usage output. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a1c67b951a142614aac165c87a9804e1a" name="a1c67b951a142614aac165c87a9804e1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c67b951a142614aac165c87a9804e1a">&#9670;&#160;</a></span>CommandLineArgs()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -144,12 +162,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>argv</em></span>[], </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>allowedFlags</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>argv</em></span>[]&#160;)</td>
         </tr>
       </table>
   </td>
@@ -158,6 +171,16 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Constructs a <a class="el" href="classCommandLineArgs.html" title="Parses and validates command-line arguments.">CommandLineArgs</a> object and parses command-line arguments. </p>
+<p>If parsing fails, an error message is displayed, usage information is printed, and the program exits with an error code.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">argc</td><td>The number of command-line arguments. </td></tr>
+    <tr><td class="paramname">argv</td><td>The array of command-line arguments. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -189,6 +212,17 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Retrieves the value associated with a flag. </p>
+<p>If the flag is not present, a default value is returned.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">flag</td><td>The flag to look up. </td></tr>
+    <tr><td class="paramname">defaultValue</td><td>The value to return if the flag is not found (default is an empty string). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The value associated with the flag or the default value if the flag is not found. </dd></dl>
+
 </div>
 </div>
 <a id="ad49f8db1c03381d9f87a8ffd48546cf8" name="ad49f8db1c03381d9f87a8ffd48546cf8"></a>
@@ -213,6 +247,9 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Retrieves the list of positional arguments. </p>
+<dl class="section return"><dt>Returns</dt><dd>A reference to a vector containing the positional arguments. </dd></dl>
 
 </div>
 </div>
@@ -239,6 +276,15 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Checks if a specific flag was provided. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">flag</td><td>The flag to check. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the flag is present, otherwise <code>false</code>. </dd></dl>
+
 </div>
 </div>
 <a id="a23bfeb76513b5a88ec4af37d6f60269e" name="a23bfeb76513b5a88ec4af37d6f60269e"></a>
@@ -263,6 +309,43 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Prints usage information and program details. </p>
+<p>The output includes a description of the program, valid options, and helpful links for project documentation and support.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">programName</td><td>The name of the program (typically <code>argv[0]</code>). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a78144ae8a840966935964dd323413008" name="a78144ae8a840966935964dd323413008"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78144ae8a840966935964dd323413008">&#9670;&#160;</a></span>validFlags</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt; std::string &gt; CommandLineArgs::validFlags</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">  <span class="stringliteral">&quot;--help&quot;</span>,         <span class="stringliteral">&quot;--show-dbus-name&quot;</span>,  <span class="stringliteral">&quot;--version&quot;</span>, <span class="stringliteral">&quot;--clear-cache&quot;</span>, <span class="stringliteral">&quot;--show-config-file&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;--show-log-dir&quot;</span>, <span class="stringliteral">&quot;--update-cache-run&quot;</span>}</div>
+</div><!-- fragment -->
+<p>List of valid flags supported by the application. </p>
 
 </div>
 </div>

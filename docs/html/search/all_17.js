@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['of_20tt_20config_20toml_20tt_0',['Example of &lt;tt&gt;config.toml&lt;/tt&gt;',['../md_COLORS.html#autotoc_md37',1,'']]],
-  ['orange_1',['Orange',['../namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6da909cea0c97058cfe2e3ea8d675cb08e1',1,'TrueColors']]],
-  ['order_20traversal_20and_20metadata_20extraction_20strong_2',['&lt;strong&gt;3. In-Order Traversal and Metadata Extraction&lt;/strong&gt;',['../md_src_2dirsort_2SONGMAP.html#autotoc_md9',1,'']]],
-  ['overview_3',['Overview',['../md_COLORS.html#autotoc_md33',1,'']]],
-  ['overview_20strong_4',['&lt;strong&gt;High-Level Flow Overview&lt;/strong&gt;',['../md_src_2dirsort_2SONGMAP.html#autotoc_md2',1,'']]]
+  ['name_0',['name',['../structAudioDevice.html#a6cd923837da3b34bda705178bc88bd55',1,'AudioDevice']]],
+  ['navy_1',['Navy',['../namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6da13ad5ac690e735fa48cf982532174e79',1,'TrueColors']]],
+  ['network_2',['NETWORK',['../md_src_2network_2NETWORK.html',1,'']]],
+  ['network_2emd_3',['NETWORK.md',['../NETWORK_8md.html',1,'']]],
+  ['node_4',['Node',['../structNode.html',1,'Node'],['../structNode.html#a589dd863071448a62021b47bc68a174d',1,'Node::Node()']]]
 ];

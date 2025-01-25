@@ -115,304 +115,303 @@ $(function(){initNavTree('mpris-service_8hpp_source.html',''); initResizable(tru
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;gio/gio.h&gt;</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;glib.h&gt;</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="foldopen" id="foldopen00032" data-start="{" data-end="};">
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classMPRISService.html">   32</a></span><span class="keyword">class </span><a class="code hl_function" href="classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18">MPRISService</a></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>{</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18">   43</a></span>  <a class="code hl_function" href="classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18">MPRISService</a>(<span class="keyword">const</span> std::string&amp; applicationName) : applicationName_(applicationName)</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* introspection_xml = R<span class="stringliteral">&quot;XML(</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="stringliteral">&lt;!DOCTYPE node PUBLIC &quot;-//freedesktop//DTD D-BUS Object Introspection 1.0//EN&quot;</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="stringliteral">    &quot;http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd&quot;&gt;</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="stringliteral">&lt;node&gt;</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="stringliteral">    &lt;interface name=&quot;org.mpris.MediaPlayer2&quot;&gt;</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="stringliteral">        &lt;property name=&quot;Identity&quot; type=&quot;s&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="stringliteral">        &lt;property name=&quot;DesktopEntry&quot; type=&quot;s&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="stringliteral">        &lt;property name=&quot;SupportedUriSchemes&quot; type=&quot;as&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="stringliteral">        &lt;property name=&quot;SupportedMimeTypes&quot; type=&quot;as&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="stringliteral">        &lt;property name=&quot;CanQuit&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="stringliteral">        &lt;property name=&quot;CanRaise&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="stringliteral">        &lt;property name=&quot;HasTrackList&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="stringliteral">    &lt;/interface&gt;</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="stringliteral">    &lt;interface name=&quot;org.mpris.MediaPlayer2.Player&quot;&gt;</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="stringliteral">        &lt;property name=&quot;PlaybackStatus&quot; type=&quot;s&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="stringliteral">        &lt;property name=&quot;LoopStatus&quot; type=&quot;s&quot; access=&quot;readwrite&quot;/&gt;</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="stringliteral">        &lt;property name=&quot;Rate&quot; type=&quot;d&quot; access=&quot;readwrite&quot;/&gt;</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="stringliteral">        &lt;property name=&quot;Shuffle&quot; type=&quot;b&quot; access=&quot;readwrite&quot;/&gt;</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="stringliteral">        &lt;property name=&quot;Metadata&quot; type=&quot;a{sv}&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="stringliteral">        &lt;property name=&quot;Volume&quot; type=&quot;d&quot; access=&quot;readwrite&quot;/&gt;</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="stringliteral">        &lt;property name=&quot;Position&quot; type=&quot;x&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="stringliteral">        &lt;property name=&quot;MinimumRate&quot; type=&quot;d&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="stringliteral">        &lt;property name=&quot;MaximumRate&quot; type=&quot;d&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="stringliteral">        &lt;property name=&quot;CanGoNext&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="stringliteral">        &lt;property name=&quot;CanGoPrevious&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="stringliteral">        &lt;property name=&quot;CanPlay&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="stringliteral">        &lt;property name=&quot;CanPause&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="stringliteral">        &lt;property name=&quot;CanSeek&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="stringliteral">        &lt;property name=&quot;CanControl&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="stringliteral">        &lt;method name=&quot;Next&quot;/&gt;</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="stringliteral">        &lt;method name=&quot;Previous&quot;/&gt;</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="stringliteral">        &lt;method name=&quot;Pause&quot;/&gt;</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="stringliteral">        &lt;method name=&quot;PlayPause&quot;/&gt;</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="stringliteral">        &lt;method name=&quot;Stop&quot;/&gt;</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="stringliteral">        &lt;method name=&quot;Play&quot;/&gt;</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="stringliteral">        &lt;method name=&quot;Seek&quot;&gt;</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="stringliteral">            &lt;arg name=&quot;Offset&quot; type=&quot;x&quot; direction=&quot;in&quot;/&gt;</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="stringliteral">        &lt;/method&gt;</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="stringliteral">        &lt;method name=&quot;SetPosition&quot;&gt;</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="stringliteral">            &lt;arg name=&quot;TrackId&quot; type=&quot;o&quot; direction=&quot;in&quot;/&gt;</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="stringliteral">            &lt;arg name=&quot;Position&quot; type=&quot;x&quot; direction=&quot;in&quot;/&gt;</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="stringliteral">        &lt;/method&gt;</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="stringliteral">        &lt;method name=&quot;OpenUri&quot;&gt;</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="stringliteral">            &lt;arg name=&quot;Uri&quot; type=&quot;s&quot; direction=&quot;in&quot;/&gt;</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="stringliteral">        &lt;/method&gt;</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="stringliteral">    &lt;/interface&gt;</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="stringliteral">&lt;/node&gt;)XML&quot;;</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="stringliteral"></span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="stringliteral">    GError* error       = </span><span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    introspection_data_ = g_dbus_node_info_new_for_xml(introspection_xml, &amp;error);</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keywordflow">if</span> (error != <span class="keyword">nullptr</span>)</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    {</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>      std::cerr &lt;&lt; <span class="stringliteral">&quot;Error creating introspection data: &quot;</span> &lt;&lt; error-&gt;message &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>      g_error_free(error);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>      <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    }</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    connection_ = g_bus_get_sync(G_BUS_TYPE_SESSION, <span class="keyword">nullptr</span>, &amp;error);</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keywordflow">if</span> (error != <span class="keyword">nullptr</span>)</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    {</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>      std::cerr &lt;&lt; <span class="stringliteral">&quot;Error connecting to D-Bus: &quot;</span> &lt;&lt; error-&gt;message &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>      g_error_free(error);</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>      <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    }</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="comment">// Register both interfaces</span></div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keyword">const</span> GDBusInterfaceVTable root_vtable = {</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>      handle_root_method_call, handle_root_get_property, <span class="keyword">nullptr</span>, {<span class="keyword">nullptr</span>}};</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keyword">const</span> GDBusInterfaceVTable player_vtable = {</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>      handle_player_method_call, handle_player_get_property, handle_player_set_property, {<span class="keyword">nullptr</span>}};</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    std::string busName = <span class="stringliteral">&quot;org.mpris.MediaPlayer2.&quot;</span> + applicationName_;</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    guint       owner_id =</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>      g_bus_own_name(G_BUS_TYPE_SESSION, busName.c_str(), G_BUS_NAME_OWNER_FLAGS_REPLACE,</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                     on_bus_acquired, <span class="keyword">nullptr</span>, <span class="keyword">nullptr</span>, <span class="keyword">this</span>, <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="comment">// Register both interfaces</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    g_dbus_connection_register_object(connection_, <span class="stringliteral">&quot;/org/mpris/MediaPlayer2&quot;</span>,</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                                      introspection_data_-&gt;interfaces[0], <span class="comment">// Root interface</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                                      &amp;root_vtable, <span class="keyword">this</span>, <span class="keyword">nullptr</span>, &amp;error);</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    g_dbus_connection_register_object(connection_, <span class="stringliteral">&quot;/org/mpris/MediaPlayer2&quot;</span>,</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                                      introspection_data_-&gt;interfaces[1], <span class="comment">// Player interface</span></div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                                      &amp;player_vtable, <span class="keyword">this</span>, <span class="keyword">nullptr</span>, &amp;error);</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keywordflow">if</span> (error != <span class="keyword">nullptr</span>)</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    {</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>      std::cerr &lt;&lt; <span class="stringliteral">&quot;Error registering object: &quot;</span> &lt;&lt; error-&gt;message &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>      g_error_free(error);</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    }</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="comment">// Initialize default metadata</span></div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    updateMetadata(<span class="stringliteral">&quot;Unknown Song&quot;</span>, <span class="stringliteral">&quot;Unknown Artist&quot;</span>, <span class="stringliteral">&quot;Unknown Album&quot;</span>, 0, <span class="stringliteral">&quot;No Comment&quot;</span>, <span class="stringliteral">&quot;No genre&quot;</span>,</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>                   0, 0);</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>  }</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  <a class="code hl_class" href="classMPRISService.html">~MPRISService</a>()</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  {</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keywordflow">if</span> (connection_)</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    {</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>      g_object_unref(connection_);</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>      connection_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    }</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keywordflow">if</span> (introspection_data_)</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    {</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>      g_dbus_node_info_unref(introspection_data_);</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>      introspection_data_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    }</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <span class="keywordflow">if</span> (current_metadata_)</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    {</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>      g_variant_unref(current_metadata_);</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>      current_metadata_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    }</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;-- MPRISService cleaned up.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  }</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span></div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span> </div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>  <span class="keywordtype">void</span> updateMetadata(<span class="keyword">const</span> std::string&amp; title, <span class="keyword">const</span> std::string&amp; artist, <span class="keyword">const</span> std::string&amp; album,</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                      int64_t length, <span class="keyword">const</span> std::string&amp; comment = <span class="stringliteral">&quot;&quot;</span>,</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                      <span class="keyword">const</span> std::string&amp; genre = <span class="stringliteral">&quot;&quot;</span>, <span class="keywordtype">int</span> trackNumber = 0, <span class="keywordtype">int</span> discNumber = 0)</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>  {</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    GVariantBuilder builder;</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    g_variant_builder_init(&amp;builder, G_VARIANT_TYPE(<span class="stringliteral">&quot;a{sv}&quot;</span>));</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="comment">// Required field</span></div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    std::string trackid = <span class="stringliteral">&quot;/org/mpris/MediaPlayer2/Track/&quot;</span> + std::to_string(rand());</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;mpris:trackid&quot;</span>,</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                          g_variant_new_object_path(trackid.c_str()));</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;xesam:title&quot;</span>, g_variant_new_string(title.c_str()));</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    GVariantBuilder artist_builder;</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    g_variant_builder_init(&amp;artist_builder, G_VARIANT_TYPE(<span class="stringliteral">&quot;as&quot;</span>));</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    g_variant_builder_add(&amp;artist_builder, <span class="stringliteral">&quot;s&quot;</span>, artist.c_str());</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;xesam:artist&quot;</span>, g_variant_builder_end(&amp;artist_builder));</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;xesam:album&quot;</span>, g_variant_new_string(album.c_str()));</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;mpris:length&quot;</span>, g_variant_new_int64(length * 1000000));</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="comment">// Add optional fields</span></div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="keywordflow">if</span> (!comment.empty())</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    {</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>      g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;xesam:comment&quot;</span>,</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                            g_variant_new_string(comment.c_str()));</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    }</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    <span class="keywordflow">if</span> (!genre.empty())</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    {</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>      GVariantBuilder genre_builder;</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>      g_variant_builder_init(&amp;genre_builder, G_VARIANT_TYPE(<span class="stringliteral">&quot;as&quot;</span>));</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>      g_variant_builder_add(&amp;genre_builder, <span class="stringliteral">&quot;s&quot;</span>, genre.c_str());</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>      g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;xesam:genre&quot;</span>, g_variant_builder_end(&amp;genre_builder));</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    }</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    <span class="keywordflow">if</span> (trackNumber &gt; 0)</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    {</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>      g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;xesam:trackNumber&quot;</span>,</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                            g_variant_new_int32(trackNumber));</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    }</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    <span class="keywordflow">if</span> (discNumber &gt; 0)</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    {</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>      g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;xesam:discNumber&quot;</span>, g_variant_new_int32(discNumber));</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    }</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="comment">// Save current metadata</span></div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <span class="keywordflow">if</span> (current_metadata_)</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>      g_variant_unref(current_metadata_);</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    current_metadata_ = g_variant_builder_end(&amp;builder);</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    g_variant_ref(current_metadata_);</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="comment">// Emit property changed</span></div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    GVariantBuilder props_builder;</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    g_variant_builder_init(&amp;props_builder, G_VARIANT_TYPE_ARRAY);</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    g_variant_builder_add(&amp;props_builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;Metadata&quot;</span>, current_metadata_);</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    g_dbus_connection_emit_signal(</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>      connection_, <span class="keyword">nullptr</span>, <span class="stringliteral">&quot;/org/mpris/MediaPlayer2&quot;</span>, <span class="stringliteral">&quot;org.freedesktop.DBus.Properties&quot;</span>,</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>      <span class="stringliteral">&quot;PropertiesChanged&quot;</span>,</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>      g_variant_new(<span class="stringliteral">&quot;(sa{sv}as)&quot;</span>, <span class="stringliteral">&quot;org.mpris.MediaPlayer2.Player&quot;</span>, &amp;props_builder, <span class="keyword">nullptr</span>),</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>      <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>  }</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> on_bus_acquired(GDBusConnection* connection, <span class="keyword">const</span> gchar* name, gpointer user_data)</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>  {</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;Acquired bus name: &quot;</span> &lt;&lt; name &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>  }</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span></div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> handle_root_method_call(GDBusConnection*, <span class="keyword">const</span> <span class="keywordtype">char</span>*, <span class="keyword">const</span> <span class="keywordtype">char</span>*, <span class="keyword">const</span> <span class="keywordtype">char</span>*,</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>                                      <span class="keyword">const</span> <span class="keywordtype">char</span>*, GVariant*, GDBusMethodInvocation* invocation,</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>                                      <span class="keywordtype">void</span>*)</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>  {</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    g_dbus_method_invocation_return_value(invocation, <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>  }</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span></div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> handle_player_method_call(GDBusConnection*, <span class="keyword">const</span> <span class="keywordtype">char</span>*, <span class="keyword">const</span> <span class="keywordtype">char</span>*, <span class="keyword">const</span> <span class="keywordtype">char</span>*,</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>                                        <span class="keyword">const</span> <span class="keywordtype">char</span>*            method_name, GVariant*,</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>                                        GDBusMethodInvocation* invocation, <span class="keywordtype">void</span>* user_data)</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>  {</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    <span class="keyword">auto</span>* service = <span class="keyword">static_cast&lt;</span><a class="code hl_function" href="classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18">MPRISService</a>*<span class="keyword">&gt;</span>(user_data);</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    g_dbus_method_invocation_return_value(invocation, <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>  }</div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span></div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>  <span class="keyword">static</span> GVariant* handle_root_get_property(GDBusConnection* connection, <span class="keyword">const</span> <span class="keywordtype">char</span>* sender,</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>                                            <span class="keyword">const</span> <span class="keywordtype">char</span>* object_path, <span class="keyword">const</span> <span class="keywordtype">char</span>* interface_name,</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                                            <span class="keyword">const</span> <span class="keywordtype">char</span>* property_name, GError** error,</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                                            <span class="keywordtype">void</span>* user_data)</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>  {</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    <span class="keyword">auto</span>* service = <span class="keyword">static_cast&lt;</span><a class="code hl_function" href="classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18">MPRISService</a>*<span class="keyword">&gt;</span>(user_data);</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span> </div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;Identity&quot;</span>) == 0)</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>      <span class="keywordflow">return</span> g_variant_new_string(service-&gt;applicationName_.c_str());</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanQuit&quot;</span>) == 0)</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>      <span class="keywordflow">return</span> g_variant_new_boolean(TRUE);</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanRaise&quot;</span>) == 0)</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>      <span class="keywordflow">return</span> g_variant_new_boolean(TRUE);</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;HasTrackList&quot;</span>) == 0)</div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>      <span class="keywordflow">return</span> g_variant_new_boolean(FALSE);</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span> </div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    <span class="comment">// Property not recognized: set error and return nullptr</span></div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    g_set_error(error, G_IO_ERROR, G_IO_ERROR_FAILED,</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>                <span class="stringliteral">&quot;Property &#39;%s&#39; is not recognized for interface &#39;%s&#39;.&quot;</span>, property_name,</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>                interface_name);</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>  }</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span></div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>  <span class="keyword">static</span> GVariant* handle_player_get_property(GDBusConnection* connection, <span class="keyword">const</span> <span class="keywordtype">char</span>* sender,</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>                                              <span class="keyword">const</span> <span class="keywordtype">char</span>* object_path, <span class="keyword">const</span> <span class="keywordtype">char</span>* interface_name,</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>                                              <span class="keyword">const</span> <span class="keywordtype">char</span>* property_name, GError** error,</div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>                                              <span class="keywordtype">void</span>* user_data)</div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>  {</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>    <span class="keyword">auto</span>* service = <span class="keyword">static_cast&lt;</span><a class="code hl_function" href="classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18">MPRISService</a>*<span class="keyword">&gt;</span>(user_data);</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span> </div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;PlaybackStatus&quot;</span>) == 0)</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>      <span class="keywordflow">return</span> g_variant_new_string(<span class="stringliteral">&quot;Playing&quot;</span>);</div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;LoopStatus&quot;</span>) == 0)</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>      <span class="keywordflow">return</span> g_variant_new_string(<span class="stringliteral">&quot;None&quot;</span>);</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;Rate&quot;</span>) == 0)</div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>      <span class="keywordflow">return</span> g_variant_new_double(1.0);</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;Shuffle&quot;</span>) == 0)</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>      <span class="keywordflow">return</span> g_variant_new_boolean(FALSE);</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;Metadata&quot;</span>) == 0)</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>      <span class="keywordflow">return</span> service-&gt;current_metadata_ ? g_variant_ref(service-&gt;current_metadata_)</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>                                        : g_variant_new(<span class="stringliteral">&quot;a{sv}&quot;</span>, nullptr);</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;Volume&quot;</span>) == 0)</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>      <span class="keywordflow">return</span> g_variant_new_double(1.0);</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;Position&quot;</span>) == 0)</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>      <span class="keywordflow">return</span> g_variant_new_int64(0);</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;MinimumRate&quot;</span>) == 0)</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>      <span class="keywordflow">return</span> g_variant_new_double(1.0);</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;MaximumRate&quot;</span>) == 0)</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>      <span class="keywordflow">return</span> g_variant_new_double(1.0);</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanGoNext&quot;</span>) == 0)</div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>      <span class="keywordflow">return</span> g_variant_new_boolean(TRUE);</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanGoPrevious&quot;</span>) == 0)</div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>      <span class="keywordflow">return</span> g_variant_new_boolean(TRUE);</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanPlay&quot;</span>) == 0)</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>      <span class="keywordflow">return</span> g_variant_new_boolean(TRUE);</div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanPause&quot;</span>) == 0)</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>      <span class="keywordflow">return</span> g_variant_new_boolean(TRUE);</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanSeek&quot;</span>) == 0)</div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>      <span class="keywordflow">return</span> g_variant_new_boolean(FALSE);</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanControl&quot;</span>) == 0)</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>      <span class="keywordflow">return</span> g_variant_new_boolean(TRUE);</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span> </div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    <span class="comment">// Property not recognized: set error and return nullptr</span></div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    g_set_error(error, G_IO_ERROR, G_IO_ERROR_FAILED,</div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>                <span class="stringliteral">&quot;Property &#39;%s&#39; is not recognized for interface &#39;%s&#39;.&quot;</span>, property_name,</div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>                interface_name);</div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>  }</div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>  <span class="keyword">static</span> gboolean handle_player_set_property(GDBusConnection*, <span class="keyword">const</span> <span class="keywordtype">char</span>*, <span class="keyword">const</span> <span class="keywordtype">char</span>*,</div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>                                             <span class="keyword">const</span> <span class="keywordtype">char</span>*, <span class="keyword">const</span> <span class="keywordtype">char</span>*, GVariant*, GError**, <span class="keywordtype">void</span>*)</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>  {</div>
-<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>    <span class="keywordflow">return</span> TRUE;</div>
-<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>  }</div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span> </div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>  std::string      applicationName_;</div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>  GDBusNodeInfo*   introspection_data_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>  GDBusConnection* connection_         = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>  GVariant*        current_metadata_   = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>};</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="foldopen" id="foldopen00031" data-start="{" data-end="};">
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classMPRISService.html">   31</a></span><span class="keyword">class </span><a class="code hl_function" href="classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18">MPRISService</a></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>{</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18">   42</a></span>  <a class="code hl_function" href="classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18">MPRISService</a>(<span class="keyword">const</span> std::string&amp; applicationName) : applicationName_(applicationName)</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* introspection_xml = R<span class="stringliteral">&quot;XML(</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="stringliteral">&lt;!DOCTYPE node PUBLIC &quot;-//freedesktop//DTD D-BUS Object Introspection 1.0//EN&quot;</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="stringliteral">    &quot;http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd&quot;&gt;</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="stringliteral">&lt;node&gt;</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="stringliteral">    &lt;interface name=&quot;org.mpris.MediaPlayer2&quot;&gt;</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="stringliteral">        &lt;property name=&quot;Identity&quot; type=&quot;s&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="stringliteral">        &lt;property name=&quot;DesktopEntry&quot; type=&quot;s&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="stringliteral">        &lt;property name=&quot;SupportedUriSchemes&quot; type=&quot;as&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="stringliteral">        &lt;property name=&quot;SupportedMimeTypes&quot; type=&quot;as&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="stringliteral">        &lt;property name=&quot;CanQuit&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="stringliteral">        &lt;property name=&quot;CanRaise&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="stringliteral">        &lt;property name=&quot;HasTrackList&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="stringliteral">    &lt;/interface&gt;</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="stringliteral">    &lt;interface name=&quot;org.mpris.MediaPlayer2.Player&quot;&gt;</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="stringliteral">        &lt;property name=&quot;PlaybackStatus&quot; type=&quot;s&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="stringliteral">        &lt;property name=&quot;LoopStatus&quot; type=&quot;s&quot; access=&quot;readwrite&quot;/&gt;</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="stringliteral">        &lt;property name=&quot;Rate&quot; type=&quot;d&quot; access=&quot;readwrite&quot;/&gt;</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="stringliteral">        &lt;property name=&quot;Shuffle&quot; type=&quot;b&quot; access=&quot;readwrite&quot;/&gt;</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="stringliteral">        &lt;property name=&quot;Metadata&quot; type=&quot;a{sv}&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="stringliteral">        &lt;property name=&quot;Volume&quot; type=&quot;d&quot; access=&quot;readwrite&quot;/&gt;</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="stringliteral">        &lt;property name=&quot;Position&quot; type=&quot;x&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="stringliteral">        &lt;property name=&quot;MinimumRate&quot; type=&quot;d&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="stringliteral">        &lt;property name=&quot;MaximumRate&quot; type=&quot;d&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="stringliteral">        &lt;property name=&quot;CanGoNext&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="stringliteral">        &lt;property name=&quot;CanGoPrevious&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="stringliteral">        &lt;property name=&quot;CanPlay&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="stringliteral">        &lt;property name=&quot;CanPause&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="stringliteral">        &lt;property name=&quot;CanSeek&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="stringliteral">        &lt;property name=&quot;CanControl&quot; type=&quot;b&quot; access=&quot;read&quot;/&gt;</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="stringliteral">        &lt;method name=&quot;Next&quot;/&gt;</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="stringliteral">        &lt;method name=&quot;Previous&quot;/&gt;</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="stringliteral">        &lt;method name=&quot;Pause&quot;/&gt;</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="stringliteral">        &lt;method name=&quot;PlayPause&quot;/&gt;</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="stringliteral">        &lt;method name=&quot;Stop&quot;/&gt;</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="stringliteral">        &lt;method name=&quot;Play&quot;/&gt;</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="stringliteral">        &lt;method name=&quot;Seek&quot;&gt;</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="stringliteral">            &lt;arg name=&quot;Offset&quot; type=&quot;x&quot; direction=&quot;in&quot;/&gt;</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="stringliteral">        &lt;/method&gt;</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="stringliteral">        &lt;method name=&quot;SetPosition&quot;&gt;</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="stringliteral">            &lt;arg name=&quot;TrackId&quot; type=&quot;o&quot; direction=&quot;in&quot;/&gt;</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="stringliteral">            &lt;arg name=&quot;Position&quot; type=&quot;x&quot; direction=&quot;in&quot;/&gt;</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="stringliteral">        &lt;/method&gt;</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="stringliteral">        &lt;method name=&quot;OpenUri&quot;&gt;</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="stringliteral">            &lt;arg name=&quot;Uri&quot; type=&quot;s&quot; direction=&quot;in&quot;/&gt;</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="stringliteral">        &lt;/method&gt;</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="stringliteral">    &lt;/interface&gt;</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="stringliteral">&lt;/node&gt;)XML&quot;;</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="stringliteral">    GError* error       = </span><span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    introspection_data_ = g_dbus_node_info_new_for_xml(introspection_xml, &amp;error);</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordflow">if</span> (error != <span class="keyword">nullptr</span>)</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    {</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>      std::cerr &lt;&lt; <span class="stringliteral">&quot;Error creating introspection data: &quot;</span> &lt;&lt; error-&gt;message &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>      g_error_free(error);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>      <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    }</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    connection_ = g_bus_get_sync(G_BUS_TYPE_SESSION, <span class="keyword">nullptr</span>, &amp;error);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keywordflow">if</span> (error != <span class="keyword">nullptr</span>)</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    {</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>      std::cerr &lt;&lt; <span class="stringliteral">&quot;Error connecting to D-Bus: &quot;</span> &lt;&lt; error-&gt;message &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>      g_error_free(error);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>      <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    }</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="comment">// Register both interfaces</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keyword">const</span> GDBusInterfaceVTable root_vtable = {</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>      handle_root_method_call, handle_root_get_property, <span class="keyword">nullptr</span>, {<span class="keyword">nullptr</span>}};</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keyword">const</span> GDBusInterfaceVTable player_vtable = {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>      handle_player_method_call, handle_player_get_property, handle_player_set_property, {<span class="keyword">nullptr</span>}};</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    std::string busName = <span class="stringliteral">&quot;org.mpris.MediaPlayer2.&quot;</span> + applicationName_;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    guint       owner_id =</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>      g_bus_own_name(G_BUS_TYPE_SESSION, busName.c_str(), G_BUS_NAME_OWNER_FLAGS_REPLACE,</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                     on_bus_acquired, <span class="keyword">nullptr</span>, <span class="keyword">nullptr</span>, <span class="keyword">this</span>, <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="comment">// Register both interfaces</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    g_dbus_connection_register_object(connection_, <span class="stringliteral">&quot;/org/mpris/MediaPlayer2&quot;</span>,</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                                      introspection_data_-&gt;interfaces[0], <span class="comment">// Root interface</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                                      &amp;root_vtable, <span class="keyword">this</span>, <span class="keyword">nullptr</span>, &amp;error);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    g_dbus_connection_register_object(connection_, <span class="stringliteral">&quot;/org/mpris/MediaPlayer2&quot;</span>,</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                                      introspection_data_-&gt;interfaces[1], <span class="comment">// Player interface</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                                      &amp;player_vtable, <span class="keyword">this</span>, <span class="keyword">nullptr</span>, &amp;error);</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="keywordflow">if</span> (error != <span class="keyword">nullptr</span>)</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    {</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>      std::cerr &lt;&lt; <span class="stringliteral">&quot;Error registering object: &quot;</span> &lt;&lt; error-&gt;message &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>      g_error_free(error);</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    }</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    <span class="comment">// Initialize default metadata</span></div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    updateMetadata(<span class="stringliteral">&quot;Unknown Song&quot;</span>, <span class="stringliteral">&quot;Unknown Artist&quot;</span>, <span class="stringliteral">&quot;Unknown Album&quot;</span>, 0, <span class="stringliteral">&quot;No Comment&quot;</span>, <span class="stringliteral">&quot;No genre&quot;</span>,</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                   0, 0);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>  }</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  <a class="code hl_class" href="classMPRISService.html">~MPRISService</a>()</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  {</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keywordflow">if</span> (connection_)</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    {</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>      g_object_unref(connection_);</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>      connection_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    }</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keywordflow">if</span> (introspection_data_)</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    {</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>      g_dbus_node_info_unref(introspection_data_);</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>      introspection_data_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    }</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keywordflow">if</span> (current_metadata_)</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    {</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>      g_variant_unref(current_metadata_);</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>      current_metadata_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    }</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;-- MPRISService cleaned up.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  }</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>  <span class="keywordtype">void</span> updateMetadata(<span class="keyword">const</span> std::string&amp; title, <span class="keyword">const</span> std::string&amp; artist, <span class="keyword">const</span> std::string&amp; album,</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                      int64_t length, <span class="keyword">const</span> std::string&amp; comment = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                      <span class="keyword">const</span> std::string&amp; genre = <span class="stringliteral">&quot;&quot;</span>, <span class="keywordtype">int</span> trackNumber = 0, <span class="keywordtype">int</span> discNumber = 0)</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>  {</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    GVariantBuilder builder;</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    g_variant_builder_init(&amp;builder, G_VARIANT_TYPE(<span class="stringliteral">&quot;a{sv}&quot;</span>));</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="comment">// Required field</span></div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    std::string trackid = <span class="stringliteral">&quot;/org/mpris/MediaPlayer2/Track/&quot;</span> + std::to_string(rand());</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;mpris:trackid&quot;</span>,</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                          g_variant_new_object_path(trackid.c_str()));</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;xesam:title&quot;</span>, g_variant_new_string(title.c_str()));</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    GVariantBuilder artist_builder;</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    g_variant_builder_init(&amp;artist_builder, G_VARIANT_TYPE(<span class="stringliteral">&quot;as&quot;</span>));</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    g_variant_builder_add(&amp;artist_builder, <span class="stringliteral">&quot;s&quot;</span>, artist.c_str());</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;xesam:artist&quot;</span>, g_variant_builder_end(&amp;artist_builder));</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;xesam:album&quot;</span>, g_variant_new_string(album.c_str()));</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;mpris:length&quot;</span>, g_variant_new_int64(length * 1000000));</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="comment">// Add optional fields</span></div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordflow">if</span> (!comment.empty())</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    {</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>      g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;xesam:comment&quot;</span>,</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                            g_variant_new_string(comment.c_str()));</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    }</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <span class="keywordflow">if</span> (!genre.empty())</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    {</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>      GVariantBuilder genre_builder;</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>      g_variant_builder_init(&amp;genre_builder, G_VARIANT_TYPE(<span class="stringliteral">&quot;as&quot;</span>));</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>      g_variant_builder_add(&amp;genre_builder, <span class="stringliteral">&quot;s&quot;</span>, genre.c_str());</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>      g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;xesam:genre&quot;</span>, g_variant_builder_end(&amp;genre_builder));</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    }</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <span class="keywordflow">if</span> (trackNumber &gt; 0)</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    {</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>      g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;xesam:trackNumber&quot;</span>,</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                            g_variant_new_int32(trackNumber));</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    }</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <span class="keywordflow">if</span> (discNumber &gt; 0)</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    {</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>      g_variant_builder_add(&amp;builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;xesam:discNumber&quot;</span>, g_variant_new_int32(discNumber));</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    }</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    <span class="comment">// Save current metadata</span></div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="keywordflow">if</span> (current_metadata_)</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>      g_variant_unref(current_metadata_);</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    current_metadata_ = g_variant_builder_end(&amp;builder);</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    g_variant_ref(current_metadata_);</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    <span class="comment">// Emit property changed</span></div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    GVariantBuilder props_builder;</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    g_variant_builder_init(&amp;props_builder, G_VARIANT_TYPE_ARRAY);</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    g_variant_builder_add(&amp;props_builder, <span class="stringliteral">&quot;{sv}&quot;</span>, <span class="stringliteral">&quot;Metadata&quot;</span>, current_metadata_);</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    g_dbus_connection_emit_signal(</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>      connection_, <span class="keyword">nullptr</span>, <span class="stringliteral">&quot;/org/mpris/MediaPlayer2&quot;</span>, <span class="stringliteral">&quot;org.freedesktop.DBus.Properties&quot;</span>,</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>      <span class="stringliteral">&quot;PropertiesChanged&quot;</span>,</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>      g_variant_new(<span class="stringliteral">&quot;(sa{sv}as)&quot;</span>, <span class="stringliteral">&quot;org.mpris.MediaPlayer2.Player&quot;</span>, &amp;props_builder, <span class="keyword">nullptr</span>),</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>      <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>  }</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> on_bus_acquired(GDBusConnection* connection, <span class="keyword">const</span> gchar* name, gpointer user_data)</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>  {</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;Acquired bus name: &quot;</span> &lt;&lt; name &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>  }</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span></div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> handle_root_method_call(GDBusConnection*, <span class="keyword">const</span> <span class="keywordtype">char</span>*, <span class="keyword">const</span> <span class="keywordtype">char</span>*, <span class="keyword">const</span> <span class="keywordtype">char</span>*,</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>                                      <span class="keyword">const</span> <span class="keywordtype">char</span>*, GVariant*, GDBusMethodInvocation* invocation,</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>                                      <span class="keywordtype">void</span>*)</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>  {</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    g_dbus_method_invocation_return_value(invocation, <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>  }</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span></div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> handle_player_method_call(GDBusConnection*, <span class="keyword">const</span> <span class="keywordtype">char</span>*, <span class="keyword">const</span> <span class="keywordtype">char</span>*, <span class="keyword">const</span> <span class="keywordtype">char</span>*,</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>                                        <span class="keyword">const</span> <span class="keywordtype">char</span>*            method_name, GVariant*,</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>                                        GDBusMethodInvocation* invocation, <span class="keywordtype">void</span>* user_data)</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>  {</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>    <span class="keyword">auto</span>* service = <span class="keyword">static_cast&lt;</span><a class="code hl_function" href="classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18">MPRISService</a>*<span class="keyword">&gt;</span>(user_data);</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    g_dbus_method_invocation_return_value(invocation, <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>  }</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span></div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>  <span class="keyword">static</span> GVariant* handle_root_get_property(GDBusConnection* connection, <span class="keyword">const</span> <span class="keywordtype">char</span>* sender,</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>                                            <span class="keyword">const</span> <span class="keywordtype">char</span>* object_path, <span class="keyword">const</span> <span class="keywordtype">char</span>* interface_name,</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>                                            <span class="keyword">const</span> <span class="keywordtype">char</span>* property_name, GError** error,</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                                            <span class="keywordtype">void</span>* user_data)</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>  {</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>    <span class="keyword">auto</span>* service = <span class="keyword">static_cast&lt;</span><a class="code hl_function" href="classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18">MPRISService</a>*<span class="keyword">&gt;</span>(user_data);</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span> </div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;Identity&quot;</span>) == 0)</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>      <span class="keywordflow">return</span> g_variant_new_string(service-&gt;applicationName_.c_str());</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanQuit&quot;</span>) == 0)</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>      <span class="keywordflow">return</span> g_variant_new_boolean(TRUE);</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanRaise&quot;</span>) == 0)</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>      <span class="keywordflow">return</span> g_variant_new_boolean(TRUE);</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;HasTrackList&quot;</span>) == 0)</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>      <span class="keywordflow">return</span> g_variant_new_boolean(FALSE);</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span> </div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>    <span class="comment">// Property not recognized: set error and return nullptr</span></div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    g_set_error(error, G_IO_ERROR, G_IO_ERROR_FAILED,</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>                <span class="stringliteral">&quot;Property &#39;%s&#39; is not recognized for interface &#39;%s&#39;.&quot;</span>, property_name,</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>                interface_name);</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>  }</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span></div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>  <span class="keyword">static</span> GVariant* handle_player_get_property(GDBusConnection* connection, <span class="keyword">const</span> <span class="keywordtype">char</span>* sender,</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>                                              <span class="keyword">const</span> <span class="keywordtype">char</span>* object_path, <span class="keyword">const</span> <span class="keywordtype">char</span>* interface_name,</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>                                              <span class="keyword">const</span> <span class="keywordtype">char</span>* property_name, GError** error,</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>                                              <span class="keywordtype">void</span>* user_data)</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>  {</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    <span class="keyword">auto</span>* service = <span class="keyword">static_cast&lt;</span><a class="code hl_function" href="classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18">MPRISService</a>*<span class="keyword">&gt;</span>(user_data);</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span> </div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;PlaybackStatus&quot;</span>) == 0)</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>      <span class="keywordflow">return</span> g_variant_new_string(<span class="stringliteral">&quot;Playing&quot;</span>);</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;LoopStatus&quot;</span>) == 0)</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>      <span class="keywordflow">return</span> g_variant_new_string(<span class="stringliteral">&quot;None&quot;</span>);</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;Rate&quot;</span>) == 0)</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>      <span class="keywordflow">return</span> g_variant_new_double(1.0);</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;Shuffle&quot;</span>) == 0)</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>      <span class="keywordflow">return</span> g_variant_new_boolean(FALSE);</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;Metadata&quot;</span>) == 0)</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>      <span class="keywordflow">return</span> service-&gt;current_metadata_ ? g_variant_ref(service-&gt;current_metadata_)</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>                                        : g_variant_new(<span class="stringliteral">&quot;a{sv}&quot;</span>, nullptr);</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;Volume&quot;</span>) == 0)</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>      <span class="keywordflow">return</span> g_variant_new_double(1.0);</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;Position&quot;</span>) == 0)</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>      <span class="keywordflow">return</span> g_variant_new_int64(0);</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;MinimumRate&quot;</span>) == 0)</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>      <span class="keywordflow">return</span> g_variant_new_double(1.0);</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;MaximumRate&quot;</span>) == 0)</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>      <span class="keywordflow">return</span> g_variant_new_double(1.0);</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanGoNext&quot;</span>) == 0)</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>      <span class="keywordflow">return</span> g_variant_new_boolean(TRUE);</div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanGoPrevious&quot;</span>) == 0)</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>      <span class="keywordflow">return</span> g_variant_new_boolean(TRUE);</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanPlay&quot;</span>) == 0)</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>      <span class="keywordflow">return</span> g_variant_new_boolean(TRUE);</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanPause&quot;</span>) == 0)</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>      <span class="keywordflow">return</span> g_variant_new_boolean(TRUE);</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanSeek&quot;</span>) == 0)</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>      <span class="keywordflow">return</span> g_variant_new_boolean(FALSE);</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <span class="keywordflow">if</span> (g_strcmp0(property_name, <span class="stringliteral">&quot;CanControl&quot;</span>) == 0)</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>      <span class="keywordflow">return</span> g_variant_new_boolean(TRUE);</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span> </div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    <span class="comment">// Property not recognized: set error and return nullptr</span></div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    g_set_error(error, G_IO_ERROR, G_IO_ERROR_FAILED,</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>                <span class="stringliteral">&quot;Property &#39;%s&#39; is not recognized for interface &#39;%s&#39;.&quot;</span>, property_name,</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>                interface_name);</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>  }</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>  <span class="keyword">static</span> gboolean handle_player_set_property(GDBusConnection*, <span class="keyword">const</span> <span class="keywordtype">char</span>*, <span class="keyword">const</span> <span class="keywordtype">char</span>*,</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>                                             <span class="keyword">const</span> <span class="keywordtype">char</span>*, <span class="keyword">const</span> <span class="keywordtype">char</span>*, GVariant*, GError**, <span class="keywordtype">void</span>*)</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>  {</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>    <span class="keywordflow">return</span> TRUE;</div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>  }</div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span> </div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>  std::string      applicationName_;</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>  GDBusNodeInfo*   introspection_data_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>  GDBusConnection* connection_         = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>  GVariant*        current_metadata_   = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>};</div>
 </div>
-<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span> </div>
-<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassMPRISService_html"><div class="ttname"><a href="classMPRISService.html">MPRISService</a></div><div class="ttdoc">A class that implements an MPRIS service over D-Bus.</div><div class="ttdef"><b>Definition</b> mpris-service.hpp:33</div></div>
-<div class="ttc" id="aclassMPRISService_html_afbe327c0dc95de1266aa0a514f234a18"><div class="ttname"><a href="classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18">MPRISService::MPRISService</a></div><div class="ttdeci">MPRISService(const std::string &amp;applicationName)</div><div class="ttdoc">Constructs a new MPRISService object.</div><div class="ttdef"><b>Definition</b> mpris-service.hpp:43</div></div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span> </div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassMPRISService_html"><div class="ttname"><a href="classMPRISService.html">MPRISService</a></div><div class="ttdoc">A class that implements an MPRIS service over D-Bus.</div><div class="ttdef"><b>Definition</b> mpris-service.hpp:32</div></div>
+<div class="ttc" id="aclassMPRISService_html_afbe327c0dc95de1266aa0a514f234a18"><div class="ttname"><a href="classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18">MPRISService::MPRISService</a></div><div class="ttdeci">MPRISService(const std::string &amp;applicationName)</div><div class="ttdoc">Constructs a new MPRISService object.</div><div class="ttdef"><b>Definition</b> mpris-service.hpp:42</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

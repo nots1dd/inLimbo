@@ -1,22 +1,10 @@
 var searchData=
 [
-  ['features_0',['Features',['../md_README.html#autotoc_md21',1,'']]],
-  ['fgcolor_1',['fgColor',['../structtiv_1_1CharData.html#a3e20ac572021d95ac44152b06b7f3542',1,'tiv::CharData']]],
-  ['filepath_2',['filePath',['../structMetadata.html#a107cf834ce2cbac4def960a2f922cfae',1,'Metadata']]],
-  ['findchardata_3',['findCharData',['../namespacetiv.html#a13e83391e442fa0a1c92aac63fda3ef3',1,'tiv']]],
-  ['fitted_5fwithin_4',['fitted_within',['../structtiv_1_1size.html#a84e015e08eddbb0dffd6e3f20cd048c0',1,'tiv::size']]],
-  ['fix_20in_20immediate_20commits_5',['fix in immediate commits',['../md_CHANGELOG.html#autotoc_md53',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md60',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md67',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md74',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md81',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md88',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md95',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md102',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md109',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md116',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md123',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md130',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md137',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md144',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md151',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md158',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md165',1,'Known Issues to fix in immediate commits'],['../md_CHANGELOG.html#autotoc_md172',1,'Known Issues to fix in immediate commits']]],
-  ['fixed_6',['Fixed',['../md_CHANGELOG.html#autotoc_md45',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md51',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md58',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md65',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md72',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md79',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md86',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md93',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md100',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md107',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md114',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md121',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md128',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md135',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md142',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md149',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md156',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md163',1,'Fixed'],['../md_CHANGELOG.html#autotoc_md170',1,'Fixed']]],
-  ['flag_5f24bit_7',['FLAG_24BIT',['../namespacetiv.html#ab022888bcc6ff74e00603b9347b91c00',1,'tiv']]],
-  ['flag_5fbg_8',['FLAG_BG',['../namespacetiv.html#a18ddcca182a373b345385f5454728174',1,'tiv']]],
-  ['flag_5ffg_9',['FLAG_FG',['../namespacetiv.html#af1f6d0aa06b42778013faeebd6297bfd',1,'tiv']]],
-  ['flag_5fmode_5f256_10',['FLAG_MODE_256',['../namespacetiv.html#ab63ee96f45b16d539a8096cc2267da87',1,'tiv']]],
-  ['flag_5fnoopt_11',['FLAG_NOOPT',['../namespacetiv.html#aeacdf1f9febf3e31e2c39cbebe2fabcf',1,'tiv']]],
-  ['flag_5fteletext_12',['FLAG_TELETEXT',['../namespacetiv.html#a01dd4f4f1ed1389d0f78dbf79262e5e2',1,'tiv']]],
-  ['flow_20overview_20strong_13',['&lt;strong&gt;High-Level Flow Overview&lt;/strong&gt;',['../md_src_2dirsort_2SONGMAP.html#autotoc_md2',1,'']]],
-  ['flow_20strong_14',['Flow strong',['../md_src_2dirsort_2SONGMAP.html',1,'&lt;strong&gt;inLimbo Music Player - Song Map Flow&lt;/strong&gt;'],['../md_src_2dirsort_2SONGMAP.html#autotoc_md4',1,'&lt;strong&gt;Step-by-Step Detailed Flow&lt;/strong&gt;']]],
-  ['format_15',['Format',['../md_CHANGELOG.html#autotoc_md40',1,'']]],
-  ['formatlyrics_16',['formatLyrics',['../misc_8hpp.html#acf1411473752280ae12e7bbeb259ca4c',1,'misc.hpp']]],
-  ['formattime_17',['FormatTime',['../misc_8hpp.html#acbc96af0b52cf5c1b6921dbaa39454a9',1,'misc.hpp']]],
-  ['ftxui_18',['ftxui',['../namespaceftxui.html',1,'']]]
+  ['end_5fheaders_0',['end_headers',['../classrun__webassembly_1_1CustomHTTPRequestHandler.html#a94a2cb3a17356975514b749e89488f0c',1,'run_webassembly::CustomHTTPRequestHandler']]],
+  ['end_5fmarker_1',['END_MARKER',['../namespacetiv.html#a22b625959209d0ccdf34816800f53e6f',1,'tiv']]],
+  ['enqueue_2',['enqueue',['../classWorkerThreadPool.html#ae326efda62a625c6b07f099a950696e5',1,'WorkerThreadPool']]],
+  ['enumeratedevices_3',['enumerateDevices',['../classMiniAudioPlayer.html#a54f92bf7ee24754c88ebbcf294fe65e2',1,'MiniAudioPlayer']]],
+  ['example_20of_20tt_20config_20toml_20tt_4',['Example of &lt;tt&gt;config.toml&lt;/tt&gt;',['../md_COLORS.html#autotoc_md66',1,'']]],
+  ['extraction_20strong_5',['&lt;strong&gt;3. In-Order Traversal and Metadata Extraction&lt;/strong&gt;',['../md_src_2dirsort_2SONGMAP.html#autotoc_md9',1,'']]],
+  ['extractthumbnail_6',['extractThumbnail',['../taglib__parser_8h.html#a663081b243b450cd9b222d681eb112bf',1,'taglib_parser.h']]]
 ];

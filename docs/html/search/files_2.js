@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['image_5fview_2ecpp_0',['image_view.cpp',['../image__view_8cpp.html',1,'']]],
-  ['image_5fview_2ehpp_1',['image_view.hpp',['../image__view_8hpp.html',1,'']]],
-  ['init_2esh_2',['init.sh',['../init_8sh.html',1,'']]],
-  ['inode_5fmapper_2ehpp_3',['inode_mapper.hpp',['../inode__mapper_8hpp.html',1,'']]]
+  ['changelog_2emd_0',['CHANGELOG.md',['../CHANGELOG_8md.html',1,'']]],
+  ['client_2ecpp_1',['client.cpp',['../client_8cpp.html',1,'']]],
+  ['cmakelists_2etxt_2',['CMakeLists.txt',['../CMakeLists_8txt.html',1,'']]],
+  ['cmd_2dline_2dargs_2ehpp_3',['cmd-line-args.hpp',['../cmd-line-args_8hpp.html',1,'']]],
+  ['colors_2ehpp_4',['colors.hpp',['../colors_8hpp.html',1,'']]],
+  ['colors_2emd_5',['COLORS.md',['../COLORS_8md.html',1,'']]]
 ];

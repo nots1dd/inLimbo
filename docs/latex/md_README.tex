@@ -10,18 +10,19 @@
 
    
 
-\DoxyHorRuler{0}
 
 
-\begin{DoxyImportant}{Important}
+\href{https://nots1dd.github.io/inLimbo}{\texttt{ Documentation}} · \href{https://github.com/nots1dd/inLimbo?tab=readme-ov-file\#features}{\texttt{ Features}} · \href{https://github.com/nots1dd/inLimbo?tab=readme-ov-file\#looks}{\texttt{ Looks}} . \href{https://github.com/nots1dd/inLimbo?tab=readme-ov-file\#building}{\texttt{ Get Started}} · \href{https://github.com/nots1dd/inLimbo/issues}{\texttt{ Report a bug}} 
+
+\begin{DoxyWarning}{Warning}
 ~\newline
  in\+Limbo is a WIP ~\newline
 ~\newline
  Most aspects of the project are under heavy development and no stable release is present as of yet. ~\newline
 ~\newline
 
-\end{DoxyImportant}
-The in\+Limbo project aims to be a new upcoming TUI music player for UNIX based systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.\hypertarget{md_README_autotoc_md21}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{md_README_autotoc_md21}
+\end{DoxyWarning}
+The in\+Limbo project aims to be a new upcoming TUI music player for UNIX based systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.\hypertarget{md_README_autotoc_md20}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{md_README_autotoc_md20}
 
 \begin{DoxyItemize}
 \item {\bfseries{Fully configurable}}\+: \doxylink{structKeybinds}{Keybinds}, library, FTP credentials, and more, all in one {\ttfamily config.\+toml} file located in {\ttfamily \$HOME/.config/in\+Limbo/config.\+toml}
@@ -31,8 +32,16 @@ The in\+Limbo project aims to be a new upcoming TUI music player for UNIX based 
 \item {\bfseries{Showcases all the metadata}}\+: Displays song metadata, including lyrics, genre, and more, for every file in your library.
 \item {\bfseries{Plays and caters to many audio file formats}}\+: Compatible with a variety of audio formats, depending on the capabilities of \href{https://github.com/mackron/miniaudio}{\texttt{ miniaudio}}.
 \item {\bfseries{Customizable}}\+: Add your own color palette to in\+Limbo ;)
-\end{DoxyItemize}\hypertarget{md_README_autotoc_md22}{}\doxysubsection{\texorpdfstring{LOOKS}{LOOKS}}\label{md_README_autotoc_md22}
-   \hypertarget{md_README_autotoc_md23}{}\doxysubsection{\texorpdfstring{DEPENDENCIES}{DEPENDENCIES}}\label{md_README_autotoc_md23}
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md21}{}\doxysubsection{\texorpdfstring{LOOKS}{LOOKS}}\label{md_README_autotoc_md21}
+   \hypertarget{md_README_autotoc_md22}{}\doxysubsection{\texorpdfstring{DEPENDENCIES}{DEPENDENCIES}}\label{md_README_autotoc_md22}
+\begin{DoxyImportant}{Important}
+~\newline
+ It is {\bfseries{HIGHLY}} recommended to have FFmpeg installed in your system ~\newline
+~\newline
+ This is required for testing purposes ({\ttfamily ./tests/}), and in the future, in\+Limbo may have features to embed your desired metadata to an audio file. ~\newline
+~\newline
+
+\end{DoxyImportant}
 \tabulinesep=1mm
 \begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
 \hline
@@ -49,11 +58,27 @@ The in\+Limbo project aims to be a new upcoming TUI music player for UNIX based 
 {\bfseries{pkg-\/config}}   &{\ttfamily pkg-\/config}   &{\ttfamily pkgconf}   &{\ttfamily pkgconf}    \\\cline{1-4}
 {\bfseries{Image\+Magick}}   &{\ttfamily imagemagick}   &{\ttfamily Image\+Magick}   &{\ttfamily imagemagick}    \\\cline{1-4}
 {\bfseries{X11}}   &{\ttfamily libx11-\/dev}   &{\ttfamily lib\+X11-\/devel}   &{\ttfamily libx11}    \\\cline{1-4}
-{\bfseries{PNG}}   &{\ttfamily libpng-\/dev}   &{\ttfamily libpng-\/devel}   &{\ttfamily libpng}   \\\cline{1-4}
+{\bfseries{PNG}}   &{\ttfamily libpng-\/dev}   &{\ttfamily libpng-\/devel}   &{\ttfamily libpng}    \\\cline{1-4}
+{\bfseries{cereal}}   &{\ttfamily libcereal-\/dev}   &{\ttfamily libcereal-\/devel}   &{\ttfamily cereal}   \\\cline{1-4}
 \end{longtabu}
 
 
-{\bfseries{FTXUI}} is fetched from Git\+Hub \href{https://github.com/ArthurSonzogni/FTXUI/}{\texttt{ here}} itself during building so {\bfseries{NO}} need to install it separately.\hypertarget{md_README_autotoc_md24}{}\doxysubsection{\texorpdfstring{GOAL}{GOAL}}\label{md_README_autotoc_md24}
+\begin{DoxyNote}{Note}
+~\newline
+ If cereal is {\bfseries{NOT}} available in your linux distribution, ~\newline
+~\newline
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ clone\ https://github.com/USCiLab/cereal.git\ \#\ download\ cereal\ }
+\DoxyCodeLine{mv\ cereal/include/*\ /usr/include/\ \#\ moves\ include/cereal\ headers\ to\ your\ include\ directory\ }
+\DoxyCodeLine{\#\ If\ you\ find\ that\ risky,\ just\ modify\ CMakeLists.txt\ to\ include\ cereal's\ directory\ for\ building}
+
+\end{DoxyCode}
+ ~\newline
+~\newline
+
+\end{DoxyNote}
+{\bfseries{FTXUI}} is fetched from Git\+Hub \href{https://github.com/ArthurSonzogni/FTXUI/}{\texttt{ here}} itself during building so {\bfseries{NO}} need to install it separately.\hypertarget{md_README_autotoc_md23}{}\doxysubsection{\texorpdfstring{GOAL}{GOAL}}\label{md_README_autotoc_md23}
 The goal of this project is just to find peace and solitude for me as I try to create something I wanted for a long time
 
 Here are a few novelties that may or may not have been added yet\+:
@@ -61,53 +86,25 @@ Here are a few novelties that may or may not have been added yet\+:
 
 \begin{DoxyEnumerate}
 \item Cool and amazing TUI experience thanks to FTXUI
-\item Full use of metadata (lyrics, genre, etc..) and available for display
+\item Full use of metadata (lyrics, genre, thumbnail, etc..) and available for display
 \item Simple and easy network transfer of your favourite songs over to another device
 \item Fast and efficient loading of your song directory with everything you need \+:)
 \item TUI over the web?? (Why would you want this)
-\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md25}{}\doxysubsection{\texorpdfstring{BUILDING}{BUILDING}}\label{md_README_autotoc_md25}
-You will need CMake for this (and git obvi)
+\item Active testing of the codebase using GTest Suite
+\item Security ensured using Code\+QL workflow
+\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md24}{}\doxysubsection{\texorpdfstring{{\bfseries{BUILDING}}}{{\bfseries{BUILDING}}}}\label{md_README_autotoc_md24}
+You will need CMake and Make (GNU Make for BSD) for this (and git obvi)
+
+A simple command using makefile should build everything you want\+:
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{git\ clone\ https://github.com/nots1dd/inLimbo.git\ }
-\DoxyCodeLine{cd\ inLimbo/}
-\DoxyCodeLine{./init.sh\ \#\ to\ initialize\ the\ repository\ with\ some\ important\ headers}
+\DoxyCodeLine{make\ build-\/all}
 
 \end{DoxyCode}
 
 
-Then building commands\+: ({\bfseries{WILL NOT COMPILE IF {\ttfamily \doxylink{init_8sh}{init.\+sh}} IS NOT RUN FIRST}})
-
-
-\begin{DoxyCode}{0}
-\DoxyCodeLine{cmake\ -\/S\ .\ -\/B\ build/}
-\DoxyCodeLine{cmake\ -\/-\/build\ build/}
-\DoxyCodeLine{./build/inLimbo}
-
-\end{DoxyCode}
-
-
-To build its web-\/assembly, you will need \href{https://github.com/emscripten-core/emscripten}{\texttt{ emscripten}}
-
-\begin{DoxyImportant}{Important}
-~\newline
- Building the web-\/assembly\+: ~\newline
-~\newline
- Currently I am not sure how to include and compile taglib into wasm so currently the web build may compile but it will not work as I have dummy methods set up for EMSCRIPTEN build (else it wont even compile to wasm) ~\newline
-~\newline
-
-\end{DoxyImportant}
-
-\begin{DoxyCode}{0}
-\DoxyCodeLine{mkdir\ build\_emscripten\ \&\&\ cd\ build\_emscripten\ }
-\DoxyCodeLine{emcmake\ cmake\ ..}
-\DoxyCodeLine{make\ -\/j}
-\DoxyCodeLine{./run\_webassembly.py\ \#\ assuming\ the\ compilation\ has\ no\ errors}
-\DoxyCodeLine{\#\ This\ will\ run\ in\ port\ 8000}
-
-\end{DoxyCode}
-
+Check out \href{https://github.com/nots1dd/inLimbo/blob/main/BUILD.md}{\texttt{ BUILD.\+md}} for more options to build targets
 
 \begin{DoxyNote}{Note}
 ~\newline
@@ -115,7 +112,7 @@ To build its web-\/assembly, you will need \href{https://github.com/emscripten-c
 ~\newline
 
 \end{DoxyNote}
-\hypertarget{md_README_autotoc_md26}{}\doxysubsection{\texorpdfstring{DEBUGGING}{DEBUGGING}}\label{md_README_autotoc_md26}
+\hypertarget{md_README_autotoc_md25}{}\doxysubsection{\texorpdfstring{DEBUGGING}{DEBUGGING}}\label{md_README_autotoc_md25}
 in\+Limbo is in active development and is prone to having {\itshape A LOT} of issues
 
 To try out {\bfseries{DEBUG BUILD}} to find bugs/issues\+:
@@ -158,7 +155,7 @@ The {\bfseries{DEBUG BUILD}} will account for the following issues\+:
 
 -\/\texorpdfstring{$>$}{>} Address Sanitation (ASan)
 
--\/\texorpdfstring{$>$}{>} Undefined Behaviour Sanitation (UBSan)\hypertarget{md_README_autotoc_md27}{}\doxysubsection{\texorpdfstring{CONFIGURATION}{CONFIGURATION}}\label{md_README_autotoc_md27}
+-\/\texorpdfstring{$>$}{>} Undefined Behaviour Sanitation (UBSan)\hypertarget{md_README_autotoc_md26}{}\doxysubsection{\texorpdfstring{CONFIGURATION}{CONFIGURATION}}\label{md_README_autotoc_md26}
 There is quite a lot to configure in the in\+Limbo project. A basic config file will be setup in your {\ttfamily \$HOME/.config/in\+Limbo/} directory while using CMake to build
 
 \begin{DoxyImportant}{Important}
@@ -181,41 +178,19 @@ There is quite a lot to configure in the in\+Limbo project. A basic config file 
 ~\newline
 
 \end{DoxyNote}
-  \hypertarget{md_README_autotoc_md28}{}\doxysubsection{\texorpdfstring{DIRECTORY SORTING}{DIRECTORY SORTING}}\label{md_README_autotoc_md28}
-Currently uses {\ttfamily rbtrees} and {\ttfamily unordered\+\_\+map} to store and write the current inodes in given directory to {\ttfamily lib.\+sync} file
-
--\/\texorpdfstring{$>$}{>} rbtree will contain all the inodes at runtime
-
--\/\texorpdfstring{$>$}{>} cached to {\ttfamily lib.\+sync} for future use and faster data fetch
-
-To test out the creation of the song map of your chosen directory\+:
+  \hypertarget{md_README_autotoc_md27}{}\doxysubsection{\texorpdfstring{DIRECTORY SORTING}{DIRECTORY SORTING}}\label{md_README_autotoc_md27}
+To know more about in\+Limbo Project\textquotesingle{}s logical flow on creating a song map, visit \href{https://github.com/nots1dd/inLimbo/blob/main/src/dirsort/SONGMAP.md}{\texttt{ SONGMAP}}\hypertarget{md_README_autotoc_md28}{}\doxysubsection{\texorpdfstring{TESTING}{TESTING}}\label{md_README_autotoc_md28}
+The in\+Limbo project is aiming to be more aware of how bad its codebase is, hence I am setting up unit tests for most if not all functions/classes that should\+:
 
 
-\begin{DoxyCode}{0}
-\DoxyCodeLine{cd\ src/dirsort/}
-\DoxyCodeLine{make}
-\DoxyCodeLine{./dirsort-\/test\ \#\ change\ the\ directory\ in\ \$HOME/.config/inLimbo/config.toml\ to\ test\ out}
+\begin{DoxyEnumerate}
+\item Give more clarity on how the logical flow of the function/class works in a test suite
+\item Logical flaws and boundary conditions going unchecked can be understood better
+\item Should give more confidence in the code structure if such tests pass
+\end{DoxyEnumerate}
 
-\end{DoxyCode}
-
-
-\begin{DoxyNote}{Note}
-~\newline
- src/dirsort/ has the current implementation of how the chosen songs directory will be cached and read into memory to display in ftxui TUI ~\newline
-~\newline
- To use dirsort/ source files separately\+: ~\newline
-~\newline
- 
-\begin{DoxyCode}{0}
-\DoxyCodeLine{make}
-
-\end{DoxyCode}
- ~\newline
-~\newline
-
-\end{DoxyNote}
-\hypertarget{md_README_autotoc_md29}{}\doxysubsection{\texorpdfstring{DOCUMENTATION}{DOCUMENTATION}}\label{md_README_autotoc_md29}
-Currently I am setting up a Doxygen documentation page that should really make it easy to understand the flow of the project
+The testing is done using GTest, read \href{https;//github.com/nots1dd/inLimbo/blob/main/tests/TESTS,md}{\texttt{ TESTS.\+md}} to understand more on how tests are configured and built\hypertarget{md_README_autotoc_md29}{}\doxysubsection{\texorpdfstring{DOCUMENTATION}{DOCUMENTATION}}\label{md_README_autotoc_md29}
+There is a primitive Doxygen documention set up for the in\+Limbo project, that should explain a lot more about the thought process and idea behind every aspect of the codebase.
 
 Man page is also under progress
 

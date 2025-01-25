@@ -4,6 +4,7 @@ var structInLimboColors =
     [ "album_name_bg", "structInLimboColors.html#a5dfc5e1ee91551fd59c958847be3b78a", null ],
     [ "artists_title_bg", "structInLimboColors.html#ac2e6da4632912694f235c23e27d19bb4", null ],
     [ "artists_title_fg", "structInLimboColors.html#af12f2ea4cae2e14a2d41a941a57e5604", null ],
+    [ "inactive_menu_cursor_bg", "structInLimboColors.html#a47ed3b46e314aca5375eab8115ded23d", null ],
     [ "inactive_win_border_color", "structInLimboColors.html#a63f4851e8e7873841078562505e3177c", null ],
     [ "menu_cursor_bg", "structInLimboColors.html#a69d1f12d371522229fbfb13c7f9ab92f", null ],
     [ "progress_bar_not_playing_col", "structInLimboColors.html#a329fc30f8e1f18686178a50003126d31", null ],

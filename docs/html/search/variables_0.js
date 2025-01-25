@@ -10,5 +10,7 @@ var searchData=
   ['artists_5flist_7',['artists_list',['../structComponentState.html#a3944174d049ec0c7cf19b2ba8aa1c97a',1,'ComponentState']]],
   ['artists_5ftitle_5fbg_8',['artists_title_bg',['../structInLimboColors.html#ac2e6da4632912694f235c23e27d19bb4',1,'InLimboColors']]],
   ['artists_5ftitle_5ffg_9',['artists_title_fg',['../structInLimboColors.html#af12f2ea4cae2e14a2d41a941a57e5604',1,'InLimboColors']]],
-  ['auth_5fattempts_10',['auth_attempts',['../server_8cpp.html#a16f68a347ae24b914438ca037809144b',1,'server.cpp']]]
+  ['audiodevicemenu_10',['audioDeviceMenu',['../structComponentState.html#a2e25ddbd2d90e63172022584fd8519b4',1,'ComponentState']]],
+  ['audiodevicesmutex_11',['audioDevicesMutex',['../structThreadManager_1_1ThreadState.html#a585ffab57564d2c76a1e5a5c94d9850b',1,'ThreadManager::ThreadState']]],
+  ['auth_5fattempts_12',['auth_attempts',['../server_8cpp.html#a16f68a347ae24b914438ca037809144b',1,'server.cpp']]]
 ];

@@ -16,11 +16,11 @@ void \mbox{\hyperlink{classSongTree_a5acb6d9c937a04cb784a6fc55fd3f0a3}{add\+Song
 \begin{DoxyCompactList}\small\item\em Adds a song to the tree. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSongTree_a573bb3b4b0372c52b4924212f6db5f2b}{display}} () const
 \begin{DoxyCompactList}\small\item\em Displays all songs in the tree hierarchically. \end{DoxyCompactList}\item 
-std\+::vector$<$ \mbox{\hyperlink{structSong}{Song}} $>$ \mbox{\hyperlink{classSongTree_a68e2d5ad41be86701f5839d0abfceac9}{get\+Songs\+By\+Artist}} (const std\+::string \&artist) const
+auto \mbox{\hyperlink{classSongTree_a7004c5b5d92f50e676a8c06f827d4ea4}{get\+Songs\+By\+Artist}} (const std\+::string \&artist) const
 \begin{DoxyCompactList}\small\item\em Retrieves all songs by a specific artist. \end{DoxyCompactList}\item 
-std\+::vector$<$ \mbox{\hyperlink{structSong}{Song}} $>$ \mbox{\hyperlink{classSongTree_ac2bffb761329095f22aacab4121746db}{get\+Songs\+By\+Album}} (const std\+::string \&artist, const std\+::string \&album) const
+auto \mbox{\hyperlink{classSongTree_aae8c9fd89c86a51b2b2c0f09d5dd8e20}{get\+Songs\+By\+Album}} (const std\+::string \&artist, const std\+::string \&album) const
 \begin{DoxyCompactList}\small\item\em Retrieves all songs from a specific album by a given artist. \end{DoxyCompactList}\item 
-std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, std\+::map$<$ unsigned int, std\+::map$<$ unsigned int, \mbox{\hyperlink{structSong}{Song}} $>$ $>$ $>$ $>$ \mbox{\hyperlink{classSongTree_a73d358fd0d3b765d8cfbd50b8d6e2b2a}{return\+Song\+Map}} ()
+auto \mbox{\hyperlink{classSongTree_a0ef1090449abbd85db3b0a65f854f7d7}{return\+Song\+Map}} ()
 \begin{DoxyCompactList}\small\item\em Returns the internal song map. \end{DoxyCompactList}\item 
 {\footnotesize template$<$class Archive$>$ }\\void \mbox{\hyperlink{classSongTree_a44501c33435ae05c476616427d407135}{serialize}} (Archive \&ar)
 \begin{DoxyCompactList}\small\item\em Serializes the \doxylink{classSongTree}{Song\+Tree} object. \end{DoxyCompactList}\item 
@@ -63,11 +63,11 @@ void Song\+Tree\+::display (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) 
 
 Displays all songs in the tree hierarchically. 
 
-This function prints the entire song tree to the console in a human-\/readable format, displaying the artist, album, disc number, track number, title, and other metadata for each song. \Hypertarget{classSongTree_ac2bffb761329095f22aacab4121746db}\index{SongTree@{SongTree}!getSongsByAlbum@{getSongsByAlbum}}
+This function prints the entire song tree to the console in a human-\/readable format, displaying the artist, album, disc number, track number, title, and other metadata for each song. \Hypertarget{classSongTree_aae8c9fd89c86a51b2b2c0f09d5dd8e20}\index{SongTree@{SongTree}!getSongsByAlbum@{getSongsByAlbum}}
 \index{getSongsByAlbum@{getSongsByAlbum}!SongTree@{SongTree}}
 \doxysubsubsection{\texorpdfstring{getSongsByAlbum()}{getSongsByAlbum()}}
-{\footnotesize\ttfamily \label{classSongTree_ac2bffb761329095f22aacab4121746db} 
-std\+::vector$<$ \mbox{\hyperlink{structSong}{Song}} $>$ Song\+Tree\+::get\+Songs\+By\+Album (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{artist}{, }\item[{const std\+::string \&}]{album}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily \label{classSongTree_aae8c9fd89c86a51b2b2c0f09d5dd8e20} 
+auto Song\+Tree\+::get\+Songs\+By\+Album (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{artist}{, }\item[{const std\+::string \&}]{album}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -85,11 +85,11 @@ This function returns a vector of all songs from a particular album by an artist
 \begin{DoxyReturn}{Returns}
 A vector of \doxylink{structSong}{Song} objects from the specified album by the specified artist. 
 \end{DoxyReturn}
-\Hypertarget{classSongTree_a68e2d5ad41be86701f5839d0abfceac9}\index{SongTree@{SongTree}!getSongsByArtist@{getSongsByArtist}}
+\Hypertarget{classSongTree_a7004c5b5d92f50e676a8c06f827d4ea4}\index{SongTree@{SongTree}!getSongsByArtist@{getSongsByArtist}}
 \index{getSongsByArtist@{getSongsByArtist}!SongTree@{SongTree}}
 \doxysubsubsection{\texorpdfstring{getSongsByArtist()}{getSongsByArtist()}}
-{\footnotesize\ttfamily \label{classSongTree_a68e2d5ad41be86701f5839d0abfceac9} 
-std\+::vector$<$ \mbox{\hyperlink{structSong}{Song}} $>$ Song\+Tree\+::get\+Songs\+By\+Artist (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{artist}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily \label{classSongTree_a7004c5b5d92f50e676a8c06f827d4ea4} 
+auto Song\+Tree\+::get\+Songs\+By\+Artist (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{artist}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -127,11 +127,11 @@ This function loads the serialized \doxylink{classSongTree}{Song\+Tree} object f
 {\em std\+::runtime\+\_\+error} & If the file cannot be opened for loading. \\
 \hline
 \end{DoxyExceptions}
-\Hypertarget{classSongTree_a73d358fd0d3b765d8cfbd50b8d6e2b2a}\index{SongTree@{SongTree}!returnSongMap@{returnSongMap}}
+\Hypertarget{classSongTree_a0ef1090449abbd85db3b0a65f854f7d7}\index{SongTree@{SongTree}!returnSongMap@{returnSongMap}}
 \index{returnSongMap@{returnSongMap}!SongTree@{SongTree}}
 \doxysubsubsection{\texorpdfstring{returnSongMap()}{returnSongMap()}}
-{\footnotesize\ttfamily \label{classSongTree_a73d358fd0d3b765d8cfbd50b8d6e2b2a} 
-std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, std\+::map$<$ unsigned int, std\+::map$<$ unsigned int, \mbox{\hyperlink{structSong}{Song}} $>$ $>$ $>$ $>$ Song\+Tree\+::return\+Song\+Map (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily \label{classSongTree_a0ef1090449abbd85db3b0a65f854f7d7} 
+auto Song\+Tree\+::return\+Song\+Map (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 

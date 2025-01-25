@@ -3,11 +3,11 @@
 {\ttfamily \#include "{}../dbus/mpris-\/service.\+hpp"{}}\newline
 {\ttfamily \#include "{}../music/audio\+\_\+playback.\+hpp"{}}\newline
 {\ttfamily \#include "{}./components/scroller.\+hpp"{}}\newline
+{\ttfamily \#include "{}./properties.\+hpp"{}}\newline
 {\ttfamily \#include "{}./thread\+\_\+manager.\+hpp"{}}\newline
 {\ttfamily \#include "{}keymaps.\+hpp"{}}\newline
 {\ttfamily \#include "{}misc.\+hpp"{}}\newline
-{\ttfamily \#include $<$iomanip$>$}\newline
-{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$ftxui/dom/elements.\+hpp$>$}\newline
 {\ttfamily \#include $<$unordered\+\_\+set$>$}\newline
 \doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
@@ -40,6 +40,8 @@ class \mbox{\hyperlink{classMusicPlayer}{Music\+Player}}
 \#define \mbox{\hyperlink{ui__handler_8hpp_a9c8fdd860223a430f7ef232c1987a890}{SHOW\+\_\+\+QUEUE\+\_\+\+SCREEN}}~3
 \item 
 \#define \mbox{\hyperlink{ui__handler_8hpp_a6b14eb33959e2e18990f68dd88278345}{SHOW\+\_\+\+SONG\+\_\+\+INFO\+\_\+\+SCREEN}}~4
+\item 
+\#define \mbox{\hyperlink{ui__handler_8hpp_ad76251869caf9c11eaf3cb506af18083}{SHOW\+\_\+\+AUDIO\+\_\+\+CONF\+\_\+\+SCREEN}}~5
 \item 
 \#define \mbox{\hyperlink{ui__handler_8hpp_a2599a56212bf57db1c1039fd3b2cf367}{MIN\+\_\+\+DEBOUNCE\+\_\+\+TIME\+\_\+\+IN\+\_\+\+MS}}~500
 \end{DoxyCompactItemize}
@@ -75,6 +77,12 @@ STRING TRUNCATION MACROS \Hypertarget{ui__handler_8hpp_a2599a56212bf57db1c1039fd
 \doxysubsubsection{\texorpdfstring{MIN\_DEBOUNCE\_TIME\_IN\_MS}{MIN\_DEBOUNCE\_TIME\_IN\_MS}}
 {\footnotesize\ttfamily \label{ui__handler_8hpp_a2599a56212bf57db1c1039fd3b2cf367} 
 \#define MIN\+\_\+\+DEBOUNCE\+\_\+\+TIME\+\_\+\+IN\+\_\+\+MS~500}
+
+\Hypertarget{ui__handler_8hpp_ad76251869caf9c11eaf3cb506af18083}\index{ui\_handler.hpp@{ui\_handler.hpp}!SHOW\_AUDIO\_CONF\_SCREEN@{SHOW\_AUDIO\_CONF\_SCREEN}}
+\index{SHOW\_AUDIO\_CONF\_SCREEN@{SHOW\_AUDIO\_CONF\_SCREEN}!ui\_handler.hpp@{ui\_handler.hpp}}
+\doxysubsubsection{\texorpdfstring{SHOW\_AUDIO\_CONF\_SCREEN}{SHOW\_AUDIO\_CONF\_SCREEN}}
+{\footnotesize\ttfamily \label{ui__handler_8hpp_ad76251869caf9c11eaf3cb506af18083} 
+\#define SHOW\+\_\+\+AUDIO\+\_\+\+CONF\+\_\+\+SCREEN~5}
 
 \Hypertarget{ui__handler_8hpp_abfd022c0da8ae34ff96773141ac69756}\index{ui\_handler.hpp@{ui\_handler.hpp}!SHOW\_HELP\_SCREEN@{SHOW\_HELP\_SCREEN}}
 \index{SHOW\_HELP\_SCREEN@{SHOW\_HELP\_SCREEN}!ui\_handler.hpp@{ui\_handler.hpp}}

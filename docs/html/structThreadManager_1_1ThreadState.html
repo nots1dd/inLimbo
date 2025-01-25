@@ -119,21 +119,49 @@ $(function(){initNavTree('structThreadManager_1_1ThreadState.html',''); initResi
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a472cefdd0390050a0f0d411c32e90b62" id="r_a472cefdd0390050a0f0d411c32e90b62"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a472cefdd0390050a0f0d411c32e90b62">play_mutex</a></td></tr>
-<tr class="memdesc:a472cefdd0390050a0f0d411c32e90b62"><td class="mdescLeft">&#160;</td><td class="mdescRight">A mutex to synchronize access to the play state.  <br /></td></tr>
+<tr class="memdesc:a472cefdd0390050a0f0d411c32e90b62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mutex for synchronizing play state.  <br /></td></tr>
 <tr class="separator:a472cefdd0390050a0f0d411c32e90b62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85aac76620190fa170441ee95317f0db" id="r_a85aac76620190fa170441ee95317f0db"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a85aac76620190fa170441ee95317f0db">queue_mutex</a></td></tr>
+<tr class="memdesc:a85aac76620190fa170441ee95317f0db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mutex for synchronizing queue operations.  <br /></td></tr>
+<tr class="separator:a85aac76620190fa170441ee95317f0db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a585ffab57564d2c76a1e5a5c94d9850b" id="r_a585ffab57564d2c76a1e5a5c94d9850b"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a585ffab57564d2c76a1e5a5c94d9850b">audioDevicesMutex</a></td></tr>
+<tr class="memdesc:a585ffab57564d2c76a1e5a5c94d9850b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mutex for synchronizing audio device access.  <br /></td></tr>
+<tr class="separator:a585ffab57564d2c76a1e5a5c94d9850b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa65dcf7ed9375055518411ffcf52eab2" id="r_aa65dcf7ed9375055518411ffcf52eab2"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa65dcf7ed9375055518411ffcf52eab2">is_processing</a> {false}</td></tr>
-<tr class="memdesc:aa65dcf7ed9375055518411ffcf52eab2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the thread is currently processing.  <br /></td></tr>
+<tr class="memdesc:aa65dcf7ed9375055518411ffcf52eab2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the thread is processing.  <br /></td></tr>
 <tr class="separator:aa65dcf7ed9375055518411ffcf52eab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbfe3de9f8e76cfeead80b264b43519c" id="r_acbfe3de9f8e76cfeead80b264b43519c"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acbfe3de9f8e76cfeead80b264b43519c">is_playing</a> {false}</td></tr>
-<tr class="memdesc:acbfe3de9f8e76cfeead80b264b43519c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the thread is currently playing.  <br /></td></tr>
+<tr class="memdesc:acbfe3de9f8e76cfeead80b264b43519c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the thread is playing.  <br /></td></tr>
 <tr class="separator:acbfe3de9f8e76cfeead80b264b43519c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ae196f9c12a605986ac045cfc311d3f" id="r_a1ae196f9c12a605986ac045cfc311d3f"><td class="memItemLeft" align="right" valign="top">std::future&lt; void &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ae196f9c12a605986ac045cfc311d3f">play_future</a></td></tr>
-<tr class="memdesc:a1ae196f9c12a605986ac045cfc311d3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A future object associated with the play operation.  <br /></td></tr>
+<tr class="memdesc:a1ae196f9c12a605986ac045cfc311d3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Future object for async play operations.  <br /></td></tr>
 <tr class="separator:a1ae196f9c12a605986ac045cfc311d3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa25591186fa1d03768bfe32f76063d19" id="r_aa25591186fa1d03768bfe32f76063d19"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; std::thread &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa25591186fa1d03768bfe32f76063d19">mpris_dbus_thread</a></td></tr>
+<tr class="memdesc:aa25591186fa1d03768bfe32f76063d19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique pointer for DBus thread.  <br /></td></tr>
+<tr class="separator:aa25591186fa1d03768bfe32f76063d19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ae5594bb4c1ed33073b496b8b8d497d" id="r_a0ae5594bb4c1ed33073b496b8b8d497d"><td class="memItemLeft" align="right" valign="top">std::thread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ae5594bb4c1ed33073b496b8b8d497d">playNextSongThread</a></td></tr>
+<tr class="memdesc:a0ae5594bb4c1ed33073b496b8b8d497d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Thread for handling "play next song" operations.  <br /></td></tr>
+<tr class="separator:a0ae5594bb4c1ed33073b496b8b8d497d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents the state of a thread managed by <a class="el" href="classThreadManager.html" title="A class that manages thread states and provides utilities for thread handling.">ThreadManager</a>. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a585ffab57564d2c76a1e5a5c94d9850b" name="a585ffab57564d2c76a1e5a5c94d9850b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a585ffab57564d2c76a1e5a5c94d9850b">&#9670;&#160;</a></span>audioDevicesMutex</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex ThreadManager::ThreadState::audioDevicesMutex</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Mutex for synchronizing audio device access. </p>
+
+</div>
+</div>
 <a id="acbfe3de9f8e76cfeead80b264b43519c" name="acbfe3de9f8e76cfeead80b264b43519c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acbfe3de9f8e76cfeead80b264b43519c">&#9670;&#160;</a></span>is_playing</h2>
 
@@ -146,7 +174,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Indicates whether the thread is currently playing. </p>
+<p>Indicates whether the thread is playing. </p>
 
 </div>
 </div>
@@ -162,7 +190,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Indicates whether the thread is currently processing. </p>
+<p>Indicates whether the thread is processing. </p>
+
+</div>
+</div>
+<a id="aa25591186fa1d03768bfe32f76063d19" name="aa25591186fa1d03768bfe32f76063d19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa25591186fa1d03768bfe32f76063d19">&#9670;&#160;</a></span>mpris_dbus_thread</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;std::thread&gt; ThreadManager::ThreadState::mpris_dbus_thread</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Unique pointer for DBus thread. </p>
 
 </div>
 </div>
@@ -178,7 +222,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>A future object associated with the play operation. </p>
+<p>Future object for async play operations. </p>
 
 </div>
 </div>
@@ -194,7 +238,39 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>A mutex to synchronize access to the play state. </p>
+<p>Mutex for synchronizing play state. </p>
+
+</div>
+</div>
+<a id="a0ae5594bb4c1ed33073b496b8b8d497d" name="a0ae5594bb4c1ed33073b496b8b8d497d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ae5594bb4c1ed33073b496b8b8d497d">&#9670;&#160;</a></span>playNextSongThread</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::thread ThreadManager::ThreadState::playNextSongThread</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Thread for handling "play next song" operations. </p>
+
+</div>
+</div>
+<a id="a85aac76620190fa170441ee95317f0db" name="a85aac76620190fa170441ee95317f0db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85aac76620190fa170441ee95317f0db">&#9670;&#160;</a></span>queue_mutex</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::mutex ThreadManager::ThreadState::queue_mutex</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Mutex for synchronizing queue operations. </p>
 
 </div>
 </div>

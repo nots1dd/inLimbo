@@ -149,11 +149,18 @@ Macros</h2></td></tr>
 <tr class="separator:aac0a4c91d4fed2417a52d531798d7367"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af66fd044a3918b6803d0f0744276d171" id="r_af66fd044a3918b6803d0f0744276d171"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af66fd044a3918b6803d0f0744276d171">PARENT_COLORS</a>&#160;&#160;&#160;&quot;colors&quot;</td></tr>
 <tr class="separator:af66fd044a3918b6803d0f0744276d171"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bd9928cc13c4d6738fc29a44b27d764" id="r_a3bd9928cc13c4d6738fc29a44b27d764"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3bd9928cc13c4d6738fc29a44b27d764">PARENT_UI</a>&#160;&#160;&#160;&quot;ui&quot;</td></tr>
+<tr class="separator:a3bd9928cc13c4d6738fc29a44b27d764"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47dcae2a56f85f30e8670519b59c4318" id="r_a47dcae2a56f85f30e8670519b59c4318"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a47dcae2a56f85f30e8670519b59c4318">CUSTOM_CONFIG_MACRO</a>&#160;&#160;&#160;&quot;INLIMBO_CONFIG_HOME&quot;</td></tr>
+<tr class="separator:a47dcae2a56f85f30e8670519b59c4318"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a07c9e72beb8cdba986557305a7605558" id="r_a07c9e72beb8cdba986557305a7605558"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07c9e72beb8cdba986557305a7605558">getBaseConfigPath</a> ()</td></tr>
+<tr class="memdesc:a07c9e72beb8cdba986557305a7605558"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the path to the configuration directory.  <br /></td></tr>
+<tr class="separator:a07c9e72beb8cdba986557305a7605558"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac64fc49e7109184bcb320cfb361219af" id="r_ac64fc49e7109184bcb320cfb361219af"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac64fc49e7109184bcb320cfb361219af">getConfigPath</a> (string fileName)</td></tr>
-<tr class="memdesc:ac64fc49e7109184bcb320cfb361219af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the path to the configuration file.  <br /></td></tr>
+<tr class="memdesc:ac64fc49e7109184bcb320cfb361219af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the full path to the configuration file.  <br /></td></tr>
 <tr class="separator:ac64fc49e7109184bcb320cfb361219af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52da76b1cc7e2b996b1cadab35d4e567" id="r_a52da76b1cc7e2b996b1cadab35d4e567"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a52da76b1cc7e2b996b1cadab35d4e567">getCachePath</a> ()</td></tr>
 <tr class="separator:a52da76b1cc7e2b996b1cadab35d4e567"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -166,9 +173,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a19930571a1aced24a71d9a1d6e7c710a" id="r_a19930571a1aced24a71d9a1d6e7c710a"><td class="memItemLeft" align="right" valign="top">string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19930571a1aced24a71d9a1d6e7c710a">parseTOMLField</a> (string parent, string field)</td></tr>
 <tr class="memdesc:a19930571a1aced24a71d9a1d6e7c710a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a string field from the TOML configuration.  <br /></td></tr>
 <tr class="separator:a19930571a1aced24a71d9a1d6e7c710a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d5e9ae7e728f5d76e3d29b767a9b8e5" id="r_a8d5e9ae7e728f5d76e3d29b767a9b8e5"><td class="memItemLeft" align="right" valign="top">string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d5e9ae7e728f5d76e3d29b767a9b8e5">parseTOMLFieldCustom</a> (const toml::parse_result &amp;custom_config, string parent, string field)</td></tr>
+<tr class="memdesc:a8d5e9ae7e728f5d76e3d29b767a9b8e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a string field from a custom TOML configuration that is called by the INLIMBO_CONFIG_HOME macro at runtime.  <br /></td></tr>
+<tr class="separator:a8d5e9ae7e728f5d76e3d29b767a9b8e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0032a51dfcdddb12160bf671f29001f1" id="r_a0032a51dfcdddb12160bf671f29001f1"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0032a51dfcdddb12160bf671f29001f1">parseTOMLFieldInt</a> (string parent, string field)</td></tr>
 <tr class="memdesc:a0032a51dfcdddb12160bf671f29001f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses an integer field from the TOML configuration.  <br /></td></tr>
 <tr class="separator:a0032a51dfcdddb12160bf671f29001f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8687daac99771caf3f8f1f2c203d6fde" id="r_a8687daac99771caf3f8f1f2c203d6fde"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8687daac99771caf3f8f1f2c203d6fde">parseTOMLFieldIntCustom</a> (const toml::parse_result &amp;custom_config, string parent, string field)</td></tr>
+<tr class="memdesc:a8687daac99771caf3f8f1f2c203d6fde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses an integer field from a custom TOML configuration set by the INLIMBO_CONFIG_HOME macro at runtime.  <br /></td></tr>
+<tr class="separator:a8687daac99771caf3f8f1f2c203d6fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -176,6 +189,21 @@ Variables</h2></td></tr>
 <tr class="separator:a9635b1b895fa15bcf1184ca6dac8476b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a47dcae2a56f85f30e8670519b59c4318" name="a47dcae2a56f85f30e8670519b59c4318"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47dcae2a56f85f30e8670519b59c4318">&#9670;&#160;</a></span>CUSTOM_CONFIG_MACRO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CUSTOM_CONFIG_MACRO&#160;&#160;&#160;&quot;INLIMBO_CONFIG_HOME&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Custom config.toml macro setup </p>
+
+</div>
+</div>
 <a id="af66fd044a3918b6803d0f0744276d171" name="af66fd044a3918b6803d0f0744276d171"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af66fd044a3918b6803d0f0744276d171">&#9670;&#160;</a></span>PARENT_COLORS</h2>
 
@@ -343,6 +371,21 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a3bd9928cc13c4d6738fc29a44b27d764" name="a3bd9928cc13c4d6738fc29a44b27d764"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3bd9928cc13c4d6738fc29a44b27d764">&#9670;&#160;</a></span>PARENT_UI</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PARENT_UI&#160;&#160;&#160;&quot;ui&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Parent section for ui settings </p>
+
+</div>
+</div>
 <a id="aa6b5fdeebb278e6f01a1100d911f359a" name="aa6b5fdeebb278e6f01a1100d911f359a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa6b5fdeebb278e6f01a1100d911f359a">&#9670;&#160;</a></span>SPECIAL_KEYBIND_ENTER_STR</h2>
 
@@ -416,6 +459,33 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a07c9e72beb8cdba986557305a7605558" name="a07c9e72beb8cdba986557305a7605558"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07c9e72beb8cdba986557305a7605558">&#9670;&#160;</a></span>getBaseConfigPath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string getBaseConfigPath </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the path to the configuration directory. </p>
+<p>By default, this function uses the HOME environment variable to determine the user's home directory. However, it checks for the presence of a <code>INLIMBO_CONFIG_HOME</code> environment variable first, which can override the default location. This allows for custom configuration paths during testing.</p>
+<dl class="section return"><dt>Returns</dt><dd>A string representing the base path to the configuration directory. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>If the HOME environment variable is not found and no custom path is provided. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a52da76b1cc7e2b996b1cadab35d4e567" name="a52da76b1cc7e2b996b1cadab35d4e567"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a52da76b1cc7e2b996b1cadab35d4e567">&#9670;&#160;</a></span>getCachePath()</h2>
 
@@ -449,8 +519,8 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retrieves the path to the configuration file. </p>
-<p>This function constructs the path to the <code>config.toml</code> file located in the user's home directory, inside the <code>.config/inLimbo/</code> folder.</p>
+<p>Retrieves the full path to the configuration file. </p>
+<p>This constructs the full path to a specific configuration file.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fileName</td><td>The name of the configuration file (e.g., "config.toml"). </td></tr>
@@ -458,13 +528,6 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A string representing the full path to the configuration file. </dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">std::runtime_error</td><td>If the HOME environment variable is not found. </td></tr>
-  </table>
-  </dd>
-</dl>
-<p>&lt; Exit gracefully if the HOME environment variable is not set.</p>
 
 </div>
 </div>
@@ -528,6 +591,44 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a8d5e9ae7e728f5d76e3d29b767a9b8e5" name="a8d5e9ae7e728f5d76e3d29b767a9b8e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d5e9ae7e728f5d76e3d29b767a9b8e5">&#9670;&#160;</a></span>parseTOMLFieldCustom()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string_view parseTOMLFieldCustom </td>
+          <td>(</td>
+          <td class="paramtype">const toml::parse_result &amp;</td>          <td class="paramname"><span class="paramname"><em>custom_config</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>parent</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Parses a string field from a custom TOML configuration that is called by the INLIMBO_CONFIG_HOME macro at runtime. </p>
+<p>This function retrieves the value of a specific field within a parent section of the TOML configuration. If the field is not found, it returns an empty string view.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parent</td><td>The parent section name (e.g., "library"). </td></tr>
+    <tr><td class="paramname">field</td><td>The field name within the parent section (e.g., "name"). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A string view representing the value of the field. </dd></dl>
+<p>&lt; If the field is not found, return an empty string view.</p>
+
+</div>
+</div>
 <a id="a0032a51dfcdddb12160bf671f29001f1" name="a0032a51dfcdddb12160bf671f29001f1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0032a51dfcdddb12160bf671f29001f1">&#9670;&#160;</a></span>parseTOMLFieldInt()</h2>
 
@@ -548,6 +649,44 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Parses an integer field from the TOML configuration. </p>
+<p>This function retrieves the value of a specific field as an integer from the TOML configuration. If the field is not found, it returns -1 as a default value.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parent</td><td>The parent section name (e.g., "ftp"). </td></tr>
+    <tr><td class="paramname">field</td><td>The field name within the parent section (e.g., "username"). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The integer value of the field, or -1 if the field is not found. </dd></dl>
+<p>&lt; If the field is not found, return -1 as default.</p>
+
+</div>
+</div>
+<a id="a8687daac99771caf3f8f1f2c203d6fde" name="a8687daac99771caf3f8f1f2c203d6fde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8687daac99771caf3f8f1f2c203d6fde">&#9670;&#160;</a></span>parseTOMLFieldIntCustom()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int64_t parseTOMLFieldIntCustom </td>
+          <td>(</td>
+          <td class="paramtype">const toml::parse_result &amp;</td>          <td class="paramname"><span class="paramname"><em>custom_config</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>parent</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Parses an integer field from a custom TOML configuration set by the INLIMBO_CONFIG_HOME macro at runtime. </p>
 <p>This function retrieves the value of a specific field as an integer from the TOML configuration. If the field is not found, it returns -1 as a default value.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">

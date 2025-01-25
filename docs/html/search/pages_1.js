@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['flow_20strong_0',['&lt;strong&gt;inLimbo Music Player - Song Map Flow&lt;/strong&gt;',['../md_src_2dirsort_2SONGMAP.html',1,'']]]
+  ['changelog_0',['CHANGELOG',['../md_CHANGELOG.html',1,'']]],
+  ['colors_20inlimbo_1',['COLORS inLimbo',['../md_COLORS.html',1,'']]]
 ];

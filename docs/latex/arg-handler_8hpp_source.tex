@@ -1,0 +1,143 @@
+\doxysection{arg-\/handler.hpp}
+\hypertarget{arg-handler_8hpp_source}{}\label{arg-handler_8hpp_source}\index{src/arg-\/handler.hpp@{src/arg-\/handler.hpp}}
+\mbox{\hyperlink{arg-handler_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ ARGUMENT\_HANDLER\_HPP}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ ARGUMENT\_HANDLER\_HPP}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cmd-line-args_8hpp}{./cmd-\/line-\/args.hpp}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <filesystem>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <stdexcept>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <string\_view>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ Constants}}
+\DoxyCodeLine{00020\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{arg-handler_8hpp_a66a0a8982b40d72ceed7b95a0d7d280c}{DBUS\_SERVICE\_NAME}}\ =}
+\DoxyCodeLine{00021\ \ \ \textcolor{stringliteral}{"{}org.mpris.MediaPlayer2.inLimbo"{}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{arg-handler_8hpp_a35aceb690e11a3d78331de7dda9563ae}{VERSION}}\ =\ \textcolor{stringliteral}{"{}2.5\ (ALPHA)"{}};\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{arg-handler_8hpp_af443d26ff309f6e511dfcae4be89775a}{shouldRunApp}}\ =}
+\DoxyCodeLine{00025\ \ \ \textcolor{keyword}{false};\ }
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{ConsoleColor}}}
+\DoxyCodeLine{00032\ \{}
+\DoxyCodeLine{00033\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d}{Reset}},\ \ }
+\DoxyCodeLine{00034\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1}{Green}},\ \ }
+\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9}{Blue}},\ \ \ }
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa51e6cd92b6c45f9affdc158ecca2b8b8}{Yellow}},\ }
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaaee38e4d5dd68c4e440825018d549cb47}{Red}},\ \ \ \ }
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa023c239d2f2538f140a20e72c7b73f20}{Cyan}},\ \ \ }
+\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaab91cc2c1416fcca942b61c7ac5b1a9ac}{Magenta}}\ }
+\DoxyCodeLine{00040\ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classColorManager}{ColorManager}}}
+\DoxyCodeLine{00050\ \{}
+\DoxyCodeLine{00051\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00058\ \ \ \textcolor{keyword}{static}\ std::string\_view\ \mbox{\hyperlink{classColorManager_af561fc120beb824a566af0611611754d}{getColor}}(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{ConsoleColor}}\ color)}
+\DoxyCodeLine{00059\ \ \ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::unordered\_map<ConsoleColor,\ std::string\_view>\ colorCodes\ =\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d}{ConsoleColor::Reset}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[0m"{}}\},\ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1}{ConsoleColor::Green}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[32m"{}}\},}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9}{ConsoleColor::Blue}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[34m"{}}\},\ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa51e6cd92b6c45f9affdc158ecca2b8b8}{ConsoleColor::Yellow}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[33m"{}}\},}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaaee38e4d5dd68c4e440825018d549cb47}{ConsoleColor::Red}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[31m"{}}\},\ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa023c239d2f2538f140a20e72c7b73f20}{ConsoleColor::Cyan}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[36m"{}}\},}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaab91cc2c1416fcca942b61c7ac5b1a9ac}{ConsoleColor::Magenta}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[35m"{}}\}\};}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordflow}{return}\ colorCodes.at(color);}
+\DoxyCodeLine{00066\ \ \ \}}
+\DoxyCodeLine{00067\ \};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00077\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classArgumentHandler}{ArgumentHandler}}}
+\DoxyCodeLine{00078\ \{}
+\DoxyCodeLine{00079\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00087\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structArgumentHandler_1_1Paths}{Paths}}}
+\DoxyCodeLine{00088\ \ \ \{}
+\DoxyCodeLine{00089\ \ \ \ \ std::string\ \mbox{\hyperlink{structArgumentHandler_1_1Paths_a0aac53206f5e6a7301f2a57b0c4ccaea}{configPath}};\ }
+\DoxyCodeLine{00090\ \ \ \ \ std::string\ \mbox{\hyperlink{structArgumentHandler_1_1Paths_a0170467908b849120b512e79ca010f84}{libBinPath}};\ }
+\DoxyCodeLine{00091\ \ \ \ \ std::string\ \mbox{\hyperlink{structArgumentHandler_1_1Paths_ac4424017ac641cc7f3d6330c0fc8c18a}{cacheDir}};\ \ \ }
+\DoxyCodeLine{00092\ \ \ \};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00105\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classArgumentHandler_a573a13e5dcb882af4dfc1568be103c72}{handleArguments}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classCommandLineArgs}{CommandLineArgs}}\&\ cmdArgs,\ \textcolor{keyword}{const}\ std::string\&\ programName,}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structArgumentHandler_1_1Paths}{Paths}}\&\ paths)}
+\DoxyCodeLine{00107\ \ \ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ std::function<void()>>\ argumentHandlers\ =\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/help"{}},\ [\&]()\ \{\ handleHelp(cmdArgs,\ programName);\ \}\},}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/version"{}},\ [\&]()\ \{\ handleVersion();\ \}\},}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/clear-\/cache"{}},\ [\&]()\ \{\ handleClearCache(paths.\mbox{\hyperlink{structArgumentHandler_1_1Paths_a0170467908b849120b512e79ca010f84}{libBinPath}});\ \}\},}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/show-\/config-\/file"{}},\ [\&]()\ \{\ handleShowConfig(paths.\mbox{\hyperlink{structArgumentHandler_1_1Paths_a0aac53206f5e6a7301f2a57b0c4ccaea}{configPath}});\ \}\},}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/show-\/log-\/dir"{}},\ [\&]()\ \{\ handleShowLogDir(paths.\mbox{\hyperlink{structArgumentHandler_1_1Paths_ac4424017ac641cc7f3d6330c0fc8c18a}{cacheDir}});\ \}\},}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/show-\/dbus-\/name"{}},\ [\&]()\ \{\ handleShowDBusName();\ \}\},}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/update-\/cache-\/run"{}},\ [\&]()\ \{\ handleUpdateCacheRun(paths.\mbox{\hyperlink{structArgumentHandler_1_1Paths_a0170467908b849120b512e79ca010f84}{libBinPath}});\ \}\}\};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [flag,\ handler]\ :\ argumentHandlers)}
+\DoxyCodeLine{00118\ \ \ \ \ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cmdArgs.\mbox{\hyperlink{classCommandLineArgs_a9e468eecc878b283c0a2070858868f0f}{hasFlag}}(flag))}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ handler();}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{arg-handler_8hpp_af443d26ff309f6e511dfcae4be89775a}{shouldRunApp}})}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ exit(0);}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00125\ \ \ \ \ \}}
+\DoxyCodeLine{00126\ \ \ \}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00136\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{ConsoleColor}}\ color,\ std::string\_view\ label,\ std::string\_view\ value\ =\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{00137\ \ \ \{}
+\DoxyCodeLine{00138\ \ \ \ \ std::cout\ <<\ \mbox{\hyperlink{classColorManager_af561fc120beb824a566af0611611754d}{ColorManager::getColor}}(color)\ <<\ label}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \mbox{\hyperlink{classColorManager_af561fc120beb824a566af0611611754d}{ColorManager::getColor}}(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d}{ConsoleColor::Reset}})\ <<\ value\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00140\ \ \ \}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00148\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleHelp(\textcolor{keyword}{const}\ CommandLineArgs\&\ cmdArgs,\ \textcolor{keyword}{const}\ std::string\&\ programName)}
+\DoxyCodeLine{00149\ \ \ \{}
+\DoxyCodeLine{00150\ \ \ \ \ cmdArgs.\mbox{\hyperlink{classCommandLineArgs_a23bfeb76513b5a88ec4af37d6f60269e}{printUsage}}(programName);}
+\DoxyCodeLine{00151\ \ \ \}}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00156\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleVersion()\ \{\ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa023c239d2f2538f140a20e72c7b73f20}{ConsoleColor::Cyan}},\ \textcolor{stringliteral}{"{}inLimbo\ version:\ "{}},\ \mbox{\hyperlink{arg-handler_8hpp_a35aceb690e11a3d78331de7dda9563ae}{VERSION}});\ \}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00163\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleShowConfig(\textcolor{keyword}{const}\ std::string\&\ configPath)}
+\DoxyCodeLine{00164\ \ \ \{}
+\DoxyCodeLine{00165\ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1}{ConsoleColor::Green}},\ \textcolor{stringliteral}{"{}Config\ file\ location:\ "{}},\ configPath);}
+\DoxyCodeLine{00166\ \ \ \}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00173\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleShowLogDir(\textcolor{keyword}{const}\ std::string\&\ cacheDir)}
+\DoxyCodeLine{00174\ \ \ \{}
+\DoxyCodeLine{00175\ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9}{ConsoleColor::Blue}},\ \textcolor{stringliteral}{"{}Log\ directory:\ "{}},\ cacheDir);}
+\DoxyCodeLine{00176\ \ \ \}}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00181\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleShowDBusName()}
+\DoxyCodeLine{00182\ \ \ \{}
+\DoxyCodeLine{00183\ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaab91cc2c1416fcca942b61c7ac5b1a9ac}{ConsoleColor::Magenta}},\ \textcolor{stringliteral}{"{}DBus\ name:\ "{}},\ \mbox{\hyperlink{arg-handler_8hpp_a66a0a8982b40d72ceed7b95a0d7d280c}{DBUS\_SERVICE\_NAME}});}
+\DoxyCodeLine{00184\ \ \ \}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00194\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleClearCache(\textcolor{keyword}{const}\ std::string\&\ libBinPath)}
+\DoxyCodeLine{00195\ \ \ \{}
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00197\ \ \ \ \ \{}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::filesystem::exists(libBinPath))}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ std::filesystem::remove(libBinPath);}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1}{ConsoleColor::Green}},\ \textcolor{stringliteral}{"{}Cache\ cleared\ successfully:\ "{}},\ libBinPath);}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa51e6cd92b6c45f9affdc158ecca2b8b8}{ConsoleColor::Yellow}},\ \textcolor{stringliteral}{"{}No\ cache\ file\ found\ to\ clear:\ "{}},\ libBinPath);}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00207\ \ \ \ \ \}}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::filesystem::filesystem\_error\&\ e)}
+\DoxyCodeLine{00209\ \ \ \ \ \{}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaaee38e4d5dd68c4e440825018d549cb47}{ConsoleColor::Red}},\ \textcolor{stringliteral}{"{}Error\ clearing\ cache:\ "{}},\ e.what());}
+\DoxyCodeLine{00211\ \ \ \ \ \}}
+\DoxyCodeLine{00212\ \ \ \}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00222\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleUpdateCacheRun(\textcolor{keyword}{const}\ std::string\&\ libBinPath)}
+\DoxyCodeLine{00223\ \ \ \{}
+\DoxyCodeLine{00224\ \ \ \ \ std::cout\ <<\ \mbox{\hyperlink{classColorManager_af561fc120beb824a566af0611611754d}{ColorManager::getColor}}(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9}{ConsoleColor::Blue}})}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}-\/-\/\ Updating\ Cache\ and\ running\ app..."{}}}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \mbox{\hyperlink{classColorManager_af561fc120beb824a566af0611611754d}{ColorManager::getColor}}(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d}{ConsoleColor::Reset}})\ <<\ std::endl;}
+\DoxyCodeLine{00227\ \ \ \ \ handleClearCache(libBinPath);}
+\DoxyCodeLine{00228\ \ \ \ \ \mbox{\hyperlink{arg-handler_8hpp_af443d26ff309f6e511dfcae4be89775a}{shouldRunApp}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00229\ \ \ \}}
+\DoxyCodeLine{00230\ \};}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ ARGUMENT\_HANDLER\_HPP}}
+
+\end{DoxyCode}

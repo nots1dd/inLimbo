@@ -34,12 +34,18 @@
 \#define \mbox{\hyperlink{toml__parser_8hpp_aac0a4c91d4fed2417a52d531798d7367}{SPECIAL\+\_\+\+KEYBIND\+\_\+\+SPACE\+\_\+\+STR}}~"{}Space"{}
 \item 
 \#define \mbox{\hyperlink{toml__parser_8hpp_af66fd044a3918b6803d0f0744276d171}{PARENT\+\_\+\+COLORS}}~"{}colors"{}
+\item 
+\#define \mbox{\hyperlink{toml__parser_8hpp_a3bd9928cc13c4d6738fc29a44b27d764}{PARENT\+\_\+\+UI}}~"{}ui"{}
+\item 
+\#define \mbox{\hyperlink{toml__parser_8hpp_a47dcae2a56f85f30e8670519b59c4318}{CUSTOM\+\_\+\+CONFIG\+\_\+\+MACRO}}~"{}INLIMBO\+\_\+\+CONFIG\+\_\+\+HOME"{}
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
+string \mbox{\hyperlink{toml__parser_8hpp_a07c9e72beb8cdba986557305a7605558}{get\+Base\+Config\+Path}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves the path to the configuration directory. \end{DoxyCompactList}\item 
 string \mbox{\hyperlink{toml__parser_8hpp_ac64fc49e7109184bcb320cfb361219af}{get\+Config\+Path}} (string file\+Name)
-\begin{DoxyCompactList}\small\item\em Retrieves the path to the configuration file. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Retrieves the full path to the configuration file. \end{DoxyCompactList}\item 
 string \mbox{\hyperlink{toml__parser_8hpp_a52da76b1cc7e2b996b1cadab35d4e567}{get\+Cache\+Path}} ()
 \item 
 bool \mbox{\hyperlink{toml__parser_8hpp_a9ae7f1652e5197b6891b1f3417f3a4e9}{config\+File\+Exists}} (const string \&file\+Path)
@@ -48,8 +54,12 @@ auto \mbox{\hyperlink{toml__parser_8hpp_ab0f9ee0b01e2b1ec3208d0323ee8957b}{load\
 \begin{DoxyCompactList}\small\item\em Loads the configuration file. \end{DoxyCompactList}\item 
 string\+\_\+view \mbox{\hyperlink{toml__parser_8hpp_a19930571a1aced24a71d9a1d6e7c710a}{parse\+TOMLField}} (string parent, string field)
 \begin{DoxyCompactList}\small\item\em Parses a string field from the TOML configuration. \end{DoxyCompactList}\item 
+string\+\_\+view \mbox{\hyperlink{toml__parser_8hpp_a8d5e9ae7e728f5d76e3d29b767a9b8e5}{parse\+TOMLField\+Custom}} (const toml\+::parse\+\_\+result \&custom\+\_\+config, string parent, string field)
+\begin{DoxyCompactList}\small\item\em Parses a string field from a custom TOML configuration that is called by the INLIMBO\+\_\+\+CONFIG\+\_\+\+HOME macro at runtime. \end{DoxyCompactList}\item 
 int64\+\_\+t \mbox{\hyperlink{toml__parser_8hpp_a0032a51dfcdddb12160bf671f29001f1}{parse\+TOMLField\+Int}} (string parent, string field)
-\begin{DoxyCompactList}\small\item\em Parses an integer field from the TOML configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Parses an integer field from the TOML configuration. \end{DoxyCompactList}\item 
+int64\+\_\+t \mbox{\hyperlink{toml__parser_8hpp_a8687daac99771caf3f8f1f2c203d6fde}{parse\+TOMLField\+Int\+Custom}} (const toml\+::parse\+\_\+result \&custom\+\_\+config, string parent, string field)
+\begin{DoxyCompactList}\small\item\em Parses an integer field from a custom TOML configuration set by the INLIMBO\+\_\+\+CONFIG\+\_\+\+HOME macro at runtime. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -58,7 +68,13 @@ auto \mbox{\hyperlink{toml__parser_8hpp_a9635b1b895fa15bcf1184ca6dac8476b}{confi
 
 
 \doxysubsection{Macro Definition Documentation}
-\Hypertarget{toml__parser_8hpp_af66fd044a3918b6803d0f0744276d171}\index{toml\_parser.hpp@{toml\_parser.hpp}!PARENT\_COLORS@{PARENT\_COLORS}}
+\Hypertarget{toml__parser_8hpp_a47dcae2a56f85f30e8670519b59c4318}\index{toml\_parser.hpp@{toml\_parser.hpp}!CUSTOM\_CONFIG\_MACRO@{CUSTOM\_CONFIG\_MACRO}}
+\index{CUSTOM\_CONFIG\_MACRO@{CUSTOM\_CONFIG\_MACRO}!toml\_parser.hpp@{toml\_parser.hpp}}
+\doxysubsubsection{\texorpdfstring{CUSTOM\_CONFIG\_MACRO}{CUSTOM\_CONFIG\_MACRO}}
+{\footnotesize\ttfamily \label{toml__parser_8hpp_a47dcae2a56f85f30e8670519b59c4318} 
+\#define CUSTOM\+\_\+\+CONFIG\+\_\+\+MACRO~"{}INLIMBO\+\_\+\+CONFIG\+\_\+\+HOME"{}}
+
+Custom config.\+toml macro setup \Hypertarget{toml__parser_8hpp_af66fd044a3918b6803d0f0744276d171}\index{toml\_parser.hpp@{toml\_parser.hpp}!PARENT\_COLORS@{PARENT\_COLORS}}
 \index{PARENT\_COLORS@{PARENT\_COLORS}!toml\_parser.hpp@{toml\_parser.hpp}}
 \doxysubsubsection{\texorpdfstring{PARENT\_COLORS}{PARENT\_COLORS}}
 {\footnotesize\ttfamily \label{toml__parser_8hpp_af66fd044a3918b6803d0f0744276d171} 
@@ -128,7 +144,13 @@ Field for the library directory \Hypertarget{toml__parser_8hpp_a92261746a473bcb8
 {\footnotesize\ttfamily \label{toml__parser_8hpp_a92261746a473bcb8362d9137634a5a75} 
 \#define PARENT\+\_\+\+LIB\+\_\+\+FIELD\+\_\+\+NAME~"{}name"{}}
 
-Field for the library name \Hypertarget{toml__parser_8hpp_aa6b5fdeebb278e6f01a1100d911f359a}\index{toml\_parser.hpp@{toml\_parser.hpp}!SPECIAL\_KEYBIND\_ENTER\_STR@{SPECIAL\_KEYBIND\_ENTER\_STR}}
+Field for the library name \Hypertarget{toml__parser_8hpp_a3bd9928cc13c4d6738fc29a44b27d764}\index{toml\_parser.hpp@{toml\_parser.hpp}!PARENT\_UI@{PARENT\_UI}}
+\index{PARENT\_UI@{PARENT\_UI}!toml\_parser.hpp@{toml\_parser.hpp}}
+\doxysubsubsection{\texorpdfstring{PARENT\_UI}{PARENT\_UI}}
+{\footnotesize\ttfamily \label{toml__parser_8hpp_a3bd9928cc13c4d6738fc29a44b27d764} 
+\#define PARENT\+\_\+\+UI~"{}ui"{}}
+
+Parent section for ui settings \Hypertarget{toml__parser_8hpp_aa6b5fdeebb278e6f01a1100d911f359a}\index{toml\_parser.hpp@{toml\_parser.hpp}!SPECIAL\_KEYBIND\_ENTER\_STR@{SPECIAL\_KEYBIND\_ENTER\_STR}}
 \index{SPECIAL\_KEYBIND\_ENTER\_STR@{SPECIAL\_KEYBIND\_ENTER\_STR}!toml\_parser.hpp@{toml\_parser.hpp}}
 \doxysubsubsection{\texorpdfstring{SPECIAL\_KEYBIND\_ENTER\_STR}{SPECIAL\_KEYBIND\_ENTER\_STR}}
 {\footnotesize\ttfamily \label{toml__parser_8hpp_aa6b5fdeebb278e6f01a1100d911f359a} 
@@ -169,6 +191,26 @@ This function checks if the {\ttfamily config.\+toml} file exists at the given f
 \begin{DoxyReturn}{Returns}
 {\ttfamily true} if the file exists, otherwise {\ttfamily false}. 
 \end{DoxyReturn}
+\Hypertarget{toml__parser_8hpp_a07c9e72beb8cdba986557305a7605558}\index{toml\_parser.hpp@{toml\_parser.hpp}!getBaseConfigPath@{getBaseConfigPath}}
+\index{getBaseConfigPath@{getBaseConfigPath}!toml\_parser.hpp@{toml\_parser.hpp}}
+\doxysubsubsection{\texorpdfstring{getBaseConfigPath()}{getBaseConfigPath()}}
+{\footnotesize\ttfamily \label{toml__parser_8hpp_a07c9e72beb8cdba986557305a7605558} 
+string get\+Base\+Config\+Path (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves the path to the configuration directory. 
+
+By default, this function uses the HOME environment variable to determine the user\textquotesingle{}s home directory. However, it checks for the presence of a {\ttfamily INLIMBO\+\_\+\+CONFIG\+\_\+\+HOME} environment variable first, which can override the default location. This allows for custom configuration paths during testing.
+
+\begin{DoxyReturn}{Returns}
+A string representing the base path to the configuration directory. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::runtime\+\_\+error} & If the HOME environment variable is not found and no custom path is provided. \\
+\hline
+\end{DoxyExceptions}
 \Hypertarget{toml__parser_8hpp_a52da76b1cc7e2b996b1cadab35d4e567}\index{toml\_parser.hpp@{toml\_parser.hpp}!getCachePath@{getCachePath}}
 \index{getCachePath@{getCachePath}!toml\_parser.hpp@{toml\_parser.hpp}}
 \doxysubsubsection{\texorpdfstring{getCachePath()}{getCachePath()}}
@@ -183,9 +225,9 @@ string get\+Config\+Path (\begin{DoxyParamCaption}\item[{string}]{file\+Name}{}\
 
 
 
-Retrieves the path to the configuration file. 
+Retrieves the full path to the configuration file. 
 
-This function constructs the path to the {\ttfamily config.\+toml} file located in the user\textquotesingle{}s home directory, inside the {\ttfamily .config/in\+Limbo/} folder.
+This constructs the full path to a specific configuration file.
 
 
 \begin{DoxyParams}{Parameters}
@@ -195,12 +237,7 @@ This function constructs the path to the {\ttfamily config.\+toml} file located 
 \begin{DoxyReturn}{Returns}
 A string representing the full path to the configuration file. 
 \end{DoxyReturn}
-
-\begin{DoxyExceptions}{Exceptions}
-{\em std\+::runtime\+\_\+error} & If the HOME environment variable is not found. \\
-\hline
-\end{DoxyExceptions}
-\texorpdfstring{$<$}{<} Exit gracefully if the HOME environment variable is not set.\Hypertarget{toml__parser_8hpp_ab0f9ee0b01e2b1ec3208d0323ee8957b}\index{toml\_parser.hpp@{toml\_parser.hpp}!loadConfig@{loadConfig}}
+\Hypertarget{toml__parser_8hpp_ab0f9ee0b01e2b1ec3208d0323ee8957b}\index{toml\_parser.hpp@{toml\_parser.hpp}!loadConfig@{loadConfig}}
 \index{loadConfig@{loadConfig}!toml\_parser.hpp@{toml\_parser.hpp}}
 \doxysubsubsection{\texorpdfstring{loadConfig()}{loadConfig()}}
 {\footnotesize\ttfamily \label{toml__parser_8hpp_ab0f9ee0b01e2b1ec3208d0323ee8957b} 
@@ -242,6 +279,28 @@ This function retrieves the value of a specific field within a parent section of
 \begin{DoxyReturn}{Returns}
 A string view representing the value of the field. 
 \end{DoxyReturn}
+\texorpdfstring{$<$}{<} If the field is not found, return an empty string view.\Hypertarget{toml__parser_8hpp_a8d5e9ae7e728f5d76e3d29b767a9b8e5}\index{toml\_parser.hpp@{toml\_parser.hpp}!parseTOMLFieldCustom@{parseTOMLFieldCustom}}
+\index{parseTOMLFieldCustom@{parseTOMLFieldCustom}!toml\_parser.hpp@{toml\_parser.hpp}}
+\doxysubsubsection{\texorpdfstring{parseTOMLFieldCustom()}{parseTOMLFieldCustom()}}
+{\footnotesize\ttfamily \label{toml__parser_8hpp_a8d5e9ae7e728f5d76e3d29b767a9b8e5} 
+string\+\_\+view parse\+TOMLField\+Custom (\begin{DoxyParamCaption}\item[{const toml\+::parse\+\_\+result \&}]{custom\+\_\+config}{, }\item[{string}]{parent}{, }\item[{string}]{field}{}\end{DoxyParamCaption})}
+
+
+
+Parses a string field from a custom TOML configuration that is called by the INLIMBO\+\_\+\+CONFIG\+\_\+\+HOME macro at runtime. 
+
+This function retrieves the value of a specific field within a parent section of the TOML configuration. If the field is not found, it returns an empty string view.
+
+
+\begin{DoxyParams}{Parameters}
+{\em parent} & The parent section name (e.\+g., "{}library"{}). \\
+\hline
+{\em field} & The field name within the parent section (e.\+g., "{}name"{}). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A string view representing the value of the field. 
+\end{DoxyReturn}
 \texorpdfstring{$<$}{<} If the field is not found, return an empty string view.\Hypertarget{toml__parser_8hpp_a0032a51dfcdddb12160bf671f29001f1}\index{toml\_parser.hpp@{toml\_parser.hpp}!parseTOMLFieldInt@{parseTOMLFieldInt}}
 \index{parseTOMLFieldInt@{parseTOMLFieldInt}!toml\_parser.hpp@{toml\_parser.hpp}}
 \doxysubsubsection{\texorpdfstring{parseTOMLFieldInt()}{parseTOMLFieldInt()}}
@@ -251,6 +310,28 @@ int64\+\_\+t parse\+TOMLField\+Int (\begin{DoxyParamCaption}\item[{string}]{pare
 
 
 Parses an integer field from the TOML configuration. 
+
+This function retrieves the value of a specific field as an integer from the TOML configuration. If the field is not found, it returns -\/1 as a default value.
+
+
+\begin{DoxyParams}{Parameters}
+{\em parent} & The parent section name (e.\+g., "{}ftp"{}). \\
+\hline
+{\em field} & The field name within the parent section (e.\+g., "{}username"{}). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The integer value of the field, or -\/1 if the field is not found. 
+\end{DoxyReturn}
+\texorpdfstring{$<$}{<} If the field is not found, return -\/1 as default.\Hypertarget{toml__parser_8hpp_a8687daac99771caf3f8f1f2c203d6fde}\index{toml\_parser.hpp@{toml\_parser.hpp}!parseTOMLFieldIntCustom@{parseTOMLFieldIntCustom}}
+\index{parseTOMLFieldIntCustom@{parseTOMLFieldIntCustom}!toml\_parser.hpp@{toml\_parser.hpp}}
+\doxysubsubsection{\texorpdfstring{parseTOMLFieldIntCustom()}{parseTOMLFieldIntCustom()}}
+{\footnotesize\ttfamily \label{toml__parser_8hpp_a8687daac99771caf3f8f1f2c203d6fde} 
+int64\+\_\+t parse\+TOMLField\+Int\+Custom (\begin{DoxyParamCaption}\item[{const toml\+::parse\+\_\+result \&}]{custom\+\_\+config}{, }\item[{string}]{parent}{, }\item[{string}]{field}{}\end{DoxyParamCaption})}
+
+
+
+Parses an integer field from a custom TOML configuration set by the INLIMBO\+\_\+\+CONFIG\+\_\+\+HOME macro at runtime. 
 
 This function retrieves the value of a specific field as an integer from the TOML configuration. If the field is not found, it returns -\/1 as a default value.
 

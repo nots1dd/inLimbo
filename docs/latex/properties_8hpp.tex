@@ -1,0 +1,63 @@
+\doxysection{src/ui/properties.hpp File Reference}
+\hypertarget{properties_8hpp}{}\label{properties_8hpp}\index{src/ui/properties.hpp@{src/ui/properties.hpp}}
+{\ttfamily \#include "{}../parser/toml\+\_\+parser.\+hpp"{}}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$string\+\_\+view$>$}\newline
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structGlobalProps}{Global\+Props}}
+\begin{DoxyCompactList}\small\item\em Struct to hold global property settings. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structGlobalProps}{Global\+Props}} \mbox{\hyperlink{properties_8hpp_a01d540760c5345b3ca7398fb1771a21c}{parse\+Props}} ()
+\begin{DoxyCompactList}\small\item\em Parses the global properties from the TOML configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{properties_8hpp_a01d540760c5345b3ca7398fb1771a21c}\index{properties.hpp@{properties.hpp}!parseProps@{parseProps}}
+\index{parseProps@{parseProps}!properties.hpp@{properties.hpp}}
+\doxysubsubsection{\texorpdfstring{parseProps()}{parseProps()}}
+{\footnotesize\ttfamily \label{properties_8hpp_a01d540760c5345b3ca7398fb1771a21c} 
+\mbox{\hyperlink{structGlobalProps}{Global\+Props}} parse\+Props (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Parses the global properties from the TOML configuration. 
+
+This function reads the global property configurations from the TOML file and returns a populated \doxylink{structGlobalProps}{Global\+Props} struct. Unlike parse\+Keybinds, this function will warn on errors but continue execution.
+
+\begin{DoxyReturn}{Returns}
+A \doxylink{structGlobalProps}{Global\+Props} struct with the configured settings. 
+\end{DoxyReturn}
+Reports a warning for invalid property values.
+
+This lambda function prints a warning message when an invalid property is detected, but allows the program to continue with a default value.
+
+
+\begin{DoxyParams}{Parameters}
+{\em field} & The field in which the invalid value was found. \\
+\hline
+{\em value} & The value that was invalid. \\
+\hline
+{\em default\+\_\+val} & The default value that will be used instead.\\
+\hline
+\end{DoxyParams}
+Handles boolean property parsing with error checking.
+
+This lambda function safely converts string values to booleans, providing appropriate warnings for invalid values.
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The string value to convert. \\
+\hline
+{\em field} & The field name for error reporting. \\
+\hline
+{\em default\+\_\+val} & The default boolean value to use if parsing fails. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The parsed boolean value or the default.
+\end{DoxyReturn}

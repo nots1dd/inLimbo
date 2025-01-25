@@ -107,7 +107,7 @@ $(function(){initNavTree('md_CHANGELOG.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">CHANGELOG</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md39"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md68"></a></p>
 <p>This is the CHANGELOG file for <a href="https://github.com/nots1dd/inLimbo">inLimbo</a></p>
 <p>All notable changes to this project will be documented in this file.</p>
 <p>This is a markdown file that will contain all the logs of <em>ALPHA</em> and <em>STABLE</em> release commits with a decent overview of changes.</p>
@@ -117,7 +117,7 @@ $(function(){initNavTree('md_CHANGELOG.html',''); initResizable(true); });
 <li>To better understand the progression of this project</li>
 <li>General debugging cases</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md40"></a>
+<h1><a class="anchor" id="autotoc_md69"></a>
 Format</h1>
 <p>This CHANGELOG follows the below format:</p>
 <div class="fragment"><div class="line">----</div>
@@ -154,12 +154,12 @@ Format</h1>
 </dd></dl>
 <p>----------------------------------&mdash; CHANGELOG STARTS -------------------------------------&mdash;</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md42"></a>
+<h1><a class="anchor" id="autotoc_md71"></a>
 [ALPHA 0.1] &mdash; 26-12-2024</h1>
-<h2><a class="anchor" id="autotoc_md43"></a>
+<h2><a class="anchor" id="autotoc_md72"></a>
 Added</h2>
 <p><b>NIL</b></p>
-<h2><a class="anchor" id="autotoc_md44"></a>
+<h2><a class="anchor" id="autotoc_md73"></a>
 Changed</h2>
 <ul>
 <li>Made most the <code>src/dirsort</code> files as headers for easier and straightforward inclusion during compilation</li>
@@ -171,21 +171,21 @@ Changed</h2>
 <li><code><a class="el" href="CMakeLists_8txt.html">CMakeLists.txt</a></code> now requires taglib to compile</li>
 <li>Updated <code><a class="el" href="NETWORK_8md.html">src/network/NETWORK.md</a></code> <a href="file:-">file:-</a> Now explains on how to change password and salt in detail</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md45"></a>
+<h2><a class="anchor" id="autotoc_md74"></a>
 Fixed</h2>
 <ul>
 <li>Unnecessary logs that slow down the storing of metadata in song map (with debug field in config.toml)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md46"></a>
+<h2><a class="anchor" id="autotoc_md75"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md48"></a>
+<h1><a class="anchor" id="autotoc_md77"></a>
 [ALPHA 0.2] &mdash; 26-12-2024</h1>
-<h2><a class="anchor" id="autotoc_md49"></a>
+<h2><a class="anchor" id="autotoc_md78"></a>
 Added</h2>
 <p><b>NIL</b></p>
-<h2><a class="anchor" id="autotoc_md50"></a>
+<h2><a class="anchor" id="autotoc_md79"></a>
 Changed</h2>
 <ul>
 <li>Attempted integration of <code>src/dirsort</code> with FTXUI components (NOT COMPLETE AT ALL)</li>
@@ -195,24 +195,24 @@ Changed</h2>
 <li>Officially started to work on the audio backend api class in <code><a class="el" href="audio__playback_8hpp.html">src/music/audio_playback.hpp</a></code> using <b>miniaudio</b></li>
 <li>Basic readme changes</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md51"></a>
+<h2><a class="anchor" id="autotoc_md80"></a>
 Fixed</h2>
 <p><b>NIL</b></p>
-<h2><a class="anchor" id="autotoc_md52"></a>
+<h2><a class="anchor" id="autotoc_md81"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Overally pretty buggy, but integration was smoother than expected.</p>
-<h2><a class="anchor" id="autotoc_md53"></a>
+<h2><a class="anchor" id="autotoc_md82"></a>
 Known Issues to fix in immediate commits</h2>
 <p>-&gt; Fix emscripten build by introducing TagLib's web-assembly build</p>
 <p>-&gt; Fix the FILENAME macro and its corresponding compilation problems in <code><a class="el" href="toml__parser_8hpp.html">src/parser/toml_parser.hpp</a></code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md55"></a>
+<h1><a class="anchor" id="autotoc_md84"></a>
 [ALPHA 0.3] &mdash; 27-12-2024</h1>
-<h2><a class="anchor" id="autotoc_md56"></a>
+<h2><a class="anchor" id="autotoc_md85"></a>
 Added</h2>
 <p><b>NIL</b></p>
-<h2><a class="anchor" id="autotoc_md57"></a>
+<h2><a class="anchor" id="autotoc_md86"></a>
 Changed</h2>
 <ul>
 <li>Majorly developed FTXUI components and rendering problems</li>
@@ -220,26 +220,26 @@ Changed</h2>
 <li>Finally shifted to reading TOML configs to <code>$HOME/.config/inLimbo/config.toml</code></li>
 <li>Added filePath to <a class="el" href="structMetadata.html" title="A structure to hold metadata information for a song.">Metadata</a> struct (for miniaudio and simplicity)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md58"></a>
+<h2><a class="anchor" id="autotoc_md87"></a>
 Fixed</h2>
 <ul>
 <li>Compilation issues with <code>src/network</code> and <code>src/dirsort</code> source files due to improper accessing of <code>src/parser/examples/config.toml</code></li>
 </ul>
 <p>^ (every source file now reads from <code>$HOME/.config/inLimbo/config.toml</code> by default)</p>
-<h2><a class="anchor" id="autotoc_md59"></a>
+<h2><a class="anchor" id="autotoc_md88"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Commit was clean but status bar components took a hit and are not rendering properly</p>
-<h2><a class="anchor" id="autotoc_md60"></a>
+<h2><a class="anchor" id="autotoc_md89"></a>
 Known Issues to fix in immediate commits</h2>
 <p>-&gt; Fix emscripten build by introducing TagLib's web-assembly build</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md62"></a>
+<h1><a class="anchor" id="autotoc_md91"></a>
 [ALPHA 0.4] &mdash; 29-12-2024</h1>
-<h2><a class="anchor" id="autotoc_md63"></a>
+<h2><a class="anchor" id="autotoc_md92"></a>
 Added</h2>
 <p><b>NIL</b></p>
-<h2><a class="anchor" id="autotoc_md64"></a>
+<h2><a class="anchor" id="autotoc_md93"></a>
 Changed</h2>
 <ul>
 <li>Started the integration of audio playback (miniaudio) and FTXUI class [A little rough on the edges but most of the functions in <code><a class="el" href="audio__playback_8hpp.html">src/music/audio_playback.hpp</a></code> work]</li>
@@ -250,29 +250,29 @@ Changed</h2>
 <li>Some API call changes to <code>miniaudio</code> for <a class="el" href="classMiniAudioPlayer.html" title="A class for playing audio using the MiniAudio library.">MiniAudioPlayer</a> class to make functions like <em>getDuration()</em> work</li>
 <li>General <code><a class="el" href="ui__handler_8hpp.html">ui/ui_handler.hpp</a></code> changes to accomodate for the integration</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md65"></a>
+<h2><a class="anchor" id="autotoc_md94"></a>
 Fixed</h2>
 <ul>
 <li>Web compilation using EMSCRIPTEN</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md66"></a>
+<h2><a class="anchor" id="autotoc_md95"></a>
 Removed</h2>
 <ul>
 <li>taglib_parser.cpp (moved the definitions back to the header) [Subsequent changes to build files]</li>
 </ul>
 <p>Commit is decently sized however now that integration is completed it is time to refactor and move to other goals</p>
-<h2><a class="anchor" id="autotoc_md67"></a>
+<h2><a class="anchor" id="autotoc_md96"></a>
 Known Issues to fix in immediate commits</h2>
 <p><b>NIL</b></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md69"></a>
+<h1><a class="anchor" id="autotoc_md98"></a>
 [ALPHA 0.5] &mdash; 31-12-2024</h1>
-<h2><a class="anchor" id="autotoc_md70"></a>
+<h2><a class="anchor" id="autotoc_md99"></a>
 Added</h2>
 <ul>
 <li><code><a class="el" href="keymaps_8hpp.html">src/ui/keymaps.hpp</a></code> :: Basic middleware between TOML parser and <a class="el" href="classMusicPlayer.html" title="A terminal-based music player.">MusicPlayer</a> classes</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md71"></a>
+<h2><a class="anchor" id="autotoc_md100"></a>
 Changed</h2>
 <ul>
 <li>Added keybind configuration and integrated them (<b>WITH THE EXCEPTION OF SPECIAL KEYS LIKE TAB, ENTER, ESC ...</b>)</li>
@@ -281,28 +281,28 @@ Changed</h2>
 <li>Current playing state struct now holds even more metadata of the currently playing song (in hopes to display them in the future)</li>
 <li>Updated <code>config.toml</code> with keybinds as a new parent</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md72"></a>
+<h2><a class="anchor" id="autotoc_md101"></a>
 Fixed</h2>
 <ul>
 <li>The previously ugly status bar is now slightly better</li>
 <li>Bug when in help window, other keybinds would still work and cause mishap (so now only one keybind works when in help win)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md73"></a>
+<h2><a class="anchor" id="autotoc_md102"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Commit is decently sized however now that integration is completed it is time to refactor and move to other goals</p>
-<h2><a class="anchor" id="autotoc_md74"></a>
+<h2><a class="anchor" id="autotoc_md103"></a>
 Known Issues to fix in immediate commits</h2>
 <p><b>NIL</b></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md76"></a>
+<h1><a class="anchor" id="autotoc_md105"></a>
 [ALPHA 0.6] &mdash; 31-12-2024</h1>
-<h2><a class="anchor" id="autotoc_md77"></a>
+<h2><a class="anchor" id="autotoc_md106"></a>
 Added</h2>
 <ul>
 <li><code><a class="el" href="misc_8hpp.html">src/ui/misc.hpp</a></code> for miscellaneous functions that help the UI of the project</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md78"></a>
+<h2><a class="anchor" id="autotoc_md107"></a>
 Changed</h2>
 <ul>
 <li>Added more fields to <code>config.toml</code>:- <code>goto_main_screen</code>, <code>toggle_mute</code> and <code>view_lyrics</code> with subsequent parsing and UI changes and integrations</li>
@@ -310,85 +310,85 @@ Changed</h2>
 <li>Added screen macros and better screen management to FTXUI</li>
 <li>Lyrics and additional info is now displayed in another window clearly (lyrics are still not scrollable however)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md79"></a>
+<h2><a class="anchor" id="autotoc_md108"></a>
 Fixed</h2>
 <ul>
 <li>Multiple screens code refactored the old code to just switch screens based on booleans</li>
 <li>Forward seek of a song</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md80"></a>
+<h2><a class="anchor" id="autotoc_md109"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Commit is medium sized with decent changes to UI and configs.</p>
-<h2><a class="anchor" id="autotoc_md81"></a>
+<h2><a class="anchor" id="autotoc_md110"></a>
 Known Issues to fix in immediate commits</h2>
 <ul>
 <li>Backward seek</li>
 <li>Scrolling of lyrics</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md83"></a>
+<h1><a class="anchor" id="autotoc_md112"></a>
 [ALPHA 0.7] &mdash; 02-01-2025</h1>
-<h2><a class="anchor" id="autotoc_md84"></a>
+<h2><a class="anchor" id="autotoc_md113"></a>
 Added</h2>
 <p><b>NIL</b></p>
-<h2><a class="anchor" id="autotoc_md85"></a>
+<h2><a class="anchor" id="autotoc_md114"></a>
 Changed</h2>
 <ul>
 <li>Finally fixed the keybinds for special keys like <code>Tab</code>, <code>Esc</code>, <code>Enter</code> and <code>Space</code> and is completely dynamic (depends on <code>config.toml</code> <b>ONLY</b>)</li>
 <li>Massively optimised <code><a class="el" href="keymaps_8hpp.html">src/ui/keymaps.hpp</a></code> to have unordered_maps to hold and traverse required fields</li>
 <li>Some more documentation in <code>config.toml</code> and <code><a class="el" href="NETWORK_8md.html">src/network/NETWORK.md</a></code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md86"></a>
+<h2><a class="anchor" id="autotoc_md115"></a>
 Fixed</h2>
 <ul>
 <li><a class="el" href="structKeybinds.html" title="Struct to hold keybinding mappings.">Keybinds</a> are now <em>FULLY</em> dynamic (regardless of whether the event is dynamic or just a character as per FTXUIs Event system)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md87"></a>
+<h2><a class="anchor" id="autotoc_md116"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Commit is small but damn worth it. Fixed a very big issue and has solid optimisations</p>
-<h2><a class="anchor" id="autotoc_md88"></a>
+<h2><a class="anchor" id="autotoc_md117"></a>
 Known Issues to fix in immediate commits</h2>
 <ul>
 <li>Backward seek</li>
 <li>Scrolling of lyrics</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md90"></a>
+<h1><a class="anchor" id="autotoc_md119"></a>
 [ALPHA 0.8] &mdash; 03-01-2025</h1>
-<h2><a class="anchor" id="autotoc_md91"></a>
+<h2><a class="anchor" id="autotoc_md120"></a>
 Added</h2>
 <p><b>NIL</b></p>
-<h2><a class="anchor" id="autotoc_md92"></a>
+<h2><a class="anchor" id="autotoc_md121"></a>
 Changed</h2>
 <ul>
 <li><code>seekTime</code> backend function to fix forward and backward seek times now</li>
 <li>Added a <code>charToStr</code> function for better code understanding</li>
 <li>UI bug fix for song seek</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md93"></a>
+<h2><a class="anchor" id="autotoc_md122"></a>
 Fixed</h2>
 <ul>
 <li>Forward <b>AND</b> backward seek work now :) (an issue with the previous formula to calculate PCM frames)</li>
 <li>UI bug when the song would play from beginning but it would still not be shown as the beginning</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md94"></a>
+<h2><a class="anchor" id="autotoc_md123"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Very small commit but noteworthy as it fixes two bugs which were quite annoying</p>
-<h2><a class="anchor" id="autotoc_md95"></a>
+<h2><a class="anchor" id="autotoc_md124"></a>
 Known Issues to fix in immediate commits</h2>
 <ul>
 <li>Scrolling of lyrics</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md97"></a>
+<h1><a class="anchor" id="autotoc_md126"></a>
 [ALPHA 0.9] &mdash; 03-01-2025</h1>
-<h2><a class="anchor" id="autotoc_md98"></a>
+<h2><a class="anchor" id="autotoc_md127"></a>
 Added</h2>
 <p><b>NIL</b></p>
-<h2><a class="anchor" id="autotoc_md99"></a>
+<h2><a class="anchor" id="autotoc_md128"></a>
 Changed</h2>
 <ul>
 <li>Changed <code><a class="el" href="CMakeLists_8txt.html">CMakeLists.txt</a></code> file to properly link and compile the project</li>
@@ -397,27 +397,27 @@ Changed</h2>
 <li>Slight refactor and optimisations of <code><a class="el" href="ui__handler_8hpp.html">src/ui/ui_handler.hpp</a></code></li>
 <li>Now when <code>play_song</code> is invoked, all the songs of the current artist after the selected song are enqueued to a list, so even if we just view and switch artists, it will not change the current song</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md100"></a>
+<h2><a class="anchor" id="autotoc_md129"></a>
 Fixed</h2>
 <ul>
 <li>Play next and previous songs are fixed thanks to <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> queue implementation</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md101"></a>
+<h2><a class="anchor" id="autotoc_md130"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Decently sized commit but the issue of songs changing just by traversal is fixed now thanks to <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> queue. This also is step forward to adding more keybinds to add song to queue, remove song from queue so on..</p>
-<h2><a class="anchor" id="autotoc_md102"></a>
+<h2><a class="anchor" id="autotoc_md131"></a>
 Known Issues to fix in immediate commits</h2>
 <ul>
 <li>Scrolling of lyrics</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md104"></a>
+<h1><a class="anchor" id="autotoc_md133"></a>
 [ALPHA 1.0] &mdash; 04-01-2025</h1>
-<h2><a class="anchor" id="autotoc_md105"></a>
+<h2><a class="anchor" id="autotoc_md134"></a>
 Added</h2>
 <p><code><a class="el" href="colors_8hpp.html">src/ui/colors.hpp</a></code></p>
-<h2><a class="anchor" id="autotoc_md106"></a>
+<h2><a class="anchor" id="autotoc_md135"></a>
 Changed</h2>
 <ul>
 <li>Finally shifted to all true colors by using <code>ftxui::Color::RGB</code> function</li>
@@ -426,28 +426,28 @@ Changed</h2>
 <li>Fixed help window to showcase the supported special chars (Tab, Enter, Space, Esc)</li>
 <li>Lyrics window is changed from (panes are now vertical not horizontal)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md107"></a>
+<h2><a class="anchor" id="autotoc_md136"></a>
 Fixed</h2>
 <ul>
 <li>Help window fix for special chars</li>
 <li>True colors implementation</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md108"></a>
+<h2><a class="anchor" id="autotoc_md137"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Medium sized commit that adds quite a few features and implementation but more work needs to be done.</p>
-<h2><a class="anchor" id="autotoc_md109"></a>
+<h2><a class="anchor" id="autotoc_md138"></a>
 Known Issues to fix in immediate commits</h2>
 <ul>
 <li>Scrolling of lyrics</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md111"></a>
+<h1><a class="anchor" id="autotoc_md140"></a>
 [ALPHA 1.1] &mdash; 05-01-2025</h1>
-<h2><a class="anchor" id="autotoc_md112"></a>
+<h2><a class="anchor" id="autotoc_md141"></a>
 Added</h2>
 <p><b>NIL</b></p>
-<h2><a class="anchor" id="autotoc_md113"></a>
+<h2><a class="anchor" id="autotoc_md142"></a>
 Changed</h2>
 <ul>
 <li>Added 3 new fields to <code>config.toml</code> and <code>Adding <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> to Queue</code> and <code>Replay <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a></code> has been integrated and subsequent changes to <code><a class="el" href="keymaps_8hpp.html">src/ui/keymaps.hpp</a></code></li>
@@ -455,26 +455,26 @@ Changed</h2>
 <li>Removed Repeat Mode UI for now</li>
 <li>Additional thread detach and creation handling to <code>PlayCurrentSong</code> in <code><a class="el" href="ui__handler_8hpp.html">src/ui/ui_handler.hpp</a></code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md114"></a>
+<h2><a class="anchor" id="autotoc_md143"></a>
 Fixed</h2>
 <ul>
 <li>Some concurrency issues in <code>PlayCurrentSong</code> when invoking the function too fast</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md115"></a>
+<h2><a class="anchor" id="autotoc_md144"></a>
 Removed</h2>
 <ul>
 <li>Repeat Mode UI</li>
 </ul>
 <p>Commit that proceeds to add queue features and fix issues (regarding threads) along the way</p>
-<h2><a class="anchor" id="autotoc_md116"></a>
+<h2><a class="anchor" id="autotoc_md145"></a>
 Known Issues to fix in immediate commits</h2>
 <ul>
 <li>Scrolling of lyrics</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md118"></a>
+<h1><a class="anchor" id="autotoc_md147"></a>
 [ALPHA 1.2] &mdash; 07-01-2025</h1>
-<h2><a class="anchor" id="autotoc_md119"></a>
+<h2><a class="anchor" id="autotoc_md148"></a>
 Added</h2>
 <ul>
 <li>Colors customizability setup (<code><a class="el" href="COLORS_8md.html">COLORS.md</a></code>)</li>
@@ -482,7 +482,7 @@ Added</h2>
 <li>Better error handling of <a class="el" href="classMusicPlayer.html" title="A terminal-based music player.">MusicPlayer</a> class</li>
 <li><code>src/ui/components</code> - Scroller component</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md120"></a>
+<h2><a class="anchor" id="autotoc_md149"></a>
 Changed</h2>
 <ul>
 <li>Changing SongMenu from traditional menu to vector&lt;Element&gt; with apt rendering and scroll (<b>NOT DYNAMIC SCROLLING THO</b>)</li>
@@ -494,33 +494,33 @@ Changed</h2>
 <li>New fields to <code>config.toml</code></li>
 <li>New component <code>scroller</code> to try and render the scroller in render lyrics func</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md121"></a>
+<h2><a class="anchor" id="autotoc_md150"></a>
 Fixed</h2>
 <ul>
 <li>Formatting of lyrics</li>
 <li><a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> menu UI</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md122"></a>
+<h2><a class="anchor" id="autotoc_md151"></a>
 Removed</h2>
 <ul>
 <li>Some redundant functions like <code>format_song_info</code></li>
 </ul>
 <p>Very big commit in dev branch that is to be merged with main after some sanity checks</p>
-<h2><a class="anchor" id="autotoc_md123"></a>
+<h2><a class="anchor" id="autotoc_md152"></a>
 Known Issues to fix in immediate commits</h2>
 <ul>
 <li>Scrolling of lyrics and sone menu</li>
 <li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md125"></a>
+<h1><a class="anchor" id="autotoc_md154"></a>
 [ALPHA 1.3] &mdash; 10-01-2025</h1>
-<h2><a class="anchor" id="autotoc_md126"></a>
+<h2><a class="anchor" id="autotoc_md155"></a>
 Added</h2>
 <ul>
 <li>New field in <code>config.toml</code> -&gt; Remove <a class="el" href="structSong.html" title="Represents a song with associated metadata and inode.">Song</a> From Queue</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md127"></a>
+<h2><a class="anchor" id="autotoc_md156"></a>
 Changed</h2>
 <ul>
 <li>Added QUEUE SCREEN with subsequent proper integration and error handling (with testing)</li>
@@ -528,23 +528,23 @@ Changed</h2>
 <li>CatchEvent changes with respect to active_screen to avoid confusion in UI</li>
 <li>Attempted to fix concurrency issues (still WIP)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md128"></a>
+<h2><a class="anchor" id="autotoc_md157"></a>
 Fixed</h2>
 <p><b>NIL</b></p>
-<h2><a class="anchor" id="autotoc_md129"></a>
+<h2><a class="anchor" id="autotoc_md158"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Decent commit with more to come, refactor TBD else its gonna be trouble</p>
-<h2><a class="anchor" id="autotoc_md130"></a>
+<h2><a class="anchor" id="autotoc_md159"></a>
 Known Issues to fix in immediate commits</h2>
 <ul>
 <li>Scrolling of lyrics and sone menu</li>
 <li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md132"></a>
+<h1><a class="anchor" id="autotoc_md161"></a>
 [ALPHA 1.4] &mdash; 11-01-2025</h1>
-<h2><a class="anchor" id="autotoc_md133"></a>
+<h2><a class="anchor" id="autotoc_md162"></a>
 Added</h2>
 <ul>
 <li>Some concurrency safechecks in <code><a class="el" href="audio__playback_8hpp.html">src/music/audio_playback.hpp</a></code></li>
@@ -552,7 +552,7 @@ Added</h2>
 <li>Added multiple <em>DBG BUILD</em> options to check for issues in addressing, threads etc.</li>
 <li>Implemented loading the songmap from cache file ("lib.sync") itself [However, the time to access the cache and time to load the directory seem to be very similar]</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md134"></a>
+<h2><a class="anchor" id="autotoc_md163"></a>
 Changed</h2>
 <ul>
 <li>Moved <code>.clang-format</code> to <code>/</code> in file source tree</li>
@@ -562,56 +562,56 @@ Changed</h2>
 <li>Changed the <a class="el" href="structInLimboColors.html" title="Represents a collection of colors used in the application.">InLimboColors</a> struct in <code><a class="el" href="colors_8hpp.html">src/ui/colors.hpp</a></code> to have <code>ftxui::Color</code> as member vars instead of <code>TrueColor::Color</code></li>
 <li>Implementation of rendering lyrics is moved to a menu, sort of dynamic fixing it soon</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md135"></a>
+<h2><a class="anchor" id="autotoc_md164"></a>
 Fixed</h2>
 <ul>
 <li>Bug with deleting the song from queue</li>
 <li>Some keybind issues while in different screens</li>
 <li>A bug where <code>album_indices_traversed</code> was unaccounted for when navigating song menu to the top</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md136"></a>
+<h2><a class="anchor" id="autotoc_md165"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Pretty big commit that added a lot of changes, hopefully shifting toward refactoring in the next immediate commits</p>
-<h2><a class="anchor" id="autotoc_md137"></a>
+<h2><a class="anchor" id="autotoc_md166"></a>
 Known Issues to fix in immediate commits</h2>
 <ul>
 <li>Scrolling of lyrics and song menu (lyrics is almost done)</li>
 <li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md139"></a>
+<h1><a class="anchor" id="autotoc_md168"></a>
 [ALPHA 1.5] &mdash; 12-01-2025</h1>
-<h2><a class="anchor" id="autotoc_md140"></a>
+<h2><a class="anchor" id="autotoc_md169"></a>
 Added</h2>
 <ul>
 <li><code>src/dbus</code> -&gt; To interact with dbus using <code>gio</code> (general purpose IO lib) and <code>glib</code> (utility lib)</li>
 <li>Added <code>gio</code> and <code>glib</code> as inLimbo's dependencies</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md141"></a>
+<h2><a class="anchor" id="autotoc_md170"></a>
 Changed</h2>
 <ul>
 <li>Changes to <a class="el" href="README_8md.html">README.md</a> to showcase dependencies</li>
 <li>Complete integration of <a class="el" href="classMPRISService.html" title="A class that implements an MPRIS service over D-Bus.">MPRISService</a> class into inLimbo with subsequent changes and testing</li>
 <li><a class="el" href="structMetadata.html" title="A structure to hold metadata information for a song.">Metadata</a> of current song is given to dbus that can be easily accessed by playerctl and similar daemons</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md142"></a>
+<h2><a class="anchor" id="autotoc_md171"></a>
 Fixed</h2>
 <p><b>NIL</b></p>
-<h2><a class="anchor" id="autotoc_md143"></a>
+<h2><a class="anchor" id="autotoc_md172"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Minor commit that somehow added a pretty neat feature. Will continue to work on setting up implementations (if needed)</p>
-<h2><a class="anchor" id="autotoc_md144"></a>
+<h2><a class="anchor" id="autotoc_md173"></a>
 Known Issues to fix in immediate commits</h2>
 <ul>
 <li>Scrolling of lyrics and song menu (lyrics is almost done)</li>
 <li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md146"></a>
+<h1><a class="anchor" id="autotoc_md175"></a>
 [ALPHA 1.6] &mdash; 13-01-2025</h1>
-<h2><a class="anchor" id="autotoc_md147"></a>
+<h2><a class="anchor" id="autotoc_md176"></a>
 Added</h2>
 <ul>
 <li>Doxygen documentation setup <code>.Doxyfile</code></li>
@@ -619,31 +619,31 @@ Added</h2>
 <li>Landing page basic html file</li>
 <li>Changes to all markdown files for doxygen docs</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md148"></a>
+<h2><a class="anchor" id="autotoc_md177"></a>
 Changed</h2>
 <ul>
 <li>Comments to most headers to add Doxygen documentation</li>
 <li>Added <code>add_artists_songs_to_queue</code> and <code>play_this_song_next</code> fields to <code>config.toml</code> with subsequent integration</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md149"></a>
+<h2><a class="anchor" id="autotoc_md178"></a>
 Fixed</h2>
 <ul>
 <li>Issue with RenderQueueScreen's menu disappearing when removing song from queue</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md150"></a>
+<h2><a class="anchor" id="autotoc_md179"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Weird commit that sets up for better and more transparent way of understanding the project thanks to doxygen</p>
-<h2><a class="anchor" id="autotoc_md151"></a>
+<h2><a class="anchor" id="autotoc_md180"></a>
 Known Issues to fix in immediate commits</h2>
 <ul>
 <li>Scrolling of lyrics and song menu (lyrics is almost done)</li>
 <li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md153"></a>
+<h1><a class="anchor" id="autotoc_md182"></a>
 [ALPHA 1.7] &mdash; 13-01-2025</h1>
-<h2><a class="anchor" id="autotoc_md154"></a>
+<h2><a class="anchor" id="autotoc_md183"></a>
 Added</h2>
 <ul>
 <li><code><a class="el" href="thread__manager_8hpp.html">src/ui/thread_manager.hpp</a></code> -&gt; To handle concurrency in UI with testing + doxygen docs setup</li>
@@ -652,63 +652,63 @@ Added</h2>
 <li><code>src/signal</code> -&gt; To catch all signals and handle gracefully (<b>FULL INTEGRATION NOT DONE YET</b>)</li>
 <li>Some changes to format lyrics function and added <a class="el" href="structComponentState.html">ComponentState</a> in <code><a class="el" href="misc_8hpp.html">src/ui/misc.hpp</a></code> to keep track of all components of UI together</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md155"></a>
+<h2><a class="anchor" id="autotoc_md184"></a>
 Changed</h2>
 <ul>
 <li>Added more functions in <a class="el" href="misc_8hpp.html">misc.hpp</a> to refactor code in ui_handler</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md156"></a>
+<h2><a class="anchor" id="autotoc_md185"></a>
 Fixed</h2>
 <ul>
 <li>Finally fixed scrolling lyrics menu issue, now it completely works with testing</li>
 <li>Weird issue with deletion of song from queue is fully fixed with testing</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md157"></a>
+<h2><a class="anchor" id="autotoc_md186"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Sizeable commit with refactoring and more configuration options as its priority, more such commits expected in future</p>
-<h2><a class="anchor" id="autotoc_md158"></a>
+<h2><a class="anchor" id="autotoc_md187"></a>
 Known Issues to fix in immediate commits</h2>
 <ul>
 <li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md160"></a>
+<h1><a class="anchor" id="autotoc_md189"></a>
 [ALPHA 1.8] &mdash; 13-01-2025</h1>
-<h2><a class="anchor" id="autotoc_md161"></a>
+<h2><a class="anchor" id="autotoc_md190"></a>
 Added</h2>
 <ul>
 <li><code>.clang-tidy</code> file for better code practice</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md162"></a>
+<h2><a class="anchor" id="autotoc_md191"></a>
 Changed</h2>
 <ul>
 <li><a class="el" href="classSignalHandler.html">SignalHandler</a> class now sends all errors with backtrace and other information to a log file in <code>$HOME/.cache/inLimbo/</code> directory</li>
 <li>Added unlockPlayMutex in <code><a class="el" href="thread__manager_8hpp.html">src/ui/thread_manager.hpp</a></code> with doxygen docs</li>
 <li>Formatting and other refactoring changes (small)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md163"></a>
+<h2><a class="anchor" id="autotoc_md192"></a>
 Fixed</h2>
 <p><b>NIL</b></p>
-<h2><a class="anchor" id="autotoc_md164"></a>
+<h2><a class="anchor" id="autotoc_md193"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Small commit that may fix codeql CI issue, going for refactor + small feature updates like cache, playlists, etc. (before the network integration)</p>
-<h2><a class="anchor" id="autotoc_md165"></a>
+<h2><a class="anchor" id="autotoc_md194"></a>
 Known Issues to fix in immediate commits</h2>
 <ul>
 <li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md167"></a>
+<h1><a class="anchor" id="autotoc_md196"></a>
 [ALPHA 1.9] &mdash; 14-01-2025</h1>
-<h2><a class="anchor" id="autotoc_md168"></a>
+<h2><a class="anchor" id="autotoc_md197"></a>
 Added</h2>
 <ul>
 <li>Image Template processing kit <code>CImg.h</code> and <code><a class="el" href="namespaceftxui.html#ac5cec639fa2c2e6aec38f6c74d8691bb">ftxui::image_view</a></code> component in <code>src/ui/components/</code> and <code>src/ui/components/libs</code></li>
 <li>Thumbnail parsing function using taglib</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md169"></a>
+<h2><a class="anchor" id="autotoc_md198"></a>
 Changed</h2>
 <ul>
 <li>New screen (SHOW_SONG_INFO_SCREEN) with thumbnail and currently playing song info with progress bar</li>
@@ -717,18 +717,208 @@ Changed</h2>
 <li>Readme changes</li>
 <li><code>imagemagick</code> is now a required dependency for the inLimbo project</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md170"></a>
+<h2><a class="anchor" id="autotoc_md199"></a>
 Fixed</h2>
 <p><b>NIL</b></p>
-<h2><a class="anchor" id="autotoc_md171"></a>
+<h2><a class="anchor" id="autotoc_md200"></a>
 Removed</h2>
 <p><b>NIL</b></p>
 <p>Medium commit with a new screen, I should really start to refactor now...</p>
-<h2><a class="anchor" id="autotoc_md172"></a>
+<h2><a class="anchor" id="autotoc_md201"></a>
 Known Issues to fix in immediate commits</h2>
 <ul>
 <li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread</li>
 <li>Centering of the image_view</li>
+</ul>
+<hr  />
+<h1><a class="anchor" id="autotoc_md203"></a>
+[ALPHA 2.0] &mdash; 16-01-2025</h1>
+<h2><a class="anchor" id="autotoc_md204"></a>
+Added</h2>
+<ul>
+<li>Added <code>cereal</code> serialization and deserialization library (header only) to load songs statically (it is insanely fast as hoped)</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md205"></a>
+Changed</h2>
+<ul>
+<li>inLimbo will now always try to load songs from a <code>$HOME/.config/inLimbo/lib.bin</code> file (static load) if not found dynamic load</li>
+<li>Added documentation for <code>src/dirsort</code> headers</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md206"></a>
+Fixed</h2>
+<p><b>NIL</b></p>
+<h2><a class="anchor" id="autotoc_md207"></a>
+Removed</h2>
+<p><b>NIL</b></p>
+<p>Small commit that adds a new dependency and a greatly needed feature of caching the song directory</p>
+<h2><a class="anchor" id="autotoc_md208"></a>
+Known Issues to fix in immediate commits</h2>
+<ul>
+<li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread</li>
+<li>Centering of the image_view</li>
+</ul>
+<hr  />
+<h1><a class="anchor" id="autotoc_md210"></a>
+[ALPHA 2.1] &mdash; 17-01-2025</h1>
+<h2><a class="anchor" id="autotoc_md211"></a>
+Added</h2>
+<ul>
+<li>Added <code><a class="el" href="arg-handler_8hpp.html">src/arg-handler.hpp</a></code> and modified bash completions</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md212"></a>
+Changed</h2>
+<ul>
+<li>Command line arguments setup with subsequent changes to <code>src/cmg-line-args.hpp</code> and <code><a class="el" href="main_8cpp.html">main.cpp</a></code></li>
+</ul>
+<h2><a class="anchor" id="autotoc_md213"></a>
+Fixed</h2>
+<ul>
+<li>Issue with flac file thumbnail extraction</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md214"></a>
+Removed</h2>
+<p><b>NIL</b></p>
+<p>Small commit with some issues + cmd line args setup</p>
+<h2><a class="anchor" id="autotoc_md215"></a>
+Known Issues to fix in immediate commits</h2>
+<ul>
+<li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread</li>
+<li>Centering of the image_view</li>
+</ul>
+<hr  />
+<h1><a class="anchor" id="autotoc_md217"></a>
+[ALPHA 2.2] &mdash; 19-01-2025</h1>
+<h2><a class="anchor" id="autotoc_md218"></a>
+Added</h2>
+<ul>
+<li><code>assets/completions/inLimbo-completions.fish</code> and <code>assets/inLimbo.desktop</code></li>
+</ul>
+<h2><a class="anchor" id="autotoc_md219"></a>
+Changed</h2>
+<ul>
+<li>Refactored the arg-handler and cmd-line-args headers</li>
+<li>Completions for <code>BASH</code>, <code>ZSH</code> and <code>FISH</code> shells work with testing</li>
+<li>inLimbo.desktop setup works (with rofi, not ags for some reason)</li>
+<li><code>init.sh</code> now sets up the preferred shell for command line args completion</li>
+<li>Added option to build globally</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md220"></a>
+Fixed</h2>
+<ul>
+<li>Completions for BASH and ZSH</li>
+<li>Removed unnecessary header that broke CodeQL CI</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md221"></a>
+Removed</h2>
+<p><b>NIL</b></p>
+<p>Small commit with some nice touch ups for user interaction with the binary</p>
+<h2><a class="anchor" id="autotoc_md222"></a>
+Known Issues to fix in immediate commits</h2>
+<ul>
+<li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread (BIG)</li>
+<li>Centering of the image_view (NOT THAT BIG)</li>
+</ul>
+<hr  />
+<h1><a class="anchor" id="autotoc_md224"></a>
+[ALPHA 2.3] &mdash; 22-01-2025</h1>
+<h2><a class="anchor" id="autotoc_md225"></a>
+Added</h2>
+<ul>
+<li><code><a class="el" href="properties_8hpp.html">src/ui/properties.hpp</a></code> &ndash; To parse global properties from config.toml and subsequent changes to <code>ui_handler</code></li>
+<li><code>Makefile</code> for easier building without a hassle, subsequent changes to README</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md226"></a>
+Changed</h2>
+<ul>
+<li>Added new color field (inactive_menu_cursor_bg) and complete integration</li>
+<li>New cmd-line-arg <code>--update-cache-run</code> :- Removes cache then reads the directory from config.toml and runs the application (subsequent changes to completions, <code><a class="el" href="cmd-line-args_8hpp.html">cmd-line-args.hpp</a></code>, <code><a class="el" href="arg-handler_8hpp.html">arg-handler.hpp</a></code>)</li>
+<li>Parsing bitrate using TagLib integrated and tested <code>mp3</code> and <code>flac</code> files</li>
+<li>Audio file MIME types are found and displayed in SongInfoScreen</li>
+<li>UI should not try to PlayNextSong() in Run() function if song_queue is empty.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md227"></a>
+Fixed</h2>
+<p><b>NIL</b></p>
+<h2><a class="anchor" id="autotoc_md228"></a>
+Removed</h2>
+<p><b>NIL</b></p>
+<p>Sizeable commit with new fields, changes and features that bring the app together</p>
+<h2><a class="anchor" id="autotoc_md229"></a>
+Known Issues to fix in immediate commits</h2>
+<ul>
+<li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread (BIG)</li>
+<li>Centering of the image_view (NOT THAT BIG)</li>
+</ul>
+<hr  />
+<h1><a class="anchor" id="autotoc_md231"></a>
+[ALPHA 2.4] &mdash; 24-01-2025</h1>
+<h2><a class="anchor" id="autotoc_md232"></a>
+Added</h2>
+<ul>
+<li>Added tests/ directory to perform unit tests using GTest and subsequent new files and test suites</li>
+<li><code>src/threads/</code> created to have a worker thread system for better concurrency handling</li>
+<li>Added a new screen to view current audio sinks (outputs) <br  />
+</li>
+<li>Added a destructor to <a class="el" href="classThreadManager.html" title="A class that manages thread states and provides utilities for thread handling.">ThreadManager</a> class to properly join all non-detached threads</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md233"></a>
+Changed</h2>
+<ul>
+<li>Cleanups in <code>src/ui</code> , <code>src/music</code> <code>src/dirsort</code></li>
+<li>Changed <a class="el" href="classThreadManager.html" title="A class that manages thread states and provides utilities for thread handling.">ThreadManager</a> drastically</li>
+<li>Modified Run function in ui_handler to NOT be detached</li>
+<li>Got rid of mutex unlock and used lock_guard instead + more concurrency changes</li>
+<li>New field in config.toml -&gt; toggle_audio_devices (will change this name later)</li>
+<li>Made mpris_dbus_thread a unique thread</li>
+<li>PlayCurrentSong now uses the WorkerThread Pool to enqueue all tasks and has a more robust way to handle concurrency</li>
+<li>New workflow to build tests</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md234"></a>
+Fixed</h2>
+<p><b>NIL</b></p>
+<h2><a class="anchor" id="autotoc_md235"></a>
+Removed</h2>
+<p><b>NIL</b></p>
+<p>Huge commit (I have not mentioned a lot changes here do read the commit history)</p>
+<h2><a class="anchor" id="autotoc_md236"></a>
+Known Issues to fix in immediate commits</h2>
+<ul>
+<li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread (BIG) [Seems to be solvable]</li>
+<li>Centering of the image_view (NOT THAT BIG)</li>
+</ul>
+<hr  />
+<h1><a class="anchor" id="autotoc_md238"></a>
+[ALPHA 2.5] &mdash; 25-01-2025</h1>
+<h2><a class="anchor" id="autotoc_md239"></a>
+Added</h2>
+<ul>
+<li>New tests for <code>taglib</code> and <code>toml_parser</code> with integration</li>
+<li><a class="el" href="BUILD_8md.html">BUILD.md</a> for clear and concise build instructions using Makefile, CMake and web-asm</li>
+<li><code>src/helpers</code> directory for general helpers -&gt; Added <code><a class="el" href="levenshtein_8hpp.html">levenshtein.hpp</a></code> for measuring difference btw 2 strings (for possible suggestions)</li>
+<li><code>run_tests.sh</code> to run all the tests in <code>tests/</code> directory and give a cumulative output (will use in workflow)</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md240"></a>
+Changed</h2>
+<ul>
+<li>Cmd-line-arg string suggestion moved from naive findClosestMatch function to levenshtein distance measure</li>
+<li>Added a MACRO <code>INLIMBO_CONFIG_HOME</code> that allows for custom location of config.toml with subsequent changes to <code><a class="el" href="toml__parser_8hpp.html">toml_parser.hpp</a></code></li>
+<li>Color field error now reports the field that is giving the error (better verbosity) for more clarity on the config issue</li>
+<li>Workflow update to run tests as well</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md241"></a>
+Fixed</h2>
+<ul>
+<li>Mild issue where color field error would be vague in error description</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md242"></a>
+Removed</h2>
+<p><b>NIL</b></p>
+<p>Medium commit, moving strictly towards testing + refactor</p>
+<h2><a class="anchor" id="autotoc_md243"></a>
+Known Issues to fix in immediate commits</h2>
+<ul>
+<li>Runtime errors with respect to <code>PlayCurrentSong()</code> that may be due to detaching the audio thread (BIG) [Seems to be solvable]</li>
+<li>Centering of the image_view (NOT THAT BIG)</li>
 </ul>
 <hr  />
  </div></div><!-- contents -->

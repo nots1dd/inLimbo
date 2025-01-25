@@ -1,0 +1,128 @@
+\doxysection{src/arg-\/handler.hpp File Reference}
+\hypertarget{arg-handler_8hpp}{}\label{arg-handler_8hpp}\index{src/arg-\/handler.hpp@{src/arg-\/handler.hpp}}
+{\ttfamily \#include "{}./cmd-\/line-\/args.\+hpp"{}}\newline
+{\ttfamily \#include $<$filesystem$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$stdexcept$>$}\newline
+{\ttfamily \#include $<$string\+\_\+view$>$}\newline
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classColorManager}{Color\+Manager}}
+\begin{DoxyCompactList}\small\item\em Provides utilities for managing console colors. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classArgumentHandler}{Argument\+Handler}}
+\begin{DoxyCompactList}\small\item\em Handles processing of command-\/line arguments and executes corresponding actions. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structArgumentHandler_1_1Paths}{Argument\+Handler\+::\+Paths}}
+\begin{DoxyCompactList}\small\item\em Represents essential application paths. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{Console\+Color}} \{ \newline
+\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d}{Reset}}
+, \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1}{Green}}
+, \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9}{Blue}}
+, \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa51e6cd92b6c45f9affdc158ecca2b8b8}{Yellow}}
+, \newline
+\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaaee38e4d5dd68c4e440825018d549cb47}{Red}}
+, \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa023c239d2f2538f140a20e72c7b73f20}{Cyan}}
+, \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaab91cc2c1416fcca942b61c7ac5b1a9ac}{Magenta}}
+ \}
+\begin{DoxyCompactList}\small\item\em Represents ANSI console colors for colored output. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+constexpr const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{arg-handler_8hpp_a66a0a8982b40d72ceed7b95a0d7d280c}{DBUS\+\_\+\+SERVICE\+\_\+\+NAME}}
+\begin{DoxyCompactList}\small\item\em DBus service name used by in\+Limbo. \end{DoxyCompactList}\item 
+constexpr const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{arg-handler_8hpp_a35aceb690e11a3d78331de7dda9563ae}{VERSION}} = "{}2.\+5 (ALPHA)"{}
+\begin{DoxyCompactList}\small\item\em Current version of the application. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{arg-handler_8hpp_af443d26ff309f6e511dfcae4be89775a}{should\+Run\+App}}
+\begin{DoxyCompactList}\small\item\em Indicates if the application should proceed to run after handling arguments. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!ConsoleColor@{ConsoleColor}}
+\index{ConsoleColor@{ConsoleColor}!arg-\/handler.hpp@{arg-\/handler.hpp}}
+\doxysubsubsection{\texorpdfstring{ConsoleColor}{ConsoleColor}}
+{\footnotesize\ttfamily \label{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada} 
+enum class \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{Console\+Color}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Represents ANSI console colors for colored output. 
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Reset@{Reset}!arg-\/handler.hpp@{arg-\/handler.hpp}}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!Reset@{Reset}}}\Hypertarget{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d}\label{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d} 
+Reset&Resets the console color to default. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Green@{Green}!arg-\/handler.hpp@{arg-\/handler.hpp}}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!Green@{Green}}}\Hypertarget{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1}\label{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1} 
+Green&Green color code. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Blue@{Blue}!arg-\/handler.hpp@{arg-\/handler.hpp}}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!Blue@{Blue}}}\Hypertarget{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9}\label{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9} 
+Blue&Blue color code. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Yellow@{Yellow}!arg-\/handler.hpp@{arg-\/handler.hpp}}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!Yellow@{Yellow}}}\Hypertarget{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa51e6cd92b6c45f9affdc158ecca2b8b8}\label{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa51e6cd92b6c45f9affdc158ecca2b8b8} 
+Yellow&Yellow color code. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Red@{Red}!arg-\/handler.hpp@{arg-\/handler.hpp}}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!Red@{Red}}}\Hypertarget{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaaee38e4d5dd68c4e440825018d549cb47}\label{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaaee38e4d5dd68c4e440825018d549cb47} 
+Red&Red color code. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Cyan@{Cyan}!arg-\/handler.hpp@{arg-\/handler.hpp}}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!Cyan@{Cyan}}}\Hypertarget{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa023c239d2f2538f140a20e72c7b73f20}\label{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa023c239d2f2538f140a20e72c7b73f20} 
+Cyan&Cyan color code. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Magenta@{Magenta}!arg-\/handler.hpp@{arg-\/handler.hpp}}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!Magenta@{Magenta}}}\Hypertarget{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaab91cc2c1416fcca942b61c7ac5b1a9ac}\label{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaab91cc2c1416fcca942b61c7ac5b1a9ac} 
+Magenta&Magenta color code. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{arg-handler_8hpp_a66a0a8982b40d72ceed7b95a0d7d280c}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!DBUS\_SERVICE\_NAME@{DBUS\_SERVICE\_NAME}}
+\index{DBUS\_SERVICE\_NAME@{DBUS\_SERVICE\_NAME}!arg-\/handler.hpp@{arg-\/handler.hpp}}
+\doxysubsubsection{\texorpdfstring{DBUS\_SERVICE\_NAME}{DBUS\_SERVICE\_NAME}}
+{\footnotesize\ttfamily \label{arg-handler_8hpp_a66a0a8982b40d72ceed7b95a0d7d280c} 
+const char\texorpdfstring{$\ast$}{*} DBUS\+\_\+\+SERVICE\+\_\+\+NAME\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}org.mpris.MediaPlayer2.inLimbo"{}}}
+
+\end{DoxyCode}
+
+
+DBus service name used by in\+Limbo. 
+
+\Hypertarget{arg-handler_8hpp_af443d26ff309f6e511dfcae4be89775a}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!shouldRunApp@{shouldRunApp}}
+\index{shouldRunApp@{shouldRunApp}!arg-\/handler.hpp@{arg-\/handler.hpp}}
+\doxysubsubsection{\texorpdfstring{shouldRunApp}{shouldRunApp}}
+{\footnotesize\ttfamily \label{arg-handler_8hpp_af443d26ff309f6e511dfcae4be89775a} 
+bool should\+Run\+App}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=}
+\DoxyCodeLine{\ \ \textcolor{keyword}{false}}
+
+\end{DoxyCode}
+
+
+Indicates if the application should proceed to run after handling arguments. 
+
+\Hypertarget{arg-handler_8hpp_a35aceb690e11a3d78331de7dda9563ae}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!VERSION@{VERSION}}
+\index{VERSION@{VERSION}!arg-\/handler.hpp@{arg-\/handler.hpp}}
+\doxysubsubsection{\texorpdfstring{VERSION}{VERSION}}
+{\footnotesize\ttfamily \label{arg-handler_8hpp_a35aceb690e11a3d78331de7dda9563ae} 
+const char\texorpdfstring{$\ast$}{*} VERSION = "{}2.\+5 (ALPHA)"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Current version of the application. 
+
