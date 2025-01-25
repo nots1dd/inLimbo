@@ -805,3 +805,38 @@ Huge commit (I have not mentioned a lot changes here do read the commit history)
 - Centering of the image_view (NOT THAT BIG)
 
 ---
+
+## [ALPHA 2.5] --- 25-01-2025
+
+### Added
+- New tests for `taglib` and `toml_parser` with integration 
+
+- BUILD.md for clear and concise build instructions using Makefile, CMake and web-asm
+
+- `src/helpers` directory for general helpers -> Added `levenshtein.hpp` for measuring difference btw 2 strings (for possible suggestions)
+
+- `run_tests.sh` to run all the tests in `tests/` directory and give a cumulative output (will use in workflow)
+
+### Changed
+- Cmd-line-arg string suggestion moved from naive findClosestMatch function to levenshtein distance measure
+
+- Added a MACRO `INLIMBO_CONFIG_HOME` that allows for custom location of config.toml with subsequent changes to `toml_parser.hpp`
+
+- Color field error now reports the field that is giving the error (better verbosity) for more clarity on the config issue 
+
+- Workflow update to run tests as well
+
+### Fixed
+- Mild issue where color field error would be vague in error description
+
+### Removed
+**NIL**
+
+Medium commit, moving strictly towards testing + refactor
+
+### Known Issues to fix in immediate commits
+- Runtime errors with respect to `PlayCurrentSong()` that may be due to detaching the audio thread (BIG) [Seems to be solvable]
+
+- Centering of the image_view (NOT THAT BIG)
+
+---

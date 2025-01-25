@@ -17,7 +17,6 @@
 #include <gio/gio.h>
 #include <glib.h>
 #include <iostream>
-#include <memory>
 #include <string>
 
 /**

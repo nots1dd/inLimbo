@@ -160,14 +160,11 @@ if (NOT GLIB_FOUND)
     set(GLIB_INCLUDE_DIRS ${GLIB_INCLUDE_DIR} ${GIO_INCLUDE_DIR})
 endif()
 
-# Add include directories for glib and gio
 include_directories(${GLIB_INCLUDE_DIRS})
 link_directories(${GLIB_LIBRARY_DIRS})
 
-# Add the necessary compilation and linker flags
 add_definitions(${GLIB_CFLAGS_OTHER})
 
-# Link libraries for native build
 target_link_libraries(${EXECUTABLE_NAME}
   PRIVATE tiv 
   PRIVATE X11

@@ -36,29 +36,49 @@ namespace fs = std::filesystem;
 
 #define PARENT_UI "ui" /**< Parent section for ui settings */
 
+#define CUSTOM_CONFIG_MACRO "INLIMBO_CONFIG_HOME" /**< Custom config.toml macro setup */
+
 /**
- * @brief Retrieves the path to the configuration file.
+ * @brief Retrieves the path to the configuration directory.
  *
- * This function constructs the path to the `config.toml` file located in the user's home directory,
- * inside the
- * `.config/inLimbo/` folder.
+ * By default, this function uses the HOME environment variable to determine the user's home
+ * directory. However, it checks for the presence of a `INLIMBO_CONFIG_HOME` environment variable
+ * first, which can override the default location. This allows for custom configuration paths during
+ * testing.
  *
- * @param fileName The name of the configuration file (e.g., "config.toml").
- * @return A string representing the full path to the configuration file.
- * @throws std::runtime_error If the HOME environment variable is not found.
+ * @return A string representing the base path to the configuration directory.
+ * @throws std::runtime_error If the HOME environment variable is not found and no custom path is
+ *         provided.
  */
-string getConfigPath(string fileName)
+string getBaseConfigPath()
 {
-  const char* homeDir = std::getenv("HOME");
+  const char* customConfigHome = getenv(CUSTOM_CONFIG_MACRO);
+  if (customConfigHome)
+  {
+    return string(customConfigHome);
+  }
+
+  const char* homeDir = getenv("HOME");
   if (!homeDir)
   {
     cerr << "ERROR: HOME environment variable not found." << endl;
-    exit(EXIT_FAILURE); /**< Exit gracefully if the HOME environment variable is not set. */
+    exit(EXIT_FAILURE);
   }
 
-  // Construct the path to the config.toml in $HOME/.config/inLimbo/
-  string configFilePath = string(homeDir) + "/.config/inLimbo/" + fileName;
-  return configFilePath;
+  return string(homeDir) + "/.config/inLimbo/";
+}
+
+/**
+ * @brief Retrieves the full path to the configuration file.
+ *
+ * This constructs the full path to a specific configuration file.
+ *
+ * @param fileName The name of the configuration file (e.g., "config.toml").
+ * @return A string representing the full path to the configuration file.
+ */
+string getConfigPath(string fileName)
+{
+  return getBaseConfigPath() + fileName;
 }
 
 string getCachePath()
@@ -101,8 +121,10 @@ auto loadConfig()
   if (!configFileExists(configFilePath))
   {
     cerr << "ERROR: config.toml not found in " << configFilePath << endl;
-    exit(EXIT_FAILURE); // Exit gracefully if the file is not found
+    exit(EXIT_FAILURE);
   }
+
+  cout << "-- CONFIG: Loading config.toml file: " << configFilePath << endl;
 
   return toml::parse_file(configFilePath);
 }
@@ -126,6 +148,12 @@ string_view parseTOMLField(string parent, string field)
     ""sv); /**< If the field is not found, return an empty string view. */
 }
 
+string_view parseTOMLFieldCustom(const toml::parse_result& custom_config, string parent, string field)
+{
+  return custom_config[parent][field].value_or(
+    ""sv); /**< If the field is not found, return an empty string view. */
+}
+
 /**
  * @brief Parses an integer field from the TOML configuration.
  *
@@ -139,6 +167,12 @@ string_view parseTOMLField(string parent, string field)
 int64_t parseTOMLFieldInt(string parent, string field)
 {
   return config[parent][field].value_or(
+    -1); /**< If the field is not found, return -1 as default. */
+}
+
+int64_t parseTOMLFieldIntCustom(const toml::parse_result& custom_config, string parent, string field)
+{
+  return custom_config[parent][field].value_or(
     -1); /**< If the field is not found, return -1 as default. */
 }
 

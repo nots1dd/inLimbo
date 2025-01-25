@@ -19,9 +19,6 @@
   <a href="https://github.com/nots1dd/inLimbo/issues">Report a bug</a>
 </p>
 
-
-----
-
 > [!WARNING]
 > 
 > inLimbo is a WIP
@@ -50,6 +47,13 @@ The inLimbo project aims to be a new upcoming TUI music player for UNIX based sy
 </div>
 
 ## DEPENDENCIES 
+
+> [!IMPORTANT]
+> 
+> It is **HIGHLY** recommended to have FFmpeg installed in your system 
+> 
+> This is required for testing purposes (`./tests/`), and in the future, inLimbo may have features to embed your desired metadata to an audio file. 
+> 
 
 | Dependency      | Ubuntu                    | Fedora                        | Arch Linux                   |
 |-----------------|---------------------------|-------------------------------|------------------------------|
@@ -82,93 +86,24 @@ The goal of this project is just to find peace and solitude for me as I try to c
 Here are a few novelties that may or may not have been added yet:
 
 1. Cool and amazing TUI experience thanks to FTXUI 
-2. Full use of metadata (lyrics, genre, etc..) and available for display 
+2. Full use of metadata (lyrics, genre, thumbnail, etc..) and available for display 
 3. Simple and easy network transfer of your favourite songs over to another device
 4. Fast and efficient loading of your song directory with everything you need :)
 5. TUI over the web?? (Why would you want this)
+6. Active testing of the codebase using GTest Suite
+7. Security ensured using CodeQL workflow
 
-## BUILDING
+## **BUILDING**
 
 You will need CMake and Make (GNU Make for BSD) for this (and git obvi)
 
-### **USING MAKE** (Preferred):
-
-The following Make commands will make building inLimbo very easy:
+A simple command using makefile should build everything you want:
 
 ```bash 
-make all # to build EVERYTHING from scratch (and RUNS ./init.sh)
+make build-all
 ```
 
-```bash 
-make build # A fresh build of inLimbo (DOES NOT RUN ./init.sh) 
-```
-
-```bash 
-make rebuild # A quick rebuild of the project (DOES NOT RUN ./init.sh)
-```
-
-```bash 
-make init # Runs the init script to download required headers
-```
-
-```bash 
-make clean # wipes the build clean.
-```
-
-> [!NOTE]
-> 
-> Debug building using make needs to be setup, will be available soon.
-> 
-
-### **MANUAL BUILD**:
-
-> [!WARNING]
-> 
-> Proceed with manual build **ONLY** if you know what you are doing.
-> 
-
-```bash
-git clone https://github.com/nots1dd/inLimbo.git 
-cd inLimbo/
-./init.sh # to initialize the repository with some important headers
-```
-
-Then building commands: (**WILL NOT COMPILE IF `init.sh` IS NOT RUN FIRST**)
-
-```bash
-cmake -S . -B build/
-cmake --build build/
-./build/inLimbo
-```
-
-To build inLimbo **GLOBALLY**:
-
-```bash 
-cmake -S . -B build -DGLOBAL_BUILD=ON 
-cmake --build build/ 
-cd build 
-sudo make install # will put the binary in /usr/bin and respective inLimbo.desktop and logo in /usr/share
-```
-
-To build its web-assembly, you will need [emscripten](https://github.com/emscripten-core/emscripten)
-
-> [!IMPORTANT]
-> 
-> Building the web-assembly:
-> 
-> Currently I am not sure how to include and compile taglib
-> into wasm so currently the web build may compile but it will 
-> not work as I have dummy methods set up for EMSCRIPTEN build 
-> (else it wont even compile to wasm)
-> 
-
-```bash 
-mkdir build_emscripten && cd build_emscripten 
-emcmake cmake ..
-make -j
-./run_webassembly.py # assuming the compilation has no errors
-# This will run in port 8000
-```
+Check out [BUILD.md](https://github.com/nots1dd/inLimbo/blob/main/BUILD.md) for more options to build targets
 
 > [!NOTE]
 > 
@@ -240,9 +175,19 @@ There is quite a lot to configure in the inLimbo project. A basic config file wi
 
 To know more about inLimbo Project's logical flow on creating a song map, visit [SONGMAP](https://github.com/nots1dd/inLimbo/blob/main/src/dirsort/SONGMAP.md)
 
+## TESTING 
+
+The inLimbo project is aiming to be more aware of how bad its codebase is, hence I am setting up unit tests for most if not all functions/classes that should:
+
+1. Give more clarity on how the logical flow of the function/class works in a test suite 
+2. Logical flaws and boundary conditions going unchecked can be understood better
+3. Should give more confidence in the code structure if such tests pass 
+
+The testing is done using GTest, read [TESTS.md](https;//github.com/nots1dd/inLimbo/blob/main/tests/TESTS,md) to understand more on how tests are configured and built
+
 ## DOCUMENTATION
 
-Currently I am setting up a Doxygen documentation page that should really make it easy to understand the flow of the project 
+There is a primitive Doxygen documention set up for the inLimbo project, that should explain a lot more about the thought process and idea behind every aspect of the codebase.
 
 Man page is also under progress
 

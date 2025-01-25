@@ -18,8 +18,6 @@ int main(int argc, char* argv[])
   InodeFileMapper mapper(libSyncPath, "false");
 
   auto start = chrono::high_resolution_clock::now();
-  cout << "-- Reading directory..." << endl;
-
   SongTree song_tree;
 
   // Try to load the song tree from file

@@ -7,7 +7,7 @@
 
 [library]
 name = "Songs"
-directory = "/home/s1dd/Downloads/temp/" # just an example
+directory = "/home/s1dd/Downloads/Songs/" # just an example
 
 [ftp]
 username = "client"
@@ -57,7 +57,7 @@ album_name_bg = "#83A598"                 # Muted cyan for background
 
 # Menu Cursor
 menu_cursor_bg = "#8EC07C"                # Soft green for cursor background
-inactive_cursor_bg = "#FFADDF"
+inactive_menu_cursor_bg = "#FFADDF"
 
 # Artists Title Section
 artists_title_bg = "#458588"              # Deep teal for background

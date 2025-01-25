@@ -10,17 +10,21 @@ EXECUTABLE := inLimbo
 CMAKE := cmake
 CMAKE_BUILD_TYPE := Release
 SCRIPT := ./init.sh
+TEST_SUITE_SCRIPT := ./run_tests.sh
 VERBOSE_FLAG := VERBOSE=1
 TESTING_FLAG := INLIMBO_TESTING
 
 # Targets
-.PHONY: all build clean rebuild build-all init asan tsan global_build build-test
+.PHONY: all build clean rebuild build-all init asan tsan global_build build-test build-test-all
 
 all: build-all
 
-build-test:
+build-test-all:
 	@echo "==> Building inLimbo with script and tests using GTest..."
-	$(SCRIPT) 
+	$(SCRIPT)
+	$(MAKE) build-test
+
+build-test:
 	$(CMAKE) -S . -B $(BUILD_DIR) -D $(TESTING_FLAG)=ON
 	$(CMAKE) --build $(BUILD_DIR)
 
@@ -76,3 +80,6 @@ verbose:
 	@echo "==> Building with verbose output..."
 	mkdir -p $(BUILD_DIR)
 	cd $(BUILD_DIR) && $(CMAKE) -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) .. && $(NINJA) $(VERBOSE_FLAG)
+
+run-tests:
+	$(TEST_SUITE_SCRIPT)

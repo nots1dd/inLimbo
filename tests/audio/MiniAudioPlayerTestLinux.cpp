@@ -158,11 +158,11 @@ TEST_F(MiniAudioPlayerTest, MultiplePlayCalls) {
 TEST_F(MiniAudioPlayerTest, ConcurrentPlayAndStop) {
     player->loadFile(TEST_SONG_NAME, false);
 
-    std::thread playThread([&]() { player->play(); });
-    std::thread stopThread([&]() { player->stop(); });
+    std::thread playThread([&]() { EXPECT_NO_THROW(player->play()); });
+    std::thread stopThread([&]() { EXPECT_NO_THROW(player->stop()); });
 
-    playThread.join();
-    stopThread.join();
+    if (playThread.joinable()) playThread.join();
+    if (stopThread.joinable()) stopThread.join();
 
     EXPECT_FALSE(player->isCurrentlyPlaying());
 }
@@ -181,3 +181,13 @@ TEST_F(MiniAudioPlayerTest, DestructorCleanup) {
 /*        EXPECT_TRUE(testPlayer.isBackendInitialized());*/
 /*    });*/
 /*}*/
+
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+
+    // Set Google Test verbosity
+    ::testing::GTEST_FLAG(print_time) = true; // Print execution time for each test
+    std::cout << "[INFO] Running all tests with verbosity enabled..." << std::endl;
+
+    return RUN_ALL_TESTS();
+}

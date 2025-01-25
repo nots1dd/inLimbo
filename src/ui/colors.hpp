@@ -235,12 +235,19 @@ ftxui::Color parseHexColor(const std::string& hex)
  * @return ftxui::Color The corresponding RGB color.
  * @throws std::exit on invalid or unsupported colors.
  */
-ftxui::Color parseColor(const std::string& color_name)
+ftxui::Color parseColor(const std::string& color_name, const std::string& color_field)
 {
   if (color_name[0] == '#')
   {
     return parseHexColor(color_name);
   }
+
+  auto reportError = [](const std::string& field, const std::string_view& key)
+  {
+    std::cerr << "** Error: Unsupported or empty color '" << key << "' detected for field '" << field
+              << "'. Modify or remove that color field. **" << std::endl;
+    std::exit(EXIT_FAILURE); /**< Exit the program on invalid keybind */
+  };
 
   static const std::unordered_map<std::string, ftxui::Color> color_map = {
     {"Black", TrueColors::GetColor(TrueColors::Color::Black)},
@@ -293,8 +300,7 @@ ftxui::Color parseColor(const std::string& color_name)
     return it->second;
   }
 
-  std::cerr << "Error: Unsupported or empty color '" << color_name
-            << "'. Please check your configuration." << std::endl;
+  reportError(color_field, color_name);
   std::exit(EXIT_FAILURE);
 }
 
@@ -332,7 +338,7 @@ InLimboColors parseColors()
   for (const auto& [field, member_color] : field_map)
   {
     std::string color_name = std::string(parseTOMLField(PARENT_COLORS, field));
-    *member_color          = parseColor(color_name);
+    *member_color          = parseColor(color_name, field);
   }
 
   return colors;

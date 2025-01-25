@@ -4,7 +4,7 @@ This directory in the inLimbo project source tree is dedicated to performing uni
 
 ## Why Testing is Essential
 
-Unit testing is a critical component of software development. For the inLimbo project, unit tests:
+Unit testing in the inLimbo project is still in its infancy but it will only grow bigger and better. For the inLimbo project, unit tests:
 
 - **Ensure Code Reliability:** By testing individual functions and classes, we can catch bugs early and verify that they perform as expected.
 - **Promote Code Safety:** Testing safeguards against regressions and ensures that changes or updates do not break existing functionality.

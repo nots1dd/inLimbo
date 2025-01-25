@@ -1,11 +1,9 @@
 #ifndef COMMAND_LINE_ARGS_HPP
 #define COMMAND_LINE_ARGS_HPP
 
-#include <algorithm>
 #include <iostream>
 #include <map>
-#include <string>
-#include <vector>
+#include "./helpers/levenshtein.hpp"
 
 class CommandLineArgs
 {
@@ -116,31 +114,24 @@ private:
   // Helper function to find the closest matching valid flag
   std::string findClosestMatch(const std::string& invalidFlag) const
   {
-    std::string bestMatch;
-    size_t      minDiff = std::string::npos;
+      std::string bestMatch;
+      size_t minDist = std::string::npos;
 
-    for (const auto& validFlag : validFlags)
-    {
-      // Simple distance calculation - how many characters are different
-      size_t diff   = 0;
-      size_t minLen = std::min(invalidFlag.length(), validFlag.length());
-
-      for (size_t i = 0; i < minLen; ++i)
+      for (const auto& validFlag : validFlags)
       {
-        if (invalidFlag[i] != validFlag[i])
-          diff++;
-      }
-      diff += std::abs(int(invalidFlag.length() - validFlag.length()));
+          // Compute Levenshtein distance
+          size_t dist = levenshteinDistance(invalidFlag, validFlag);
 
-      if (diff < minDiff)
-      {
-        minDiff   = diff;
-        bestMatch = validFlag;
+          // Track the flag with the smallest distance
+          if (dist < minDist)
+          {
+              minDist = dist;
+              bestMatch = validFlag;
+          }
       }
-    }
 
-    // Only suggest if the match is reasonably close
-    return (minDiff <= 3) ? bestMatch : "";
+      // Only suggest if the match is reasonably close (for example, max 3 edits away)
+      return (minDist <= 3) ? bestMatch : "";
   }
 };
 
