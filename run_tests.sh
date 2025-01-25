@@ -1,6 +1,6 @@
-# Run tests script for the inLimbo project
-
 #!/bin/bash
+
+# Test Suite script for the inLimbo project
 
 # static decl ik will fix it
 declare -A test_binaries
