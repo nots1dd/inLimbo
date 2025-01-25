@@ -27,7 +27,7 @@ jobs:
 
       - name: inLimbo Test Suite (x86 arch - GCC)
         run: |
-          make build-test
+          make build-test-all
           make run-tests
 
       - name: Clean up
