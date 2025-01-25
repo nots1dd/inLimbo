@@ -33,9 +33,8 @@ jobs:
         # Ensure any dependencies are installed before building
         
         sudo apt-get update
-        sudo apt-get install -y build-essential cmake libtag1-dev git libglib2.0-dev imagemagick libx11-dev libpng-dev libcereal-dev  # Example dependencies, modify as needed
-        
-        make build 
+        sudo apt-get install -y build-essential cmake libtag1-dev git libglib2.0-dev imagemagick libx11-dev libpng-dev libcereal-dev  # Example dependencies, modify as needed 
+        make build-all
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
