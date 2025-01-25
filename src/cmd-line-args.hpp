@@ -1,21 +1,51 @@
+/**
+ * @file command_line_args.hpp
+ * @brief Provides a class for parsing and handling command-line arguments for the inLimbo TUI music
+ * player.
+ *
+ * This header defines the `CommandLineArgs` class, which simplifies the parsing and management
+ * of command-line arguments. It validates flags, extracts positional arguments, and provides
+ * helpful error messages for invalid flags. Additionally, it offers usage information and project
+ * details.
+ */
+
 #ifndef COMMAND_LINE_ARGS_HPP
 #define COMMAND_LINE_ARGS_HPP
 
+#include "./helpers/levenshtein.hpp"
 #include <iostream>
 #include <map>
-#include "./helpers/levenshtein.hpp"
 
+/**
+ * @class CommandLineArgs
+ * @brief Parses and validates command-line arguments.
+ *
+ * The `CommandLineArgs` class handles parsing flags, extracting positional arguments,
+ * and providing detailed error messages for invalid flags. It is designed for the
+ * inLimbo TUI music player and includes project-specific details in its usage output.
+ */
 class CommandLineArgs
 {
 private:
-  std::map<std::string, std::string> args;
-  std::vector<std::string>           positionalArgs;
-  bool                               hasError = false;
-  std::string                        errorMessage;
+  std::map<std::string, std::string> args; ///< Stores flags and their corresponding values.
+  std::vector<std::string>           positionalArgs; ///< Stores non-flag, positional arguments.
+  bool        hasError = false; ///< Indicates if an error occurred during parsing.
+  std::string errorMessage;     ///< Stores the error message if parsing fails.
 
 public:
+  /**
+   * @brief List of valid flags supported by the application.
+   */
   static const std::vector<std::string> validFlags;
-
+  /**
+   * @brief Constructs a CommandLineArgs object and parses command-line arguments.
+   *
+   * If parsing fails, an error message is displayed, usage information is printed,
+   * and the program exits with an error code.
+   *
+   * @param argc The number of command-line arguments.
+   * @param argv The array of command-line arguments.
+   */
   CommandLineArgs(int argc, char* argv[])
   {
     parseArgs(argc, argv);
@@ -26,17 +56,43 @@ public:
       exit(1);
     }
   }
-
+  /**
+   * @brief Retrieves the value associated with a flag.
+   *
+   * If the flag is not present, a default value is returned.
+   *
+   * @param flag The flag to look up.
+   * @param defaultValue The value to return if the flag is not found (default is an empty string).
+   * @return The value associated with the flag or the default value if the flag is not found.
+   */
   std::string get(const std::string& flag, const std::string& defaultValue = "") const
   {
     auto it = args.find(flag);
     return (it != args.end()) ? it->second : defaultValue;
   }
 
+  /**
+   * @brief Checks if a specific flag was provided.
+   *
+   * @param flag The flag to check.
+   * @return `true` if the flag is present, otherwise `false`.
+   */
   bool hasFlag(const std::string& flag) const { return args.find(flag) != args.end(); }
-
+  /**
+   * @brief Retrieves the list of positional arguments.
+   *
+   * @return A reference to a vector containing the positional arguments.
+   */
   const std::vector<std::string>& getPositionalArgs() const { return positionalArgs; }
 
+  /**
+   * @brief Prints usage information and program details.
+   *
+   * The output includes a description of the program, valid options,
+   * and helpful links for project documentation and support.
+   *
+   * @param programName The name of the program (typically `argv[0]`).
+   */
   void printUsage(const std::string& programName) const
   {
     std::cout << "\033[1mMusic player that keeps you in Limbo.\033[0m\n";
@@ -63,11 +119,23 @@ public:
     std::cout << std::endl;
 
     std::cout << "\033[1mDescription:\033[0m\n";
-    std::cout << "  inLimbo is a TUI music player that supports seamless playback and efficient metadata handling.\n  Designed for minimalism and ease of use.\n\n\033[1mKeeps YOU in Limbo...\033[0m";
+    std::cout << "  inLimbo is a TUI music player that supports seamless playback and efficient "
+                 "metadata handling.\n  Designed for minimalism and ease of use.\n\n\033[1mKeeps "
+                 "YOU in Limbo...\033[0m";
     std::cout << "\n";
   }
 
 private:
+  /**
+   * @brief Parses the command-line arguments.
+   *
+   * This method extracts flags and their values, validates them, and
+   * identifies positional arguments. If an invalid flag is encountered,
+   * an error message is prepared.
+   *
+   * @param argc The number of command-line arguments.
+   * @param argv The array of command-line arguments.
+   */
   void parseArgs(int argc, char* argv[])
   {
     for (int i = 1; i < argc; ++i)
@@ -111,33 +179,42 @@ private:
     }
   }
 
-  // Helper function to find the closest matching valid flag
+  /**
+   * @brief Finds the closest valid flag to a given invalid flag using Levenshtein distance.
+   *
+   * This method suggests a valid flag that is most similar to the invalid flag provided,
+   * helping the user identify potential typos or errors.
+   *
+   * @param invalidFlag The invalid flag entered by the user.
+   * @return The closest matching valid flag if it exists and is reasonably close; otherwise, an
+   * empty string.
+   */
   std::string findClosestMatch(const std::string& invalidFlag) const
   {
-      std::string bestMatch;
-      size_t minDist = std::string::npos;
+    std::string bestMatch;
+    size_t      minDist = std::string::npos;
 
-      for (const auto& validFlag : validFlags)
+    for (const auto& validFlag : validFlags)
+    {
+      // Compute Levenshtein distance
+      size_t dist = levenshteinDistance(invalidFlag, validFlag);
+
+      // Track the flag with the smallest distance
+      if (dist < minDist)
       {
-          // Compute Levenshtein distance
-          size_t dist = levenshteinDistance(invalidFlag, validFlag);
-
-          // Track the flag with the smallest distance
-          if (dist < minDist)
-          {
-              minDist = dist;
-              bestMatch = validFlag;
-          }
+        minDist   = dist;
+        bestMatch = validFlag;
       }
+    }
 
-      // Only suggest if the match is reasonably close (for example, max 3 edits away)
-      return (minDist <= 3) ? bestMatch : "";
+    // Only suggest if the match is reasonably close (for example, max 3 edits away)
+    return (minDist <= 3) ? bestMatch : "";
   }
 };
 
 // Define valid flags globally
 const std::vector<std::string> CommandLineArgs::validFlags = {
-  "--help",        "--show-dbus-name",   "--version",
-  "--clear-cache", "--show-config-file", "--show-log-dir", "--update-cache-run"};
+  "--help",         "--show-dbus-name",  "--version", "--clear-cache", "--show-config-file",
+  "--show-log-dir", "--update-cache-run"};
 
 #endif // COMMAND_LINE_ARGS_HPP

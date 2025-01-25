@@ -23,7 +23,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake libtag1-dev git libglib2.0-dev imagemagick libx11-dev libpng-dev libcereal-dev libgtest-dev
+          sudo apt-get install -y build-essential cmake libtag1-dev git libglib2.0-dev imagemagick libx11-dev libpng-dev libcereal-dev libgtest-dev ffmpeg
 
       - name: inLimbo Test Suite (x86 arch - GCC)
         run: |

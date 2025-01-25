@@ -8,13 +8,12 @@
 #include <unistd.h>
 #include <fstream>
 #include <string>
-#include <filesystem>
 #include <ctime> // For timestamps
 #include <sys/resource.h> // For resource usage
 #include <sys/utsname.h> // For system info
 #include <pthread.h> // For thread info
 #include <unistd.h> // For getpid, getppid
-#include <limits.h> // For PATH_MAX
+#include <climits> // For PATH_MAX
 
 class SignalHandler {
 public:
@@ -128,9 +127,9 @@ private:
 
             logFile.close();
 
-            std::cerr << "Critical error occurred. See " << logFileName << " for details.\n" << "Exiting..." << std::endl;
+            std::cerr << "** Critical error occurred. See " << logFileName << " for details.\n" << "Exiting... **" << std::endl;
         } else {
-            std::cerr << "Failed to write to log file: " << logFileName << "\n";
+            std::cerr << "-- Failed to write to log file: " << logFileName << "\n";
         }
 
         // Clean termination

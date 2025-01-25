@@ -148,6 +148,16 @@ string_view parseTOMLField(string parent, string field)
     ""sv); /**< If the field is not found, return an empty string view. */
 }
 
+/**
+ * @brief Parses a string field from a custom TOML configuration that is called by the INLIMBO_CONFIG_HOME macro at runtime
+ *
+ * This function retrieves the value of a specific field within a parent section of the TOML
+ * configuration. If the field is not found, it returns an empty string view.
+ *
+ * @param parent The parent section name (e.g., "library").
+ * @param field The field name within the parent section (e.g., "name").
+ * @return A string view representing the value of the field.
+ */
 string_view parseTOMLFieldCustom(const toml::parse_result& custom_config, string parent, string field)
 {
   return custom_config[parent][field].value_or(
@@ -170,6 +180,16 @@ int64_t parseTOMLFieldInt(string parent, string field)
     -1); /**< If the field is not found, return -1 as default. */
 }
 
+/**
+ * @brief Parses an integer field from a custom TOML configuration set by the INLIMBO_CONFIG_HOME macro at runtime.
+ *
+ * This function retrieves the value of a specific field as an integer from the TOML configuration.
+ * If the field is not found, it returns -1 as a default value.
+ *
+ * @param parent The parent section name (e.g., "ftp").
+ * @param field The field name within the parent section (e.g., "username").
+ * @return The integer value of the field, or -1 if the field is not found.
+ */
 int64_t parseTOMLFieldIntCustom(const toml::parse_result& custom_config, string parent, string field)
 {
   return custom_config[parent][field].value_or(
