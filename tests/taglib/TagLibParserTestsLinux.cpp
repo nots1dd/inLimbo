@@ -77,8 +77,8 @@ TEST_F(TagLibParserTest, ParseMP3WithoutMetadata) {
               << "Artist: " << YELLOW << metadata.artist << RESET << "\n"
               << "Album: " << YELLOW << metadata.album << RESET << "\n";
 
-    EXPECT_EQ(metadata.title, "Unknown Title");
-    EXPECT_EQ(metadata.artist, "Unknown Artist");
+    EXPECT_EQ(metadata.title, "test_no_metadata.mp3"); // default title is the song file name 
+    EXPECT_EQ(metadata.artist, "<Unknown Artist>");
     EXPECT_EQ(metadata.album, "Unknown Album");
 }
 
@@ -113,8 +113,8 @@ TEST_F(TagLibParserTest, ParseFLACWithoutMetadata) {
               << "Artist: " << YELLOW << metadata.artist << RESET << "\n"
               << "Album: " << YELLOW << metadata.album << RESET << "\n";
 
-    EXPECT_EQ(metadata.title, "Unknown Title");
-    EXPECT_EQ(metadata.artist, "Unknown Artist");
+    EXPECT_EQ(metadata.title, "test_no_metadata.flac");
+    EXPECT_EQ(metadata.artist, "<Unknown Artist>");
     EXPECT_EQ(metadata.album, "Unknown Album");
 }
 
@@ -182,7 +182,7 @@ TEST_F(TagLibParserTest, ExtractThumbnailFlac) {
 /*    std::cout << BOLD << RED << "Attempted to parse unsupported_file.ogg. Success: " << result << RESET << "\n";*/
 /*}*/
 
-int main(int argc, char **argv) {
+auto main(int argc, char **argv) -> int {
     ::testing::InitGoogleTest(&argc, argv);
 
     // Set Google Test verbosity

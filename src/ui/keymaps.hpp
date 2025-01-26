@@ -48,7 +48,7 @@ struct Keybinds
  *
  * @return A `Keybinds` struct with the key mappings for various actions.
  */
-Keybinds parseKeybinds()
+auto parseKeybinds() -> Keybinds
 {
   Keybinds keybinds;
 
@@ -71,8 +71,8 @@ Keybinds parseKeybinds()
    */
   auto reportError = [](const std::string& field, const std::string_view& key)
   {
-    std::cerr << "** Error: Unsupported or empty keybind '" << key << "' detected for field '" << field
-              << "'. Modify or remove that keybind field. **" << std::endl;
+    std::cerr << "** Error: Unsupported or empty keybind '" << key << "' detected for field '"
+              << field << "'. Modify or remove that keybind field. **" << std::endl;
     std::exit(EXIT_FAILURE); /**< Exit the program on invalid keybind */
   };
 

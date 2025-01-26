@@ -1,13 +1,13 @@
 #include "dirsort/inode_mapper.hpp"
 #include "signal/signalHandler.hpp"
+#include "./ui/keymaps.hpp"
 #include "ui/ui_handler.hpp"
 #include "./arg-handler.hpp"
 
-int main(int argc, char* argv[])
+auto main(int argc, char* argv[]) -> int
 {
   SignalHandler::getInstance().setup();
   auto            directoryPath = string(parseTOMLField(PARENT_LIB, PARENT_LIB_FIELD_DIR));
-  string          libSyncPath  = getConfigPath(LIB_SYNC_NAME);
   string          configPath   = getConfigPath("config.toml");
   string          cacheDir     = getCachePath();
   string          libBinPath   = getConfigPath(LIB_BIN_NAME);
@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
   ArgumentHandler::Paths paths{ .configPath = configPath, .libBinPath = libBinPath, .cacheDir = cacheDir };
   ArgumentHandler::handleArguments(cmdArgs, argv[0], paths);
   RedBlackTree    rbt;
-  InodeFileMapper mapper(libSyncPath, "false");
+  InodeFileMapper mapper;
 
   auto start = chrono::high_resolution_clock::now();
   SongTree song_tree;
@@ -39,7 +39,9 @@ int main(int argc, char* argv[])
 
   auto        library_map = song_tree.returnSongMap();
   auto end = chrono::high_resolution_clock::now();
-  MusicPlayer player(library_map);
+  Keybinds      global_keybinds = parseKeybinds();
+  InLimboColors global_colors   = parseColors();
+  MusicPlayer player(library_map, global_keybinds, global_colors);
   try
   {
     player.Run();

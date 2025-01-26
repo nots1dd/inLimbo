@@ -65,7 +65,8 @@ public:
    * @param defaultValue The value to return if the flag is not found (default is an empty string).
    * @return The value associated with the flag or the default value if the flag is not found.
    */
-  std::string get(const std::string& flag, const std::string& defaultValue = "") const
+  [[nodiscard]]
+  auto get(const std::string& flag, const std::string& defaultValue = "") const -> std::string
   {
     auto it = args.find(flag);
     return (it != args.end()) ? it->second : defaultValue;
@@ -77,13 +78,15 @@ public:
    * @param flag The flag to check.
    * @return `true` if the flag is present, otherwise `false`.
    */
-  bool hasFlag(const std::string& flag) const { return args.find(flag) != args.end(); }
+  [[nodiscard]]
+  auto hasFlag(const std::string& flag) const -> bool { return args.find(flag) != args.end(); }
   /**
    * @brief Retrieves the list of positional arguments.
    *
    * @return A reference to a vector containing the positional arguments.
    */
-  const std::vector<std::string>& getPositionalArgs() const { return positionalArgs; }
+  [[nodiscard]] 
+  auto getPositionalArgs() const -> const std::vector<std::string>& { return positionalArgs; }
 
   /**
    * @brief Prints usage information and program details.
@@ -189,7 +192,8 @@ private:
    * @return The closest matching valid flag if it exists and is reasonably close; otherwise, an
    * empty string.
    */
-  std::string findClosestMatch(const std::string& invalidFlag) const
+  [[nodiscard]]
+  auto findClosestMatch(const std::string& invalidFlag) const -> std::string
   {
     std::string bestMatch;
     size_t      minDist = std::string::npos;

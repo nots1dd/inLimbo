@@ -73,7 +73,7 @@ enum class Color
  * @param color The predefined color enum.
  * @return ftxui::Color The corresponding RGB color.
  */
-ftxui::Color GetColor(Color color)
+auto GetColor(Color color) -> ftxui::Color
 {
   switch (color)
   {
@@ -207,7 +207,7 @@ struct InLimboColors
  * @throws std::exit on invalid format.
  */
 
-ftxui::Color parseHexColor(const std::string& hex)
+auto parseHexColor(const std::string& hex) -> ftxui::Color
 {
   // Validate hex format
   std::regex  hex_regex("^#([0-9a-fA-F]{6})$"); // Matches #RRGGBB
@@ -235,7 +235,7 @@ ftxui::Color parseHexColor(const std::string& hex)
  * @return ftxui::Color The corresponding RGB color.
  * @throws std::exit on invalid or unsupported colors.
  */
-ftxui::Color parseColor(const std::string& color_name, const std::string& color_field)
+auto parseColor(const std::string& color_name, const std::string& color_field) -> ftxui::Color
 {
   if (color_name[0] == '#')
   {
@@ -244,8 +244,8 @@ ftxui::Color parseColor(const std::string& color_name, const std::string& color_
 
   auto reportError = [](const std::string& field, const std::string_view& key)
   {
-    std::cerr << "** Error: Unsupported or empty color '" << key << "' detected for field '" << field
-              << "'. Modify or remove that color field. **" << std::endl;
+    std::cerr << "** Error: Unsupported or empty color '" << key << "' detected for field '"
+              << field << "'. Modify or remove that color field. **" << std::endl;
     std::exit(EXIT_FAILURE); /**< Exit the program on invalid keybind */
   };
 
@@ -309,7 +309,7 @@ ftxui::Color parseColor(const std::string& color_name, const std::string& color_
  *
  * @return InLimboColors The populated color configuration.
  */
-InLimboColors parseColors()
+auto parseColors() -> InLimboColors
 {
   InLimboColors colors;
 

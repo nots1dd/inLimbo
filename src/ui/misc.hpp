@@ -114,7 +114,7 @@ auto formatLyrics(const std::string& lyrics)
   return lines;
 }
 
-std::string charToStr(char ch)
+auto charToStr(char ch) -> std::string
 {
   switch (ch)
   {
@@ -172,15 +172,15 @@ auto CreateMenu(const std::vector<std::string>* vecLines, int* currLine)
 auto RenderSongMenu(const std::vector<Element>& items)
 {
   Elements rendered_items;
-  for (int i = 0; i < items.size(); ++i)
+  for (const auto & item : items)
   {
-    rendered_items.push_back(items[i] | frame);
+    rendered_items.push_back(item | frame);
   }
 
   return vbox(std::move(rendered_items));
 }
 
-std::string getMimeTypeFromExtension(const std::string& filePath)
+auto getMimeTypeFromExtension(const std::string& filePath) -> std::string
 {
   // Map file extensions to MIME types
   static std::map<std::string, std::string> mimeTypes = {

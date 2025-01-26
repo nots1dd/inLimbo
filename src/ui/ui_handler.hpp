@@ -3,9 +3,9 @@
 
 #include "../dbus/mpris-service.hpp"
 #include "../music/audio_playback.hpp"
+#include "../threads/thread_manager.hpp"
 #include "./components/scroller.hpp"
 #include "./properties.hpp"
-#include "./thread_manager.hpp"
 #include "keymaps.hpp"
 #include "misc.hpp"
 #include <ftxui/dom/elements.hpp>
@@ -47,9 +47,12 @@ public:
   MusicPlayer(
     const std::map<std::string,
                    std::map<std::string, std::map<unsigned int, std::map<unsigned int, Song>>>>&
-      initial_library)
+      initial_library, Keybinds& keybinds, InLimboColors& colors)
       : library(initial_library), INL_Thread_Manager(std::make_unique<ThreadManager>()),
-        INL_Thread_State(INL_Thread_Manager->getThreadState())
+        INL_Thread_State(INL_Thread_Manager->getThreadState()),
+        global_keybinds(keybinds),
+        global_colors(colors),
+        song_queue() // Initialize the queue vector to avoid any abrupt exits 
   {
     InitializeData();
     CreateComponents();
@@ -67,7 +70,8 @@ public:
         g_main_loop_unref(loop);
       });
 
-    INL_Thread_State.mpris_dbus_thread->detach(); // We will not be concerned with this thread entirely, hence it is detached
+    INL_Thread_State.mpris_dbus_thread
+      ->detach(); // We will not be concerned with this thread entirely, hence it is detached
 
     auto              screen = ScreenInteractive::Fullscreen();
     std::atomic<bool> screen_active{true};
@@ -88,7 +92,6 @@ public:
 
             if (INL_Thread_State.is_playing)
             {
-              std::lock_guard<std::mutex> lock(state_mutex);
               current_position += 0.1;
               if (current_position >= GetCurrentSongDuration())
               {
@@ -140,8 +143,8 @@ private:
     std::string                                  title;
     std::string                                  genre;
     std::string                                  album;
-    bool                                         has_comment = false;
-    bool                                         has_lyrics  = false;
+    bool                                         has_comment     = false;
+    bool                                         has_lyrics      = false;
     int                                          duration;
     int                                          bitrate;
     unsigned int                                 year       = 0;
@@ -157,9 +160,9 @@ private:
 
   std::unique_ptr<MPRISService> mprisService;
 
-  Keybinds      global_keybinds = parseKeybinds();
+  Keybinds      global_keybinds;
   GlobalProps   global_props    = parseProps();
-  InLimboColors global_colors   = parseColors();
+  InLimboColors global_colors;
 
   std::shared_ptr<MiniAudioPlayer> audio_player;
   std::unique_ptr<ThreadManager>   INL_Thread_Manager; // Smart pointer to ThreadManager
@@ -208,7 +211,7 @@ private:
   int                  lastVolume       = volume;
   double               current_position = 0;
   int                  active_screen =
-    0; // 0 -> Main UI ; 1 -> Show help ; 2 -> Show lyrics; 3 -> Songs queue screen
+    0; // 0 -> Main UI ; 1 -> Show help ; 2 -> Show lyrics; 3 -> Songs queue screen; 4 -> Song info screen; 5 -> Audio sinks screen
   bool               should_quit      = false;
   bool               focus_on_artists = true;
   ScreenInteractive* screen_          = nullptr;
@@ -264,8 +267,7 @@ private:
 
   std::shared_ptr<MiniAudioPlayer> getOrCreateAudioPlayer()
   {
-    static std::mutex           player_mutex;
-    std::lock_guard<std::mutex> lock(player_mutex);
+    static std::mutex player_mutex;
     if (!audio_player)
     {
       audio_player = std::make_shared<MiniAudioPlayer>();
@@ -304,21 +306,26 @@ private:
           if (INL_Thread_State.is_playing)
           {
             audio_player->stop();
-            INL_Thread_State.is_playing = false;
+            /*INL_Thread_State.is_playing = false;*/
           }
           // Load the audio file
-          int loadAudioFileStatus = audio_player->loadFile(file_path, true);
+          auto load_future = audio_player->loadFileAsync(file_path, true);
+
+          // Wait for the asynchronous load to complete
+          int loadAudioFileStatus = load_future.get();
           if (loadAudioFileStatus == -1)
           {
             throw std::runtime_error("Error: Failed to load the audio file.");
           }
           INL_Thread_State.is_playing = true;
           audio_player->play(); // Play the song (it will play in a separate thread)
-          current_playing_state.duration = audio_player->getDuration();
+          auto durationFuture            = audio_player->getDurationAsync();
+          current_playing_state.duration = durationFuture.get();
         }
         catch (const std::exception& e)
         {
           SetDialogMessage(e.what());
+          audio_player->stop();
           INL_Thread_State.is_playing = false;
         }
 
@@ -639,45 +646,57 @@ private:
 
   void UpdatePlayingState()
   {
-    if (Song* current_song = GetCurrentSongFromQueue())
+    // Retrieve the current song from the queue
+    Song* current_song = GetCurrentSongFromQueue();
+    if (!current_song)
     {
-      const auto& metadata = current_song->metadata;
-
-      current_playing_state.artist      = metadata.artist;
-      current_playing_state.title       = metadata.title;
-      current_playing_state.album       = metadata.album;
-      current_playing_state.genre       = metadata.genre;
-      current_playing_state.comment     = metadata.comment;
-      current_playing_state.year        = metadata.year;
-      current_playing_state.track       = metadata.track;
-      current_playing_state.discNumber  = metadata.discNumber;
-      current_playing_state.lyrics      = metadata.lyrics;
-      current_playing_state.has_comment = (metadata.comment != "No Comment");
-      current_playing_state.has_lyrics  = (metadata.lyrics != "No Lyrics");
-      current_playing_state.filePath    = metadata.filePath;
-      current_playing_state.bitrate     = metadata.bitrate;
-      // duration gets updated in the PlayCurrentSong() thread itself
-
-      // If there's additional properties, you can either copy them or process as needed
-      current_playing_state.additionalProperties.clear();
-      for (const auto& [key, value] : metadata.additionalProperties)
-      {
-        current_playing_state.additionalProperties[key] = value;
-      }
+      return; // No song available
     }
 
-    const std::string& mprisSongTitle   = current_playing_state.title;
-    const std::string& mprisSongArtist  = current_playing_state.artist;
-    const std::string& mprisSongAlbum   = current_playing_state.album;
-    const std::string& mprisSongComment = current_playing_state.comment;
-    const std::string& mprisSongGenre   = current_playing_state.genre;
+    const auto& metadata = current_song->metadata;
 
-    mprisService->updateMetadata(mprisSongTitle, mprisSongArtist, mprisSongAlbum,
-                                 static_cast<int64_t>(GetCurrentSongFromQueue()->metadata.duration),
-                                 mprisSongComment, mprisSongGenre, current_playing_state.track,
-                                 current_playing_state.discNumber);
+    // Offload metadata updates to a worker thread
+    INL_Thread_Manager->getWorkerThreadPool().enqueue(
+      [this, metadata]()
+      {
+        // Perform updates locally before committing to the shared state
+        PlayingState new_state = current_playing_state;
 
-    current_lyric_line = 0;
+        if (new_state.filePath == metadata.filePath)
+        {
+          return;
+        }
+
+        new_state.artist      = metadata.artist;
+        new_state.title       = metadata.title;
+        new_state.album       = metadata.album;
+        new_state.genre       = metadata.genre;
+        new_state.comment     = metadata.comment;
+        new_state.year        = metadata.year;
+        new_state.track       = metadata.track;
+        new_state.discNumber  = metadata.discNumber;
+        new_state.lyrics      = metadata.lyrics;
+        new_state.has_comment = (metadata.comment != "No Comment");
+        new_state.has_lyrics  = (metadata.lyrics != "No Lyrics");
+        new_state.filePath    = metadata.filePath;
+        new_state.bitrate     = metadata.bitrate;
+
+        new_state.additionalProperties = metadata.additionalProperties;
+
+        // Commit to shared state under mutex
+        {
+          std::lock_guard<std::mutex> lock(state_mutex);
+          current_playing_state = std::move(new_state);
+        }
+
+        mprisService->updateMetadata(current_playing_state.title, current_playing_state.artist,
+                                     current_playing_state.album,
+                                     static_cast<int64_t>(current_playing_state.duration),
+                                     current_playing_state.comment, current_playing_state.genre,
+                                     current_playing_state.track, current_playing_state.discNumber);
+
+        current_lyric_line = 0;
+      });
   }
 
   void CreateComponents()
@@ -1260,6 +1279,10 @@ private:
       {
         albums_indices_traversed = 1;
       }
+      if (selected_inode == current_song_elements.size() - 1 && !move_down)
+      {
+        albums_indices_traversed = album_name_indices.size();
+      }
       // Break the loop if we traverse all elements (prevent infinite loop)
       if (selected_inode == initial_inode)
       {
@@ -1341,6 +1364,9 @@ private:
           {
             selected_artist = current_artist_names.size() - 1;
           }
+          UpdateSongsForArtist(current_artist_names[selected_artist]);
+          selected_inode           = 1; // Reset to the first song
+          albums_indices_traversed = 1;
         }
       }
       else
@@ -1550,7 +1576,7 @@ private:
       songs_left = 0;
     queue_info += std::to_string(songs_left) + " songs left.";
     std::string up_next_song = " Next up: ";
-    if (song_queue.size() > 1 && song_queue[current_song_queue_index + 1].metadata.title != "")
+    if (song_queue.size() > 1 && songs_left > 0)
       up_next_song += song_queue[current_song_queue_index + 1].metadata.title + " by " +
                       song_queue[current_song_queue_index + 1].metadata.artist;
     else

@@ -10,6 +10,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <future>
 #include <filesystem>
 
 /**
@@ -97,7 +98,7 @@ public:
     ma_engine_uninit(&engine);
   }
 
-  std::vector<AudioDevice> enumerateDevices()
+  auto enumerateDevices() -> std::vector<AudioDevice>
   {
       std::vector<AudioDevice> localDevices;
 
@@ -162,35 +163,40 @@ public:
    * @return 0 on success, -1 on failure.
    * @throws std::runtime_error If the audio file cannot be loaded.
    */
-  int loadFile(const std::string& filePath, bool reloadNextFile)
+  auto loadFileAsync(const std::string& filePath, bool reloadNextFile) -> std::future<int>
   {
-    std::unique_lock<std::mutex> lock(mtx);
+      return std::async(std::launch::async, [this, filePath, reloadNextFile]()
+      {
+          std::unique_lock<std::mutex> lock(mtx);
 
-    if (isPlaying)
-    {
-      stop();
-    }
+          if (isPlaying)
+          {
+              stop();
+          }
 
-    if (!std::filesystem::exists(filePath))
-    {
-        throw std::runtime_error("File does not exist: " + filePath);
-    }
-    
-    if (reloadNextFile)
-      ma_sound_uninit(&sound);
-    if (deviceSet)
-    {
-      deviceConfig.playback.pDeviceID = &deviceID;
-    }
+          // File check is done before loading the file so this seems like an unnecessary sanity check that can be removed
+          /*if (!std::filesystem::exists(filePath))*/
+          /*{*/
+          /*    throw std::runtime_error("File does not exist: " + filePath);*/
+          /*}*/
 
-    if (ma_sound_init_from_file(&engine, filePath.c_str(), MA_SOUND_FLAG_STREAM, nullptr, nullptr,
-                                &sound) != MA_SUCCESS)
-    {
-      throw std::runtime_error("Failed to load audio file: " + filePath);
-      return -1;
-    }
+          if (reloadNextFile)
+          {
+              ma_sound_uninit(&sound);
+          }
 
-    return 0;
+          if (deviceSet)
+          {
+              deviceConfig.playback.pDeviceID = &deviceID;
+          }
+
+          if (ma_sound_init_from_file(&engine, filePath.c_str(), MA_SOUND_FLAG_STREAM, nullptr, nullptr, &sound) != MA_SUCCESS)
+          {
+              throw std::runtime_error("Failed to load audio file: " + filePath);
+          }
+
+          return 0; // Success
+      });
   }
 
   /**
@@ -351,27 +357,31 @@ public:
   }
 
   /**
-   * @brief Gets the total duration of the sound in seconds.
+   * @brief Gets the total duration of the sound in seconds. (async function)
    *
    * This method retrieves the total duration of the loaded audio file in seconds.
    *
    * @return The duration of the sound in seconds.
    * @throws std::runtime_error If the duration cannot be retrieved.
    */
-  float getDuration()
+  auto getDurationAsync() -> std::future<float>
   {
-    std::unique_lock<std::mutex> lock(mtx); // Protect shared state
-    if (ma_sound_get_time_in_milliseconds(&sound) != MA_SUCCESS)
-    {
-      throw std::runtime_error("Failed to get sound duration.");
-    }
-    float     duration = 0.0f;
-    ma_result result   = ma_sound_get_length_in_seconds(&sound, &duration);
-    if (result != MA_SUCCESS)
-    {
-      throw std::runtime_error("Failed to get sound duration. Result: " + std::to_string(result));
-    }
-    return duration;
+      return std::async(std::launch::async, [this]() {
+          std::unique_lock<std::mutex> lock(mtx); // Protect shared state
+          if (ma_sound_get_time_in_milliseconds(&sound) != MA_SUCCESS)
+          {
+              throw std::runtime_error("Failed to get sound duration.");
+          }
+
+          float     duration = 0.0f;
+          ma_result result   = ma_sound_get_length_in_seconds(&sound, &duration);
+          if (result != MA_SUCCESS)
+          {
+              throw std::runtime_error("Failed to get sound duration. Result: " + std::to_string(result));
+          }
+
+          return duration;
+      });
   }
 
   /**

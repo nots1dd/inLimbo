@@ -3,6 +3,17 @@
 #include <fstream>
 #include <iostream>
 
+/* 
+ * @NOTE: This test file is NOT enough to test the MiniAudioPlayer class,
+ *  
+ * ConcurrentPlayAndStop test will mostly pass, but sometimes due to the async / concurrent nature of the class, it will not pass (arbitrary)
+ *
+ * Some functions are async / concurrent in nature that affect the state of the entire class 
+ *
+ * As a result, I will add more concurrent testing in the future but this is a simple working sanity test that lets me know nothing is devastatingly wrong
+ *
+ */
+
 using namespace std;
 
 #define TEST_SONG_NAME "test_audio.wav"
@@ -23,7 +34,7 @@ protected:
         }
     }
 
-    bool fileExists(const std::string& filename) 
+    auto fileExists(const std::string& filename) -> bool 
     {
         std::ifstream file(filename);
         return file.good();
@@ -52,20 +63,20 @@ TEST_F(MiniAudioPlayerTest, EnumerateAudioDevices) {
 TEST_F(MiniAudioPlayerTest, LoadFileSuccess) {
     std::string testFile = TEST_SONG_NAME;
     ASSERT_NO_THROW({
-        EXPECT_EQ(player->loadFile(testFile, false), 0);
+        EXPECT_EQ(player->loadFileAsync(testFile, false).get(), 0);
     });
 }
 
 TEST_F(MiniAudioPlayerTest, LoadInvalidFile) {
     std::string invalidFile = "nonexistent_file.wav";
-    EXPECT_THROW({
-        player->loadFile(invalidFile, false);
-    }, std::runtime_error);
+    EXPECT_NO_THROW({
+        player->loadFileAsync(invalidFile, false);
+    });
 }
 
 TEST_F(MiniAudioPlayerTest, PlaySound) {
     std::string testFile = TEST_SONG_NAME;
-    player->loadFile(testFile, false);
+    player->loadFileAsync(testFile, false);
 
     EXPECT_NO_THROW({
         player->play();
@@ -76,7 +87,7 @@ TEST_F(MiniAudioPlayerTest, PlaySound) {
 
 TEST_F(MiniAudioPlayerTest, PauseAndResume) {
     std::string testFile = TEST_SONG_NAME;
-    player->loadFile(testFile, false);
+    player->loadFileAsync(testFile, false);
     player->play();
 
     EXPECT_NO_THROW({
@@ -120,7 +131,7 @@ TEST_F(MiniAudioPlayerTest, SetAndGetVolume) {
 
 TEST_F(MiniAudioPlayerTest, SeekTime) {
     std::string testFile = TEST_SONG_NAME;
-    player->loadFile(testFile, false);
+    player->loadFileAsync(testFile, false);
     player->play();
 
     EXPECT_NO_THROW({
@@ -139,7 +150,7 @@ TEST_F(MiniAudioPlayerTest, InvalidStateTransitions) {
 }
 
 TEST_F(MiniAudioPlayerTest, StopPlaying) {
-    player->loadFile(TEST_SONG_NAME, false);
+    player->loadFileAsync(TEST_SONG_NAME, false);
     player->play();
     EXPECT_TRUE(player->isCurrentlyPlaying());
 
@@ -149,14 +160,14 @@ TEST_F(MiniAudioPlayerTest, StopPlaying) {
 
 // Test repeated play calls
 TEST_F(MiniAudioPlayerTest, MultiplePlayCalls) {
-    player->loadFile(TEST_SONG_NAME, false);
+    player->loadFileAsync(TEST_SONG_NAME, false);
     EXPECT_NO_THROW(player->play());
     EXPECT_NO_THROW(player->play());  // Ensure calling play again doesn't break
 }
 
 // Test concurrent play and stop
 TEST_F(MiniAudioPlayerTest, ConcurrentPlayAndStop) {
-    player->loadFile(TEST_SONG_NAME, false);
+    player->loadFileAsync(TEST_SONG_NAME, false);
 
     std::thread playThread([&]() { EXPECT_NO_THROW(player->play()); });
     std::thread stopThread([&]() { EXPECT_NO_THROW(player->stop()); });
@@ -168,8 +179,8 @@ TEST_F(MiniAudioPlayerTest, ConcurrentPlayAndStop) {
 }
 
 TEST_F(MiniAudioPlayerTest, DestructorCleanup) {
-    MiniAudioPlayer* tempPlayer = new MiniAudioPlayer();
-    tempPlayer->loadFile(TEST_SONG_NAME, false);
+    auto* tempPlayer = new MiniAudioPlayer();
+    tempPlayer->loadFileAsync(TEST_SONG_NAME, false);
     tempPlayer->play();
 
     EXPECT_NO_THROW(delete tempPlayer);
@@ -182,7 +193,7 @@ TEST_F(MiniAudioPlayerTest, DestructorCleanup) {
 /*    });*/
 /*}*/
 
-int main(int argc, char **argv) {
+auto main(int argc, char **argv) -> int {
     ::testing::InitGoogleTest(&argc, argv);
 
     // Set Google Test verbosity

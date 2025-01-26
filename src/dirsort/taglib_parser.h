@@ -39,7 +39,7 @@ namespace fs = std::filesystem;
 struct Metadata
 {
   std::string title = "Unknown Title"; /**< The title of the song */
-  std::string artist = "Unknown Artist"; /**< The artist of the song */
+  std::string artist = "<Unknown Artist>"; /**< The artist of the song */
   std::string album = "Unknown Album"; /**< The album the song is part of */
   std::string genre = "Unknown Genre"; /**< The genre of the song */
   std::string comment = "No Comment"; /**< The comment associated with the song */
@@ -114,23 +114,19 @@ void sendErrMsg(std::string debugLogBoolStr, std::string errMsg);
 // variable to keep track of user's preference of debug logs
 std::string debugLogBoolStr;
 
+bool debugLogBool;
+
+int unknownArtistTracks = 0;
+
 // Constructor with parameter
-TagLibParser::TagLibParser(const std::string& debugString) { debugLogBoolStr = debugString; }
+TagLibParser::TagLibParser(const std::string& debugString) { debugLogBoolStr = debugString; debugLogBool = debugLogBoolStr == "true" ? true : false; }
 
 void sendErrMsg(std::string debugLogBoolStr, std::string errMsg)
 {
-  if (debugLogBoolStr == "false")
-  {
-    return;
-  }
-
-  else if (debugLogBoolStr == "true")
+  
+  if (debugLogBool)
   {
     std::cerr << errMsg << std::endl;
-  }
-  else
-  {
-    std::cerr << "invalid field in config.toml: " << debugLogBoolStr << std::endl;
   }
 
   return;
@@ -140,57 +136,119 @@ void sendErrMsg(std::string debugLogBoolStr, std::string errMsg)
 
 // Function to parse metadata from a file
 bool TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) {
+  if (debugLogBool) {
+    std::cout << "-- [TAG PARSE] Parsing file: " << filePath << std::endl;
+  }
+
   TagLib::FileRef file(filePath.c_str());
-  std::string     errMsg;
+  std::string errMsg;
+  
+  // If file is invalid or cannot be opened
   if (file.isNull()) {
     errMsg = "Error: Failed to open file: " + filePath;
     sendErrMsg(debugLogBoolStr, errMsg);
+    if (debugLogBool) {
+      std::cout << "[TAG PARSE] " << errMsg << std::endl;
+    }
+    metadata.title = filePath.substr(filePath.find_last_of("/\\") + 1); // Use the file name 
     return false;
   }
 
+  // If file has no tag information
   if (!file.tag()) {
     errMsg = "Error: No tag information found in file: " + filePath;
     sendErrMsg(debugLogBoolStr, errMsg);
-    return false;
+    if (debugLogBool) {
+      std::cout << "[TAG PARSE] " << errMsg << std::endl;
+    }
+
+    // Fallback metadata in case there is no tag information
+    metadata.title = filePath.substr(filePath.find_last_of("/\\") + 1); // Use the file name 
+    return true;
   }
 
+  // If the file contains tag data, continue processing
   TagLib::Tag* tag = file.tag();
-  metadata.title   = tag->title().isEmpty() ? "Unknown Title" : tag->title().to8Bit(true);
-  metadata.artist  = tag->artist().isEmpty() ? "Unknown Artist" : tag->artist().to8Bit(true);
-  metadata.album   = tag->album().isEmpty() ? "Unknown Album" : tag->album().to8Bit(true);
-  metadata.genre   = tag->genre().isEmpty() ? "Unknown Genre" : tag->genre().to8Bit(true);
+  metadata.title = tag->title().isEmpty() ? filePath.substr(filePath.find_last_of("/\\") + 1) : tag->title().to8Bit(true);
+  metadata.artist = tag->artist().isEmpty() ? "<Unknown Artist>" : tag->artist().to8Bit(true);
+  metadata.album = tag->album().isEmpty() ? "Unknown Album" : tag->album().to8Bit(true);
+  metadata.genre = tag->genre().isEmpty() ? "Unknown Genre" : tag->genre().to8Bit(true);
   metadata.comment = tag->comment().isEmpty() ? "No Comment" : tag->comment().to8Bit(true);
-  metadata.year    = tag->year() == 0 ? 0 : tag->year();
-  metadata.track   = tag->track() == 0 ? 0 : tag->track();
-  
+  metadata.year = tag->year() == 0 ? 0 : tag->year();
+
+  // Track logic
+  metadata.track = tag->track();
+  if (debugLogBool) {
+    std::cout << "[TAG PARSE] Track: " << (tag->track() == 0 ? "(No Track, using fallback)" : std::to_string(tag->track())) << std::endl;
+    if (tag->track() == 0) {
+      if (metadata.artist == "<Unknown Artist>") {
+        unknownArtistTracks++;
+        metadata.track = unknownArtistTracks;
+      }
+      std::cout << "[TAG PARSE]  Assigned track number: " << metadata.track << std::endl;
+    }
+  }
+
+  // Audio Properties
   TagLib::AudioProperties *audioProperties = file.audioProperties();
   if (audioProperties) {
     metadata.duration = audioProperties->length(); // Duration in seconds
     metadata.bitrate = (audioProperties->bitrate() == 0) ? -1 : audioProperties->bitrate();
+
+    if (debugLogBool) {
+      std::cout << "[TAG PARSE] Audio properties found:" << std::endl;
+      std::cout << "[TAG PARSE]  Duration: " << metadata.duration << " seconds" << std::endl;
+      std::cout << "[TAG PARSE]  Bitrate: " << metadata.bitrate << " kbps" << std::endl;
+    }
+  } else {
+    if (debugLogBool) {
+      std::cout << "[TAG PARSE] No audio properties found." << std::endl;
+    }
+    metadata.duration = 0.0f;
+    metadata.bitrate = 0;
   }
 
   // Keep track of file path
   metadata.filePath = filePath;
+  if (debugLogBool) {
+    std::cout << "[TAG PARSE] File Path: " << metadata.filePath << std::endl;
+  }
 
   // Extract additional properties such as lyrics and disc number
   TagLib::PropertyMap properties = file.file()->properties();
   if (properties.contains("DISCNUMBER")) {
     metadata.discNumber = properties["DISCNUMBER"].toString().toInt();
+    if (debugLogBool) {
+      std::cout << "[TAG PARSE] Disc Number: " << metadata.discNumber << std::endl;
+    }
   } else {
     metadata.discNumber = 0;
+    if (debugLogBool) {
+      std::cout << "[TAG PARSE] Disc Number: (Not Available)" << std::endl;
+    }
   }
 
   if (properties.contains("LYRICS")) {
     metadata.lyrics = properties["LYRICS"].toString().to8Bit(true);
+    if (debugLogBool) {
+      std::cout << "[TAG PARSE] Lyrics found: " << metadata.lyrics << std::endl;
+    }
   } else {
     metadata.lyrics = "No Lyrics";
+    if (debugLogBool) {
+      std::cout << "[TAG PARSE] Lyrics: (Not Available)" << std::endl;
+    }
   }
 
   // Populate additional properties if needed
-  for (const auto& prop : properties) {
-    std::string key                    = prop.first.to8Bit(true);
-    std::string value                  = prop.second.toString().to8Bit(true);
-    metadata.additionalProperties[key] = value;
+  if (debugLogBool && !properties.isEmpty()) {
+    std::cout << "[TAG PARSE] Additional properties found:" << std::endl;
+    for (const auto& prop : properties) {
+      std::string key = prop.first.to8Bit(true);
+      std::string value = prop.second.toString().to8Bit(true);
+      metadata.additionalProperties[key] = value;
+      std::cout << "[TAG PARSE]  " << key << ": " << value << std::endl;
+    }
   }
 
   return true;

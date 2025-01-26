@@ -6,7 +6,7 @@
 #ifndef THREAD_MANAGER_HPP
 #define THREAD_MANAGER_HPP
 
-#include "../threads/workers.hpp"
+#include "workers.hpp"
 #include <atomic>
 #include <future>
 #include <memory>
@@ -41,24 +41,24 @@ public:
   /**
    * @brief Construct a ThreadManager with a worker thread pool.
    */
-  ThreadManager() : worker_pool(std::make_unique<WorkerThreadPool>()) {}
+  ThreadManager() : worker_pool(std::make_shared<WorkerThreadPool>()) {}
 
   /**
    * @brief Destructor to clean up resources and threads.
    */
-  ~ThreadManager() { cleanupAllThreads(); }
+  /*~ThreadManager() { cleanupAllThreads(); }*/
 
   /**
    * @brief Retrieves the thread state managed by this ThreadManager.
    * @return A reference to the thread state.
    */
-  ThreadState& getThreadState() { return thread_state; }
+  auto getThreadState() -> ThreadState& { return thread_state; }
 
   /**
    * @brief Get the worker thread pool.
    * @return Reference to the WorkerThreadPool.
    */
-  WorkerThreadPool& getWorkerThreadPool() { return *worker_pool; }
+  auto getWorkerThreadPool() -> WorkerThreadPool& { return *worker_pool; }
 
   /**
    * @brief Locks the play mutex for the provided thread state.
@@ -111,7 +111,7 @@ private:
   /**
    * @brief The worker thread pool.
    */
-  std::unique_ptr<WorkerThreadPool> worker_pool;
+  std::shared_ptr<WorkerThreadPool> worker_pool;
 };
 
 #endif // THREAD_MANAGER_HPP

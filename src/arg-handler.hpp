@@ -55,7 +55,7 @@ public:
    * @param color The `ConsoleColor` enum value.
    * @return A string view representing the ANSI color code.
    */
-  static std::string_view getColor(ConsoleColor color)
+  static auto getColor(ConsoleColor color) -> std::string_view
   {
     static const std::unordered_map<ConsoleColor, std::string_view> colorCodes = {
       {ConsoleColor::Reset, "\033[0m"},   {ConsoleColor::Green, "\033[32m"},

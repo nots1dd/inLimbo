@@ -840,3 +840,46 @@ Medium commit, moving strictly towards testing + refactor
 - Centering of the image_view (NOT THAT BIG)
 
 ---
+
+## [ALPHA 2.6] --- 26-01-2025
+
+### Added
+**NIL** 
+
+### Changed
+- Followed better trailing return types for a lot of functions 
+
+- More verbosity for taglib parser logs using parseFile function call
+
+- loadFile and getSongDuration functions in miniaudio are now an async functions that have significant performace improvement especially during fast UI calls to play a song
+
+- UpdatePlayingState is now part of the worker thread pool with better struct data protection to avoid any corrupt values in fields
+
+- Fetching the debugLogBool value should be faster now (previously there were so many string comparisons idk what i was thinking, now it is just a boolean)
+
+- Keybinds and InLimboColors structs are initialized in main func and given as parameterized values to MusicPlayer
+
+- Subsequent changes to `tests/audio` and `tests/taglib` test suites
+
+### Fixed
+- The MAJOR issue of the player just exiting if the song queue was <= ~6 songs is fixed :)
+
+- Unknown songs being overwritten in song map to track 0 by default is fixed (now every unknown song that taglib could not parse is shown under `<Unknown Artist>`)
+
+- When traversing back down to the last song, the album_indices_traversed value was buggy (would cause songs to not be played), now it is fixed
+
+### Removed
+- Unnecessary libsync file and constructor and destructor of InodeMapper (might add them later when logging is setup)
+
+- Useless function processCacheFile in InodeMapper
+
+Sizeable commit, a lot of bugs resolved which is great, still hoping for better refactor and more test suite inclusion
+
+### Known Issues to fix in immediate commits
+- Holding the keybind for PlayNextSong() / PlayPrevSong() doesnt break anything, but MiniAudioPlayer class is not as responsive as the UI, so it lags behind (MAJOR ISSUE)
+
+(The outcome of the above issue would be that if you hold PlayNextSong() func call and it goes to Song A, the MiniAudioPlayer might still be playing Song B, which appears BEFORE Song A)
+
+- Centering of the image_view (NOT THAT BIG)
+
+---
