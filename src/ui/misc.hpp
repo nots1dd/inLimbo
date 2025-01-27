@@ -25,6 +25,25 @@ struct ComponentState
   Component audioDeviceMenu;
 };
 
+struct PlayingState
+{
+  std::string                                  artist;
+  std::string                                  title;
+  std::string                                  genre;
+  std::string                                  album;
+  bool                                         has_comment = false;
+  bool                                         has_lyrics  = false;
+  int                                          duration;
+  int                                          bitrate;
+  unsigned int                                 year       = 0;
+  unsigned int                                 track      = 0;
+  unsigned int                                 discNumber = 0;
+  std::string                                  lyrics;
+  std::string                                  comment;
+  std::unordered_map<std::string, std::string> additionalProperties;
+  std::string                                  filePath;
+};
+
 auto formatLyrics(const std::string& lyrics)
 {
   std::vector<std::string> lines;
@@ -172,7 +191,7 @@ auto CreateMenu(const std::vector<std::string>* vecLines, int* currLine)
 auto RenderSongMenu(const std::vector<Element>& items)
 {
   Elements rendered_items;
-  for (const auto & item : items)
+  for (const auto& item : items)
   {
     rendered_items.push_back(item | frame);
   }

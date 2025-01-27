@@ -883,3 +883,38 @@ Sizeable commit, a lot of bugs resolved which is great, still hoping for better 
 - Centering of the image_view (NOT THAT BIG)
 
 ---
+
+## [ALPHA 2.7] --- 27-01-2025
+
+### Added
+**NIL** 
+
+### Changed
+- Overall version bump to 2.7
+
+- Added `build-global`, `build-global-uninstall` to makefile
+
+- Subsequent makefile, readme and build file changes
+
+- CMakeLists.txt now posts a very neat verbose output of the build configuration it will undergo (useful for debugging)
+
+- Moved `PlayingState` struct definition outside of `ui_handler` header
+
+- Overall code formatting and minor fixes
+
+### Fixed
+- Debug builds for ASan and TSan using makefile
+
+### Removed
+- Removed debounce time for now, seems unnecessary but might add in the future
+
+Small commit with some neat build changes that makes life pretty easy
+
+### Known Issues to fix in immediate commits
+- Holding the keybind for PlayNextSong() / PlayPrevSong() doesnt break anything, but MiniAudioPlayer class is not as responsive as the UI, so it lags behind (MAJOR ISSUE)
+
+(The outcome of the above issue would be that if you hold PlayNextSong() func call and it goes to Song A, the MiniAudioPlayer might still be playing Song B, which appears BEFORE Song A)
+
+- Centering of the image_view (NOT THAT BIG)
+
+---

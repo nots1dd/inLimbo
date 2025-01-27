@@ -12,14 +12,13 @@
 #include "./cmd-line-args.hpp"
 #include <filesystem>
 #include <iostream>
-#include <stdexcept>
 #include <string_view>
 #include <unordered_map>
 
 // Constants
 constexpr const char* DBUS_SERVICE_NAME =
   "org.mpris.MediaPlayer2.inLimbo";            ///< DBus service name used by inLimbo.
-constexpr const char* VERSION = "2.5 (ALPHA)"; ///< Current version of the application.
+constexpr const char* VERSION = "2.7 (ALPHA)"; ///< Current version of the application.
 
 bool shouldRunApp =
   false; ///< Indicates if the application should proceed to run after handling arguments.

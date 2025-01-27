@@ -103,6 +103,12 @@ A simple command using makefile should build everything you want:
 make build-all
 ```
 
+For a **GLOBAL BUILD**:
+
+```bash 
+make build-global
+```
+
 Check out [BUILD.md](https://github.com/nots1dd/inLimbo/blob/main/BUILD.md) for more options to build targets
 
 > [!NOTE]
@@ -113,6 +119,8 @@ Check out [BUILD.md](https://github.com/nots1dd/inLimbo/blob/main/BUILD.md) for 
 ## DEBUGGING
 
 inLimbo is in active development and is prone to having *A LOT* of issues
+
+-> Makefile also allows for building and running of a debug build.
 
 To try out **DEBUG BUILD** to find bugs/issues:
 

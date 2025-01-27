@@ -47,12 +47,11 @@ public:
   MusicPlayer(
     const std::map<std::string,
                    std::map<std::string, std::map<unsigned int, std::map<unsigned int, Song>>>>&
-      initial_library, Keybinds& keybinds, InLimboColors& colors)
+              initial_library,
+    Keybinds& keybinds, InLimboColors& colors)
       : library(initial_library), INL_Thread_Manager(std::make_unique<ThreadManager>()),
-        INL_Thread_State(INL_Thread_Manager->getThreadState()),
-        global_keybinds(keybinds),
-        global_colors(colors),
-        song_queue() // Initialize the queue vector to avoid any abrupt exits 
+        INL_Thread_State(INL_Thread_Manager->getThreadState()), global_keybinds(keybinds),
+        global_colors(colors), song_queue() // Initialize the queue vector to avoid any abrupt exits
   {
     InitializeData();
     CreateComponents();
@@ -137,31 +136,12 @@ public:
   }
 
 private:
-  struct PlayingState
-  {
-    std::string                                  artist;
-    std::string                                  title;
-    std::string                                  genre;
-    std::string                                  album;
-    bool                                         has_comment     = false;
-    bool                                         has_lyrics      = false;
-    int                                          duration;
-    int                                          bitrate;
-    unsigned int                                 year       = 0;
-    unsigned int                                 track      = 0;
-    unsigned int                                 discNumber = 0;
-    std::string                                  lyrics;
-    std::string                                  comment;
-    std::unordered_map<std::string, std::string> additionalProperties;
-    std::string                                  filePath;
-  };
-
   PlayingState current_playing_state;
 
   std::unique_ptr<MPRISService> mprisService;
 
   Keybinds      global_keybinds;
-  GlobalProps   global_props    = parseProps();
+  GlobalProps   global_props = parseProps();
   InLimboColors global_colors;
 
   std::shared_ptr<MiniAudioPlayer> audio_player;
@@ -210,8 +190,8 @@ private:
   bool                 muted            = false;
   int                  lastVolume       = volume;
   double               current_position = 0;
-  int                  active_screen =
-    0; // 0 -> Main UI ; 1 -> Show help ; 2 -> Show lyrics; 3 -> Songs queue screen; 4 -> Song info screen; 5 -> Audio sinks screen
+  int active_screen = 0; // 0 -> Main UI ; 1 -> Show help ; 2 -> Show lyrics; 3 -> Songs queue
+                         // screen; 4 -> Song info screen; 5 -> Audio sinks screen
   bool               should_quit      = false;
   bool               focus_on_artists = true;
   ScreenInteractive* screen_          = nullptr;
@@ -419,17 +399,43 @@ private:
 
   void PlayPreviousSong()
   {
-    // Move to the previous song if possible
-    if (current_song_queue_index > 0)
+    try
     {
+      // Queue state validations
+      if (song_queue.empty())
+      {
+        SetDialogMessage("Error: Queue is empty.");
+        INL_Thread_State.is_playing = false;
+        return;
+      }
+
+      if (current_song_queue_index + 1 >= song_queue.size())
+      {
+        SetDialogMessage("Error: No more previous songs in the queue.");
+        return;
+      }
+
+      // Increment song index
       current_song_queue_index--;
+
+      // Get current song
+      Song* current_song = GetCurrentSongFromQueue();
+      if (!current_song)
+      {
+        INL_Thread_State.is_playing = false;
+        SetDialogMessage("Error: Invalid song in queue.");
+        return;
+      }
+
       current_position = 0;
       PlayCurrentSong();
       UpdatePlayingState();
     }
-    else
+    catch (std::exception e)
     {
-      SetDialogMessage("Error: No previous song available.");
+      show_dialog    = true;
+      dialog_message = "Error: Invalid!!.";
+      return;
     }
   }
 

@@ -151,16 +151,32 @@ This target runs the initialization script (`init.sh`).
 
 ---
 
-### 12. **global_build**
+### 12. **build-global**
 This target builds and installs the project globally.
 
 - **Command**: 
   ```sh
-  make global_build
+  make build-global
   ```
 - **Description**: 
-  - This will configure the build with a `BUILD_GLOBAL` flag and install the project using `ninja` after the build completes.
-  - Useful for installing the project globally for system-wide usage.
+  - Just runs sudo make install after building for target local release (adds inLimbo.desktop and icon to system wide directories)
+
+---
+
+### 12. **build-global-uninstall**
+This target uninstalls every system wide installed file of inLimbo using `install_manifests.txt` in build directory.
+
+- **Command**: 
+  ```sh
+  make build-global-uninstall
+  ```
+
+  > [!NOTE]
+  > 
+  > If you remove `build/` directory, the `install_manifests.txt` will not exist so this wont work
+  > 
+  > Will come with a workaround in the future
+  > 
 
 ---
 
@@ -226,8 +242,3 @@ make -j
 ./run_webassembly.py # assuming the compilation has no errors
 # This will run in port 8000
 ```
-
-> [!NOTE]
-> 
-> Debug building using make needs to be setup, will be available soon. (it may not work using make currently)
-> 

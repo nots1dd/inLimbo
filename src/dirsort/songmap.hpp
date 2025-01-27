@@ -201,10 +201,7 @@ public:
    *
    * @return The nested map structure of songs.
    */
-  auto returnSongMap()
-  {
-    return tree;
-  }
+  auto returnSongMap() { return tree; }
 
   /**
    * @brief Serializes the SongTree object.

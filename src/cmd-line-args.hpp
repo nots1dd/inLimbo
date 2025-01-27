@@ -79,14 +79,20 @@ public:
    * @return `true` if the flag is present, otherwise `false`.
    */
   [[nodiscard]]
-  auto hasFlag(const std::string& flag) const -> bool { return args.find(flag) != args.end(); }
+  auto hasFlag(const std::string& flag) const -> bool
+  {
+    return args.find(flag) != args.end();
+  }
   /**
    * @brief Retrieves the list of positional arguments.
    *
    * @return A reference to a vector containing the positional arguments.
    */
-  [[nodiscard]] 
-  auto getPositionalArgs() const -> const std::vector<std::string>& { return positionalArgs; }
+  [[nodiscard]]
+  auto getPositionalArgs() const -> const std::vector<std::string>&
+  {
+    return positionalArgs;
+  }
 
   /**
    * @brief Prints usage information and program details.

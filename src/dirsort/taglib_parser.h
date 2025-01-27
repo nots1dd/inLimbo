@@ -86,7 +86,7 @@ public:
    * @param metadata A reference to a Metadata object where parsed data will be stored.
    * @return `true` if parsing was successful, `false` otherwise.
    */
-  bool parseFile(const std::string& filePath, Metadata& metadata);
+  auto parseFile(const std::string& filePath, Metadata& metadata) -> bool;
 
   /**
    * @brief Parse metadata from files in a directory based on inode.
@@ -94,8 +94,7 @@ public:
    * @param directory The directory to search in.
    * @return A map of file paths to corresponding metadata.
    */
-  std::unordered_map<std::string, Metadata> parseFromInode(ino_t              inode,
-                                                           const std::string& directory);
+  auto parseFromInode(ino_t inode, const std::string& directory) -> std::unordered_map<std::string, Metadata>;
 };
 
 /**
@@ -135,7 +134,7 @@ void sendErrMsg(std::string debugLogBoolStr, std::string errMsg)
 #ifndef __EMSCRIPTEN__ // TagLib-specific implementations
 
 // Function to parse metadata from a file
-bool TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) {
+auto TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) -> bool {
   if (debugLogBool) {
     std::cout << "-- [TAG PARSE] Parsing file: " << filePath << std::endl;
   }
@@ -230,9 +229,6 @@ bool TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) {
 
   if (properties.contains("LYRICS")) {
     metadata.lyrics = properties["LYRICS"].toString().to8Bit(true);
-    if (debugLogBool) {
-      std::cout << "[TAG PARSE] Lyrics found: " << metadata.lyrics << std::endl;
-    }
   } else {
     metadata.lyrics = "No Lyrics";
     if (debugLogBool) {
@@ -242,12 +238,11 @@ bool TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) {
 
   // Populate additional properties if needed
   if (debugLogBool && !properties.isEmpty()) {
-    std::cout << "[TAG PARSE] Additional properties found:" << std::endl;
+    std::cout << "[TAG PARSE] Additional properties found!" << std::endl;
     for (const auto& prop : properties) {
       std::string key = prop.first.to8Bit(true);
       std::string value = prop.second.toString().to8Bit(true);
       metadata.additionalProperties[key] = value;
-      std::cout << "[TAG PARSE]  " << key << ": " << value << std::endl;
     }
   }
 
@@ -255,7 +250,7 @@ bool TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) {
 }
 
 // Function to parse metadata based on inode
-std::unordered_map<std::string, Metadata> TagLibParser::parseFromInode(ino_t inode, const std::string& directory) {
+auto TagLibParser::parseFromInode(ino_t inode, const std::string& directory) -> std::unordered_map<std::string, Metadata> {
   std::unordered_map<std::string, Metadata> metadataMap;
   std::string                               tempErrMsg;
 
@@ -326,7 +321,7 @@ void printMetadata(const Metadata& metadata) {
  * @param outputImagePath The path where the extracted album art image will be saved.
  * @return `true` if the thumbnail was successfully extracted, `false` otherwise.
  */
-bool extractThumbnail(const std::string& audioFilePath, const std::string& outputImagePath) {
+auto extractThumbnail(const std::string& audioFilePath, const std::string& outputImagePath) -> bool {
     // Determine the file type based on the extension
     std::string extension = audioFilePath.substr(audioFilePath.find_last_of('.') + 1);
 

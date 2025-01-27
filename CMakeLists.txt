@@ -2,13 +2,19 @@ cmake_minimum_required (VERSION 3.22)
 
 project(inLimbo
   LANGUAGES CXX
-  VERSION 1.0.0
+  VERSION 2.7
 )
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CONFIG_TOML_FILE "$ENV{HOME}/.config/inLimbo/config.toml")
+set(INLIMBO_CACHE_DIR "$ENV{HOME}/.cache/inLimbo")
+set(MINIAUDIO_FILE_RELATIVE "src/music/miniaudio.h")
+set(CIMG_FILE_RELATIVE "src/ui/components/libs/CImg.h")
+set(TOML_FILE_RELATIVE "src/parser/toml.hpp")
+set(INLIMBO_DEBUG_BUILD OFF)
 
 enable_testing()
 
@@ -42,6 +48,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug-ASan")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Debug-TSan")
   set(EXECUTABLE_NAME "inLimbo-DBG-TSan")
 else()
+  set(CMAKE_BUILD_TYPE "Local Release")
   set(EXECUTABLE_NAME "inLimbo")
 endif()
 
@@ -61,6 +68,7 @@ target_include_directories(${EXECUTABLE_NAME} PRIVATE src)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug-ASan")
   # Enable AddressSanitizer
+  set(INLIMBO_DEBUG_BUILD ON)
   message(STATUS "Enabling AddressSanitizer for Debug-AddressSanitizer build")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g")
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
@@ -76,6 +84,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug-ASan")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
  
 elseif(CMAKE_BUILD_TYPE STREQUAL "Debug-TSan")
+  set(INLIMBO_DEBUG_BUILD ON)
   # Enable ThreadSanitizer
   message(STATUS "Enabling ThreadSanitizer for Debug-ThreadSanitizer build")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread -g")
@@ -115,6 +124,7 @@ endif()
 
 # --- Handle Global Build ---------------------------------------------------------
 if(DEFINED GLOBAL_BUILD AND GLOBAL_BUILD)
+  set(CMAKE_BUILD_TYPE "Global")
   set(CMAKE_INSTALL_PREFIX "/usr/")
   message(STATUS "Starting GLOBAL_BUILD for inLimbo...")
 
@@ -126,7 +136,6 @@ if(DEFINED GLOBAL_BUILD AND GLOBAL_BUILD)
 else()
   # Local build (build in ./build directory)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/build")
-
   message(STATUS "Building locally, binaries will be located in ./build/")
 endif()
 
@@ -176,18 +185,65 @@ target_link_libraries(${EXECUTABLE_NAME}
 )
 
 # --- Ensure the config.toml file is created in the correct directory ---------------------
-if (NOT EXISTS "$ENV{HOME}/.config/inLimbo/config.toml")
+if (NOT EXISTS ${CONFIG_TOML_FILE})
+  message(STATUS "Creating config.toml...")
   file(MAKE_DIRECTORY "$ENV{HOME}/.config/inLimbo")
-  configure_file("${CMAKE_SOURCE_DIR}/src/parser/examples/config.toml" "$ENV{HOME}/.config/inLimbo/config.toml" COPYONLY)
+  configure_file("${CMAKE_SOURCE_DIR}/src/parser/examples/config.toml" ${CONFIG_TOML_FILE} COPYONLY)
 endif()
-if (NOT EXISTS "$ENV{HOME}/.cache/inLimbo/")
-  file(MAKE_DIRECTORY "$ENV{HOME}/.cache/inLimbo")
+if (NOT EXISTS ${INLIMBO_CACHE_DIR})
+  file(MAKE_DIRECTORY ${INLIMBO_CACHE_DIR})
 endif()
 
 # --- Add Tests Directory Only if INLIMBO_TESTING is Defined ----------------------
 if(DEFINED INLIMBO_TESTING AND INLIMBO_TESTING)
+  set(CMAKE_BUILD_TYPE "Build-Test")
   message("--> Enabling TESTING for INLIMBO...")
   add_subdirectory(tests)
 else()
   message("--> TESTING is disabled for INLIMBO.")
 endif()
+
+# --- Sanity check for required headers ----
+message(STATUS "================== SANITY CHECKS ==========================")
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${MINIAUDIO_FILE_RELATIVE}")
+  message(FATAL_ERROR "**Miniaudio header not found. File should exist at the expected location: ${MINIAUDIO_FILE_RELATIVE} (Maybe run init.sh?)**")
+else()
+  message(STATUS "Found Miniaudio header...")
+endif()
+
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${CIMG_FILE_RELATIVE}")
+  message(FATAL_ERROR "**CImg header not found. File should exist at the expected location: ${CIMG_FILE_RELATIVE} (Maybe run init.sh?)**")
+else()
+  message(STATUS "Found CImg header...")
+endif()
+
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${TOML_FILE_RELATIVE}")
+  message(FATAL_ERROR "**TOML++ header not found. File should exist at the expected location: ${TOML_FILE_RELATIVE} (Maybe run init.sh?)**")
+else()
+  message(STATUS "Found TOML++ header...")
+endif()
+message(STATUS "================== SANITY CHECKS END ========================")
+
+# --- Print Build Configuration ----------------------------------------------------
+message(STATUS "\n\n-- Building the ${PROJECT_NAME} project v${PROJECT_VERSION}...\n")
+message(STATUS "┌─ Build Configuration for inLimbo ────────────────────────")
+message(STATUS "│ Operating System        : ${CMAKE_SYSTEM_NAME}")
+message(STATUS "│ Build Type              : ${CMAKE_BUILD_TYPE} (ALPHA)")
+message(STATUS "│ CMake Version           : ${CMAKE_VERSION}")
+message(STATUS "│ Compiler                : ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_VERSION}")
+message(STATUS "│ Compiler Flags          : ${CMAKE_CXX_FLAGS}")
+message(STATUS "│ Executable Name         : ${EXECUTABLE_NAME}")
+message(STATUS "│ C++ Standard            : ${CMAKE_CXX_STANDARD}")
+message(STATUS "│ Install Prefix (GLOBAL) : ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "│ Local Build Directory   : ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+message(STATUS "│ Miniaudio header        : YES (${MINIAUDIO_FILE_RELATIVE})")
+message(STATUS "│ CImg header             : YES (${CIMG_FILE_RELATIVE})")
+message(STATUS "│ TOML++ header           : YES (${TOML_FILE_RELATIVE})")
+message(STATUS "│ GLib/Gio Libraries      : ${GLIB_LIBRARIES}")
+message(STATUS "│ FTXUI Fetched           : YES")
+message(STATUS "│ Config file location    : ${CONFIG_TOML_FILE}")
+message(STATUS "│ Cache dir location      : ${INLIMBO_CACHE_DIR}")
+message(STATUS "│ Build Global Option     : ${BUILD_GLOBAL}")
+message(STATUS "│ Enable Testing          : ${INLIMBO_TESTING}")
+message(STATUS "│ Enable Debug Build      : ${INLIMBO_DEBUG_BUILD}")
+message(STATUS "└──────────────────────────────────────────────────────────\n")

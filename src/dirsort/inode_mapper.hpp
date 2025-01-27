@@ -14,7 +14,7 @@
 
 using namespace std;
 
-#define LIB_BIN_NAME  "lib.bin"
+#define LIB_BIN_NAME "lib.bin"
 
 class InodeFileMapper
 {
