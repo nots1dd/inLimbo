@@ -26,7 +26,7 @@ struct GlobalProps
  *
  * @return A GlobalProps struct with the configured settings.
  */
-GlobalProps parseProps()
+auto parseProps() -> GlobalProps
 {
   GlobalProps gprops;
 

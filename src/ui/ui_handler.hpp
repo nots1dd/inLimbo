@@ -6,10 +6,11 @@
 #include "../threads/thread_manager.hpp"
 #include "./components/scroller.hpp"
 #include "./properties.hpp"
+#include "arg-handler.hpp"
+#include "dirsort/songmap.hpp"
 #include "keymaps.hpp"
 #include "misc.hpp"
 #include <ftxui/dom/elements.hpp>
-#include <unordered_set>
 
 using namespace ftxui;
 
@@ -20,10 +21,6 @@ using namespace ftxui;
 #define ADDN_PROPS_AVAIL "&*"
 #define STATUS_BAR_DELIM " | "
 
-/** STRING TRUNCATION MACROS */
-#define MAX_LENGTH_SONG_NAME   50
-#define MAX_LENGTH_ARTIST_NAME 30
-
 /** SCREEN MACROS */
 #define SHOW_MAIN_UI           0
 #define SHOW_HELP_SCREEN       1
@@ -31,6 +28,10 @@ using namespace ftxui;
 #define SHOW_QUEUE_SCREEN      3
 #define SHOW_SONG_INFO_SCREEN  4
 #define SHOW_AUDIO_CONF_SCREEN 5
+
+/** MODES OF OPERATION */
+#define NORMAL_MODE 0
+#define SEARCH_MODE 1
 
 #define MIN_DEBOUNCE_TIME_IN_MS 500
 
@@ -92,6 +93,8 @@ public:
             if (INL_Thread_State.is_playing)
             {
               current_position += 0.1;
+              // [TODO]: FIX BUG=> If we have a lot of activity (say we spam a lot of up/down,
+              // eventually after 10-15s, it will force itself to the next song)
               if (current_position >= GetCurrentSongDuration())
               {
                 PlayNextSong();
@@ -171,6 +174,7 @@ private:
   std::vector<std::string>  lyricLines;
   std::vector<std::string>  audioDevices;
   std::vector<AudioDevice>  audioDeviceMap;
+  std::vector<std::string>  audioDeviceConf;
   std::vector<Element>      current_song_elements;
   std::vector<unsigned int> current_inodes;
   std::unordered_set<int>   album_name_indices;
@@ -184,6 +188,7 @@ private:
   int selected_song_queue     = 0;
   int selected_audio_dev_line = 0;
   int selected_inode          = 1; // First element is always going to album name so we ignore it
+  int selected_song           = 0; // song index with respect to the song menu
   int current_lyric_line      = 0;
   std::vector<Element> lyricElements;
   int                  volume           = 50;
@@ -245,7 +250,7 @@ private:
 
   /* Miniaudio class integrations */
 
-  std::shared_ptr<MiniAudioPlayer> getOrCreateAudioPlayer()
+  auto getOrCreateAudioPlayer() -> std::shared_ptr<MiniAudioPlayer>
   {
     static std::mutex player_mutex;
     if (!audio_player)
@@ -282,15 +287,13 @@ private:
           {
             throw std::runtime_error("Error: Invalid file path.");
           }
-          // Stop previous song if any
+
           if (INL_Thread_State.is_playing)
           {
             audio_player->stop();
-            /*INL_Thread_State.is_playing = false;*/
           }
-          // Load the audio file
-          auto load_future = audio_player->loadFileAsync(file_path, true);
 
+          auto load_future = audio_player->loadFileAsync(file_path, true);
           // Wait for the asynchronous load to complete
           int loadAudioFileStatus = load_future.get();
           if (loadAudioFileStatus == -1)
@@ -298,9 +301,11 @@ private:
             throw std::runtime_error("Error: Failed to load the audio file.");
           }
           INL_Thread_State.is_playing = true;
+          UpdateVolume();
           audio_player->play(); // Play the song (it will play in a separate thread)
           auto durationFuture            = audio_player->getDurationAsync();
           current_playing_state.duration = durationFuture.get();
+          selected_song                  = selected_inode;
         }
         catch (const std::exception& e)
         {
@@ -415,7 +420,7 @@ private:
         return;
       }
 
-      // Increment song index
+      // Decrement song index
       current_song_queue_index--;
 
       // Get current song
@@ -449,19 +454,29 @@ private:
     return;
   }
 
-  Element listAudioSinks()
+  auto RenderAudioConsole() -> Element
   {
     INL_Component_State.audioDeviceMenu = CreateMenu(&audioDevices, &selected_audio_dev_line);
     findAudioSinks();
     if (audioDevices.empty())
       return vbox({text("No sinks available.") | bold | border});
 
-    auto title = text(" Audio Devices ") | bold | getTrueColor(TrueColors::Color::LightBlue) |
+    auto title = text(" Audio Console ") | bold | getTrueColor(TrueColors::Color::LightBlue) |
                  underlined | center;
 
     auto audioDevComp = vbox({INL_Component_State.audioDeviceMenu->Render() | flex}) | border;
 
-    return vbox({title, separator(), audioDevComp | frame | flex}) | flex;
+    audioDeviceConf = audio_player->getAudioPlaybackDetails();
+
+    vector<Element> audioConfDetails;
+    for (const auto& i : audioDeviceConf)
+      audioConfDetails.push_back(text(i) | frame);
+
+    auto finalAudioConfDetailsElement = vbox(audioConfDetails);
+
+    return vbox({title, separator(), audioDevComp | frame | flex, separator(),
+                 finalAudioConfDetailsElement | flex | border}) |
+           flex | borderRounded;
   }
 
   /* ------------------------------- */
@@ -493,8 +508,9 @@ private:
       {
         // Get year from the first song in the album
         const Song& first_song = discs.begin()->second.begin()->second;
-        current_song_elements.push_back(
-          renderAlbumName(album_name, first_song.metadata.year, global_colors.album_name_bg));
+        current_song_elements.push_back(renderAlbumName(album_name, first_song.metadata.year,
+                                                        global_colors.album_name_bg,
+                                                        global_colors.album_name_fg));
         album_name_indices.insert(current_song_elements.size() - 1);
 
         for (const auto& [disc_number, tracks] : discs)
@@ -520,7 +536,7 @@ private:
     current_song_queue_index = 0;
   }
 
-  const Song& GetCurrentSong(const std::string& artist)
+  auto GetCurrentSong(const std::string& artist) -> const Song&
   {
     const auto& artist_data = library.at(artist);
 
@@ -630,7 +646,7 @@ private:
     }
   }
 
-  Song* GetCurrentSongFromQueue()
+  auto GetCurrentSongFromQueue() -> Song*
   {
     if (!song_queue.empty() && current_song_queue_index < song_queue.size())
     {
@@ -641,7 +657,7 @@ private:
     return nullptr;
   }
 
-  int GetCurrentSongDuration()
+  auto GetCurrentSongDuration() -> int
   {
     if (!current_inodes.empty() && audio_player)
     {
@@ -721,8 +737,10 @@ private:
     song_menu_options.on_change     = [&]() {};
     song_menu_options.focused_entry = &selected_inode;
 
-    INL_Component_State.artists_list =
-      Menu(&current_artist_names, &selected_artist, artist_menu_options);
+    INL_Component_State.artists_list = Scroller(
+      Renderer([&]() mutable { return RenderArtistMenu(current_artist_names); }), &selected_artist,
+      global_colors.artists_menu_col_bg, global_colors.inactive_menu_cursor_bg);
+    Menu(&current_artist_names, &selected_artist, artist_menu_options);
     INL_Component_State.songs_list = Scroller(
       Renderer(
         [&]() mutable
@@ -773,38 +791,6 @@ private:
             active_screen = SHOW_MAIN_UI;
             return true;
           }
-
-          else if (is_keybind_match(global_keybinds.scroll_down))
-          {
-            NavigateList(true);
-            return true;
-          }
-          else if (is_keybind_match(global_keybinds.scroll_up))
-          {
-            NavigateList(false);
-            return true;
-          }
-          else if (is_keybind_match('g'))
-          {
-
-            if (!first_g_pressed)
-            {
-              // First 'g' press
-              first_g_pressed = true;
-            }
-            else
-            {
-              // Second 'g' press
-              NavigateListToTop(true);
-              first_g_pressed = false; // Reset the state
-              return true;
-            }
-          }
-          else if (is_keybind_match('G'))
-          {
-            NavigateListToTop(false);
-            return true;
-          }
         }
 
         else if (active_screen == SHOW_QUEUE_SCREEN)
@@ -812,37 +798,6 @@ private:
           if (is_keybind_match(global_keybinds.remove_song_from_queue))
           {
             RemoveSongFromQueue();
-            return true;
-          }
-          else if (is_keybind_match(global_keybinds.scroll_down))
-          {
-            NavigateList(true);
-            return true;
-          }
-          else if (is_keybind_match(global_keybinds.scroll_up))
-          {
-            NavigateList(false);
-            return true;
-          }
-          else if (is_keybind_match('g'))
-          {
-
-            if (!first_g_pressed)
-            {
-              // First 'g' press
-              first_g_pressed = true;
-            }
-            else
-            {
-              // Second 'g' press
-              NavigateListToTop(true);
-              first_g_pressed = false; // Reset the state
-              return true;
-            }
-          }
-          else if (is_keybind_match('G'))
-          {
-            NavigateListToTop(false);
             return true;
           }
           else if (is_keybind_match(global_keybinds.goto_main_screen))
@@ -856,9 +811,6 @@ private:
             return true;
           }
         }
-
-        else if (event.is_mouse())
-          return false;
 
         else if (active_screen == SHOW_SONG_INFO_SCREEN)
         {
@@ -990,16 +942,6 @@ private:
             active_screen = SHOW_HELP_SCREEN;
             return true;
           }
-          else if (is_keybind_match(global_keybinds.scroll_down))
-          {
-            NavigateList(true);
-            return true;
-          }
-          else if (is_keybind_match(global_keybinds.scroll_up))
-          {
-            NavigateList(false);
-            return true;
-          }
           else if (is_keybind_match('x'))
           { // Add key to dismiss dialog
             show_dialog = false;
@@ -1039,28 +981,6 @@ private:
             active_screen = SHOW_SONG_INFO_SCREEN;
             return true;
           }
-          // Some default keybinds
-          else if (is_keybind_match('g'))
-          {
-
-            if (!first_g_pressed)
-            {
-              // First 'g' press
-              first_g_pressed = true;
-            }
-            else
-            {
-              // Second 'g' press
-              NavigateListToTop(true);
-              first_g_pressed = false; // Reset the state
-              return true;
-            }
-          }
-          else if (is_keybind_match('G'))
-          {
-            NavigateListToTop(false);
-            return true;
-          }
           else if (is_keybind_match(global_keybinds.toggle_focus))
           {
             focus_on_artists = !focus_on_artists;
@@ -1082,6 +1002,11 @@ private:
           else if (is_keybind_match(global_keybinds.add_artists_songs_to_queue) && focus_on_artists)
           {
             EnqueueAllSongsByArtist(current_artist_names[selected_artist], false);
+            if (!INL_Thread_State.is_playing) {
+              current_position = 0;
+              PlayCurrentSong();
+              UpdatePlayingState();
+            }
             NavigateList(true);
             return true;
           }
@@ -1092,16 +1017,38 @@ private:
           }
         }
 
-        /*if (event == Event::ArrowDown && active_screen == SHOW_QUEUE_SCREEN)*/
-        /*{*/
-        /*  NavigateList(true);*/
-        /*  return true;*/
-        /*}*/
-        /*if (event == Event::ArrowUp && active_screen == SHOW_QUEUE_SCREEN)*/
-        /*{*/
-        /*  NavigateList(false);*/
-        /*  return true;*/
-        /*}*/
+        if (is_keybind_match(global_keybinds.scroll_down) || event == Event::ArrowDown)
+        {
+          NavigateList(true);
+          return true;
+        }
+        else if (is_keybind_match(global_keybinds.scroll_up) || event == Event::ArrowUp)
+        {
+          NavigateList(false);
+          return true;
+        }
+        // Some default keybinds
+        else if (is_keybind_match('g'))
+        {
+
+          if (!first_g_pressed)
+          {
+            // First 'g' press
+            first_g_pressed = true;
+          }
+          else
+          {
+            // Second 'g' press
+            NavigateListToTop(true);
+            first_g_pressed = false; // Reset the state
+            return true;
+          }
+        }
+        else if (is_keybind_match('G'))
+        {
+          NavigateListToTop(false);
+          return true;
+        }
 
         return false;
       });
@@ -1114,33 +1061,30 @@ private:
                  float progress = duration > 0 ? (float)current_position / duration : 0;
 
                  Element interface;
-                 if (active_screen == SHOW_HELP_SCREEN)
+                 switch (active_screen)
                  {
-                   interface = RenderHelpScreen();
-                 }
-                 if (active_screen == SHOW_MAIN_UI)
-                 {
-                   interface = RenderMainInterface(progress);
-                 }
-                 if (active_screen == SHOW_LYRICS_SCREEN)
-                 {
-                   interface = RenderLyricsAndInfoView();
-                 }
-                 if (active_screen == SHOW_QUEUE_SCREEN)
-                 {
-                   interface = RenderQueueScreen();
-                 }
-                 if (active_screen == SHOW_AUDIO_CONF_SCREEN)
-                 {
-                   interface = listAudioSinks();
-                 }
-                 if (active_screen == SHOW_SONG_INFO_SCREEN)
-                 {
-                   interface = RenderThumbnail(
-                     current_playing_state.filePath, getCachePath(), current_playing_state.title,
-                     current_playing_state.artist, current_playing_state.album,
-                     current_playing_state.genre, current_playing_state.year,
-                     current_playing_state.track, current_playing_state.discNumber, progress);
+                   case SHOW_HELP_SCREEN:
+                     interface = RenderHelpScreen();
+                     break;
+                   case SHOW_MAIN_UI:
+                     interface = RenderMainInterface(progress);
+                     break;
+                   case SHOW_LYRICS_SCREEN:
+                     interface = RenderLyricsAndInfoView();
+                     break;
+                   case SHOW_QUEUE_SCREEN:
+                     interface = RenderQueueScreen();
+                     break;
+                   case SHOW_AUDIO_CONF_SCREEN:
+                     interface = RenderAudioConsole();
+                     break;
+                   case SHOW_SONG_INFO_SCREEN:
+                     interface = RenderThumbnail(
+                       current_playing_state.filePath, getCachePath(), current_playing_state.title,
+                       current_playing_state.artist, current_playing_state.album,
+                       current_playing_state.genre, current_playing_state.year,
+                       current_playing_state.track, current_playing_state.discNumber, progress);
+                     break;
                  }
                  if (show_dialog)
                  {
@@ -1157,7 +1101,7 @@ private:
                });
   }
 
-  Element RenderDialog()
+  auto RenderDialog() -> Element
   {
     return window(
              text(" File Information ") | bold | center | getTrueColor(TrueColors::Color::White) |
@@ -1179,7 +1123,7 @@ private:
     return;
   }
 
-  Element RenderLyricsAndInfoView()
+  auto RenderLyricsAndInfoView() -> Element
   {
 
     std::vector<Element> additionalPropertiesText;
@@ -1231,7 +1175,7 @@ private:
     return;
   }
 
-  Element RenderQueueScreen()
+  auto RenderQueueScreen() -> Element
   {
     INL_Component_State.songs_queue_comp = CreateMenu(&song_queue_names, &selected_song_queue);
     UpdateSongQueueList();
@@ -1262,175 +1206,100 @@ private:
 
   void NavigateSongMenu(bool move_down)
   {
-    int initial_inode = selected_inode; // Store the initial index to detect infinite loops
+    if (current_song_elements.empty())
+      return;
+
+    int initial_inode = selected_inode;
     do
     {
-      if (move_down)
+      UpdateSelectedIndex(selected_inode, current_song_elements.size(), move_down);
+
+      if (album_name_indices.count(selected_inode))
       {
-        selected_inode = (selected_inode + 1) % current_song_elements.size();
+        move_down ? ++albums_indices_traversed : --albums_indices_traversed;
       }
-      else
-      {
-        selected_inode =
-          (selected_inode - 1 + current_song_elements.size()) % current_song_elements.size();
-      }
-      if (album_name_indices.find(selected_inode) != album_name_indices.end())
-      {
-        if (move_down)
-          albums_indices_traversed++;
-        else
-          albums_indices_traversed--;
-      }
+
       if (selected_inode == 0 && move_down)
       {
         albums_indices_traversed = 1;
       }
-      if (selected_inode == current_song_elements.size() - 1 && !move_down)
+      else if (selected_inode == current_song_elements.size() - 1 && !move_down)
       {
         albums_indices_traversed = album_name_indices.size();
       }
-      // Break the loop if we traverse all elements (prevent infinite loop)
+
       if (selected_inode == initial_inode)
-      {
         break;
-      }
-    } while (album_name_indices.find(selected_inode) !=
-             album_name_indices.end()); // Skip album name indices
+    } while (album_name_indices.count(selected_inode)); // Skip album headers
   }
 
   void NavigateList(bool move_down)
   {
-    if (active_screen == SHOW_MAIN_UI)
+    switch (active_screen)
     {
-      if (focus_on_artists)
-      {
-        if (!current_artist_names.empty())
+      case SHOW_MAIN_UI:
+        if (focus_on_artists && !current_artist_names.empty())
         {
-          if (move_down)
-          {
-            selected_artist = (selected_artist + 1) % current_artist_names.size();
-          }
-          else
-          {
-            selected_artist =
-              (selected_artist - 1 + current_artist_names.size()) % current_artist_names.size();
-          }
+          UpdateSelectedIndex(selected_artist, current_artist_names.size(), move_down);
           UpdateSongsForArtist(current_artist_names[selected_artist]);
-          selected_inode           = 1; // Reset to the first song
+          selected_inode           = 1;
           albums_indices_traversed = 1;
         }
-      }
-      else
-      {
-        if (!current_inodes.empty())
+        else if (!current_inodes.empty())
         {
           NavigateSongMenu(move_down);
         }
-      }
-    }
-    else if (active_screen == SHOW_QUEUE_SCREEN)
-    {
-      if (move_down)
-      {
-        selected_song_queue = (selected_song_queue + 1) % song_queue_names.size();
-      }
-      else
-      {
-        selected_song_queue =
-          (selected_song_queue - 1 + song_queue_names.size()) % song_queue_names.size();
-      }
-    }
-    else if (active_screen == SHOW_LYRICS_SCREEN)
-    {
-      if (move_down)
-      {
-        current_lyric_line = (current_lyric_line + 1) % lyricLines.size();
-      }
-      else
-      {
-        current_lyric_line = (current_lyric_line - 1 + lyricLines.size()) % lyricLines.size();
-      }
+        break;
+
+      case SHOW_QUEUE_SCREEN:
+        UpdateSelectedIndex(selected_song_queue, song_queue_names.size(), move_down);
+        break;
+
+      case SHOW_LYRICS_SCREEN:
+        UpdateSelectedIndex(current_lyric_line, lyricLines.size(), move_down);
+        break;
+      case SHOW_AUDIO_CONF_SCREEN:
+        UpdateSelectedIndex(selected_audio_dev_line, audioDevices.size(), move_down);
+        break;
     }
   }
 
   void NavigateListToTop(bool move_up)
   {
-    if (active_screen == SHOW_MAIN_UI)
+    switch (active_screen)
     {
-      if (focus_on_artists)
-      {
-        if (!current_artist_names.empty())
+      case SHOW_MAIN_UI:
+        if (focus_on_artists && !current_artist_names.empty())
         {
-          // Navigate to the top of the artist list
-          if (move_up)
-          {
-            selected_artist = 0;
-          }
-          else
-          {
-            selected_artist = current_artist_names.size() - 1;
-          }
+          selected_artist = move_up ? 0 : current_artist_names.size() - 1;
           UpdateSongsForArtist(current_artist_names[selected_artist]);
-          selected_inode           = 1; // Reset to the first song
+          selected_inode           = 1;
           albums_indices_traversed = 1;
         }
-      }
-      else
-      {
-        if (!current_inodes.empty())
+        else if (!current_inodes.empty())
         {
-          if (move_up)
-          {
-            // Navigate to the first valid song, skipping headers
-            selected_inode           = 1;
-            albums_indices_traversed = 1;
-          }
-          else
-          {
-            // Navigate to the last valid song
-            selected_inode           = current_song_elements.size() - 1;
-            albums_indices_traversed = album_name_indices.size();
-          }
-
-          if (selected_inode < 0 || selected_inode >= current_song_elements.size())
-          {
-            selected_inode           = 1; // Fallback
-            albums_indices_traversed = 1;
-          }
+          selected_inode           = move_up ? 1 : current_song_elements.size() - 1;
+          albums_indices_traversed = move_up ? 1 : album_name_indices.size();
         }
-      }
-    }
-    else if (active_screen == SHOW_QUEUE_SCREEN)
-    {
-      if (move_up)
-      {
-        selected_song_queue = 0;
-      }
-      else
-      {
-        selected_song_queue = song_queue_names.size() - 1;
-      }
-    }
-    else if (active_screen == SHOW_LYRICS_SCREEN)
-    {
-      if (move_up)
-      {
-        current_lyric_line = 0;
-      }
-      else
-      {
-        current_lyric_line = lyricLines.size() - 1;
-      }
+        break;
+
+      case SHOW_QUEUE_SCREEN:
+        selected_song_queue = move_up ? 0 : song_queue_names.size() - 1;
+        break;
+
+      case SHOW_LYRICS_SCREEN:
+        current_lyric_line = move_up ? 0 : lyricLines.size() - 1;
+        break;
     }
   }
 
-  Element RenderHelpScreen()
+  auto RenderHelpScreen() -> Element
   {
     auto title = text("inLimbo Controls") | bold | getTrueColor(TrueColors::Color::Teal);
 
     // Helper function to create a single keybind row
     auto createRow =
-      [&](const std::string& key, const std::string& description, TrueColors::Color color)
+      [](const std::string& key, const std::string& description, TrueColors::Color color)
     {
       return hbox({
         text(key) | getTrueColor(color),
@@ -1439,42 +1308,67 @@ private:
       });
     };
 
-    auto controls_list =
-      vbox({
-        createRow(charToStr(global_keybinds.toggle_play), "Toggle playback",
-                  TrueColors::Color::Teal),
-        createRow(charToStr(global_keybinds.play_song_next), "Next song",
-                  TrueColors::Color::LightCyan),
-        createRow(charToStr(global_keybinds.play_song_prev), "Previous song",
-                  TrueColors::Color::LightCyan),
-        createRow("r", "Cycle repeat mode", TrueColors::Color::LightMagenta),
-        createRow(charToStr(global_keybinds.vol_up), "Volume up", TrueColors::Color::LightGreen),
-        createRow(charToStr(global_keybinds.vol_down), "Volume down",
-                  TrueColors::Color::LightGreen),
-        createRow(charToStr(global_keybinds.toggle_mute),
-                  "Toggle muting the current instance of miniaudio", TrueColors::Color::LightRed),
-        createRow(charToStr(global_keybinds.toggle_focus), "Switch focus",
-                  TrueColors::Color::LightYellow),
-        createRow("gg", "Go to top of the current list", TrueColors::Color::LightBlue),
-        createRow("G", "Go to bottom of the current list", TrueColors::Color::LightBlue),
-        createRow(charToStr(global_keybinds.seek_ahead_5), "Seek ahead by 5s",
-                  TrueColors::Color::Orange),
-        createRow(charToStr(global_keybinds.seek_behind_5), "Seek behind by 5s",
-                  TrueColors::Color::Orange),
-        createRow(charToStr(global_keybinds.replay_song), "Replay current song",
-                  TrueColors::Color::Orange),
-        createRow(charToStr(global_keybinds.quit_app), "Quit", TrueColors::Color::LightRed),
-        createRow(charToStr(global_keybinds.show_help), "Toggle this help",
-                  TrueColors::Color::Cyan),
-        createRow(charToStr(global_keybinds.add_song_to_queue), "Add song to queue",
-                  TrueColors::Color::LightPink),
-        createRow(charToStr(global_keybinds.add_song_to_queue), "Remove song from queue",
-                  TrueColors::Color::Teal),
-        createRow(charToStr(global_keybinds.goto_main_screen), "Go to song tree view",
-                  TrueColors::Color::Teal),
-      }) |
-      getTrueColor(TrueColors::Color::LightGreen);
+    // List of keybinds for easier modification
+    std::vector<std::tuple<std::string, std::string, TrueColors::Color>> keybinds = {
+      {charToStr(global_keybinds.scroll_up), "Scroll up in the current view",
+       TrueColors::Color::LightCyan},
+      {charToStr(global_keybinds.scroll_down), "Scroll down in the current view",
+       TrueColors::Color::LightCyan},
+      {charToStr(global_keybinds.toggle_focus), "Switch focus between panes",
+       TrueColors::Color::LightYellow},
+      {charToStr(global_keybinds.show_help), "Toggle this help window", TrueColors::Color::Cyan},
+      {charToStr(global_keybinds.toggle_play), "Play/Pause playback", TrueColors::Color::Teal},
+      {charToStr(global_keybinds.play_song), "Play the selected song",
+       TrueColors::Color::LightGreen},
+      {charToStr(global_keybinds.play_song_next), "Skip to next song",
+       TrueColors::Color::LightCyan},
+      {charToStr(global_keybinds.play_song_prev), "Go back to previous song",
+       TrueColors::Color::LightCyan},
+      {charToStr(global_keybinds.vol_up), "Increase volume", TrueColors::Color::LightGreen},
+      {charToStr(global_keybinds.vol_down), "Decrease volume", TrueColors::Color::LightGreen},
+      {charToStr(global_keybinds.toggle_mute), "Mute/Unmute audio", TrueColors::Color::LightRed},
+      {charToStr(global_keybinds.quit_app), "Quit inLimbo", TrueColors::Color::LightRed},
+      {charToStr(global_keybinds.seek_ahead_5), "Seek forward by 5 seconds",
+       TrueColors::Color::Orange},
+      {charToStr(global_keybinds.seek_behind_5), "Seek backward by 5 seconds",
+       TrueColors::Color::Orange},
+      {charToStr(global_keybinds.view_lyrics), "View lyrics for the current song",
+       TrueColors::Color::LightBlue},
+      {charToStr(global_keybinds.goto_main_screen), "Return to main UI", TrueColors::Color::Teal},
+      {charToStr(global_keybinds.replay_song), "Replay the current song",
+       TrueColors::Color::Orange},
+      {charToStr(global_keybinds.add_song_to_queue), "Add selected song to queue",
+       TrueColors::Color::LightPink},
+      {charToStr(global_keybinds.add_artists_songs_to_queue), "Queue all songs by the artist",
+       TrueColors::Color::LightPink},
+      {charToStr(global_keybinds.remove_song_from_queue), "Remove selected song from queue",
+       TrueColors::Color::Teal},
+      {charToStr(global_keybinds.play_this_song_next), "Play selected song next",
+       TrueColors::Color::LightMagenta},
+      {charToStr(global_keybinds.view_song_queue), "View currently queued songs",
+       TrueColors::Color::LightYellow},
+      {charToStr(global_keybinds.view_current_song_info), "View info of the currently playing song",
+       TrueColors::Color::LightCyan},
+      {charToStr(global_keybinds.toggle_audio_devices), "Switch between available audio devices",
+       TrueColors::Color::LightBlue},
+      {charToStr(global_keybinds.search_menu), "Open the search menu",
+       TrueColors::Color::LightGreen},
+      {"gg", "Go to the top of the active menu", TrueColors::Color::LightBlue},
+      {"G", "Go to the bottom of the active menu", TrueColors::Color::LightBlue},
+      {"x", "Close the dialog box", TrueColors::Color::LightRed},
+    };
 
+    // Generate controls list dynamically
+    std::vector<Element> control_elements;
+    for (const auto& [key, description, color] : keybinds)
+    {
+      control_elements.push_back(createRow(key, description, color));
+    }
+
+    auto controls_list =
+      vbox(std::move(control_elements)) | getTrueColor(TrueColors::Color::LightGreen);
+
+    // Symbols Legend
     auto symbols_explanation = vbox({
       hbox({text(LYRICS_AVAIL), text(" -> "), text("The current song has lyrics metadata.")}) |
         getTrueColor(TrueColors::Color::LightCyan),
@@ -1483,10 +1377,29 @@ private:
         getTrueColor(TrueColors::Color::LightYellow),
     });
 
+    // Application details
+    auto app_name    = text("inLimbo - Music player that keeps you in Limbo...") | bold | getTrueColor(TrueColors::Color::Teal);
+    auto contributor = text("Developed by: Siddharth Karanam (nots1dd)") |
+                       getTrueColor(TrueColors::Color::LightGreen);
+    auto github_link = hbox({
+      text("GitHub: "),
+      text("Click me!") | underlined | bold |
+        getTrueColor(TrueColors::Color::LightBlue) |
+        hyperlink(REPOSITORY_URL),
+    });
+
+    // Footer with shortcut hint
     std::string footer_text =
       "Press '" + charToStr(global_keybinds.show_help) + "' to return to inLimbo.";
-    auto footer = text(footer_text) | getTrueColor(TrueColors::Color::LightYellow) | center;
+    auto footer = vbox({
+                    app_name,
+                    contributor,
+                    github_link,
+                    text(footer_text) | getTrueColor(TrueColors::Color::LightYellow) | center,
+                  }) |
+                  flex | border;
 
+    // Build UI layout
     return vbox({
              title,
              controls_list | border | flex,
@@ -1497,13 +1410,77 @@ private:
            flex;
   }
 
-  Color GetCurrWinColor(bool focused)
+  auto GetCurrWinColor(bool focused) -> Color
   {
     return focused ? global_colors.active_win_border_color
                    : global_colors.inactive_win_border_color;
   }
 
-  Element RenderMainInterface(float progress)
+  auto RenderProgressBar(float progress) -> Element
+  {
+    auto progress_style = INL_Thread_State.is_playing
+                            ? color(global_colors.progress_bar_playing_col)
+                            : color(global_colors.progress_bar_not_playing_col);
+
+    return hbox({
+      text(FormatTime((int)current_position)) | progress_style,
+      gauge(progress) | flex | progress_style,
+      text(FormatTime(GetCurrentSongDuration())) | progress_style,
+    });
+  }
+
+  auto RenderVolumeBar(int volume) -> Element
+  {
+    return hbox({
+      text(" Vol: ") | dim,
+      gauge(volume / 100.0) | size(WIDTH, EQUAL, 10) | color(global_colors.volume_bar_col),
+      text(std::to_string(volume) + "%") | dim,
+    });
+  }
+
+  auto RenderQueueBar() -> Element
+  {
+    std::string queue_info = " ";
+    int         songs_left = song_queue.size() - current_song_queue_index - 1;
+    if (songs_left > song_queue.size())
+      songs_left = 0;
+    queue_info += std::to_string(songs_left) + " songs left.";
+
+    std::string up_next_song = " Next up: ";
+    if (song_queue.size() > 1 && songs_left > 0)
+      up_next_song += song_queue[current_song_queue_index + 1].metadata.title + " by " +
+                      song_queue[current_song_queue_index + 1].metadata.artist;
+    else
+      up_next_song += "Next song not available.";
+
+    return hbox({
+      text(queue_info) | dim | border | bold,
+      text(up_next_song) | dim | border | flex | size(WIDTH, LESS_THAN, MAX_LENGTH_SONG_NAME),
+    });
+  }
+
+  auto RenderStatusBar(const std::string& status, const std::string& current_song_info,
+                       const std::string& additional_info, const std::string& year_info) -> Element
+  {
+    return hbox({
+             text(status) | getTrueColor(TrueColors::Color::Black),
+             text(current_playing_state.artist) | color(global_colors.status_bar_artist_col) |
+               bold | size(WIDTH, LESS_THAN, MAX_LENGTH_ARTIST_NAME),
+             text(current_song_info) | bold | color(global_colors.status_bar_song_col) |
+               size(WIDTH, LESS_THAN, MAX_LENGTH_SONG_NAME),
+             filler(), // Push the right-aligned content to the end
+             hbox({
+               text(additional_info) | bold | color(global_colors.status_bar_addn_info_col) | flex,
+               text(year_info) | color(global_colors.status_bar_addn_info_col) |
+                 size(WIDTH, LESS_THAN, 15),
+               text(" "),
+             }) |
+               align_right,
+           }) |
+           size(HEIGHT, EQUAL, 1) | bgcolor(global_colors.status_bar_bg);
+  }
+
+  auto RenderMainInterface(float progress) -> Element
   {
     std::string current_song_info;
     std::string year_info;
@@ -1561,55 +1538,15 @@ private:
                        flex}) |
                  flex;
 
-    auto progress_style = INL_Thread_State.is_playing
-                            ? color(global_colors.progress_bar_playing_col)
-                            : color(global_colors.progress_bar_not_playing_col);
-    auto progress_bar   = hbox({
-      text(FormatTime((int)current_position)) | progress_style,
-      gauge(progress) | flex | progress_style,
-      text(FormatTime(GetCurrentSongDuration())) | progress_style,
-    });
-
-    auto volume_bar = hbox({
-      text(" Vol: ") | dim,
-      gauge(volume / 100.0) | size(WIDTH, EQUAL, 10) | color(global_colors.volume_bar_col),
-      text(std::to_string(volume) + "%") | dim,
-    });
-
-    std::string queue_info = " ";
-    int         songs_left = song_queue.size() - current_song_queue_index - 1;
-    if (songs_left > song_queue.size())
-      songs_left = 0;
-    queue_info += std::to_string(songs_left) + " songs left.";
-    std::string up_next_song = " Next up: ";
-    if (song_queue.size() > 1 && songs_left > 0)
-      up_next_song += song_queue[current_song_queue_index + 1].metadata.title + " by " +
-                      song_queue[current_song_queue_index + 1].metadata.artist;
-    else
-      up_next_song += "Next song not available.";
-    auto queue_bar = hbox({
-      text(queue_info) | dim | border | bold,
-      text(up_next_song) | dim | border | flex | size(WIDTH, LESS_THAN, MAX_LENGTH_SONG_NAME),
-    });
-
-    auto status_bar =
-      hbox({text(status) | getTrueColor(TrueColors::Color::Black),
-            text(current_playing_state.artist) | color(global_colors.status_bar_artist_col) | bold |
-              size(WIDTH, LESS_THAN, MAX_LENGTH_ARTIST_NAME),
-            text(current_song_info) | bold | color(global_colors.status_bar_song_col) |
-              size(WIDTH, LESS_THAN, MAX_LENGTH_SONG_NAME),
-            filler(), // Push the right-aligned content to the end
-            hbox({text(additional_info) | getTrueColor(TrueColors::Color::Black) | flex,
-                  text(year_info) | getTrueColor(TrueColors::Color::Black) |
-                    size(WIDTH, LESS_THAN, 15),
-                  text(" ")}) |
-              align_right}) |
-      size(HEIGHT, EQUAL, 1) | bgcolor(global_colors.status_bar_bg);
+    auto progress_bar = RenderProgressBar(progress);
+    auto volume_bar   = RenderVolumeBar(volume);
+    auto queue_bar    = RenderQueueBar();
+    auto status_bar   = RenderStatusBar(status, current_song_info, additional_info, year_info);
 
     return vbox({
              panes,
              hbox({
-               progress_bar | border | flex,
+               progress_bar | border | flex_grow,
                volume_bar | border,
                queue_bar,
              }),

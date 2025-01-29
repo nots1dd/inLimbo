@@ -5,30 +5,39 @@
  * @brief Implementation of a custom Scroller component for FTXUI.
  */
 
-namespace ftxui {
+namespace ftxui
+{
 /**
  * @class ScrollerBase
- * @brief A custom scroller component that synchronizes with an external index and applies a custom cursor background color.
+ * @brief A custom scroller component that synchronizes with an external index and applies a custom
+ * cursor background color.
  *
  * The `ScrollerBase` component disables internal navigation and allows the scroll state
  * to be controlled externally using an external index (`external_selected_`).
  * It also supports custom styling for the focused element using a background color (`cursor_bg_`).
  */
-class ScrollerBase : public ComponentBase {
- public:
+class ScrollerBase : public ComponentBase
+{
+public:
   /**
    * @brief Constructor for the ScrollerBase class.
    *
    * @param child The child component to be rendered inside the scroller.
    * @param external_selected A pointer to an external integer that controls the selected index.
    * @param cursor_bg The background color to apply to the focused element.
+   * @param inactive_menu_cursor_bg The background color to apply to the inactive menu elements.
+   * @param current_playing_col The background color to apply to the currently playing element.
+   * @param current_playing_index The index of the currently playing element.
    */
-  ScrollerBase(Component child, int* external_selected, Color cursor_bg, Color inactive_menu_cursor_bg)
-      : external_selected_(external_selected), cursor_bg_(cursor_bg), inactive_menu_cursor_bg_(inactive_menu_cursor_bg) {
+  ScrollerBase(Component child, int* external_selected, Color cursor_bg,
+               Color inactive_menu_cursor_bg)
+      : external_selected_(external_selected), cursor_bg_(cursor_bg),
+        inactive_menu_cursor_bg_(inactive_menu_cursor_bg)
+  {
     Add(child);
   }
 
- private:
+private:
   /**
    * @brief Renders the scroller component.
    *
@@ -37,7 +46,8 @@ class ScrollerBase : public ComponentBase {
    *
    * @return The rendered FTXUI Element.
    */
-  Element Render() final {
+  auto Render() -> Element final
+  {
     auto focused = Focused() ? focus : ftxui::select;
 
     // Use the cursor background color when focused
@@ -53,11 +63,11 @@ class ScrollerBase : public ComponentBase {
     size_ = background->requirement().min_y;
 
     return dbox({
-               std::move(background),
-               vbox({
-                   text(L"") | size(HEIGHT, EQUAL, selected_),
-                   text(L"") | style | focused | inverted_style,
-               }),
+             std::move(background),
+             vbox({
+               text(L"") | size(HEIGHT, EQUAL, selected_),
+               text(L"") | style | focused | inverted_style,
+             }),
            }) |
            vscroll_indicator | yframe | yflex | reflect(box_);
   }
@@ -71,7 +81,8 @@ class ScrollerBase : public ComponentBase {
    * @param event The event to handle.
    * @return Always returns `false` since no events are handled.
    */
-  bool OnEvent(Event event) final {
+  auto OnEvent(Event event) -> bool final
+  {
     // Ignore all keyboard/mouse events to disable internal navigation
     return false;
   }
@@ -81,14 +92,14 @@ class ScrollerBase : public ComponentBase {
    *
    * @return Always returns `true` since the scroller can be focused.
    */
-  bool Focusable() const final { return true; }
+  [[nodiscard]] auto Focusable() const -> bool final { return true; }
 
-  int selected_ = 0;             ///< The currently selected index.
-  int size_ = 0;                 ///< The size of the child component.
-  int* external_selected_;       ///< Pointer to the external selected index.
-  Color cursor_bg_;              ///< Background color for the focused element.
-  Color inactive_menu_cursor_bg_;///< Background color for the current element which is unfocused.
-  Box box_;                      ///< The bounding box of the scroller.
+  int   selected_ = 0;            ///< The currently selected index.
+  int   size_     = 0;            ///< The size of the child component.
+  int*  external_selected_;       ///< Pointer to the external selected index.
+  Color cursor_bg_;               ///< Background color for the focused element.
+  Color inactive_menu_cursor_bg_; ///< Background color for the current element which is unfocused.
+  Box   box_;                     ///< The bounding box of the scroller.
 };
 
 /**
@@ -100,10 +111,16 @@ class ScrollerBase : public ComponentBase {
  * @param child The child component to be rendered inside the scroller.
  * @param external_selected A pointer to an external integer that controls the selected index.
  * @param cursor_bg The background color to apply to the focused element.
+ * @param inactive_menu_cursor_bg The background color to apply to the inactive menu elements.
+ * @param current_playing_col The background color to apply to the currently playing element.
+ * @param current_playing_index The index of the currently playing element.
  * @return A `Component` instance representing the scroller.
  */
-Component Scroller(Component child, int* external_selected, Color cursor_bg, Color inactive_menu_cursor_bg) {
-  return Make<ScrollerBase>(std::move(child), external_selected, cursor_bg, inactive_menu_cursor_bg);
+auto Scroller(Component child, int* external_selected, Color cursor_bg,
+              Color inactive_menu_cursor_bg) -> Component
+{
+  return Make<ScrollerBase>(std::move(child), external_selected, cursor_bg,
+                            inactive_menu_cursor_bg);
 }
 
-}  // namespace ftxui
+} // namespace ftxui

@@ -918,3 +918,40 @@ Small commit with some neat build changes that makes life pretty easy
 - Centering of the image_view (NOT THAT BIG)
 
 ---
+
+## [ALPHA 2.8] --- 29-01-2025
+
+### Added
+- New workflow to build in g++ and clang++ (x86 arch)
+
+### Changed
+- Makefile now gives the option to compile to any desired c++ compiler
+
+- General code refactor + minor issues fix mainly in ui_handler
+
+- UI overhaul + updates to several render functions 
+
+- New function in miniaudio class to show case more details regarding the miniaudio engine, device config etc..
+
+- Artist menu is now a scroller base component not a menu anymore
+
+- New colors and keybinds fields (more updates soon) 
+
+### Fixed
+- Minor issue of a song first loading with full volume by default before getting updated (would sound weird and jarring)
+
+### Removed
+- 
+
+Medium commit with some refactoring and small, nice QOL changes
+
+### Known Issues to fix in immediate commits
+- Holding the keybind for PlayNextSong() / PlayPrevSong() doesnt break anything, but MiniAudioPlayer class is not as responsive as the UI, so it lags behind (MAJOR ISSUE)
+
+(The outcome of the above issue would be that if you hold PlayNextSong() func call and it goes to Song A, the MiniAudioPlayer might still be playing Song B, which appears BEFORE Song A)
+
+- Centering of the image_view (NOT THAT BIG)
+
+- Fixing current_position bug when run refresh thread is woken up a lot of times (BIG)
+
+---

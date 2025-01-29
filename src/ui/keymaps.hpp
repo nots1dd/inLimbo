@@ -38,6 +38,7 @@ struct Keybinds
   char view_song_queue;            /**< Key for viewing the song queue */
   char view_current_song_info;     /**< Key for viewing in-depth song info */
   char toggle_audio_devices;       /**< Key to view all the available audio devices */
+  char search_menu;                /**< Key to search the currently active menu */
 };
 
 /**
@@ -130,7 +131,8 @@ auto parseKeybinds() -> Keybinds
     {"play_this_song_next", &keybinds.play_this_song_next},
     {"view_song_queue", &keybinds.view_song_queue},
     {"view_current_song_info", &keybinds.view_current_song_info},
-    {"toggle_audio_devices", &keybinds.toggle_audio_devices}};
+    {"toggle_audio_devices", &keybinds.toggle_audio_devices},
+    {"search_menu", &keybinds.search_menu}};
 
   // Populate the keybinds struct by reading the fields from the TOML configuration
   for (const auto& [field, member_ptr] : field_map)

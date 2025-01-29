@@ -7,6 +7,25 @@ You can build the inLimbo in two ways:
 1. Makefile (uses CMake)
 2. Manually building using CMake commands
 
+> [!NOTE]
+> 
+> If you want to use a custom compiler rather than the default compiler defined in:
+> `CMAKE_CXX_COMPILER` macro by CMake,
+> 
+> Append `CMAKE_EXTRA_FLAGS="-D CMAKE_CXX_COMPILER=/path/to/your/compiler"` to the make command like so:
+> 
+> ```bash 
+> # Let us say I want to compile using clang++:
+> make build CMAKE_EXTRA_FLAGS="-D CMAKE_CXX_COMPILER=clang++"
+> # To rebuild 
+> make rebuild 
+> ```
+> 
+> The CMAKE_EXTRA_FLAGS macro is passable to `build`, `build-all`, `asan`, `build-test`, `build-test-all`, `tsan`.
+> 
+> There is some issue where clang++ starts a scratch compilation even though the build files are present and only a few source files are changed.
+> 
+
 ## Available Build Targets
 
 ### 1. **all**

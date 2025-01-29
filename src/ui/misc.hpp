@@ -4,6 +4,7 @@
 #include "../dirsort/taglib_parser.h"
 #include "./colors.hpp"
 #include "components/image_view.hpp"
+#include <algorithm>
 #include <cctype>
 #include <ftxui/component/captured_mouse.hpp>
 #include <ftxui/component/component.hpp>
@@ -13,6 +14,10 @@
 #include <ftxui/dom/elements.hpp>
 #include <string>
 #include <vector>
+
+/** STRING TRUNCATION MACROS */
+#define MAX_LENGTH_SONG_NAME   50
+#define MAX_LENGTH_ARTIST_NAME 30
 
 struct ComponentState
 {
@@ -164,19 +169,34 @@ auto getTrueColor(TrueColors::Color color) { return ftxui::color(TrueColors::Get
 
 auto getTrueBGColor(TrueColors::Color color) { return ftxui::bgcolor(TrueColors::GetColor(color)); }
 
-auto renderAlbumName(const std::string& album_name, const int& year, ftxui::Color sel_color)
+auto renderAlbumName(const std::string& album_name, const int& year, ftxui::Color sel_color,
+                     ftxui::Color sel_color_fg)
 {
-  return hbox({text(" "), text(album_name) | bold, filler(),
-               text(std::to_string(year)) | dim | align_right, text(" ")}) |
-         inverted | color(sel_color) | dim;
+  auto albumText = vbox(text(album_name) | color(sel_color_fg) | bold);
+  return hbox({text(" "), albumText, filler(),
+               text(std::to_string(year)) | color(sel_color_fg) | bold | align_right, text(" ")}) |
+         bgcolor(sel_color);
 }
 
 auto renderSongName(const std::string& disc_track_info, const std::string& song_name,
                     const int& duration)
 {
-  return hbox({text(disc_track_info) | dim, text(song_name) | bold | flex_grow,
+  return hbox({text(disc_track_info), text(song_name) | bold | flex_grow,
                filler(), // Spacer for dynamic layout
                text(FormatTime(duration)) | align_right});
+}
+
+auto RenderArtistNames(const std::vector<std::string>& artist_list)
+{
+  std::vector<Element> artist_names_elements;
+
+  for (const auto& a : artist_list)
+  {
+    auto artistElement = hbox({text(" "), text(a) | bold});
+    artist_names_elements.push_back(artistElement);
+  }
+
+  return artist_names_elements;
 }
 
 auto CreateMenu(const std::vector<std::string>* vecLines, int* currLine)
@@ -190,6 +210,18 @@ auto CreateMenu(const std::vector<std::string>* vecLines, int* currLine)
 
 auto RenderSongMenu(const std::vector<Element>& items)
 {
+  Elements rendered_items;
+  for (const auto& item : items)
+  {
+    rendered_items.push_back(item | frame);
+  }
+
+  return vbox(std::move(rendered_items));
+}
+
+auto RenderArtistMenu(const std::vector<std::string>& artist_list)
+{
+  auto     items = RenderArtistNames(artist_list);
   Elements rendered_items;
   for (const auto& item : items)
   {
@@ -280,6 +312,26 @@ auto RenderThumbnail(const std::string& songFilePath, const std::string& cacheDi
   });
 
   return errorView;
+}
+
+void searchModeIndices(const std::vector<std::string>& words, const std::string& prefix,
+                       std::vector<int>& search_indices)
+{
+  auto start = lower_bound(words.begin(), words.end(), prefix);
+
+  for (auto it = start; it != words.end(); ++it)
+  {
+    if (it->substr(0, prefix.size()) != prefix)
+      break;
+    search_indices.push_back(std::distance(words.begin(), it));
+  }
+}
+
+void UpdateSelectedIndex(int& index, int max_size, bool move_down)
+{
+  if (max_size == 0)
+    return;
+  index = move_down ? (index + 1) % max_size : (index == 0 ? max_size - 1 : index - 1);
 }
 
 #endif

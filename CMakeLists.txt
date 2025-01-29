@@ -64,41 +64,38 @@ add_executable(${EXECUTABLE_NAME}
 target_include_directories(${EXECUTABLE_NAME} PRIVATE src)
 
 # --- Debugging Flags --------------------------------------------------------
-# Add debugging flags for better error reporting, debugging, and sanitization
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug-ASan")
-  # Enable AddressSanitizer
   set(INLIMBO_DEBUG_BUILD ON)
   message(STATUS "Enabling AddressSanitizer for Debug-AddressSanitizer build")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g")
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
+  
+  target_compile_options(${EXECUTABLE_NAME} PRIVATE 
+    -fsanitize=address 
+    -fsanitize=undefined 
+    -g 
+    -Wall 
+    -Wextra
+  )
+  
+  target_link_options(${EXECUTABLE_NAME} PRIVATE 
+    -fsanitize=address
+  )
 
-  # Enable UndefinedBehaviorSanitizer (UBSan)
-  message(STATUS "Enabling UndefinedBehaviorSanitizer for Debug-AddressSanitizer build")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined")
-
-  # Enable Debug Symbols
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
-
-  # Enable all warnings and treat them as errors
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
- 
 elseif(CMAKE_BUILD_TYPE STREQUAL "Debug-TSan")
   set(INLIMBO_DEBUG_BUILD ON)
-  # Enable ThreadSanitizer
   message(STATUS "Enabling ThreadSanitizer for Debug-ThreadSanitizer build")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread -g")
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=thread")
-
-  # Enable UndefinedBehaviorSanitizer (UBSan)
-  message(STATUS "Enabling UndefinedBehaviorSanitizer for Debug-ThreadSanitizer build")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined")
-
-  # Enable Debug Symbols
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
-
-  # Enable all warnings and treat them as errors
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+  
+  target_compile_options(${EXECUTABLE_NAME} PRIVATE 
+    -fsanitize=thread 
+    -fsanitize=undefined 
+    -g 
+    -Wall 
+    -Wextra
+  )
+  
+  target_link_options(${EXECUTABLE_NAME} PRIVATE 
+    -fsanitize=thread
+  )
 
 else()
   message(STATUS "Skipping Sanitizers for Release build")

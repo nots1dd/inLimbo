@@ -1,6 +1,7 @@
 #ifndef COLORS_HPP
 #define COLORS_HPP
 
+#include "../parser/toml_parser.hpp"
 #include <ftxui/screen/color.hpp>
 #include <iostream>
 #include <regex>
@@ -183,10 +184,12 @@ struct InLimboColors
   ftxui::Color active_win_border_color;
   ftxui::Color inactive_win_border_color;
   ftxui::Color album_name_bg;
+  ftxui::Color album_name_fg;
   ftxui::Color menu_cursor_bg;
   ftxui::Color inactive_menu_cursor_bg;
   ftxui::Color artists_title_bg;
   ftxui::Color artists_title_fg;
+  ftxui::Color artists_menu_col_bg;
   ftxui::Color songs_title_bg;
   ftxui::Color songs_title_fg;
   ftxui::Color song_queue_menu_bor_col;
@@ -197,6 +200,8 @@ struct InLimboColors
   ftxui::Color status_bar_bg;
   ftxui::Color status_bar_artist_col;
   ftxui::Color status_bar_song_col;
+  ftxui::Color status_bar_addn_info_col;
+  ftxui::Color curr_playing_song_col;
 };
 
 /**
@@ -318,10 +323,12 @@ auto parseColors() -> InLimboColors
     {"active_win_border_color", &colors.active_win_border_color},
     {"inactive_win_border_color", &colors.inactive_win_border_color},
     {"album_name_bg", &colors.album_name_bg},
+    {"album_name_fg", &colors.album_name_fg},
     {"menu_cursor_bg", &colors.menu_cursor_bg},
     {"inactive_menu_cursor_bg", &colors.inactive_menu_cursor_bg},
     {"artists_title_bg", &colors.artists_title_bg},
     {"artists_title_fg", &colors.artists_title_fg},
+    {"artists_menu_col_bg", &colors.artists_menu_col_bg},
     {"songs_title_bg", &colors.songs_title_bg},
     {"songs_title_fg", &colors.songs_title_fg},
     {"song_queue_menu_bor_col", &colors.song_queue_menu_bor_col},
@@ -332,6 +339,8 @@ auto parseColors() -> InLimboColors
     {"status_bar_bg", &colors.status_bar_bg},
     {"status_bar_artist_col", &colors.status_bar_artist_col},
     {"status_bar_song_col", &colors.status_bar_song_col},
+    {"status_bar_addn_info_col", &colors.status_bar_addn_info_col},
+    {"curr_playing_song_col", &colors.curr_playing_song_col}
 
   };
 

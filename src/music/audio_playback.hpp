@@ -1,17 +1,17 @@
 #ifndef AUDIO_PLAYBACK_HPP
 #define AUDIO_PLAYBACK_HPP
 
+#include "parser/toml_parser.hpp"
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
 #include <chrono>
+#include <future>
 #include <iostream>
 #include <mutex>
 #include <stdexcept>
 #include <string>
 #include <thread>
 #include <vector>
-#include <future>
-#include <filesystem>
 
 /**
  * @struct AudioDevice
@@ -47,8 +47,9 @@ private:
   bool             deviceSet; /**< Flag to check if an audio device is set or not. */
   bool             wasPaused; /**< Flag to track if the sound was paused. */
   uint64_t    pausePosition;  /**< Stores the position in PCM frames where the sound was paused. */
-  std::thread playbackThread, audioDeviceThread; /**< A thread for monitoring the playback state in the background. */
-  std::mutex  mtx, devicesMutex;            /**< Mutex to protect shared state between methods and threads. */
+  std::thread playbackThread,
+    audioDeviceThread; /**< A thread for monitoring the playback state in the background. */
+  std::mutex mtx, devicesMutex; /**< Mutex to protect shared state between methods and threads. */
   std::vector<AudioDevice> devices;
 
 public:
@@ -67,20 +68,21 @@ public:
       throw std::runtime_error("Failed to initialize MiniAudio engine.");
     }
 
-    deviceConfig                    = ma_device_config_init(ma_device_type_playback);
+    deviceConfig = ma_device_config_init(ma_device_type_playback);
     if (ma_context_init(nullptr, 0, nullptr, &context) != MA_SUCCESS)
     {
       throw std::runtime_error("Failed to initialize audio context.");
     }
 
-    if (ma_device_init(nullptr, &deviceConfig, &device) != MA_SUCCESS) 
+    if (ma_device_init(nullptr, &deviceConfig, &device) != MA_SUCCESS)
     {
-        throw std::runtime_error("Failed to initialize playback device.");
+      throw std::runtime_error("Failed to initialize playback device.");
     }
 
-    if (ma_device_start(&device) != MA_SUCCESS) {
-        ma_device_uninit(&device);
-        throw std::runtime_error("Failed to start playback device.");
+    if (ma_device_start(&device) != MA_SUCCESS)
+    {
+      ma_device_uninit(&device);
+      throw std::runtime_error("Failed to start playback device.");
     }
   }
 
@@ -100,43 +102,44 @@ public:
 
   auto enumerateDevices() -> std::vector<AudioDevice>
   {
-      std::vector<AudioDevice> localDevices;
+    std::vector<AudioDevice> localDevices;
 
-      audioDeviceThread = std::thread([this, &localDevices]() {
-          try {
-              ma_device_info* playbackDevices;
-              ma_uint32 playbackDeviceCount;
+    audioDeviceThread = std::thread(
+      [this, &localDevices]()
+      {
+        try
+        {
+          ma_device_info* playbackDevices;
+          ma_uint32       playbackDeviceCount;
 
-              // Enumerate devices
-              ma_result result = ma_context_get_devices(&context, &playbackDevices, &playbackDeviceCount, nullptr, nullptr);
-              if (result != MA_SUCCESS)
-              {
-                  throw std::runtime_error("Failed to enumerate playback devices.");
-              }
-
-              // Log device info for debugging
-              std::cout << "Found " << playbackDeviceCount << " playback devices:\n";
-              for (ma_uint32 i = 0; i < playbackDeviceCount; ++i) {
-                  std::cout << "Device " << i << ": " << playbackDevices[i].name << std::endl;
-              }
-
-              // Safely copy devices
-              {
-                  std::lock_guard<std::mutex> lock(devicesMutex);
-                  devices.clear();
-                  for (ma_uint32 i = 0; i < playbackDeviceCount; ++i) {
-                      devices.push_back({playbackDevices[i].name, playbackDevices[i].id});
-                  }
-                  localDevices = devices;
-              }
-
-          } catch (const std::exception& e) {
-              std::cerr << "Error in enumerateDevices thread: " << e.what() << "\n";
+          // Enumerate devices
+          ma_result result = ma_context_get_devices(&context, &playbackDevices,
+                                                    &playbackDeviceCount, nullptr, nullptr);
+          if (result != MA_SUCCESS)
+          {
+            throw std::runtime_error("Failed to enumerate playback devices.");
           }
+
+          // Safely copy devices
+          {
+            std::lock_guard<std::mutex> lock(devicesMutex);
+            devices.clear();
+            for (ma_uint32 i = 0; i < playbackDeviceCount; ++i)
+            {
+              devices.push_back({playbackDevices[i].name, playbackDevices[i].id});
+            }
+            localDevices = devices;
+          }
+        }
+        catch (const std::exception& e)
+        {
+          std::cerr << "Error in enumerateDevices thread: " << e.what() << "\n";
+        }
       });
 
-      if (audioDeviceThread.joinable()) audioDeviceThread.join(); // Wait for the thread to finish
-      return localDevices;
+    if (audioDeviceThread.joinable())
+      audioDeviceThread.join(); // Wait for the thread to finish
+    return localDevices;
   }
 
   /**
@@ -147,9 +150,9 @@ public:
   void setDevice(const ma_device_id& id)
   {
     std::unique_lock<std::mutex> lock(mtx);
-    deviceID  = id;
+    deviceID                        = id;
     deviceConfig.playback.pDeviceID = &deviceID;
-    deviceSet = true;
+    deviceSet                       = true;
   }
 
   /**
@@ -165,38 +168,41 @@ public:
    */
   auto loadFileAsync(const std::string& filePath, bool reloadNextFile) -> std::future<int>
   {
-      return std::async(std::launch::async, [this, filePath, reloadNextFile]()
-      {
-          std::unique_lock<std::mutex> lock(mtx);
+    return std::async(std::launch::async,
+                      [this, filePath, reloadNextFile]()
+                      {
+                        std::unique_lock<std::mutex> lock(mtx);
 
-          if (isPlaying)
-          {
-              stop();
-          }
+                        if (isPlaying)
+                        {
+                          stop();
+                        }
 
-          // File check is done before loading the file so this seems like an unnecessary sanity check that can be removed
-          /*if (!std::filesystem::exists(filePath))*/
-          /*{*/
-          /*    throw std::runtime_error("File does not exist: " + filePath);*/
-          /*}*/
+                        // File check is done before loading the file so this seems like an
+                        // unnecessary sanity check that can be removed
+                        /*if (!std::filesystem::exists(filePath))*/
+                        /*{*/
+                        /*    throw std::runtime_error("File does not exist: " + filePath);*/
+                        /*}*/
 
-          if (reloadNextFile)
-          {
-              ma_sound_uninit(&sound);
-          }
+                        if (reloadNextFile)
+                        {
+                          ma_sound_uninit(&sound);
+                        }
 
-          if (deviceSet)
-          {
-              deviceConfig.playback.pDeviceID = &deviceID;
-          }
+                        if (deviceSet)
+                        {
+                          deviceConfig.playback.pDeviceID = &deviceID;
+                        }
 
-          if (ma_sound_init_from_file(&engine, filePath.c_str(), MA_SOUND_FLAG_STREAM, nullptr, nullptr, &sound) != MA_SUCCESS)
-          {
-              throw std::runtime_error("Failed to load audio file: " + filePath);
-          }
+                        if (ma_sound_init_from_file(&engine, filePath.c_str(), MA_SOUND_FLAG_STREAM,
+                                                    nullptr, nullptr, &sound) != MA_SUCCESS)
+                        {
+                          throw std::runtime_error("Failed to load audio file: " + filePath);
+                        }
 
-          return 0; // Success
-      });
+                        return 0; // Success
+                      });
   }
 
   /**
@@ -219,7 +225,8 @@ public:
       }
       isPlaying = true;
 
-      if (playbackThread.joinable()) playbackThread.join();
+      if (playbackThread.joinable())
+        playbackThread.join();
 
       // Start a new playback thread
       playbackThread = std::thread(
@@ -268,7 +275,7 @@ public:
         playbackThread.join();
       }
     }
-    else 
+    else
     {
       throw std::runtime_error("No song is playing...");
     }
@@ -341,7 +348,7 @@ public:
    *
    * @return The current volume level.
    */
-  float getVolume() const { return ma_sound_get_volume(&sound); }
+  [[nodiscard]] auto getVolume() const -> float { return ma_sound_get_volume(&sound); }
 
   /**
    * @brief Checks if the sound is currently playing.
@@ -350,7 +357,7 @@ public:
    *
    * @return `true` if the sound is playing, `false` otherwise.
    */
-  bool isCurrentlyPlaying()
+  auto isCurrentlyPlaying() -> bool
   {
     std::unique_lock<std::mutex> lock(mtx); // Protect shared state
     return isPlaying;
@@ -366,22 +373,25 @@ public:
    */
   auto getDurationAsync() -> std::future<float>
   {
-      return std::async(std::launch::async, [this]() {
-          std::unique_lock<std::mutex> lock(mtx); // Protect shared state
-          if (ma_sound_get_time_in_milliseconds(&sound) != MA_SUCCESS)
-          {
-              throw std::runtime_error("Failed to get sound duration.");
-          }
+    return std::async(std::launch::async,
+                      [this]()
+                      {
+                        std::unique_lock<std::mutex> lock(mtx); // Protect shared state
+                        if (ma_sound_get_time_in_milliseconds(&sound) != MA_SUCCESS)
+                        {
+                          throw std::runtime_error("Failed to get sound duration.");
+                        }
 
-          float     duration = 0.0f;
-          ma_result result   = ma_sound_get_length_in_seconds(&sound, &duration);
-          if (result != MA_SUCCESS)
-          {
-              throw std::runtime_error("Failed to get sound duration. Result: " + std::to_string(result));
-          }
+                        float     duration = 0.0f;
+                        ma_result result   = ma_sound_get_length_in_seconds(&sound, &duration);
+                        if (result != MA_SUCCESS)
+                        {
+                          throw std::runtime_error("Failed to get sound duration. Result: " +
+                                                   std::to_string(result));
+                        }
 
-          return duration;
-      });
+                        return duration;
+                      });
   }
 
   /**
@@ -392,7 +402,7 @@ public:
    * @param seconds The time (in seconds) to seek to.
    * @return The actual time (in seconds) that the sound was seeked to.
    */
-  double seekTime(int seconds)
+  auto seekTime(int seconds) -> double
   {
     if (isPlaying)
     {
@@ -430,10 +440,156 @@ public:
 
       return (double)seconds;
     }
-    else 
-    {  
+    else
+    {
       throw std::runtime_error("-- Audio is not playing, cannot seek time");
     }
+  }
+
+  /**
+   * @brief Gets detailed information about the current audio playback configuration.
+   *
+   * This method retrieves and returns details such as the sample rate, channels, format,
+   * and other playback-related information for the current audio.
+   *
+   * @return A formatted string containing detailed audio configuration and playback information.
+   */
+  [[nodiscard]] auto getAudioPlaybackDetails() const -> std::vector<std::string>
+  {
+    std::vector<std::string> details;
+
+    // Get audio engine's sample rate
+    ma_uint32 sampleRate = ma_engine_get_sample_rate(&engine);
+    if (sampleRate == 0)
+    {
+      details.emplace_back("WARNING: Could not detect sample rate, using default 44100 Hz");
+      sampleRate = 44100;
+    }
+
+    // Get channels from the device config
+    ma_uint32 channels = deviceConfig.playback.channels;
+    if (channels == 0)
+    {
+      details.emplace_back("WARNING: Could not detect channels, using default stereo");
+      channels = 2;
+    }
+
+    // Get format from the device config
+    ma_format format = deviceConfig.playback.format;
+    if (format == ma_format_unknown)
+    {
+      details.emplace_back("WARNING: Could not detect format, using default f32");
+      format = ma_format_f32;
+    }
+
+    // Header
+    details.emplace_back("=== Audio Playback Details ===");
+
+    // Audio Configuration
+    details.emplace_back("\nAudio Configuration:");
+    {
+      std::ostringstream oss;
+      oss << "  Sample Rate: " << sampleRate << " Hz";
+      details.emplace_back(oss.str());
+
+      oss.str("");
+      oss << "  Channels: " << channels << " (" << getChannelLayoutString(channels) << ")";
+      details.emplace_back(oss.str());
+
+      oss.str("");
+      oss << "  Format: " << getFormatString(format) << " (" << getBitsPerSample(format) << "-bit)";
+      details.emplace_back(oss.str());
+    }
+
+    // Playback State
+    details.emplace_back("\nPlayback State:");
+    {
+      std::ostringstream oss;
+      oss << "  Status: " << getPlaybackStateString();
+      details.emplace_back(oss.str());
+      oss.str("");
+      oss << "  Looping: " << (soundConfig.isLooping ? "Yes" : "No");
+      details.emplace_back(oss.str());
+    }
+
+    return details;
+  }
+
+  // Helper functions remain the same
+  [[nodiscard]] auto getChannelLayoutString(ma_uint32 channels) const -> std::string
+  {
+    switch (channels)
+    {
+      case 1:
+        return "Mono";
+      case 2:
+        return "Stereo";
+      case 3:
+        return "2.1";
+      case 4:
+        return "Quadraphonic";
+      case 5:
+        return "5.0";
+      case 6:
+        return "5.1";
+      case 7:
+        return "6.1";
+      case 8:
+        return "7.1";
+      default:
+      {
+        std::ostringstream oss;
+        oss << channels << " channels";
+        return oss.str();
+      }
+    }
+  }
+
+  [[nodiscard]] auto getFormatString(ma_format format) const -> std::string
+  {
+    switch (format)
+    {
+      case ma_format_f32:
+        return "32-bit float";
+      case ma_format_s16:
+        return "16-bit signed PCM";
+      case ma_format_u8:
+        return "8-bit unsigned PCM";
+      case ma_format_s24:
+        return "24-bit signed PCM";
+      case ma_format_s32:
+        return "32-bit signed PCM";
+      default:
+        return "Unknown format";
+    }
+  }
+
+  [[nodiscard]] auto getBitsPerSample(ma_format format) const -> uint32_t
+  {
+    switch (format)
+    {
+      case ma_format_f32:
+        return 32;
+      case ma_format_s16:
+        return 16;
+      case ma_format_u8:
+        return 8;
+      case ma_format_s24:
+        return 24;
+      case ma_format_s32:
+        return 32;
+      default:
+        return 0;
+    }
+  }
+
+  [[nodiscard]] auto getPlaybackStateString() const -> std::string
+  {
+    if (isPlaying)
+      return "Playing";
+    if (wasPaused)
+      return "Paused";
+    return "Stopped";
   }
 };
 
