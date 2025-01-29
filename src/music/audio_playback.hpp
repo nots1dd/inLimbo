@@ -1,7 +1,6 @@
 #ifndef AUDIO_PLAYBACK_HPP
 #define AUDIO_PLAYBACK_HPP
 
-#include "parser/toml_parser.hpp"
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
 #include <chrono>
@@ -12,6 +11,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <sstream>
 
 /**
  * @struct AudioDevice
