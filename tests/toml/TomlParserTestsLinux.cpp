@@ -38,7 +38,7 @@ salt = "salt_value"
 password_hash = "hashed_password"
 
 [debug]
-parser_log = "true"
+taglib_parser_log = "true"
         )";
 
         // Write the test configuration file
@@ -104,7 +104,7 @@ TEST_F(TOMLParserTest, LoadConfig_FileExistsAndParsed) {
     // Check that a value exists for a given field
     EXPECT_EQ(string(parseTOMLFieldCustom(config, PARENT_LIB, PARENT_LIB_FIELD_NAME)), "MyLibrary");
     EXPECT_EQ(string(parseTOMLFieldCustom(config, PARENT_FTP, PARENT_FTP_FIELD_USER)), "user");
-    EXPECT_EQ(string(parseTOMLFieldCustom(config, PARENT_DBG, PARENT_DBG_FIELD_PARSER_LOG)), "true");
+    EXPECT_EQ(string(parseTOMLFieldCustom(config, PARENT_DBG, PARENT_DBG_FIELD_TAGLIB_PARSER_LOG)), "true");
 }
 
 // Test for parseTOMLField for non-existent field

@@ -37,6 +37,11 @@ auto main(int argc, char* argv[]) -> int
     song_tree.saveToFile(libBinPath);
   }
 
+  if (printSongTree) {
+    song_tree.display();
+    return 0;
+  }
+
   auto        library_map = song_tree.returnSongMap();
   auto end = chrono::high_resolution_clock::now();
   Keybinds      global_keybinds = parseKeybinds();

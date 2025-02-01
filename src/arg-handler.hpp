@@ -22,6 +22,7 @@ constexpr const char* REPOSITORY_URL = "https://github.com/nots1dd/inLimbo";
 
 bool shouldRunApp =
   false; ///< Indicates if the application should proceed to run after handling arguments.
+bool printSongTree = false;
 
 /**
  * @enum ConsoleColor
@@ -111,7 +112,8 @@ public:
       {"--show-config-file", [&]() { handleShowConfig(paths.configPath); }},
       {"--show-log-dir", [&]() { handleShowLogDir(paths.cacheDir); }},
       {"--show-dbus-name", [&]() { handleShowDBusName(); }},
-      {"--update-cache-run", [&]() { handleUpdateCacheRun(paths.libBinPath); }}};
+      {"--update-cache-run", [&]() { handleUpdateCacheRun(paths.libBinPath); }},
+      {"--print-song-tree", [&]() { handlePrintSongTree(); }}};
 
     for (const auto& [flag, handler] : argumentHandlers)
     {
@@ -224,6 +226,12 @@ private:
               << "-- Updating Cache and running app..."
               << ColorManager::getColor(ConsoleColor::Reset) << std::endl;
     handleClearCache(libBinPath);
+    shouldRunApp = true;
+  }
+  
+  static void handlePrintSongTree()
+  {
+    printSongTree = true;
     shouldRunApp = true;
   }
 };

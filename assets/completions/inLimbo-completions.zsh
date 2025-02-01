@@ -8,6 +8,7 @@ _inLimbo_completions() {
         "--show-log-dir:Show the log directory path"
         "--show-dbus-name:Show the DBus service name"
         "--update-cache-run:Update the cache file and run the application"
+        "--print-song-tree:Print the Song Map parsed from directory"
     )
     _describe -t options "inLimbo options" opts
 }

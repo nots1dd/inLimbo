@@ -29,7 +29,15 @@
 
 The inLimbo project aims to be a new upcoming TUI music player for UNIX based systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.
 
-## Features
+## **Why**
+
+There are a dozen of great music players out there that do a really good job of making my music experience top notch, but nothing was ever perfect. So I tried making something that in my opinion comes closest to my ideal TUI music player.
+
+Why would you want to stay in Limbo?
+
+Sometimes it feels good to be stuck in a weird place in your life, and it feels even better to be stuck in Limbo with music :)
+
+## **Features**
 
 - **Fully configurable**: Keybinds, library, FTP credentials, and more, all in one `config.toml` file located in `$HOME/.config/inLimbo/config.toml`
 - **Very fast and easy to use**: Optimized for speed and usability.
@@ -37,16 +45,17 @@ The inLimbo project aims to be a new upcoming TUI music player for UNIX based sy
 - **Clean and nice TUI experience**: Interact with your music library seamlessly in a terminal interface.
 - **Showcases all the metadata**: Displays song metadata, including lyrics, genre, and more, for every file in your library.
 - **Plays and caters to many audio file formats**: Compatible with a variety of audio formats, depending on the capabilities of [miniaudio](https://github.com/mackron/miniaudio).
-- **Customizable**: Add your own color palette to inLimbo ;)
+- **Customizable**: Heavily customizable TUI with custom keybinds, colors, UI designs and much more to come...
+- **Privacy**: No data is collected by inLimbo other than a backtrace of when the application catches a critical signal like `SIGSEGV`, `SIGABRT`
 
-## LOOKS
+## **LOOKS**
 
 <div align="center">
   <img src="assets/gifs/inLimbo-1.gif" alt="inLimbo Demo GIF" width="600">
   <img src="assets/gifs/inLimbo-3.gif" alt="inLimbo Demo GIF" width="600">
 </div>
 
-## DEPENDENCIES 
+## **DEPENDENCIES** 
 
 > [!IMPORTANT]
 > 
@@ -274,11 +283,13 @@ The **DEBUG BUILD** will account for the following issues:
 
 -> Undefined Behaviour Sanitation (UBSan)
 
-## DIRECTORY SORTING 
+## **DIRECTORY SORTING**
+
+inLimbo reads a directory and attempts to parse each inode for its metadata using TagLib, and accordingly creates a song map datastructure that is utilized to efficiently traverse the required artist, album, song etc.
 
 To know more about inLimbo Project's logical flow on creating a song map, visit [SONGMAP](https://github.com/nots1dd/inLimbo/blob/main/src/dirsort/SONGMAP.md)
 
-## TESTING 
+## **TESTING** 
 
 The inLimbo project is aiming to be more aware of how bad its codebase is, hence I am setting up unit tests for most if not all functions/classes that should:
 
@@ -288,7 +299,7 @@ The inLimbo project is aiming to be more aware of how bad its codebase is, hence
 
 The testing is done using GTest, read [TESTS.md](https;//github.com/nots1dd/inLimbo/blob/main/tests/TESTS,md) to understand more on how tests are configured and built
 
-## DOCUMENTATION
+## **DOCUMENTATION**
 
 There is a primitive Doxygen documention set up for the inLimbo project, that should explain a lot more about the thought process and idea behind every aspect of the codebase.
 
@@ -326,6 +337,10 @@ To parse the [config.toml](https://github.com/nots1dd/inlimbo/blob/main/src/pars
 **AUDIO PLAYBACK & API**:
 
 Audio playback and capture is thanks to [miniaudio](https://github.com/mackron/miniaudio)
+
+**INSPIRATIONS**:
+
+This music player's UI flow is heavily inspired by [CMUS](https://github.com/cmus/cmus), it seemed (to me atleast) the fastest and most responsive and logical UI/UX design of a TUI that has a great balance between looking good and feeling smooth
 
 ----
 

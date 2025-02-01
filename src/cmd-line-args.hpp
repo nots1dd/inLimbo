@@ -223,4 +223,4 @@ private:
 // Define valid flags globally
 const std::vector<std::string> CommandLineArgs::validFlags = {
   "--help",         "--show-dbus-name",  "--version", "--clear-cache", "--show-config-file",
-  "--show-log-dir", "--update-cache-run"};
+  "--show-log-dir", "--update-cache-run", "--print-song-tree"};

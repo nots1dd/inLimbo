@@ -7,7 +7,8 @@ function _inLimbo_completions
         "--show-config-file" "Show the configuration file path" \
         "--show-log-dir" "Show the log directory path" \
         "--show-dbus-name" "Show the DBus service name" \
-        "--update-cache-run"   "Update the cache file and run the application"
+        "--update-cache-run"   "Update the cache file and run the application" \
+        "--print-song-tree"   "Print the Song Map parsed from directory"
     for i in (seq 1 2 (count $opts))
         set -l opt (string trim -- $opts[$i])
         set -l desc $opts[(math $i + 1)]
