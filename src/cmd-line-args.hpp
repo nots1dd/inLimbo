@@ -8,9 +8,7 @@
  * helpful error messages for invalid flags. Additionally, it offers usage information and project
  * details.
  */
-
-#ifndef COMMAND_LINE_ARGS_HPP
-#define COMMAND_LINE_ARGS_HPP
+#pragma once
 
 #include "./helpers/levenshtein.hpp"
 #include <iostream>
@@ -226,5 +224,3 @@ private:
 const std::vector<std::string> CommandLineArgs::validFlags = {
   "--help",         "--show-dbus-name",  "--version", "--clear-cache", "--show-config-file",
   "--show-log-dir", "--update-cache-run"};
-
-#endif // COMMAND_LINE_ARGS_HPP

@@ -955,3 +955,38 @@ Medium commit with some refactoring and small, nice QOL changes
 - Fixing current_position bug when run refresh thread is woken up a lot of times (BIG)
 
 ---
+
+## [ALPHA 2.9] --- 01-02-2025
+
+### Added
+- Trie `src/helpers/trie.hpp` --> For efficient string search
+
+- Powerful and neat string search for artists (songs does not work atm) with next and previous search match (circular match)
+
+### Changed
+- Every header now uses `#pragma once` instead of `#ifndef` (idk why i was doing that) 
+
+- Overall refactor / code change to most headers
+
+- Added 2 new debug parser logs (keybinds and colors)
+
+- Much better UI for Song Info screen
+
+- Readme changes to explain the default keybinds and their use
+
+### Fixed
+- Centered the Image View component in Song Info Screen
+
+### Removed
+- setDevice in MiniAudioPlayer (will add in future but not the priority right now) 
+
+Medium commit with some refactoring and neat changes, getting to better UI and codebase maybe
+
+### Known Issues to fix in immediate commits
+- Holding the keybind for PlayNextSong() / PlayPrevSong() doesnt break anything, but MiniAudioPlayer class is not as responsive as the UI, so it lags behind (MAJOR ISSUE)
+
+(The outcome of the above issue would be that if you hold PlayNextSong() func call and it goes to Song A, the MiniAudioPlayer might still be playing Song B, which appears BEFORE Song A)
+
+- Fixing current_position bug when run refresh thread is woken up a lot of times (BIG)
+
+---

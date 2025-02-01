@@ -15,14 +15,16 @@ salt = "random_salt_value"
 password_hash = "0a4dd737a1f7ab1f0b8f36f7ed75959febad3de996b5d5a8779547a7083fff16" # default password is `password`
 
 [debug]
-parser_log = "false" # false to disable it, true to enable it
+taglib_parser_log = "false" # false to disable it, true to enable it
+colors_parser_log = "false"
+keybinds_parser_log = "false"
 debounce_time_in_ms = "500" # Adding debounce to events (minimum is 500) [# LEGACY]
 
 # NOTE: Only `Tab`, `Escape`, `Enter/Return` and `Space` are accepted as special chars aside from:
 # [a-zA-Z0-9!@#$%\^&*\(\)<>\?/`~:;'"\[\]{}\|,\.-=+] charset
 [keybinds]
-scroll_up = "h"
-scroll_down = "l"
+scroll_up = "k"
+scroll_down = "j"
 toggle_focus = "Tab" # to toggle between window panes (Songs and Artists)
 show_help = "?" # Toggles help window
 toggle_play = "Space"
@@ -46,6 +48,8 @@ view_song_queue = "3"
 view_current_song_info = "i"
 toggle_audio_devices = "w"
 search_menu = "/"
+search_item_next = "0"
+search_item_prev = "9"
 
 # Colors format: Solid Colors and Hexadecimal values of format `#RRGGBB`
 [colors]

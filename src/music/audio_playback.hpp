@@ -1,5 +1,4 @@
-#ifndef AUDIO_PLAYBACK_HPP
-#define AUDIO_PLAYBACK_HPP
+#pragma once
 
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
@@ -147,13 +146,28 @@ public:
    *
    * @param id The device ID to set for playback.
    */
-  void setDevice(const ma_device_id& id)
-  {
-    std::unique_lock<std::mutex> lock(mtx);
-    deviceID                        = id;
-    deviceConfig.playback.pDeviceID = &deviceID;
-    deviceSet                       = true;
-  }
+  // This does not work will figure some way to fix this
+  /*void setDevice(const ma_device_id& id)*/
+  /*{*/
+  /*    std::unique_lock<std::mutex> lock(mtx);*/
+  /**/
+  /*    if (!deviceSet) {*/
+  /*        std::cerr << "Device not initialized!\n";*/
+  /*        return;*/
+  /*    }*/
+  /**/
+  /*    // Stop current playback*/
+  /*    ma_device_stop(&device);*/
+  /**/
+  /*    // Set new device*/
+  /*    deviceID                        = id;*/
+  /*    deviceConfig.playback.pDeviceID = &deviceID;*/
+  /**/
+  /*    // Restart playback*/
+  /*    if (ma_device_start(&device) != MA_SUCCESS) {*/
+  /*        std::cerr << "Failed to restart audio device after switch.\n";*/
+  /*    }*/
+  /*}*/
 
   /**
    * @brief Loads an audio file for playback.
@@ -240,7 +254,7 @@ public:
               isPlaying = false;
               break;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
           }
         });
     }
@@ -592,5 +606,3 @@ public:
     return "Stopped";
   }
 };
-
-#endif

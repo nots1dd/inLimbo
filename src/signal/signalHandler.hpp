@@ -1,5 +1,4 @@
-#ifndef SIGNAL_HANDLER_HPP
-#define SIGNAL_HANDLER_HPP
+#pragma once
 
 #include <climits> // For PATH_MAX
 #include <csignal>
@@ -19,7 +18,7 @@ class SignalHandler
 {
 public:
   // Singleton instance getter
-  static SignalHandler& getInstance()
+  static auto getInstance() -> SignalHandler&
   {
     static SignalHandler instance;
     return instance;
@@ -42,11 +41,11 @@ private:
   ~SignalHandler() = default;
 
   // Non-copyable and non-movable
-  SignalHandler(const SignalHandler&)            = delete;
-  SignalHandler& operator=(const SignalHandler&) = delete;
+  SignalHandler(const SignalHandler&)                    = delete;
+  auto operator=(const SignalHandler&) -> SignalHandler& = delete;
 
   // Get current timestamp as a string
-  static std::string getCurrentTimestamp()
+  static auto getCurrentTimestamp() -> std::string
   {
     std::time_t now = std::time(nullptr);
     char        buffer[100];
@@ -150,8 +149,8 @@ private:
 
       logFile.close();
 
-      std::cerr << "** Critical error occurred. See " << logFileName << " for details.\n"
-                << "Exiting... **" << std::endl;
+      std::cerr << "** Critical error occurred. See " << logFileName << " for details.**\n"
+                << "Exiting..." << std::endl;
     }
     else
     {
@@ -162,5 +161,3 @@ private:
     _Exit(EXIT_FAILURE);
   }
 };
-
-#endif

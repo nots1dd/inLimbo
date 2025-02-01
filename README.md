@@ -116,7 +116,129 @@ Check out [BUILD.md](https://github.com/nots1dd/inLimbo/blob/main/BUILD.md) for 
 > To try debug build check out [DEBUGGING](https://github.com/nots1dd/inLimbo?tab=readme-ov-file#debugging)
 > 
 
-## DEBUGGING
+## **GETTING STARTED**
+
+To get started: 
+
+```bash 
+inLimbo # or wherever you have built the binary 
+```
+
+To get help regarding the command-line arguments available with inLimbo:
+
+```bash 
+inLimbo --help
+```
+
+If you update the songs directory in `config.toml`, inLimbo binary will not automatically change the directory and remove the static serialized `lib.bin` from which it loads the song map from.
+
+You need to run:
+
+```bash 
+inLimbo --update-cache-run # will load the directory dynamically everytime (will have slower song map times of course)
+```
+
+That should help with everything.
+
+## **CONFIGURATION**
+
+There is quite a lot to configure in the inLimbo project. A basic config file will be setup in your `$HOME/.config/inLimbo/` directory while using CMake to build
+
+> [!IMPORTANT]
+> 
+> Check out [config.toml](https://github.com/nots1dd/inLimbo/blob/main/src/parser/examples/config.toml) to see all the possible fields
+> for configuration 
+> 
+> **IT IS UNDER HEAVY DEVELOPMENT SO EXPECT BREAKING CHANGES WITH EACH COMMIT**
+>
+
+**COLORS FORMAT**
+
+-> Hexadecimal `#RRGGBB` format 
+
+-> TrueColors (Solid predefined colors):
+
+> [!NOTE]
+> 
+> For TrueColors, check out [COLORS](https://github.com/nots1dd/inLimbo/blob/main/COLORS.md) for more information on how to set up colors in `inLimbo`
+> 
+
+**DEFAULT KEYBINDS**
+
+### **General Navigation**
+| Keybind | Action |
+|---------|--------|
+| `q` | **Quit the application** |
+| `Tab` | **Toggle focus** between the "Artists" and "Songs" panes |
+| `?` | **Show or hide the help menu** |
+| `/` | **Open the search menu** |
+
+---
+
+### **Scrolling and Selection**
+| Keybind | Action |
+|---------|--------|
+| `j` | **Scroll down** (move selection down in the list) |
+| `k` | **Scroll up** (move selection up in the list) |
+| `0` | **Move to the next search result** (if search is active) |
+| `9` | **Move to the previous search result** (if search is active) |
+
+---
+
+### **Playback Controls**
+| Keybind | Action |
+|---------|--------|
+| `Space` | **Toggle play/pause** for the currently playing song |
+| `Enter` | **Play the currently selected song** |
+| `n` | **Play the next song** in the queue |
+| `p` | **Play the previous song** in the queue |
+| `r` | **Replay the current song** |
+| `m` | **Toggle mute** on/off |
+
+---
+
+### **Seeking and Volume Control**
+| Keybind | Action |
+|---------|--------|
+| `h` | **Seek backward by 5 seconds** |
+| `l` | **Seek forward by 5 seconds** |
+| `=` | **Increase volume** |
+| `-` | **Decrease volume** |
+| `w` | **Toggle between available audio devices** |
+
+---
+
+### **Song and Queue Management**
+| Keybind | Action |
+|---------|--------|
+| `a` | **Add the currently selected song to the queue** |
+| `e` | **Add all songs of the selected artist to the queue** |
+| `b` | **Play this song next** (insert it into the queue immediately after the current song) |
+| `d` | **Remove the currently selected song from the queue** |
+| `3` | **View the current song queue** |
+
+---
+
+### **Song Information and UI Navigation**
+| Keybind | Action |
+|---------|--------|
+| `1` | **Go to the main UI screen** |
+| `2` or `L` | **View lyrics of the currently playing song** |
+| `i` | **View detailed information about the current song** |
+
+---
+
+### **Status Bar & UI Settings**
+| Keybind | Action |
+|---------|--------|
+| `true/false` (UI setting) | **Show or hide bitrate information** in the status bar |
+
+
+<div align="center">
+  <img src="assets/gifs/inLimbo-2.gif" alt="inLimbo Demo GIF" width="600">
+</div>
+
+## **DEBUGGING**
 
 inLimbo is in active development and is prone to having *A LOT* of issues
 
@@ -151,33 +273,6 @@ The **DEBUG BUILD** will account for the following issues:
 -> Address Sanitation (ASan)
 
 -> Undefined Behaviour Sanitation (UBSan)
-
-## CONFIGURATION
-
-There is quite a lot to configure in the inLimbo project. A basic config file will be setup in your `$HOME/.config/inLimbo/` directory while using CMake to build
-
-> [!IMPORTANT]
-> 
-> Check out [config.toml](https://github.com/nots1dd/inLimbo/blob/main/src/parser/examples/config.toml) to see all the possible fields
-> for configuration 
-> 
-> **IT IS UNDER HEAVY DEVELOPMENT SO EXPECT BREAKING CHANGES WITH EACH COMMIT**
->
-
-**COLORS FORMAT**
-
--> Hexadecimal `#RRGGBB` format 
-
--> TrueColors (Solid predefined colors):
-
-> [!NOTE]
-> 
-> For TrueColors, check out [COLORS](https://github.com/nots1dd/inLimbo/blob/main/COLORS.md) for more information on how to set up colors in `inLimbo`
-> 
-
-<div align="center">
-  <img src="assets/gifs/inLimbo-2.gif" alt="inLimbo Demo GIF" width="600">
-</div>
 
 ## DIRECTORY SORTING 
 

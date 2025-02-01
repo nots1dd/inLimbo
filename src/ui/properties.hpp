@@ -1,5 +1,4 @@
-#ifndef PROPERTIES_HPP
-#define PROPERTIES_HPP
+#pragma once
 
 #include "../parser/toml_parser.hpp"
 #include <iostream>
@@ -100,5 +99,3 @@ auto parseProps() -> GlobalProps
 
   return gprops;
 }
-
-#endif

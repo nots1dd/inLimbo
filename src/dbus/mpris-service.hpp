@@ -10,14 +10,13 @@
  * The service provides methods to update metadata, handle playback control, and register the
  * service on the D-Bus.
  */
-
-#ifndef MPRIS_SERVER_HPP
-#define MPRIS_SERVER_HPP
+#pragma once
 
 #include <gio/gio.h>
 #include <glib.h>
 #include <iostream>
 #include <string>
+#include <utility>
 
 /**
  * @class MPRISService
@@ -39,7 +38,7 @@ public:
    *
    * @param applicationName The name of the media player application.
    */
-  MPRISService(const std::string& applicationName) : applicationName_(applicationName)
+  MPRISService(std::string applicationName) : applicationName_(std::move(applicationName))
   {
 
     const char* introspection_xml = R"XML(
@@ -319,10 +318,10 @@ private:
    * @param user_data User data passed from the service constructor.
    * @return The value of the requested property.
    */
-  static GVariant* handle_root_get_property(GDBusConnection* connection, const char* sender,
-                                            const char* object_path, const char* interface_name,
-                                            const char* property_name, GError** error,
-                                            void* user_data)
+  static auto handle_root_get_property(GDBusConnection* connection, const char* sender,
+                                       const char* object_path, const char* interface_name,
+                                       const char* property_name, GError** error,
+                                       void* user_data) -> GVariant*
   {
     auto* service = static_cast<MPRISService*>(user_data);
 
@@ -357,10 +356,10 @@ private:
    * @param user_data User data passed from the service constructor.
    * @return The value of the requested property.
    */
-  static GVariant* handle_player_get_property(GDBusConnection* connection, const char* sender,
-                                              const char* object_path, const char* interface_name,
-                                              const char* property_name, GError** error,
-                                              void* user_data)
+  static auto handle_player_get_property(GDBusConnection* connection, const char* sender,
+                                         const char* object_path, const char* interface_name,
+                                         const char* property_name, GError** error,
+                                         void* user_data) -> GVariant*
   {
     auto* service = static_cast<MPRISService*>(user_data);
 
@@ -416,8 +415,8 @@ private:
    * @param error Error output in case of failure.
    * @param user_data User data passed from the service constructor.
    */
-  static gboolean handle_player_set_property(GDBusConnection*, const char*, const char*,
-                                             const char*, const char*, GVariant*, GError**, void*)
+  static auto handle_player_set_property(GDBusConnection*, const char*, const char*, const char*,
+                                         const char*, GVariant*, GError**, void*) -> gboolean
   {
     return TRUE;
   }
@@ -427,5 +426,3 @@ private:
   GDBusConnection* connection_         = nullptr;
   GVariant*        current_metadata_   = nullptr;
 };
-
-#endif

@@ -6,8 +6,7 @@
  * process command-line arguments and execute corresponding actions. It also includes
  * helper structures and utilities for managing console output with color.
  */
-#ifndef ARGUMENT_HANDLER_HPP
-#define ARGUMENT_HANDLER_HPP
+#pragma once
 
 #include "./cmd-line-args.hpp"
 #include <filesystem>
@@ -18,7 +17,7 @@
 // Constants
 constexpr const char* DBUS_SERVICE_NAME =
   "org.mpris.MediaPlayer2.inLimbo";                   ///< DBus service name used by inLimbo.
-constexpr const char* VERSION        = "2.7 (ALPHA)"; ///< Current version of the application.
+constexpr const char* VERSION        = "2.9 (ALPHA)"; ///< Current version of the application.
 constexpr const char* REPOSITORY_URL = "https://github.com/nots1dd/inLimbo";
 
 bool shouldRunApp =
@@ -228,5 +227,3 @@ private:
     shouldRunApp = true;
   }
 };
-
-#endif // ARGUMENT_HANDLER_HPP

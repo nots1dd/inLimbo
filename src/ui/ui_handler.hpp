@@ -1,24 +1,20 @@
-#ifndef FTXUI_HANDLER_HPP
-#define FTXUI_HANDLER_HPP
+#pragma once
 
 #include "../dbus/mpris-service.hpp"
 #include "../music/audio_playback.hpp"
 #include "../threads/thread_manager.hpp"
 #include "./components/scroller.hpp"
 #include "./properties.hpp"
-#include "arg-handler.hpp"
 #include "dirsort/songmap.hpp"
-#include "keymaps.hpp"
 #include "misc.hpp"
 #include <ftxui/dom/elements.hpp>
+#include <ftxui/dom/node.hpp>
 
 using namespace ftxui;
 
 /** MACROS FOR SONG DETAILS */
 #define STATUS_PLAYING   "<>"
 #define STATUS_PAUSED    "!!"
-#define LYRICS_AVAIL     "L*"
-#define ADDN_PROPS_AVAIL "&*"
 #define STATUS_BAR_DELIM " | "
 
 /** SCREEN MACROS */
@@ -28,6 +24,7 @@ using namespace ftxui;
 #define SHOW_QUEUE_SCREEN      3
 #define SHOW_SONG_INFO_SCREEN  4
 #define SHOW_AUDIO_CONF_SCREEN 5
+#define SHOW_SEARCH_INPUT      6
 
 /** MODES OF OPERATION */
 #define NORMAL_MODE 0
@@ -52,7 +49,8 @@ public:
     Keybinds& keybinds, InLimboColors& colors)
       : library(initial_library), INL_Thread_Manager(std::make_unique<ThreadManager>()),
         INL_Thread_State(INL_Thread_Manager->getThreadState()), global_keybinds(keybinds),
-        global_colors(colors), song_queue() // Initialize the queue vector to avoid any abrupt exits
+        global_colors(colors), song_queue(),
+        searchIndices() // Initialize these vectors to avoid any abrupt exits
   {
     InitializeData();
     CreateComponents();
@@ -140,6 +138,7 @@ public:
 
 private:
   PlayingState current_playing_state;
+  SearchState  current_search_state;
 
   std::unique_ptr<MPRISService> mprisService;
 
@@ -163,6 +162,7 @@ private:
   unsigned int current_disc       = 1;
   unsigned int current_track      = 1;
   bool         show_dialog        = false;
+  bool         is_search_active   = false;
   bool         show_audio_devices = false;
   std::string  dialog_message;
   double       seekBuffer;
@@ -170,9 +170,11 @@ private:
 
   // Current view lists
   std::vector<std::string>  current_artist_names;
+  std::vector<std::string>  current_artist_song_names;
   std::vector<std::string>  song_queue_names;
   std::vector<std::string>  lyricLines;
   std::vector<std::string>  audioDevices;
+  std::vector<int>          searchIndices;
   std::vector<AudioDevice>  audioDeviceMap;
   std::vector<std::string>  audioDeviceConf;
   std::vector<Element>      current_song_elements;
@@ -211,15 +213,15 @@ private:
     {
       current_artist_names.push_back(artist_pair.first);
     }
-
     // Sort artist names alphabetically
     std::sort(current_artist_names.begin(), current_artist_names.end());
 
-    // Initialize first artist's songs if available
     if (!current_artist_names.empty())
     {
       UpdateSongsForArtist(current_artist_names[0]);
     }
+    // Update the Search Query for Artists (it wont be updated again during the lifetime of the player so doing it here is fine)
+    for (size_t i=0;i<current_artist_names.size();++i) current_search_state.ArtistSearchTrie.insert(current_artist_names[i], i);
   }
 
   void SetDialogMessage(const std::string& message)
@@ -486,6 +488,7 @@ private:
     current_inodes.clear();
     current_song_elements.clear();
     album_name_indices.clear();
+    current_search_state.SongSearchTrie.clear();
 
     if (library.count(artist) > 0)
     {
@@ -520,6 +523,7 @@ private:
             std::string disc_track_info =
               " " + std::to_string(disc_number) + "-" + std::to_string(track_number) + "  ";
             current_inodes.push_back(song.inode);
+            current_search_state.SongSearchTrie.insert(song.metadata.title, current_inodes.size()-1);
             current_song_elements.push_back(
               renderSongName(disc_track_info, song.metadata.title, song.metadata.duration));
           }
@@ -528,6 +532,8 @@ private:
     }
 
     current_artist = artist;
+    selected_inode           = 1;
+    albums_indices_traversed = 1;
   }
 
   void ClearQueue()
@@ -761,7 +767,7 @@ private:
     if (debounce_time < MIN_DEBOUNCE_TIME_IN_MS)
       debounce_time = MIN_DEBOUNCE_TIME_IN_MS; // min debounce time is 0.5s
     const int final_debounce_time = debounce_time;
-    auto      debounce_duration   = std::chrono::milliseconds(final_debounce_time);
+    auto      debounce_duration   = std::chrono::milliseconds(final_debounce_time); 
 
     main_container |= CatchEvent(
       [&](Event event)
@@ -771,6 +777,39 @@ private:
           return (event.is_character() && event.character() == std::string(1, key)) ||
                  (event == Event::Special(std::string(1, static_cast<char>(key))));
         };
+
+        if (is_search_active) {
+            if (event.is_character()) {
+                current_search_state.input += event.character();
+                
+                current_search_state.artistIndex = 0;
+                current_search_state.songIndex = 0;
+
+                if (focus_on_artists) {
+                    searchIndices = current_search_state.ArtistSearchTrie.search(current_search_state.input);
+                    if (!searchIndices.empty()) {
+                        selected_artist = searchIndices[current_search_state.artistIndex];
+                        UpdateSongsForArtist(current_artist_names[selected_artist]);
+                    }
+                } else {
+                    searchIndices = current_search_state.SongSearchTrie.search(current_search_state.input);
+                    if (!searchIndices.empty())
+                    {
+                      selected_song = searchIndices[current_search_state.songIndex];
+                    }
+                }
+                return true;
+            }
+            else if (event == Event::Backspace) {
+                if (!current_search_state.input.empty()) current_search_state.input.pop_back(); 
+                return true;
+            }
+            else if (event == Event::Return || event == Event::Escape) {
+                is_search_active = false;
+                current_search_state.input.clear();
+                return true;
+            }
+        }
 
         if (active_screen == SHOW_HELP_SCREEN)
         {
@@ -805,11 +844,6 @@ private:
             active_screen = SHOW_MAIN_UI;
             return true;
           }
-          else if (is_keybind_match('x'))
-          { // Add key to dismiss dialog
-            show_dialog = false;
-            return true;
-          }
         }
 
         else if (active_screen == SHOW_SONG_INFO_SCREEN)
@@ -830,7 +864,6 @@ private:
             return true;
           }
         }
-
         else if (active_screen == SHOW_MAIN_UI)
         {
 
@@ -887,12 +920,13 @@ private:
             PlayPreviousSong();
             return true;
           }
-          else if (is_keybind_match(global_keybinds.seek_ahead_5))
+          else if (is_keybind_match(global_keybinds.seek_ahead_5) && INL_Thread_State.is_playing)
           {
             seekBuffer = audio_player->seekTime(5);
             current_position += seekBuffer;
+            return true;
           }
-          else if (is_keybind_match(global_keybinds.seek_behind_5))
+          else if (is_keybind_match(global_keybinds.seek_behind_5) && INL_Thread_State.is_playing)
           {
             if (current_position > 5)
             {
@@ -904,6 +938,7 @@ private:
               ReplaySong();
             }
             UpdatePlayingState();
+            return true;
           }
           else if (is_keybind_match(global_keybinds.replay_song))
           {
@@ -924,27 +959,13 @@ private:
           }
           else if (is_keybind_match(global_keybinds.toggle_mute))
           {
-            muted = !muted;
-            if (muted)
-            {
-              lastVolume = volume;
-              volume     = 0;
-            }
-            else
-            {
-              volume = lastVolume;
-            }
+            volume = handleToggleMute(&volume, &lastVolume, &muted);
             UpdateVolume();
             return true;
           }
           else if (is_keybind_match(global_keybinds.show_help))
           {
             active_screen = SHOW_HELP_SCREEN;
-            return true;
-          }
-          else if (is_keybind_match('x'))
-          { // Add key to dismiss dialog
-            show_dialog = false;
             return true;
           }
           else if (is_keybind_match(global_keybinds.toggle_audio_devices))
@@ -1002,7 +1023,8 @@ private:
           else if (is_keybind_match(global_keybinds.add_artists_songs_to_queue) && focus_on_artists)
           {
             EnqueueAllSongsByArtist(current_artist_names[selected_artist], false);
-            if (!INL_Thread_State.is_playing) {
+            if (!INL_Thread_State.is_playing)
+            {
               current_position = 0;
               PlayCurrentSong();
               UpdatePlayingState();
@@ -1014,6 +1036,35 @@ private:
           {
             PlayThisSongNext(current_artist_names[selected_artist]);
             return true;
+          }
+          else if (is_keybind_match(global_keybinds.search_menu))
+          {
+            is_search_active = true;
+            searchIndices.clear();
+            current_search_state.input.clear();
+            return true;
+          }
+          else if (is_keybind_match(global_keybinds.search_item_next))
+          {
+              if (focus_on_artists)
+              {
+                  // Increment index and wrap around if necessary
+                  current_search_state.artistIndex = (current_search_state.artistIndex + 1) % searchIndices.size();
+                  selected_artist = searchIndices[current_search_state.artistIndex];
+                  UpdateSongsForArtist(current_artist_names[selected_artist]);
+                  return true;
+              }
+          }
+          else if (is_keybind_match(global_keybinds.search_item_prev))
+          {
+              if (focus_on_artists)
+              {
+                  // Decrement index and wrap around if necessary
+                  current_search_state.artistIndex = (current_search_state.artistIndex - 1 + searchIndices.size()) % searchIndices.size();
+                  selected_artist = searchIndices[current_search_state.artistIndex];
+                  UpdateSongsForArtist(current_artist_names[selected_artist]);
+                  return true;
+              }
           }
         }
 
@@ -1027,7 +1078,7 @@ private:
           NavigateList(false);
           return true;
         }
-        // Some default keybinds
+        /* @Some default keybinds */
         else if (is_keybind_match('g'))
         {
 
@@ -1040,13 +1091,18 @@ private:
           {
             // Second 'g' press
             NavigateListToTop(true);
-            first_g_pressed = false; // Reset the state
+            first_g_pressed = false;
             return true;
           }
         }
         else if (is_keybind_match('G'))
         {
           NavigateListToTop(false);
+          return true;
+        }
+        else if (is_keybind_match('x'))
+        {
+          show_dialog = false;
           return true;
         }
 
@@ -1064,7 +1120,7 @@ private:
                  switch (active_screen)
                  {
                    case SHOW_HELP_SCREEN:
-                     interface = RenderHelpScreen();
+                     interface = RenderHelpScreen(global_keybinds);
                      break;
                    case SHOW_MAIN_UI:
                      interface = RenderMainInterface(progress);
@@ -1088,33 +1144,16 @@ private:
                  }
                  if (show_dialog)
                  {
-                   // Create a semi-transparent overlay with the dialog box
                    interface =
                      dbox({
-                       interface,              // Dim the background
-                       RenderDialog() | center // Center the dialog both horizontally and vertically
+                       interface,
+                       RenderDialog(dialog_message) | center
                      }) |
                      getTrueColor(TrueColors::Color::White) | flex;
                  }
-
                  return vbox(interface);
                });
-  }
-
-  auto RenderDialog() -> Element
-  {
-    return window(
-             text(" File Information ") | bold | center | getTrueColor(TrueColors::Color::White) |
-               getTrueBGColor(TrueColors::Color::Gray),
-             vbox({
-               text(dialog_message) | getTrueColor(TrueColors::Color::Coral),
-               separator() | color(Color::GrayLight),
-               text("Press 'x' to close") | dim | center | getTrueColor(TrueColors::Color::Pink),
-             }) |
-               center) |
-           size(WIDTH, LESS_THAN, 60) | size(HEIGHT, LESS_THAN, 8) |
-           getTrueBGColor(TrueColors::Color::Black) | borderHeavy;
-  }
+  } 
 
   void UpdateLyrics()
   {
@@ -1191,7 +1230,7 @@ private:
 
     auto queue_container = vbox({
                              INL_Component_State.songs_queue_comp->Render() |
-                               color(global_colors.song_queue_menu_fg) | flex,
+                               color(global_colors.song_queue_menu_fg) | flex | frame,
                            }) |
                            border | color(global_colors.song_queue_menu_bor_col);
 
@@ -1242,8 +1281,6 @@ private:
         {
           UpdateSelectedIndex(selected_artist, current_artist_names.size(), move_down);
           UpdateSongsForArtist(current_artist_names[selected_artist]);
-          selected_inode           = 1;
-          albums_indices_traversed = 1;
         }
         else if (!current_inodes.empty())
         {
@@ -1293,123 +1330,6 @@ private:
     }
   }
 
-  auto RenderHelpScreen() -> Element
-  {
-    auto title = text("inLimbo Controls") | bold | getTrueColor(TrueColors::Color::Teal);
-
-    // Helper function to create a single keybind row
-    auto createRow =
-      [](const std::string& key, const std::string& description, TrueColors::Color color)
-    {
-      return hbox({
-        text(key) | getTrueColor(color),
-        text("  --  ") | getTrueColor(TrueColors::Color::Gray),
-        text(description) | getTrueColor(TrueColors::Color::White),
-      });
-    };
-
-    // List of keybinds for easier modification
-    std::vector<std::tuple<std::string, std::string, TrueColors::Color>> keybinds = {
-      {charToStr(global_keybinds.scroll_up), "Scroll up in the current view",
-       TrueColors::Color::LightCyan},
-      {charToStr(global_keybinds.scroll_down), "Scroll down in the current view",
-       TrueColors::Color::LightCyan},
-      {charToStr(global_keybinds.toggle_focus), "Switch focus between panes",
-       TrueColors::Color::LightYellow},
-      {charToStr(global_keybinds.show_help), "Toggle this help window", TrueColors::Color::Cyan},
-      {charToStr(global_keybinds.toggle_play), "Play/Pause playback", TrueColors::Color::Teal},
-      {charToStr(global_keybinds.play_song), "Play the selected song",
-       TrueColors::Color::LightGreen},
-      {charToStr(global_keybinds.play_song_next), "Skip to next song",
-       TrueColors::Color::LightCyan},
-      {charToStr(global_keybinds.play_song_prev), "Go back to previous song",
-       TrueColors::Color::LightCyan},
-      {charToStr(global_keybinds.vol_up), "Increase volume", TrueColors::Color::LightGreen},
-      {charToStr(global_keybinds.vol_down), "Decrease volume", TrueColors::Color::LightGreen},
-      {charToStr(global_keybinds.toggle_mute), "Mute/Unmute audio", TrueColors::Color::LightRed},
-      {charToStr(global_keybinds.quit_app), "Quit inLimbo", TrueColors::Color::LightRed},
-      {charToStr(global_keybinds.seek_ahead_5), "Seek forward by 5 seconds",
-       TrueColors::Color::Orange},
-      {charToStr(global_keybinds.seek_behind_5), "Seek backward by 5 seconds",
-       TrueColors::Color::Orange},
-      {charToStr(global_keybinds.view_lyrics), "View lyrics for the current song",
-       TrueColors::Color::LightBlue},
-      {charToStr(global_keybinds.goto_main_screen), "Return to main UI", TrueColors::Color::Teal},
-      {charToStr(global_keybinds.replay_song), "Replay the current song",
-       TrueColors::Color::Orange},
-      {charToStr(global_keybinds.add_song_to_queue), "Add selected song to queue",
-       TrueColors::Color::LightPink},
-      {charToStr(global_keybinds.add_artists_songs_to_queue), "Queue all songs by the artist",
-       TrueColors::Color::LightPink},
-      {charToStr(global_keybinds.remove_song_from_queue), "Remove selected song from queue",
-       TrueColors::Color::Teal},
-      {charToStr(global_keybinds.play_this_song_next), "Play selected song next",
-       TrueColors::Color::LightMagenta},
-      {charToStr(global_keybinds.view_song_queue), "View currently queued songs",
-       TrueColors::Color::LightYellow},
-      {charToStr(global_keybinds.view_current_song_info), "View info of the currently playing song",
-       TrueColors::Color::LightCyan},
-      {charToStr(global_keybinds.toggle_audio_devices), "Switch between available audio devices",
-       TrueColors::Color::LightBlue},
-      {charToStr(global_keybinds.search_menu), "Open the search menu",
-       TrueColors::Color::LightGreen},
-      {"gg", "Go to the top of the active menu", TrueColors::Color::LightBlue},
-      {"G", "Go to the bottom of the active menu", TrueColors::Color::LightBlue},
-      {"x", "Close the dialog box", TrueColors::Color::LightRed},
-    };
-
-    // Generate controls list dynamically
-    std::vector<Element> control_elements;
-    for (const auto& [key, description, color] : keybinds)
-    {
-      control_elements.push_back(createRow(key, description, color));
-    }
-
-    auto controls_list =
-      vbox(std::move(control_elements)) | getTrueColor(TrueColors::Color::LightGreen);
-
-    // Symbols Legend
-    auto symbols_explanation = vbox({
-      hbox({text(LYRICS_AVAIL), text(" -> "), text("The current song has lyrics metadata.")}) |
-        getTrueColor(TrueColors::Color::LightCyan),
-      hbox({text(ADDN_PROPS_AVAIL), text("  -> "),
-            text("The current song has additional properties metadata.")}) |
-        getTrueColor(TrueColors::Color::LightYellow),
-    });
-
-    // Application details
-    auto app_name    = text("inLimbo - Music player that keeps you in Limbo...") | bold | getTrueColor(TrueColors::Color::Teal);
-    auto contributor = text("Developed by: Siddharth Karanam (nots1dd)") |
-                       getTrueColor(TrueColors::Color::LightGreen);
-    auto github_link = hbox({
-      text("GitHub: "),
-      text("Click me!") | underlined | bold |
-        getTrueColor(TrueColors::Color::LightBlue) |
-        hyperlink(REPOSITORY_URL),
-    });
-
-    // Footer with shortcut hint
-    std::string footer_text =
-      "Press '" + charToStr(global_keybinds.show_help) + "' to return to inLimbo.";
-    auto footer = vbox({
-                    app_name,
-                    contributor,
-                    github_link,
-                    text(footer_text) | getTrueColor(TrueColors::Color::LightYellow) | center,
-                  }) |
-                  flex | border;
-
-    // Build UI layout
-    return vbox({
-             title,
-             controls_list | border | flex,
-             text("Symbols Legend") | bold | getTrueColor(TrueColors::Color::LightBlue),
-             symbols_explanation | border | flex,
-             footer,
-           }) |
-           flex;
-  }
-
   auto GetCurrWinColor(bool focused) -> Color
   {
     return focused ? global_colors.active_win_border_color
@@ -1427,16 +1347,7 @@ private:
       gauge(progress) | flex | progress_style,
       text(FormatTime(GetCurrentSongDuration())) | progress_style,
     });
-  }
-
-  auto RenderVolumeBar(int volume) -> Element
-  {
-    return hbox({
-      text(" Vol: ") | dim,
-      gauge(volume / 100.0) | size(WIDTH, EQUAL, 10) | color(global_colors.volume_bar_col),
-      text(std::to_string(volume) + "%") | dim,
-    });
-  }
+  } 
 
   auto RenderQueueBar() -> Element
   {
@@ -1459,27 +1370,6 @@ private:
     });
   }
 
-  auto RenderStatusBar(const std::string& status, const std::string& current_song_info,
-                       const std::string& additional_info, const std::string& year_info) -> Element
-  {
-    return hbox({
-             text(status) | getTrueColor(TrueColors::Color::Black),
-             text(current_playing_state.artist) | color(global_colors.status_bar_artist_col) |
-               bold | size(WIDTH, LESS_THAN, MAX_LENGTH_ARTIST_NAME),
-             text(current_song_info) | bold | color(global_colors.status_bar_song_col) |
-               size(WIDTH, LESS_THAN, MAX_LENGTH_SONG_NAME),
-             filler(), // Push the right-aligned content to the end
-             hbox({
-               text(additional_info) | bold | color(global_colors.status_bar_addn_info_col) | flex,
-               text(year_info) | color(global_colors.status_bar_addn_info_col) |
-                 size(WIDTH, LESS_THAN, 15),
-               text(" "),
-             }) |
-               align_right,
-           }) |
-           size(HEIGHT, EQUAL, 1) | bgcolor(global_colors.status_bar_bg);
-  }
-
   auto RenderMainInterface(float progress) -> Element
   {
     std::string current_song_info;
@@ -1488,7 +1378,7 @@ private:
 
     if (!current_playing_state.artist.empty())
     {
-      current_song_info = " - " + current_playing_state.title;
+      current_song_info = SONG_TITLE_DELIM + current_playing_state.title;
       year_info         = std::to_string(current_playing_state.year) + " ";
 
       if (current_playing_state.genre != "Unknown Genre")
@@ -1539,9 +1429,10 @@ private:
                  flex;
 
     auto progress_bar = RenderProgressBar(progress);
-    auto volume_bar   = RenderVolumeBar(volume);
+    auto volume_bar   = RenderVolumeBar(volume, global_colors.volume_bar_col);
     auto queue_bar    = RenderQueueBar();
-    auto status_bar   = RenderStatusBar(status, current_song_info, additional_info, year_info);
+    auto status_bar   = RenderStatusBar(status, current_song_info, additional_info, year_info, global_colors, current_playing_state.artist);
+    auto search_bar   = is_search_active == true ? RenderSearchBar(current_search_state.input) : filler();
 
     return vbox({
              panes,
@@ -1551,6 +1442,7 @@ private:
                queue_bar,
              }),
              status_bar,
+             search_bar
            }) |
            flex;
   }
@@ -1583,5 +1475,3 @@ private:
     }
   }
 };
-
-#endif // FTXUI_HANDLER_HPP

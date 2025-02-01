@@ -1,5 +1,4 @@
-#ifndef COLORS_HPP
-#define COLORS_HPP
+#pragma once
 
 #include "../parser/toml_parser.hpp"
 #include <ftxui/screen/color.hpp>
@@ -240,16 +239,22 @@ auto parseHexColor(const std::string& hex) -> ftxui::Color
  * @return ftxui::Color The corresponding RGB color.
  * @throws std::exit on invalid or unsupported colors.
  */
-auto parseColor(const std::string& color_name, const std::string& color_field) -> ftxui::Color
+auto parseColor(const std::string& color_name, const std::string& color_field,
+                bool verbose_logging) -> ftxui::Color
 {
   if (color_name[0] == '#')
   {
+    if (verbose_logging)
+    {
+      std::cout << "[COLORS] Parsing HEX color: " << color_name << " for field: " << color_field
+                << std::endl;
+    }
     return parseHexColor(color_name);
   }
 
   auto reportError = [](const std::string& field, const std::string_view& key)
   {
-    std::cerr << "** Error: Unsupported or empty color '" << key << "' detected for field '"
+    std::cerr << "** Error: ⚠  Unsupported or empty color '" << key << "' detected for field '"
               << field << "'. Modify or remove that color field. **" << std::endl;
     std::exit(EXIT_FAILURE); /**< Exit the program on invalid keybind */
   };
@@ -302,6 +307,11 @@ auto parseColor(const std::string& color_name, const std::string& color_field) -
   auto it = color_map.find(color_name);
   if (it != color_map.end())
   {
+    if (verbose_logging)
+    {
+      std::cout << "[COLORS] Parsing predefined color **" << color_name
+                << "** for field: " << color_field << std::endl;
+    }
     return it->second;
   }
 
@@ -344,13 +354,18 @@ auto parseColors() -> InLimboColors
 
   };
 
+  bool verbose_logging = parseTOMLFieldBool(PARENT_DBG, PARENT_DBG_FIELD_COLORS_PARSER_LOG);
+
+  if (verbose_logging)
+  {
+    cout << "[COLORS] Parsing Colors in config.toml ...." << endl;
+  }
+
   for (const auto& [field, member_color] : field_map)
   {
     std::string color_name = std::string(parseTOMLField(PARENT_COLORS, field));
-    *member_color          = parseColor(color_name, field);
+    *member_color          = parseColor(color_name, field, verbose_logging);
   }
 
   return colors;
 }
-
-#endif

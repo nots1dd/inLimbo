@@ -1,5 +1,4 @@
-#ifndef LEVENSHTEIN_DIST_HPP
-#define LEVENSHTEIN_DIST_HPP
+#pragma once
 
 #include <algorithm>
 #include <string>
@@ -34,7 +33,7 @@
  * the table. The time complexity of this algorithm is O(m * n), where m and n are the lengths of
  * the two input strings.
  */
-size_t levenshteinDistance(const std::string& s1, const std::string& s2)
+auto levenshteinDistance(const std::string& s1, const std::string& s2) -> size_t
 {
   size_t len1 = s1.size(); ///< Length of the first string.
   size_t len2 = s2.size(); ///< Length of the second string.
@@ -70,5 +69,3 @@ size_t levenshteinDistance(const std::string& s1, const std::string& s2)
   // table.
   return dist[len1][len2];
 }
-
-#endif

@@ -3,8 +3,7 @@
  * @brief Declaration of the ThreadManager class for managing threads and their states.
  */
 
-#ifndef THREAD_MANAGER_HPP
-#define THREAD_MANAGER_HPP
+#pragma once
 
 #include "workers.hpp"
 #include <atomic>
@@ -113,5 +112,3 @@ private:
    */
   std::shared_ptr<WorkerThreadPool> worker_pool;
 };
-
-#endif // THREAD_MANAGER_HPP

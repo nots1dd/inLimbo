@@ -7,8 +7,7 @@
  *
  * **Note**: In the Emscripten build, dummy functions are used because TagLib must be compiled using Emscripten to function correctly in a web environment.
  */
-#ifndef TAGLIB_PARSER_H
-#define TAGLIB_PARSER_H
+#pragma once 
 
 #include <filesystem>
 #include <fstream>
@@ -390,5 +389,3 @@ auto extractThumbnail(const std::string& audioFilePath, const std::string& outpu
 
     return true;
 }
-
-#endif // TAGLIB_PARSER_H

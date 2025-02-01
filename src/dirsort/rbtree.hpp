@@ -1,5 +1,4 @@
-#ifndef RB_TREE_HPP
-#define RB_TREE_HPP
+#pragma once
 
 #include "../parser/toml_parser.hpp"
 #include "songmap.hpp"
@@ -18,7 +17,7 @@ using namespace std;
 
 string DIRECTORY_FIELD = string(parseTOMLField(
   PARENT_LIB, PARENT_LIB_FIELD_DIR)); // fetches the directory from the example config.toml for now
-string DEBUG_LOG_PARSE = string(parseTOMLField(PARENT_DBG, PARENT_DBG_FIELD_PARSER_LOG));
+string DEBUG_LOG_PARSE = string(parseTOMLField(PARENT_DBG, PARENT_DBG_FIELD_TAGLIB_PARSER_LOG));
 
 // Node structure for the Red-Black Tree
 struct Node
@@ -223,9 +222,7 @@ public:
     fixInsert(new_node);
   }
 
-  void     inorderStoreMetadata() { inorderHelper(root); }
-  void     printSongTree() { songTree.display(); }
-  SongTree returnSongTree() { return songTree; }
+  void inorderStoreMetadata() { inorderHelper(root); }
+  void printSongTree() { songTree.display(); }
+  auto returnSongTree() -> SongTree { return songTree; }
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef TOML_PARSER_HPP
-#define TOML_PARSER_HPP
+#pragma once
 
 #include "toml.hpp"
 #include <cstdlib>
@@ -23,8 +22,11 @@ namespace fs = std::filesystem;
 #define PARENT_FTP_FIELD_SALT     "salt"          /**< Field for FTP salt */
 #define PARENT_FTP_FIELD_PWD_HASH "password_hash" /**< Field for FTP password hash */
 
-#define PARENT_DBG                  "debug"      /**< Parent section for debug settings */
-#define PARENT_DBG_FIELD_PARSER_LOG "parser_log" /**< Field for debug parser log setting */
+#define PARENT_DBG "debug" /**< Parent section for debug settings */
+#define PARENT_DBG_FIELD_TAGLIB_PARSER_LOG \
+  "taglib_parser_log" /**< Field for debug parser log setting */
+#define PARENT_DBG_FIELD_COLORS_PARSER_LOG   "colors_parser_log"
+#define PARENT_DBG_FIELD_KEYBINDS_PARSER_LOG "keybinds_parser_log"
 
 /* SPECIAL KEYBINDS MACROS */
 #define PARENT_KEYBINDS           "keybinds" /**< Parent section for keybinds */
@@ -139,7 +141,7 @@ auto config = loadConfig();
  * @param field The field name within the parent section (e.g., "name").
  * @return A string view representing the value of the field.
  */
-string_view parseTOMLField(string parent, string field)
+auto parseTOMLField(string parent, string field) -> string_view
 {
   return config[parent][field].value_or(
     ""sv); /**< If the field is not found, return an empty string view. */
@@ -156,8 +158,8 @@ string_view parseTOMLField(string parent, string field)
  * @param field The field name within the parent section (e.g., "name").
  * @return A string view representing the value of the field.
  */
-string_view parseTOMLFieldCustom(const toml::parse_result& custom_config, string parent,
-                                 string field)
+auto parseTOMLFieldCustom(const toml::parse_result& custom_config, string parent,
+                          string field) -> string_view
 {
   return custom_config[parent][field].value_or(
     ""sv); /**< If the field is not found, return an empty string view. */
@@ -173,7 +175,7 @@ string_view parseTOMLFieldCustom(const toml::parse_result& custom_config, string
  * @param field The field name within the parent section (e.g., "username").
  * @return The integer value of the field, or -1 if the field is not found.
  */
-int64_t parseTOMLFieldInt(string parent, string field)
+auto parseTOMLFieldInt(string parent, string field) -> int64_t
 {
   return config[parent][field].value_or(
     -1); /**< If the field is not found, return -1 as default. */
@@ -190,11 +192,16 @@ int64_t parseTOMLFieldInt(string parent, string field)
  * @param field The field name within the parent section (e.g., "username").
  * @return The integer value of the field, or -1 if the field is not found.
  */
-int64_t parseTOMLFieldIntCustom(const toml::parse_result& custom_config, string parent,
-                                string field)
+auto parseTOMLFieldIntCustom(const toml::parse_result& custom_config, string parent,
+                             string field) -> int64_t
 {
   return custom_config[parent][field].value_or(
     -1); /**< If the field is not found, return -1 as default. */
 }
 
-#endif
+auto parseTOMLFieldBool(const string& parent, const string& field) -> bool
+{
+  if (string(parseTOMLField(parent, field)) == "true")
+    return true;
+  return false;
+}

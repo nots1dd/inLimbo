@@ -1,22 +1,33 @@
 #include "inode_mapper.hpp"
 
-int main(int argc, char* argv[])
+auto main(int argc, char* argv[]) -> int
 {
-  /*if (argc != 2)*/
-  /*{*/
-  /*  cerr << "Usage: " << argv[0] << " <directory_path>" << endl;*/
-  /*  return EXIT_FAILURE;*/
-  /*}*/
-
   string          directoryPath = string(parseTOMLField("library", "directory"));
+  string          libBinPath   = getConfigPath(LIB_BIN_NAME);
   RedBlackTree    rbt;
-  InodeFileMapper mapper("lib.sync");
+  InodeFileMapper mapper;
 
   auto start = chrono::high_resolution_clock::now();
-  processDirectory(directoryPath, rbt, mapper);
-  cout << "Inorder traversal of inodes: ";
-  rbt.inorderStoreMetadata();
-  cout << endl;
+  SongTree song_tree;
+
+  // Try to load the song tree from file
+  try
+  {
+    song_tree.loadFromFile(libBinPath);
+    cout << "-- Successfully loaded song tree from cache file." << endl;
+  }
+  catch (const std::exception& e)
+  {
+    cout << "-- Could not load song tree from file: " << e.what() << endl;
+    cout << "-- Processing directory instead..." << endl;
+
+    processDirectory(directoryPath, rbt, mapper);
+    rbt.inorderStoreMetadata();
+    song_tree = rbt.returnSongTree();
+    song_tree.saveToFile(libBinPath);
+  }
+
+  auto        library_map = song_tree.returnSongMap();
   auto end = chrono::high_resolution_clock::now();
 
   rbt.printSongTree();

@@ -1,5 +1,4 @@
-#ifndef INODE_MAPPER_HPP
-#define INODE_MAPPER_HPP
+#pragma once
 
 #include "rbtree.hpp"
 #include <cstring>
@@ -77,5 +76,3 @@ void processDirectory(const string& dirPath, RedBlackTree& rbt, InodeFileMapper&
 
   closedir(dir);
 }
-
-#endif // INODE_MAPPER_HPP

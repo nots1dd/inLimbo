@@ -1,8 +1,11 @@
-#ifndef MISC_HEADER
-#define MISC_HEADER
+#pragma once
 
+#include "../dirsort/songmap.hpp"
 #include "../dirsort/taglib_parser.h"
+#include "../helpers/trie.hpp"
 #include "./colors.hpp"
+#include "./keymaps.hpp"
+#include "../arg-handler.hpp"
 #include "components/image_view.hpp"
 #include <algorithm>
 #include <cctype>
@@ -18,6 +21,10 @@
 /** STRING TRUNCATION MACROS */
 #define MAX_LENGTH_SONG_NAME   50
 #define MAX_LENGTH_ARTIST_NAME 30
+
+#define SONG_TITLE_DELIM " • "
+#define LYRICS_AVAIL     "L*"
+#define ADDN_PROPS_AVAIL "&*"
 
 struct ComponentState
 {
@@ -48,6 +55,31 @@ struct PlayingState
   std::unordered_map<std::string, std::string> additionalProperties;
   std::string                                  filePath;
 };
+
+struct SearchState
+{
+  Trie   ArtistSearchTrie;
+  Trie   SongSearchTrie;
+  int    artistIndex = 0;
+  int    songIndex   = 0;
+  string input       = "";
+  mutex mtx;
+};
+
+auto handleToggleMute(int* volume, int* lastVolume, bool* muted) -> int
+{
+  *muted = !*muted;
+  if (*muted)
+  {
+    *lastVolume = *volume;
+    *volume     = 0;
+  }
+  else
+  {
+    *volume = *lastVolume;
+  }
+  return *volume;
+}
 
 auto formatLyrics(const std::string& lyrics)
 {
@@ -268,50 +300,206 @@ auto RenderThumbnail(const std::string& songFilePath, const std::string& cacheDi
     auto thumbnail = Renderer(
       [&]
       {
-        return vbox({image_view(thumbnailFilePath)}) |
-               center; // [TODO] Is not being centered properly
+        return vbox({
+                 image_view(thumbnailFilePath) | size(WIDTH, LESS_THAN, 50) |
+                   size(HEIGHT, LESS_THAN, 50),
+               }) |
+               center;
       });
 
-    auto metadataView = vbox({
-      hbox({text(albumName) | bold | underlined}) | center,
-      hbox({text(songTitle) | bold, text(" by "), text(artistName) | bold, text(" ["),
-            text(std::to_string(year)), text("]"), text(" ("),
-            text(std::to_string(discNumber)) | bold, text("/"),
-            text(std::to_string(trackNumber)) | bold, text(") -- {"),
-            text(getMimeTypeFromExtension(songFilePath)) | bold, text("}")}) |
-        center,
-      hbox({text("Seems like a "), text(genre) | bold, text(" type of song...")}) | center, // Genre
-    });
+    auto metadataView =
+      vbox({
+        hbox({text(songTitle) | center | bold | size(WIDTH, EQUAL, MAX_LENGTH_SONG_NAME)}) | center,
+        hbox({text(artistName) | dim}) | center,
+        hbox({text(albumName) | underlined, text(SONG_TITLE_DELIM),
+              text(std::to_string(year)) | dim}) |
+          center,
+        hbox({text("Track ") | dim, text(std::to_string(trackNumber)) | bold, text(" on Disc "),
+              text(std::to_string(discNumber)) | bold}) |
+          center,
+        separator(),
+        hbox({text("Genre: "), text(genre) | bold}) | center,
+        hbox({text("Format: "), text(getMimeTypeFromExtension(songFilePath)) | bold}) | center,
+      }) |
+      borderRounded;
 
-    auto progressBar = hbox({
-      text("Progress: ") | bold,
-      gauge(progress) | flex, // Progress bar
-      text(" "),
-      text(std::to_string(static_cast<int>(progress * 100)) + "%"),
+    auto progressBar = vbox({
+      separator(),
+      hbox({text("Playback Progress") | bold}) | center,
+      hbox({gauge(progress) | flex,
+            text(" " + std::to_string(static_cast<int>(progress * 100)) + "%")}),
     });
-
-    auto thumbNailEle = vbox({thumbnail->Render()});
 
     auto modernUI = vbox({
-                      thumbNailEle | flex_shrink, // Centered and scaled thumbnail
+                      thumbnail->Render() | flex_shrink,
                       separator(),
-                      metadataView | borderRounded, // Metadata in a rounded bordered box
+                      metadataView,
                       separator(),
-                      progressBar, // Progress bar below the metadata
+                      progressBar,
                     }) |
                     borderRounded;
 
     return modernUI;
   }
 
-  // Fallback for when thumbnail extraction fails
+  // Fallback UI when thumbnail extraction fails
   auto errorView = vbox({
-    text("Error: Thumbnail not found!") | center | dim,
-    separator(),
-    text("Please ensure the file has embedded artwork.") | center,
-  });
+                     text("⚠ Thumbnail Unavailable") | bold | center | color(Color::Red),
+                     separator(),
+                     text("Ensure the file has embedded artwork.") | dim | center,
+                   }) |
+                   border;
 
   return errorView;
+}
+
+auto RenderSearchBar(std::string& user_input) -> Element {
+    return hbox({
+            text("/") | color(Color::GrayLight),
+            text(user_input) | color(Color::LightSteelBlue) | bold | inverted,
+        }) | color(Color::GrayDark) | bgcolor(Color::Black) | size(HEIGHT, EQUAL, 1);
+}
+
+auto RenderDialog(const std::string& dialog_message) -> Element
+{
+  return window(
+           text(" File Information ") | bold | center | getTrueColor(TrueColors::Color::White) |
+             getTrueBGColor(TrueColors::Color::Gray),
+           vbox({
+             text(dialog_message) | getTrueColor(TrueColors::Color::Coral),
+             separator() | color(Color::GrayLight),
+             text("Press 'x' to close") | dim | center | getTrueColor(TrueColors::Color::Pink),
+           }) |
+             center) |
+         size(WIDTH, LESS_THAN, 60) | size(HEIGHT, LESS_THAN, 8) |
+         getTrueBGColor(TrueColors::Color::Black) | borderHeavy;
+}
+
+auto RenderHelpScreen(Keybinds& global_keybinds) -> Element
+{
+  auto title = text("inLimbo Controls") | bold | getTrueColor(TrueColors::Color::Teal);
+
+  // Helper function to create a single keybind row
+  auto createRow =
+    [](const std::string& key, const std::string& description, TrueColors::Color color)
+  {
+    return hbox({
+      text(key) | getTrueColor(color),
+      text("  --  ") | getTrueColor(TrueColors::Color::Gray),
+      text(description) | getTrueColor(TrueColors::Color::White),
+    });
+  };
+
+  // List of keybinds for easier modification
+  std::vector<std::tuple<std::string, std::string, TrueColors::Color>> keybinds = {
+    {charToStr(global_keybinds.scroll_up), "Scroll up in the current view",
+     TrueColors::Color::LightCyan},
+    {charToStr(global_keybinds.scroll_down), "Scroll down in the current view",
+     TrueColors::Color::LightCyan},
+    {charToStr(global_keybinds.toggle_focus), "Switch focus between panes",
+     TrueColors::Color::LightYellow},
+    {charToStr(global_keybinds.show_help), "Toggle this help window", TrueColors::Color::Cyan},
+    {charToStr(global_keybinds.toggle_play), "Play/Pause playback", TrueColors::Color::Teal},
+    {charToStr(global_keybinds.play_song), "Play the selected song",
+     TrueColors::Color::LightGreen},
+    {charToStr(global_keybinds.play_song_next), "Skip to next song",
+     TrueColors::Color::LightCyan},
+    {charToStr(global_keybinds.play_song_prev), "Go back to previous song",
+     TrueColors::Color::LightCyan},
+    {charToStr(global_keybinds.vol_up), "Increase volume", TrueColors::Color::LightGreen},
+    {charToStr(global_keybinds.vol_down), "Decrease volume", TrueColors::Color::LightGreen},
+    {charToStr(global_keybinds.toggle_mute), "Mute/Unmute audio", TrueColors::Color::LightRed},
+    {charToStr(global_keybinds.quit_app), "Quit inLimbo", TrueColors::Color::LightRed},
+    {charToStr(global_keybinds.seek_ahead_5), "Seek forward by 5 seconds",
+     TrueColors::Color::Orange},
+    {charToStr(global_keybinds.seek_behind_5), "Seek backward by 5 seconds",
+     TrueColors::Color::Orange},
+    {charToStr(global_keybinds.view_lyrics), "View lyrics for the current song",
+     TrueColors::Color::LightBlue},
+    {charToStr(global_keybinds.goto_main_screen), "Return to main UI", TrueColors::Color::Teal},
+    {charToStr(global_keybinds.replay_song), "Replay the current song",
+     TrueColors::Color::Orange},
+    {charToStr(global_keybinds.add_song_to_queue), "Add selected song to queue",
+     TrueColors::Color::LightPink},
+    {charToStr(global_keybinds.add_artists_songs_to_queue), "Queue all songs by the artist",
+     TrueColors::Color::LightPink},
+    {charToStr(global_keybinds.remove_song_from_queue), "Remove selected song from queue",
+     TrueColors::Color::Teal},
+    {charToStr(global_keybinds.play_this_song_next), "Play selected song next",
+     TrueColors::Color::LightMagenta},
+    {charToStr(global_keybinds.view_song_queue), "View currently queued songs",
+     TrueColors::Color::LightYellow},
+    {charToStr(global_keybinds.view_current_song_info), "View info of the currently playing song",
+     TrueColors::Color::LightCyan},
+    {charToStr(global_keybinds.toggle_audio_devices), "Switch between available audio devices",
+     TrueColors::Color::LightBlue},
+    {charToStr(global_keybinds.search_menu), "Open the search menu",
+     TrueColors::Color::LightGreen},
+    {"gg", "Go to the top of the active menu", TrueColors::Color::LightBlue},
+    {"G", "Go to the bottom of the active menu", TrueColors::Color::LightBlue},
+    {"x", "Close the dialog box", TrueColors::Color::LightRed},
+  };
+
+  // Generate controls list dynamically
+  std::vector<Element> control_elements;
+  for (const auto& [key, description, color] : keybinds)
+  {
+    control_elements.push_back(createRow(key, description, color));
+  }
+
+  auto controls_list =
+    vbox(std::move(control_elements)) | getTrueColor(TrueColors::Color::LightGreen);
+
+  // Symbols Legend
+  auto symbols_explanation = vbox({
+    hbox({text(LYRICS_AVAIL), text(" -> "), text("The current song has lyrics metadata.")}) |
+      getTrueColor(TrueColors::Color::LightCyan),
+    hbox({text(ADDN_PROPS_AVAIL), text("  -> "),
+          text("The current song has additional properties metadata.")}) |
+      getTrueColor(TrueColors::Color::LightYellow),
+  });
+
+  // Application details
+  auto app_name = text("inLimbo - Music player that keeps you in Limbo...") | bold |
+                  getTrueColor(TrueColors::Color::Teal);
+  auto contributor = text("Developed by: Siddharth Karanam (nots1dd)") |
+                     getTrueColor(TrueColors::Color::LightGreen);
+  auto github_link = hbox({
+    text("GitHub: "),
+    text("Click me!") | underlined | bold | getTrueColor(TrueColors::Color::LightBlue) |
+      hyperlink(REPOSITORY_URL),
+  });
+
+  std::string footer_text =
+    "Press '" + charToStr(global_keybinds.show_help) + "' to return to inLimbo.";
+  auto footer = vbox({
+                  app_name,
+                  contributor,
+                  github_link,
+                  text(footer_text) | getTrueColor(TrueColors::Color::LightYellow) | center,
+                }) |
+                flex | border;
+
+  return vbox({
+           title,
+           controls_list | border | flex,
+           text("Symbols Legend") | bold | getTrueColor(TrueColors::Color::LightBlue),
+           symbols_explanation | border | flex,
+           footer,
+         }) |
+         flex;
+}
+
+auto calculateTotalQueueTime(const std::vector<Song> song_queue) -> std::string
+{
+  int total_seconds = 0;
+
+  for (const auto& song : song_queue)
+  {
+    total_seconds += song.metadata.duration;
+  }
+
+  return FormatTime(total_seconds);
 }
 
 void searchModeIndices(const std::vector<std::string>& words, const std::string& prefix,
@@ -334,4 +522,32 @@ void UpdateSelectedIndex(int& index, int max_size, bool move_down)
   index = move_down ? (index + 1) % max_size : (index == 0 ? max_size - 1 : index - 1);
 }
 
-#endif
+auto RenderStatusBar(const std::string& status, const std::string& current_song_info,
+                     const std::string& additional_info, const std::string& year_info, InLimboColors& global_colors, const std::string& current_artist) -> Element
+{
+  return hbox({
+           text(status) | getTrueColor(TrueColors::Color::Black) | bold,
+           text(current_artist) | color(global_colors.status_bar_artist_col) |
+             bold | size(WIDTH, LESS_THAN, MAX_LENGTH_ARTIST_NAME),
+           text(current_song_info) | bold | color(global_colors.status_bar_song_col) |
+             size(WIDTH, LESS_THAN, MAX_LENGTH_SONG_NAME),
+           filler(), // Push the right-aligned content to the end
+           hbox({
+             text(additional_info) | bold | color(global_colors.status_bar_addn_info_col) | flex,
+             text(year_info) | color(global_colors.status_bar_addn_info_col) |
+               size(WIDTH, LESS_THAN, 15),
+             text(" "),
+           }) |
+             align_right,
+         }) |
+         size(HEIGHT, EQUAL, 1) | bgcolor(global_colors.status_bar_bg);
+}
+
+auto RenderVolumeBar(int volume, ftxui::Color volume_bar_col) -> Element
+{
+  return hbox({
+    text(" Vol: ") | dim,
+    gauge(volume / 100.0) | size(WIDTH, EQUAL, 10) | color(volume_bar_col),
+    text(std::to_string(volume) + "%") | dim,
+  });
+}

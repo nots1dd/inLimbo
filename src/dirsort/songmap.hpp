@@ -16,8 +16,7 @@
  * @see TagLibParser.h
  */
 
-#ifndef SONG_MAP_HPP
-#define SONG_MAP_HPP
+#pragma once
 
 #include "taglib_parser.h"
 #include <cereal/archives/binary.hpp>
@@ -144,7 +143,7 @@ public:
    * @param artist The name of the artist whose songs are to be retrieved.
    * @return A vector of Song objects by the specified artist.
    */
-  auto getSongsByArtist(const std::string& artist) const
+  [[nodiscard]] auto getSongsByArtist(const std::string& artist) const
   {
     std::vector<Song> result;
     auto              artistIt = tree.find(artist);
@@ -173,7 +172,7 @@ public:
    * @param album The title of the album whose songs are to be retrieved.
    * @return A vector of Song objects from the specified album by the specified artist.
    */
-  auto getSongsByAlbum(const std::string& artist, const std::string& album) const
+  [[nodiscard]] auto getSongsByAlbum(const std::string& artist, const std::string& album) const
   {
     std::vector<Song> result;
     auto              artistIt = tree.find(artist);
@@ -201,7 +200,7 @@ public:
    *
    * @return The nested map structure of songs.
    */
-  auto returnSongMap() { return tree; }
+  [[nodiscard]] auto returnSongMap() const { return tree; }
 
   /**
    * @brief Serializes the SongTree object.
@@ -250,5 +249,3 @@ public:
     archive(*this); // Deserialize the SongTree
   }
 };
-
-#endif

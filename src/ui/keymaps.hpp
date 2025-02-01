@@ -1,5 +1,4 @@
-#ifndef KEYMAPS_HPP
-#define KEYMAPS_HPP
+#pragma once
 
 #include "../parser/toml_parser.hpp"
 #include <cstdlib>
@@ -39,6 +38,8 @@ struct Keybinds
   char view_current_song_info;     /**< Key for viewing in-depth song info */
   char toggle_audio_devices;       /**< Key to view all the available audio devices */
   char search_menu;                /**< Key to search the currently active menu */
+  char search_item_next;
+  char search_item_prev;
 };
 
 /**
@@ -72,7 +73,7 @@ auto parseKeybinds() -> Keybinds
    */
   auto reportError = [](const std::string& field, const std::string_view& key)
   {
-    std::cerr << "** Error: Unsupported or empty keybind '" << key << "' detected for field '"
+    std::cerr << "** Error: ⚠  Unsupported or empty keybind '" << key << "' detected for field '"
               << field << "'. Modify or remove that keybind field. **" << std::endl;
     std::exit(EXIT_FAILURE); /**< Exit the program on invalid keybind */
   };
@@ -132,16 +133,39 @@ auto parseKeybinds() -> Keybinds
     {"view_song_queue", &keybinds.view_song_queue},
     {"view_current_song_info", &keybinds.view_current_song_info},
     {"toggle_audio_devices", &keybinds.toggle_audio_devices},
-    {"search_menu", &keybinds.search_menu}};
+    {"search_menu", &keybinds.search_menu},
+    {"search_item_next", &keybinds.search_item_next},
+    {"search_item_prev", &keybinds.search_item_prev}};
+
+  bool verbose_logging = parseTOMLFieldBool(PARENT_DBG, PARENT_DBG_FIELD_KEYBINDS_PARSER_LOG);
+  if (verbose_logging)
+  {
+    std::cout << "[KEYBINDS] Parsing keybinds..." << std::endl;
+  }
 
   // Populate the keybinds struct by reading the fields from the TOML configuration
   for (const auto& [field, member_ptr] : field_map)
   {
-    *member_ptr = handle_special_keys(parseTOMLField(PARENT_KEYBINDS, field),
-                                      field); /**< Handle each keybind */
+    const std::string_view key = parseTOMLField(PARENT_KEYBINDS, field);
+
+    if (verbose_logging)
+    {
+      std::cout << "[KEYBINDS] Parsing keybind for " << field << ": " << key << std::endl;
+    }
+
+    *member_ptr = handle_special_keys(key, field); /**< Handle each keybind */
+
+    if (verbose_logging)
+    {
+      std::cout << "[KEYBINDS] Mapped keybind for " << field
+                << " to ASCII value: " << static_cast<int>(*member_ptr) << std::endl;
+    }
+  }
+
+  if (verbose_logging)
+  {
+    std::cout << "[KEYBINDS] Keybind parsing complete! Moving on..." << std::endl;
   }
 
   return keybinds; /**< Return the populated Keybinds struct */
 }
-
-#endif
