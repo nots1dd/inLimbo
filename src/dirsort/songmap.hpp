@@ -21,6 +21,7 @@
 #pragma once
 
 #include "taglib_parser.h"
+#include "../helpers/levenshtein.hpp"
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/map.hpp>
 #include <cereal/types/string.hpp>
@@ -28,6 +29,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <optional>
 #include <set>
 #include <string>
 #include <vector>
@@ -380,5 +382,123 @@ public:
     }
     cereal::BinaryInputArchive archive(file);
     archive(*this); // Deserialize the SongTree
+  }
+
+  /**
+   * @brief Prints metadata and additional properties of a song.
+   *
+   * This function retrieves a song based on either a file path or a song name
+   * and prints all relevant metadata, including title, artist, album, genre,
+   * track number, disc number, and inode.
+   *
+   * @param input The file path or song name to search for.
+   */
+  void printSongInfo(const std::string& input)
+  {
+    bool isFilePath = input.find('/') != std::string::npos || input.find('\\') != std::string::npos;
+
+    std::optional<Song> foundSong;
+
+    if (isFilePath)
+    {
+      // If input is a file path, retrieve its metadata using inode
+      std::cout << std::endl << "> Taking argument as a possible audio file path..." << std::endl;
+      struct stat fileStat;
+      if (stat(input.c_str(), &fileStat) == 0)
+      {
+        unsigned int inode = fileStat.st_ino;
+        for (const auto& artistPair : tree)
+        {
+          for (const auto& albumPair : artistPair.second)
+          {
+            for (const auto& discPair : albumPair.second)
+            {
+              for (const auto& trackPair : discPair.second)
+              {
+                if (trackPair.second.inode == inode)
+                {
+                  foundSong = trackPair.second;
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    else
+    {
+      // If input is a song name, search by title
+      for (const auto& artistPair : tree)
+      {
+        for (const auto& albumPair : artistPair.second)
+        {
+          for (const auto& discPair : albumPair.second)
+          {
+            for (const auto& trackPair : discPair.second)
+            {
+              if (levenshteinDistance(trackPair.second.metadata.title, input) < 3) // Recommended limit of correction (else it will go bonkers)
+              {
+                foundSong = trackPair.second;
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if (foundSong)
+    {
+      const auto& song = *foundSong;
+      std::cout << "\n🎵 Song Information:\n";
+      std::cout << "──────────────────────────────────────\n";
+      std::cout << "Title     : " << song.metadata.title << "\n";
+      std::cout << "Artist    : " << song.metadata.artist << "\n";
+      std::cout << "Album     : " << song.metadata.album << "\n";
+      std::cout << "Disc      : " << song.metadata.discNumber << "\n";
+      std::cout << "Track     : " << song.metadata.track << "\n";
+      std::cout << "Genre     : " << song.metadata.genre << "\n";
+      std::cout << "Inode     : " << song.inode << "\n";
+
+      if (!song.metadata.additionalProperties.empty())
+      {
+        std::cout << "Additional Properties:\n";
+        for (const auto& prop : song.metadata.additionalProperties)
+        {
+          if (prop.first == "LYRICS")
+          {
+            std::cout << "\n📜 Lyrics:\n";
+            std::cout << "──────────────────────────────────────\n";
+
+            // Wrap and format the lyrics
+            const std::string& lyrics = prop.second;
+            size_t lineLength = 80;
+            size_t start = 0;
+            while (start < lyrics.size())
+            {
+              size_t end = start + lineLength;
+              if (end > lyrics.size()) end = lyrics.size();
+              std::cout << lyrics.substr(start, end - start) << "\n";
+              start = end;
+            }
+            std::cout << "──────────────────────────────────────\n";
+          }
+          else
+          {
+            std::cout << "  - " << prop.first << " : " << prop.second << "\n";
+          }
+        }
+      }
+      else
+      {
+        std::cout << "No additional properties found!" << std::endl;
+      }
+      std::cout << "──────────────────────────────────────\n";
+    }
+    else
+    {
+      std::cout << "⚠️  Song not found: " << input << "\n";
+    }
   }
 };

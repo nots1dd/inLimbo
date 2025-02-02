@@ -159,42 +159,55 @@ inLimbo --update-cache-run --print-song-tree # will create a new song map and pr
 
 Note that this will result in slower song map times as the song map is generated dynamically on each run.
 
----
-
 ## **Command-Line Arguments**
 
-### `--help`
+- `--help`
 **Description**: Display help information about available arguments for inLimbo.
 
-### `--version`
+- `--version`
 **Description**: Display the version number of inLimbo.
 
-### `--clear-cache`
+- `--clear-cache`
 **Description**: Clear cached data, which includes the song map and other temporary data stored by the application.
 
-### `--show-config-file`
+- `--show-config-file`
 **Description**: Display the path to the configuration file used by inLimbo.
 
-### `--show-log-dir`
+- `--show-log-dir`
 **Description**: Show the directory path where logs are stored for inLimbo.
 
-### `--show-dbus-name`
+- `--show-dbus-name`
 **Description**: Show the DBus service name used by inLimbo.
 
-### `--update-cache-run`
+- `--update-cache-run`
 **Description**: Update the cache file and run the application. This will make inLimbo load the directory dynamically every time (note that this will result in slower song map times).
 
-### `--print-song-tree`
+- `--print-song-tree`
 **Description**: Print the song map parsed from the directory. This shows the structure of the song tree and how songs are organized.
 
-### `--print-artists-all`
+- `--print-artists-all`
 **Description**: Print all parsed artists from the song map. This will list all artists found in the directory and their corresponding songs.
 
-### `--print-songs-by-artist`
+- `--print-songs-by-artist`
 **Description**: Print all the songs of a given artist. This argument requires you to specify the artist’s name, and it will list all songs by that artist.
 
-### `--print-songs-by-genre-all`
+- `--print-songs-by-genre-all`
 **Description**: Print all parsed genres and their song mappings. This will show all the genres available in the song map and list songs under each genre.
+
+- `--print-song-info`
+**Description**: Print every parsed information (even default info) regarding a song (Arguments: Can take **SONG NAME** or **FILE PATH**)
+
+> [!NOTE]
+> 
+> To utilize these arguments to the fullest, it is **HIGHLY** recommended to use something like `less`/`bat`
+> that allows for neat terminal output traversal (will allow for you to view the entire song tree parsing)
+> 
+> ```bash 
+> inLimbo --print-song-tree | bat # an example of using bat to view the song tree (can traverse the output easily)
+> ```
+> 
+> This ensures that you do not have any struggle with viewing the entire console output.
+> 
 
 There will be more command-line arguments in the future...
 
@@ -231,8 +244,6 @@ There is quite a lot to configure in the inLimbo project. A basic config file wi
 | `?` | **Show or hide the help menu** |
 | `/` | **Open the search menu** |
 
----
-
 ### **Scrolling and Selection**
 | Keybind | Action |
 |---------|--------|
@@ -240,8 +251,6 @@ There is quite a lot to configure in the inLimbo project. A basic config file wi
 | `k` | **Scroll up** (move selection up in the list) |
 | `0` | **Move to the next search result** (if search is active) |
 | `9` | **Move to the previous search result** (if search is active) |
-
----
 
 ### **Playback Controls**
 | Keybind | Action |
@@ -253,8 +262,6 @@ There is quite a lot to configure in the inLimbo project. A basic config file wi
 | `r` | **Replay the current song** |
 | `m` | **Toggle mute** on/off |
 
----
-
 ### **Seeking and Volume Control**
 | Keybind | Action |
 |---------|--------|
@@ -263,8 +270,6 @@ There is quite a lot to configure in the inLimbo project. A basic config file wi
 | `=` | **Increase volume** |
 | `-` | **Decrease volume** |
 | `w` | **Toggle between available audio devices** |
-
----
 
 ### **Song and Queue Management**
 | Keybind | Action |
@@ -275,16 +280,12 @@ There is quite a lot to configure in the inLimbo project. A basic config file wi
 | `d` | **Remove the currently selected song from the queue** |
 | `3` | **View the current song queue** |
 
----
-
 ### **Song Information and UI Navigation**
 | Keybind | Action |
 |---------|--------|
 | `1` | **Go to the main UI screen** |
 | `2` or `L` | **View lyrics of the currently playing song** |
 | `i` | **View detailed information about the current song** |
-
----
 
 ### **Status Bar & UI Settings**
 | Keybind | Action |

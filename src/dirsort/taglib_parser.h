@@ -238,8 +238,8 @@ auto TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) ->
   }
 
   // Populate additional properties if needed
-  if (debugLogBool && !properties.isEmpty()) {
-    std::cout << "[TAG PARSE] Additional properties found!" << std::endl;
+  if (!properties.isEmpty()) {
+    if (debugLogBool) std::cout << "[TAG PARSE] Additional properties found!" << std::endl;
     for (const auto& prop : properties) {
       std::string key = prop.first.to8Bit(true);
       std::string value = prop.second.toString().to8Bit(true);

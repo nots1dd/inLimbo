@@ -11,7 +11,8 @@ function _inLimbo_completions
         "--print-song-tree"   "Print the Song Map parsed from directory" \
         "--print-artists-all"        "Print all parsed artists from Song Map" \
         "--print-songs-by-artist"    "Print all the songs of a given artist" \
-        "--print-songs-by-genre-all" "Print all parsed genre and their song mappings"
+        "--print-songs-by-genre-all" "Print all parsed genre and their song mappings" \
+        "--print-song-info"          "Print every parsed field of a song name / filepath"
     for i in (seq 1 2 (count $opts))
         set -l opt (string trim -- $opts[$i])
         set -l desc $opts[(math $i + 1)]

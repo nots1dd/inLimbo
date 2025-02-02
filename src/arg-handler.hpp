@@ -31,7 +31,9 @@ struct SongTreeState
   bool        printArtistsAll    = false;
   bool        printSongsByArtist = false;
   bool        printSongsGenreAll = false;
+  bool printSongInfo = false;
   std::string artist;
+  std::string song;
 };
 
 /**
@@ -129,7 +131,8 @@ public:
       {"--print-artists-all", [&]() { handlePrintArtistsAll(); }},
       {"--print-songs-by-genre-all", [&]() { handlePrintSongsByGenreAll(); }},
       {"--print-songs-by-artist",
-       [&]() { handlePrintSongsByArtist(cmdArgs.get("--print-songs-by-artist")); }}};
+       [&]() { handlePrintSongsByArtist(cmdArgs.get("--print-songs-by-artist")); }},
+      {"--print-song-info", [&]() { handleSongInfo(cmdArgs.get("--print-song-info")); }}};
 
     for (const auto& [flag, handler] : argumentHandlers)
     {
@@ -162,6 +165,10 @@ public:
     if (ArgumentHandler::song_tree_parse_state.printSongsGenreAll)
     {
       song_tree.getSongsByGenreAndPrint();
+    }
+    if (ArgumentHandler::song_tree_parse_state.printSongInfo)
+    {
+      song_tree.printSongInfo(ArgumentHandler::song_tree_parse_state.song);
     }
   }
 
@@ -286,31 +293,39 @@ private:
     shouldRunApp = true;
   }
 
+  static void parseSongMap()
+  {
+    parseSongTree = true;
+    shouldRunApp = true;
+  }
+
   static void handlePrintSongTree()
   {
-    parseSongTree                       = true;
     song_tree_parse_state.printSongTree = true;
-    shouldRunApp                        = true;
+    parseSongMap();
   }
 
   static void handlePrintArtistsAll()
   {
-    parseSongTree                         = true;
-    shouldRunApp                          = true;
+    parseSongMap();
     song_tree_parse_state.printArtistsAll = true;
   }
 
   static void handlePrintSongsByArtist(std::string artistName)
   {
-    parseSongTree                            = true;
-    shouldRunApp                             = true;
+    parseSongMap();
     song_tree_parse_state.printSongsByArtist = true;
     song_tree_parse_state.artist             = artistName;
   }
   static void handlePrintSongsByGenreAll()
   {
-    parseSongTree                            = true;
-    shouldRunApp                             = true;
+    parseSongMap();
     song_tree_parse_state.printSongsGenreAll = true;
+  }
+  static void handleSongInfo(std::string songName)
+  {
+    parseSongMap();
+    song_tree_parse_state.printSongInfo = true;
+    song_tree_parse_state.song = songName;
   }
 };

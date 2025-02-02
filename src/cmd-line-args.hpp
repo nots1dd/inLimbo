@@ -241,4 +241,5 @@ const std::vector<std::string> CommandLineArgs::validFlags = {"--help",
                                                               "--print-song-tree",
                                                               "--print-songs-by-artist",
                                                               "--print-songs-by-genre-all",
+                                                              "--print-song-info",
                                                               "--print-artists-all"};

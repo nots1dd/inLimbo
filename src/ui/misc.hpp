@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cctype>
 #include <ftxui/component/captured_mouse.hpp>
+#include <ftxui/component/component.hpp>
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/component/event.hpp>
 #include <ftxui/component/screen_interactive.hpp>
@@ -357,7 +358,7 @@ auto RenderSearchBar(std::string& user_input) -> Element
 
 auto RenderDialog(const std::string& dialog_message) -> Element
 {
-  return window(text(" File Information ") | bold | center |
+  return window(text(" inLimbo Information ") | bold | center |
                   getTrueColor(TrueColors::Color::White) | getTrueBGColor(TrueColors::Color::Gray),
                 vbox({
                   text(dialog_message) | getTrueColor(TrueColors::Color::Coral),

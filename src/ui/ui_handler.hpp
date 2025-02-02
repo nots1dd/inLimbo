@@ -8,8 +8,6 @@
 #include "dirsort/songmap.hpp"
 #include "misc.hpp"
 #include "states/state.hpp"
-#include <ftxui/dom/elements.hpp>
-#include <ftxui/dom/node.hpp>
 
 using namespace ftxui;
 
@@ -25,10 +23,6 @@ using namespace ftxui;
 #define SHOW_SONG_INFO_SCREEN  4
 #define SHOW_AUDIO_CONF_SCREEN 5
 #define SHOW_SEARCH_INPUT      6
-
-/** MODES OF OPERATION */
-#define NORMAL_MODE 0
-#define SEARCH_MODE 1
 
 #define MIN_DEBOUNCE_TIME_IN_MS 500
 
@@ -82,7 +76,6 @@ public:
           {
             using namespace std::chrono_literals;
 
-            // Safely update shared resources
             UpdateVolume();
 
             std::this_thread::sleep_for(0.1s);
@@ -138,6 +131,7 @@ public:
 private:
   PlayingState current_playing_state;
   SearchState  current_search_state;
+  ComponentState INL_Component_State;
   QueueState   qState;
 
   std::unique_ptr<MPRISService> mprisService;
@@ -195,12 +189,8 @@ private:
   bool               focus_on_artists = true;
   ScreenInteractive* screen_          = nullptr;
 
-  // UI Components
-  ComponentState INL_Component_State;
-
   void InitializeData()
   {
-    // Initialize current_artist_names from library
     for (const auto& artist_pair : library)
     {
       current_artist_names.push_back(artist_pair.first);
@@ -351,7 +341,6 @@ private:
   {
     try
     {
-      // Queue state validations
       if (qState.song_queue.empty())
       {
         SetDialogMessage("Error: Queue is empty.");
@@ -365,10 +354,8 @@ private:
         return;
       }
 
-      // Increment song index
       qState.incrementQIndex();
 
-      // Get current song
       Song* current_song = qState.GetCurrentSongFromQueue();
       if (!current_song)
       {
@@ -401,7 +388,6 @@ private:
   {
     try
     {
-      // Queue state validations
       if (qState.song_queue.empty())
       {
         SetDialogMessage("Error: Queue is empty.");
@@ -415,10 +401,8 @@ private:
         return;
       }
 
-      // Decrement song index
       qState.decrementQIndex();
 
-      // Get current song
       Song* current_song = qState.GetCurrentSongFromQueue();
       if (!current_song)
       {
@@ -486,7 +470,6 @@ private:
 
     if (library.count(artist) > 0)
     {
-      // Group songs by album and year
       std::map<std::string, std::map<unsigned int, std::map<unsigned int, Song>>> albums;
       for (const auto& album_pair : library.at(artist))
       {
@@ -500,10 +483,8 @@ private:
         }
       }
 
-      // Format the album and song display
       for (const auto& [album_name, discs] : albums)
       {
-        // Get year from the first song in the album
         const Song& first_song = discs.begin()->second.begin()->second;
         current_song_elements.push_back(renderAlbumName(album_name, first_song.metadata.year,
                                                         global_colors.album_name_bg,
@@ -545,7 +526,7 @@ private:
 
           if (current_inodes[selected_inode - albums_indices_traversed] == song.inode)
           {
-            return song; // Return a reference to the matched song.
+            return song;
           }
         }
       }
@@ -573,13 +554,11 @@ private:
 
   void EnqueueAllSongsByArtist(const std::string& artist, bool clearQueue)
   {
-    // Clear the existing song list
     if (clearQueue)
       qState.clearQueue();
 
     bool start_enqueue = false;
 
-    // Check if the artist exists in the library
     if (library.find(artist) == library.end())
     {
       std::cerr << "Artist not found in the library: " << artist << std::endl;
@@ -601,7 +580,6 @@ private:
           {
             start_enqueue = true;
           }
-          // Add the song to the list
           if (start_enqueue)
             qState.qPush(song);
         }
@@ -611,7 +589,6 @@ private:
 
   void AddSongToQueue()
   {
-    // Validate indices to prevent out-of-range access
     if (selected_artist >= current_artist_names.size() ||
         selected_inode - albums_indices_traversed >= current_inodes.size())
     {
@@ -621,7 +598,6 @@ private:
     // Get a const reference to the current song
     const Song& current_preview_song = GetCurrentSong(current_artist_names[selected_artist]);
 
-    // Add a copy of the song to the queue
     qState.qPush(current_preview_song);
 
     NavigateSongMenu(true);
@@ -656,7 +632,7 @@ private:
     if (!current_song)
     {
       SetDialogMessage("Current Song not available!");
-      return; // No song available
+      return;
     }
 
     const auto& metadata = current_song->metadata;
@@ -693,29 +669,14 @@ private:
 
   void CreateComponents()
   {
-    MenuOption artist_menu_options;
-    artist_menu_options.on_change = [&]()
-    {
-      if (focus_on_artists && selected_artist < current_artist_names.size())
-      {
-        UpdateSongsForArtist(current_artist_names[selected_artist]);
-      }
-    };
-    artist_menu_options.focused_entry = &selected_artist;
-
-    MenuOption song_menu_options;
-    song_menu_options.on_change     = [&]() {};
-    song_menu_options.focused_entry = &selected_inode;
-
     INL_Component_State.artists_list = Scroller(
       Renderer([&]() mutable { return RenderArtistMenu(current_artist_names); }), &selected_artist,
       global_colors.artists_menu_col_bg, global_colors.inactive_menu_cursor_bg);
-    Menu(&current_artist_names, &selected_artist, artist_menu_options);
     INL_Component_State.songs_list = Scroller(
       Renderer(
         [&]() mutable
         {
-          return RenderSongMenu(current_song_elements); // This should return an Element
+          return RenderSongMenu(current_song_elements);
         }),
       &selected_inode, global_colors.menu_cursor_bg, global_colors.inactive_menu_cursor_bg);
 
@@ -1024,17 +985,15 @@ private:
             if (focus_on_artists)
             {
               // Increment index and wrap around if necessary
-              current_search_state.artistIndex =
-                (current_search_state.artistIndex + 1) % searchIndices.size();
+              UpdateSelectedIndex(current_search_state.artistIndex, searchIndices.size(), true);
               selected_artist = searchIndices[current_search_state.artistIndex];
               UpdateSongsForArtist(current_artist_names[selected_artist]);
               return true;
             }
             else
             {
-              // Increment index and wrap around if necessary
-              current_search_state.songIndex =
-                (current_search_state.songIndex + 1) % searchIndices.size();
+              // Inc index and wrap around if necessary
+              UpdateSelectedIndex(current_search_state.songIndex, searchIndices.size(), true);
               selected_inode = searchIndices[current_search_state.songIndex];
               return true;
             }
@@ -1044,9 +1003,7 @@ private:
             if (focus_on_artists)
             {
               // Decrement index and wrap around if necessary
-              current_search_state.artistIndex =
-                (current_search_state.artistIndex - 1 + searchIndices.size()) %
-                searchIndices.size();
+              UpdateSelectedIndex(current_search_state.artistIndex, searchIndices.size(), false);
               selected_artist = searchIndices[current_search_state.artistIndex];
               UpdateSongsForArtist(current_artist_names[selected_artist]);
               return true;
@@ -1054,8 +1011,7 @@ private:
             else
             {
               // Decrement index and wrap around if necessary
-              current_search_state.songIndex =
-                (current_search_state.songIndex - 1 + searchIndices.size()) % searchIndices.size();
+              UpdateSelectedIndex(current_search_state.songIndex, searchIndices.size(), false);
               selected_inode = searchIndices[current_search_state.songIndex];
               return true;
             }
@@ -1141,7 +1097,7 @@ private:
                    interface = dbox({interface, RenderDialog(dialog_message) | center}) |
                                getTrueColor(TrueColors::Color::White) | flex;
                  }
-                 return vbox(interface);
+                 return window(text(" inLimbo ") | bold, vbox(interface));
                });
   }
 
@@ -1175,7 +1131,7 @@ private:
       INL_Component_State.lyrics_scroller->Render() | flex,
     });
 
-    auto info_pane = window(text(" Additional Info ") | bold | center | inverted,
+    auto info_pane = window(text(" Additional Info ") | bold | center,
                             vbox(additionalPropertiesText) | frame | flex);
 
     return hbox({vbox({
@@ -1205,14 +1161,14 @@ private:
 
     auto queue_container = vbox({
                              INL_Component_State.songs_queue_comp->Render() |
-                               color(global_colors.song_queue_menu_fg) | flex | frame,
+                               color(global_colors.song_queue_menu_fg) | flex,
                            }) |
                            border | color(global_colors.song_queue_menu_bor_col);
 
     return vbox({
              title,
              queue_container | frame | flex,
-             separator(),
+             filler(),
              text(end_text) | dim | center,
            }) |
            flex;
@@ -1328,7 +1284,7 @@ private:
   {
     std::string queue_info = " ";
     int         songs_left = qState.getQueueSize() - qState.qIndex - 1;
-    if (songs_left > qState.getQueueSize())
+    if (songs_left >= qState.getQueueSize() && songs_left < 0)
       songs_left = 0;
     queue_info += std::to_string(songs_left) + " songs left.";
 
