@@ -8,7 +8,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/License-GNU GPL%20v3-blue" alt="License" />
-  <img src="https://img.shields.io/badge/Version-2.0%20alpha-red" alt="Version" />
+  <img src="https://img.shields.io/badge/Version-3.0%20alpha-red" alt="Version" />
   <img src="https://img.shields.io/badge/Build-passing-brightgreen" alt="Build" />
 </p>
 <p align="center">
@@ -88,7 +88,7 @@ Sometimes it feels good to be stuck in a weird place in your life, and it feels 
 
 **FTXUI** is fetched from GitHub [here](https://github.com/ArthurSonzogni/FTXUI/) itself during building so **NO** need to install it separately.
 
-## GOAL
+## **GOAL**
 
 The goal of this project is just to find peace and solitude for me as I try to create something I wanted for a long time
 
@@ -103,6 +103,17 @@ Here are a few novelties that may or may not have been added yet:
 7. Security ensured using CodeQL workflow
 
 ## **BUILDING**
+
+> [!IMPORTANT]
+> 
+> inLimbo has been **TRIED AND TESTED** in the following GNU/Linux distros:
+> 
+> 1. Arch Linux (x86-64 arch)
+> 2. Ubuntu (x86-64 arch)
+> 3. Fedora/Nobara Linux (x86-64 arch)
+> 
+> As long as your distribution can install & build the requirements, there should *NOT* be any issue
+> 
 
 You will need CMake and Make (GNU Make for BSD) for this (and git obvi)
 

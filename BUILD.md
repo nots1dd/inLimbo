@@ -190,12 +190,12 @@ This target uninstalls every system wide installed file of inLimbo using `instal
   make build-global-uninstall
   ```
 
-  > [!NOTE]
-  > 
-  > If you remove `build/` directory, the `install_manifests.txt` will not exist so this wont work
-  > 
-  > Will come with a workaround in the future
-  > 
+> [!NOTE]
+> 
+> If you remove `build/` directory, the `install_manifests.txt` will not exist so this wont work
+> 
+> Will come with a workaround in the future
+> 
 
 ---
 
