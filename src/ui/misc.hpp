@@ -1,16 +1,13 @@
 #pragma once
 
-#include "../dirsort/songmap.hpp"
+#include "../arg-handler.hpp"
 #include "../dirsort/taglib_parser.h"
-#include "../helpers/trie.hpp"
 #include "./colors.hpp"
 #include "./keymaps.hpp"
-#include "../arg-handler.hpp"
 #include "components/image_view.hpp"
 #include <algorithm>
 #include <cctype>
 #include <ftxui/component/captured_mouse.hpp>
-#include <ftxui/component/component.hpp>
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/component/event.hpp>
 #include <ftxui/component/screen_interactive.hpp>
@@ -25,46 +22,7 @@
 #define SONG_TITLE_DELIM " • "
 #define LYRICS_AVAIL     "L*"
 #define ADDN_PROPS_AVAIL "&*"
-
-struct ComponentState
-{
-  Component artists_list;
-  Component songs_list;
-  Component songs_queue_comp;
-  Component lyrics_scroller;
-  Component MainRenderer;
-  Component ThumbnailRenderer;
-  Component audioDeviceMenu;
-};
-
-struct PlayingState
-{
-  std::string                                  artist;
-  std::string                                  title;
-  std::string                                  genre;
-  std::string                                  album;
-  bool                                         has_comment = false;
-  bool                                         has_lyrics  = false;
-  int                                          duration;
-  int                                          bitrate;
-  unsigned int                                 year       = 0;
-  unsigned int                                 track      = 0;
-  unsigned int                                 discNumber = 0;
-  std::string                                  lyrics;
-  std::string                                  comment;
-  std::unordered_map<std::string, std::string> additionalProperties;
-  std::string                                  filePath;
-};
-
-struct SearchState
-{
-  Trie   ArtistSearchTrie;
-  Trie   SongSearchTrie;
-  int    artistIndex = 0;
-  int    songIndex   = 0;
-  string input       = "";
-  mutex mtx;
-};
+#define STATUS_BAR_DELIM " | "
 
 auto handleToggleMute(int* volume, int* lastVolume, bool* muted) -> int
 {
@@ -79,6 +37,14 @@ auto handleToggleMute(int* volume, int* lastVolume, bool* muted) -> int
     *volume = *lastVolume;
   }
   return *volume;
+}
+
+auto formatDiscTrackInfo(const int& disc_number, const int& track_number)
+{
+  std::string formatted_info =
+    " " + std::to_string(disc_number) + "-" + std::to_string(track_number) + "  ";
+
+  return formatted_info;
 }
 
 auto formatLyrics(const std::string& lyrics)
@@ -168,6 +134,33 @@ auto formatLyrics(const std::string& lyrics)
               lines.end());
 
   return lines;
+}
+
+auto formatAdditionalInfo(const std::string& genre, const bool& has_comment, const bool& has_lyrics,
+                          const bool& show_bitrate, const int& bitrate) -> std::string
+{
+  std::string additional_info = "";
+  if (genre != "Unknown Genre")
+  {
+    additional_info += "Genre: " + genre + STATUS_BAR_DELIM;
+  }
+  if (has_comment)
+  {
+    additional_info += ADDN_PROPS_AVAIL;
+  }
+  if (has_lyrics)
+  {
+    additional_info += STATUS_BAR_DELIM;
+    additional_info += LYRICS_AVAIL;
+  }
+  if (show_bitrate)
+  {
+    additional_info += STATUS_BAR_DELIM;
+    additional_info += std::to_string(bitrate) + " kbps";
+  }
+  additional_info += STATUS_BAR_DELIM;
+
+  return additional_info;
 }
 
 auto charToStr(char ch) -> std::string
@@ -353,24 +346,25 @@ auto RenderThumbnail(const std::string& songFilePath, const std::string& cacheDi
   return errorView;
 }
 
-auto RenderSearchBar(std::string& user_input) -> Element {
-    return hbox({
-            text("/") | color(Color::GrayLight),
-            text(user_input) | color(Color::LightSteelBlue) | bold | inverted,
-        }) | color(Color::GrayDark) | bgcolor(Color::Black) | size(HEIGHT, EQUAL, 1);
+auto RenderSearchBar(std::string& user_input) -> Element
+{
+  return hbox({
+           text("/") | color(Color::GrayLight),
+           text(user_input) | color(Color::LightSteelBlue) | bold | inverted,
+         }) |
+         color(Color::GrayDark) | bgcolor(Color::Black) | size(HEIGHT, EQUAL, 1);
 }
 
 auto RenderDialog(const std::string& dialog_message) -> Element
 {
-  return window(
-           text(" File Information ") | bold | center | getTrueColor(TrueColors::Color::White) |
-             getTrueBGColor(TrueColors::Color::Gray),
-           vbox({
-             text(dialog_message) | getTrueColor(TrueColors::Color::Coral),
-             separator() | color(Color::GrayLight),
-             text("Press 'x' to close") | dim | center | getTrueColor(TrueColors::Color::Pink),
-           }) |
-             center) |
+  return window(text(" File Information ") | bold | center |
+                  getTrueColor(TrueColors::Color::White) | getTrueBGColor(TrueColors::Color::Gray),
+                vbox({
+                  text(dialog_message) | getTrueColor(TrueColors::Color::Coral),
+                  separator() | color(Color::GrayLight),
+                  text("Press 'x' to close") | dim | center | getTrueColor(TrueColors::Color::Pink),
+                }) |
+                  center) |
          size(WIDTH, LESS_THAN, 60) | size(HEIGHT, LESS_THAN, 8) |
          getTrueBGColor(TrueColors::Color::Black) | borderHeavy;
 }
@@ -400,10 +394,8 @@ auto RenderHelpScreen(Keybinds& global_keybinds) -> Element
      TrueColors::Color::LightYellow},
     {charToStr(global_keybinds.show_help), "Toggle this help window", TrueColors::Color::Cyan},
     {charToStr(global_keybinds.toggle_play), "Play/Pause playback", TrueColors::Color::Teal},
-    {charToStr(global_keybinds.play_song), "Play the selected song",
-     TrueColors::Color::LightGreen},
-    {charToStr(global_keybinds.play_song_next), "Skip to next song",
-     TrueColors::Color::LightCyan},
+    {charToStr(global_keybinds.play_song), "Play the selected song", TrueColors::Color::LightGreen},
+    {charToStr(global_keybinds.play_song_next), "Skip to next song", TrueColors::Color::LightCyan},
     {charToStr(global_keybinds.play_song_prev), "Go back to previous song",
      TrueColors::Color::LightCyan},
     {charToStr(global_keybinds.vol_up), "Increase volume", TrueColors::Color::LightGreen},
@@ -417,8 +409,7 @@ auto RenderHelpScreen(Keybinds& global_keybinds) -> Element
     {charToStr(global_keybinds.view_lyrics), "View lyrics for the current song",
      TrueColors::Color::LightBlue},
     {charToStr(global_keybinds.goto_main_screen), "Return to main UI", TrueColors::Color::Teal},
-    {charToStr(global_keybinds.replay_song), "Replay the current song",
-     TrueColors::Color::Orange},
+    {charToStr(global_keybinds.replay_song), "Replay the current song", TrueColors::Color::Orange},
     {charToStr(global_keybinds.add_song_to_queue), "Add selected song to queue",
      TrueColors::Color::LightPink},
     {charToStr(global_keybinds.add_artists_songs_to_queue), "Queue all songs by the artist",
@@ -433,8 +424,7 @@ auto RenderHelpScreen(Keybinds& global_keybinds) -> Element
      TrueColors::Color::LightCyan},
     {charToStr(global_keybinds.toggle_audio_devices), "Switch between available audio devices",
      TrueColors::Color::LightBlue},
-    {charToStr(global_keybinds.search_menu), "Open the search menu",
-     TrueColors::Color::LightGreen},
+    {charToStr(global_keybinds.search_menu), "Open the search menu", TrueColors::Color::LightGreen},
     {"gg", "Go to the top of the active menu", TrueColors::Color::LightBlue},
     {"G", "Go to the bottom of the active menu", TrueColors::Color::LightBlue},
     {"x", "Close the dialog box", TrueColors::Color::LightRed},
@@ -462,8 +452,8 @@ auto RenderHelpScreen(Keybinds& global_keybinds) -> Element
   // Application details
   auto app_name = text("inLimbo - Music player that keeps you in Limbo...") | bold |
                   getTrueColor(TrueColors::Color::Teal);
-  auto contributor = text("Developed by: Siddharth Karanam (nots1dd)") |
-                     getTrueColor(TrueColors::Color::LightGreen);
+  auto contributor =
+    text("Developed by: Siddharth Karanam (nots1dd)") | getTrueColor(TrueColors::Color::LightGreen);
   auto github_link = hbox({
     text("GitHub: "),
     text("Click me!") | underlined | bold | getTrueColor(TrueColors::Color::LightBlue) |
@@ -490,18 +480,6 @@ auto RenderHelpScreen(Keybinds& global_keybinds) -> Element
          flex;
 }
 
-auto calculateTotalQueueTime(const std::vector<Song> song_queue) -> std::string
-{
-  int total_seconds = 0;
-
-  for (const auto& song : song_queue)
-  {
-    total_seconds += song.metadata.duration;
-  }
-
-  return FormatTime(total_seconds);
-}
-
 void searchModeIndices(const std::vector<std::string>& words, const std::string& prefix,
                        std::vector<int>& search_indices)
 {
@@ -523,12 +501,13 @@ void UpdateSelectedIndex(int& index, int max_size, bool move_down)
 }
 
 auto RenderStatusBar(const std::string& status, const std::string& current_song_info,
-                     const std::string& additional_info, const std::string& year_info, InLimboColors& global_colors, const std::string& current_artist) -> Element
+                     const std::string& additional_info, const std::string& year_info,
+                     InLimboColors& global_colors, const std::string& current_artist) -> Element
 {
   return hbox({
            text(status) | getTrueColor(TrueColors::Color::Black) | bold,
-           text(current_artist) | color(global_colors.status_bar_artist_col) |
-             bold | size(WIDTH, LESS_THAN, MAX_LENGTH_ARTIST_NAME),
+           text(current_artist) | color(global_colors.status_bar_artist_col) | bold |
+             size(WIDTH, LESS_THAN, MAX_LENGTH_ARTIST_NAME),
            text(current_song_info) | bold | color(global_colors.status_bar_song_col) |
              size(WIDTH, LESS_THAN, MAX_LENGTH_SONG_NAME),
            filler(), // Push the right-aligned content to the end

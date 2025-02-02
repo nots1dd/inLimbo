@@ -9,6 +9,7 @@
 #pragma once
 
 #include "./cmd-line-args.hpp"
+#include "dirsort/songmap.hpp"
 #include <filesystem>
 #include <iostream>
 #include <string_view>
@@ -16,13 +17,22 @@
 
 // Constants
 constexpr const char* DBUS_SERVICE_NAME =
-  "org.mpris.MediaPlayer2.inLimbo";                   ///< DBus service name used by inLimbo.
-constexpr const char* VERSION        = "2.9 (ALPHA)"; ///< Current version of the application.
-constexpr const char* REPOSITORY_URL = "https://github.com/nots1dd/inLimbo";
+  "org.mpris.MediaPlayer2.inLimbo"; ///< DBus service name used by inLimbo.
+constexpr const char* VERSION_FILE_NAME = "VERSION";
+constexpr const char* REPOSITORY_URL    = "https://github.com/nots1dd/inLimbo";
 
 bool shouldRunApp =
   false; ///< Indicates if the application should proceed to run after handling arguments.
-bool printSongTree = false;
+bool parseSongTree = false;
+
+struct SongTreeState
+{
+  bool        printSongTree      = false;
+  bool        printArtistsAll    = false;
+  bool        printSongsByArtist = false;
+  bool        printSongsGenreAll = false;
+  std::string artist;
+};
 
 /**
  * @enum ConsoleColor
@@ -91,6 +101,8 @@ public:
     std::string cacheDir;   ///< Path to the cache directory.
   };
 
+  static inline SongTreeState song_tree_parse_state = {};
+
   /**
    * @brief Handles command-line arguments and executes corresponding actions.
    *
@@ -113,7 +125,11 @@ public:
       {"--show-log-dir", [&]() { handleShowLogDir(paths.cacheDir); }},
       {"--show-dbus-name", [&]() { handleShowDBusName(); }},
       {"--update-cache-run", [&]() { handleUpdateCacheRun(paths.libBinPath); }},
-      {"--print-song-tree", [&]() { handlePrintSongTree(); }}};
+      {"--print-song-tree", [&]() { handlePrintSongTree(); }},
+      {"--print-artists-all", [&]() { handlePrintArtistsAll(); }},
+      {"--print-songs-by-genre-all", [&]() { handlePrintSongsByGenreAll(); }},
+      {"--print-songs-by-artist",
+       [&]() { handlePrintSongsByArtist(cmdArgs.get("--print-songs-by-artist")); }}};
 
     for (const auto& [flag, handler] : argumentHandlers)
     {
@@ -123,6 +139,29 @@ public:
         if (!shouldRunApp)
           exit(0);
       }
+    }
+  }
+
+  static auto processSongTreeArguments(SongTree& song_tree) -> void
+  {
+    if (ArgumentHandler::song_tree_parse_state.printSongTree)
+    {
+      song_tree.display();
+    }
+
+    if (ArgumentHandler::song_tree_parse_state.printArtistsAll)
+    {
+      song_tree.printAllArtists();
+    }
+
+    if (ArgumentHandler::song_tree_parse_state.printSongsByArtist)
+    {
+      song_tree.getSongsByArtist(ArgumentHandler::song_tree_parse_state.artist);
+    }
+
+    if (ArgumentHandler::song_tree_parse_state.printSongsGenreAll)
+    {
+      song_tree.getSongsByGenreAndPrint();
     }
   }
 
@@ -151,10 +190,28 @@ private:
     cmdArgs.printUsage(programName);
   }
 
+  static auto readVersionFromFile() -> std::string
+  {
+    std::ifstream versionFile(VERSION_FILE_NAME); // Open the VERSION file
+    if (!versionFile)
+    {
+      std::cerr << "Error: Unable to open VERSION file!" << std::endl;
+      return "Unknown Version"; // Return default version if file can't be opened
+    }
+
+    std::stringstream buffer;
+    buffer << versionFile.rdbuf(); // Read the file content into a string stream
+    return buffer.str();           // Return the string content
+  }
+
   /**
    * @brief Handles the `--version` flag by displaying the application version.
    */
-  static void handleVersion() { colorPrint(ConsoleColor::Cyan, "inLimbo version: ", VERSION); }
+  static void handleVersion()
+  {
+    std::string version = readVersionFromFile();
+    colorPrint(ConsoleColor::Cyan, "inLimbo version: ", version);
+  }
 
   /**
    * @brief Handles the `--show-config-file` flag by displaying the configuration file path.
@@ -228,10 +285,32 @@ private:
     handleClearCache(libBinPath);
     shouldRunApp = true;
   }
-  
+
   static void handlePrintSongTree()
   {
-    printSongTree = true;
-    shouldRunApp = true;
+    parseSongTree                       = true;
+    song_tree_parse_state.printSongTree = true;
+    shouldRunApp                        = true;
+  }
+
+  static void handlePrintArtistsAll()
+  {
+    parseSongTree                         = true;
+    shouldRunApp                          = true;
+    song_tree_parse_state.printArtistsAll = true;
+  }
+
+  static void handlePrintSongsByArtist(std::string artistName)
+  {
+    parseSongTree                            = true;
+    shouldRunApp                             = true;
+    song_tree_parse_state.printSongsByArtist = true;
+    song_tree_parse_state.artist             = artistName;
+  }
+  static void handlePrintSongsByGenreAll()
+  {
+    parseSongTree                            = true;
+    shouldRunApp                             = true;
+    song_tree_parse_state.printSongsGenreAll = true;
   }
 };

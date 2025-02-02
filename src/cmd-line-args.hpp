@@ -127,8 +127,7 @@ public:
 
     std::cout << "\033[1mDescription:\033[0m\n";
     std::cout << "  inLimbo is a TUI music player that supports seamless playback and efficient "
-                 "metadata handling.\n  Designed for minimalism and ease of use.\n\n\033[1mKeeps "
-                 "YOU in Limbo...\033[0m";
+                 "metadata handling.\n  Designed for minimalism and ease of use.\n";
     std::cout << "\n";
   }
 
@@ -151,12 +150,23 @@ private:
 
       if (arg[0] == '-')
       {
-        std::string flag = arg;
-        std::string value;
+        std::string flag, value;
+        size_t      eqPos = arg.find('=');
 
-        if (i + 1 < argc && argv[i + 1][0] != '-')
+        if (eqPos != std::string::npos)
         {
-          value = argv[++i];
+          // Handle --flag=value format
+          flag  = arg.substr(0, eqPos);
+          value = arg.substr(eqPos + 1);
+        }
+        else
+        {
+          // Handle --flag value format
+          flag = arg;
+          if (i + 1 < argc && argv[i + 1][0] != '-')
+          {
+            value = argv[++i];
+          }
         }
 
         // Find closest matching flag for error message
@@ -177,7 +187,7 @@ private:
           return;
         }
 
-        args[flag] = value;
+        args[flag] = value; // Store the flag and its associated value (if any)
       }
       else
       {
@@ -221,6 +231,14 @@ private:
 };
 
 // Define valid flags globally
-const std::vector<std::string> CommandLineArgs::validFlags = {
-  "--help",         "--show-dbus-name",  "--version", "--clear-cache", "--show-config-file",
-  "--show-log-dir", "--update-cache-run", "--print-song-tree"};
+const std::vector<std::string> CommandLineArgs::validFlags = {"--help",
+                                                              "--show-dbus-name",
+                                                              "--version",
+                                                              "--clear-cache",
+                                                              "--show-config-file",
+                                                              "--show-log-dir",
+                                                              "--update-cache-run",
+                                                              "--print-song-tree",
+                                                              "--print-songs-by-artist",
+                                                              "--print-songs-by-genre-all",
+                                                              "--print-artists-all"};

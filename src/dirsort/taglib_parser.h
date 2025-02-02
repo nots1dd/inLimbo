@@ -178,14 +178,16 @@ auto TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) ->
   metadata.track = tag->track();
   if (debugLogBool) {
     std::cout << "[TAG PARSE] Track: " << (tag->track() == 0 ? "(No Track, using fallback)" : std::to_string(tag->track())) << std::endl;
-    if (tag->track() == 0) {
-      if (metadata.artist == "<Unknown Artist>") {
-        unknownArtistTracks++;
-        metadata.track = unknownArtistTracks;
-      }
-      std::cout << "[TAG PARSE]  Assigned track number: " << metadata.track << std::endl;
+    
+  }
+
+  if (tag->track() == 0) {
+    if (metadata.artist == "<Unknown Artist>") {
+      unknownArtistTracks++;
+      metadata.track = unknownArtistTracks;
     }
   }
+  if (debugLogBool) std::cout << "[TAG PARSE]  Assigned track number: " << metadata.track << std::endl;
 
   // Audio Properties
   TagLib::AudioProperties *audioProperties = file.audioProperties();

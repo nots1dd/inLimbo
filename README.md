@@ -125,29 +125,78 @@ Check out [BUILD.md](https://github.com/nots1dd/inLimbo/blob/main/BUILD.md) for 
 > To try debug build check out [DEBUGGING](https://github.com/nots1dd/inLimbo?tab=readme-ov-file#debugging)
 > 
 
-## **GETTING STARTED**
+# **Getting Started with inLimbo**
 
-To get started: 
+## Running inLimbo
 
-```bash 
-inLimbo # or wherever you have built the binary 
+To get started with **inLimbo**, run the following command:
+
+```bash
+inLimbo # or wherever you have built the binary
 ```
 
-To get help regarding the command-line arguments available with inLimbo:
+To get help regarding the command-line arguments available with inLimbo, you can use the `--help` option:
 
-```bash 
+```bash
 inLimbo --help
 ```
 
-If you update the songs directory in `config.toml`, inLimbo binary will not automatically change the directory and remove the static serialized `lib.bin` from which it loads the song map from.
+## Cache and Directory Management
 
-You need to run:
+If you update the song directory in `config.toml`, **inLimbo** does not automatically remove the static serialized `lib.bin` file, which is used to load the song map. 
 
-```bash 
-inLimbo --update-cache-run # will load the directory dynamically everytime (will have slower song map times of course)
+To ensure that **inLimbo** loads the directory dynamically, use the following command:
+
+```bash
+inLimbo --update-cache-run
 ```
 
-That should help with everything.
+You can also merge the dynamic load with other arguments like so:
+
+```bash 
+inLimbo --update-cache-run --print-song-tree # will create a new song map and print it regardless of lib.bin data
+```
+
+Note that this will result in slower song map times as the song map is generated dynamically on each run.
+
+---
+
+## **Command-Line Arguments**
+
+### `--help`
+**Description**: Display help information about available arguments for inLimbo.
+
+### `--version`
+**Description**: Display the version number of inLimbo.
+
+### `--clear-cache`
+**Description**: Clear cached data, which includes the song map and other temporary data stored by the application.
+
+### `--show-config-file`
+**Description**: Display the path to the configuration file used by inLimbo.
+
+### `--show-log-dir`
+**Description**: Show the directory path where logs are stored for inLimbo.
+
+### `--show-dbus-name`
+**Description**: Show the DBus service name used by inLimbo.
+
+### `--update-cache-run`
+**Description**: Update the cache file and run the application. This will make inLimbo load the directory dynamically every time (note that this will result in slower song map times).
+
+### `--print-song-tree`
+**Description**: Print the song map parsed from the directory. This shows the structure of the song tree and how songs are organized.
+
+### `--print-artists-all`
+**Description**: Print all parsed artists from the song map. This will list all artists found in the directory and their corresponding songs.
+
+### `--print-songs-by-artist`
+**Description**: Print all the songs of a given artist. This argument requires you to specify the artist’s name, and it will list all songs by that artist.
+
+### `--print-songs-by-genre-all`
+**Description**: Print all parsed genres and their song mappings. This will show all the genres available in the song map and list songs under each genre.
+
+There will be more command-line arguments in the future...
 
 ## **CONFIGURATION**
 

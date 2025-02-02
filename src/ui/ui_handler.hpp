@@ -7,15 +7,15 @@
 #include "./properties.hpp"
 #include "dirsort/songmap.hpp"
 #include "misc.hpp"
+#include "states/state.hpp"
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/node.hpp>
 
 using namespace ftxui;
 
 /** MACROS FOR SONG DETAILS */
-#define STATUS_PLAYING   "<>"
-#define STATUS_PAUSED    "!!"
-#define STATUS_BAR_DELIM " | "
+#define STATUS_PLAYING "<>"
+#define STATUS_PAUSED  "!!"
 
 /** SCREEN MACROS */
 #define SHOW_MAIN_UI           0
@@ -49,8 +49,7 @@ public:
     Keybinds& keybinds, InLimboColors& colors)
       : library(initial_library), INL_Thread_Manager(std::make_unique<ThreadManager>()),
         INL_Thread_State(INL_Thread_Manager->getThreadState()), global_keybinds(keybinds),
-        global_colors(colors), song_queue(),
-        searchIndices() // Initialize these vectors to avoid any abrupt exits
+        global_colors(colors), searchIndices() // Initialize these vectors to avoid any abrupt exits
   {
     InitializeData();
     CreateComponents();
@@ -139,6 +138,7 @@ public:
 private:
   PlayingState current_playing_state;
   SearchState  current_search_state;
+  QueueState   qState;
 
   std::unique_ptr<MPRISService> mprisService;
 
@@ -150,28 +150,22 @@ private:
   std::unique_ptr<ThreadManager>   INL_Thread_Manager; // Smart pointer to ThreadManager
   ThreadManager::ThreadState&      INL_Thread_State;
 
-  std::vector<Song> song_queue;
-  int               current_song_queue_index = 0;
-
   // Main data structure
   std::map<std::string, std::map<std::string, std::map<unsigned int, std::map<unsigned int, Song>>>>
     library;
 
   // Navigation state
-  std::string  current_artist;
-  unsigned int current_disc       = 1;
-  unsigned int current_track      = 1;
-  bool         show_dialog        = false;
-  bool         is_search_active   = false;
-  bool         show_audio_devices = false;
-  std::string  dialog_message;
-  double       seekBuffer;
-  bool         first_g_pressed = false; // Track the state of the first 'g' press
+  std::string current_artist;
+  bool        show_dialog        = false;
+  bool        is_search_active   = false;
+  bool        show_audio_devices = false;
+  std::string dialog_message;
+  double      seekBuffer;
+  bool        first_g_pressed = false; // Track the state of the first 'g' press
 
   // Current view lists
   std::vector<std::string>  current_artist_names;
   std::vector<std::string>  current_artist_song_names;
-  std::vector<std::string>  song_queue_names;
   std::vector<std::string>  lyricLines;
   std::vector<std::string>  audioDevices;
   std::vector<int>          searchIndices;
@@ -187,10 +181,8 @@ private:
 
   // Player state
   int selected_artist         = 0;
-  int selected_song_queue     = 0;
   int selected_audio_dev_line = 0;
   int selected_inode          = 1; // First element is always going to album name so we ignore it
-  int selected_song           = 0; // song index with respect to the song menu
   int current_lyric_line      = 0;
   std::vector<Element> lyricElements;
   int                  volume           = 50;
@@ -220,8 +212,10 @@ private:
     {
       UpdateSongsForArtist(current_artist_names[0]);
     }
-    // Update the Search Query for Artists (it wont be updated again during the lifetime of the player so doing it here is fine)
-    for (size_t i=0;i<current_artist_names.size();++i) current_search_state.ArtistSearchTrie.insert(current_artist_names[i], i);
+    // Update the Search Query for Artists (it wont be updated again during the lifetime of the
+    // player so doing it here is fine)
+    for (size_t i = 0; i < current_artist_names.size(); ++i)
+      current_search_state.ArtistSearchTrie.insert(current_artist_names[i], i);
   }
 
   void SetDialogMessage(const std::string& message)
@@ -279,7 +273,7 @@ private:
         {
           audio_player       = getOrCreateAudioPlayer();
           audioDeviceMap     = audio_player->enumerateDevices();
-          Song* current_song = GetCurrentSongFromQueue();
+          Song* current_song = qState.GetCurrentSongFromQueue();
           if (!current_song)
           {
             throw std::runtime_error("Error: No current song found.");
@@ -307,7 +301,6 @@ private:
           audio_player->play(); // Play the song (it will play in a separate thread)
           auto durationFuture            = audio_player->getDurationAsync();
           current_playing_state.duration = durationFuture.get();
-          selected_song                  = selected_inode;
         }
         catch (const std::exception& e)
         {
@@ -359,24 +352,24 @@ private:
     try
     {
       // Queue state validations
-      if (song_queue.empty())
+      if (qState.song_queue.empty())
       {
         SetDialogMessage("Error: Queue is empty.");
         INL_Thread_State.is_playing = false;
         return;
       }
 
-      if (current_song_queue_index + 1 >= song_queue.size())
+      if (qState.qIndex + 1 >= qState.song_queue.size())
       {
         SetDialogMessage("Error: No more songs in the queue.");
         return;
       }
 
       // Increment song index
-      current_song_queue_index++;
+      qState.incrementQIndex();
 
       // Get current song
-      Song* current_song = GetCurrentSongFromQueue();
+      Song* current_song = qState.GetCurrentSongFromQueue();
       if (!current_song)
       {
         INL_Thread_State.is_playing = false;
@@ -409,24 +402,24 @@ private:
     try
     {
       // Queue state validations
-      if (song_queue.empty())
+      if (qState.song_queue.empty())
       {
         SetDialogMessage("Error: Queue is empty.");
         INL_Thread_State.is_playing = false;
         return;
       }
 
-      if (current_song_queue_index + 1 >= song_queue.size())
+      if (qState.qIndex + 1 >= qState.song_queue.size())
       {
         SetDialogMessage("Error: No more previous songs in the queue.");
         return;
       }
 
       // Decrement song index
-      current_song_queue_index--;
+      qState.decrementQIndex();
 
       // Get current song
-      Song* current_song = GetCurrentSongFromQueue();
+      Song* current_song = qState.GetCurrentSongFromQueue();
       if (!current_song)
       {
         INL_Thread_State.is_playing = false;
@@ -489,6 +482,7 @@ private:
     current_song_elements.clear();
     album_name_indices.clear();
     current_search_state.SongSearchTrie.clear();
+    current_search_state.songIndex = 0;
 
     if (library.count(artist) > 0)
     {
@@ -520,10 +514,10 @@ private:
         {
           for (const auto& [track_number, song] : tracks)
           {
-            std::string disc_track_info =
-              " " + std::to_string(disc_number) + "-" + std::to_string(track_number) + "  ";
+            std::string disc_track_info = formatDiscTrackInfo(disc_number, track_number);
             current_inodes.push_back(song.inode);
-            current_search_state.SongSearchTrie.insert(song.metadata.title, current_inodes.size()-1);
+            current_search_state.SongSearchTrie.insert(song.metadata.title,
+                                                       current_search_state.songIndex++);
             current_song_elements.push_back(
               renderSongName(disc_track_info, song.metadata.title, song.metadata.duration));
           }
@@ -531,15 +525,9 @@ private:
       }
     }
 
-    current_artist = artist;
+    current_artist           = artist;
     selected_inode           = 1;
     albums_indices_traversed = 1;
-  }
-
-  void ClearQueue()
-  {
-    song_queue.clear();
-    current_song_queue_index = 0;
   }
 
   auto GetCurrentSong(const std::string& artist) -> const Song&
@@ -572,14 +560,14 @@ private:
 
     try
     {
-      song_queue.insert(song_queue.begin() + current_song_queue_index + 1, get_curr_song);
+      qState.insertSongToIndex(get_curr_song);
     }
     catch (std::exception e)
     {
       SetDialogMessage("Could not play this song next!");
     }
 
-    current_song_queue_index++;
+    qState.incrementQIndex();
     return;
   }
 
@@ -587,7 +575,7 @@ private:
   {
     // Clear the existing song list
     if (clearQueue)
-      ClearQueue();
+      qState.clearQueue();
 
     bool start_enqueue = false;
 
@@ -615,7 +603,7 @@ private:
           }
           // Add the song to the list
           if (start_enqueue)
-            song_queue.push_back(song);
+            qState.qPush(song);
         }
       }
     }
@@ -634,33 +622,22 @@ private:
     const Song& current_preview_song = GetCurrentSong(current_artist_names[selected_artist]);
 
     // Add a copy of the song to the queue
-    song_queue.push_back(current_preview_song);
+    qState.qPush(current_preview_song);
 
     NavigateSongMenu(true);
   }
 
   void RemoveSongFromQueue()
   {
-    if (selected_song_queue == 0)
+    if (qState.qScreenIndex == 0)
     {
       SetDialogMessage("Unable to remove song... This is playing right now!");
       return;
     }
-    if (selected_song_queue < song_queue.size())
+    if (qState.qScreenIndex < qState.getQueueSize())
     {
-      song_queue.erase(song_queue.begin() + selected_song_queue);
+      qState.qPopIndex();
     }
-  }
-
-  auto GetCurrentSongFromQueue() -> Song*
-  {
-    if (!song_queue.empty() && current_song_queue_index < song_queue.size())
-    {
-      return &song_queue[current_song_queue_index];
-    }
-
-    SetDialogMessage("Something went wrong");
-    return nullptr;
   }
 
   auto GetCurrentSongDuration() -> int
@@ -675,9 +652,10 @@ private:
   void UpdatePlayingState()
   {
     // Retrieve the current song from the queue
-    Song* current_song = GetCurrentSongFromQueue();
+    Song* current_song = qState.GetCurrentSongFromQueue();
     if (!current_song)
     {
+      SetDialogMessage("Current Song not available!");
       return; // No song available
     }
 
@@ -695,21 +673,7 @@ private:
           return;
         }
 
-        new_state.artist      = metadata.artist;
-        new_state.title       = metadata.title;
-        new_state.album       = metadata.album;
-        new_state.genre       = metadata.genre;
-        new_state.comment     = metadata.comment;
-        new_state.year        = metadata.year;
-        new_state.track       = metadata.track;
-        new_state.discNumber  = metadata.discNumber;
-        new_state.lyrics      = metadata.lyrics;
-        new_state.has_comment = (metadata.comment != "No Comment");
-        new_state.has_lyrics  = (metadata.lyrics != "No Lyrics");
-        new_state.filePath    = metadata.filePath;
-        new_state.bitrate     = metadata.bitrate;
-
-        new_state.additionalProperties = metadata.additionalProperties;
+        new_state.copyMetadata(metadata);
 
         // Commit to shared state under mutex
         {
@@ -767,7 +731,7 @@ private:
     if (debounce_time < MIN_DEBOUNCE_TIME_IN_MS)
       debounce_time = MIN_DEBOUNCE_TIME_IN_MS; // min debounce time is 0.5s
     const int final_debounce_time = debounce_time;
-    auto      debounce_duration   = std::chrono::milliseconds(final_debounce_time); 
+    auto      debounce_duration   = std::chrono::milliseconds(final_debounce_time);
 
     main_container |= CatchEvent(
       [&](Event event)
@@ -778,37 +742,48 @@ private:
                  (event == Event::Special(std::string(1, static_cast<char>(key))));
         };
 
-        if (is_search_active) {
-            if (event.is_character()) {
-                current_search_state.input += event.character();
-                
-                current_search_state.artistIndex = 0;
-                current_search_state.songIndex = 0;
+        if (is_search_active)
+        {
+          if (event.is_character())
+          {
+            current_search_state.input += event.character();
 
-                if (focus_on_artists) {
-                    searchIndices = current_search_state.ArtistSearchTrie.search(current_search_state.input);
-                    if (!searchIndices.empty()) {
-                        selected_artist = searchIndices[current_search_state.artistIndex];
-                        UpdateSongsForArtist(current_artist_names[selected_artist]);
-                    }
-                } else {
-                    searchIndices = current_search_state.SongSearchTrie.search(current_search_state.input);
-                    if (!searchIndices.empty())
-                    {
-                      selected_song = searchIndices[current_search_state.songIndex];
-                    }
-                }
-                return true;
+            current_search_state.artistIndex = 0;
+            current_search_state.songIndex   = 0;
+
+            if (focus_on_artists)
+            {
+              searchIndices =
+                current_search_state.ArtistSearchTrie.search(current_search_state.input);
+              if (!searchIndices.empty())
+              {
+                selected_artist = searchIndices[current_search_state.artistIndex];
+                UpdateSongsForArtist(current_artist_names[selected_artist]);
+              }
             }
-            else if (event == Event::Backspace) {
-                if (!current_search_state.input.empty()) current_search_state.input.pop_back(); 
-                return true;
+            else
+            {
+              searchIndices =
+                current_search_state.SongSearchTrie.search(current_search_state.input);
+              if (!searchIndices.empty())
+              {
+                selected_inode = searchIndices[current_search_state.songIndex];
+              }
             }
-            else if (event == Event::Return || event == Event::Escape) {
-                is_search_active = false;
-                current_search_state.input.clear();
-                return true;
-            }
+            return true;
+          }
+          else if (event == Event::Backspace)
+          {
+            if (!current_search_state.input.empty())
+              current_search_state.input.pop_back();
+            return true;
+          }
+          else if (event == Event::Return || event == Event::Escape)
+          {
+            is_search_active = false;
+            current_search_state.input.clear();
+            return true;
+          }
         }
 
         if (active_screen == SHOW_HELP_SCREEN)
@@ -873,7 +848,7 @@ private:
             {
               EnqueueAllSongsByArtist(current_artist, true);
 
-              if (Song* current_song = GetCurrentSongFromQueue())
+              if (Song* current_song = qState.GetCurrentSongFromQueue())
               {
                 // Enqueue all songs by the current artist
                 current_position = 0;
@@ -982,12 +957,12 @@ private:
             return true;
           }
           else if (is_keybind_match(global_keybinds.view_lyrics) &&
-                   (current_playing_state.has_lyrics || current_playing_state.has_comment))
+                   (current_playing_state.HasLyrics() || current_playing_state.HasComments()))
           {
             active_screen = SHOW_LYRICS_SCREEN;
             return true;
           }
-          else if (is_keybind_match(global_keybinds.view_song_queue) && !song_queue.empty())
+          else if (is_keybind_match(global_keybinds.view_song_queue) && !qState.song_queue.empty())
           {
             active_screen = SHOW_QUEUE_SCREEN;
             return true;
@@ -1046,25 +1021,44 @@ private:
           }
           else if (is_keybind_match(global_keybinds.search_item_next))
           {
-              if (focus_on_artists)
-              {
-                  // Increment index and wrap around if necessary
-                  current_search_state.artistIndex = (current_search_state.artistIndex + 1) % searchIndices.size();
-                  selected_artist = searchIndices[current_search_state.artistIndex];
-                  UpdateSongsForArtist(current_artist_names[selected_artist]);
-                  return true;
-              }
+            if (focus_on_artists)
+            {
+              // Increment index and wrap around if necessary
+              current_search_state.artistIndex =
+                (current_search_state.artistIndex + 1) % searchIndices.size();
+              selected_artist = searchIndices[current_search_state.artistIndex];
+              UpdateSongsForArtist(current_artist_names[selected_artist]);
+              return true;
+            }
+            else
+            {
+              // Increment index and wrap around if necessary
+              current_search_state.songIndex =
+                (current_search_state.songIndex + 1) % searchIndices.size();
+              selected_inode = searchIndices[current_search_state.songIndex];
+              return true;
+            }
           }
           else if (is_keybind_match(global_keybinds.search_item_prev))
           {
-              if (focus_on_artists)
-              {
-                  // Decrement index and wrap around if necessary
-                  current_search_state.artistIndex = (current_search_state.artistIndex - 1 + searchIndices.size()) % searchIndices.size();
-                  selected_artist = searchIndices[current_search_state.artistIndex];
-                  UpdateSongsForArtist(current_artist_names[selected_artist]);
-                  return true;
-              }
+            if (focus_on_artists)
+            {
+              // Decrement index and wrap around if necessary
+              current_search_state.artistIndex =
+                (current_search_state.artistIndex - 1 + searchIndices.size()) %
+                searchIndices.size();
+              selected_artist = searchIndices[current_search_state.artistIndex];
+              UpdateSongsForArtist(current_artist_names[selected_artist]);
+              return true;
+            }
+            else
+            {
+              // Decrement index and wrap around if necessary
+              current_search_state.songIndex =
+                (current_search_state.songIndex - 1 + searchIndices.size()) % searchIndices.size();
+              selected_inode = searchIndices[current_search_state.songIndex];
+              return true;
+            }
           }
         }
 
@@ -1144,21 +1138,17 @@ private:
                  }
                  if (show_dialog)
                  {
-                   interface =
-                     dbox({
-                       interface,
-                       RenderDialog(dialog_message) | center
-                     }) |
-                     getTrueColor(TrueColors::Color::White) | flex;
+                   interface = dbox({interface, RenderDialog(dialog_message) | center}) |
+                               getTrueColor(TrueColors::Color::White) | flex;
                  }
                  return vbox(interface);
                });
-  } 
+  }
 
   void UpdateLyrics()
   {
     lyricLines.clear();
-    lyricLines = formatLyrics(current_playing_state.lyrics);
+    lyricLines = current_playing_state.formatLyrics();
     return;
   }
 
@@ -1179,8 +1169,7 @@ private:
     UpdateLyrics();
 
     std::string end_text = "Use arrow keys to scroll, Press '" +
-                           std::string(1, static_cast<char>(global_keybinds.goto_main_screen)) +
-                           "' to go back home.";
+                           charToStr(global_keybinds.goto_main_screen) + "' to go back home.";
 
     auto lyrics_pane = vbox({
       INL_Component_State.lyrics_scroller->Render() | flex,
@@ -1199,25 +1188,11 @@ private:
            flex;
   }
 
-  void UpdateSongQueueList()
-  {
-    song_queue_names.clear();
-
-    for (long unsigned int i = current_song_queue_index; i < song_queue.size(); i++)
-    {
-      std::string eleName = song_queue[i].metadata.title + " by " + song_queue[i].metadata.artist;
-      if (i == current_song_queue_index)
-        eleName += "  *";
-      song_queue_names.push_back(eleName);
-    }
-
-    return;
-  }
-
   auto RenderQueueScreen() -> Element
   {
-    INL_Component_State.songs_queue_comp = CreateMenu(&song_queue_names, &selected_song_queue);
-    UpdateSongQueueList();
+    INL_Component_State.songs_queue_comp =
+      CreateMenu(&qState.song_queue_names, &qState.qScreenIndex);
+    qState.UpdateSongQueueList();
 
     auto title = text(" Song Queue ") | bold | getTrueColor(TrueColors::Color::LightBlue) |
                  underlined | center;
@@ -1289,7 +1264,7 @@ private:
         break;
 
       case SHOW_QUEUE_SCREEN:
-        UpdateSelectedIndex(selected_song_queue, song_queue_names.size(), move_down);
+        UpdateSelectedIndex(qState.qScreenIndex, qState.song_queue_names.size(), move_down);
         break;
 
       case SHOW_LYRICS_SCREEN:
@@ -1321,7 +1296,7 @@ private:
         break;
 
       case SHOW_QUEUE_SCREEN:
-        selected_song_queue = move_up ? 0 : song_queue_names.size() - 1;
+        qState.qScreenIndex = move_up ? 0 : qState.song_queue_names.size() - 1;
         break;
 
       case SHOW_LYRICS_SCREEN:
@@ -1347,20 +1322,20 @@ private:
       gauge(progress) | flex | progress_style,
       text(FormatTime(GetCurrentSongDuration())) | progress_style,
     });
-  } 
+  }
 
   auto RenderQueueBar() -> Element
   {
     std::string queue_info = " ";
-    int         songs_left = song_queue.size() - current_song_queue_index - 1;
-    if (songs_left > song_queue.size())
+    int         songs_left = qState.getQueueSize() - qState.qIndex - 1;
+    if (songs_left > qState.getQueueSize())
       songs_left = 0;
     queue_info += std::to_string(songs_left) + " songs left.";
 
     std::string up_next_song = " Next up: ";
-    if (song_queue.size() > 1 && songs_left > 0)
-      up_next_song += song_queue[current_song_queue_index + 1].metadata.title + " by " +
-                      song_queue[current_song_queue_index + 1].metadata.artist;
+    if (qState.getQueueSize() > 1 && songs_left > 0)
+      up_next_song += qState.song_queue[qState.qIndex + 1].metadata.title + " by " +
+                      qState.song_queue[qState.qIndex + 1].metadata.artist;
     else
       up_next_song += "Next song not available.";
 
@@ -1380,26 +1355,9 @@ private:
     {
       current_song_info = SONG_TITLE_DELIM + current_playing_state.title;
       year_info         = std::to_string(current_playing_state.year) + " ";
-
-      if (current_playing_state.genre != "Unknown Genre")
-      {
-        additional_info += "Genre: " + current_playing_state.genre + STATUS_BAR_DELIM;
-      }
-      if (current_playing_state.has_comment)
-      {
-        additional_info += ADDN_PROPS_AVAIL;
-      }
-      if (current_playing_state.has_lyrics)
-      {
-        additional_info += STATUS_BAR_DELIM;
-        additional_info += LYRICS_AVAIL;
-      }
-      if (global_props.show_bitrate)
-      {
-        additional_info += STATUS_BAR_DELIM;
-        additional_info += std::to_string(current_playing_state.bitrate) + " kbps";
-      }
-      additional_info += STATUS_BAR_DELIM;
+      additional_info   = formatAdditionalInfo(
+        current_playing_state.genre, current_playing_state.has_comment,
+        current_playing_state.has_lyrics, global_props.show_bitrate, current_playing_state.bitrate);
     }
 
     std::string status =
@@ -1431,19 +1389,18 @@ private:
     auto progress_bar = RenderProgressBar(progress);
     auto volume_bar   = RenderVolumeBar(volume, global_colors.volume_bar_col);
     auto queue_bar    = RenderQueueBar();
-    auto status_bar   = RenderStatusBar(status, current_song_info, additional_info, year_info, global_colors, current_playing_state.artist);
-    auto search_bar   = is_search_active == true ? RenderSearchBar(current_search_state.input) : filler();
+    auto status_bar   = RenderStatusBar(status, current_song_info, additional_info, year_info,
+                                        global_colors, current_playing_state.artist);
+    auto search_bar =
+      is_search_active == true ? RenderSearchBar(current_search_state.input) : filler();
 
-    return vbox({
-             panes,
-             hbox({
-               progress_bar | border | flex_grow,
-               volume_bar | border,
-               queue_bar,
-             }),
-             status_bar,
-             search_bar
-           }) |
+    return vbox({panes,
+                 hbox({
+                   progress_bar | border | flex_grow,
+                   volume_bar | border,
+                   queue_bar,
+                 }),
+                 status_bar, search_bar}) |
            flex;
   }
 

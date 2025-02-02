@@ -990,3 +990,40 @@ Medium commit with some refactoring and neat changes, getting to better UI and c
 - Fixing current_position bug when run refresh thread is woken up a lot of times (BIG)
 
 ---
+
+## [ALPHA 3.0] --- 02-02-2025
+
+### Added
+- State management header `src/ui/states/state.hpp` that has the member structs and methods of Queue, PlayingState and Component for now (will add more soon)
+
+- New and modified arguments `--print-song-tree`, `--print-songs-by-artist=`, `--print-songs-by-genre-all`, `--print-artists-all`
+
+### Changed
+- Refactor sizeable code in ui_handler for better state management
+
+- Modified `--print-song-tree` argument for a better unicode tree like representation (like lsblk) 
+
+- Changed all completion files to accomodate for new cmd-line-args
+
+- Reading the version is no longer statically compiled, it now reads from `VERSION` file and prints it
+
+- CommandLineArgs got a change to print the value from the positional argument for a more robust cli interface 
+
+- Readme changes
+
+### Fixed
+- The issue of unknown tracks being numbered correctly only at dynamic load with taglib debug log on is fixed (now works as intended)
+
+### Removed
+**NIL**
+
+Medium commit with very satisfactory refactoring changes, some features to the cli interface
+
+### Known Issues to fix in immediate commits
+- Holding the keybind for PlayNextSong() / PlayPrevSong() doesnt break anything, but MiniAudioPlayer class is not as responsive as the UI, so it lags behind (MAJOR ISSUE)
+
+(The outcome of the above issue would be that if you hold PlayNextSong() func call and it goes to Song A, the MiniAudioPlayer might still be playing Song B, which appears BEFORE Song A)
+
+- Fixing current_position bug when run refresh thread is woken up a lot of times (BIG)
+
+---

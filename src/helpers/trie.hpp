@@ -57,7 +57,7 @@ private:
   }
 
   // Helper function to delete a word from the Trie recursively
-  bool deleteWord(TrieNode* node, const std::string& word, int index, size_t depth = 0)
+  auto deleteWord(TrieNode* node, const std::string& word, int index, size_t depth = 0) -> bool
   {
     if (!node)
       return false;
