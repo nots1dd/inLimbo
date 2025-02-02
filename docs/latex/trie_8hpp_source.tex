@@ -1,0 +1,121 @@
+\doxysection{trie.\+hpp}
+\hypertarget{trie_8hpp_source}{}\label{trie_8hpp_source}\index{src/helpers/trie.hpp@{src/helpers/trie.hpp}}
+\mbox{\hyperlink{trie_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <algorithm>}\ \ \textcolor{comment}{//\ For\ std::transform}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classTrieNode_a3c44872f26b52fa29a38c91e69b22103}{TrieNode}}}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00031\ \ \ std::unordered\_map<char,\ TrieNode*>\ \mbox{\hyperlink{classTrieNode_a05e3e28111eae62cee67dd544942fda1}{children}};}
+\DoxyCodeLine{00032\ \ \ std::vector<int>\ \mbox{\hyperlink{classTrieNode_a4dfa161e2b39e90f1ba30abcf171e0ea}{indices}};}
+\DoxyCodeLine{00033\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classTrieNode_ab2732ce1e141346865d997859836d663}{isEndOfWord}};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{classTrieNode_a3c44872f26b52fa29a38c91e69b22103}{TrieNode}}()\ :\ \mbox{\hyperlink{classTrieNode_ab2732ce1e141346865d997859836d663}{isEndOfWord}}(false)\ \{\}}
+\DoxyCodeLine{00036\ \};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classTrie_a6af57e9f25d0d0a2d59eea5a4a802908}{Trie}}}
+\DoxyCodeLine{00047\ \{}
+\DoxyCodeLine{00048\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{classTrieNode}{TrieNode}}*\ root;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \textcolor{comment}{//\ Helper\ function\ to\ convert\ characters\ to\ lowercase}}
+\DoxyCodeLine{00052\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{auto}\ toLowerCase(\textcolor{keyword}{const}\ std::string\&\ str)\ -\/>\ std::string}
+\DoxyCodeLine{00053\ \ \ \{}
+\DoxyCodeLine{00054\ \ \ \ \ std::string\ result\ =\ str;}
+\DoxyCodeLine{00055\ \ \ \ \ std::transform(result.begin(),\ result.end(),\ result.begin(),\ ::tolower);}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00057\ \ \ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \textcolor{comment}{//\ Helper\ function\ to\ delete\ a\ word\ from\ the\ Trie\ recursively}}
+\DoxyCodeLine{00060\ \ \ \textcolor{keyword}{auto}\ deleteWord(\mbox{\hyperlink{classTrieNode}{TrieNode}}*\ node,\ \textcolor{keyword}{const}\ std::string\&\ word,\ \textcolor{keywordtype}{int}\ index,\ \textcolor{keywordtype}{size\_t}\ depth\ =\ 0)\ -\/>\ \textcolor{keywordtype}{bool}}
+\DoxyCodeLine{00061\ \ \ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordflow}{if}\ (!node)}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordflow}{if}\ (depth\ ==\ word.size())}
+\DoxyCodeLine{00066\ \ \ \ \ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \textcolor{comment}{//\ Remove\ the\ index\ from\ this\ node}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \textcolor{keyword}{auto}\&\ indices\ =\ node-\/>\mbox{\hyperlink{classTrieNode_a4dfa161e2b39e90f1ba30abcf171e0ea}{indices}};}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ std::find(indices.begin(),\ indices.end(),\ index);}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ indices.end())}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ indices.erase(it);}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ node-\/>\mbox{\hyperlink{classTrieNode_ab2732ce1e141346865d997859836d663}{isEndOfWord}}\ =\ !indices.empty();}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ node-\/>\mbox{\hyperlink{classTrieNode_a05e3e28111eae62cee67dd544942fda1}{children}}.empty()\ \&\&\ !node-\/>\mbox{\hyperlink{classTrieNode_ab2732ce1e141346865d997859836d663}{isEndOfWord}};}
+\DoxyCodeLine{00076\ \ \ \ \ \}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{char}\ c\ =\ toLowerCase(std::string(1,\ word[depth]))[0];}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordflow}{if}\ (deleteWord(node-\/>\mbox{\hyperlink{classTrieNode_a05e3e28111eae62cee67dd544942fda1}{children}}[c],\ word,\ index,\ depth\ +\ 1))}
+\DoxyCodeLine{00080\ \ \ \ \ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \textcolor{comment}{//\ Clean\ up\ the\ current\ node\ if\ it\ has\ no\ children\ and\ isn't\ the\ end\ of\ any\ word}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \textcolor{keyword}{delete}\ node-\/>\mbox{\hyperlink{classTrieNode_a05e3e28111eae62cee67dd544942fda1}{children}}[c];}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ node-\/>\mbox{\hyperlink{classTrieNode_a05e3e28111eae62cee67dd544942fda1}{children}}.erase(c);}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ node-\/>\mbox{\hyperlink{classTrieNode_a05e3e28111eae62cee67dd544942fda1}{children}}.empty()\ \&\&\ !node-\/>\mbox{\hyperlink{classTrieNode_ab2732ce1e141346865d997859836d663}{isEndOfWord}};}
+\DoxyCodeLine{00085\ \ \ \ \ \}}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00087\ \ \ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00090\ \ \ \mbox{\hyperlink{classTrie_a6af57e9f25d0d0a2d59eea5a4a802908}{Trie}}()\ :\ root(new\ \mbox{\hyperlink{classTrieNode}{TrieNode}}())\ \{\}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00098\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classTrie_aea7c40f02ef29f22da10909e355371a2}{insert}}(\textcolor{keyword}{const}\ std::string\&\ word,\ \textcolor{keywordtype}{int}\ index)}
+\DoxyCodeLine{00099\ \ \ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \mbox{\hyperlink{classTrieNode}{TrieNode}}*\ node\ =\ root;}
+\DoxyCodeLine{00101\ \ \ \ \ std::string\ lower\_word\ =\ toLowerCase(word);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{char}\ c\ :\ lower\_word)}
+\DoxyCodeLine{00104\ \ \ \ \ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!node-\/>\mbox{\hyperlink{classTrieNode_a05e3e28111eae62cee67dd544942fda1}{children}}.count(c))}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ node-\/>\mbox{\hyperlink{classTrieNode_a05e3e28111eae62cee67dd544942fda1}{children}}[c]\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{classTrieNode}{TrieNode}}();}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ node\ =\ node-\/>\mbox{\hyperlink{classTrieNode_a05e3e28111eae62cee67dd544942fda1}{children}}[c];}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ node-\/>\mbox{\hyperlink{classTrieNode_a4dfa161e2b39e90f1ba30abcf171e0ea}{indices}}.push\_back(index);}
+\DoxyCodeLine{00111\ \ \ \ \ \}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ node-\/>\mbox{\hyperlink{classTrieNode_ab2732ce1e141346865d997859836d663}{isEndOfWord}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00114\ \ \ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00122\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTrie_a73ca289e202e5bf6fbfbb4e3b84df506}{search}}(\textcolor{keyword}{const}\ std::string\&\ prefix)\ -\/>\ std::vector<int>}
+\DoxyCodeLine{00123\ \ \ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \mbox{\hyperlink{classTrieNode}{TrieNode}}*\ node\ =\ root;}
+\DoxyCodeLine{00125\ \ \ \ \ std::string\ lower\_prefix\ =\ toLowerCase(prefix);}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{char}\ c\ :\ lower\_prefix)}
+\DoxyCodeLine{00128\ \ \ \ \ \{}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!node-\/>\mbox{\hyperlink{classTrieNode_a05e3e28111eae62cee67dd544942fda1}{children}}.count(c))}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\};\ \ \textcolor{comment}{//\ No\ match\ found}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ node\ =\ node-\/>\mbox{\hyperlink{classTrieNode_a05e3e28111eae62cee67dd544942fda1}{children}}[c];}
+\DoxyCodeLine{00134\ \ \ \ \ \}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keywordflow}{return}\ node-\/>\mbox{\hyperlink{classTrieNode_a4dfa161e2b39e90f1ba30abcf171e0ea}{indices}};}
+\DoxyCodeLine{00137\ \ \ \}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00145\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classTrie_a2b3788d7ebfa50acfd6540a894b87d89}{deleteWord}}(\textcolor{keyword}{const}\ std::string\&\ word,\ \textcolor{keywordtype}{int}\ index)}
+\DoxyCodeLine{00146\ \ \ \{}
+\DoxyCodeLine{00147\ \ \ \ \ deleteWord(root,\ word,\ index);}
+\DoxyCodeLine{00148\ \ \ \}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00153\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classTrie_a4d0e1db753c924e7f93497ea2db1866d}{clear}}()}
+\DoxyCodeLine{00154\ \ \ \{}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{delete}\ root;}
+\DoxyCodeLine{00156\ \ \ \ \ root\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{classTrieNode}{TrieNode}}();}
+\DoxyCodeLine{00157\ \ \ \}}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00164\ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTrie_a910f4e955712f50d9c506355a115ced2}{is\_empty}}()\ const\ -\/>\ \textcolor{keywordtype}{bool}}
+\DoxyCodeLine{00165\ \ \ \{}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keywordflow}{return}\ root-\/>children.empty();}
+\DoxyCodeLine{00167\ \ \ \}}
+\DoxyCodeLine{00168\ \};}
+
+\end{DoxyCode}

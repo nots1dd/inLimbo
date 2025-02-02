@@ -19,7 +19,10 @@ var hierarchy =
     [ "MusicPlayer", "classMusicPlayer.html", null ],
     [ "Node", "structNode.html", null ],
     [ "ArgumentHandler::Paths", "structArgumentHandler_1_1Paths.html", null ],
+    [ "PlayingState", "structPlayingState.html", null ],
+    [ "QueueState", "structQueueState.html", null ],
     [ "RedBlackTree", "classRedBlackTree.html", null ],
+    [ "SearchState", "structSearchState.html", null ],
     [ "SignalHandler", "classSignalHandler.html", null ],
     [ "SimpleHTTPRequestHandler", null, [
       [ "run_webassembly.CustomHTTPRequestHandler", "classrun__webassembly_1_1CustomHTTPRequestHandler.html", null ]
@@ -27,8 +30,11 @@ var hierarchy =
     [ "tiv::size", "structtiv_1_1size.html", null ],
     [ "Song", "structSong.html", null ],
     [ "SongTree", "classSongTree.html", null ],
+    [ "SongTreeState", "structSongTreeState.html", null ],
     [ "TagLibParser", "classTagLibParser.html", null ],
     [ "ThreadManager", "classThreadManager.html", null ],
     [ "ThreadManager::ThreadState", "structThreadManager_1_1ThreadState.html", null ],
+    [ "Trie", "classTrie.html", null ],
+    [ "TrieNode", "classTrieNode.html", null ],
     [ "WorkerThreadPool", "classWorkerThreadPool.html", null ]
 ];

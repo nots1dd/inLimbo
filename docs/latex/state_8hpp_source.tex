@@ -1,0 +1,218 @@
+\doxysection{state.\+hpp}
+\hypertarget{state_8hpp_source}{}\label{state_8hpp_source}\index{src/ui/states/state.hpp@{src/ui/states/state.hpp}}
+\mbox{\hyperlink{state_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{songmap_8hpp}{../../dirsort/songmap.hpp}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{trie_8hpp}{../../helpers/trie.hpp}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <ftxui/component/component.hpp>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{using\ namespace\ }\mbox{\hyperlink{namespaceftxui}{ftxui}};}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{using\ namespace\ }std;}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structComponentState}{ComponentState}}}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \ \ Component\ \mbox{\hyperlink{structComponentState_a3944174d049ec0c7cf19b2ba8aa1c97a}{artists\_list}};\ \ \ \ \ \ }
+\DoxyCodeLine{00024\ \ \ Component\ \mbox{\hyperlink{structComponentState_a6178a5d5e06b9896ca94f2679711690a}{songs\_list}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00025\ \ \ Component\ \mbox{\hyperlink{structComponentState_a114c498aecf46d89b54eaa17abf2195b}{songs\_queue\_comp}};\ \ }
+\DoxyCodeLine{00026\ \ \ Component\ \mbox{\hyperlink{structComponentState_a35b0ecb15c35a5e0ef8bd52d144d9243}{lyrics\_scroller}};\ \ \ }
+\DoxyCodeLine{00027\ \ \ Component\ \mbox{\hyperlink{structComponentState_a3c119b5fc09869b46271ef866886d4f1}{MainRenderer}};\ \ \ \ \ \ }
+\DoxyCodeLine{00028\ \ \ Component\ \mbox{\hyperlink{structComponentState_a9a5a81585b84997e5996210c83caeec1}{ThumbnailRenderer}};\ }
+\DoxyCodeLine{00029\ \ \ Component\ \mbox{\hyperlink{structComponentState_a2e25ddbd2d90e63172022584fd8519b4}{audioDeviceMenu}};\ \ \ }
+\DoxyCodeLine{00030\ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structPlayingState}{PlayingState}}}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \ \ std::string\ \ \mbox{\hyperlink{structPlayingState_aeae3629e138a336fedce3ea3f9bcb8f7}{artist}};\ \ \ \ \ \ }
+\DoxyCodeLine{00042\ \ \ std::string\ \ \mbox{\hyperlink{structPlayingState_acefd63ea2019537955414ed6747af89e}{title}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00043\ \ \ std::string\ \ \mbox{\hyperlink{structPlayingState_a68edc5d5812023bde7e769939544b0bf}{genre}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00044\ \ \ std::string\ \ \mbox{\hyperlink{structPlayingState_a94fd4a60a8b684c130b5dac2b569bb7a}{album}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00045\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structPlayingState_a8b6a066eec86072fd1157ae66995b4ce}{has\_comment}};\ }
+\DoxyCodeLine{00046\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structPlayingState_a7b01650747104eb60f8fb8920f164438}{has\_lyrics}};\ \ }
+\DoxyCodeLine{00047\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structPlayingState_ab8d7335b9f99361d9926e4f49569e9fd}{duration}};\ \ \ \ }
+\DoxyCodeLine{00048\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structPlayingState_a3b6a76b8cf49888c7af673ecaf652c06}{bitrate}};\ \ \ \ \ }
+\DoxyCodeLine{00049\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structPlayingState_a0976f4fb1e46ca7cb41f52d567e45b4e}{year}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00050\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structPlayingState_a1349d8347463b6686a96b1f541630a31}{track}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00051\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structPlayingState_a3bbf363aff12435075b66939b3e4fee9}{discNumber}};\ \ }
+\DoxyCodeLine{00052\ \ \ std::string\ \ \mbox{\hyperlink{structPlayingState_ac7f17e2a90d2a20653eb2c8b39064c82}{lyrics}};\ \ \ \ \ \ }
+\DoxyCodeLine{00053\ \ \ std::string\ \ \mbox{\hyperlink{structPlayingState_aff8827a3a311f75e1452c0c4d4b99775}{comment}};\ \ \ \ \ }
+\DoxyCodeLine{00054\ \ \ std::unordered\_map<std::string,\ std::string>}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structPlayingState_a671c6a9c633eb5494a0d8f95a63e25ac}{additionalProperties}};\ }
+\DoxyCodeLine{00056\ \ \ std::string\ \mbox{\hyperlink{structPlayingState_a08236abb0fc8cf3c471d5abb2285f616}{filePath}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00066\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structPlayingState_ae4778a79bb8ba90f3139fbcc04e03837}{copyMetadata}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structMetadata}{Metadata}}\&\ metadata)}
+\DoxyCodeLine{00067\ \ \ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \mbox{\hyperlink{structPlayingState_aeae3629e138a336fedce3ea3f9bcb8f7}{artist}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ metadata.\mbox{\hyperlink{structMetadata_a9c925474f678d140c0e0eef6213a160b}{artist}};}
+\DoxyCodeLine{00069\ \ \ \ \ \mbox{\hyperlink{structPlayingState_acefd63ea2019537955414ed6747af89e}{title}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ metadata.\mbox{\hyperlink{structMetadata_a4ef2e2685f50d2a79b973f752f05fc40}{title}};}
+\DoxyCodeLine{00070\ \ \ \ \ \mbox{\hyperlink{structPlayingState_a94fd4a60a8b684c130b5dac2b569bb7a}{album}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ metadata.\mbox{\hyperlink{structMetadata_ad0bb399c882458d760b09c02842d7f09}{album}};}
+\DoxyCodeLine{00071\ \ \ \ \ \mbox{\hyperlink{structPlayingState_a68edc5d5812023bde7e769939544b0bf}{genre}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ metadata.\mbox{\hyperlink{structMetadata_af1f1a30b5d78b0b972c9c5c49d493891}{genre}};}
+\DoxyCodeLine{00072\ \ \ \ \ \mbox{\hyperlink{structPlayingState_aff8827a3a311f75e1452c0c4d4b99775}{comment}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ metadata.\mbox{\hyperlink{structMetadata_a526f9ca995119be7b51da282f09d6f64}{comment}};}
+\DoxyCodeLine{00073\ \ \ \ \ \mbox{\hyperlink{structPlayingState_a0976f4fb1e46ca7cb41f52d567e45b4e}{year}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ metadata.\mbox{\hyperlink{structMetadata_a0f53b33fb05426a436767b71a7bb7f13}{year}};}
+\DoxyCodeLine{00074\ \ \ \ \ \mbox{\hyperlink{structPlayingState_a1349d8347463b6686a96b1f541630a31}{track}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ metadata.\mbox{\hyperlink{structMetadata_a1991c38d1fd88ef2240aa798bb22c253}{track}};}
+\DoxyCodeLine{00075\ \ \ \ \ \mbox{\hyperlink{structPlayingState_a3bbf363aff12435075b66939b3e4fee9}{discNumber}}\ \ \ \ \ \ \ \ \ \ \ =\ metadata.\mbox{\hyperlink{structMetadata_a777a78e4b78994e5b0015f7c3d21bc08}{discNumber}};}
+\DoxyCodeLine{00076\ \ \ \ \ \mbox{\hyperlink{structPlayingState_ac7f17e2a90d2a20653eb2c8b39064c82}{lyrics}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ metadata.\mbox{\hyperlink{structMetadata_a5a3933635bffdb997a7f8eee6f83f415}{lyrics}};}
+\DoxyCodeLine{00077\ \ \ \ \ \mbox{\hyperlink{structPlayingState_a8b6a066eec86072fd1157ae66995b4ce}{has\_comment}}\ \ \ \ \ \ \ \ \ \ =\ (metadata.\mbox{\hyperlink{structMetadata_a526f9ca995119be7b51da282f09d6f64}{comment}}\ !=\ \textcolor{stringliteral}{"{}No\ Comment"{}});}
+\DoxyCodeLine{00078\ \ \ \ \ \mbox{\hyperlink{structPlayingState_a7b01650747104eb60f8fb8920f164438}{has\_lyrics}}\ \ \ \ \ \ \ \ \ \ \ =\ (metadata.\mbox{\hyperlink{structMetadata_a5a3933635bffdb997a7f8eee6f83f415}{lyrics}}\ !=\ \textcolor{stringliteral}{"{}No\ Lyrics"{}});}
+\DoxyCodeLine{00079\ \ \ \ \ \mbox{\hyperlink{structPlayingState_a08236abb0fc8cf3c471d5abb2285f616}{filePath}}\ \ \ \ \ \ \ \ \ \ \ \ \ =\ metadata.\mbox{\hyperlink{structMetadata_a107cf834ce2cbac4def960a2f922cfae}{filePath}};}
+\DoxyCodeLine{00080\ \ \ \ \ \mbox{\hyperlink{structPlayingState_a3b6a76b8cf49888c7af673ecaf652c06}{bitrate}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ metadata.\mbox{\hyperlink{structMetadata_aa17e49aff3ab62aec124b7d7d52adb0c}{bitrate}};}
+\DoxyCodeLine{00081\ \ \ \ \ \mbox{\hyperlink{structPlayingState_a671c6a9c633eb5494a0d8f95a63e25ac}{additionalProperties}}\ =\ metadata.\mbox{\hyperlink{structMetadata_aa903f78de79e265504cef7be279342ac}{additionalProperties}};}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00084\ \ \ \}}
+\DoxyCodeLine{00092\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structPlayingState_a910f7061b75ba227ab2d6be430efdbb1}{HasLyrics}}()\ -\/>\ \textcolor{keywordtype}{bool}\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structPlayingState_a7b01650747104eb60f8fb8920f164438}{has\_lyrics}};\ \}}
+\DoxyCodeLine{00100\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structPlayingState_a5d14a424d66df33f3d1deae4c3543450}{HasComments}}()\ -\/>\ \textcolor{keywordtype}{bool}\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structPlayingState_a8b6a066eec86072fd1157ae66995b4ce}{has\_comment}};\ \}}
+\DoxyCodeLine{00110\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structPlayingState_ab86119510eb0b4d6aae551d02d5af395}{formatLyrics}}()\ -\/>\ vector<string>}
+\DoxyCodeLine{00111\ \ \ \{}
+\DoxyCodeLine{00112\ \ \ \ \ vector<string>\ lines;}
+\DoxyCodeLine{00113\ \ \ \ \ std::string\ \ \ \ currentLine;}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ insideSquareBrackets\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ insideCurlBrackets\ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ lastWasUppercase\ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ lastWasSpecialChar\ \ \ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ Tracks\ special\ characters\ within\ words}}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{char}\ \ \ \ \ \ \ \ \ \ \ previousChar\ \ \ \ \ \ \ \ \ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{char}\ c\ :\ \mbox{\hyperlink{structPlayingState_ac7f17e2a90d2a20653eb2c8b39064c82}{lyrics}})}
+\DoxyCodeLine{00121\ \ \ \ \ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'['}\ ||\ c\ ==\ \textcolor{charliteral}{'('})}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!currentLine.empty())}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ currentLine.clear();}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'['})}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ insideSquareBrackets\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ insideCurlBrackets\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ currentLine\ +=\ c;}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (insideSquareBrackets\ ||\ insideCurlBrackets)}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ currentLine\ +=\ c;}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{']'}\ \&\&\ insideSquareBrackets)}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ currentLine.clear();}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ insideSquareBrackets\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{')'}\ \&\&\ insideCurlBrackets)}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ currentLine.clear();}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ insideCurlBrackets\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'\(\backslash\)''}\ ||\ c\ ==\ \textcolor{charliteral}{'-\/'})}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ currentLine\ +=\ c;}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ lastWasSpecialChar\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::isupper(c)\ \&\&\ !lastWasUppercase\ \&\&\ !lastWasSpecialChar\ \&\&\ !currentLine.empty()\ \&\&}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ previousChar\ !=\ \textcolor{charliteral}{'\(\backslash\)n'}\ \&\&\ previousChar\ !=\ \textcolor{charliteral}{'\ '})}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ currentLine.clear();}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \ \ currentLine\ +=\ c;}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ \textcolor{charliteral}{'\(\backslash\)n'})}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!currentLine.empty())}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ currentLine.clear();}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \ \ lastWasUppercase\ \ \ =\ std::isupper(c);}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ lastWasSpecialChar\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ previousChar\ \ \ \ \ \ \ =\ c;}
+\DoxyCodeLine{00184\ \ \ \ \ \}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordflow}{if}\ (!currentLine.empty())}
+\DoxyCodeLine{00187\ \ \ \ \ \{}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ lines.push\_back(currentLine);}
+\DoxyCodeLine{00189\ \ \ \ \ \}}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{comment}{//\ Trim\ empty\ lines\ (optional)}}
+\DoxyCodeLine{00192\ \ \ \ \ lines.erase(std::remove\_if(lines.begin(),\ lines.end(),}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [](\textcolor{keyword}{const}\ std::string\&\ line)\ \{\ return\ line.empty();\ \}),}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lines.end());}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{comment}{//\ assign\ formmated\ lyrics\ to\ member}}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keywordflow}{return}\ lines;}
+\DoxyCodeLine{00198\ \ \ \}}
+\DoxyCodeLine{00199\ \};}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00208\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structSearchState}{SearchState}}}
+\DoxyCodeLine{00209\ \{}
+\DoxyCodeLine{00210\ \ \ \mbox{\hyperlink{classTrie}{Trie}}\ \ \ \mbox{\hyperlink{structSearchState_a7fed29b67fa69f570885be059375b49e}{ArtistSearchTrie}};\ }
+\DoxyCodeLine{00211\ \ \ \mbox{\hyperlink{classTrie}{Trie}}\ \ \ \mbox{\hyperlink{structSearchState_a46ae4c47555451ac487dc7565443039a}{SongSearchTrie}};\ \ \ }
+\DoxyCodeLine{00212\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \mbox{\hyperlink{structSearchState_a86a2f727dda8daa3639a4076257bc528}{artistIndex}}\ =\ 0;\ \ }
+\DoxyCodeLine{00213\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \mbox{\hyperlink{structSearchState_a4a9c070de79727c54409e46e965024ba}{songIndex}}\ \ \ =\ 0;\ \ }
+\DoxyCodeLine{00214\ \ \ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{structSearchState_a154240c9a9184270f870597ad52a1206}{input}}\ \ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}"{}};\ }
+\DoxyCodeLine{00215\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \mbox{\hyperlink{structSearchState_ab41a1f24bb5987765938f59710d46c2c}{albumsIndex}}\ =\ 0;\ \ }
+\DoxyCodeLine{00216\ \ \ mutex\ \ \mbox{\hyperlink{structSearchState_aef170102b29179b75470f87870e588f6}{mtx}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00217\ \};}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structQueueState}{QueueState}}}
+\DoxyCodeLine{00227\ \{}
+\DoxyCodeLine{00228\ \ \ vector<Song>\ \ \ \mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\_queue}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00229\ \ \ vector<string>\ \mbox{\hyperlink{structQueueState_a53d38391f1ec389aba26a5540bf04f6d}{song\_queue\_names}};\ }
+\DoxyCodeLine{00230\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structQueueState_af8c3ee8aace579c5a133c3011b3c8884}{qIndex}}\ \ \ \ \ \ \ =\ 0;\ }
+\DoxyCodeLine{00231\ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structQueueState_ad22e7ed9a63ceccf8de1aae84f27f7a7}{qScreenIndex}}\ =\ 0;\ }
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00238\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structQueueState_aa7f46abdae55021a1554c2a3762f4fa7}{clearQueue}}()}
+\DoxyCodeLine{00239\ \ \ \{}
+\DoxyCodeLine{00240\ \ \ \ \ \mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\_queue}}.clear();}
+\DoxyCodeLine{00241\ \ \ \ \ \mbox{\hyperlink{structQueueState_af8c3ee8aace579c5a133c3011b3c8884}{qIndex}}\ =\ 0;}
+\DoxyCodeLine{00242\ \ \ \}}
+\DoxyCodeLine{00248\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structQueueState_a7dd88d6930978f664c2ac8e72d5dae59}{incrementQIndex}}()\ \{\ \mbox{\hyperlink{structQueueState_af8c3ee8aace579c5a133c3011b3c8884}{qIndex}}++;\ \}}
+\DoxyCodeLine{00254\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structQueueState_abe4c9a43eaf4903595b748e040ce6323}{decrementQIndex}}()\ \{\ \mbox{\hyperlink{structQueueState_af8c3ee8aace579c5a133c3011b3c8884}{qIndex}}-\/-\/;\ \}}
+\DoxyCodeLine{00262\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structQueueState_a13a02a30b4058b39205426aca3bf589c}{insertSongToIndex}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structSong}{Song}}\&\ newSong)}
+\DoxyCodeLine{00263\ \ \ \{}
+\DoxyCodeLine{00264\ \ \ \ \ \mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\_queue}}.insert(\mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\_queue}}.begin()\ +\ \mbox{\hyperlink{structQueueState_af8c3ee8aace579c5a133c3011b3c8884}{qIndex}}\ +\ 1,\ newSong);}
+\DoxyCodeLine{00265\ \ \ \}}
+\DoxyCodeLine{00273\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structQueueState_a251298c2aa2d209fa1923afa854ce971}{qPush}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structSong}{Song}}\&\ song)\ \{\ \mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\_queue}}.push\_back(song);\ \}}
+\DoxyCodeLine{00279\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structQueueState_abd2cce5d8b2b8def08fb65caf21c439e}{qPopIndex}}()\ \{\ \mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\_queue}}.erase(\mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\_queue}}.begin()\ +\ \mbox{\hyperlink{structQueueState_ad22e7ed9a63ceccf8de1aae84f27f7a7}{qScreenIndex}});\ \}}
+\DoxyCodeLine{00287\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structQueueState_acae7ee9762c8beb29458963345a5347b}{getQueueSize}}()\ -\/>\ \textcolor{keywordtype}{int}\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\_queue}}.size();\ \}}
+\DoxyCodeLine{00295\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structQueueState_af7fee68bc004cacab93614ceb9f0114b}{GetCurrentSongFromQueue}}()\ -\/>\ \mbox{\hyperlink{structSong}{Song}}*}
+\DoxyCodeLine{00296\ \ \ \{}
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\_queue}}.empty()\ \&\&\ \mbox{\hyperlink{structQueueState_af8c3ee8aace579c5a133c3011b3c8884}{qIndex}}\ <\ \mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\_queue}}.size())}
+\DoxyCodeLine{00298\ \ \ \ \ \{}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \&\mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\_queue}}[\mbox{\hyperlink{structQueueState_af8c3ee8aace579c5a133c3011b3c8884}{qIndex}}];}
+\DoxyCodeLine{00300\ \ \ \ \ \}}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00303\ \ \ \}}
+\DoxyCodeLine{00310\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structQueueState_a9c0dbcf03cd0cb414d63ac97a8377865}{UpdateSongQueueList}}()}
+\DoxyCodeLine{00311\ \ \ \{}
+\DoxyCodeLine{00312\ \ \ \ \ \mbox{\hyperlink{structQueueState_a53d38391f1ec389aba26a5540bf04f6d}{song\_queue\_names}}.clear();}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\ =\ \mbox{\hyperlink{structQueueState_af8c3ee8aace579c5a133c3011b3c8884}{qIndex}};\ i\ <\ \mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\_queue}}.size();\ i++)}
+\DoxyCodeLine{00315\ \ \ \ \ \{}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ std::string\ eleName\ =\ \mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\_queue}}[i].metadata.title\ +\ \textcolor{stringliteral}{"{}\ by\ "{}}\ +\ \mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\_queue}}[i].metadata.artist;}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ ==\ \mbox{\hyperlink{structQueueState_af8c3ee8aace579c5a133c3011b3c8884}{qIndex}})}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ eleName\ +=\ \textcolor{stringliteral}{"{}\ \ *"{}};}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \mbox{\hyperlink{structQueueState_a53d38391f1ec389aba26a5540bf04f6d}{song\_queue\_names}}.push\_back(eleName);}
+\DoxyCodeLine{00320\ \ \ \ \ \}}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00323\ \ \ \}}
+\DoxyCodeLine{00324\ \};}
+
+\end{DoxyCode}

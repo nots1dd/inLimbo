@@ -112,9 +112,9 @@ $(function(){initNavTree('arg-handler_8hpp.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="cmd-line-args_8hpp_source.html">./cmd-line-args.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="songmap_8hpp_source.html">dirsort/songmap.hpp</a>&quot;</code><br />
 <code>#include &lt;filesystem&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
-<code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;string_view&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
 </div>
@@ -122,6 +122,8 @@ $(function(){initNavTree('arg-handler_8hpp.html',''); initResizable(true); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSongTreeState.html">SongTreeState</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classColorManager.html">ColorManager</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides utilities for managing console colors.  <a href="classColorManager.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,12 +155,15 @@ Variables</h2></td></tr>
 <tr class="memitem:a66a0a8982b40d72ceed7b95a0d7d280c" id="r_a66a0a8982b40d72ceed7b95a0d7d280c"><td class="memItemLeft" align="right" valign="top">constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66a0a8982b40d72ceed7b95a0d7d280c">DBUS_SERVICE_NAME</a></td></tr>
 <tr class="memdesc:a66a0a8982b40d72ceed7b95a0d7d280c"><td class="mdescLeft">&#160;</td><td class="mdescRight">DBus service name used by inLimbo.  <br /></td></tr>
 <tr class="separator:a66a0a8982b40d72ceed7b95a0d7d280c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35aceb690e11a3d78331de7dda9563ae" id="r_a35aceb690e11a3d78331de7dda9563ae"><td class="memItemLeft" align="right" valign="top">constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a35aceb690e11a3d78331de7dda9563ae">VERSION</a> = &quot;2.5 (ALPHA)&quot;</td></tr>
-<tr class="memdesc:a35aceb690e11a3d78331de7dda9563ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current version of the application.  <br /></td></tr>
-<tr class="separator:a35aceb690e11a3d78331de7dda9563ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af373b8d5ef3d654b43f29e8f6b4a6ccc" id="r_af373b8d5ef3d654b43f29e8f6b4a6ccc"><td class="memItemLeft" align="right" valign="top">constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af373b8d5ef3d654b43f29e8f6b4a6ccc">VERSION_FILE_NAME</a> = &quot;VERSION&quot;</td></tr>
+<tr class="separator:af373b8d5ef3d654b43f29e8f6b4a6ccc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dea1931820a41f82fc5acb0fab76ea4" id="r_a1dea1931820a41f82fc5acb0fab76ea4"><td class="memItemLeft" align="right" valign="top">constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1dea1931820a41f82fc5acb0fab76ea4">REPOSITORY_URL</a> = &quot;https://github.com/nots1dd/inLimbo&quot;</td></tr>
+<tr class="separator:a1dea1931820a41f82fc5acb0fab76ea4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af443d26ff309f6e511dfcae4be89775a" id="r_af443d26ff309f6e511dfcae4be89775a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af443d26ff309f6e511dfcae4be89775a">shouldRunApp</a></td></tr>
 <tr class="memdesc:af443d26ff309f6e511dfcae4be89775a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if the application should proceed to run after handling arguments.  <br /></td></tr>
 <tr class="separator:af443d26ff309f6e511dfcae4be89775a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4facf54f696971b5d1e41f376fb0e783" id="r_a4facf54f696971b5d1e41f376fb0e783"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4facf54f696971b5d1e41f376fb0e783">parseSongTree</a> = false</td></tr>
+<tr class="separator:a4facf54f696971b5d1e41f376fb0e783"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="a821042d5f30537f776ce823c5d66aada" name="a821042d5f30537f776ce823c5d66aada"></a>
@@ -228,6 +233,42 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a4facf54f696971b5d1e41f376fb0e783" name="a4facf54f696971b5d1e41f376fb0e783"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4facf54f696971b5d1e41f376fb0e783">&#9670;&#160;</a></span>parseSongTree</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool parseSongTree = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1dea1931820a41f82fc5acb0fab76ea4" name="a1dea1931820a41f82fc5acb0fab76ea4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1dea1931820a41f82fc5acb0fab76ea4">&#9670;&#160;</a></span>REPOSITORY_URL</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* REPOSITORY_URL = &quot;https://github.com/nots1dd/inLimbo&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af443d26ff309f6e511dfcae4be89775a" name="af443d26ff309f6e511dfcae4be89775a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af443d26ff309f6e511dfcae4be89775a">&#9670;&#160;</a></span>shouldRunApp</h2>
 
@@ -246,8 +287,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a35aceb690e11a3d78331de7dda9563ae" name="a35aceb690e11a3d78331de7dda9563ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35aceb690e11a3d78331de7dda9563ae">&#9670;&#160;</a></span>VERSION</h2>
+<a id="af373b8d5ef3d654b43f29e8f6b4a6ccc" name="af373b8d5ef3d654b43f29e8f6b4a6ccc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af373b8d5ef3d654b43f29e8f6b4a6ccc">&#9670;&#160;</a></span>VERSION_FILE_NAME</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -256,7 +297,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char* VERSION = &quot;2.5 (ALPHA)&quot;</td>
+          <td class="memname">const char* VERSION_FILE_NAME = &quot;VERSION&quot;</td>
         </tr>
       </table>
   </td>
@@ -265,8 +306,6 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Current version of the application. </p>
 
 </div>
 </div>

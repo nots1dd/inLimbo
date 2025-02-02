@@ -18,7 +18,14 @@ struct \mbox{\hyperlink{structArgumentHandler_1_1Paths}{Paths}}
 \begin{DoxyCompactItemize}
 \item 
 static void \mbox{\hyperlink{classArgumentHandler_a573a13e5dcb882af4dfc1568be103c72}{handle\+Arguments}} (const \mbox{\hyperlink{classCommandLineArgs}{Command\+Line\+Args}} \&cmd\+Args, const std\+::string \&program\+Name, const \mbox{\hyperlink{structArgumentHandler_1_1Paths}{Paths}} \&paths)
-\begin{DoxyCompactList}\small\item\em Handles command-\/line arguments and executes corresponding actions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Handles command-\/line arguments and executes corresponding actions. \end{DoxyCompactList}\item 
+static auto \mbox{\hyperlink{classArgumentHandler_a5b7b9b549025b3058b6ceac55986cf9a}{process\+Song\+Tree\+Arguments}} (\mbox{\hyperlink{classSongTree}{Song\+Tree}} \&song\+\_\+tree) -\/$>$ void
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{structSongTreeState}{Song\+Tree\+State}} \mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{song\+\_\+tree\+\_\+parse\+\_\+state}} = \{\}
+\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -48,6 +55,21 @@ This method processes all valid flags provided through the {\ttfamily \doxylink{
 {\em paths} & The application paths required for handling certain flags. \\
 \hline
 \end{DoxyParams}
+\Hypertarget{classArgumentHandler_a5b7b9b549025b3058b6ceac55986cf9a}\index{ArgumentHandler@{ArgumentHandler}!processSongTreeArguments@{processSongTreeArguments}}
+\index{processSongTreeArguments@{processSongTreeArguments}!ArgumentHandler@{ArgumentHandler}}
+\doxysubsubsection{\texorpdfstring{processSongTreeArguments()}{processSongTreeArguments()}}
+{\footnotesize\ttfamily \label{classArgumentHandler_a5b7b9b549025b3058b6ceac55986cf9a} 
+static auto Argument\+Handler\+::process\+Song\+Tree\+Arguments (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classSongTree}{Song\+Tree}} \&}]{song\+\_\+tree}{}\end{DoxyParamCaption}) -\/$>$ void   \hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}\index{ArgumentHandler@{ArgumentHandler}!song\_tree\_parse\_state@{song\_tree\_parse\_state}}
+\index{song\_tree\_parse\_state@{song\_tree\_parse\_state}!ArgumentHandler@{ArgumentHandler}}
+\doxysubsubsection{\texorpdfstring{song\_tree\_parse\_state}{song\_tree\_parse\_state}}
+{\footnotesize\ttfamily \label{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8} 
+\mbox{\hyperlink{structSongTreeState}{Song\+Tree\+State}} Argument\+Handler\+::song\+\_\+tree\+\_\+parse\+\_\+state = \{\}\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

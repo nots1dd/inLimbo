@@ -1,0 +1,223 @@
+\doxysection{Playing\+State Struct Reference}
+\hypertarget{structPlayingState}{}\label{structPlayingState}\index{PlayingState@{PlayingState}}
+
+
+Represents the current state of the song being played.  
+
+
+
+
+{\ttfamily \#include $<$state.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{structPlayingState_ae4778a79bb8ba90f3139fbcc04e03837}{copy\+Metadata}} (const \mbox{\hyperlink{structMetadata}{Metadata}} \&metadata)
+\begin{DoxyCompactList}\small\item\em Copies the metadata from a given \doxylink{structMetadata}{Metadata} object. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{structPlayingState_a910f7061b75ba227ab2d6be430efdbb1}{Has\+Lyrics}} () -\/$>$ bool
+\begin{DoxyCompactList}\small\item\em Checks if the song has lyrics. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{structPlayingState_a5d14a424d66df33f3d1deae4c3543450}{Has\+Comments}} () -\/$>$ bool
+\begin{DoxyCompactList}\small\item\em Checks if the song has comments. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{structPlayingState_ab86119510eb0b4d6aae551d02d5af395}{format\+Lyrics}} () -\/$>$ vector$<$ string $>$
+\begin{DoxyCompactList}\small\item\em Formats the lyrics into a vector of strings. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{structPlayingState_aeae3629e138a336fedce3ea3f9bcb8f7}{artist}}
+\item 
+std\+::string \mbox{\hyperlink{structPlayingState_acefd63ea2019537955414ed6747af89e}{title}}
+\item 
+std\+::string \mbox{\hyperlink{structPlayingState_a68edc5d5812023bde7e769939544b0bf}{genre}}
+\item 
+std\+::string \mbox{\hyperlink{structPlayingState_a94fd4a60a8b684c130b5dac2b569bb7a}{album}}
+\item 
+bool \mbox{\hyperlink{structPlayingState_a8b6a066eec86072fd1157ae66995b4ce}{has\+\_\+comment}}
+\item 
+bool \mbox{\hyperlink{structPlayingState_a7b01650747104eb60f8fb8920f164438}{has\+\_\+lyrics}}
+\item 
+int \mbox{\hyperlink{structPlayingState_ab8d7335b9f99361d9926e4f49569e9fd}{duration}}
+\item 
+int \mbox{\hyperlink{structPlayingState_a3b6a76b8cf49888c7af673ecaf652c06}{bitrate}}
+\item 
+unsigned int \mbox{\hyperlink{structPlayingState_a0976f4fb1e46ca7cb41f52d567e45b4e}{year}}
+\item 
+unsigned int \mbox{\hyperlink{structPlayingState_a1349d8347463b6686a96b1f541630a31}{track}}
+\item 
+unsigned int \mbox{\hyperlink{structPlayingState_a3bbf363aff12435075b66939b3e4fee9}{disc\+Number}}
+\item 
+std\+::string \mbox{\hyperlink{structPlayingState_ac7f17e2a90d2a20653eb2c8b39064c82}{lyrics}}
+\item 
+std\+::string \mbox{\hyperlink{structPlayingState_aff8827a3a311f75e1452c0c4d4b99775}{comment}}
+\item 
+std\+::unordered\+\_\+map$<$ std\+::string, std\+::string $>$ \mbox{\hyperlink{structPlayingState_a671c6a9c633eb5494a0d8f95a63e25ac}{additional\+Properties}}
+\item 
+std\+::string \mbox{\hyperlink{structPlayingState_a08236abb0fc8cf3c471d5abb2285f616}{file\+Path}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the current state of the song being played. 
+
+This structure holds the metadata for the song currently playing, including the artist, title, album, genre, lyrics, comments, and more. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structPlayingState_ae4778a79bb8ba90f3139fbcc04e03837}\index{PlayingState@{PlayingState}!copyMetadata@{copyMetadata}}
+\index{copyMetadata@{copyMetadata}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{copyMetadata()}{copyMetadata()}}
+{\footnotesize\ttfamily \label{structPlayingState_ae4778a79bb8ba90f3139fbcc04e03837} 
+void Playing\+State\+::copy\+Metadata (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structMetadata}{Metadata}} \&}]{metadata}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Copies the metadata from a given \doxylink{structMetadata}{Metadata} object. 
+
+This method copies the metadata fields from the provided \doxylink{structMetadata}{Metadata} structure into the \doxylink{structPlayingState}{Playing\+State} structure.
+
+
+\begin{DoxyParams}{Parameters}
+{\em metadata} & The \doxylink{structMetadata}{Metadata} object to copy from. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{structPlayingState_ab86119510eb0b4d6aae551d02d5af395}\index{PlayingState@{PlayingState}!formatLyrics@{formatLyrics}}
+\index{formatLyrics@{formatLyrics}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{formatLyrics()}{formatLyrics()}}
+{\footnotesize\ttfamily \label{structPlayingState_ab86119510eb0b4d6aae551d02d5af395} 
+auto Playing\+State\+::format\+Lyrics (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) -\/$>$ vector$<$string$>$   \hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Formats the lyrics into a vector of strings. 
+
+This method processes the lyrics, breaking them into lines and handling special characters such as square and curly brackets. The result is a vector of strings representing the formatted lyrics.
+
+\begin{DoxyReturn}{Returns}
+A vector of formatted lyrics lines. 
+\end{DoxyReturn}
+\Hypertarget{structPlayingState_a5d14a424d66df33f3d1deae4c3543450}\index{PlayingState@{PlayingState}!HasComments@{HasComments}}
+\index{HasComments@{HasComments}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{HasComments()}{HasComments()}}
+{\footnotesize\ttfamily \label{structPlayingState_a5d14a424d66df33f3d1deae4c3543450} 
+auto Playing\+State\+::\+Has\+Comments (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) -\/$>$ bool \hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Checks if the song has comments. 
+
+This method returns whether the song has any comments.
+
+\begin{DoxyReturn}{Returns}
+True if the song has comments, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{structPlayingState_a910f7061b75ba227ab2d6be430efdbb1}\index{PlayingState@{PlayingState}!HasLyrics@{HasLyrics}}
+\index{HasLyrics@{HasLyrics}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{HasLyrics()}{HasLyrics()}}
+{\footnotesize\ttfamily \label{structPlayingState_a910f7061b75ba227ab2d6be430efdbb1} 
+auto Playing\+State\+::\+Has\+Lyrics (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) -\/$>$ bool \hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Checks if the song has lyrics. 
+
+This method returns whether the song has lyrics available.
+
+\begin{DoxyReturn}{Returns}
+True if the song has lyrics, false otherwise. 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structPlayingState_a671c6a9c633eb5494a0d8f95a63e25ac}\index{PlayingState@{PlayingState}!additionalProperties@{additionalProperties}}
+\index{additionalProperties@{additionalProperties}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{additionalProperties}{additionalProperties}}
+{\footnotesize\ttfamily \label{structPlayingState_a671c6a9c633eb5494a0d8f95a63e25ac} 
+std\+::unordered\+\_\+map$<$std\+::string, std\+::string$>$ Playing\+State\+::additional\+Properties}
+
+Any additional properties of the song \Hypertarget{structPlayingState_a94fd4a60a8b684c130b5dac2b569bb7a}\index{PlayingState@{PlayingState}!album@{album}}
+\index{album@{album}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{album}{album}}
+{\footnotesize\ttfamily \label{structPlayingState_a94fd4a60a8b684c130b5dac2b569bb7a} 
+std\+::string Playing\+State\+::album}
+
+The album of the currently playing song \Hypertarget{structPlayingState_aeae3629e138a336fedce3ea3f9bcb8f7}\index{PlayingState@{PlayingState}!artist@{artist}}
+\index{artist@{artist}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{artist}{artist}}
+{\footnotesize\ttfamily \label{structPlayingState_aeae3629e138a336fedce3ea3f9bcb8f7} 
+std\+::string Playing\+State\+::artist}
+
+The artist of the currently playing song \Hypertarget{structPlayingState_a3b6a76b8cf49888c7af673ecaf652c06}\index{PlayingState@{PlayingState}!bitrate@{bitrate}}
+\index{bitrate@{bitrate}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{bitrate}{bitrate}}
+{\footnotesize\ttfamily \label{structPlayingState_a3b6a76b8cf49888c7af673ecaf652c06} 
+int Playing\+State\+::bitrate}
+
+The bitrate of the song \Hypertarget{structPlayingState_aff8827a3a311f75e1452c0c4d4b99775}\index{PlayingState@{PlayingState}!comment@{comment}}
+\index{comment@{comment}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{comment}{comment}}
+{\footnotesize\ttfamily \label{structPlayingState_aff8827a3a311f75e1452c0c4d4b99775} 
+std\+::string Playing\+State\+::comment}
+
+The comment for the song \Hypertarget{structPlayingState_a3bbf363aff12435075b66939b3e4fee9}\index{PlayingState@{PlayingState}!discNumber@{discNumber}}
+\index{discNumber@{discNumber}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{discNumber}{discNumber}}
+{\footnotesize\ttfamily \label{structPlayingState_a3bbf363aff12435075b66939b3e4fee9} 
+unsigned int Playing\+State\+::disc\+Number}
+
+The disc number the song is on \Hypertarget{structPlayingState_ab8d7335b9f99361d9926e4f49569e9fd}\index{PlayingState@{PlayingState}!duration@{duration}}
+\index{duration@{duration}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{duration}{duration}}
+{\footnotesize\ttfamily \label{structPlayingState_ab8d7335b9f99361d9926e4f49569e9fd} 
+int Playing\+State\+::duration}
+
+The duration of the song in seconds \Hypertarget{structPlayingState_a08236abb0fc8cf3c471d5abb2285f616}\index{PlayingState@{PlayingState}!filePath@{filePath}}
+\index{filePath@{filePath}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{filePath}{filePath}}
+{\footnotesize\ttfamily \label{structPlayingState_a08236abb0fc8cf3c471d5abb2285f616} 
+std\+::string Playing\+State\+::file\+Path}
+
+The file path of the song \Hypertarget{structPlayingState_a68edc5d5812023bde7e769939544b0bf}\index{PlayingState@{PlayingState}!genre@{genre}}
+\index{genre@{genre}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{genre}{genre}}
+{\footnotesize\ttfamily \label{structPlayingState_a68edc5d5812023bde7e769939544b0bf} 
+std\+::string Playing\+State\+::genre}
+
+The genre of the currently playing song \Hypertarget{structPlayingState_a8b6a066eec86072fd1157ae66995b4ce}\index{PlayingState@{PlayingState}!has\_comment@{has\_comment}}
+\index{has\_comment@{has\_comment}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{has\_comment}{has\_comment}}
+{\footnotesize\ttfamily \label{structPlayingState_a8b6a066eec86072fd1157ae66995b4ce} 
+bool Playing\+State\+::has\+\_\+comment}
+
+Whether the song has a comment \Hypertarget{structPlayingState_a7b01650747104eb60f8fb8920f164438}\index{PlayingState@{PlayingState}!has\_lyrics@{has\_lyrics}}
+\index{has\_lyrics@{has\_lyrics}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{has\_lyrics}{has\_lyrics}}
+{\footnotesize\ttfamily \label{structPlayingState_a7b01650747104eb60f8fb8920f164438} 
+bool Playing\+State\+::has\+\_\+lyrics}
+
+Whether the song has lyrics \Hypertarget{structPlayingState_ac7f17e2a90d2a20653eb2c8b39064c82}\index{PlayingState@{PlayingState}!lyrics@{lyrics}}
+\index{lyrics@{lyrics}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{lyrics}{lyrics}}
+{\footnotesize\ttfamily \label{structPlayingState_ac7f17e2a90d2a20653eb2c8b39064c82} 
+std\+::string Playing\+State\+::lyrics}
+
+The lyrics of the song \Hypertarget{structPlayingState_acefd63ea2019537955414ed6747af89e}\index{PlayingState@{PlayingState}!title@{title}}
+\index{title@{title}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{title}{title}}
+{\footnotesize\ttfamily \label{structPlayingState_acefd63ea2019537955414ed6747af89e} 
+std\+::string Playing\+State\+::title}
+
+The title of the currently playing song \Hypertarget{structPlayingState_a1349d8347463b6686a96b1f541630a31}\index{PlayingState@{PlayingState}!track@{track}}
+\index{track@{track}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{track}{track}}
+{\footnotesize\ttfamily \label{structPlayingState_a1349d8347463b6686a96b1f541630a31} 
+unsigned int Playing\+State\+::track}
+
+The track number of the song \Hypertarget{structPlayingState_a0976f4fb1e46ca7cb41f52d567e45b4e}\index{PlayingState@{PlayingState}!year@{year}}
+\index{year@{year}!PlayingState@{PlayingState}}
+\doxysubsubsection{\texorpdfstring{year}{year}}
+{\footnotesize\ttfamily \label{structPlayingState_a0976f4fb1e46ca7cb41f52d567e45b4e} 
+unsigned int Playing\+State\+::year}
+
+The year of release for the song 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/ui/states/\mbox{\hyperlink{state_8hpp}{state.\+hpp}}\end{DoxyCompactItemize}

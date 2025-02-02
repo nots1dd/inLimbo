@@ -1,20 +1,107 @@
 \doxysection{src/main.cpp File Reference}
 \hypertarget{main_8cpp}{}\label{main_8cpp}\index{src/main.cpp@{src/main.cpp}}
+{\ttfamily \#include "{}./arg-\/handler.\+hpp"{}}\newline
+{\ttfamily \#include "{}./ui/keymaps.\+hpp"{}}\newline
 {\ttfamily \#include "{}dirsort/inode\+\_\+mapper.\+hpp"{}}\newline
 {\ttfamily \#include "{}signal/signal\+Handler.\+hpp"{}}\newline
 {\ttfamily \#include "{}ui/ui\+\_\+handler.\+hpp"{}}\newline
-{\ttfamily \#include "{}./arg-\/handler.\+hpp"{}}\newline
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-int \mbox{\hyperlink{main_8cpp_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]})
-\end{DoxyCompactItemize}
+auto \mbox{\hyperlink{main_8cpp_a86f81edac3570a692b89f1cada4f3124}{handle\+Arguments}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]}) -\/$>$ \mbox{\hyperlink{structArgumentHandler_1_1Paths}{Argument\+Handler\+::\+Paths}}
+\begin{DoxyCompactList}\small\item\em Handles the command line arguments. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{main_8cpp_aaf7409f78fe62adf2227d9879f6b7786}{load\+Or\+Process\+Song\+Tree}} (const string \&lib\+Bin\+Path, const string \&directory\+Path) -\/$>$ \mbox{\hyperlink{classSongTree}{Song\+Tree}}
+\begin{DoxyCompactList}\small\item\em Loads or processes the song tree from the given directory. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{main_8cpp_ae10bca782500e6b5b1379b8f10574f62}{run\+Music\+Player}} (\mbox{\hyperlink{classSongTree}{Song\+Tree}} \&song\+\_\+tree) -\/$>$ int
+\begin{DoxyCompactList}\small\item\em Runs the music player with the provided song tree. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{main_8cpp_a7114aa2dd6837734db57667a298dfcc4}{main}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]}) -\/$>$ int
+\begin{DoxyCompactList}\small\item\em The main entry point of the program. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Function Documentation}
-\Hypertarget{main_8cpp_a0ddf1224851353fc92bfbff6f499fa97}\index{main.cpp@{main.cpp}!main@{main}}
+\Hypertarget{main_8cpp_a86f81edac3570a692b89f1cada4f3124}\index{main.cpp@{main.cpp}!handleArguments@{handleArguments}}
+\index{handleArguments@{handleArguments}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{handleArguments()}{handleArguments()}}
+{\footnotesize\ttfamily \label{main_8cpp_a86f81edac3570a692b89f1cada4f3124} 
+auto handle\+Arguments (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption}) -\/$>$ \mbox{\hyperlink{structArgumentHandler_1_1Paths}{Argument\+Handler\+::\+Paths}} }
+
+
+
+Handles the command line arguments. 
+
+This function processes the command line arguments and sets the appropriate paths for configuration, library binary, and cache directory. It returns a {\ttfamily Paths} structure containing the necessary paths for the program\textquotesingle{}s operation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em argc} & The number of command line arguments. \\
+\hline
+{\em argv} & The array of command line arguments. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The {\ttfamily Paths} structure containing the paths for the configuration, library binary, and cache directory. 
+\end{DoxyReturn}
+\Hypertarget{main_8cpp_aaf7409f78fe62adf2227d9879f6b7786}\index{main.cpp@{main.cpp}!loadOrProcessSongTree@{loadOrProcessSongTree}}
+\index{loadOrProcessSongTree@{loadOrProcessSongTree}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{loadOrProcessSongTree()}{loadOrProcessSongTree()}}
+{\footnotesize\ttfamily \label{main_8cpp_aaf7409f78fe62adf2227d9879f6b7786} 
+auto load\+Or\+Process\+Song\+Tree (\begin{DoxyParamCaption}\item[{const string \&}]{lib\+Bin\+Path}{, }\item[{const string \&}]{directory\+Path}{}\end{DoxyParamCaption}) -\/$>$ \mbox{\hyperlink{classSongTree}{Song\+Tree}} }
+
+
+
+Loads or processes the song tree from the given directory. 
+
+This function attempts to load a previously cached song tree from a file. If the song tree cannot be loaded, it processes the directory to generate a new song tree, stores it in a red-\/black tree structure, and saves the tree to a file for future use.
+
+
+\begin{DoxyParams}{Parameters}
+{\em lib\+Bin\+Path} & The path to the library binary directory. \\
+\hline
+{\em directory\+Path} & The path to the directory containing the music files. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The processed or loaded {\ttfamily \doxylink{classSongTree}{Song\+Tree}} object. 
+\end{DoxyReturn}
+\Hypertarget{main_8cpp_a7114aa2dd6837734db57667a298dfcc4}\index{main.cpp@{main.cpp}!main@{main}}
 \index{main@{main}!main.cpp@{main.cpp}}
 \doxysubsubsection{\texorpdfstring{main()}{main()}}
-{\footnotesize\ttfamily \label{main_8cpp_a0ddf1224851353fc92bfbff6f499fa97} 
-int main (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{main_8cpp_a7114aa2dd6837734db57667a298dfcc4} 
+auto main (\begin{DoxyParamCaption}\item[{int}]{argc}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{argv}{\mbox{[}$\,$\mbox{]}}\end{DoxyParamCaption}) -\/$>$ int }
 
+
+
+The main entry point of the program. 
+
+This is the main function that initializes signal handling, parses command line arguments, processes the song tree, and runs the music player. It also measures the time taken for the inode insertion and mapping process and prints the duration to the console.
+
+
+\begin{DoxyParams}{Parameters}
+{\em argc} & The number of command line arguments. \\
+\hline
+{\em argv} & The array of command line arguments. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if the music player runs successfully, or 1 if an error occurs. 
+\end{DoxyReturn}
+\Hypertarget{main_8cpp_ae10bca782500e6b5b1379b8f10574f62}\index{main.cpp@{main.cpp}!runMusicPlayer@{runMusicPlayer}}
+\index{runMusicPlayer@{runMusicPlayer}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{runMusicPlayer()}{runMusicPlayer()}}
+{\footnotesize\ttfamily \label{main_8cpp_ae10bca782500e6b5b1379b8f10574f62} 
+auto run\+Music\+Player (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classSongTree}{Song\+Tree}} \&}]{song\+\_\+tree}{}\end{DoxyParamCaption}) -\/$>$ int }
+
+
+
+Runs the music player with the provided song tree. 
+
+This function initializes the music player with the provided song tree, keybinds, and color settings, and then runs the player. If any exceptions are encountered, an error message is displayed, and the program exits with a non-\/zero code.
+
+
+\begin{DoxyParams}{Parameters}
+{\em song\+\_\+tree} & The {\ttfamily \doxylink{classSongTree}{Song\+Tree}} object containing the music library. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if the music player runs successfully, or 1 if an error occurs. 
+\end{DoxyReturn}

@@ -30,7 +30,7 @@ unsigned int \mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inod
 \doxysubsection{Detailed Description}
 Represents a song with associated metadata and inode. 
 
-The \doxylink{structSong}{Song} struct contains an inode identifier and a \doxylink{structMetadata}{Metadata} object that holds the metadata for a song. The metadata includes details such as title, artist, album, genre, and track number. 
+The {\ttfamily \doxylink{structSong}{Song}} struct encapsulates the metadata and inode of a song, including details such as title, artist, album, genre, and track number. It provides methods to initialize, serialize, and deserialize song data. 
 
 \doxysubsection{Constructor \& Destructor Documentation}
 \Hypertarget{structSong_adacc2058bb6263b4f0b68ce61c232b87}\index{Song@{Song}!Song@{Song}}
@@ -43,9 +43,11 @@ Song\+::\+Song (\begin{DoxyParamCaption}\item[{unsigned int}]{inode}{, }\item[{c
 
 Constructs a \doxylink{structSong}{Song} with the given inode and metadata. 
 
+This constructor initializes a song with a unique inode and metadata.
+
 
 \begin{DoxyParams}{Parameters}
-{\em inode} & The inode of the song. \\
+{\em inode} & The inode of the song file. \\
 \hline
 {\em metadata} & The metadata associated with the song. \\
 \hline
@@ -74,7 +76,7 @@ void Song\+::serialize (\begin{DoxyParamCaption}\item[{Archive \&}]{ar}{}\end{Do
 
 Serializes the \doxylink{structSong}{Song} object. 
 
-This function is used by the Cereal library to serialize the \doxylink{structSong}{Song} object for saving to a file or transmission.
+This function is used by the Cereal library to serialize the \doxylink{structSong}{Song} object for storage or transmission.
 
 
 \begin{DoxyParams}{Parameters}

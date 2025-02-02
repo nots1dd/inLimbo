@@ -2,49 +2,48 @@
 \hypertarget{levenshtein_8hpp_source}{}\label{levenshtein_8hpp_source}\index{src/helpers/levenshtein.hpp@{src/helpers/levenshtein.hpp}}
 \mbox{\hyperlink{levenshtein_8hpp}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ LEVENSHTEIN\_DIST\_HPP}}
-\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ LEVENSHTEIN\_DIST\_HPP}}
-\DoxyCodeLine{00003\ }
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <string>}}
 \DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
-\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00006\ }
 \DoxyCodeLine{00015\ }
-\DoxyCodeLine{00034\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{levenshtein_8hpp_af6b965a635feedead81476d39ac9d867}{levenshteinDistance}}(\textcolor{keyword}{const}\ std::string\&\ s1,\ \textcolor{keyword}{const}\ std::string\&\ s2)}
-\DoxyCodeLine{00035\ \{}
-\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ len1\ =\ s1.size();\ }
-\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ len2\ =\ s2.size();\ }
-\DoxyCodeLine{00038\ \ \ \ \ }
-\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{//\ 2D\ table\ to\ store\ the\ distances\ between\ substrings\ of\ s1\ and\ s2.}}
-\DoxyCodeLine{00040\ \ \ \ \ std::vector<std::vector<size\_t>>\ dist(len1\ +\ 1,\ std::vector<size\_t>(len2\ +\ 1));}
-\DoxyCodeLine{00041\ }
-\DoxyCodeLine{00042\ \ \ \ \ \textcolor{comment}{//\ Initialize\ the\ first\ column\ and\ row\ of\ the\ table.}}
-\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <=\ len1;\ ++i)}
-\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ dist[i][0]\ =\ i;\ }
-\DoxyCodeLine{00045\ }
-\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ j\ =\ 0;\ j\ <=\ len2;\ ++j)}
-\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ dist[0][j]\ =\ j;\ }
-\DoxyCodeLine{00048\ }
-\DoxyCodeLine{00049\ \ \ \ \ \textcolor{comment}{//\ Fill\ the\ rest\ of\ the\ table\ with\ the\ calculated\ distances.}}
-\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 1;\ i\ <=\ len1;\ ++i)}
-\DoxyCodeLine{00051\ \ \ \ \ \{}
-\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ j\ =\ 1;\ j\ <=\ len2;\ ++j)}
-\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ the\ characters\ at\ the\ current\ positions\ are\ the\ same,\ no\ cost\ to\ substitute.}}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ cost\ =\ (s1[i\ -\/\ 1]\ ==\ s2[j\ -\/\ 1])\ ?\ 0\ :\ 1;}
-\DoxyCodeLine{00056\ }
-\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Calculate\ the\ minimum\ of\ deletion,\ insertion,\ or\ substitution\ operations.}}
-\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ dist[i][j]\ =\ std::min(\{\ dist[i\ -\/\ 1][j]\ +\ 1,\ \ \ \ \ \ \ }
-\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dist[i][j\ -\/\ 1]\ +\ 1,\ \ \ \ \ \ \ }
-\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dist[i\ -\/\ 1][j\ -\/\ 1]\ +\ cost\ }
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00063\ \ \ \ \ \}}
-\DoxyCodeLine{00064\ }
-\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//\ Return\ the\ computed\ Levenshtein\ distance,\ which\ is\ the\ value\ at\ the\ bottom-\/right\ corner\ of\ the\ table.}}
-\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordflow}{return}\ dist[len1][len2];}
-\DoxyCodeLine{00067\ \}}
-\DoxyCodeLine{00068\ }
-\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00036\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{levenshtein_8hpp_a055e26a6c544edff9020f7e52c0c59ca}{levenshteinDistance}}(\textcolor{keyword}{const}\ std::string\&\ s1,\ \textcolor{keyword}{const}\ std::string\&\ s2)\ -\/>\ \textcolor{keywordtype}{size\_t}}
+\DoxyCodeLine{00037\ \{}
+\DoxyCodeLine{00038\ \ \ \textcolor{keywordtype}{size\_t}\ len1\ =\ s1.size();\ }
+\DoxyCodeLine{00039\ \ \ \textcolor{keywordtype}{size\_t}\ len2\ =\ s2.size();\ }
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \textcolor{comment}{//\ 2D\ table\ to\ store\ the\ distances\ between\ substrings\ of\ s1\ and\ s2.}}
+\DoxyCodeLine{00042\ \ \ std::vector<std::vector<size\_t>>\ dist(len1\ +\ 1,\ std::vector<size\_t>(len2\ +\ 1));}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \textcolor{comment}{//\ Initialize\ the\ first\ column\ and\ row\ of\ the\ table.}}
+\DoxyCodeLine{00045\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <=\ len1;\ ++i)}
+\DoxyCodeLine{00046\ \ \ \ \ dist[i][0]\ =\ i;\ }
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ j\ =\ 0;\ j\ <=\ len2;\ ++j)}
+\DoxyCodeLine{00049\ \ \ \ \ dist[0][j]\ =\ j;\ }
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \textcolor{comment}{//\ Fill\ the\ rest\ of\ the\ table\ with\ the\ calculated\ distances.}}
+\DoxyCodeLine{00052\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 1;\ i\ <=\ len1;\ ++i)}
+\DoxyCodeLine{00053\ \ \ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ j\ =\ 1;\ j\ <=\ len2;\ ++j)}
+\DoxyCodeLine{00055\ \ \ \ \ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \textcolor{comment}{//\ If\ the\ characters\ at\ the\ current\ positions\ are\ the\ same,\ no\ cost\ to\ substitute.}}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ cost\ =\ (s1[i\ -\/\ 1]\ ==\ s2[j\ -\/\ 1])\ ?\ 0\ :\ 1;}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \textcolor{comment}{//\ Calculate\ the\ minimum\ of\ deletion,\ insertion,\ or\ substitution\ operations.}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ dist[i][j]\ =\ std::min(\{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ dist[i\ -\/\ 1][j]\ +\ 1,\ \ \ \ \ \ \ }
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ dist[i][j\ -\/\ 1]\ +\ 1,\ \ \ \ \ \ \ }
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ dist[i\ -\/\ 1][j\ -\/\ 1]\ +\ cost\ }
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00065\ \ \ \ \ \}}
+\DoxyCodeLine{00066\ \ \ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \textcolor{comment}{//\ Return\ the\ computed\ Levenshtein\ distance,\ which\ is\ the\ value\ at\ the\ bottom-\/right\ corner\ of\ the}}
+\DoxyCodeLine{00069\ \ \ \textcolor{comment}{//\ table.}}
+\DoxyCodeLine{00070\ \ \ \textcolor{keywordflow}{return}\ dist[len1][len2];}
+\DoxyCodeLine{00071\ \}}
 
 \end{DoxyCode}

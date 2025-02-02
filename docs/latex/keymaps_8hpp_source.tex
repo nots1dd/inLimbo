@@ -2,117 +2,143 @@
 \hypertarget{keymaps_8hpp_source}{}\label{keymaps_8hpp_source}\index{src/ui/keymaps.hpp@{src/ui/keymaps.hpp}}
 \mbox{\hyperlink{keymaps_8hpp}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ KEYMAPS\_HPP}}
-\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ KEYMAPS\_HPP}}
-\DoxyCodeLine{00003\ }
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{toml__parser_8hpp}{../parser/toml\_parser.hpp}}"{}}}
-\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <iostream>}}
-\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string\_view>}}
-\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
-\DoxyCodeLine{00009\ }
-\DoxyCodeLine{00015\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structKeybinds}{Keybinds}}}
-\DoxyCodeLine{00016\ \{}
-\DoxyCodeLine{00017\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a31d353b681721388fa78c974245f983e}{scroll\_up}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00018\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_ac2e5b89bf1db7941a3d3c115d3be6bdb}{scroll\_down}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00019\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_aeebdafcff1d774e95b25c184b229128c}{toggle\_focus}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00020\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a11bbc23c21d5fef44f2b13f32cf8d831}{show\_help}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00021\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_ad10b5a9637dc1cd70cfce5fa8362cb03}{toggle\_play}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00022\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_afed2550f73b5b8481626f25744963d1d}{play\_song}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00023\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_ac8dee0e90b6f40bcbc0fae4be3207736}{play\_song\_next}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00024\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_abcc5064335d6797840983acb99bdb88c}{play\_song\_prev}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00025\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_af23c42bb55c27be6788ce52935424bb3}{vol\_up}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00026\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a911e1c12013e8a608c8a1b5f7b7c5be2}{vol\_down}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00027\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a3d0f9af37b9cf78a2da4bfdc56bbe629}{toggle\_mute}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00028\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_af70444b29352ec2fa20920c6158123f6}{quit\_app}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00029\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a328d188e562cf2d00ca8fdc65af75c6a}{seek\_ahead\_5}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00030\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_ac01d4cb164309e257c932076a6a65aa6}{seek\_behind\_5}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00031\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_ab7c2068f6c21a4b2d228e0720cbe8ed5}{view\_lyrics}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00032\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a08813d343f783c66e71f6014d1623218}{goto\_main\_screen}};\ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00033\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a6002f357b11c6ecc415595d3e4cd35b4}{replay\_song}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00034\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_af484a422e3e572779060ebb34e736dfc}{add\_song\_to\_queue}};\ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00035\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a1558efc3ae95ab185f63dc61859d6923}{add\_artists\_songs\_to\_queue}};\ }
-\DoxyCodeLine{00036\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_ad6ba797ddc2c738d59acb8ad745d7c50}{remove\_song\_from\_queue}};\ \ \ \ \ }
-\DoxyCodeLine{00037\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_aee5cde9ebf6a1197a7f339471fea0d41}{play\_this\_song\_next}};\ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00038\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a928d27528bc64d0d67e4871733e37779}{view\_song\_queue}};\ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00039\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_afbfca5b80fd58ffbc08822c518bc4ec2}{view\_current\_song\_info}};\ \ \ \ \ }
-\DoxyCodeLine{00040\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a0c1783894d6ec11de583f0b5396bbde4}{toggle\_audio\_devices}};\ \ \ \ \ \ \ }
-\DoxyCodeLine{00041\ \};}
-\DoxyCodeLine{00042\ }
-\DoxyCodeLine{00051\ \mbox{\hyperlink{structKeybinds}{Keybinds}}\ \mbox{\hyperlink{keymaps_8hpp_a140e0fecc49876baa6c265621cf96518}{parseKeybinds}}()}
-\DoxyCodeLine{00052\ \{}
-\DoxyCodeLine{00053\ \ \ \mbox{\hyperlink{structKeybinds}{Keybinds}}\ keybinds;}
-\DoxyCodeLine{00054\ }
-\DoxyCodeLine{00055\ \ \ \textcolor{comment}{//\ Mapping\ of\ special\ key\ names\ to\ their\ ASCII\ values}}
-\DoxyCodeLine{00056\ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string\_view,\ char>\ special\_keys\ =\ \{}
-\DoxyCodeLine{00057\ \ \ \ \ \{\textcolor{stringliteral}{"{}Tab"{}},\ \textcolor{charliteral}{'\(\backslash\)t'}\},\ \ \ }
-\DoxyCodeLine{00058\ \ \ \ \ \{\textcolor{stringliteral}{"{}Space"{}},\ \textcolor{charliteral}{'\ '}\},\ \ }
-\DoxyCodeLine{00059\ \ \ \ \ \{\textcolor{stringliteral}{"{}Enter"{}},\ \textcolor{charliteral}{'\(\backslash\)n'}\},\ }
-\DoxyCodeLine{00060\ \ \ \ \ \{\textcolor{stringliteral}{"{}Esc"{}},\ 27\},\ \ \ \ \ }
-\DoxyCodeLine{00061\ \ \ \};}
-\DoxyCodeLine{00062\ }
-\DoxyCodeLine{00072\ \ \ \textcolor{keyword}{auto}\ reportError\ =\ [](\textcolor{keyword}{const}\ std::string\&\ field,\ \textcolor{keyword}{const}\ std::string\_view\&\ key)}
-\DoxyCodeLine{00073\ \ \ \{}
-\DoxyCodeLine{00074\ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}**\ Error:\ Unsupported\ or\ empty\ keybind\ '"{}}\ <<\ key\ <<\ \textcolor{stringliteral}{"{}'\ detected\ for\ field\ '"{}}\ <<\ field}
-\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}'.\ Modify\ or\ remove\ that\ keybind\ field.\ **"{}}\ <<\ std::endl;}
-\DoxyCodeLine{00076\ \ \ \ \ std::exit(EXIT\_FAILURE);\ }
-\DoxyCodeLine{00077\ \ \ \};}
-\DoxyCodeLine{00078\ }
-\DoxyCodeLine{00090\ \ \ \textcolor{keyword}{auto}\ handle\_special\_keys\ =\ [\&](\textcolor{keyword}{const}\ std::string\_view\&\ key,\ \textcolor{keyword}{const}\ std::string\&\ field)\ -\/>\ \textcolor{keywordtype}{char}}
-\DoxyCodeLine{00091\ \ \ \{}
-\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{if}\ (key.empty())}
-\DoxyCodeLine{00093\ \ \ \ \ \{}
-\DoxyCodeLine{00094\ \ \ \ \ \ \ reportError(field,\ key);\ }
-\DoxyCodeLine{00095\ \ \ \ \ \}}
-\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordflow}{if}\ (special\_keys.find(key)\ !=\ special\_keys.end())}
-\DoxyCodeLine{00097\ \ \ \ \ \{}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ special\_keys.at(key);\ }
-\DoxyCodeLine{00099\ \ \ \ \ \}}
-\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordflow}{if}\ (key.size()\ ==\ 1)}
-\DoxyCodeLine{00101\ \ \ \ \ \{}
-\DoxyCodeLine{00102\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ key[0];\ \textcolor{comment}{//\ Single-\/character\ keys}}
-\DoxyCodeLine{00103\ \ \ \ \ \}}
-\DoxyCodeLine{00104\ \ \ \ \ reportError(field,\ key);\ }
-\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unreachable\ case}}
-\DoxyCodeLine{00106\ \ \ \};}
-\DoxyCodeLine{00107\ }
-\DoxyCodeLine{00108\ \ \ \textcolor{comment}{//\ Map\ each\ field\ name\ to\ the\ corresponding\ member\ in\ the\ Keybinds\ struct}}
-\DoxyCodeLine{00109\ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ char*>\ field\_map\ =\ \{}
-\DoxyCodeLine{00110\ \ \ \ \ \{\textcolor{stringliteral}{"{}scroll\_up"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a31d353b681721388fa78c974245f983e}{scroll\_up}}\},}
-\DoxyCodeLine{00111\ \ \ \ \ \{\textcolor{stringliteral}{"{}scroll\_down"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_ac2e5b89bf1db7941a3d3c115d3be6bdb}{scroll\_down}}\},}
-\DoxyCodeLine{00112\ \ \ \ \ \{\textcolor{stringliteral}{"{}toggle\_focus"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_aeebdafcff1d774e95b25c184b229128c}{toggle\_focus}}\},}
-\DoxyCodeLine{00113\ \ \ \ \ \{\textcolor{stringliteral}{"{}show\_help"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a11bbc23c21d5fef44f2b13f32cf8d831}{show\_help}}\},}
-\DoxyCodeLine{00114\ \ \ \ \ \{\textcolor{stringliteral}{"{}toggle\_play"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_ad10b5a9637dc1cd70cfce5fa8362cb03}{toggle\_play}}\},}
-\DoxyCodeLine{00115\ \ \ \ \ \{\textcolor{stringliteral}{"{}play\_song"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_afed2550f73b5b8481626f25744963d1d}{play\_song}}\},}
-\DoxyCodeLine{00116\ \ \ \ \ \{\textcolor{stringliteral}{"{}play\_song\_next"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_ac8dee0e90b6f40bcbc0fae4be3207736}{play\_song\_next}}\},}
-\DoxyCodeLine{00117\ \ \ \ \ \{\textcolor{stringliteral}{"{}play\_song\_prev"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_abcc5064335d6797840983acb99bdb88c}{play\_song\_prev}}\},}
-\DoxyCodeLine{00118\ \ \ \ \ \{\textcolor{stringliteral}{"{}vol\_up"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_af23c42bb55c27be6788ce52935424bb3}{vol\_up}}\},}
-\DoxyCodeLine{00119\ \ \ \ \ \{\textcolor{stringliteral}{"{}vol\_down"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a911e1c12013e8a608c8a1b5f7b7c5be2}{vol\_down}}\},}
-\DoxyCodeLine{00120\ \ \ \ \ \{\textcolor{stringliteral}{"{}toggle\_mute"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a3d0f9af37b9cf78a2da4bfdc56bbe629}{toggle\_mute}}\},}
-\DoxyCodeLine{00121\ \ \ \ \ \{\textcolor{stringliteral}{"{}quit\_app"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_af70444b29352ec2fa20920c6158123f6}{quit\_app}}\},}
-\DoxyCodeLine{00122\ \ \ \ \ \{\textcolor{stringliteral}{"{}seek\_ahead\_5"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a328d188e562cf2d00ca8fdc65af75c6a}{seek\_ahead\_5}}\},}
-\DoxyCodeLine{00123\ \ \ \ \ \{\textcolor{stringliteral}{"{}seek\_behind\_5"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_ac01d4cb164309e257c932076a6a65aa6}{seek\_behind\_5}}\},}
-\DoxyCodeLine{00124\ \ \ \ \ \{\textcolor{stringliteral}{"{}view\_lyrics"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_ab7c2068f6c21a4b2d228e0720cbe8ed5}{view\_lyrics}}\},}
-\DoxyCodeLine{00125\ \ \ \ \ \{\textcolor{stringliteral}{"{}replay\_song"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a6002f357b11c6ecc415595d3e4cd35b4}{replay\_song}}\},}
-\DoxyCodeLine{00126\ \ \ \ \ \{\textcolor{stringliteral}{"{}goto\_main\_screen"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a08813d343f783c66e71f6014d1623218}{goto\_main\_screen}}\},}
-\DoxyCodeLine{00127\ \ \ \ \ \{\textcolor{stringliteral}{"{}add\_song\_to\_queue"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_af484a422e3e572779060ebb34e736dfc}{add\_song\_to\_queue}}\},}
-\DoxyCodeLine{00128\ \ \ \ \ \{\textcolor{stringliteral}{"{}add\_artists\_songs\_to\_queue"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a1558efc3ae95ab185f63dc61859d6923}{add\_artists\_songs\_to\_queue}}\},}
-\DoxyCodeLine{00129\ \ \ \ \ \{\textcolor{stringliteral}{"{}remove\_song\_from\_queue"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_ad6ba797ddc2c738d59acb8ad745d7c50}{remove\_song\_from\_queue}}\},}
-\DoxyCodeLine{00130\ \ \ \ \ \{\textcolor{stringliteral}{"{}play\_this\_song\_next"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_aee5cde9ebf6a1197a7f339471fea0d41}{play\_this\_song\_next}}\},}
-\DoxyCodeLine{00131\ \ \ \ \ \{\textcolor{stringliteral}{"{}view\_song\_queue"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a928d27528bc64d0d67e4871733e37779}{view\_song\_queue}}\},}
-\DoxyCodeLine{00132\ \ \ \ \ \{\textcolor{stringliteral}{"{}view\_current\_song\_info"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_afbfca5b80fd58ffbc08822c518bc4ec2}{view\_current\_song\_info}}\},}
-\DoxyCodeLine{00133\ \ \ \ \ \{\textcolor{stringliteral}{"{}toggle\_audio\_devices"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a0c1783894d6ec11de583f0b5396bbde4}{toggle\_audio\_devices}}\}\};}
-\DoxyCodeLine{00134\ }
-\DoxyCodeLine{00135\ \ \ \textcolor{comment}{//\ Populate\ the\ keybinds\ struct\ by\ reading\ the\ fields\ from\ the\ TOML\ configuration}}
-\DoxyCodeLine{00136\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [field,\ member\_ptr]\ :\ field\_map)}
-\DoxyCodeLine{00137\ \ \ \{}
-\DoxyCodeLine{00138\ \ \ \ \ *member\_ptr\ =\ handle\_special\_keys(\mbox{\hyperlink{toml__parser_8hpp_a19930571a1aced24a71d9a1d6e7c710a}{parseTOMLField}}(\mbox{\hyperlink{toml__parser_8hpp_a68fd11c312f2eb908cc3cf08ae9b9c28}{PARENT\_KEYBINDS}},\ field),}
-\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ field);\ }
-\DoxyCodeLine{00140\ \ \ \}}
-\DoxyCodeLine{00141\ }
-\DoxyCodeLine{00142\ \ \ \textcolor{keywordflow}{return}\ keybinds;\ }
-\DoxyCodeLine{00143\ \}}
-\DoxyCodeLine{00144\ }
-\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{toml__parser_8hpp}{../parser/toml\_parser.hpp}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string\_view>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structKeybinds}{Keybinds}}}
+\DoxyCodeLine{00015\ \{}
+\DoxyCodeLine{00016\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a31d353b681721388fa78c974245f983e}{scroll\_up}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00017\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_ac2e5b89bf1db7941a3d3c115d3be6bdb}{scroll\_down}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00018\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_aeebdafcff1d774e95b25c184b229128c}{toggle\_focus}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00019\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a11bbc23c21d5fef44f2b13f32cf8d831}{show\_help}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00020\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_ad10b5a9637dc1cd70cfce5fa8362cb03}{toggle\_play}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00021\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_afed2550f73b5b8481626f25744963d1d}{play\_song}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00022\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_ac8dee0e90b6f40bcbc0fae4be3207736}{play\_song\_next}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00023\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_abcc5064335d6797840983acb99bdb88c}{play\_song\_prev}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00024\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_af23c42bb55c27be6788ce52935424bb3}{vol\_up}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00025\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a911e1c12013e8a608c8a1b5f7b7c5be2}{vol\_down}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00026\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a3d0f9af37b9cf78a2da4bfdc56bbe629}{toggle\_mute}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00027\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_af70444b29352ec2fa20920c6158123f6}{quit\_app}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00028\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a328d188e562cf2d00ca8fdc65af75c6a}{seek\_ahead\_5}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00029\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_ac01d4cb164309e257c932076a6a65aa6}{seek\_behind\_5}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00030\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_ab7c2068f6c21a4b2d228e0720cbe8ed5}{view\_lyrics}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00031\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a08813d343f783c66e71f6014d1623218}{goto\_main\_screen}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00032\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a6002f357b11c6ecc415595d3e4cd35b4}{replay\_song}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00033\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_af484a422e3e572779060ebb34e736dfc}{add\_song\_to\_queue}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00034\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a1558efc3ae95ab185f63dc61859d6923}{add\_artists\_songs\_to\_queue}};\ }
+\DoxyCodeLine{00035\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_ad6ba797ddc2c738d59acb8ad745d7c50}{remove\_song\_from\_queue}};\ \ \ \ \ }
+\DoxyCodeLine{00036\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_aee5cde9ebf6a1197a7f339471fea0d41}{play\_this\_song\_next}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00037\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a928d27528bc64d0d67e4871733e37779}{view\_song\_queue}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00038\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_afbfca5b80fd58ffbc08822c518bc4ec2}{view\_current\_song\_info}};\ \ \ \ \ }
+\DoxyCodeLine{00039\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a0c1783894d6ec11de583f0b5396bbde4}{toggle\_audio\_devices}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00040\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a5b06fcd589ad7f8c2a633e5f6cfe5638}{search\_menu}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00041\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_a1362375a39d165ef6d35387bbe093356}{search\_item\_next}};}
+\DoxyCodeLine{00042\ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structKeybinds_abd8d9c8ae126d4393777c8e8617074bd}{search\_item\_prev}};}
+\DoxyCodeLine{00043\ \};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{keymaps_8hpp_a74375ab0d7f926eb068b50f3c9fbd3a5}{parseKeybinds}}()\ -\/>\ \mbox{\hyperlink{structKeybinds}{Keybinds}}}
+\DoxyCodeLine{00054\ \{}
+\DoxyCodeLine{00055\ \ \ \mbox{\hyperlink{structKeybinds}{Keybinds}}\ keybinds;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \textcolor{comment}{//\ Mapping\ of\ special\ key\ names\ to\ their\ ASCII\ values}}
+\DoxyCodeLine{00058\ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string\_view,\ char>\ special\_keys\ =\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \{\textcolor{stringliteral}{"{}Tab"{}},\ \textcolor{charliteral}{'\(\backslash\)t'}\},\ \ \ }
+\DoxyCodeLine{00060\ \ \ \ \ \{\textcolor{stringliteral}{"{}Space"{}},\ \textcolor{charliteral}{'\ '}\},\ \ }
+\DoxyCodeLine{00061\ \ \ \ \ \{\textcolor{stringliteral}{"{}Enter"{}},\ \textcolor{charliteral}{'\(\backslash\)n'}\},\ }
+\DoxyCodeLine{00062\ \ \ \ \ \{\textcolor{stringliteral}{"{}Esc"{}},\ 27\},\ \ \ \ \ }
+\DoxyCodeLine{00063\ \ \ \};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00074\ \ \ \textcolor{keyword}{auto}\ reportError\ =\ [](\textcolor{keyword}{const}\ std::string\&\ field,\ \textcolor{keyword}{const}\ std::string\_view\&\ key)}
+\DoxyCodeLine{00075\ \ \ \{}
+\DoxyCodeLine{00076\ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}**\ Error:\ ⚠\ \ Unsupported\ or\ empty\ keybind\ '"{}}\ <<\ key\ <<\ \textcolor{stringliteral}{"{}'\ detected\ for\ field\ '"{}}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ field\ <<\ \textcolor{stringliteral}{"{}'.\ Modify\ or\ remove\ that\ keybind\ field.\ **"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00078\ \ \ \ \ std::exit(EXIT\_FAILURE);\ }
+\DoxyCodeLine{00079\ \ \ \};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00092\ \ \ \textcolor{keyword}{auto}\ handle\_special\_keys\ =\ [\&](\textcolor{keyword}{const}\ std::string\_view\&\ key,\ \textcolor{keyword}{const}\ std::string\&\ field)\ -\/>\ \textcolor{keywordtype}{char}}
+\DoxyCodeLine{00093\ \ \ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordflow}{if}\ (key.empty())}
+\DoxyCodeLine{00095\ \ \ \ \ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ reportError(field,\ key);\ }
+\DoxyCodeLine{00097\ \ \ \ \ \}}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordflow}{if}\ (special\_keys.find(key)\ !=\ special\_keys.end())}
+\DoxyCodeLine{00099\ \ \ \ \ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ special\_keys.at(key);\ }
+\DoxyCodeLine{00101\ \ \ \ \ \}}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordflow}{if}\ (key.size()\ ==\ 1)}
+\DoxyCodeLine{00103\ \ \ \ \ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ key[0];\ \textcolor{comment}{//\ Single-\/character\ keys}}
+\DoxyCodeLine{00105\ \ \ \ \ \}}
+\DoxyCodeLine{00106\ \ \ \ \ reportError(field,\ key);\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unreachable\ case}}
+\DoxyCodeLine{00108\ \ \ \};}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \textcolor{comment}{//\ Map\ each\ field\ name\ to\ the\ corresponding\ member\ in\ the\ Keybinds\ struct}}
+\DoxyCodeLine{00111\ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ char*>\ field\_map\ =\ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \{\textcolor{stringliteral}{"{}scroll\_up"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a31d353b681721388fa78c974245f983e}{scroll\_up}}\},}
+\DoxyCodeLine{00113\ \ \ \ \ \{\textcolor{stringliteral}{"{}scroll\_down"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_ac2e5b89bf1db7941a3d3c115d3be6bdb}{scroll\_down}}\},}
+\DoxyCodeLine{00114\ \ \ \ \ \{\textcolor{stringliteral}{"{}toggle\_focus"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_aeebdafcff1d774e95b25c184b229128c}{toggle\_focus}}\},}
+\DoxyCodeLine{00115\ \ \ \ \ \{\textcolor{stringliteral}{"{}show\_help"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a11bbc23c21d5fef44f2b13f32cf8d831}{show\_help}}\},}
+\DoxyCodeLine{00116\ \ \ \ \ \{\textcolor{stringliteral}{"{}toggle\_play"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_ad10b5a9637dc1cd70cfce5fa8362cb03}{toggle\_play}}\},}
+\DoxyCodeLine{00117\ \ \ \ \ \{\textcolor{stringliteral}{"{}play\_song"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_afed2550f73b5b8481626f25744963d1d}{play\_song}}\},}
+\DoxyCodeLine{00118\ \ \ \ \ \{\textcolor{stringliteral}{"{}play\_song\_next"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_ac8dee0e90b6f40bcbc0fae4be3207736}{play\_song\_next}}\},}
+\DoxyCodeLine{00119\ \ \ \ \ \{\textcolor{stringliteral}{"{}play\_song\_prev"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_abcc5064335d6797840983acb99bdb88c}{play\_song\_prev}}\},}
+\DoxyCodeLine{00120\ \ \ \ \ \{\textcolor{stringliteral}{"{}vol\_up"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_af23c42bb55c27be6788ce52935424bb3}{vol\_up}}\},}
+\DoxyCodeLine{00121\ \ \ \ \ \{\textcolor{stringliteral}{"{}vol\_down"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a911e1c12013e8a608c8a1b5f7b7c5be2}{vol\_down}}\},}
+\DoxyCodeLine{00122\ \ \ \ \ \{\textcolor{stringliteral}{"{}toggle\_mute"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a3d0f9af37b9cf78a2da4bfdc56bbe629}{toggle\_mute}}\},}
+\DoxyCodeLine{00123\ \ \ \ \ \{\textcolor{stringliteral}{"{}quit\_app"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_af70444b29352ec2fa20920c6158123f6}{quit\_app}}\},}
+\DoxyCodeLine{00124\ \ \ \ \ \{\textcolor{stringliteral}{"{}seek\_ahead\_5"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a328d188e562cf2d00ca8fdc65af75c6a}{seek\_ahead\_5}}\},}
+\DoxyCodeLine{00125\ \ \ \ \ \{\textcolor{stringliteral}{"{}seek\_behind\_5"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_ac01d4cb164309e257c932076a6a65aa6}{seek\_behind\_5}}\},}
+\DoxyCodeLine{00126\ \ \ \ \ \{\textcolor{stringliteral}{"{}view\_lyrics"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_ab7c2068f6c21a4b2d228e0720cbe8ed5}{view\_lyrics}}\},}
+\DoxyCodeLine{00127\ \ \ \ \ \{\textcolor{stringliteral}{"{}replay\_song"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a6002f357b11c6ecc415595d3e4cd35b4}{replay\_song}}\},}
+\DoxyCodeLine{00128\ \ \ \ \ \{\textcolor{stringliteral}{"{}goto\_main\_screen"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a08813d343f783c66e71f6014d1623218}{goto\_main\_screen}}\},}
+\DoxyCodeLine{00129\ \ \ \ \ \{\textcolor{stringliteral}{"{}add\_song\_to\_queue"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_af484a422e3e572779060ebb34e736dfc}{add\_song\_to\_queue}}\},}
+\DoxyCodeLine{00130\ \ \ \ \ \{\textcolor{stringliteral}{"{}add\_artists\_songs\_to\_queue"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a1558efc3ae95ab185f63dc61859d6923}{add\_artists\_songs\_to\_queue}}\},}
+\DoxyCodeLine{00131\ \ \ \ \ \{\textcolor{stringliteral}{"{}remove\_song\_from\_queue"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_ad6ba797ddc2c738d59acb8ad745d7c50}{remove\_song\_from\_queue}}\},}
+\DoxyCodeLine{00132\ \ \ \ \ \{\textcolor{stringliteral}{"{}play\_this\_song\_next"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_aee5cde9ebf6a1197a7f339471fea0d41}{play\_this\_song\_next}}\},}
+\DoxyCodeLine{00133\ \ \ \ \ \{\textcolor{stringliteral}{"{}view\_song\_queue"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a928d27528bc64d0d67e4871733e37779}{view\_song\_queue}}\},}
+\DoxyCodeLine{00134\ \ \ \ \ \{\textcolor{stringliteral}{"{}view\_current\_song\_info"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_afbfca5b80fd58ffbc08822c518bc4ec2}{view\_current\_song\_info}}\},}
+\DoxyCodeLine{00135\ \ \ \ \ \{\textcolor{stringliteral}{"{}toggle\_audio\_devices"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a0c1783894d6ec11de583f0b5396bbde4}{toggle\_audio\_devices}}\},}
+\DoxyCodeLine{00136\ \ \ \ \ \{\textcolor{stringliteral}{"{}search\_menu"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a5b06fcd589ad7f8c2a633e5f6cfe5638}{search\_menu}}\},}
+\DoxyCodeLine{00137\ \ \ \ \ \{\textcolor{stringliteral}{"{}search\_item\_next"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_a1362375a39d165ef6d35387bbe093356}{search\_item\_next}}\},}
+\DoxyCodeLine{00138\ \ \ \ \ \{\textcolor{stringliteral}{"{}search\_item\_prev"{}},\ \&keybinds.\mbox{\hyperlink{structKeybinds_abd8d9c8ae126d4393777c8e8617074bd}{search\_item\_prev}}\}\};}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \textcolor{keywordtype}{bool}\ verbose\_logging\ =\ \mbox{\hyperlink{toml__parser_8hpp_a6eb11e4db65b58858c65704ec4daa915}{parseTOMLFieldBool}}(\mbox{\hyperlink{toml__parser_8hpp_a10265fc668d386d5d02e91115db9a7cc}{PARENT\_DBG}},\ \mbox{\hyperlink{toml__parser_8hpp_a3dbbf241f204ad3fec4382233f7a771b}{PARENT\_DBG\_FIELD\_KEYBINDS\_PARSER\_LOG}});}
+\DoxyCodeLine{00141\ \ \ \textcolor{keywordflow}{if}\ (verbose\_logging)}
+\DoxyCodeLine{00142\ \ \ \{}
+\DoxyCodeLine{00143\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[KEYBINDS]\ Parsing\ keybinds..."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00144\ \ \ \}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \textcolor{comment}{//\ Populate\ the\ keybinds\ struct\ by\ reading\ the\ fields\ from\ the\ TOML\ configuration}}
+\DoxyCodeLine{00147\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [field,\ member\_ptr]\ :\ field\_map)}
+\DoxyCodeLine{00148\ \ \ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keyword}{const}\ std::string\_view\ key\ =\ \mbox{\hyperlink{toml__parser_8hpp_a9a9759bd3909e5f64c6b7acbdd4bc16f}{parseTOMLField}}(\mbox{\hyperlink{toml__parser_8hpp_a68fd11c312f2eb908cc3cf08ae9b9c28}{PARENT\_KEYBINDS}},\ field);}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordflow}{if}\ (verbose\_logging)}
+\DoxyCodeLine{00152\ \ \ \ \ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[KEYBINDS]\ Parsing\ keybind\ for\ "{}}\ <<\ field\ <<\ \textcolor{stringliteral}{"{}:\ "{}}\ <<\ key\ <<\ std::endl;}
+\DoxyCodeLine{00154\ \ \ \ \ \}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ *member\_ptr\ =\ handle\_special\_keys(key,\ field);\ }
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordflow}{if}\ (verbose\_logging)}
+\DoxyCodeLine{00159\ \ \ \ \ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[KEYBINDS]\ Mapped\ keybind\ for\ "{}}\ <<\ field}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\ to\ ASCII\ value:\ "{}}\ <<\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(*member\_ptr)\ <<\ std::endl;}
+\DoxyCodeLine{00162\ \ \ \ \ \}}
+\DoxyCodeLine{00163\ \ \ \}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \textcolor{keywordflow}{if}\ (verbose\_logging)}
+\DoxyCodeLine{00166\ \ \ \{}
+\DoxyCodeLine{00167\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[KEYBINDS]\ Keybind\ parsing\ complete!\ Moving\ on..."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00168\ \ \ \}}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \textcolor{keywordflow}{return}\ keybinds;\ }
+\DoxyCodeLine{00171\ \}}
 
 \end{DoxyCode}

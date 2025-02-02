@@ -1,0 +1,83 @@
+\doxysection{Search\+State Struct Reference}
+\hypertarget{structSearchState}{}\label{structSearchState}\index{SearchState@{SearchState}}
+
+
+Holds the state for searching artists and songs.  
+
+
+
+
+{\ttfamily \#include $<$state.\+hpp$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classTrie}{Trie}} \mbox{\hyperlink{structSearchState_a7fed29b67fa69f570885be059375b49e}{Artist\+Search\+Trie}}
+\item 
+\mbox{\hyperlink{classTrie}{Trie}} \mbox{\hyperlink{structSearchState_a46ae4c47555451ac487dc7565443039a}{Song\+Search\+Trie}}
+\item 
+int \mbox{\hyperlink{structSearchState_a86a2f727dda8daa3639a4076257bc528}{artist\+Index}} = 0
+\item 
+int \mbox{\hyperlink{structSearchState_a4a9c070de79727c54409e46e965024ba}{song\+Index}} = 0
+\item 
+string \mbox{\hyperlink{structSearchState_a154240c9a9184270f870597ad52a1206}{input}} = "{}"{}
+\item 
+int \mbox{\hyperlink{structSearchState_ab41a1f24bb5987765938f59710d46c2c}{albums\+Index}} = 0
+\item 
+mutex \mbox{\hyperlink{structSearchState_aef170102b29179b75470f87870e588f6}{mtx}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Holds the state for searching artists and songs. 
+
+This structure stores the current search state, including search queries and indices for navigating through the search results for artists and songs. 
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structSearchState_ab41a1f24bb5987765938f59710d46c2c}\index{SearchState@{SearchState}!albumsIndex@{albumsIndex}}
+\index{albumsIndex@{albumsIndex}!SearchState@{SearchState}}
+\doxysubsubsection{\texorpdfstring{albumsIndex}{albumsIndex}}
+{\footnotesize\ttfamily \label{structSearchState_ab41a1f24bb5987765938f59710d46c2c} 
+int Search\+State\+::albums\+Index = 0}
+
+Index for the current album search result \Hypertarget{structSearchState_a86a2f727dda8daa3639a4076257bc528}\index{SearchState@{SearchState}!artistIndex@{artistIndex}}
+\index{artistIndex@{artistIndex}!SearchState@{SearchState}}
+\doxysubsubsection{\texorpdfstring{artistIndex}{artistIndex}}
+{\footnotesize\ttfamily \label{structSearchState_a86a2f727dda8daa3639a4076257bc528} 
+int Search\+State\+::artist\+Index = 0}
+
+Index for the current artist search result \Hypertarget{structSearchState_a7fed29b67fa69f570885be059375b49e}\index{SearchState@{SearchState}!ArtistSearchTrie@{ArtistSearchTrie}}
+\index{ArtistSearchTrie@{ArtistSearchTrie}!SearchState@{SearchState}}
+\doxysubsubsection{\texorpdfstring{ArtistSearchTrie}{ArtistSearchTrie}}
+{\footnotesize\ttfamily \label{structSearchState_a7fed29b67fa69f570885be059375b49e} 
+\mbox{\hyperlink{classTrie}{Trie}} Search\+State\+::\+Artist\+Search\+Trie}
+
+\doxylink{classTrie}{Trie} for searching artists \Hypertarget{structSearchState_a154240c9a9184270f870597ad52a1206}\index{SearchState@{SearchState}!input@{input}}
+\index{input@{input}!SearchState@{SearchState}}
+\doxysubsubsection{\texorpdfstring{input}{input}}
+{\footnotesize\ttfamily \label{structSearchState_a154240c9a9184270f870597ad52a1206} 
+string Search\+State\+::input = "{}"{}}
+
+The current search input \Hypertarget{structSearchState_aef170102b29179b75470f87870e588f6}\index{SearchState@{SearchState}!mtx@{mtx}}
+\index{mtx@{mtx}!SearchState@{SearchState}}
+\doxysubsubsection{\texorpdfstring{mtx}{mtx}}
+{\footnotesize\ttfamily \label{structSearchState_aef170102b29179b75470f87870e588f6} 
+mutex Search\+State\+::mtx}
+
+Mutex for synchronizing access to search state \Hypertarget{structSearchState_a4a9c070de79727c54409e46e965024ba}\index{SearchState@{SearchState}!songIndex@{songIndex}}
+\index{songIndex@{songIndex}!SearchState@{SearchState}}
+\doxysubsubsection{\texorpdfstring{songIndex}{songIndex}}
+{\footnotesize\ttfamily \label{structSearchState_a4a9c070de79727c54409e46e965024ba} 
+int Search\+State\+::song\+Index = 0}
+
+Index for the current song search result \Hypertarget{structSearchState_a46ae4c47555451ac487dc7565443039a}\index{SearchState@{SearchState}!SongSearchTrie@{SongSearchTrie}}
+\index{SongSearchTrie@{SongSearchTrie}!SearchState@{SearchState}}
+\doxysubsubsection{\texorpdfstring{SongSearchTrie}{SongSearchTrie}}
+{\footnotesize\ttfamily \label{structSearchState_a46ae4c47555451ac487dc7565443039a} 
+\mbox{\hyperlink{classTrie}{Trie}} Search\+State\+::\+Song\+Search\+Trie}
+
+\doxylink{classTrie}{Trie} for searching songs 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/ui/states/\mbox{\hyperlink{state_8hpp}{state.\+hpp}}\end{DoxyCompactItemize}

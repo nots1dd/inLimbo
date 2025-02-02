@@ -121,9 +121,9 @@ Classes</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ac5cec639fa2c2e6aec38f6c74d8691bb" id="r_ac5cec639fa2c2e6aec38f6c74d8691bb"><td class="memItemLeft" align="right" valign="top">Element&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5cec639fa2c2e6aec38f6c74d8691bb">image_view</a> (std::string_view url)</td></tr>
 <tr class="separator:ac5cec639fa2c2e6aec38f6c74d8691bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7482d6cb3dc83c8a457927b988bb9ee7" id="r_a7482d6cb3dc83c8a457927b988bb9ee7"><td class="memItemLeft" align="right" valign="top">Component&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7482d6cb3dc83c8a457927b988bb9ee7">Scroller</a> (Component child, int *external_selected, Color cursor_bg, Color inactive_menu_cursor_bg)</td></tr>
-<tr class="memdesc:a7482d6cb3dc83c8a457927b988bb9ee7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Factory function to create a Scroller component.  <br /></td></tr>
-<tr class="separator:a7482d6cb3dc83c8a457927b988bb9ee7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46e25d07aee6975dc34e02abd98b5cbf" id="r_a46e25d07aee6975dc34e02abd98b5cbf"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46e25d07aee6975dc34e02abd98b5cbf">Scroller</a> (Component child, int *external_selected, Color cursor_bg, Color inactive_menu_cursor_bg) -&gt; Component</td></tr>
+<tr class="memdesc:a46e25d07aee6975dc34e02abd98b5cbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Factory function to create a Scroller component.  <br /></td></tr>
+<tr class="separator:a46e25d07aee6975dc34e02abd98b5cbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ac5cec639fa2c2e6aec38f6c74d8691bb" name="ac5cec639fa2c2e6aec38f6c74d8691bb"></a>
@@ -143,14 +143,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a7482d6cb3dc83c8a457927b988bb9ee7" name="a7482d6cb3dc83c8a457927b988bb9ee7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7482d6cb3dc83c8a457927b988bb9ee7">&#9670;&#160;</a></span>Scroller()</h2>
+<a id="a46e25d07aee6975dc34e02abd98b5cbf" name="a46e25d07aee6975dc34e02abd98b5cbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46e25d07aee6975dc34e02abd98b5cbf">&#9670;&#160;</a></span>Scroller()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Component ftxui::Scroller </td>
+          <td class="memname">auto ftxui::Scroller </td>
           <td>(</td>
           <td class="paramtype">Component</td>          <td class="paramname"><span class="paramname"><em>child</em></span>, </td>
         </tr>
@@ -167,7 +167,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Color</td>          <td class="paramname"><span class="paramname"><em>inactive_menu_cursor_bg</em></span>&#160;)</td>
+          <td class="paramtype">Color</td>          <td class="paramname"><span class="paramname"><em>inactive_menu_cursor_bg</em></span>&#160;) -&gt;  Component</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -179,6 +179,9 @@ Functions</h2></td></tr>
     <tr><td class="paramname">child</td><td>The child component to be rendered inside the scroller. </td></tr>
     <tr><td class="paramname">external_selected</td><td>A pointer to an external integer that controls the selected index. </td></tr>
     <tr><td class="paramname">cursor_bg</td><td>The background color to apply to the focused element. </td></tr>
+    <tr><td class="paramname">inactive_menu_cursor_bg</td><td>The background color to apply to the inactive menu elements. </td></tr>
+    <tr><td class="paramname">current_playing_col</td><td>The background color to apply to the currently playing element. </td></tr>
+    <tr><td class="paramname">current_playing_index</td><td>The index of the currently playing element. </td></tr>
   </table>
   </dd>
 </dl>

@@ -22,7 +22,12 @@
 ~\newline
 
 \end{DoxyWarning}
-The in\+Limbo project aims to be a new upcoming TUI music player for UNIX based systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.\hypertarget{md_README_autotoc_md20}{}\doxysubsection{\texorpdfstring{Features}{Features}}\label{md_README_autotoc_md20}
+The in\+Limbo project aims to be a new upcoming TUI music player for UNIX based systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.\hypertarget{md_README_autotoc_md20}{}\doxysubsection{\texorpdfstring{{\bfseries{Why}}}{{\bfseries{Why}}}}\label{md_README_autotoc_md20}
+There are a dozen of great music players out there that do a really good job of making my music experience top notch, but nothing was ever perfect. So I tried making something that in my opinion comes closest to my ideal TUI music player.
+
+Why would you want to stay in Limbo?
+
+Sometimes it feels good to be stuck in a weird place in your life, and it feels even better to be stuck in Limbo with music \+:)\hypertarget{md_README_autotoc_md21}{}\doxysubsection{\texorpdfstring{{\bfseries{Features}}}{{\bfseries{Features}}}}\label{md_README_autotoc_md21}
 
 \begin{DoxyItemize}
 \item {\bfseries{Fully configurable}}\+: \doxylink{structKeybinds}{Keybinds}, library, FTP credentials, and more, all in one {\ttfamily config.\+toml} file located in {\ttfamily \$HOME/.config/in\+Limbo/config.\+toml}
@@ -31,9 +36,10 @@ The in\+Limbo project aims to be a new upcoming TUI music player for UNIX based 
 \item {\bfseries{Clean and nice TUI experience}}\+: Interact with your music library seamlessly in a terminal interface.
 \item {\bfseries{Showcases all the metadata}}\+: Displays song metadata, including lyrics, genre, and more, for every file in your library.
 \item {\bfseries{Plays and caters to many audio file formats}}\+: Compatible with a variety of audio formats, depending on the capabilities of \href{https://github.com/mackron/miniaudio}{\texttt{ miniaudio}}.
-\item {\bfseries{Customizable}}\+: Add your own color palette to in\+Limbo ;)
-\end{DoxyItemize}\hypertarget{md_README_autotoc_md21}{}\doxysubsection{\texorpdfstring{LOOKS}{LOOKS}}\label{md_README_autotoc_md21}
-   \hypertarget{md_README_autotoc_md22}{}\doxysubsection{\texorpdfstring{DEPENDENCIES}{DEPENDENCIES}}\label{md_README_autotoc_md22}
+\item {\bfseries{Customizable}}\+: Heavily customizable TUI with custom keybinds, colors, UI designs and much more to come...
+\item {\bfseries{Privacy}}\+: No data is collected by in\+Limbo other than a backtrace of when the application catches a critical signal like {\ttfamily SIGSEGV}, {\ttfamily SIGABRT}
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md22}{}\doxysubsection{\texorpdfstring{{\bfseries{LOOKS}}}{{\bfseries{LOOKS}}}}\label{md_README_autotoc_md22}
+   \hypertarget{md_README_autotoc_md23}{}\doxysubsection{\texorpdfstring{{\bfseries{DEPENDENCIES}}}{{\bfseries{DEPENDENCIES}}}}\label{md_README_autotoc_md23}
 \begin{DoxyImportant}{Important}
 ~\newline
  It is {\bfseries{HIGHLY}} recommended to have FFmpeg installed in your system ~\newline
@@ -78,7 +84,7 @@ The in\+Limbo project aims to be a new upcoming TUI music player for UNIX based 
 ~\newline
 
 \end{DoxyNote}
-{\bfseries{FTXUI}} is fetched from Git\+Hub \href{https://github.com/ArthurSonzogni/FTXUI/}{\texttt{ here}} itself during building so {\bfseries{NO}} need to install it separately.\hypertarget{md_README_autotoc_md23}{}\doxysubsection{\texorpdfstring{GOAL}{GOAL}}\label{md_README_autotoc_md23}
+{\bfseries{FTXUI}} is fetched from Git\+Hub \href{https://github.com/ArthurSonzogni/FTXUI/}{\texttt{ here}} itself during building so {\bfseries{NO}} need to install it separately.\hypertarget{md_README_autotoc_md24}{}\doxysubsection{\texorpdfstring{{\bfseries{GOAL}}}{{\bfseries{GOAL}}}}\label{md_README_autotoc_md24}
 The goal of this project is just to find peace and solitude for me as I try to create something I wanted for a long time
 
 Here are a few novelties that may or may not have been added yet\+:
@@ -92,7 +98,22 @@ Here are a few novelties that may or may not have been added yet\+:
 \item TUI over the web?? (Why would you want this)
 \item Active testing of the codebase using GTest Suite
 \item Security ensured using Code\+QL workflow
-\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md24}{}\doxysubsection{\texorpdfstring{{\bfseries{BUILDING}}}{{\bfseries{BUILDING}}}}\label{md_README_autotoc_md24}
+\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md25}{}\doxysubsection{\texorpdfstring{{\bfseries{BUILDING}}}{{\bfseries{BUILDING}}}}\label{md_README_autotoc_md25}
+\begin{DoxyImportant}{Important}
+~\newline
+ in\+Limbo has been {\bfseries{TRIED AND TESTED}} in the following GNU/\+Linux distros\+: ~\newline
+~\newline
+
+\begin{DoxyEnumerate}
+\item Arch Linux (x86-\/64 arch)
+\item Ubuntu (x86-\/64 arch)
+\item Fedora/\+Nobara Linux (x86-\/64 arch) ~\newline
+~\newline
+ As long as your distribution can install \& build the requirements, there should {\itshape NOT} be any issue ~\newline
+~\newline
+
+\end{DoxyEnumerate}
+\end{DoxyImportant}
 You will need CMake and Make (GNU Make for BSD) for this (and git obvi)
 
 A simple command using makefile should build everything you want\+:
@@ -100,6 +121,15 @@ A simple command using makefile should build everything you want\+:
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{make\ build-\/all}
+
+\end{DoxyCode}
+
+
+For a {\bfseries{GLOBAL BUILD}}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ build-\/global}
 
 \end{DoxyCode}
 
@@ -112,8 +142,218 @@ Check out \href{https://github.com/nots1dd/inLimbo/blob/main/BUILD.md}{\texttt{ 
 ~\newline
 
 \end{DoxyNote}
-\hypertarget{md_README_autotoc_md25}{}\doxysubsection{\texorpdfstring{DEBUGGING}{DEBUGGING}}\label{md_README_autotoc_md25}
+\hypertarget{md_README_autotoc_md26}{}\doxysection{\texorpdfstring{{\bfseries{Getting Started with in\+Limbo}}}{{\bfseries{Getting Started with in\+Limbo}}}}\label{md_README_autotoc_md26}
+\hypertarget{md_README_autotoc_md27}{}\doxysubsection{\texorpdfstring{Running in\+Limbo}{Running in\+Limbo}}\label{md_README_autotoc_md27}
+To get started with {\bfseries{in\+Limbo}}, run the following command\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{inLimbo\ \#\ or\ wherever\ you\ have\ built\ the\ binary}
+
+\end{DoxyCode}
+
+
+To get help regarding the command-\/line arguments available with in\+Limbo, you can use the {\ttfamily -\/-\/help} option\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{inLimbo\ -\/-\/help}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md28}{}\doxysubsection{\texorpdfstring{Cache and Directory Management}{Cache and Directory Management}}\label{md_README_autotoc_md28}
+If you update the song directory in {\ttfamily config.\+toml}, {\bfseries{in\+Limbo}} does not automatically remove the static serialized {\ttfamily lib.\+bin} file, which is used to load the song map.
+
+To ensure that {\bfseries{in\+Limbo}} loads the directory dynamically, use the following command\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{inLimbo\ -\/-\/update-\/cache-\/run}
+
+\end{DoxyCode}
+
+
+You can also merge the dynamic load with other arguments like so\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{inLimbo\ -\/-\/update-\/cache-\/run\ -\/-\/print-\/song-\/tree\ \#\ will\ create\ a\ new\ song\ map\ and\ print\ it\ regardless\ of\ lib.bin\ data}
+
+\end{DoxyCode}
+
+
+Note that this will result in slower song map times as the song map is generated dynamically on each run.\hypertarget{md_README_autotoc_md29}{}\doxysubsection{\texorpdfstring{{\bfseries{Command-\/\+Line Arguments}}}{{\bfseries{Command-\/\+Line Arguments}}}}\label{md_README_autotoc_md29}
+
+\begin{DoxyItemize}
+\item {\ttfamily -\/-\/help} {\bfseries{Description}}\+: Display help information about available arguments for in\+Limbo.
+\item {\ttfamily -\/-\/version} {\bfseries{Description}}\+: Display the version number of in\+Limbo.
+\item {\ttfamily -\/-\/clear-\/cache} {\bfseries{Description}}\+: Clear cached data, which includes the song map and other temporary data stored by the application.
+\item {\ttfamily -\/-\/show-\/config-\/file} {\bfseries{Description}}\+: Display the path to the configuration file used by in\+Limbo.
+\item {\ttfamily -\/-\/show-\/log-\/dir} {\bfseries{Description}}\+: Show the directory path where logs are stored for in\+Limbo.
+\item {\ttfamily -\/-\/show-\/dbus-\/name} {\bfseries{Description}}\+: Show the DBus service name used by in\+Limbo.
+\item {\ttfamily -\/-\/update-\/cache-\/run} {\bfseries{Description}}\+: Update the cache file and run the application. This will make in\+Limbo load the directory dynamically every time (note that this will result in slower song map times).
+\item {\ttfamily -\/-\/print-\/song-\/tree} {\bfseries{Description}}\+: Print the song map parsed from the directory. This shows the structure of the song tree and how songs are organized.
+\item {\ttfamily -\/-\/print-\/artists-\/all} {\bfseries{Description}}\+: Print all parsed artists from the song map. This will list all artists found in the directory and their corresponding songs.
+\item {\ttfamily -\/-\/print-\/songs-\/by-\/artist} {\bfseries{Description}}\+: Print all the songs of a given artist. This argument requires you to specify the artist’s name, and it will list all songs by that artist.
+\item {\ttfamily -\/-\/print-\/songs-\/by-\/genre-\/all} {\bfseries{Description}}\+: Print all parsed genres and their song mappings. This will show all the genres available in the song map and list songs under each genre.
+\item {\ttfamily -\/-\/print-\/song-\/info} {\bfseries{Description}}\+: Print every parsed information (even default info) regarding a song (Arguments\+: Can take {\bfseries{SONG NAME}} or {\bfseries{FILE PATH}})
+\end{DoxyItemize}
+
+\begin{DoxyNote}{Note}
+~\newline
+ To utilize these arguments to the fullest, it is {\bfseries{HIGHLY}} recommended to use something like {\ttfamily less}/{\ttfamily bat} that allows for neat terminal output traversal (will allow for you to view the entire song tree parsing) ~\newline
+~\newline
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{inLimbo\ -\/-\/print-\/song-\/tree\ |\ bat\ \#\ an\ example\ of\ using\ bat\ to\ view\ the\ song\ tree\ (can\ traverse\ the\ output\ easily)}
+
+\end{DoxyCode}
+ ~\newline
+~\newline
+ This ensures that you do not have any struggle with viewing the entire console output. ~\newline
+~\newline
+
+\end{DoxyNote}
+There will be more command-\/line arguments in the future...\hypertarget{md_README_autotoc_md30}{}\doxysubsection{\texorpdfstring{{\bfseries{CONFIGURATION}}}{{\bfseries{CONFIGURATION}}}}\label{md_README_autotoc_md30}
+There is quite a lot to configure in the in\+Limbo project. A basic config file will be setup in your {\ttfamily \$HOME/.config/in\+Limbo/} directory while using CMake to build
+
+\begin{DoxyImportant}{Important}
+~\newline
+ Check out \href{https://github.com/nots1dd/inLimbo/blob/main/src/parser/examples/config.toml}{\texttt{ config.\+toml}} to see all the possible fields for configuration ~\newline
+~\newline
+ {\bfseries{IT IS UNDER HEAVY DEVELOPMENT SO EXPECT BREAKING CHANGES WITH EACH COMMIT}} ~\newline
+~\newline
+
+\end{DoxyImportant}
+{\bfseries{COLORS FORMAT}}
+
+-\/\texorpdfstring{$>$}{>} Hexadecimal {\ttfamily \#RRGGBB} format
+
+-\/\texorpdfstring{$>$}{>} \doxylink{namespaceTrueColors}{True\+Colors} (Solid predefined colors)\+:
+
+\begin{DoxyNote}{Note}
+~\newline
+ For \doxylink{namespaceTrueColors}{True\+Colors}, check out \href{https://github.com/nots1dd/inLimbo/blob/main/COLORS.md}{\texttt{ COLORS}} for more information on how to set up colors in {\ttfamily in\+Limbo} ~\newline
+~\newline
+
+\end{DoxyNote}
+{\bfseries{DEFAULT KEYBINDS}}\hypertarget{md_README_autotoc_md31}{}\doxysubsubsection{\texorpdfstring{{\bfseries{General Navigation}}}{{\bfseries{General Navigation}}}}\label{md_README_autotoc_md31}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Keybind   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Keybind   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action    }\\\cline{1-2}
+\endhead
+{\ttfamily q}   &{\bfseries{Quit the application}}    \\\cline{1-2}
+{\ttfamily Tab}   &{\bfseries{Toggle focus}} between the "{}\+Artists"{} and "{}\+Songs"{} panes    \\\cline{1-2}
+{\ttfamily ?}   &{\bfseries{Show or hide the help menu}}    \\\cline{1-2}
+{\ttfamily /}   &{\bfseries{Open the search menu}}   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{md_README_autotoc_md32}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Scrolling and Selection}}}{{\bfseries{Scrolling and Selection}}}}\label{md_README_autotoc_md32}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Keybind   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Keybind   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action    }\\\cline{1-2}
+\endhead
+{\ttfamily j}   &{\bfseries{Scroll down}} (move selection down in the list)    \\\cline{1-2}
+{\ttfamily k}   &{\bfseries{Scroll up}} (move selection up in the list)    \\\cline{1-2}
+{\ttfamily 0}   &{\bfseries{Move to the next search result}} (if search is active)    \\\cline{1-2}
+{\ttfamily 9}   &{\bfseries{Move to the previous search result}} (if search is active)   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{md_README_autotoc_md33}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Playback Controls}}}{{\bfseries{Playback Controls}}}}\label{md_README_autotoc_md33}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Keybind   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Keybind   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action    }\\\cline{1-2}
+\endhead
+{\ttfamily Space}   &{\bfseries{Toggle play/pause}} for the currently playing song    \\\cline{1-2}
+{\ttfamily Enter}   &{\bfseries{Play the currently selected song}}    \\\cline{1-2}
+{\ttfamily n}   &{\bfseries{Play the next song}} in the queue    \\\cline{1-2}
+{\ttfamily p}   &{\bfseries{Play the previous song}} in the queue    \\\cline{1-2}
+{\ttfamily r}   &{\bfseries{Replay the current song}}    \\\cline{1-2}
+{\ttfamily m}   &{\bfseries{Toggle mute}} on/off   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{md_README_autotoc_md34}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Seeking and Volume Control}}}{{\bfseries{Seeking and Volume Control}}}}\label{md_README_autotoc_md34}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Keybind   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Keybind   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action    }\\\cline{1-2}
+\endhead
+{\ttfamily h}   &{\bfseries{Seek backward by 5 seconds}}    \\\cline{1-2}
+{\ttfamily l}   &{\bfseries{Seek forward by 5 seconds}}    \\\cline{1-2}
+{\ttfamily =}   &{\bfseries{Increase volume}}    \\\cline{1-2}
+{\ttfamily -\/}   &{\bfseries{Decrease volume}}    \\\cline{1-2}
+{\ttfamily w}   &{\bfseries{Toggle between available audio devices}}   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{md_README_autotoc_md35}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Song and Queue Management}}}{{\bfseries{Song and Queue Management}}}}\label{md_README_autotoc_md35}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Keybind   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Keybind   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action    }\\\cline{1-2}
+\endhead
+{\ttfamily a}   &{\bfseries{Add the currently selected song to the queue}}    \\\cline{1-2}
+{\ttfamily e}   &{\bfseries{Add all songs of the selected artist to the queue}}    \\\cline{1-2}
+{\ttfamily b}   &{\bfseries{Play this song next}} (insert it into the queue immediately after the current song)    \\\cline{1-2}
+{\ttfamily d}   &{\bfseries{Remove the currently selected song from the queue}}    \\\cline{1-2}
+{\ttfamily 3}   &{\bfseries{View the current song queue}}   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{md_README_autotoc_md36}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Song Information and UI Navigation}}}{{\bfseries{Song Information and UI Navigation}}}}\label{md_README_autotoc_md36}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Keybind   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Keybind   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action    }\\\cline{1-2}
+\endhead
+{\ttfamily 1}   &{\bfseries{Go to the main UI screen}}    \\\cline{1-2}
+{\ttfamily 2} or {\ttfamily L}   &{\bfseries{View lyrics of the currently playing song}}    \\\cline{1-2}
+{\ttfamily i}   &{\bfseries{View detailed information about the current song}}   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{md_README_autotoc_md37}{}\doxysubsubsection{\texorpdfstring{{\bfseries{Status Bar \& UI Settings}}}{{\bfseries{Status Bar \& UI Settings}}}}\label{md_README_autotoc_md37}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Keybind   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Keybind   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action    }\\\cline{1-2}
+\endhead
+{\ttfamily true/false} (UI setting)   &{\bfseries{Show or hide bitrate information}} in the status bar   \\\cline{1-2}
+\end{longtabu}
+
+
+  \hypertarget{md_README_autotoc_md38}{}\doxysubsection{\texorpdfstring{{\bfseries{DEBUGGING}}}{{\bfseries{DEBUGGING}}}}\label{md_README_autotoc_md38}
 in\+Limbo is in active development and is prone to having {\itshape A LOT} of issues
+
+-\/\texorpdfstring{$>$}{>} Makefile also allows for building and running of a debug build.
 
 To try out {\bfseries{DEBUG BUILD}} to find bugs/issues\+:
 
@@ -155,31 +395,10 @@ The {\bfseries{DEBUG BUILD}} will account for the following issues\+:
 
 -\/\texorpdfstring{$>$}{>} Address Sanitation (ASan)
 
--\/\texorpdfstring{$>$}{>} Undefined Behaviour Sanitation (UBSan)\hypertarget{md_README_autotoc_md26}{}\doxysubsection{\texorpdfstring{CONFIGURATION}{CONFIGURATION}}\label{md_README_autotoc_md26}
-There is quite a lot to configure in the in\+Limbo project. A basic config file will be setup in your {\ttfamily \$HOME/.config/in\+Limbo/} directory while using CMake to build
+-\/\texorpdfstring{$>$}{>} Undefined Behaviour Sanitation (UBSan)\hypertarget{md_README_autotoc_md39}{}\doxysubsection{\texorpdfstring{{\bfseries{DIRECTORY SORTING}}}{{\bfseries{DIRECTORY SORTING}}}}\label{md_README_autotoc_md39}
+in\+Limbo reads a directory and attempts to parse each inode for its metadata using Tag\+Lib, and accordingly creates a song map datastructure that is utilized to efficiently traverse the required artist, album, song etc.
 
-\begin{DoxyImportant}{Important}
-~\newline
- Check out \href{https://github.com/nots1dd/inLimbo/blob/main/src/parser/examples/config.toml}{\texttt{ config.\+toml}} to see all the possible fields for configuration ~\newline
-~\newline
- {\bfseries{IT IS UNDER HEAVY DEVELOPMENT SO EXPECT BREAKING CHANGES WITH EACH COMMIT}} ~\newline
-~\newline
-
-\end{DoxyImportant}
-{\bfseries{COLORS FORMAT}}
-
--\/\texorpdfstring{$>$}{>} Hexadecimal {\ttfamily \#RRGGBB} format
-
--\/\texorpdfstring{$>$}{>} \doxylink{namespaceTrueColors}{True\+Colors} (Solid predefined colors)\+:
-
-\begin{DoxyNote}{Note}
-~\newline
- For \doxylink{namespaceTrueColors}{True\+Colors}, check out \href{https://github.com/nots1dd/inLimbo/blob/main/COLORS.md}{\texttt{ COLORS}} for more information on how to set up colors in {\ttfamily in\+Limbo} ~\newline
-~\newline
-
-\end{DoxyNote}
-  \hypertarget{md_README_autotoc_md27}{}\doxysubsection{\texorpdfstring{DIRECTORY SORTING}{DIRECTORY SORTING}}\label{md_README_autotoc_md27}
-To know more about in\+Limbo Project\textquotesingle{}s logical flow on creating a song map, visit \href{https://github.com/nots1dd/inLimbo/blob/main/src/dirsort/SONGMAP.md}{\texttt{ SONGMAP}}\hypertarget{md_README_autotoc_md28}{}\doxysubsection{\texorpdfstring{TESTING}{TESTING}}\label{md_README_autotoc_md28}
+To know more about in\+Limbo Project\textquotesingle{}s logical flow on creating a song map, visit \href{https://github.com/nots1dd/inLimbo/blob/main/src/dirsort/SONGMAP.md}{\texttt{ SONGMAP}}\hypertarget{md_README_autotoc_md40}{}\doxysubsection{\texorpdfstring{{\bfseries{TESTING}}}{{\bfseries{TESTING}}}}\label{md_README_autotoc_md40}
 The in\+Limbo project is aiming to be more aware of how bad its codebase is, hence I am setting up unit tests for most if not all functions/classes that should\+:
 
 
@@ -189,7 +408,7 @@ The in\+Limbo project is aiming to be more aware of how bad its codebase is, hen
 \item Should give more confidence in the code structure if such tests pass
 \end{DoxyEnumerate}
 
-The testing is done using GTest, read \href{https;//github.com/nots1dd/inLimbo/blob/main/tests/TESTS,md}{\texttt{ TESTS.\+md}} to understand more on how tests are configured and built\hypertarget{md_README_autotoc_md29}{}\doxysubsection{\texorpdfstring{DOCUMENTATION}{DOCUMENTATION}}\label{md_README_autotoc_md29}
+The testing is done using GTest, read \href{https;//github.com/nots1dd/inLimbo/blob/main/tests/TESTS,md}{\texttt{ TESTS.\+md}} to understand more on how tests are configured and built\hypertarget{md_README_autotoc_md41}{}\doxysubsection{\texorpdfstring{{\bfseries{DOCUMENTATION}}}{{\bfseries{DOCUMENTATION}}}}\label{md_README_autotoc_md41}
 There is a primitive Doxygen documention set up for the in\+Limbo project, that should explain a lot more about the thought process and idea behind every aspect of the codebase.
 
 Man page is also under progress
@@ -215,7 +434,7 @@ It is much easier to use the script {\ttfamily make\+\_\+docs.\+sh}
 \end{DoxyCode}
 
 
-Or you could just visit \href{https://nots1dd.github.io/inLimbo/}{\texttt{ in\+Limbo Website}}\hypertarget{md_README_autotoc_md30}{}\doxysubsection{\texorpdfstring{CREDITS}{CREDITS}}\label{md_README_autotoc_md30}
+Or you could just visit \href{https://nots1dd.github.io/inLimbo/}{\texttt{ in\+Limbo Website}}\hypertarget{md_README_autotoc_md42}{}\doxysubsection{\texorpdfstring{CREDITS}{CREDITS}}\label{md_README_autotoc_md42}
 {\bfseries{LOGO}}\+:
 
 {\itshape DISCLAIMER}\+: This is not an original logo nor was it commisioned by me
@@ -229,6 +448,10 @@ To parse the \href{https://github.com/nots1dd/inlimbo/blob/main/src/parser/examp
 {\bfseries{AUDIO PLAYBACK \& API}}\+:
 
 Audio playback and capture is thanks to \href{https://github.com/mackron/miniaudio}{\texttt{ miniaudio}}
+
+{\bfseries{INSPIRATIONS}}\+:
+
+This music player\textquotesingle{}s UI flow is heavily inspired by \href{https://github.com/cmus/cmus}{\texttt{ CMUS}}, it seemed (to me atleast) the fastest and most responsive and logical UI/\+UX design of a TUI that has a great balance between looking good and feeling smooth
 
 \DoxyHorRuler{0}
 

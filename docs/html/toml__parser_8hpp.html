@@ -137,8 +137,12 @@ Macros</h2></td></tr>
 <tr class="separator:ac3eb75d2f5670fffbfaa73d5326f9ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10265fc668d386d5d02e91115db9a7cc" id="r_a10265fc668d386d5d02e91115db9a7cc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10265fc668d386d5d02e91115db9a7cc">PARENT_DBG</a>&#160;&#160;&#160;&quot;debug&quot;</td></tr>
 <tr class="separator:a10265fc668d386d5d02e91115db9a7cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:addfc43cbcf5a4328846696cee721a4de" id="r_addfc43cbcf5a4328846696cee721a4de"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#addfc43cbcf5a4328846696cee721a4de">PARENT_DBG_FIELD_PARSER_LOG</a>&#160;&#160;&#160;&quot;parser_log&quot;</td></tr>
-<tr class="separator:addfc43cbcf5a4328846696cee721a4de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b133a50d58c5718bc07c6e73286378e" id="r_a9b133a50d58c5718bc07c6e73286378e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9b133a50d58c5718bc07c6e73286378e">PARENT_DBG_FIELD_TAGLIB_PARSER_LOG</a>&#160;&#160;&#160;  &quot;taglib_parser_log&quot;</td></tr>
+<tr class="separator:a9b133a50d58c5718bc07c6e73286378e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6632006e058b691283eecae15d8f2c4c" id="r_a6632006e058b691283eecae15d8f2c4c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6632006e058b691283eecae15d8f2c4c">PARENT_DBG_FIELD_COLORS_PARSER_LOG</a>&#160;&#160;&#160;&quot;colors_parser_log&quot;</td></tr>
+<tr class="separator:a6632006e058b691283eecae15d8f2c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dbbf241f204ad3fec4382233f7a771b" id="r_a3dbbf241f204ad3fec4382233f7a771b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3dbbf241f204ad3fec4382233f7a771b">PARENT_DBG_FIELD_KEYBINDS_PARSER_LOG</a>&#160;&#160;&#160;&quot;keybinds_parser_log&quot;</td></tr>
+<tr class="separator:a3dbbf241f204ad3fec4382233f7a771b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68fd11c312f2eb908cc3cf08ae9b9c28" id="r_a68fd11c312f2eb908cc3cf08ae9b9c28"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68fd11c312f2eb908cc3cf08ae9b9c28">PARENT_KEYBINDS</a>&#160;&#160;&#160;&quot;keybinds&quot;</td></tr>
 <tr class="separator:a68fd11c312f2eb908cc3cf08ae9b9c28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6b5fdeebb278e6f01a1100d911f359a" id="r_aa6b5fdeebb278e6f01a1100d911f359a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa6b5fdeebb278e6f01a1100d911f359a">SPECIAL_KEYBIND_ENTER_STR</a>&#160;&#160;&#160;&quot;Enter&quot;</td></tr>
@@ -170,18 +174,20 @@ Functions</h2></td></tr>
 <tr class="memitem:ab0f9ee0b01e2b1ec3208d0323ee8957b" id="r_ab0f9ee0b01e2b1ec3208d0323ee8957b"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0f9ee0b01e2b1ec3208d0323ee8957b">loadConfig</a> ()</td></tr>
 <tr class="memdesc:ab0f9ee0b01e2b1ec3208d0323ee8957b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads the configuration file.  <br /></td></tr>
 <tr class="separator:ab0f9ee0b01e2b1ec3208d0323ee8957b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19930571a1aced24a71d9a1d6e7c710a" id="r_a19930571a1aced24a71d9a1d6e7c710a"><td class="memItemLeft" align="right" valign="top">string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19930571a1aced24a71d9a1d6e7c710a">parseTOMLField</a> (string parent, string field)</td></tr>
-<tr class="memdesc:a19930571a1aced24a71d9a1d6e7c710a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a string field from the TOML configuration.  <br /></td></tr>
-<tr class="separator:a19930571a1aced24a71d9a1d6e7c710a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d5e9ae7e728f5d76e3d29b767a9b8e5" id="r_a8d5e9ae7e728f5d76e3d29b767a9b8e5"><td class="memItemLeft" align="right" valign="top">string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d5e9ae7e728f5d76e3d29b767a9b8e5">parseTOMLFieldCustom</a> (const toml::parse_result &amp;custom_config, string parent, string field)</td></tr>
-<tr class="memdesc:a8d5e9ae7e728f5d76e3d29b767a9b8e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a string field from a custom TOML configuration that is called by the INLIMBO_CONFIG_HOME macro at runtime.  <br /></td></tr>
-<tr class="separator:a8d5e9ae7e728f5d76e3d29b767a9b8e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0032a51dfcdddb12160bf671f29001f1" id="r_a0032a51dfcdddb12160bf671f29001f1"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0032a51dfcdddb12160bf671f29001f1">parseTOMLFieldInt</a> (string parent, string field)</td></tr>
-<tr class="memdesc:a0032a51dfcdddb12160bf671f29001f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses an integer field from the TOML configuration.  <br /></td></tr>
-<tr class="separator:a0032a51dfcdddb12160bf671f29001f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8687daac99771caf3f8f1f2c203d6fde" id="r_a8687daac99771caf3f8f1f2c203d6fde"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8687daac99771caf3f8f1f2c203d6fde">parseTOMLFieldIntCustom</a> (const toml::parse_result &amp;custom_config, string parent, string field)</td></tr>
-<tr class="memdesc:a8687daac99771caf3f8f1f2c203d6fde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses an integer field from a custom TOML configuration set by the INLIMBO_CONFIG_HOME macro at runtime.  <br /></td></tr>
-<tr class="separator:a8687daac99771caf3f8f1f2c203d6fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a9759bd3909e5f64c6b7acbdd4bc16f" id="r_a9a9759bd3909e5f64c6b7acbdd4bc16f"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a9759bd3909e5f64c6b7acbdd4bc16f">parseTOMLField</a> (string parent, string field) -&gt; string_view</td></tr>
+<tr class="memdesc:a9a9759bd3909e5f64c6b7acbdd4bc16f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a string field from the TOML configuration.  <br /></td></tr>
+<tr class="separator:a9a9759bd3909e5f64c6b7acbdd4bc16f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a555727478007fa0e36c967ec545ccf1f" id="r_a555727478007fa0e36c967ec545ccf1f"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a555727478007fa0e36c967ec545ccf1f">parseTOMLFieldCustom</a> (const toml::parse_result &amp;custom_config, string parent, string field) -&gt; string_view</td></tr>
+<tr class="memdesc:a555727478007fa0e36c967ec545ccf1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a string field from a custom TOML configuration that is called by the INLIMBO_CONFIG_HOME macro at runtime.  <br /></td></tr>
+<tr class="separator:a555727478007fa0e36c967ec545ccf1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a523559870b0baf1323e43e2f4997f95f" id="r_a523559870b0baf1323e43e2f4997f95f"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a523559870b0baf1323e43e2f4997f95f">parseTOMLFieldInt</a> (string parent, string field) -&gt; int64_t</td></tr>
+<tr class="memdesc:a523559870b0baf1323e43e2f4997f95f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses an integer field from the TOML configuration.  <br /></td></tr>
+<tr class="separator:a523559870b0baf1323e43e2f4997f95f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a981c846888e9379bcd247dbb739de240" id="r_a981c846888e9379bcd247dbb739de240"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a981c846888e9379bcd247dbb739de240">parseTOMLFieldIntCustom</a> (const toml::parse_result &amp;custom_config, string parent, string field) -&gt; int64_t</td></tr>
+<tr class="memdesc:a981c846888e9379bcd247dbb739de240"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses an integer field from a custom TOML configuration set by the INLIMBO_CONFIG_HOME macro at runtime.  <br /></td></tr>
+<tr class="separator:a981c846888e9379bcd247dbb739de240"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6eb11e4db65b58858c65704ec4daa915" id="r_a6eb11e4db65b58858c65704ec4daa915"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6eb11e4db65b58858c65704ec4daa915">parseTOMLFieldBool</a> (const string &amp;parent, const string &amp;field) -&gt; bool</td></tr>
+<tr class="separator:a6eb11e4db65b58858c65704ec4daa915"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -234,14 +240,42 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="addfc43cbcf5a4328846696cee721a4de" name="addfc43cbcf5a4328846696cee721a4de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#addfc43cbcf5a4328846696cee721a4de">&#9670;&#160;</a></span>PARENT_DBG_FIELD_PARSER_LOG</h2>
+<a id="a6632006e058b691283eecae15d8f2c4c" name="a6632006e058b691283eecae15d8f2c4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6632006e058b691283eecae15d8f2c4c">&#9670;&#160;</a></span>PARENT_DBG_FIELD_COLORS_PARSER_LOG</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define PARENT_DBG_FIELD_PARSER_LOG&#160;&#160;&#160;&quot;parser_log&quot;</td>
+          <td class="memname">#define PARENT_DBG_FIELD_COLORS_PARSER_LOG&#160;&#160;&#160;&quot;colors_parser_log&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3dbbf241f204ad3fec4382233f7a771b" name="a3dbbf241f204ad3fec4382233f7a771b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dbbf241f204ad3fec4382233f7a771b">&#9670;&#160;</a></span>PARENT_DBG_FIELD_KEYBINDS_PARSER_LOG</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PARENT_DBG_FIELD_KEYBINDS_PARSER_LOG&#160;&#160;&#160;&quot;keybinds_parser_log&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9b133a50d58c5718bc07c6e73286378e" name="a9b133a50d58c5718bc07c6e73286378e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b133a50d58c5718bc07c6e73286378e">&#9670;&#160;</a></span>PARENT_DBG_FIELD_TAGLIB_PARSER_LOG</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PARENT_DBG_FIELD_TAGLIB_PARSER_LOG&#160;&#160;&#160;  &quot;taglib_parser_log&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -558,21 +592,22 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a19930571a1aced24a71d9a1d6e7c710a" name="a19930571a1aced24a71d9a1d6e7c710a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19930571a1aced24a71d9a1d6e7c710a">&#9670;&#160;</a></span>parseTOMLField()</h2>
+<a id="a9a9759bd3909e5f64c6b7acbdd4bc16f" name="a9a9759bd3909e5f64c6b7acbdd4bc16f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a9759bd3909e5f64c6b7acbdd4bc16f">&#9670;&#160;</a></span>parseTOMLField()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string_view parseTOMLField </td>
+          <td class="memname">auto parseTOMLField </td>
           <td>(</td>
           <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>parent</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;) -&gt; string_view
+</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -591,14 +626,36 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a8d5e9ae7e728f5d76e3d29b767a9b8e5" name="a8d5e9ae7e728f5d76e3d29b767a9b8e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d5e9ae7e728f5d76e3d29b767a9b8e5">&#9670;&#160;</a></span>parseTOMLFieldCustom()</h2>
+<a id="a6eb11e4db65b58858c65704ec4daa915" name="a6eb11e4db65b58858c65704ec4daa915"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6eb11e4db65b58858c65704ec4daa915">&#9670;&#160;</a></span>parseTOMLFieldBool()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string_view parseTOMLFieldCustom </td>
+          <td class="memname">auto parseTOMLFieldBool </td>
+          <td>(</td>
+          <td class="paramtype">const string &amp;</td>          <td class="paramname"><span class="paramname"><em>parent</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;) -&gt; bool
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a555727478007fa0e36c967ec545ccf1f" name="a555727478007fa0e36c967ec545ccf1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a555727478007fa0e36c967ec545ccf1f">&#9670;&#160;</a></span>parseTOMLFieldCustom()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto parseTOMLFieldCustom </td>
           <td>(</td>
           <td class="paramtype">const toml::parse_result &amp;</td>          <td class="paramname"><span class="paramname"><em>custom_config</em></span>, </td>
         </tr>
@@ -610,7 +667,8 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;) -&gt; string_view
+</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -629,21 +687,22 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a0032a51dfcdddb12160bf671f29001f1" name="a0032a51dfcdddb12160bf671f29001f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0032a51dfcdddb12160bf671f29001f1">&#9670;&#160;</a></span>parseTOMLFieldInt()</h2>
+<a id="a523559870b0baf1323e43e2f4997f95f" name="a523559870b0baf1323e43e2f4997f95f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a523559870b0baf1323e43e2f4997f95f">&#9670;&#160;</a></span>parseTOMLFieldInt()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int64_t parseTOMLFieldInt </td>
+          <td class="memname">auto parseTOMLFieldInt </td>
           <td>(</td>
           <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>parent</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;) -&gt; int64_t
+</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -662,14 +721,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a8687daac99771caf3f8f1f2c203d6fde" name="a8687daac99771caf3f8f1f2c203d6fde"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8687daac99771caf3f8f1f2c203d6fde">&#9670;&#160;</a></span>parseTOMLFieldIntCustom()</h2>
+<a id="a981c846888e9379bcd247dbb739de240" name="a981c846888e9379bcd247dbb739de240"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a981c846888e9379bcd247dbb739de240">&#9670;&#160;</a></span>parseTOMLFieldIntCustom()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int64_t parseTOMLFieldIntCustom </td>
+          <td class="memname">auto parseTOMLFieldIntCustom </td>
           <td>(</td>
           <td class="paramtype">const toml::parse_result &amp;</td>          <td class="paramname"><span class="paramname"><em>custom_config</em></span>, </td>
         </tr>
@@ -681,7 +740,8 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>field</em></span>&#160;) -&gt; int64_t
+</td>
         </tr>
       </table>
 </div><div class="memdoc">

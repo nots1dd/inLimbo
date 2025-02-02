@@ -1,0 +1,197 @@
+\doxysection{Queue\+State Struct Reference}
+\hypertarget{structQueueState}{}\label{structQueueState}\index{QueueState@{QueueState}}
+
+
+Represents the state of the song queue.  
+
+
+
+
+{\ttfamily \#include $<$state.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{structQueueState_aa7f46abdae55021a1554c2a3762f4fa7}{clear\+Queue}} ()
+\begin{DoxyCompactList}\small\item\em Clears the song queue. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{structQueueState_a7dd88d6930978f664c2ac8e72d5dae59}{increment\+QIndex}} ()
+\begin{DoxyCompactList}\small\item\em Increments the queue index. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{structQueueState_abe4c9a43eaf4903595b748e040ce6323}{decrement\+QIndex}} ()
+\begin{DoxyCompactList}\small\item\em Decrements the queue index. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{structQueueState_a13a02a30b4058b39205426aca3bf589c}{insert\+Song\+To\+Index}} (const \mbox{\hyperlink{structSong}{Song}} \&new\+Song)
+\begin{DoxyCompactList}\small\item\em Inserts a song at the current index in the queue. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{structQueueState_a251298c2aa2d209fa1923afa854ce971}{q\+Push}} (const \mbox{\hyperlink{structSong}{Song}} \&song)
+\begin{DoxyCompactList}\small\item\em Pushes a song to the end of the queue. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{structQueueState_abd2cce5d8b2b8def08fb65caf21c439e}{q\+Pop\+Index}} ()
+\begin{DoxyCompactList}\small\item\em Pops the song at the current screen index from the queue. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{structQueueState_acae7ee9762c8beb29458963345a5347b}{get\+Queue\+Size}} () -\/$>$ int
+\begin{DoxyCompactList}\small\item\em Returns the current size of the song queue. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{structQueueState_af7fee68bc004cacab93614ceb9f0114b}{Get\+Current\+Song\+From\+Queue}} () -\/$>$ \mbox{\hyperlink{structSong}{Song}} \texorpdfstring{$\ast$}{*}
+\begin{DoxyCompactList}\small\item\em Retrieves the current song from the queue. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{structQueueState_a9c0dbcf03cd0cb414d63ac97a8377865}{Update\+Song\+Queue\+List}} ()
+\begin{DoxyCompactList}\small\item\em Updates the list of song names in the queue. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+vector$<$ \mbox{\hyperlink{structSong}{Song}} $>$ \mbox{\hyperlink{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}{song\+\_\+queue}}
+\item 
+vector$<$ string $>$ \mbox{\hyperlink{structQueueState_a53d38391f1ec389aba26a5540bf04f6d}{song\+\_\+queue\+\_\+names}}
+\item 
+int \mbox{\hyperlink{structQueueState_af8c3ee8aace579c5a133c3011b3c8884}{q\+Index}} = 0
+\item 
+int \mbox{\hyperlink{structQueueState_ad22e7ed9a63ceccf8de1aae84f27f7a7}{q\+Screen\+Index}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the state of the song queue. 
+
+This structure holds the song queue and the indices for navigating and managing the queue. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structQueueState_aa7f46abdae55021a1554c2a3762f4fa7}\index{QueueState@{QueueState}!clearQueue@{clearQueue}}
+\index{clearQueue@{clearQueue}!QueueState@{QueueState}}
+\doxysubsubsection{\texorpdfstring{clearQueue()}{clearQueue()}}
+{\footnotesize\ttfamily \label{structQueueState_aa7f46abdae55021a1554c2a3762f4fa7} 
+void Queue\+State\+::clear\+Queue (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Clears the song queue. 
+
+This method removes all songs from the queue and resets the queue index. \Hypertarget{structQueueState_abe4c9a43eaf4903595b748e040ce6323}\index{QueueState@{QueueState}!decrementQIndex@{decrementQIndex}}
+\index{decrementQIndex@{decrementQIndex}!QueueState@{QueueState}}
+\doxysubsubsection{\texorpdfstring{decrementQIndex()}{decrementQIndex()}}
+{\footnotesize\ttfamily \label{structQueueState_abe4c9a43eaf4903595b748e040ce6323} 
+void Queue\+State\+::decrement\+QIndex (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Decrements the queue index. 
+
+This method decrements the index to point to the previous song in the queue. \Hypertarget{structQueueState_af7fee68bc004cacab93614ceb9f0114b}\index{QueueState@{QueueState}!GetCurrentSongFromQueue@{GetCurrentSongFromQueue}}
+\index{GetCurrentSongFromQueue@{GetCurrentSongFromQueue}!QueueState@{QueueState}}
+\doxysubsubsection{\texorpdfstring{GetCurrentSongFromQueue()}{GetCurrentSongFromQueue()}}
+{\footnotesize\ttfamily \label{structQueueState_af7fee68bc004cacab93614ceb9f0114b} 
+auto Queue\+State\+::\+Get\+Current\+Song\+From\+Queue (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) -\/$>$ \mbox{\hyperlink{structSong}{Song}}\texorpdfstring{$\ast$}{*}   \hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Retrieves the current song from the queue. 
+
+This method returns a pointer to the song currently selected in the queue.
+
+\begin{DoxyReturn}{Returns}
+A pointer to the current song in the queue, or nullptr if the queue is empty. 
+\end{DoxyReturn}
+\Hypertarget{structQueueState_acae7ee9762c8beb29458963345a5347b}\index{QueueState@{QueueState}!getQueueSize@{getQueueSize}}
+\index{getQueueSize@{getQueueSize}!QueueState@{QueueState}}
+\doxysubsubsection{\texorpdfstring{getQueueSize()}{getQueueSize()}}
+{\footnotesize\ttfamily \label{structQueueState_acae7ee9762c8beb29458963345a5347b} 
+auto Queue\+State\+::get\+Queue\+Size (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) -\/$>$ int \hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the current size of the song queue. 
+
+This method returns the number of songs currently in the queue.
+
+\begin{DoxyReturn}{Returns}
+The size of the song queue. 
+\end{DoxyReturn}
+\Hypertarget{structQueueState_a7dd88d6930978f664c2ac8e72d5dae59}\index{QueueState@{QueueState}!incrementQIndex@{incrementQIndex}}
+\index{incrementQIndex@{incrementQIndex}!QueueState@{QueueState}}
+\doxysubsubsection{\texorpdfstring{incrementQIndex()}{incrementQIndex()}}
+{\footnotesize\ttfamily \label{structQueueState_a7dd88d6930978f664c2ac8e72d5dae59} 
+void Queue\+State\+::increment\+QIndex (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Increments the queue index. 
+
+This method increments the index to point to the next song in the queue. \Hypertarget{structQueueState_a13a02a30b4058b39205426aca3bf589c}\index{QueueState@{QueueState}!insertSongToIndex@{insertSongToIndex}}
+\index{insertSongToIndex@{insertSongToIndex}!QueueState@{QueueState}}
+\doxysubsubsection{\texorpdfstring{insertSongToIndex()}{insertSongToIndex()}}
+{\footnotesize\ttfamily \label{structQueueState_a13a02a30b4058b39205426aca3bf589c} 
+void Queue\+State\+::insert\+Song\+To\+Index (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structSong}{Song}} \&}]{new\+Song}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Inserts a song at the current index in the queue. 
+
+This method inserts a new song at the position immediately after the current queue index.
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+Song} & The song to insert into the queue. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{structQueueState_abd2cce5d8b2b8def08fb65caf21c439e}\index{QueueState@{QueueState}!qPopIndex@{qPopIndex}}
+\index{qPopIndex@{qPopIndex}!QueueState@{QueueState}}
+\doxysubsubsection{\texorpdfstring{qPopIndex()}{qPopIndex()}}
+{\footnotesize\ttfamily \label{structQueueState_abd2cce5d8b2b8def08fb65caf21c439e} 
+void Queue\+State\+::q\+Pop\+Index (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Pops the song at the current screen index from the queue. 
+
+This method removes the song at the current screen index from the queue. \Hypertarget{structQueueState_a251298c2aa2d209fa1923afa854ce971}\index{QueueState@{QueueState}!qPush@{qPush}}
+\index{qPush@{qPush}!QueueState@{QueueState}}
+\doxysubsubsection{\texorpdfstring{qPush()}{qPush()}}
+{\footnotesize\ttfamily \label{structQueueState_a251298c2aa2d209fa1923afa854ce971} 
+void Queue\+State\+::q\+Push (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structSong}{Song}} \&}]{song}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Pushes a song to the end of the queue. 
+
+This method appends a song to the end of the song queue.
+
+
+\begin{DoxyParams}{Parameters}
+{\em song} & The song to add to the queue. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{structQueueState_a9c0dbcf03cd0cb414d63ac97a8377865}\index{QueueState@{QueueState}!UpdateSongQueueList@{UpdateSongQueueList}}
+\index{UpdateSongQueueList@{UpdateSongQueueList}!QueueState@{QueueState}}
+\doxysubsubsection{\texorpdfstring{UpdateSongQueueList()}{UpdateSongQueueList()}}
+{\footnotesize\ttfamily \label{structQueueState_a9c0dbcf03cd0cb414d63ac97a8377865} 
+void Queue\+State\+::\+Update\+Song\+Queue\+List (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Updates the list of song names in the queue. 
+
+This method updates the {\ttfamily song\+\_\+queue\+\_\+names} list with the names of the songs from the queue, marking the current song with an asterisk. 
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structQueueState_af8c3ee8aace579c5a133c3011b3c8884}\index{QueueState@{QueueState}!qIndex@{qIndex}}
+\index{qIndex@{qIndex}!QueueState@{QueueState}}
+\doxysubsubsection{\texorpdfstring{qIndex}{qIndex}}
+{\footnotesize\ttfamily \label{structQueueState_af8c3ee8aace579c5a133c3011b3c8884} 
+int Queue\+State\+::q\+Index = 0}
+
+Index of the current song in the queue \Hypertarget{structQueueState_ad22e7ed9a63ceccf8de1aae84f27f7a7}\index{QueueState@{QueueState}!qScreenIndex@{qScreenIndex}}
+\index{qScreenIndex@{qScreenIndex}!QueueState@{QueueState}}
+\doxysubsubsection{\texorpdfstring{qScreenIndex}{qScreenIndex}}
+{\footnotesize\ttfamily \label{structQueueState_ad22e7ed9a63ceccf8de1aae84f27f7a7} 
+int Queue\+State\+::q\+Screen\+Index = 0}
+
+Index of the current song being displayed on the screen \Hypertarget{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d}\index{QueueState@{QueueState}!song\_queue@{song\_queue}}
+\index{song\_queue@{song\_queue}!QueueState@{QueueState}}
+\doxysubsubsection{\texorpdfstring{song\_queue}{song\_queue}}
+{\footnotesize\ttfamily \label{structQueueState_abe1d36a9eed6c7fdc69fdac52ca23f5d} 
+vector$<$\mbox{\hyperlink{structSong}{Song}}$>$ Queue\+State\+::song\+\_\+queue}
+
+The list of songs in the queue \Hypertarget{structQueueState_a53d38391f1ec389aba26a5540bf04f6d}\index{QueueState@{QueueState}!song\_queue\_names@{song\_queue\_names}}
+\index{song\_queue\_names@{song\_queue\_names}!QueueState@{QueueState}}
+\doxysubsubsection{\texorpdfstring{song\_queue\_names}{song\_queue\_names}}
+{\footnotesize\ttfamily \label{structQueueState_a53d38391f1ec389aba26a5540bf04f6d} 
+vector$<$string$>$ Queue\+State\+::song\+\_\+queue\+\_\+names}
+
+The list of song names in the queue 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/ui/states/\mbox{\hyperlink{state_8hpp}{state.\+hpp}}\end{DoxyCompactItemize}

@@ -19,11 +19,9 @@ struct \mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}}
 \item 
 \mbox{\hyperlink{classThreadManager_a613b13ebf45502e4d86c2f9317ec5871}{Thread\+Manager}} ()
 \begin{DoxyCompactList}\small\item\em Construct a \doxylink{classThreadManager}{Thread\+Manager} with a worker thread pool. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{classThreadManager_a18eb12d3d752075318c3672c8efffd5b}{\texorpdfstring{$\sim$}{\string~}\+Thread\+Manager}} ()
+auto \mbox{\hyperlink{classThreadManager_a46b42b1798d4aa874edd8d4fa6ee0ed7}{get\+Thread\+State}} () -\/$>$ \mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}} \&
 \begin{DoxyCompactList}\small\item\em Destructor to clean up resources and threads. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}} \& \mbox{\hyperlink{classThreadManager_a68d674d82375bbf4cbaeda427df036a2}{get\+Thread\+State}} ()
-\begin{DoxyCompactList}\small\item\em Retrieves the thread state managed by this \doxylink{classThreadManager}{Thread\+Manager}. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}} \& \mbox{\hyperlink{classThreadManager_aaa649c0d04519f63cd596cf7fdcaa7de}{get\+Worker\+Thread\+Pool}} ()
+auto \mbox{\hyperlink{classThreadManager_aba98251e64455c0a166d524f68f1674b}{get\+Worker\+Thread\+Pool}} () -\/$>$ \mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}} \&
 \begin{DoxyCompactList}\small\item\em Get the worker thread pool. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classThreadManager_a8c0b77d668ea526a62b556b42751a5a6}{lock\+Play\+Mutex}} (\mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}} \&thread\+\_\+state)
 \begin{DoxyCompactList}\small\item\em Locks the play mutex for the provided thread state. \end{DoxyCompactList}\item 
@@ -45,37 +43,27 @@ Thread\+Manager\+::\+Thread\+Manager (\begin{DoxyParamCaption}{}{}\end{DoxyParam
 
 Construct a \doxylink{classThreadManager}{Thread\+Manager} with a worker thread pool. 
 
-\Hypertarget{classThreadManager_a18eb12d3d752075318c3672c8efffd5b}\index{ThreadManager@{ThreadManager}!````~ThreadManager@{\texorpdfstring{$\sim$}{\string~}ThreadManager}}
-\index{````~ThreadManager@{\texorpdfstring{$\sim$}{\string~}ThreadManager}!ThreadManager@{ThreadManager}}
-\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}ThreadManager()}{\string~ThreadManager()}}
-{\footnotesize\ttfamily \label{classThreadManager_a18eb12d3d752075318c3672c8efffd5b} 
-Thread\+Manager\+::\texorpdfstring{$\sim$}{\string~}\+Thread\+Manager (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classThreadManager_a46b42b1798d4aa874edd8d4fa6ee0ed7}\index{ThreadManager@{ThreadManager}!getThreadState@{getThreadState}}
+\index{getThreadState@{getThreadState}!ThreadManager@{ThreadManager}}
+\doxysubsubsection{\texorpdfstring{getThreadState()}{getThreadState()}}
+{\footnotesize\ttfamily \label{classThreadManager_a46b42b1798d4aa874edd8d4fa6ee0ed7} 
+auto Thread\+Manager\+::get\+Thread\+State (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) -\/$>$ \mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}}\& \hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
 Destructor to clean up resources and threads. 
 
-
-
-\doxysubsection{Member Function Documentation}
-\Hypertarget{classThreadManager_a68d674d82375bbf4cbaeda427df036a2}\index{ThreadManager@{ThreadManager}!getThreadState@{getThreadState}}
-\index{getThreadState@{getThreadState}!ThreadManager@{ThreadManager}}
-\doxysubsubsection{\texorpdfstring{getThreadState()}{getThreadState()}}
-{\footnotesize\ttfamily \label{classThreadManager_a68d674d82375bbf4cbaeda427df036a2} 
-\mbox{\hyperlink{structThreadManager_1_1ThreadState}{Thread\+State}} \& Thread\+Manager\+::get\+Thread\+State (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-Retrieves the thread state managed by this \doxylink{classThreadManager}{Thread\+Manager}. 
-
-\begin{DoxyReturn}{Returns}
+Retrieves the thread state managed by this \doxylink{classThreadManager}{Thread\+Manager}. \begin{DoxyReturn}{Returns}
 A reference to the thread state. 
 \end{DoxyReturn}
-\Hypertarget{classThreadManager_aaa649c0d04519f63cd596cf7fdcaa7de}\index{ThreadManager@{ThreadManager}!getWorkerThreadPool@{getWorkerThreadPool}}
+\Hypertarget{classThreadManager_aba98251e64455c0a166d524f68f1674b}\index{ThreadManager@{ThreadManager}!getWorkerThreadPool@{getWorkerThreadPool}}
 \index{getWorkerThreadPool@{getWorkerThreadPool}!ThreadManager@{ThreadManager}}
 \doxysubsubsection{\texorpdfstring{getWorkerThreadPool()}{getWorkerThreadPool()}}
-{\footnotesize\ttfamily \label{classThreadManager_aaa649c0d04519f63cd596cf7fdcaa7de} 
-\mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}} \& Thread\+Manager\+::get\+Worker\+Thread\+Pool (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily \label{classThreadManager_aba98251e64455c0a166d524f68f1674b} 
+auto Thread\+Manager\+::get\+Worker\+Thread\+Pool (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) -\/$>$ \mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}}\& \hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -118,4 +106,4 @@ Locks the queue mutex for the provided thread state.
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-src/ui/\mbox{\hyperlink{thread__manager_8hpp}{thread\+\_\+manager.\+hpp}}\end{DoxyCompactItemize}
+src/threads/\mbox{\hyperlink{thread__manager_8hpp}{thread\+\_\+manager.\+hpp}}\end{DoxyCompactItemize}

@@ -3,141 +3,240 @@
 \mbox{\hyperlink{arg-handler_8hpp}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00001\ }
-\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ ARGUMENT\_HANDLER\_HPP}}
-\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ ARGUMENT\_HANDLER\_HPP}}
-\DoxyCodeLine{00011\ }
-\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cmd-line-args_8hpp}{./cmd-\/line-\/args.hpp}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{cmd-line-args_8hpp}{./cmd-\/line-\/args.hpp}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{songmap_8hpp}{dirsort/songmap.hpp}}"{}}}
 \DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <filesystem>}}
 \DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <iostream>}}
-\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <stdexcept>}}
-\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <string\_view>}}
-\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
-\DoxyCodeLine{00018\ }
-\DoxyCodeLine{00019\ \textcolor{comment}{//\ Constants}}
-\DoxyCodeLine{00020\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{arg-handler_8hpp_a66a0a8982b40d72ceed7b95a0d7d280c}{DBUS\_SERVICE\_NAME}}\ =}
-\DoxyCodeLine{00021\ \ \ \textcolor{stringliteral}{"{}org.mpris.MediaPlayer2.inLimbo"{}};\ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00022\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{arg-handler_8hpp_a35aceb690e11a3d78331de7dda9563ae}{VERSION}}\ =\ \textcolor{stringliteral}{"{}2.5\ (ALPHA)"{}};\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <string\_view>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ Constants}}
+\DoxyCodeLine{00019\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{arg-handler_8hpp_a66a0a8982b40d72ceed7b95a0d7d280c}{DBUS\_SERVICE\_NAME}}\ =}
+\DoxyCodeLine{00020\ \ \ \textcolor{stringliteral}{"{}org.mpris.MediaPlayer2.inLimbo"{}};\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{arg-handler_8hpp_af373b8d5ef3d654b43f29e8f6b4a6ccc}{VERSION\_FILE\_NAME}}\ =\ \textcolor{stringliteral}{"{}VERSION"{}};}
+\DoxyCodeLine{00022\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \mbox{\hyperlink{arg-handler_8hpp_a1dea1931820a41f82fc5acb0fab76ea4}{REPOSITORY\_URL}}\ \ \ \ =\ \textcolor{stringliteral}{"{}https://github.com/nots1dd/inLimbo"{}};}
 \DoxyCodeLine{00023\ }
 \DoxyCodeLine{00024\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{arg-handler_8hpp_af443d26ff309f6e511dfcae4be89775a}{shouldRunApp}}\ =}
 \DoxyCodeLine{00025\ \ \ \textcolor{keyword}{false};\ }
-\DoxyCodeLine{00026\ }
-\DoxyCodeLine{00031\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{ConsoleColor}}}
-\DoxyCodeLine{00032\ \{}
-\DoxyCodeLine{00033\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d}{Reset}},\ \ }
-\DoxyCodeLine{00034\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1}{Green}},\ \ }
-\DoxyCodeLine{00035\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9}{Blue}},\ \ \ }
-\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa51e6cd92b6c45f9affdc158ecca2b8b8}{Yellow}},\ }
-\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaaee38e4d5dd68c4e440825018d549cb47}{Red}},\ \ \ \ }
-\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa023c239d2f2538f140a20e72c7b73f20}{Cyan}},\ \ \ }
-\DoxyCodeLine{00039\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaab91cc2c1416fcca942b61c7ac5b1a9ac}{Magenta}}\ }
-\DoxyCodeLine{00040\ \};}
-\DoxyCodeLine{00041\ }
-\DoxyCodeLine{00049\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classColorManager}{ColorManager}}}
-\DoxyCodeLine{00050\ \{}
-\DoxyCodeLine{00051\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00058\ \ \ \textcolor{keyword}{static}\ std::string\_view\ \mbox{\hyperlink{classColorManager_af561fc120beb824a566af0611611754d}{getColor}}(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{ConsoleColor}}\ color)}
-\DoxyCodeLine{00059\ \ \ \{}
-\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::unordered\_map<ConsoleColor,\ std::string\_view>\ colorCodes\ =\ \{}
-\DoxyCodeLine{00061\ \ \ \ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d}{ConsoleColor::Reset}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[0m"{}}\},\ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1}{ConsoleColor::Green}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[32m"{}}\},}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9}{ConsoleColor::Blue}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[34m"{}}\},\ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa51e6cd92b6c45f9affdc158ecca2b8b8}{ConsoleColor::Yellow}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[33m"{}}\},}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaaee38e4d5dd68c4e440825018d549cb47}{ConsoleColor::Red}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[31m"{}}\},\ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa023c239d2f2538f140a20e72c7b73f20}{ConsoleColor::Cyan}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[36m"{}}\},}
-\DoxyCodeLine{00064\ \ \ \ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaab91cc2c1416fcca942b61c7ac5b1a9ac}{ConsoleColor::Magenta}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[35m"{}}\}\};}
-\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordflow}{return}\ colorCodes.at(color);}
-\DoxyCodeLine{00066\ \ \ \}}
-\DoxyCodeLine{00067\ \};}
-\DoxyCodeLine{00068\ }
-\DoxyCodeLine{00077\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classArgumentHandler}{ArgumentHandler}}}
-\DoxyCodeLine{00078\ \{}
-\DoxyCodeLine{00079\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00087\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structArgumentHandler_1_1Paths}{Paths}}}
-\DoxyCodeLine{00088\ \ \ \{}
-\DoxyCodeLine{00089\ \ \ \ \ std::string\ \mbox{\hyperlink{structArgumentHandler_1_1Paths_a0aac53206f5e6a7301f2a57b0c4ccaea}{configPath}};\ }
-\DoxyCodeLine{00090\ \ \ \ \ std::string\ \mbox{\hyperlink{structArgumentHandler_1_1Paths_a0170467908b849120b512e79ca010f84}{libBinPath}};\ }
-\DoxyCodeLine{00091\ \ \ \ \ std::string\ \mbox{\hyperlink{structArgumentHandler_1_1Paths_ac4424017ac641cc7f3d6330c0fc8c18a}{cacheDir}};\ \ \ }
-\DoxyCodeLine{00092\ \ \ \};}
-\DoxyCodeLine{00093\ }
-\DoxyCodeLine{00105\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classArgumentHandler_a573a13e5dcb882af4dfc1568be103c72}{handleArguments}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classCommandLineArgs}{CommandLineArgs}}\&\ cmdArgs,\ \textcolor{keyword}{const}\ std::string\&\ programName,}
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structArgumentHandler_1_1Paths}{Paths}}\&\ paths)}
-\DoxyCodeLine{00107\ \ \ \{}
-\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ std::function<void()>>\ argumentHandlers\ =\ \{}
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/help"{}},\ [\&]()\ \{\ handleHelp(cmdArgs,\ programName);\ \}\},}
-\DoxyCodeLine{00110\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/version"{}},\ [\&]()\ \{\ handleVersion();\ \}\},}
-\DoxyCodeLine{00111\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/clear-\/cache"{}},\ [\&]()\ \{\ handleClearCache(paths.\mbox{\hyperlink{structArgumentHandler_1_1Paths_a0170467908b849120b512e79ca010f84}{libBinPath}});\ \}\},}
-\DoxyCodeLine{00112\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/show-\/config-\/file"{}},\ [\&]()\ \{\ handleShowConfig(paths.\mbox{\hyperlink{structArgumentHandler_1_1Paths_a0aac53206f5e6a7301f2a57b0c4ccaea}{configPath}});\ \}\},}
-\DoxyCodeLine{00113\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/show-\/log-\/dir"{}},\ [\&]()\ \{\ handleShowLogDir(paths.\mbox{\hyperlink{structArgumentHandler_1_1Paths_ac4424017ac641cc7f3d6330c0fc8c18a}{cacheDir}});\ \}\},}
-\DoxyCodeLine{00114\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/show-\/dbus-\/name"{}},\ [\&]()\ \{\ handleShowDBusName();\ \}\},}
-\DoxyCodeLine{00115\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/update-\/cache-\/run"{}},\ [\&]()\ \{\ handleUpdateCacheRun(paths.\mbox{\hyperlink{structArgumentHandler_1_1Paths_a0170467908b849120b512e79ca010f84}{libBinPath}});\ \}\}\};}
-\DoxyCodeLine{00116\ }
-\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [flag,\ handler]\ :\ argumentHandlers)}
-\DoxyCodeLine{00118\ \ \ \ \ \{}
-\DoxyCodeLine{00119\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cmdArgs.\mbox{\hyperlink{classCommandLineArgs_a9e468eecc878b283c0a2070858868f0f}{hasFlag}}(flag))}
-\DoxyCodeLine{00120\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ handler();}
-\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{arg-handler_8hpp_af443d26ff309f6e511dfcae4be89775a}{shouldRunApp}})}
-\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ exit(0);}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00125\ \ \ \ \ \}}
-\DoxyCodeLine{00126\ \ \ \}}
-\DoxyCodeLine{00127\ }
-\DoxyCodeLine{00128\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00136\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{ConsoleColor}}\ color,\ std::string\_view\ label,\ std::string\_view\ value\ =\ \textcolor{stringliteral}{"{}"{}})}
-\DoxyCodeLine{00137\ \ \ \{}
-\DoxyCodeLine{00138\ \ \ \ \ std::cout\ <<\ \mbox{\hyperlink{classColorManager_af561fc120beb824a566af0611611754d}{ColorManager::getColor}}(color)\ <<\ label}
-\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \mbox{\hyperlink{classColorManager_af561fc120beb824a566af0611611754d}{ColorManager::getColor}}(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d}{ConsoleColor::Reset}})\ <<\ value\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00140\ \ \ \}}
-\DoxyCodeLine{00141\ }
-\DoxyCodeLine{00148\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleHelp(\textcolor{keyword}{const}\ CommandLineArgs\&\ cmdArgs,\ \textcolor{keyword}{const}\ std::string\&\ programName)}
+\DoxyCodeLine{00026\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{arg-handler_8hpp_a4facf54f696971b5d1e41f376fb0e783}{parseSongTree}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structSongTreeState}{SongTreeState}}}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structSongTreeState_a1638f8cc00d352a2eec2913709ac5339}{printSongTree}}\ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00031\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structSongTreeState_a6fa65cd0aa4a77cf1d751d9eb35e6498}{printArtistsAll}}\ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00032\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structSongTreeState_ac10a38576bcb9fc2b88e24d170d78c00}{printSongsByArtist}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00033\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structSongTreeState_afbe699b15526908de64b6ca2a1f9e58d}{printSongsGenreAll}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00034\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structSongTreeState_a8e482dcfee976da0a8cf37d26fbf6ef4}{printSongInfo}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00035\ \ \ std::string\ \mbox{\hyperlink{structSongTreeState_a469567f9eaec41bf0657a301dd5b4101}{artist}};}
+\DoxyCodeLine{00036\ \ \ std::string\ \mbox{\hyperlink{structSongTreeState_af3ab3aa1ff13b000d647645c807aac60}{song}};}
+\DoxyCodeLine{00037\ \};}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{ConsoleColor}}}
+\DoxyCodeLine{00044\ \{}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d}{Reset}},\ \ }
+\DoxyCodeLine{00046\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1}{Green}},\ \ }
+\DoxyCodeLine{00047\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9}{Blue}},\ \ \ }
+\DoxyCodeLine{00048\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa51e6cd92b6c45f9affdc158ecca2b8b8}{Yellow}},\ }
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaaee38e4d5dd68c4e440825018d549cb47}{Red}},\ \ \ \ }
+\DoxyCodeLine{00050\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa023c239d2f2538f140a20e72c7b73f20}{Cyan}},\ \ \ }
+\DoxyCodeLine{00051\ \ \ \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaab91cc2c1416fcca942b61c7ac5b1a9ac}{Magenta}}\ }
+\DoxyCodeLine{00052\ \};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classColorManager}{ColorManager}}}
+\DoxyCodeLine{00062\ \{}
+\DoxyCodeLine{00063\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00070\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classColorManager_ab705db1ff8377fd2c71e9e9878f4c26c}{getColor}}(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{ConsoleColor}}\ color)\ -\/>\ std::string\_view}
+\DoxyCodeLine{00071\ \ \ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::unordered\_map<ConsoleColor,\ std::string\_view>\ colorCodes\ =\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d}{ConsoleColor::Reset}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[0m"{}}\},\ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1}{ConsoleColor::Green}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[32m"{}}\},}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9}{ConsoleColor::Blue}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[34m"{}}\},\ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa51e6cd92b6c45f9affdc158ecca2b8b8}{ConsoleColor::Yellow}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[33m"{}}\},}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaaee38e4d5dd68c4e440825018d549cb47}{ConsoleColor::Red}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[31m"{}}\},\ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa023c239d2f2538f140a20e72c7b73f20}{ConsoleColor::Cyan}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[36m"{}}\},}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \{\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaab91cc2c1416fcca942b61c7ac5b1a9ac}{ConsoleColor::Magenta}},\ \textcolor{stringliteral}{"{}\(\backslash\)033[35m"{}}\}\};}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordflow}{return}\ colorCodes.at(color);}
+\DoxyCodeLine{00078\ \ \ \}}
+\DoxyCodeLine{00079\ \};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classArgumentHandler}{ArgumentHandler}}}
+\DoxyCodeLine{00090\ \{}
+\DoxyCodeLine{00091\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00099\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structArgumentHandler_1_1Paths}{Paths}}}
+\DoxyCodeLine{00100\ \ \ \{}
+\DoxyCodeLine{00101\ \ \ \ \ std::string\ \mbox{\hyperlink{structArgumentHandler_1_1Paths_a0aac53206f5e6a7301f2a57b0c4ccaea}{configPath}};\ }
+\DoxyCodeLine{00102\ \ \ \ \ std::string\ \mbox{\hyperlink{structArgumentHandler_1_1Paths_a0170467908b849120b512e79ca010f84}{libBinPath}};\ }
+\DoxyCodeLine{00103\ \ \ \ \ std::string\ \mbox{\hyperlink{structArgumentHandler_1_1Paths_ac4424017ac641cc7f3d6330c0fc8c18a}{cacheDir}};\ \ \ }
+\DoxyCodeLine{00104\ \ \ \};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{structSongTreeState}{SongTreeState}}\ \mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{song\_tree\_parse\_state}}\ =\ \{\};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00119\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classArgumentHandler_a573a13e5dcb882af4dfc1568be103c72}{handleArguments}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classCommandLineArgs}{CommandLineArgs}}\&\ cmdArgs,\ \textcolor{keyword}{const}\ std::string\&\ programName,}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structArgumentHandler_1_1Paths}{Paths}}\&\ paths)}
+\DoxyCodeLine{00121\ \ \ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ std::function<void()>>\ argumentHandlers\ =\ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/help"{}},\ [\&]()\ \{\ handleHelp(cmdArgs,\ programName);\ \}\},}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/version"{}},\ [\&]()\ \{\ handleVersion();\ \}\},}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/clear-\/cache"{}},\ [\&]()\ \{\ handleClearCache(paths.\mbox{\hyperlink{structArgumentHandler_1_1Paths_a0170467908b849120b512e79ca010f84}{libBinPath}});\ \}\},}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/show-\/config-\/file"{}},\ [\&]()\ \{\ handleShowConfig(paths.\mbox{\hyperlink{structArgumentHandler_1_1Paths_a0aac53206f5e6a7301f2a57b0c4ccaea}{configPath}});\ \}\},}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/show-\/log-\/dir"{}},\ [\&]()\ \{\ handleShowLogDir(paths.\mbox{\hyperlink{structArgumentHandler_1_1Paths_ac4424017ac641cc7f3d6330c0fc8c18a}{cacheDir}});\ \}\},}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/show-\/dbus-\/name"{}},\ [\&]()\ \{\ handleShowDBusName();\ \}\},}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/update-\/cache-\/run"{}},\ [\&]()\ \{\ handleUpdateCacheRun(paths.\mbox{\hyperlink{structArgumentHandler_1_1Paths_a0170467908b849120b512e79ca010f84}{libBinPath}});\ \}\},}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/print-\/song-\/tree"{}},\ [\&]()\ \{\ handlePrintSongTree();\ \}\},}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/print-\/artists-\/all"{}},\ [\&]()\ \{\ handlePrintArtistsAll();\ \}\},}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/print-\/songs-\/by-\/genre-\/all"{}},\ [\&]()\ \{\ handlePrintSongsByGenreAll();\ \}\},}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/print-\/songs-\/by-\/artist"{}},}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ [\&]()\ \{\ handlePrintSongsByArtist(cmdArgs.\mbox{\hyperlink{classCommandLineArgs_af4274817a5528e3aa73117e80f8fe5dd}{get}}(\textcolor{stringliteral}{"{}-\/-\/print-\/songs-\/by-\/artist"{}}));\ \}\},}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \{\textcolor{stringliteral}{"{}-\/-\/print-\/song-\/info"{}},\ [\&]()\ \{\ handleSongInfo(cmdArgs.\mbox{\hyperlink{classCommandLineArgs_af4274817a5528e3aa73117e80f8fe5dd}{get}}(\textcolor{stringliteral}{"{}-\/-\/print-\/song-\/info"{}}));\ \}\}\};}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [flag,\ handler]\ :\ argumentHandlers)}
+\DoxyCodeLine{00138\ \ \ \ \ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cmdArgs.\mbox{\hyperlink{classCommandLineArgs_a8d8db92f07e7ea891150eb4307130db4}{hasFlag}}(flag))}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ handler();}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{arg-handler_8hpp_af443d26ff309f6e511dfcae4be89775a}{shouldRunApp}})}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ exit(0);}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00145\ \ \ \ \ \}}
+\DoxyCodeLine{00146\ \ \ \}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classArgumentHandler_a5b7b9b549025b3058b6ceac55986cf9a}{processSongTreeArguments}}(\mbox{\hyperlink{classSongTree}{SongTree}}\&\ song\_tree)\ -\/>\ \textcolor{keywordtype}{void}}
 \DoxyCodeLine{00149\ \ \ \{}
-\DoxyCodeLine{00150\ \ \ \ \ cmdArgs.\mbox{\hyperlink{classCommandLineArgs_a23bfeb76513b5a88ec4af37d6f60269e}{printUsage}}(programName);}
-\DoxyCodeLine{00151\ \ \ \}}
-\DoxyCodeLine{00152\ }
-\DoxyCodeLine{00156\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleVersion()\ \{\ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa023c239d2f2538f140a20e72c7b73f20}{ConsoleColor::Cyan}},\ \textcolor{stringliteral}{"{}inLimbo\ version:\ "{}},\ \mbox{\hyperlink{arg-handler_8hpp_a35aceb690e11a3d78331de7dda9563ae}{VERSION}});\ \}}
-\DoxyCodeLine{00157\ }
-\DoxyCodeLine{00163\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleShowConfig(\textcolor{keyword}{const}\ std::string\&\ configPath)}
-\DoxyCodeLine{00164\ \ \ \{}
-\DoxyCodeLine{00165\ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1}{ConsoleColor::Green}},\ \textcolor{stringliteral}{"{}Config\ file\ location:\ "{}},\ configPath);}
-\DoxyCodeLine{00166\ \ \ \}}
-\DoxyCodeLine{00167\ }
-\DoxyCodeLine{00173\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleShowLogDir(\textcolor{keyword}{const}\ std::string\&\ cacheDir)}
-\DoxyCodeLine{00174\ \ \ \{}
-\DoxyCodeLine{00175\ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9}{ConsoleColor::Blue}},\ \textcolor{stringliteral}{"{}Log\ directory:\ "{}},\ cacheDir);}
-\DoxyCodeLine{00176\ \ \ \}}
-\DoxyCodeLine{00177\ }
-\DoxyCodeLine{00181\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleShowDBusName()}
-\DoxyCodeLine{00182\ \ \ \{}
-\DoxyCodeLine{00183\ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaab91cc2c1416fcca942b61c7ac5b1a9ac}{ConsoleColor::Magenta}},\ \textcolor{stringliteral}{"{}DBus\ name:\ "{}},\ \mbox{\hyperlink{arg-handler_8hpp_a66a0a8982b40d72ceed7b95a0d7d280c}{DBUS\_SERVICE\_NAME}});}
-\DoxyCodeLine{00184\ \ \ \}}
-\DoxyCodeLine{00185\ }
-\DoxyCodeLine{00194\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleClearCache(\textcolor{keyword}{const}\ std::string\&\ libBinPath)}
-\DoxyCodeLine{00195\ \ \ \{}
-\DoxyCodeLine{00196\ \ \ \ \ \textcolor{keywordflow}{try}}
-\DoxyCodeLine{00197\ \ \ \ \ \{}
-\DoxyCodeLine{00198\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::filesystem::exists(libBinPath))}
-\DoxyCodeLine{00199\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ std::filesystem::remove(libBinPath);}
-\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1}{ConsoleColor::Green}},\ \textcolor{stringliteral}{"{}Cache\ cleared\ successfully:\ "{}},\ libBinPath);}
-\DoxyCodeLine{00202\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00203\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00204\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa51e6cd92b6c45f9affdc158ecca2b8b8}{ConsoleColor::Yellow}},\ \textcolor{stringliteral}{"{}No\ cache\ file\ found\ to\ clear:\ "{}},\ libBinPath);}
-\DoxyCodeLine{00206\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{ArgumentHandler::song\_tree\_parse\_state}}.printSongTree)}
+\DoxyCodeLine{00151\ \ \ \ \ \{}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ song\_tree.display();}
+\DoxyCodeLine{00153\ \ \ \ \ \}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{ArgumentHandler::song\_tree\_parse\_state}}.printArtistsAll)}
+\DoxyCodeLine{00156\ \ \ \ \ \{}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ song\_tree.printAllArtists();}
+\DoxyCodeLine{00158\ \ \ \ \ \}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{ArgumentHandler::song\_tree\_parse\_state}}.printSongsByArtist)}
+\DoxyCodeLine{00161\ \ \ \ \ \{}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ song\_tree.getSongsByArtist(\mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{ArgumentHandler::song\_tree\_parse\_state}}.artist);}
+\DoxyCodeLine{00163\ \ \ \ \ \}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{ArgumentHandler::song\_tree\_parse\_state}}.printSongsGenreAll)}
+\DoxyCodeLine{00166\ \ \ \ \ \{}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ song\_tree.getSongsByGenreAndPrint();}
+\DoxyCodeLine{00168\ \ \ \ \ \}}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{ArgumentHandler::song\_tree\_parse\_state}}.printSongInfo)}
+\DoxyCodeLine{00170\ \ \ \ \ \{}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ song\_tree.printSongInfo(\mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{ArgumentHandler::song\_tree\_parse\_state}}.song);}
+\DoxyCodeLine{00172\ \ \ \ \ \}}
+\DoxyCodeLine{00173\ \ \ \}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00183\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{ConsoleColor}}\ color,\ std::string\_view\ label,\ std::string\_view\ value\ =\ \textcolor{stringliteral}{"{}"{}})}
+\DoxyCodeLine{00184\ \ \ \{}
+\DoxyCodeLine{00185\ \ \ \ \ std::cout\ <<\ \mbox{\hyperlink{classColorManager_ab705db1ff8377fd2c71e9e9878f4c26c}{ColorManager::getColor}}(color)\ <<\ label}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \mbox{\hyperlink{classColorManager_ab705db1ff8377fd2c71e9e9878f4c26c}{ColorManager::getColor}}(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d}{ConsoleColor::Reset}})\ <<\ value\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00187\ \ \ \}}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00195\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleHelp(\textcolor{keyword}{const}\ CommandLineArgs\&\ cmdArgs,\ \textcolor{keyword}{const}\ std::string\&\ programName)}
+\DoxyCodeLine{00196\ \ \ \{}
+\DoxyCodeLine{00197\ \ \ \ \ cmdArgs.\mbox{\hyperlink{classCommandLineArgs_a23bfeb76513b5a88ec4af37d6f60269e}{printUsage}}(programName);}
+\DoxyCodeLine{00198\ \ \ \}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{auto}\ readVersionFromFile()\ -\/>\ std::string}
+\DoxyCodeLine{00201\ \ \ \{}
+\DoxyCodeLine{00202\ \ \ \ \ std::ifstream\ versionFile(\mbox{\hyperlink{arg-handler_8hpp_af373b8d5ef3d654b43f29e8f6b4a6ccc}{VERSION\_FILE\_NAME}});\ \textcolor{comment}{//\ Open\ the\ VERSION\ file}}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keywordflow}{if}\ (!versionFile)}
+\DoxyCodeLine{00204\ \ \ \ \ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Unable\ to\ open\ VERSION\ file!"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Unknown\ Version"{}};\ \textcolor{comment}{//\ Return\ default\ version\ if\ file\ can't\ be\ opened}}
 \DoxyCodeLine{00207\ \ \ \ \ \}}
-\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::filesystem::filesystem\_error\&\ e)}
-\DoxyCodeLine{00209\ \ \ \ \ \{}
-\DoxyCodeLine{00210\ \ \ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaaee38e4d5dd68c4e440825018d549cb47}{ConsoleColor::Red}},\ \textcolor{stringliteral}{"{}Error\ clearing\ cache:\ "{}},\ e.what());}
-\DoxyCodeLine{00211\ \ \ \ \ \}}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \ \ \ \ std::stringstream\ buffer;}
+\DoxyCodeLine{00210\ \ \ \ \ buffer\ <<\ versionFile.rdbuf();\ \textcolor{comment}{//\ Read\ the\ file\ content\ into\ a\ string\ stream}}
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keywordflow}{return}\ buffer.str();\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Return\ the\ string\ content}}
 \DoxyCodeLine{00212\ \ \ \}}
 \DoxyCodeLine{00213\ }
-\DoxyCodeLine{00222\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleUpdateCacheRun(\textcolor{keyword}{const}\ std::string\&\ libBinPath)}
-\DoxyCodeLine{00223\ \ \ \{}
-\DoxyCodeLine{00224\ \ \ \ \ std::cout\ <<\ \mbox{\hyperlink{classColorManager_af561fc120beb824a566af0611611754d}{ColorManager::getColor}}(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9}{ConsoleColor::Blue}})}
-\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}-\/-\/\ Updating\ Cache\ and\ running\ app..."{}}}
-\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \mbox{\hyperlink{classColorManager_af561fc120beb824a566af0611611754d}{ColorManager::getColor}}(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d}{ConsoleColor::Reset}})\ <<\ std::endl;}
-\DoxyCodeLine{00227\ \ \ \ \ handleClearCache(libBinPath);}
-\DoxyCodeLine{00228\ \ \ \ \ \mbox{\hyperlink{arg-handler_8hpp_af443d26ff309f6e511dfcae4be89775a}{shouldRunApp}}\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00229\ \ \ \}}
-\DoxyCodeLine{00230\ \};}
-\DoxyCodeLine{00231\ }
-\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ ARGUMENT\_HANDLER\_HPP}}
+\DoxyCodeLine{00217\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleVersion()}
+\DoxyCodeLine{00218\ \ \ \{}
+\DoxyCodeLine{00219\ \ \ \ \ std::string\ version\ =\ readVersionFromFile();}
+\DoxyCodeLine{00220\ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa023c239d2f2538f140a20e72c7b73f20}{ConsoleColor::Cyan}},\ \textcolor{stringliteral}{"{}inLimbo\ version:\ "{}},\ version);}
+\DoxyCodeLine{00221\ \ \ \}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00228\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleShowConfig(\textcolor{keyword}{const}\ std::string\&\ configPath)}
+\DoxyCodeLine{00229\ \ \ \{}
+\DoxyCodeLine{00230\ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1}{ConsoleColor::Green}},\ \textcolor{stringliteral}{"{}Config\ file\ location:\ "{}},\ configPath);}
+\DoxyCodeLine{00231\ \ \ \}}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00238\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleShowLogDir(\textcolor{keyword}{const}\ std::string\&\ cacheDir)}
+\DoxyCodeLine{00239\ \ \ \{}
+\DoxyCodeLine{00240\ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9}{ConsoleColor::Blue}},\ \textcolor{stringliteral}{"{}Log\ directory:\ "{}},\ cacheDir);}
+\DoxyCodeLine{00241\ \ \ \}}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00246\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleShowDBusName()}
+\DoxyCodeLine{00247\ \ \ \{}
+\DoxyCodeLine{00248\ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaab91cc2c1416fcca942b61c7ac5b1a9ac}{ConsoleColor::Magenta}},\ \textcolor{stringliteral}{"{}DBus\ name:\ "{}},\ \mbox{\hyperlink{arg-handler_8hpp_a66a0a8982b40d72ceed7b95a0d7d280c}{DBUS\_SERVICE\_NAME}});}
+\DoxyCodeLine{00249\ \ \ \}}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00259\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleClearCache(\textcolor{keyword}{const}\ std::string\&\ libBinPath)}
+\DoxyCodeLine{00260\ \ \ \{}
+\DoxyCodeLine{00261\ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00262\ \ \ \ \ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::filesystem::exists(libBinPath))}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ std::filesystem::remove(libBinPath);}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaad382816a3cbeed082c9e216e7392eed1}{ConsoleColor::Green}},\ \textcolor{stringliteral}{"{}Cache\ cleared\ successfully:\ "{}},\ libBinPath);}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa51e6cd92b6c45f9affdc158ecca2b8b8}{ConsoleColor::Yellow}},\ \textcolor{stringliteral}{"{}No\ cache\ file\ found\ to\ clear:\ "{}},\ libBinPath);}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00272\ \ \ \ \ \}}
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::filesystem::filesystem\_error\&\ e)}
+\DoxyCodeLine{00274\ \ \ \ \ \{}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ colorPrint(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaaee38e4d5dd68c4e440825018d549cb47}{ConsoleColor::Red}},\ \textcolor{stringliteral}{"{}Error\ clearing\ cache:\ "{}},\ e.what());}
+\DoxyCodeLine{00276\ \ \ \ \ \}}
+\DoxyCodeLine{00277\ \ \ \}}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00287\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleUpdateCacheRun(\textcolor{keyword}{const}\ std::string\&\ libBinPath)}
+\DoxyCodeLine{00288\ \ \ \{}
+\DoxyCodeLine{00289\ \ \ \ \ std::cout\ <<\ \mbox{\hyperlink{classColorManager_ab705db1ff8377fd2c71e9e9878f4c26c}{ColorManager::getColor}}(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa9594eec95be70e7b1710f730fdda33d9}{ConsoleColor::Blue}})}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}-\/-\/\ Updating\ Cache\ and\ running\ app..."{}}}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \mbox{\hyperlink{classColorManager_ab705db1ff8377fd2c71e9e9878f4c26c}{ColorManager::getColor}}(\mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aadaa526d688f37a86d3c3f27d0c5016eb71d}{ConsoleColor::Reset}})\ <<\ std::endl;}
+\DoxyCodeLine{00292\ \ \ \ \ handleClearCache(libBinPath);}
+\DoxyCodeLine{00293\ \ \ \ \ \mbox{\hyperlink{arg-handler_8hpp_af443d26ff309f6e511dfcae4be89775a}{shouldRunApp}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00294\ \ \ \}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ parseSongMap()}
+\DoxyCodeLine{00297\ \ \ \{}
+\DoxyCodeLine{00298\ \ \ \ \ \mbox{\hyperlink{arg-handler_8hpp_a4facf54f696971b5d1e41f376fb0e783}{parseSongTree}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00299\ \ \ \ \ \mbox{\hyperlink{arg-handler_8hpp_af443d26ff309f6e511dfcae4be89775a}{shouldRunApp}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00300\ \ \ \}}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handlePrintSongTree()}
+\DoxyCodeLine{00303\ \ \ \{}
+\DoxyCodeLine{00304\ \ \ \ \ \mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{song\_tree\_parse\_state}}.printSongTree\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00305\ \ \ \ \ parseSongMap();}
+\DoxyCodeLine{00306\ \ \ \}}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handlePrintArtistsAll()}
+\DoxyCodeLine{00309\ \ \ \{}
+\DoxyCodeLine{00310\ \ \ \ \ parseSongMap();}
+\DoxyCodeLine{00311\ \ \ \ \ \mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{song\_tree\_parse\_state}}.printArtistsAll\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00312\ \ \ \}}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handlePrintSongsByArtist(std::string\ artistName)}
+\DoxyCodeLine{00315\ \ \ \{}
+\DoxyCodeLine{00316\ \ \ \ \ parseSongMap();}
+\DoxyCodeLine{00317\ \ \ \ \ \mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{song\_tree\_parse\_state}}.printSongsByArtist\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00318\ \ \ \ \ \mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{song\_tree\_parse\_state}}.artist\ \ \ \ \ \ \ \ \ \ \ \ \ =\ artistName;}
+\DoxyCodeLine{00319\ \ \ \}}
+\DoxyCodeLine{00320\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handlePrintSongsByGenreAll()}
+\DoxyCodeLine{00321\ \ \ \{}
+\DoxyCodeLine{00322\ \ \ \ \ parseSongMap();}
+\DoxyCodeLine{00323\ \ \ \ \ \mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{song\_tree\_parse\_state}}.printSongsGenreAll\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00324\ \ \ \}}
+\DoxyCodeLine{00325\ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ handleSongInfo(std::string\ songName)}
+\DoxyCodeLine{00326\ \ \ \{}
+\DoxyCodeLine{00327\ \ \ \ \ parseSongMap();}
+\DoxyCodeLine{00328\ \ \ \ \ \mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{song\_tree\_parse\_state}}.printSongInfo\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00329\ \ \ \ \ \mbox{\hyperlink{classArgumentHandler_aca2ea1efaa781e9163ea1dca1048b5d8}{song\_tree\_parse\_state}}.song\ =\ songName;}
+\DoxyCodeLine{00330\ \ \ \}}
+\DoxyCodeLine{00331\ \};}
 
 \end{DoxyCode}

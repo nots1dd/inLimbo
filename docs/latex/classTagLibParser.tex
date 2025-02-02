@@ -14,9 +14,9 @@ A class for parsing metadata from audio files.
 \item 
 \mbox{\hyperlink{classTagLibParser_ae17fbbefed079d5457c3a53af0328080}{Tag\+Lib\+Parser}} (const std\+::string \&debug\+String)
 \begin{DoxyCompactList}\small\item\em Constructor for \doxylink{classTagLibParser}{Tag\+Lib\+Parser}. \end{DoxyCompactList}\item 
-bool \mbox{\hyperlink{classTagLibParser_a42f060c96746baf0e495bb8bed4a2778}{parse\+File}} (const std\+::string \&file\+Path, \mbox{\hyperlink{structMetadata}{Metadata}} \&metadata)
+auto \mbox{\hyperlink{classTagLibParser_a3f8962f27b1c8713beaa577ed8e7ec91}{parse\+File}} (const std\+::string \&file\+Path, \mbox{\hyperlink{structMetadata}{Metadata}} \&metadata) -\/$>$ bool
 \begin{DoxyCompactList}\small\item\em Parse metadata from an audio file. \end{DoxyCompactList}\item 
-std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{structMetadata}{Metadata}} $>$ \mbox{\hyperlink{classTagLibParser_ac7e0277f5bf46433d1bf64b9e0154641}{parse\+From\+Inode}} (ino\+\_\+t inode, const std\+::string \&directory)
+auto \mbox{\hyperlink{classTagLibParser_a7cd224b41a07560899f0968f8ad3c093}{parse\+From\+Inode}} (ino\+\_\+t inode, const std\+::string \&directory) -\/$>$ std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{structMetadata}{Metadata}} $>$
 \begin{DoxyCompactList}\small\item\em Parse metadata from files in a directory based on inode. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -44,11 +44,11 @@ Constructor for \doxylink{classTagLibParser}{Tag\+Lib\+Parser}.
 
 
 \doxysubsection{Member Function Documentation}
-\Hypertarget{classTagLibParser_a42f060c96746baf0e495bb8bed4a2778}\index{TagLibParser@{TagLibParser}!parseFile@{parseFile}}
+\Hypertarget{classTagLibParser_a3f8962f27b1c8713beaa577ed8e7ec91}\index{TagLibParser@{TagLibParser}!parseFile@{parseFile}}
 \index{parseFile@{parseFile}!TagLibParser@{TagLibParser}}
 \doxysubsubsection{\texorpdfstring{parseFile()}{parseFile()}}
-{\footnotesize\ttfamily \label{classTagLibParser_a42f060c96746baf0e495bb8bed4a2778} 
-bool Tag\+Lib\+Parser\+::parse\+File (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+Path}{, }\item[{\mbox{\hyperlink{structMetadata}{Metadata}} \&}]{metadata}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{classTagLibParser_a3f8962f27b1c8713beaa577ed8e7ec91} 
+auto Tag\+Lib\+Parser\+::parse\+File (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+Path}{, }\item[{\mbox{\hyperlink{structMetadata}{Metadata}} \&}]{metadata}{}\end{DoxyParamCaption}) -\/$>$ bool}
 
 
 
@@ -64,11 +64,11 @@ Parse metadata from an audio file.
 \begin{DoxyReturn}{Returns}
 {\ttfamily true} if parsing was successful, {\ttfamily false} otherwise. 
 \end{DoxyReturn}
-\Hypertarget{classTagLibParser_ac7e0277f5bf46433d1bf64b9e0154641}\index{TagLibParser@{TagLibParser}!parseFromInode@{parseFromInode}}
+\Hypertarget{classTagLibParser_a7cd224b41a07560899f0968f8ad3c093}\index{TagLibParser@{TagLibParser}!parseFromInode@{parseFromInode}}
 \index{parseFromInode@{parseFromInode}!TagLibParser@{TagLibParser}}
 \doxysubsubsection{\texorpdfstring{parseFromInode()}{parseFromInode()}}
-{\footnotesize\ttfamily \label{classTagLibParser_ac7e0277f5bf46433d1bf64b9e0154641} 
-std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{structMetadata}{Metadata}} $>$ Tag\+Lib\+Parser\+::parse\+From\+Inode (\begin{DoxyParamCaption}\item[{ino\+\_\+t}]{inode}{, }\item[{const std\+::string \&}]{directory}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{classTagLibParser_a7cd224b41a07560899f0968f8ad3c093} 
+auto Tag\+Lib\+Parser\+::parse\+From\+Inode (\begin{DoxyParamCaption}\item[{ino\+\_\+t}]{inode}{, }\item[{const std\+::string \&}]{directory}{}\end{DoxyParamCaption}) -\/$>$ std\+::unordered\+\_\+map$<$std\+::string, \mbox{\hyperlink{structMetadata}{Metadata}}$>$}
 
 
 

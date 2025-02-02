@@ -1,8 +1,11 @@
 \doxysection{src/ui/misc.hpp File Reference}
 \hypertarget{misc_8hpp}{}\label{misc_8hpp}\index{src/ui/misc.hpp@{src/ui/misc.hpp}}
+{\ttfamily \#include "{}../arg-\/handler.\+hpp"{}}\newline
 {\ttfamily \#include "{}../dirsort/taglib\+\_\+parser.\+h"{}}\newline
 {\ttfamily \#include "{}./colors.\+hpp"{}}\newline
+{\ttfamily \#include "{}./keymaps.\+hpp"{}}\newline
 {\ttfamily \#include "{}components/image\+\_\+view.\+hpp"{}}\newline
+{\ttfamily \#include $<$algorithm$>$}\newline
 {\ttfamily \#include $<$cctype$>$}\newline
 {\ttfamily \#include $<$ftxui/component/captured\+\_\+mouse.\+hpp$>$}\newline
 {\ttfamily \#include $<$ftxui/component/component.\+hpp$>$}\newline
@@ -12,17 +15,33 @@
 {\ttfamily \#include $<$ftxui/dom/elements.\+hpp$>$}\newline
 {\ttfamily \#include $<$string$>$}\newline
 {\ttfamily \#include $<$vector$>$}\newline
-\doxysubsubsection*{Classes}
+\doxysubsubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
-struct \mbox{\hyperlink{structComponentState}{Component\+State}}
+\#define \mbox{\hyperlink{misc_8hpp_ac5fe6a723443d277de55e15b8e2a30d2}{MAX\+\_\+\+LENGTH\+\_\+\+SONG\+\_\+\+NAME}}~50
+\item 
+\#define \mbox{\hyperlink{misc_8hpp_a6199aa5ef4a8655f98529342f12e188f}{MAX\+\_\+\+LENGTH\+\_\+\+ARTIST\+\_\+\+NAME}}~30
+\item 
+\#define \mbox{\hyperlink{misc_8hpp_a38f7063ec36148c340a4547d8e17b660}{SONG\+\_\+\+TITLE\+\_\+\+DELIM}}~"{} • "{}
+\item 
+\#define \mbox{\hyperlink{misc_8hpp_aba56a61f453fc60302c6c87189871467}{LYRICS\+\_\+\+AVAIL}}~"{}L\texorpdfstring{$\ast$}{*}"{}
+\item 
+\#define \mbox{\hyperlink{misc_8hpp_ad1801a0eef7108118fc5a54e6098ebfa}{ADDN\+\_\+\+PROPS\+\_\+\+AVAIL}}~"{}\&\texorpdfstring{$\ast$}{*}"{}
+\item 
+\#define \mbox{\hyperlink{misc_8hpp_ae404e170bcac700cdc2e87d1c5ba04f5}{STATUS\+\_\+\+BAR\+\_\+\+DELIM}}~"{} \texorpdfstring{$\vert$}{|} "{}
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
+auto \mbox{\hyperlink{misc_8hpp_a32a12e3a8f61c86e816a42396b92e301}{handle\+Toggle\+Mute}} (int \texorpdfstring{$\ast$}{*}volume, int \texorpdfstring{$\ast$}{*}last\+Volume, bool \texorpdfstring{$\ast$}{*}muted) -\/$>$ int
+\item 
+auto \mbox{\hyperlink{misc_8hpp_a971329da198146110e1e71346d7be95a}{format\+Disc\+Track\+Info}} (const int \&disc\+\_\+number, const int \&track\+\_\+number)
+\item 
 auto \mbox{\hyperlink{misc_8hpp_acf1411473752280ae12e7bbeb259ca4c}{format\+Lyrics}} (const std\+::string \&lyrics)
 \item 
-std\+::string \mbox{\hyperlink{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}{char\+To\+Str}} (char ch)
+auto \mbox{\hyperlink{misc_8hpp_a6b8a1dade19d0cf89a3c2e3f336b01c8}{format\+Additional\+Info}} (const std\+::string \&genre, const bool \&has\+\_\+comment, const bool \&has\+\_\+lyrics, const bool \&show\+\_\+bitrate, const int \&bitrate) -\/$>$ std\+::string
+\item 
+auto \mbox{\hyperlink{misc_8hpp_a38892037627158c30e20ad3d882929c0}{char\+To\+Str}} (char ch) -\/$>$ std\+::string
 \item 
 auto \mbox{\hyperlink{misc_8hpp_acbc96af0b52cf5c1b6921dbaa39454a9}{Format\+Time}} (int seconds)
 \item 
@@ -30,32 +49,101 @@ auto \mbox{\hyperlink{misc_8hpp_a1dd4ac00b301270766d69bfd131b1a8a}{get\+True\+Co
 \item 
 auto \mbox{\hyperlink{misc_8hpp_a1895c5b44b9fcf7e8609b74d59f1333c}{get\+True\+BGColor}} (\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{True\+Colors\+::\+Color}} color)
 \item 
-auto \mbox{\hyperlink{misc_8hpp_aa0e7f463ba7f6a6f02a1bd7bd7e33054}{render\+Album\+Name}} (const std\+::string \&album\+\_\+name, const int \&year, ftxui\+::\+Color sel\+\_\+color)
+auto \mbox{\hyperlink{misc_8hpp_a5fcb063cf073d7a1067d0431dad277b6}{render\+Album\+Name}} (const std\+::string \&album\+\_\+name, const int \&year, ftxui\+::\+Color sel\+\_\+color, ftxui\+::\+Color sel\+\_\+color\+\_\+fg)
 \item 
 auto \mbox{\hyperlink{misc_8hpp_a62d9f40a75073b83bbdb4c23378a211b}{render\+Song\+Name}} (const std\+::string \&disc\+\_\+track\+\_\+info, const std\+::string \&song\+\_\+name, const int \&duration)
+\item 
+auto \mbox{\hyperlink{misc_8hpp_a3b8148459d48503dab72c85f83e43de5}{Render\+Artist\+Names}} (const std\+::vector$<$ std\+::string $>$ \&artist\+\_\+list)
 \item 
 auto \mbox{\hyperlink{misc_8hpp_ac17ffa793bef7aa522f2efc1e40be89a}{Create\+Menu}} (const std\+::vector$<$ std\+::string $>$ \texorpdfstring{$\ast$}{*}vec\+Lines, int \texorpdfstring{$\ast$}{*}curr\+Line)
 \item 
 auto \mbox{\hyperlink{misc_8hpp_a8cf36d4dbe5e1c02b0afc2ca2b33e6cf}{Render\+Song\+Menu}} (const std\+::vector$<$ Element $>$ \&items)
 \item 
-std\+::string \mbox{\hyperlink{misc_8hpp_aa40cf4a9ca2dd2a38f2086cd49aef14d}{get\+Mime\+Type\+From\+Extension}} (const std\+::string \&file\+Path)
+auto \mbox{\hyperlink{misc_8hpp_a48aff9dfdc661e62e4d9d50000e5f53e}{Render\+Artist\+Menu}} (const std\+::vector$<$ std\+::string $>$ \&artist\+\_\+list)
+\item 
+auto \mbox{\hyperlink{misc_8hpp_a2c1d5923fa6b279e4313df6ae6f5c7d4}{get\+Mime\+Type\+From\+Extension}} (const std\+::string \&file\+Path) -\/$>$ std\+::string
 \item 
 auto \mbox{\hyperlink{misc_8hpp_a3c3039a58e757a40c335b936c371e767}{Render\+Thumbnail}} (const std\+::string \&song\+File\+Path, const std\+::string \&cache\+Dir\+Path, const std\+::string \&song\+Title, const std\+::string \&artist\+Name, const std\+::string \&album\+Name, const std\+::string \&genre, unsigned int year, unsigned int track\+Number, unsigned int disc\+Number, float progress)
+\item 
+auto \mbox{\hyperlink{misc_8hpp_ad679fa505cafd606a870f5834d2f93af}{Render\+Search\+Bar}} (std\+::string \&user\+\_\+input) -\/$>$ Element
+\item 
+auto \mbox{\hyperlink{misc_8hpp_a4280012329c5a877666414fa33117a92}{Render\+Dialog}} (const std\+::string \&dialog\+\_\+message) -\/$>$ Element
+\item 
+auto \mbox{\hyperlink{misc_8hpp_a0354bc85b6985716667c480ef2d82f54}{Render\+Help\+Screen}} (\mbox{\hyperlink{structKeybinds}{Keybinds}} \&global\+\_\+keybinds) -\/$>$ Element
+\item 
+void \mbox{\hyperlink{misc_8hpp_a94fbb4f267f7e6d5eeb261bf64d990a4}{search\+Mode\+Indices}} (const std\+::vector$<$ std\+::string $>$ \&words, const std\+::string \&prefix, std\+::vector$<$ int $>$ \&search\+\_\+indices)
+\item 
+void \mbox{\hyperlink{misc_8hpp_a751e0ebbe56441032165705c236e7162}{Update\+Selected\+Index}} (int \&index, int max\+\_\+size, bool move\+\_\+down)
+\item 
+auto \mbox{\hyperlink{misc_8hpp_a7b4adf051dfbd664a7f59f21db30b3ab}{Render\+Status\+Bar}} (const std\+::string \&status, const std\+::string \&current\+\_\+song\+\_\+info, const std\+::string \&additional\+\_\+info, const std\+::string \&year\+\_\+info, \mbox{\hyperlink{structInLimboColors}{In\+Limbo\+Colors}} \&global\+\_\+colors, const std\+::string \&current\+\_\+artist) -\/$>$ Element
+\item 
+auto \mbox{\hyperlink{misc_8hpp_aa4388e6383f77a5314a89ba0519b1aa4}{Render\+Volume\+Bar}} (int volume, ftxui\+::\+Color volume\+\_\+bar\+\_\+col) -\/$>$ Element
 \end{DoxyCompactItemize}
 
 
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{misc_8hpp_ad1801a0eef7108118fc5a54e6098ebfa}\index{misc.hpp@{misc.hpp}!ADDN\_PROPS\_AVAIL@{ADDN\_PROPS\_AVAIL}}
+\index{ADDN\_PROPS\_AVAIL@{ADDN\_PROPS\_AVAIL}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{ADDN\_PROPS\_AVAIL}{ADDN\_PROPS\_AVAIL}}
+{\footnotesize\ttfamily \label{misc_8hpp_ad1801a0eef7108118fc5a54e6098ebfa} 
+\#define ADDN\+\_\+\+PROPS\+\_\+\+AVAIL~"{}\&\texorpdfstring{$\ast$}{*}"{}}
+
+\Hypertarget{misc_8hpp_aba56a61f453fc60302c6c87189871467}\index{misc.hpp@{misc.hpp}!LYRICS\_AVAIL@{LYRICS\_AVAIL}}
+\index{LYRICS\_AVAIL@{LYRICS\_AVAIL}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{LYRICS\_AVAIL}{LYRICS\_AVAIL}}
+{\footnotesize\ttfamily \label{misc_8hpp_aba56a61f453fc60302c6c87189871467} 
+\#define LYRICS\+\_\+\+AVAIL~"{}L\texorpdfstring{$\ast$}{*}"{}}
+
+\Hypertarget{misc_8hpp_a6199aa5ef4a8655f98529342f12e188f}\index{misc.hpp@{misc.hpp}!MAX\_LENGTH\_ARTIST\_NAME@{MAX\_LENGTH\_ARTIST\_NAME}}
+\index{MAX\_LENGTH\_ARTIST\_NAME@{MAX\_LENGTH\_ARTIST\_NAME}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{MAX\_LENGTH\_ARTIST\_NAME}{MAX\_LENGTH\_ARTIST\_NAME}}
+{\footnotesize\ttfamily \label{misc_8hpp_a6199aa5ef4a8655f98529342f12e188f} 
+\#define MAX\+\_\+\+LENGTH\+\_\+\+ARTIST\+\_\+\+NAME~30}
+
+\Hypertarget{misc_8hpp_ac5fe6a723443d277de55e15b8e2a30d2}\index{misc.hpp@{misc.hpp}!MAX\_LENGTH\_SONG\_NAME@{MAX\_LENGTH\_SONG\_NAME}}
+\index{MAX\_LENGTH\_SONG\_NAME@{MAX\_LENGTH\_SONG\_NAME}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{MAX\_LENGTH\_SONG\_NAME}{MAX\_LENGTH\_SONG\_NAME}}
+{\footnotesize\ttfamily \label{misc_8hpp_ac5fe6a723443d277de55e15b8e2a30d2} 
+\#define MAX\+\_\+\+LENGTH\+\_\+\+SONG\+\_\+\+NAME~50}
+
+STRING TRUNCATION MACROS \Hypertarget{misc_8hpp_a38f7063ec36148c340a4547d8e17b660}\index{misc.hpp@{misc.hpp}!SONG\_TITLE\_DELIM@{SONG\_TITLE\_DELIM}}
+\index{SONG\_TITLE\_DELIM@{SONG\_TITLE\_DELIM}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{SONG\_TITLE\_DELIM}{SONG\_TITLE\_DELIM}}
+{\footnotesize\ttfamily \label{misc_8hpp_a38f7063ec36148c340a4547d8e17b660} 
+\#define SONG\+\_\+\+TITLE\+\_\+\+DELIM~"{} • "{}}
+
+\Hypertarget{misc_8hpp_ae404e170bcac700cdc2e87d1c5ba04f5}\index{misc.hpp@{misc.hpp}!STATUS\_BAR\_DELIM@{STATUS\_BAR\_DELIM}}
+\index{STATUS\_BAR\_DELIM@{STATUS\_BAR\_DELIM}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{STATUS\_BAR\_DELIM}{STATUS\_BAR\_DELIM}}
+{\footnotesize\ttfamily \label{misc_8hpp_ae404e170bcac700cdc2e87d1c5ba04f5} 
+\#define STATUS\+\_\+\+BAR\+\_\+\+DELIM~"{} \texorpdfstring{$\vert$}{|} "{}}
+
+
+
 \doxysubsection{Function Documentation}
-\Hypertarget{misc_8hpp_a2e2246f99124f69740c8012be4b75c36}\index{misc.hpp@{misc.hpp}!charToStr@{charToStr}}
+\Hypertarget{misc_8hpp_a38892037627158c30e20ad3d882929c0}\index{misc.hpp@{misc.hpp}!charToStr@{charToStr}}
 \index{charToStr@{charToStr}!misc.hpp@{misc.hpp}}
 \doxysubsubsection{\texorpdfstring{charToStr()}{charToStr()}}
-{\footnotesize\ttfamily \label{misc_8hpp_a2e2246f99124f69740c8012be4b75c36} 
-std\+::string char\+To\+Str (\begin{DoxyParamCaption}\item[{char}]{ch}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{misc_8hpp_a38892037627158c30e20ad3d882929c0} 
+auto char\+To\+Str (\begin{DoxyParamCaption}\item[{char}]{ch}{}\end{DoxyParamCaption}) -\/$>$ std\+::string }
 
 \Hypertarget{misc_8hpp_ac17ffa793bef7aa522f2efc1e40be89a}\index{misc.hpp@{misc.hpp}!CreateMenu@{CreateMenu}}
 \index{CreateMenu@{CreateMenu}!misc.hpp@{misc.hpp}}
 \doxysubsubsection{\texorpdfstring{CreateMenu()}{CreateMenu()}}
 {\footnotesize\ttfamily \label{misc_8hpp_ac17ffa793bef7aa522f2efc1e40be89a} 
 auto Create\+Menu (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \texorpdfstring{$\ast$}{*}}]{vec\+Lines}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{curr\+Line}{}\end{DoxyParamCaption})}
+
+\Hypertarget{misc_8hpp_a6b8a1dade19d0cf89a3c2e3f336b01c8}\index{misc.hpp@{misc.hpp}!formatAdditionalInfo@{formatAdditionalInfo}}
+\index{formatAdditionalInfo@{formatAdditionalInfo}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{formatAdditionalInfo()}{formatAdditionalInfo()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a6b8a1dade19d0cf89a3c2e3f336b01c8} 
+auto format\+Additional\+Info (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{genre}{, }\item[{const bool \&}]{has\+\_\+comment}{, }\item[{const bool \&}]{has\+\_\+lyrics}{, }\item[{const bool \&}]{show\+\_\+bitrate}{, }\item[{const int \&}]{bitrate}{}\end{DoxyParamCaption}) -\/$>$ std\+::string }
+
+\Hypertarget{misc_8hpp_a971329da198146110e1e71346d7be95a}\index{misc.hpp@{misc.hpp}!formatDiscTrackInfo@{formatDiscTrackInfo}}
+\index{formatDiscTrackInfo@{formatDiscTrackInfo}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{formatDiscTrackInfo()}{formatDiscTrackInfo()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a971329da198146110e1e71346d7be95a} 
+auto format\+Disc\+Track\+Info (\begin{DoxyParamCaption}\item[{const int \&}]{disc\+\_\+number}{, }\item[{const int \&}]{track\+\_\+number}{}\end{DoxyParamCaption})}
 
 \Hypertarget{misc_8hpp_acf1411473752280ae12e7bbeb259ca4c}\index{misc.hpp@{misc.hpp}!formatLyrics@{formatLyrics}}
 \index{formatLyrics@{formatLyrics}!misc.hpp@{misc.hpp}}
@@ -69,11 +157,11 @@ auto format\+Lyrics (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{lyr
 {\footnotesize\ttfamily \label{misc_8hpp_acbc96af0b52cf5c1b6921dbaa39454a9} 
 auto Format\+Time (\begin{DoxyParamCaption}\item[{int}]{seconds}{}\end{DoxyParamCaption})}
 
-\Hypertarget{misc_8hpp_aa40cf4a9ca2dd2a38f2086cd49aef14d}\index{misc.hpp@{misc.hpp}!getMimeTypeFromExtension@{getMimeTypeFromExtension}}
+\Hypertarget{misc_8hpp_a2c1d5923fa6b279e4313df6ae6f5c7d4}\index{misc.hpp@{misc.hpp}!getMimeTypeFromExtension@{getMimeTypeFromExtension}}
 \index{getMimeTypeFromExtension@{getMimeTypeFromExtension}!misc.hpp@{misc.hpp}}
 \doxysubsubsection{\texorpdfstring{getMimeTypeFromExtension()}{getMimeTypeFromExtension()}}
-{\footnotesize\ttfamily \label{misc_8hpp_aa40cf4a9ca2dd2a38f2086cd49aef14d} 
-std\+::string get\+Mime\+Type\+From\+Extension (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+Path}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{misc_8hpp_a2c1d5923fa6b279e4313df6ae6f5c7d4} 
+auto get\+Mime\+Type\+From\+Extension (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+Path}{}\end{DoxyParamCaption}) -\/$>$ std\+::string }
 
 \Hypertarget{misc_8hpp_a1895c5b44b9fcf7e8609b74d59f1333c}\index{misc.hpp@{misc.hpp}!getTrueBGColor@{getTrueBGColor}}
 \index{getTrueBGColor@{getTrueBGColor}!misc.hpp@{misc.hpp}}
@@ -87,11 +175,47 @@ auto get\+True\+BGColor (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespa
 {\footnotesize\ttfamily \label{misc_8hpp_a1dd4ac00b301270766d69bfd131b1a8a} 
 auto get\+True\+Color (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{True\+Colors\+::\+Color}}}]{color}{}\end{DoxyParamCaption})}
 
-\Hypertarget{misc_8hpp_aa0e7f463ba7f6a6f02a1bd7bd7e33054}\index{misc.hpp@{misc.hpp}!renderAlbumName@{renderAlbumName}}
+\Hypertarget{misc_8hpp_a32a12e3a8f61c86e816a42396b92e301}\index{misc.hpp@{misc.hpp}!handleToggleMute@{handleToggleMute}}
+\index{handleToggleMute@{handleToggleMute}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{handleToggleMute()}{handleToggleMute()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a32a12e3a8f61c86e816a42396b92e301} 
+auto handle\+Toggle\+Mute (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{volume}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{last\+Volume}{, }\item[{bool \texorpdfstring{$\ast$}{*}}]{muted}{}\end{DoxyParamCaption}) -\/$>$ int }
+
+\Hypertarget{misc_8hpp_a5fcb063cf073d7a1067d0431dad277b6}\index{misc.hpp@{misc.hpp}!renderAlbumName@{renderAlbumName}}
 \index{renderAlbumName@{renderAlbumName}!misc.hpp@{misc.hpp}}
 \doxysubsubsection{\texorpdfstring{renderAlbumName()}{renderAlbumName()}}
-{\footnotesize\ttfamily \label{misc_8hpp_aa0e7f463ba7f6a6f02a1bd7bd7e33054} 
-auto render\+Album\+Name (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{album\+\_\+name}{, }\item[{const int \&}]{year}{, }\item[{ftxui\+::\+Color}]{sel\+\_\+color}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{misc_8hpp_a5fcb063cf073d7a1067d0431dad277b6} 
+auto render\+Album\+Name (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{album\+\_\+name}{, }\item[{const int \&}]{year}{, }\item[{ftxui\+::\+Color}]{sel\+\_\+color}{, }\item[{ftxui\+::\+Color}]{sel\+\_\+color\+\_\+fg}{}\end{DoxyParamCaption})}
+
+\Hypertarget{misc_8hpp_a48aff9dfdc661e62e4d9d50000e5f53e}\index{misc.hpp@{misc.hpp}!RenderArtistMenu@{RenderArtistMenu}}
+\index{RenderArtistMenu@{RenderArtistMenu}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{RenderArtistMenu()}{RenderArtistMenu()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a48aff9dfdc661e62e4d9d50000e5f53e} 
+auto Render\+Artist\+Menu (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{artist\+\_\+list}{}\end{DoxyParamCaption})}
+
+\Hypertarget{misc_8hpp_a3b8148459d48503dab72c85f83e43de5}\index{misc.hpp@{misc.hpp}!RenderArtistNames@{RenderArtistNames}}
+\index{RenderArtistNames@{RenderArtistNames}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{RenderArtistNames()}{RenderArtistNames()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a3b8148459d48503dab72c85f83e43de5} 
+auto Render\+Artist\+Names (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{artist\+\_\+list}{}\end{DoxyParamCaption})}
+
+\Hypertarget{misc_8hpp_a4280012329c5a877666414fa33117a92}\index{misc.hpp@{misc.hpp}!RenderDialog@{RenderDialog}}
+\index{RenderDialog@{RenderDialog}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{RenderDialog()}{RenderDialog()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a4280012329c5a877666414fa33117a92} 
+auto Render\+Dialog (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{dialog\+\_\+message}{}\end{DoxyParamCaption}) -\/$>$ Element }
+
+\Hypertarget{misc_8hpp_a0354bc85b6985716667c480ef2d82f54}\index{misc.hpp@{misc.hpp}!RenderHelpScreen@{RenderHelpScreen}}
+\index{RenderHelpScreen@{RenderHelpScreen}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{RenderHelpScreen()}{RenderHelpScreen()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a0354bc85b6985716667c480ef2d82f54} 
+auto Render\+Help\+Screen (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structKeybinds}{Keybinds}} \&}]{global\+\_\+keybinds}{}\end{DoxyParamCaption}) -\/$>$ Element }
+
+\Hypertarget{misc_8hpp_ad679fa505cafd606a870f5834d2f93af}\index{misc.hpp@{misc.hpp}!RenderSearchBar@{RenderSearchBar}}
+\index{RenderSearchBar@{RenderSearchBar}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{RenderSearchBar()}{RenderSearchBar()}}
+{\footnotesize\ttfamily \label{misc_8hpp_ad679fa505cafd606a870f5834d2f93af} 
+auto Render\+Search\+Bar (\begin{DoxyParamCaption}\item[{std\+::string \&}]{user\+\_\+input}{}\end{DoxyParamCaption}) -\/$>$ Element }
 
 \Hypertarget{misc_8hpp_a8cf36d4dbe5e1c02b0afc2ca2b33e6cf}\index{misc.hpp@{misc.hpp}!RenderSongMenu@{RenderSongMenu}}
 \index{RenderSongMenu@{RenderSongMenu}!misc.hpp@{misc.hpp}}
@@ -105,9 +229,33 @@ auto Render\+Song\+Menu (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ E
 {\footnotesize\ttfamily \label{misc_8hpp_a62d9f40a75073b83bbdb4c23378a211b} 
 auto render\+Song\+Name (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{disc\+\_\+track\+\_\+info}{, }\item[{const std\+::string \&}]{song\+\_\+name}{, }\item[{const int \&}]{duration}{}\end{DoxyParamCaption})}
 
+\Hypertarget{misc_8hpp_a7b4adf051dfbd664a7f59f21db30b3ab}\index{misc.hpp@{misc.hpp}!RenderStatusBar@{RenderStatusBar}}
+\index{RenderStatusBar@{RenderStatusBar}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{RenderStatusBar()}{RenderStatusBar()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a7b4adf051dfbd664a7f59f21db30b3ab} 
+auto Render\+Status\+Bar (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{status}{, }\item[{const std\+::string \&}]{current\+\_\+song\+\_\+info}{, }\item[{const std\+::string \&}]{additional\+\_\+info}{, }\item[{const std\+::string \&}]{year\+\_\+info}{, }\item[{\mbox{\hyperlink{structInLimboColors}{In\+Limbo\+Colors}} \&}]{global\+\_\+colors}{, }\item[{const std\+::string \&}]{current\+\_\+artist}{}\end{DoxyParamCaption}) -\/$>$ Element }
+
 \Hypertarget{misc_8hpp_a3c3039a58e757a40c335b936c371e767}\index{misc.hpp@{misc.hpp}!RenderThumbnail@{RenderThumbnail}}
 \index{RenderThumbnail@{RenderThumbnail}!misc.hpp@{misc.hpp}}
 \doxysubsubsection{\texorpdfstring{RenderThumbnail()}{RenderThumbnail()}}
 {\footnotesize\ttfamily \label{misc_8hpp_a3c3039a58e757a40c335b936c371e767} 
 auto Render\+Thumbnail (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{song\+File\+Path}{, }\item[{const std\+::string \&}]{cache\+Dir\+Path}{, }\item[{const std\+::string \&}]{song\+Title}{, }\item[{const std\+::string \&}]{artist\+Name}{, }\item[{const std\+::string \&}]{album\+Name}{, }\item[{const std\+::string \&}]{genre}{, }\item[{unsigned int}]{year}{, }\item[{unsigned int}]{track\+Number}{, }\item[{unsigned int}]{disc\+Number}{, }\item[{float}]{progress}{}\end{DoxyParamCaption})}
+
+\Hypertarget{misc_8hpp_aa4388e6383f77a5314a89ba0519b1aa4}\index{misc.hpp@{misc.hpp}!RenderVolumeBar@{RenderVolumeBar}}
+\index{RenderVolumeBar@{RenderVolumeBar}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{RenderVolumeBar()}{RenderVolumeBar()}}
+{\footnotesize\ttfamily \label{misc_8hpp_aa4388e6383f77a5314a89ba0519b1aa4} 
+auto Render\+Volume\+Bar (\begin{DoxyParamCaption}\item[{int}]{volume}{, }\item[{ftxui\+::\+Color}]{volume\+\_\+bar\+\_\+col}{}\end{DoxyParamCaption}) -\/$>$ Element }
+
+\Hypertarget{misc_8hpp_a94fbb4f267f7e6d5eeb261bf64d990a4}\index{misc.hpp@{misc.hpp}!searchModeIndices@{searchModeIndices}}
+\index{searchModeIndices@{searchModeIndices}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{searchModeIndices()}{searchModeIndices()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a94fbb4f267f7e6d5eeb261bf64d990a4} 
+void search\+Mode\+Indices (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{words}{, }\item[{const std\+::string \&}]{prefix}{, }\item[{std\+::vector$<$ int $>$ \&}]{search\+\_\+indices}{}\end{DoxyParamCaption})}
+
+\Hypertarget{misc_8hpp_a751e0ebbe56441032165705c236e7162}\index{misc.hpp@{misc.hpp}!UpdateSelectedIndex@{UpdateSelectedIndex}}
+\index{UpdateSelectedIndex@{UpdateSelectedIndex}!misc.hpp@{misc.hpp}}
+\doxysubsubsection{\texorpdfstring{UpdateSelectedIndex()}{UpdateSelectedIndex()}}
+{\footnotesize\ttfamily \label{misc_8hpp_a751e0ebbe56441032165705c236e7162} 
+void Update\+Selected\+Index (\begin{DoxyParamCaption}\item[{int \&}]{index}{, }\item[{int}]{max\+\_\+size}{, }\item[{bool}]{move\+\_\+down}{}\end{DoxyParamCaption})}
 

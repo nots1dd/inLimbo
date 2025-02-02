@@ -23,7 +23,11 @@
 \item 
 \#define \mbox{\hyperlink{toml__parser_8hpp_a10265fc668d386d5d02e91115db9a7cc}{PARENT\+\_\+\+DBG}}~"{}debug"{}
 \item 
-\#define \mbox{\hyperlink{toml__parser_8hpp_addfc43cbcf5a4328846696cee721a4de}{PARENT\+\_\+\+DBG\+\_\+\+FIELD\+\_\+\+PARSER\+\_\+\+LOG}}~"{}parser\+\_\+log"{}
+\#define \mbox{\hyperlink{toml__parser_8hpp_a9b133a50d58c5718bc07c6e73286378e}{PARENT\+\_\+\+DBG\+\_\+\+FIELD\+\_\+\+TAGLIB\+\_\+\+PARSER\+\_\+\+LOG}}~  "{}taglib\+\_\+parser\+\_\+log"{}
+\item 
+\#define \mbox{\hyperlink{toml__parser_8hpp_a6632006e058b691283eecae15d8f2c4c}{PARENT\+\_\+\+DBG\+\_\+\+FIELD\+\_\+\+COLORS\+\_\+\+PARSER\+\_\+\+LOG}}~"{}colors\+\_\+parser\+\_\+log"{}
+\item 
+\#define \mbox{\hyperlink{toml__parser_8hpp_a3dbbf241f204ad3fec4382233f7a771b}{PARENT\+\_\+\+DBG\+\_\+\+FIELD\+\_\+\+KEYBINDS\+\_\+\+PARSER\+\_\+\+LOG}}~"{}keybinds\+\_\+parser\+\_\+log"{}
 \item 
 \#define \mbox{\hyperlink{toml__parser_8hpp_a68fd11c312f2eb908cc3cf08ae9b9c28}{PARENT\+\_\+\+KEYBINDS}}~"{}keybinds"{}
 \item 
@@ -52,14 +56,16 @@ bool \mbox{\hyperlink{toml__parser_8hpp_a9ae7f1652e5197b6891b1f3417f3a4e9}{confi
 \begin{DoxyCompactList}\small\item\em Checks if the configuration file exists. \end{DoxyCompactList}\item 
 auto \mbox{\hyperlink{toml__parser_8hpp_ab0f9ee0b01e2b1ec3208d0323ee8957b}{load\+Config}} ()
 \begin{DoxyCompactList}\small\item\em Loads the configuration file. \end{DoxyCompactList}\item 
-string\+\_\+view \mbox{\hyperlink{toml__parser_8hpp_a19930571a1aced24a71d9a1d6e7c710a}{parse\+TOMLField}} (string parent, string field)
+auto \mbox{\hyperlink{toml__parser_8hpp_a9a9759bd3909e5f64c6b7acbdd4bc16f}{parse\+TOMLField}} (string parent, string field) -\/$>$ string\+\_\+view
 \begin{DoxyCompactList}\small\item\em Parses a string field from the TOML configuration. \end{DoxyCompactList}\item 
-string\+\_\+view \mbox{\hyperlink{toml__parser_8hpp_a8d5e9ae7e728f5d76e3d29b767a9b8e5}{parse\+TOMLField\+Custom}} (const toml\+::parse\+\_\+result \&custom\+\_\+config, string parent, string field)
+auto \mbox{\hyperlink{toml__parser_8hpp_a555727478007fa0e36c967ec545ccf1f}{parse\+TOMLField\+Custom}} (const toml\+::parse\+\_\+result \&custom\+\_\+config, string parent, string field) -\/$>$ string\+\_\+view
 \begin{DoxyCompactList}\small\item\em Parses a string field from a custom TOML configuration that is called by the INLIMBO\+\_\+\+CONFIG\+\_\+\+HOME macro at runtime. \end{DoxyCompactList}\item 
-int64\+\_\+t \mbox{\hyperlink{toml__parser_8hpp_a0032a51dfcdddb12160bf671f29001f1}{parse\+TOMLField\+Int}} (string parent, string field)
+auto \mbox{\hyperlink{toml__parser_8hpp_a523559870b0baf1323e43e2f4997f95f}{parse\+TOMLField\+Int}} (string parent, string field) -\/$>$ int64\+\_\+t
 \begin{DoxyCompactList}\small\item\em Parses an integer field from the TOML configuration. \end{DoxyCompactList}\item 
-int64\+\_\+t \mbox{\hyperlink{toml__parser_8hpp_a8687daac99771caf3f8f1f2c203d6fde}{parse\+TOMLField\+Int\+Custom}} (const toml\+::parse\+\_\+result \&custom\+\_\+config, string parent, string field)
-\begin{DoxyCompactList}\small\item\em Parses an integer field from a custom TOML configuration set by the INLIMBO\+\_\+\+CONFIG\+\_\+\+HOME macro at runtime. \end{DoxyCompactList}\end{DoxyCompactItemize}
+auto \mbox{\hyperlink{toml__parser_8hpp_a981c846888e9379bcd247dbb739de240}{parse\+TOMLField\+Int\+Custom}} (const toml\+::parse\+\_\+result \&custom\+\_\+config, string parent, string field) -\/$>$ int64\+\_\+t
+\begin{DoxyCompactList}\small\item\em Parses an integer field from a custom TOML configuration set by the INLIMBO\+\_\+\+CONFIG\+\_\+\+HOME macro at runtime. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{toml__parser_8hpp_a6eb11e4db65b58858c65704ec4daa915}{parse\+TOMLField\+Bool}} (const string \&parent, const string \&field) -\/$>$ bool
+\end{DoxyCompactItemize}
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -86,11 +92,23 @@ Parent section for color settings \Hypertarget{toml__parser_8hpp_a10265fc668d386
 {\footnotesize\ttfamily \label{toml__parser_8hpp_a10265fc668d386d5d02e91115db9a7cc} 
 \#define PARENT\+\_\+\+DBG~"{}debug"{}}
 
-Parent section for debug settings \Hypertarget{toml__parser_8hpp_addfc43cbcf5a4328846696cee721a4de}\index{toml\_parser.hpp@{toml\_parser.hpp}!PARENT\_DBG\_FIELD\_PARSER\_LOG@{PARENT\_DBG\_FIELD\_PARSER\_LOG}}
-\index{PARENT\_DBG\_FIELD\_PARSER\_LOG@{PARENT\_DBG\_FIELD\_PARSER\_LOG}!toml\_parser.hpp@{toml\_parser.hpp}}
-\doxysubsubsection{\texorpdfstring{PARENT\_DBG\_FIELD\_PARSER\_LOG}{PARENT\_DBG\_FIELD\_PARSER\_LOG}}
-{\footnotesize\ttfamily \label{toml__parser_8hpp_addfc43cbcf5a4328846696cee721a4de} 
-\#define PARENT\+\_\+\+DBG\+\_\+\+FIELD\+\_\+\+PARSER\+\_\+\+LOG~"{}parser\+\_\+log"{}}
+Parent section for debug settings \Hypertarget{toml__parser_8hpp_a6632006e058b691283eecae15d8f2c4c}\index{toml\_parser.hpp@{toml\_parser.hpp}!PARENT\_DBG\_FIELD\_COLORS\_PARSER\_LOG@{PARENT\_DBG\_FIELD\_COLORS\_PARSER\_LOG}}
+\index{PARENT\_DBG\_FIELD\_COLORS\_PARSER\_LOG@{PARENT\_DBG\_FIELD\_COLORS\_PARSER\_LOG}!toml\_parser.hpp@{toml\_parser.hpp}}
+\doxysubsubsection{\texorpdfstring{PARENT\_DBG\_FIELD\_COLORS\_PARSER\_LOG}{PARENT\_DBG\_FIELD\_COLORS\_PARSER\_LOG}}
+{\footnotesize\ttfamily \label{toml__parser_8hpp_a6632006e058b691283eecae15d8f2c4c} 
+\#define PARENT\+\_\+\+DBG\+\_\+\+FIELD\+\_\+\+COLORS\+\_\+\+PARSER\+\_\+\+LOG~"{}colors\+\_\+parser\+\_\+log"{}}
+
+\Hypertarget{toml__parser_8hpp_a3dbbf241f204ad3fec4382233f7a771b}\index{toml\_parser.hpp@{toml\_parser.hpp}!PARENT\_DBG\_FIELD\_KEYBINDS\_PARSER\_LOG@{PARENT\_DBG\_FIELD\_KEYBINDS\_PARSER\_LOG}}
+\index{PARENT\_DBG\_FIELD\_KEYBINDS\_PARSER\_LOG@{PARENT\_DBG\_FIELD\_KEYBINDS\_PARSER\_LOG}!toml\_parser.hpp@{toml\_parser.hpp}}
+\doxysubsubsection{\texorpdfstring{PARENT\_DBG\_FIELD\_KEYBINDS\_PARSER\_LOG}{PARENT\_DBG\_FIELD\_KEYBINDS\_PARSER\_LOG}}
+{\footnotesize\ttfamily \label{toml__parser_8hpp_a3dbbf241f204ad3fec4382233f7a771b} 
+\#define PARENT\+\_\+\+DBG\+\_\+\+FIELD\+\_\+\+KEYBINDS\+\_\+\+PARSER\+\_\+\+LOG~"{}keybinds\+\_\+parser\+\_\+log"{}}
+
+\Hypertarget{toml__parser_8hpp_a9b133a50d58c5718bc07c6e73286378e}\index{toml\_parser.hpp@{toml\_parser.hpp}!PARENT\_DBG\_FIELD\_TAGLIB\_PARSER\_LOG@{PARENT\_DBG\_FIELD\_TAGLIB\_PARSER\_LOG}}
+\index{PARENT\_DBG\_FIELD\_TAGLIB\_PARSER\_LOG@{PARENT\_DBG\_FIELD\_TAGLIB\_PARSER\_LOG}!toml\_parser.hpp@{toml\_parser.hpp}}
+\doxysubsubsection{\texorpdfstring{PARENT\_DBG\_FIELD\_TAGLIB\_PARSER\_LOG}{PARENT\_DBG\_FIELD\_TAGLIB\_PARSER\_LOG}}
+{\footnotesize\ttfamily \label{toml__parser_8hpp_a9b133a50d58c5718bc07c6e73286378e} 
+\#define PARENT\+\_\+\+DBG\+\_\+\+FIELD\+\_\+\+TAGLIB\+\_\+\+PARSER\+\_\+\+LOG~  "{}taglib\+\_\+parser\+\_\+log"{}}
 
 Field for debug parser log setting \Hypertarget{toml__parser_8hpp_a392cc09f85ec01c77982dafa6bf29631}\index{toml\_parser.hpp@{toml\_parser.hpp}!PARENT\_FTP@{PARENT\_FTP}}
 \index{PARENT\_FTP@{PARENT\_FTP}!toml\_parser.hpp@{toml\_parser.hpp}}
@@ -257,11 +275,11 @@ A {\ttfamily toml\+::parse\+\_\+result} object representing the parsed configura
 {\em std\+::runtime\+\_\+error} & If the configuration file does not exist or cannot be parsed. \\
 \hline
 \end{DoxyExceptions}
-\Hypertarget{toml__parser_8hpp_a19930571a1aced24a71d9a1d6e7c710a}\index{toml\_parser.hpp@{toml\_parser.hpp}!parseTOMLField@{parseTOMLField}}
+\Hypertarget{toml__parser_8hpp_a9a9759bd3909e5f64c6b7acbdd4bc16f}\index{toml\_parser.hpp@{toml\_parser.hpp}!parseTOMLField@{parseTOMLField}}
 \index{parseTOMLField@{parseTOMLField}!toml\_parser.hpp@{toml\_parser.hpp}}
 \doxysubsubsection{\texorpdfstring{parseTOMLField()}{parseTOMLField()}}
-{\footnotesize\ttfamily \label{toml__parser_8hpp_a19930571a1aced24a71d9a1d6e7c710a} 
-string\+\_\+view parse\+TOMLField (\begin{DoxyParamCaption}\item[{string}]{parent}{, }\item[{string}]{field}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{toml__parser_8hpp_a9a9759bd3909e5f64c6b7acbdd4bc16f} 
+auto parse\+TOMLField (\begin{DoxyParamCaption}\item[{string}]{parent}{, }\item[{string}]{field}{}\end{DoxyParamCaption}) -\/$>$ string\+\_\+view }
 
 
 
@@ -279,11 +297,17 @@ This function retrieves the value of a specific field within a parent section of
 \begin{DoxyReturn}{Returns}
 A string view representing the value of the field. 
 \end{DoxyReturn}
-\texorpdfstring{$<$}{<} If the field is not found, return an empty string view.\Hypertarget{toml__parser_8hpp_a8d5e9ae7e728f5d76e3d29b767a9b8e5}\index{toml\_parser.hpp@{toml\_parser.hpp}!parseTOMLFieldCustom@{parseTOMLFieldCustom}}
+\texorpdfstring{$<$}{<} If the field is not found, return an empty string view.\Hypertarget{toml__parser_8hpp_a6eb11e4db65b58858c65704ec4daa915}\index{toml\_parser.hpp@{toml\_parser.hpp}!parseTOMLFieldBool@{parseTOMLFieldBool}}
+\index{parseTOMLFieldBool@{parseTOMLFieldBool}!toml\_parser.hpp@{toml\_parser.hpp}}
+\doxysubsubsection{\texorpdfstring{parseTOMLFieldBool()}{parseTOMLFieldBool()}}
+{\footnotesize\ttfamily \label{toml__parser_8hpp_a6eb11e4db65b58858c65704ec4daa915} 
+auto parse\+TOMLField\+Bool (\begin{DoxyParamCaption}\item[{const string \&}]{parent}{, }\item[{const string \&}]{field}{}\end{DoxyParamCaption}) -\/$>$ bool }
+
+\Hypertarget{toml__parser_8hpp_a555727478007fa0e36c967ec545ccf1f}\index{toml\_parser.hpp@{toml\_parser.hpp}!parseTOMLFieldCustom@{parseTOMLFieldCustom}}
 \index{parseTOMLFieldCustom@{parseTOMLFieldCustom}!toml\_parser.hpp@{toml\_parser.hpp}}
 \doxysubsubsection{\texorpdfstring{parseTOMLFieldCustom()}{parseTOMLFieldCustom()}}
-{\footnotesize\ttfamily \label{toml__parser_8hpp_a8d5e9ae7e728f5d76e3d29b767a9b8e5} 
-string\+\_\+view parse\+TOMLField\+Custom (\begin{DoxyParamCaption}\item[{const toml\+::parse\+\_\+result \&}]{custom\+\_\+config}{, }\item[{string}]{parent}{, }\item[{string}]{field}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{toml__parser_8hpp_a555727478007fa0e36c967ec545ccf1f} 
+auto parse\+TOMLField\+Custom (\begin{DoxyParamCaption}\item[{const toml\+::parse\+\_\+result \&}]{custom\+\_\+config}{, }\item[{string}]{parent}{, }\item[{string}]{field}{}\end{DoxyParamCaption}) -\/$>$ string\+\_\+view }
 
 
 
@@ -301,11 +325,11 @@ This function retrieves the value of a specific field within a parent section of
 \begin{DoxyReturn}{Returns}
 A string view representing the value of the field. 
 \end{DoxyReturn}
-\texorpdfstring{$<$}{<} If the field is not found, return an empty string view.\Hypertarget{toml__parser_8hpp_a0032a51dfcdddb12160bf671f29001f1}\index{toml\_parser.hpp@{toml\_parser.hpp}!parseTOMLFieldInt@{parseTOMLFieldInt}}
+\texorpdfstring{$<$}{<} If the field is not found, return an empty string view.\Hypertarget{toml__parser_8hpp_a523559870b0baf1323e43e2f4997f95f}\index{toml\_parser.hpp@{toml\_parser.hpp}!parseTOMLFieldInt@{parseTOMLFieldInt}}
 \index{parseTOMLFieldInt@{parseTOMLFieldInt}!toml\_parser.hpp@{toml\_parser.hpp}}
 \doxysubsubsection{\texorpdfstring{parseTOMLFieldInt()}{parseTOMLFieldInt()}}
-{\footnotesize\ttfamily \label{toml__parser_8hpp_a0032a51dfcdddb12160bf671f29001f1} 
-int64\+\_\+t parse\+TOMLField\+Int (\begin{DoxyParamCaption}\item[{string}]{parent}{, }\item[{string}]{field}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{toml__parser_8hpp_a523559870b0baf1323e43e2f4997f95f} 
+auto parse\+TOMLField\+Int (\begin{DoxyParamCaption}\item[{string}]{parent}{, }\item[{string}]{field}{}\end{DoxyParamCaption}) -\/$>$ int64\+\_\+t }
 
 
 
@@ -323,11 +347,11 @@ This function retrieves the value of a specific field as an integer from the TOM
 \begin{DoxyReturn}{Returns}
 The integer value of the field, or -\/1 if the field is not found. 
 \end{DoxyReturn}
-\texorpdfstring{$<$}{<} If the field is not found, return -\/1 as default.\Hypertarget{toml__parser_8hpp_a8687daac99771caf3f8f1f2c203d6fde}\index{toml\_parser.hpp@{toml\_parser.hpp}!parseTOMLFieldIntCustom@{parseTOMLFieldIntCustom}}
+\texorpdfstring{$<$}{<} If the field is not found, return -\/1 as default.\Hypertarget{toml__parser_8hpp_a981c846888e9379bcd247dbb739de240}\index{toml\_parser.hpp@{toml\_parser.hpp}!parseTOMLFieldIntCustom@{parseTOMLFieldIntCustom}}
 \index{parseTOMLFieldIntCustom@{parseTOMLFieldIntCustom}!toml\_parser.hpp@{toml\_parser.hpp}}
 \doxysubsubsection{\texorpdfstring{parseTOMLFieldIntCustom()}{parseTOMLFieldIntCustom()}}
-{\footnotesize\ttfamily \label{toml__parser_8hpp_a8687daac99771caf3f8f1f2c203d6fde} 
-int64\+\_\+t parse\+TOMLField\+Int\+Custom (\begin{DoxyParamCaption}\item[{const toml\+::parse\+\_\+result \&}]{custom\+\_\+config}{, }\item[{string}]{parent}{, }\item[{string}]{field}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{toml__parser_8hpp_a981c846888e9379bcd247dbb739de240} 
+auto parse\+TOMLField\+Int\+Custom (\begin{DoxyParamCaption}\item[{const toml\+::parse\+\_\+result \&}]{custom\+\_\+config}{, }\item[{string}]{parent}{, }\item[{string}]{field}{}\end{DoxyParamCaption}) -\/$>$ int64\+\_\+t }
 
 
 

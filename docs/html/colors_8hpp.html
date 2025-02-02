@@ -112,7 +112,8 @@ $(function(){initNavTree('colors_8hpp.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">colors.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;ftxui/screen/color.hpp&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="toml__parser_8hpp_source.html">../parser/toml_parser.hpp</a>&quot;</code><br />
+<code>#include &lt;ftxui/screen/color.hpp&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;regex&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
@@ -194,35 +195,41 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a5e3fb4538a96657fee0d7ffb9a92fb96" id="r_a5e3fb4538a96657fee0d7ffb9a92fb96"><td class="memItemLeft" align="right" valign="top">ftxui::Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceTrueColors.html#a5e3fb4538a96657fee0d7ffb9a92fb96">TrueColors::GetColor</a> (<a class="el" href="namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6d">Color</a> color)</td></tr>
-<tr class="memdesc:a5e3fb4538a96657fee0d7ffb9a92fb96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps a predefined color enum to its corresponding ftxui::Color::RGB value.  <br /></td></tr>
-<tr class="separator:a5e3fb4538a96657fee0d7ffb9a92fb96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38d72813e90e14f8b18e88cd4af7c9da" id="r_a38d72813e90e14f8b18e88cd4af7c9da"><td class="memItemLeft" align="right" valign="top">ftxui::Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38d72813e90e14f8b18e88cd4af7c9da">parseHexColor</a> (const std::string &amp;hex)</td></tr>
-<tr class="memdesc:a38d72813e90e14f8b18e88cd4af7c9da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a hexadecimal color string into an ftxui::Color::RGB value.  <br /></td></tr>
-<tr class="separator:a38d72813e90e14f8b18e88cd4af7c9da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a199acdfa1243dcb86ac7e6de0195a7dc" id="r_a199acdfa1243dcb86ac7e6de0195a7dc"><td class="memItemLeft" align="right" valign="top">ftxui::Color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a199acdfa1243dcb86ac7e6de0195a7dc">parseColor</a> (const std::string &amp;color_name, const std::string &amp;color_field)</td></tr>
-<tr class="memdesc:a199acdfa1243dcb86ac7e6de0195a7dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a color name or hex value into an ftxui::Color.  <br /></td></tr>
-<tr class="separator:a199acdfa1243dcb86ac7e6de0195a7dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a637d01c5fd950275d85073732fec1d08" id="r_a637d01c5fd950275d85073732fec1d08"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structInLimboColors.html">InLimboColors</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a637d01c5fd950275d85073732fec1d08">parseColors</a> ()</td></tr>
-<tr class="memdesc:a637d01c5fd950275d85073732fec1d08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses colors from a TOML configuration into an <a class="el" href="structInLimboColors.html" title="Represents a collection of colors used in the application.">InLimboColors</a> struct.  <br /></td></tr>
-<tr class="separator:a637d01c5fd950275d85073732fec1d08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3784afe8e73efdb0822e9999a0da1c18" id="r_a3784afe8e73efdb0822e9999a0da1c18"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceTrueColors.html#a3784afe8e73efdb0822e9999a0da1c18">TrueColors::GetColor</a> (<a class="el" href="namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6d">Color</a> color) -&gt; ftxui::Color</td></tr>
+<tr class="memdesc:a3784afe8e73efdb0822e9999a0da1c18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps a predefined color enum to its corresponding ftxui::Color::RGB value.  <br /></td></tr>
+<tr class="separator:a3784afe8e73efdb0822e9999a0da1c18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abda2901961de3e14b8be16ae35f7ab66" id="r_abda2901961de3e14b8be16ae35f7ab66"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abda2901961de3e14b8be16ae35f7ab66">parseHexColor</a> (const std::string &amp;hex) -&gt; ftxui::Color</td></tr>
+<tr class="memdesc:abda2901961de3e14b8be16ae35f7ab66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a hexadecimal color string into an ftxui::Color::RGB value.  <br /></td></tr>
+<tr class="separator:abda2901961de3e14b8be16ae35f7ab66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdc424eb9e7792dfd11042db761457fa" id="r_acdc424eb9e7792dfd11042db761457fa"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acdc424eb9e7792dfd11042db761457fa">parseColor</a> (const std::string &amp;color_name, const std::string &amp;color_field, bool verbose_logging) -&gt; ftxui::Color</td></tr>
+<tr class="memdesc:acdc424eb9e7792dfd11042db761457fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a color name or hex value into an ftxui::Color.  <br /></td></tr>
+<tr class="separator:acdc424eb9e7792dfd11042db761457fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8758bdc34d780b2c5c392397ff6591c" id="r_af8758bdc34d780b2c5c392397ff6591c"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8758bdc34d780b2c5c392397ff6591c">parseColors</a> () -&gt; <a class="el" href="structInLimboColors.html">InLimboColors</a></td></tr>
+<tr class="memdesc:af8758bdc34d780b2c5c392397ff6591c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses colors from a TOML configuration into an <a class="el" href="structInLimboColors.html" title="Represents a collection of colors used in the application.">InLimboColors</a> struct.  <br /></td></tr>
+<tr class="separator:af8758bdc34d780b2c5c392397ff6591c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a199acdfa1243dcb86ac7e6de0195a7dc" name="a199acdfa1243dcb86ac7e6de0195a7dc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a199acdfa1243dcb86ac7e6de0195a7dc">&#9670;&#160;</a></span>parseColor()</h2>
+<a id="acdc424eb9e7792dfd11042db761457fa" name="acdc424eb9e7792dfd11042db761457fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acdc424eb9e7792dfd11042db761457fa">&#9670;&#160;</a></span>parseColor()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ftxui::Color parseColor </td>
+          <td class="memname">auto parseColor </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>color_name</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>color_field</em></span>&#160;)</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>color_field</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>verbose_logging</em></span>&#160;) -&gt; ftxui::Color
+</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -245,17 +252,18 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a637d01c5fd950275d85073732fec1d08" name="a637d01c5fd950275d85073732fec1d08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a637d01c5fd950275d85073732fec1d08">&#9670;&#160;</a></span>parseColors()</h2>
+<a id="af8758bdc34d780b2c5c392397ff6591c" name="af8758bdc34d780b2c5c392397ff6591c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8758bdc34d780b2c5c392397ff6591c">&#9670;&#160;</a></span>parseColors()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structInLimboColors.html">InLimboColors</a> parseColors </td>
+          <td class="memname">auto parseColors </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
+          <td> -&gt; <a class="el" href="structInLimboColors.html">InLimboColors</a>
+</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -265,17 +273,18 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a38d72813e90e14f8b18e88cd4af7c9da" name="a38d72813e90e14f8b18e88cd4af7c9da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38d72813e90e14f8b18e88cd4af7c9da">&#9670;&#160;</a></span>parseHexColor()</h2>
+<a id="abda2901961de3e14b8be16ae35f7ab66" name="abda2901961de3e14b8be16ae35f7ab66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abda2901961de3e14b8be16ae35f7ab66">&#9670;&#160;</a></span>parseHexColor()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ftxui::Color parseHexColor </td>
+          <td class="memname">auto parseHexColor </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>hex</em></span></td><td>)</td>
-          <td></td>
+          <td> -&gt; ftxui::Color
+</td>
         </tr>
       </table>
 </div><div class="memdoc">

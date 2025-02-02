@@ -122,15 +122,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1c67b951a142614aac165c87a9804e1a" id="r_a1c67b951a142614aac165c87a9804e1a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c67b951a142614aac165c87a9804e1a">CommandLineArgs</a> (int argc, char *argv[])</td></tr>
 <tr class="memdesc:a1c67b951a142614aac165c87a9804e1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classCommandLineArgs.html" title="Parses and validates command-line arguments.">CommandLineArgs</a> object and parses command-line arguments.  <br /></td></tr>
 <tr class="separator:a1c67b951a142614aac165c87a9804e1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed48cc4e9324c706042acb43ace91a1e" id="r_aed48cc4e9324c706042acb43ace91a1e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed48cc4e9324c706042acb43ace91a1e">get</a> (const std::string &amp;flag, const std::string &amp;defaultValue=&quot;&quot;) const</td></tr>
-<tr class="memdesc:aed48cc4e9324c706042acb43ace91a1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the value associated with a flag.  <br /></td></tr>
-<tr class="separator:aed48cc4e9324c706042acb43ace91a1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e468eecc878b283c0a2070858868f0f" id="r_a9e468eecc878b283c0a2070858868f0f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e468eecc878b283c0a2070858868f0f">hasFlag</a> (const std::string &amp;flag) const</td></tr>
-<tr class="memdesc:a9e468eecc878b283c0a2070858868f0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a specific flag was provided.  <br /></td></tr>
-<tr class="separator:a9e468eecc878b283c0a2070858868f0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad49f8db1c03381d9f87a8ffd48546cf8" id="r_ad49f8db1c03381d9f87a8ffd48546cf8"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad49f8db1c03381d9f87a8ffd48546cf8">getPositionalArgs</a> () const</td></tr>
-<tr class="memdesc:ad49f8db1c03381d9f87a8ffd48546cf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the list of positional arguments.  <br /></td></tr>
-<tr class="separator:ad49f8db1c03381d9f87a8ffd48546cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4274817a5528e3aa73117e80f8fe5dd" id="r_af4274817a5528e3aa73117e80f8fe5dd"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af4274817a5528e3aa73117e80f8fe5dd">get</a> (const std::string &amp;flag, const std::string &amp;defaultValue=&quot;&quot;) const -&gt; std::string</td></tr>
+<tr class="memdesc:af4274817a5528e3aa73117e80f8fe5dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the value associated with a flag.  <br /></td></tr>
+<tr class="separator:af4274817a5528e3aa73117e80f8fe5dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d8db92f07e7ea891150eb4307130db4" id="r_a8d8db92f07e7ea891150eb4307130db4"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d8db92f07e7ea891150eb4307130db4">hasFlag</a> (const std::string &amp;flag) const -&gt; bool</td></tr>
+<tr class="memdesc:a8d8db92f07e7ea891150eb4307130db4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a specific flag was provided.  <br /></td></tr>
+<tr class="separator:a8d8db92f07e7ea891150eb4307130db4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0087974d9a91f312d43115aa4cb224b9" id="r_a0087974d9a91f312d43115aa4cb224b9"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0087974d9a91f312d43115aa4cb224b9">getPositionalArgs</a> () const -&gt; const std::vector&lt; std::string &gt; &amp;</td></tr>
+<tr class="memdesc:a0087974d9a91f312d43115aa4cb224b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the list of positional arguments.  <br /></td></tr>
+<tr class="separator:a0087974d9a91f312d43115aa4cb224b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23bfeb76513b5a88ec4af37d6f60269e" id="r_a23bfeb76513b5a88ec4af37d6f60269e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a23bfeb76513b5a88ec4af37d6f60269e">printUsage</a> (const std::string &amp;programName) const</td></tr>
 <tr class="memdesc:a23bfeb76513b5a88ec4af37d6f60269e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints usage information and program details.  <br /></td></tr>
 <tr class="separator:a23bfeb76513b5a88ec4af37d6f60269e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,8 +185,8 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aed48cc4e9324c706042acb43ace91a1e" name="aed48cc4e9324c706042acb43ace91a1e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aed48cc4e9324c706042acb43ace91a1e">&#9670;&#160;</a></span>get()</h2>
+<a id="af4274817a5528e3aa73117e80f8fe5dd" name="af4274817a5528e3aa73117e80f8fe5dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4274817a5528e3aa73117e80f8fe5dd">&#9670;&#160;</a></span>get()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -195,19 +195,20 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string CommandLineArgs::get </td>
+          <td class="memname">auto CommandLineArgs::get </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>flag</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>defaultValue</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>&#160;) const</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>defaultValue</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>&#160;) const -&gt; std::string
+  </td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -225,8 +226,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ad49f8db1c03381d9f87a8ffd48546cf8" name="ad49f8db1c03381d9f87a8ffd48546cf8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad49f8db1c03381d9f87a8ffd48546cf8">&#9670;&#160;</a></span>getPositionalArgs()</h2>
+<a id="a0087974d9a91f312d43115aa4cb224b9" name="a0087974d9a91f312d43115aa4cb224b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0087974d9a91f312d43115aa4cb224b9">&#9670;&#160;</a></span>getPositionalArgs()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -235,15 +236,16 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::vector&lt; std::string &gt; &amp; CommandLineArgs::getPositionalArgs </td>
+          <td class="memname">auto CommandLineArgs::getPositionalArgs </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
+          <td> const -&gt; const std::vector&lt;std::string&gt;&amp;
+  </td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -253,8 +255,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a9e468eecc878b283c0a2070858868f0f" name="a9e468eecc878b283c0a2070858868f0f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e468eecc878b283c0a2070858868f0f">&#9670;&#160;</a></span>hasFlag()</h2>
+<a id="a8d8db92f07e7ea891150eb4307130db4" name="a8d8db92f07e7ea891150eb4307130db4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d8db92f07e7ea891150eb4307130db4">&#9670;&#160;</a></span>hasFlag()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -263,15 +265,16 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool CommandLineArgs::hasFlag </td>
+          <td class="memname">auto CommandLineArgs::hasFlag </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>flag</em></span></td><td>)</td>
-          <td> const</td>
+          <td> const -&gt; bool
+  </td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -341,9 +344,18 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">  <span class="stringliteral">&quot;--help&quot;</span>,         <span class="stringliteral">&quot;--show-dbus-name&quot;</span>,  <span class="stringliteral">&quot;--version&quot;</span>, <span class="stringliteral">&quot;--clear-cache&quot;</span>, <span class="stringliteral">&quot;--show-config-file&quot;</span>,</div>
-<div class="line">  <span class="stringliteral">&quot;--show-log-dir&quot;</span>, <span class="stringliteral">&quot;--update-cache-run&quot;</span>}</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {<span class="stringliteral">&quot;--help&quot;</span>,</div>
+<div class="line">                                                              <span class="stringliteral">&quot;--show-dbus-name&quot;</span>,</div>
+<div class="line">                                                              <span class="stringliteral">&quot;--version&quot;</span>,</div>
+<div class="line">                                                              <span class="stringliteral">&quot;--clear-cache&quot;</span>,</div>
+<div class="line">                                                              <span class="stringliteral">&quot;--show-config-file&quot;</span>,</div>
+<div class="line">                                                              <span class="stringliteral">&quot;--show-log-dir&quot;</span>,</div>
+<div class="line">                                                              <span class="stringliteral">&quot;--update-cache-run&quot;</span>,</div>
+<div class="line">                                                              <span class="stringliteral">&quot;--print-song-tree&quot;</span>,</div>
+<div class="line">                                                              <span class="stringliteral">&quot;--print-songs-by-artist&quot;</span>,</div>
+<div class="line">                                                              <span class="stringliteral">&quot;--print-songs-by-genre-all&quot;</span>,</div>
+<div class="line">                                                              <span class="stringliteral">&quot;--print-song-info&quot;</span>,</div>
+<div class="line">                                                              <span class="stringliteral">&quot;--print-artists-all&quot;</span>}</div>
 </div><!-- fragment -->
 <p>List of valid flags supported by the application. </p>
 

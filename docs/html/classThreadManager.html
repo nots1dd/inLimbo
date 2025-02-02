@@ -128,15 +128,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a613b13ebf45502e4d86c2f9317ec5871" id="r_a613b13ebf45502e4d86c2f9317ec5871"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a613b13ebf45502e4d86c2f9317ec5871">ThreadManager</a> ()</td></tr>
 <tr class="memdesc:a613b13ebf45502e4d86c2f9317ec5871"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <a class="el" href="classThreadManager.html" title="A class that manages thread states and provides utilities for thread handling.">ThreadManager</a> with a worker thread pool.  <br /></td></tr>
 <tr class="separator:a613b13ebf45502e4d86c2f9317ec5871"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18eb12d3d752075318c3672c8efffd5b" id="r_a18eb12d3d752075318c3672c8efffd5b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a18eb12d3d752075318c3672c8efffd5b">~ThreadManager</a> ()</td></tr>
-<tr class="memdesc:a18eb12d3d752075318c3672c8efffd5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor to clean up resources and threads.  <br /></td></tr>
-<tr class="separator:a18eb12d3d752075318c3672c8efffd5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68d674d82375bbf4cbaeda427df036a2" id="r_a68d674d82375bbf4cbaeda427df036a2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structThreadManager_1_1ThreadState.html">ThreadState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68d674d82375bbf4cbaeda427df036a2">getThreadState</a> ()</td></tr>
-<tr class="memdesc:a68d674d82375bbf4cbaeda427df036a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the thread state managed by this <a class="el" href="classThreadManager.html" title="A class that manages thread states and provides utilities for thread handling.">ThreadManager</a>.  <br /></td></tr>
-<tr class="separator:a68d674d82375bbf4cbaeda427df036a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa649c0d04519f63cd596cf7fdcaa7de" id="r_aaa649c0d04519f63cd596cf7fdcaa7de"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWorkerThreadPool.html">WorkerThreadPool</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa649c0d04519f63cd596cf7fdcaa7de">getWorkerThreadPool</a> ()</td></tr>
-<tr class="memdesc:aaa649c0d04519f63cd596cf7fdcaa7de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the worker thread pool.  <br /></td></tr>
-<tr class="separator:aaa649c0d04519f63cd596cf7fdcaa7de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46b42b1798d4aa874edd8d4fa6ee0ed7" id="r_a46b42b1798d4aa874edd8d4fa6ee0ed7"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46b42b1798d4aa874edd8d4fa6ee0ed7">getThreadState</a> () -&gt; <a class="el" href="structThreadManager_1_1ThreadState.html">ThreadState</a> &amp;</td></tr>
+<tr class="memdesc:a46b42b1798d4aa874edd8d4fa6ee0ed7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor to clean up resources and threads.  <br /></td></tr>
+<tr class="separator:a46b42b1798d4aa874edd8d4fa6ee0ed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba98251e64455c0a166d524f68f1674b" id="r_aba98251e64455c0a166d524f68f1674b"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba98251e64455c0a166d524f68f1674b">getWorkerThreadPool</a> () -&gt; <a class="el" href="classWorkerThreadPool.html">WorkerThreadPool</a> &amp;</td></tr>
+<tr class="memdesc:aba98251e64455c0a166d524f68f1674b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the worker thread pool.  <br /></td></tr>
+<tr class="separator:aba98251e64455c0a166d524f68f1674b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c0b77d668ea526a62b556b42751a5a6" id="r_a8c0b77d668ea526a62b556b42751a5a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c0b77d668ea526a62b556b42751a5a6">lockPlayMutex</a> (<a class="el" href="structThreadManager_1_1ThreadState.html">ThreadState</a> &amp;thread_state)</td></tr>
 <tr class="memdesc:a8c0b77d668ea526a62b556b42751a5a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Locks the play mutex for the provided thread state.  <br /></td></tr>
 <tr class="separator:a8c0b77d668ea526a62b556b42751a5a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,8 +171,9 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a18eb12d3d752075318c3672c8efffd5b" name="a18eb12d3d752075318c3672c8efffd5b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a18eb12d3d752075318c3672c8efffd5b">&#9670;&#160;</a></span>~ThreadManager()</h2>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a46b42b1798d4aa874edd8d4fa6ee0ed7" name="a46b42b1798d4aa874edd8d4fa6ee0ed7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46b42b1798d4aa874edd8d4fa6ee0ed7">&#9670;&#160;</a></span>getThreadState()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -184,10 +182,10 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ThreadManager::~ThreadManager </td>
+          <td class="memname">auto ThreadManager::getThreadState </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
+          <td> -&gt; <a class="el" href="structThreadManager_1_1ThreadState.html">ThreadState</a>&amp; </td>
         </tr>
       </table>
   </td>
@@ -198,12 +196,12 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Destructor to clean up resources and threads. </p>
+<p>Retrieves the thread state managed by this <a class="el" href="classThreadManager.html" title="A class that manages thread states and provides utilities for thread handling.">ThreadManager</a>. </p><dl class="section return"><dt>Returns</dt><dd>A reference to the thread state. </dd></dl>
 
 </div>
 </div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a68d674d82375bbf4cbaeda427df036a2" name="a68d674d82375bbf4cbaeda427df036a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68d674d82375bbf4cbaeda427df036a2">&#9670;&#160;</a></span>getThreadState()</h2>
+<a id="aba98251e64455c0a166d524f68f1674b" name="aba98251e64455c0a166d524f68f1674b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba98251e64455c0a166d524f68f1674b">&#9670;&#160;</a></span>getWorkerThreadPool()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -212,38 +210,10 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structThreadManager_1_1ThreadState.html">ThreadState</a> &amp; ThreadManager::getThreadState </td>
+          <td class="memname">auto ThreadManager::getWorkerThreadPool </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Retrieves the thread state managed by this <a class="el" href="classThreadManager.html" title="A class that manages thread states and provides utilities for thread handling.">ThreadManager</a>. </p>
-<dl class="section return"><dt>Returns</dt><dd>A reference to the thread state. </dd></dl>
-
-</div>
-</div>
-<a id="aaa649c0d04519f63cd596cf7fdcaa7de" name="aaa649c0d04519f63cd596cf7fdcaa7de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa649c0d04519f63cd596cf7fdcaa7de">&#9670;&#160;</a></span>getWorkerThreadPool()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classWorkerThreadPool.html">WorkerThreadPool</a> &amp; ThreadManager::getWorkerThreadPool </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
+          <td> -&gt; <a class="el" href="classWorkerThreadPool.html">WorkerThreadPool</a>&amp; </td>
         </tr>
       </table>
   </td>
@@ -254,7 +224,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the worker thread pool. </p>
-<dl class="section return"><dt>Returns</dt><dd>Reference to the <a class="el" href="classWorkerThreadPool.html">WorkerThreadPool</a>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Reference to the <a class="el" href="classWorkerThreadPool.html" title="A thread pool that manages a collection of worker threads.">WorkerThreadPool</a>. </dd></dl>
 
 </div>
 </div>
@@ -325,7 +295,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/ui/<a class="el" href="thread__manager_8hpp_source.html">thread_manager.hpp</a></li>
+<li>src/threads/<a class="el" href="thread__manager_8hpp_source.html">thread_manager.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

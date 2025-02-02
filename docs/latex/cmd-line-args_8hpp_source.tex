@@ -3,147 +3,172 @@
 \mbox{\hyperlink{cmd-line-args_8hpp}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00001\ }
-\DoxyCodeLine{00011\ }
-\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#ifndef\ COMMAND\_LINE\_ARGS\_HPP}}
-\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ COMMAND\_LINE\_ARGS\_HPP}}
-\DoxyCodeLine{00014\ }
-\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{levenshtein_8hpp}{./helpers/levenshtein.hpp}}"{}}}
-\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <iostream>}}
-\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <map>}}
-\DoxyCodeLine{00018\ }
-\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classCommandLineArgs_a1c67b951a142614aac165c87a9804e1a}{CommandLineArgs}}}
-\DoxyCodeLine{00028\ \{}
-\DoxyCodeLine{00029\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00030\ \ \ std::map<std::string,\ std::string>\ args;\ }
-\DoxyCodeLine{00031\ \ \ std::vector<std::string>\ \ \ \ \ \ \ \ \ \ \ positionalArgs;\ }
-\DoxyCodeLine{00032\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ hasError\ =\ \textcolor{keyword}{false};\ }
-\DoxyCodeLine{00033\ \ \ std::string\ errorMessage;\ \ \ \ \ }
-\DoxyCodeLine{00034\ }
-\DoxyCodeLine{00035\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00039\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::vector<std::string>\ \mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{validFlags}};}
-\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{classCommandLineArgs_a1c67b951a142614aac165c87a9804e1a}{CommandLineArgs}}(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}*\ argv[])}
-\DoxyCodeLine{00050\ \ \ \{}
-\DoxyCodeLine{00051\ \ \ \ \ parseArgs(argc,\ argv);}
-\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasError)}
-\DoxyCodeLine{00053\ \ \ \ \ \{}
-\DoxyCodeLine{00054\ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[31mError:\ "{}}\ <<\ errorMessage\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[0m\(\backslash\)n\(\backslash\)n"{}};}
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \mbox{\hyperlink{classCommandLineArgs_a23bfeb76513b5a88ec4af37d6f60269e}{printUsage}}(argv[0]);}
-\DoxyCodeLine{00056\ \ \ \ \ \ \ exit(1);}
-\DoxyCodeLine{00057\ \ \ \ \ \}}
-\DoxyCodeLine{00058\ \ \ \}}
-\DoxyCodeLine{00068\ \ \ std::string\ \mbox{\hyperlink{classCommandLineArgs_aed48cc4e9324c706042acb43ace91a1e}{get}}(\textcolor{keyword}{const}\ std::string\&\ flag,\ \textcolor{keyword}{const}\ std::string\&\ defaultValue\ =\ \textcolor{stringliteral}{"{}"{}})\textcolor{keyword}{\ const}}
-\DoxyCodeLine{00069\ \textcolor{keyword}{\ \ }\{}
-\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ args.find(flag);}
-\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordflow}{return}\ (it\ !=\ args.end())\ ?\ it-\/>second\ :\ defaultValue;}
-\DoxyCodeLine{00072\ \ \ \}}
-\DoxyCodeLine{00073\ }
-\DoxyCodeLine{00080\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classCommandLineArgs_a9e468eecc878b283c0a2070858868f0f}{hasFlag}}(\textcolor{keyword}{const}\ std::string\&\ flag)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ args.find(flag)\ !=\ args.end();\ \}}
-\DoxyCodeLine{00086\ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\&\ \mbox{\hyperlink{classCommandLineArgs_ad49f8db1c03381d9f87a8ffd48546cf8}{getPositionalArgs}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ positionalArgs;\ \}}
-\DoxyCodeLine{00087\ }
-\DoxyCodeLine{00096\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classCommandLineArgs_a23bfeb76513b5a88ec4af37d6f60269e}{printUsage}}(\textcolor{keyword}{const}\ std::string\&\ programName)\textcolor{keyword}{\ const}}
-\DoxyCodeLine{00097\ \textcolor{keyword}{\ \ }\{}
-\DoxyCodeLine{00098\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[1mMusic\ player\ that\ keeps\ you\ in\ Limbo.\(\backslash\)033[0m\(\backslash\)n"{}};}
-\DoxyCodeLine{00099\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[1mUsage:\(\backslash\)033[0m\ "{}}\ <<\ programName\ <<\ \textcolor{stringliteral}{"{}\ [options]\ [positional\ arguments]\(\backslash\)n\(\backslash\)n"{}};}
-\DoxyCodeLine{00100\ }
-\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{validFlags}}.empty())}
-\DoxyCodeLine{00102\ \ \ \ \ \{}
-\DoxyCodeLine{00103\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[1mValid\ options:\(\backslash\)033[0m\(\backslash\)n"{}};}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ flag\ :\ \mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{validFlags}})}
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ "{}}\ <<\ flag\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00107\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00108\ \ \ \ \ \}}
-\DoxyCodeLine{00109\ }
-\DoxyCodeLine{00110\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00111\ }
-\DoxyCodeLine{00112\ \ \ \ \ \textcolor{comment}{//\ Project\ details\ and\ additional\ information}}
-\DoxyCodeLine{00113\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[1mProject\ Information:\(\backslash\)033[0m\(\backslash\)n"{}};}
-\DoxyCodeLine{00114\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}-\/\ \ Name:\ inLimbo\ -\/\ Terminal-\/based\ Music\ Player\(\backslash\)n"{}};}
-\DoxyCodeLine{00115\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}-\/\ \ Author:\ Siddharth\ Karnam\ (nots1dd)\(\backslash\)n"{}};}
-\DoxyCodeLine{00116\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}-\/\ \ License:\ GNU\ GPL\ v3\(\backslash\)n"{}};}
-\DoxyCodeLine{00117\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}-\/\ \ Website:\ https://nots1dd.github.io/inLimbo/\ (has\ Doxygen\ documentation)\(\backslash\)n"{}};}
-\DoxyCodeLine{00118\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}For\ any\ issues\ visit\ <https://github.com/nots1dd/inLimbo>\(\backslash\)n"{}};}
-\DoxyCodeLine{00119\ \ \ \ \ std::cout\ <<\ std::endl;}
-\DoxyCodeLine{00120\ }
-\DoxyCodeLine{00121\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[1mDescription:\(\backslash\)033[0m\(\backslash\)n"{}};}
-\DoxyCodeLine{00122\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ inLimbo\ is\ a\ TUI\ music\ player\ that\ supports\ seamless\ playback\ and\ efficient\ "{}}}
-\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}metadata\ handling.\(\backslash\)n\ \ Designed\ for\ minimalism\ and\ ease\ of\ use.\(\backslash\)n\(\backslash\)n\(\backslash\)033[1mKeeps\ "{}}}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}YOU\ in\ Limbo...\(\backslash\)033[0m"{}};}
-\DoxyCodeLine{00125\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00126\ \ \ \}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{levenshtein_8hpp}{./helpers/levenshtein.hpp}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classCommandLineArgs_a1c67b951a142614aac165c87a9804e1a}{CommandLineArgs}}}
+\DoxyCodeLine{00026\ \{}
+\DoxyCodeLine{00027\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00028\ \ \ std::map<std::string,\ std::string>\ args;\ }
+\DoxyCodeLine{00029\ \ \ std::vector<std::string>\ \ \ \ \ \ \ \ \ \ \ positionalArgs;\ }
+\DoxyCodeLine{00030\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ hasError\ =\ \textcolor{keyword}{false};\ }
+\DoxyCodeLine{00031\ \ \ std::string\ errorMessage;\ \ \ \ \ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00037\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::vector<std::string>\ \mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{validFlags}};}
+\DoxyCodeLine{00047\ \ \ \mbox{\hyperlink{classCommandLineArgs_a1c67b951a142614aac165c87a9804e1a}{CommandLineArgs}}(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}*\ argv[])}
+\DoxyCodeLine{00048\ \ \ \{}
+\DoxyCodeLine{00049\ \ \ \ \ parseArgs(argc,\ argv);}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasError)}
+\DoxyCodeLine{00051\ \ \ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[31mError:\ "{}}\ <<\ errorMessage\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[0m\(\backslash\)n\(\backslash\)n"{}};}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \mbox{\hyperlink{classCommandLineArgs_a23bfeb76513b5a88ec4af37d6f60269e}{printUsage}}(argv[0]);}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ exit(1);}
+\DoxyCodeLine{00055\ \ \ \ \ \}}
+\DoxyCodeLine{00056\ \ \ \}}
+\DoxyCodeLine{00066\ \ \ [[nodiscard]]}
+\DoxyCodeLine{00067\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classCommandLineArgs_af4274817a5528e3aa73117e80f8fe5dd}{get}}(\textcolor{keyword}{const}\ std::string\&\ flag,\ \textcolor{keyword}{const}\ std::string\&\ defaultValue\ =\ \textcolor{stringliteral}{"{}"{}})\ const\ -\/>\ std::\textcolor{keywordtype}{string}}
+\DoxyCodeLine{00068\ \ \ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ args.find(flag);}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{return}\ (it\ !=\ args.end())\ ?\ it-\/>second\ :\ defaultValue;}
+\DoxyCodeLine{00071\ \ \ \}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00079\ \ \ [[nodiscard]]}
+\DoxyCodeLine{00080\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classCommandLineArgs_a8d8db92f07e7ea891150eb4307130db4}{hasFlag}}(\textcolor{keyword}{const}\ std::string\&\ flag)\ \textcolor{keyword}{const}\ -\/>\ \textcolor{keywordtype}{bool}}
+\DoxyCodeLine{00081\ \ \ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordflow}{return}\ args.find(flag)\ !=\ args.end();}
+\DoxyCodeLine{00083\ \ \ \}}
+\DoxyCodeLine{00089\ \ \ [[nodiscard]]}
+\DoxyCodeLine{00090\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classCommandLineArgs_a0087974d9a91f312d43115aa4cb224b9}{getPositionalArgs}}()\ const\ -\/>\ const\ std::vector<std::\textcolor{keywordtype}{string}>\&}
+\DoxyCodeLine{00091\ \ \ \{}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{return}\ positionalArgs;}
+\DoxyCodeLine{00093\ \ \ \}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00103\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classCommandLineArgs_a23bfeb76513b5a88ec4af37d6f60269e}{printUsage}}(\textcolor{keyword}{const}\ std::string\&\ programName)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00104\ \textcolor{keyword}{\ \ }\{}
+\DoxyCodeLine{00105\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[1mMusic\ player\ that\ keeps\ you\ in\ Limbo.\(\backslash\)033[0m\(\backslash\)n"{}};}
+\DoxyCodeLine{00106\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[1mUsage:\(\backslash\)033[0m\ "{}}\ <<\ programName\ <<\ \textcolor{stringliteral}{"{}\ [options]\ [positional\ arguments]\(\backslash\)n\(\backslash\)n"{}};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{validFlags}}.empty())}
+\DoxyCodeLine{00109\ \ \ \ \ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[1mValid\ options:\(\backslash\)033[0m\(\backslash\)n"{}};}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ flag\ :\ \mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{validFlags}})}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ "{}}\ <<\ flag\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00115\ \ \ \ \ \}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{//\ Project\ details\ and\ additional\ information}}
+\DoxyCodeLine{00120\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[1mProject\ Information:\(\backslash\)033[0m\(\backslash\)n"{}};}
+\DoxyCodeLine{00121\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}-\/\ \ Name:\ inLimbo\ -\/\ Terminal-\/based\ Music\ Player\(\backslash\)n"{}};}
+\DoxyCodeLine{00122\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}-\/\ \ Author:\ Siddharth\ Karnam\ (nots1dd)\(\backslash\)n"{}};}
+\DoxyCodeLine{00123\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}-\/\ \ License:\ GNU\ GPL\ v3\(\backslash\)n"{}};}
+\DoxyCodeLine{00124\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}-\/\ \ Website:\ https://nots1dd.github.io/inLimbo/\ (has\ Doxygen\ documentation)\(\backslash\)n"{}};}
+\DoxyCodeLine{00125\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}For\ any\ issues\ visit\ <https://github.com/nots1dd/inLimbo>\(\backslash\)n"{}};}
+\DoxyCodeLine{00126\ \ \ \ \ std::cout\ <<\ std::endl;}
 \DoxyCodeLine{00127\ }
-\DoxyCodeLine{00128\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00139\ \ \ \textcolor{keywordtype}{void}\ parseArgs(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}*\ argv[])}
-\DoxyCodeLine{00140\ \ \ \{}
-\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <\ argc;\ ++i)}
-\DoxyCodeLine{00142\ \ \ \ \ \{}
-\DoxyCodeLine{00143\ \ \ \ \ \ \ std::string\ arg\ =\ argv[i];}
-\DoxyCodeLine{00144\ }
-\DoxyCodeLine{00145\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (arg[0]\ ==\ \textcolor{charliteral}{'-\/'})}
-\DoxyCodeLine{00146\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ std::string\ flag\ =\ arg;}
-\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ std::string\ value;}
-\DoxyCodeLine{00149\ }
-\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ +\ 1\ <\ argc\ \&\&\ argv[i\ +\ 1][0]\ !=\ \textcolor{charliteral}{'-\/'})}
-\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ value\ =\ argv[++i];}
-\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00154\ }
-\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Find\ closest\ matching\ flag\ for\ error\ message}}
-\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::find(\mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{validFlags}}.begin(),\ \mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{validFlags}}.end(),\ flag)\ ==\ \mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{validFlags}}.end())}
+\DoxyCodeLine{00128\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[1mDescription:\(\backslash\)033[0m\(\backslash\)n"{}};}
+\DoxyCodeLine{00129\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ inLimbo\ is\ a\ TUI\ music\ player\ that\ supports\ seamless\ playback\ and\ efficient\ "{}}}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}metadata\ handling.\(\backslash\)n\ \ Designed\ for\ minimalism\ and\ ease\ of\ use.\(\backslash\)n"{}};}
+\DoxyCodeLine{00131\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00132\ \ \ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00145\ \ \ \textcolor{keywordtype}{void}\ parseArgs(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}*\ argv[])}
+\DoxyCodeLine{00146\ \ \ \{}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <\ argc;\ ++i)}
+\DoxyCodeLine{00148\ \ \ \ \ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ std::string\ arg\ =\ argv[i];}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (arg[0]\ ==\ \textcolor{charliteral}{'-\/'})}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ std::string\ flag,\ value;}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ eqPos\ =\ arg.find(\textcolor{charliteral}{'='});}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eqPos\ !=\ std::string::npos)}
 \DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ hasError\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00159\ }
-\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Find\ the\ closest\ matching\ flag\ for\ a\ helpful\ suggestion}}
-\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ std::string\ closestMatch\ =\ findClosestMatch(flag);}
-\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!closestMatch.empty())}
-\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ errorMessage\ =\ \textcolor{stringliteral}{"{}Invalid\ flag:\ '"{}}\ +\ flag\ +\ \textcolor{stringliteral}{"{}'.\ Did\ you\ mean\ '"{}}\ +\ closestMatch\ +\ \textcolor{stringliteral}{"{}'?"{}};}
-\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Handle\ -\/-\/flag=value\ format}}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ flag\ \ =\ arg.substr(0,\ eqPos);}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ value\ =\ arg.substr(eqPos\ +\ 1);}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Handle\ -\/-\/flag\ value\ format}}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ flag\ =\ arg;}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ +\ 1\ <\ argc\ \&\&\ argv[i\ +\ 1][0]\ !=\ \textcolor{charliteral}{'-\/'})}
 \DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ errorMessage\ =\ \textcolor{stringliteral}{"{}Invalid\ flag:\ '"{}}\ +\ flag\ +\ \textcolor{stringliteral}{"{}'"{}};}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ argv[++i];}
 \DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00172\ }
-\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ args[flag]\ =\ value;}
-\DoxyCodeLine{00174\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00175\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00176\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ positionalArgs.push\_back(arg);}
-\DoxyCodeLine{00178\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00179\ \ \ \ \ \}}
-\DoxyCodeLine{00180\ \ \ \}}
-\DoxyCodeLine{00181\ }
-\DoxyCodeLine{00192\ \ \ std::string\ findClosestMatch(\textcolor{keyword}{const}\ std::string\&\ invalidFlag)\textcolor{keyword}{\ const}}
-\DoxyCodeLine{00193\ \textcolor{keyword}{\ \ }\{}
-\DoxyCodeLine{00194\ \ \ \ \ std::string\ bestMatch;}
-\DoxyCodeLine{00195\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ minDist\ =\ std::string::npos;}
-\DoxyCodeLine{00196\ }
-\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ validFlag\ :\ \mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{validFlags}})}
-\DoxyCodeLine{00198\ \ \ \ \ \{}
-\DoxyCodeLine{00199\ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ Levenshtein\ distance}}
-\DoxyCodeLine{00200\ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ dist\ =\ \mbox{\hyperlink{levenshtein_8hpp_af6b965a635feedead81476d39ac9d867}{levenshteinDistance}}(invalidFlag,\ validFlag);}
-\DoxyCodeLine{00201\ }
-\DoxyCodeLine{00202\ \ \ \ \ \ \ \textcolor{comment}{//\ Track\ the\ flag\ with\ the\ smallest\ distance}}
-\DoxyCodeLine{00203\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dist\ <\ minDist)}
-\DoxyCodeLine{00204\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ minDist\ \ \ =\ dist;}
-\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ bestMatch\ =\ validFlag;}
-\DoxyCodeLine{00207\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00208\ \ \ \ \ \}}
-\DoxyCodeLine{00209\ }
-\DoxyCodeLine{00210\ \ \ \ \ \textcolor{comment}{//\ Only\ suggest\ if\ the\ match\ is\ reasonably\ close\ (for\ example,\ max\ 3\ edits\ away)}}
-\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keywordflow}{return}\ (minDist\ <=\ 3)\ ?\ bestMatch\ :\ \textcolor{stringliteral}{"{}"{}};}
-\DoxyCodeLine{00212\ \ \ \}}
-\DoxyCodeLine{00213\ \};}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Find\ closest\ matching\ flag\ for\ error\ message}}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::find(\mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{validFlags}}.begin(),\ \mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{validFlags}}.end(),\ flag)\ ==\ \mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{validFlags}}.end())}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ hasError\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Find\ the\ closest\ matching\ flag\ for\ a\ helpful\ suggestion}}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ std::string\ closestMatch\ =\ findClosestMatch(flag);}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!closestMatch.empty())}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ errorMessage\ =\ \textcolor{stringliteral}{"{}Invalid\ flag:\ '"{}}\ +\ flag\ +\ \textcolor{stringliteral}{"{}'.\ Did\ you\ mean\ '"{}}\ +\ closestMatch\ +\ \textcolor{stringliteral}{"{}'?"{}};}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ errorMessage\ =\ \textcolor{stringliteral}{"{}Invalid\ flag:\ '"{}}\ +\ flag\ +\ \textcolor{stringliteral}{"{}'"{}};}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ args[flag]\ =\ value;\ \textcolor{comment}{//\ Store\ the\ flag\ and\ its\ associated\ value\ (if\ any)}}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ positionalArgs.push\_back(arg);}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00196\ \ \ \ \ \}}
+\DoxyCodeLine{00197\ \ \ \}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00209\ \ \ [[nodiscard]]}
+\DoxyCodeLine{00210\ \ \ \textcolor{keyword}{auto}\ findClosestMatch(\textcolor{keyword}{const}\ std::string\&\ invalidFlag)\ \textcolor{keyword}{const}\ -\/>\ std::string}
+\DoxyCodeLine{00211\ \ \ \{}
+\DoxyCodeLine{00212\ \ \ \ \ std::string\ bestMatch;}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ minDist\ =\ std::string::npos;}
 \DoxyCodeLine{00214\ }
-\DoxyCodeLine{00215\ \textcolor{comment}{//\ Define\ valid\ flags\ globally}}
-\DoxyCodeLine{00216\ \textcolor{keyword}{const}\ std::vector<std::string>\ \mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{CommandLineArgs::validFlags}}\ =\ \{}
-\DoxyCodeLine{00217\ \ \ \textcolor{stringliteral}{"{}-\/-\/help"{}},\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/show-\/dbus-\/name"{}},\ \ \textcolor{stringliteral}{"{}-\/-\/version"{}},\ \textcolor{stringliteral}{"{}-\/-\/clear-\/cache"{}},\ \textcolor{stringliteral}{"{}-\/-\/show-\/config-\/file"{}},}
-\DoxyCodeLine{00218\ \ \ \textcolor{stringliteral}{"{}-\/-\/show-\/log-\/dir"{}},\ \textcolor{stringliteral}{"{}-\/-\/update-\/cache-\/run"{}}\};}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ validFlag\ :\ \mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{validFlags}})}
+\DoxyCodeLine{00216\ \ \ \ \ \{}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ Levenshtein\ distance}}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ dist\ =\ \mbox{\hyperlink{levenshtein_8hpp_a055e26a6c544edff9020f7e52c0c59ca}{levenshteinDistance}}(invalidFlag,\ validFlag);}
 \DoxyCodeLine{00219\ }
-\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ COMMAND\_LINE\_ARGS\_HPP}}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \textcolor{comment}{//\ Track\ the\ flag\ with\ the\ smallest\ distance}}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dist\ <\ minDist)}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ minDist\ \ \ =\ dist;}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ bestMatch\ =\ validFlag;}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00226\ \ \ \ \ \}}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{comment}{//\ Only\ suggest\ if\ the\ match\ is\ reasonably\ close\ (for\ example,\ max\ 3\ edits\ away)}}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keywordflow}{return}\ (minDist\ <=\ 3)\ ?\ bestMatch\ :\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00230\ \ \ \}}
+\DoxyCodeLine{00231\ \};}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \textcolor{comment}{//\ Define\ valid\ flags\ globally}}
+\DoxyCodeLine{00234\ \textcolor{keyword}{const}\ std::vector<std::string>\ \mbox{\hyperlink{classCommandLineArgs_a78144ae8a840966935964dd323413008}{CommandLineArgs::validFlags}}\ =\ \{\textcolor{stringliteral}{"{}-\/-\/help"{}},}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/show-\/dbus-\/name"{}},}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/version"{}},}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/clear-\/cache"{}},}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/show-\/config-\/file"{}},}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/show-\/log-\/dir"{}},}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/update-\/cache-\/run"{}},}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/print-\/song-\/tree"{}},}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/print-\/songs-\/by-\/artist"{}},}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/print-\/songs-\/by-\/genre-\/all"{}},}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/print-\/song-\/info"{}},}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/print-\/artists-\/all"{}}\};}
 
 \end{DoxyCode}

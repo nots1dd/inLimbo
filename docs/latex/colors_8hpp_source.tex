@@ -2,9 +2,9 @@
 \hypertarget{colors_8hpp_source}{}\label{colors_8hpp_source}\index{src/ui/colors.hpp@{src/ui/colors.hpp}}
 \mbox{\hyperlink{colors_8hpp}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ COLORS\_HPP}}
-\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ COLORS\_HPP}}
-\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{toml__parser_8hpp}{../parser/toml\_parser.hpp}}"{}}}
 \DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <ftxui/screen/color.hpp>}}
 \DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <iostream>}}
 \DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <regex>}}
@@ -64,7 +64,7 @@
 \DoxyCodeLine{00067\ \ \ \mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae5c96e2ad0520ead9cec1a0664a709a9}{LightTurquoise}}}
 \DoxyCodeLine{00068\ \};}
 \DoxyCodeLine{00069\ }
-\DoxyCodeLine{00076\ ftxui::Color\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{Color}}\ color)}
+\DoxyCodeLine{00076\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6d}{Color}}\ color)\ -\/>\ ftxui::Color}
 \DoxyCodeLine{00077\ \{}
 \DoxyCodeLine{00078\ \ \ \textcolor{keywordflow}{switch}\ (color)}
 \DoxyCodeLine{00079\ \ \ \{}
@@ -166,148 +166,172 @@
 \DoxyCodeLine{00183\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a4e358ee399638df61c706456fcf40767}{active\_win\_border\_color}};}
 \DoxyCodeLine{00184\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a63f4851e8e7873841078562505e3177c}{inactive\_win\_border\_color}};}
 \DoxyCodeLine{00185\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a5dfc5e1ee91551fd59c958847be3b78a}{album\_name\_bg}};}
-\DoxyCodeLine{00186\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a69d1f12d371522229fbfb13c7f9ab92f}{menu\_cursor\_bg}};}
-\DoxyCodeLine{00187\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a47ed3b46e314aca5375eab8115ded23d}{inactive\_menu\_cursor\_bg}};}
-\DoxyCodeLine{00188\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_ac2e6da4632912694f235c23e27d19bb4}{artists\_title\_bg}};}
-\DoxyCodeLine{00189\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_af12f2ea4cae2e14a2d41a941a57e5604}{artists\_title\_fg}};}
-\DoxyCodeLine{00190\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a8e83386ccaf42468103b52ad524dbd26}{songs\_title\_bg}};}
-\DoxyCodeLine{00191\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a54dfddaa89dfa93e8d42fd2f4e0b6a9d}{songs\_title\_fg}};}
-\DoxyCodeLine{00192\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_afa375f2950a11edb70942581292f57df}{song\_queue\_menu\_bor\_col}};}
-\DoxyCodeLine{00193\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a7fab96b4dcff8aea094de48020e34b14}{song\_queue\_menu\_fg}};}
-\DoxyCodeLine{00194\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a5a35db6e7f7b57d15d58d2babde9e5f6}{progress\_bar\_playing\_col}};}
-\DoxyCodeLine{00195\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a329fc30f8e1f18686178a50003126d31}{progress\_bar\_not\_playing\_col}};}
-\DoxyCodeLine{00196\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a1b9361baade2607c61ab26b154171b2c}{volume\_bar\_col}};}
-\DoxyCodeLine{00197\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a09cbb994d96a073868650991cd7f107b}{status\_bar\_bg}};}
-\DoxyCodeLine{00198\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a30d558e131ef5cc80bac532316715331}{status\_bar\_artist\_col}};}
-\DoxyCodeLine{00199\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_acedfe8f1d1861349a9b956bc9d3ceeb8}{status\_bar\_song\_col}};}
-\DoxyCodeLine{00200\ \};}
-\DoxyCodeLine{00201\ }
-\DoxyCodeLine{00209\ }
-\DoxyCodeLine{00210\ ftxui::Color\ \mbox{\hyperlink{colors_8hpp_a38d72813e90e14f8b18e88cd4af7c9da}{parseHexColor}}(\textcolor{keyword}{const}\ std::string\&\ hex)}
-\DoxyCodeLine{00211\ \{}
-\DoxyCodeLine{00212\ \ \ \textcolor{comment}{//\ Validate\ hex\ format}}
-\DoxyCodeLine{00213\ \ \ std::regex\ \ hex\_regex(\textcolor{stringliteral}{"{}\string^\#([0-\/9a-\/fA-\/F]\{6\})\$"{}});\ \textcolor{comment}{//\ Matches\ \#RRGGBB}}
-\DoxyCodeLine{00214\ \ \ std::smatch\ match;}
-\DoxyCodeLine{00215\ }
-\DoxyCodeLine{00216\ \ \ \textcolor{keywordflow}{if}\ (!std::regex\_match(hex,\ match,\ hex\_regex))}
-\DoxyCodeLine{00217\ \ \ \{}
-\DoxyCodeLine{00218\ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Invalid\ hexadecimal\ color\ format:\ '"{}}\ <<\ hex}
-\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}'.\ Use\ a\ string\ like\ \`{}\#RRGGBB`."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00220\ \ \ \ \ std::exit(EXIT\_FAILURE);}
-\DoxyCodeLine{00221\ \ \ \}}
-\DoxyCodeLine{00222\ }
-\DoxyCodeLine{00223\ \ \ \textcolor{comment}{//\ Extract\ RGB\ components\ from\ the\ validated\ hex\ string}}
-\DoxyCodeLine{00224\ \ \ \textcolor{keywordtype}{int}\ r\ =\ std::stoi(hex.substr(1,\ 2),\ \textcolor{keyword}{nullptr},\ 16);}
-\DoxyCodeLine{00225\ \ \ \textcolor{keywordtype}{int}\ g\ =\ std::stoi(hex.substr(3,\ 2),\ \textcolor{keyword}{nullptr},\ 16);}
-\DoxyCodeLine{00226\ \ \ \textcolor{keywordtype}{int}\ b\ =\ std::stoi(hex.substr(5,\ 2),\ \textcolor{keyword}{nullptr},\ 16);}
-\DoxyCodeLine{00227\ }
-\DoxyCodeLine{00228\ \ \ \textcolor{keywordflow}{return}\ ftxui::Color::RGB(r,\ g,\ b);}
-\DoxyCodeLine{00229\ \}}
-\DoxyCodeLine{00230\ }
-\DoxyCodeLine{00238\ ftxui::Color\ \mbox{\hyperlink{colors_8hpp_a199acdfa1243dcb86ac7e6de0195a7dc}{parseColor}}(\textcolor{keyword}{const}\ std::string\&\ color\_name,\ \textcolor{keyword}{const}\ std::string\&\ color\_field)}
-\DoxyCodeLine{00239\ \{}
-\DoxyCodeLine{00240\ \ \ \textcolor{keywordflow}{if}\ (color\_name[0]\ ==\ \textcolor{charliteral}{'\#'})}
-\DoxyCodeLine{00241\ \ \ \{}
-\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{colors_8hpp_a38d72813e90e14f8b18e88cd4af7c9da}{parseHexColor}}(color\_name);}
-\DoxyCodeLine{00243\ \ \ \}}
-\DoxyCodeLine{00244\ }
-\DoxyCodeLine{00245\ \ \ \textcolor{keyword}{auto}\ reportError\ =\ [](\textcolor{keyword}{const}\ std::string\&\ field,\ \textcolor{keyword}{const}\ std::string\_view\&\ key)}
+\DoxyCodeLine{00186\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a7c0dd9bf341d3098923a55711f3abf3d}{album\_name\_fg}};}
+\DoxyCodeLine{00187\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a69d1f12d371522229fbfb13c7f9ab92f}{menu\_cursor\_bg}};}
+\DoxyCodeLine{00188\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a47ed3b46e314aca5375eab8115ded23d}{inactive\_menu\_cursor\_bg}};}
+\DoxyCodeLine{00189\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_ac2e6da4632912694f235c23e27d19bb4}{artists\_title\_bg}};}
+\DoxyCodeLine{00190\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_af12f2ea4cae2e14a2d41a941a57e5604}{artists\_title\_fg}};}
+\DoxyCodeLine{00191\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_ac0208ffac164140d3182405f8d96dc5c}{artists\_menu\_col\_bg}};}
+\DoxyCodeLine{00192\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a8e83386ccaf42468103b52ad524dbd26}{songs\_title\_bg}};}
+\DoxyCodeLine{00193\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a54dfddaa89dfa93e8d42fd2f4e0b6a9d}{songs\_title\_fg}};}
+\DoxyCodeLine{00194\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_afa375f2950a11edb70942581292f57df}{song\_queue\_menu\_bor\_col}};}
+\DoxyCodeLine{00195\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a7fab96b4dcff8aea094de48020e34b14}{song\_queue\_menu\_fg}};}
+\DoxyCodeLine{00196\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a5a35db6e7f7b57d15d58d2babde9e5f6}{progress\_bar\_playing\_col}};}
+\DoxyCodeLine{00197\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a329fc30f8e1f18686178a50003126d31}{progress\_bar\_not\_playing\_col}};}
+\DoxyCodeLine{00198\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a1b9361baade2607c61ab26b154171b2c}{volume\_bar\_col}};}
+\DoxyCodeLine{00199\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a09cbb994d96a073868650991cd7f107b}{status\_bar\_bg}};}
+\DoxyCodeLine{00200\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_a30d558e131ef5cc80bac532316715331}{status\_bar\_artist\_col}};}
+\DoxyCodeLine{00201\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_acedfe8f1d1861349a9b956bc9d3ceeb8}{status\_bar\_song\_col}};}
+\DoxyCodeLine{00202\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_accc24dcaffee8b1b6c16f41d264af47f}{status\_bar\_addn\_info\_col}};}
+\DoxyCodeLine{00203\ \ \ ftxui::Color\ \mbox{\hyperlink{structInLimboColors_ad9d0f241291f70523247ecd0cae0cae1}{curr\_playing\_song\_col}};}
+\DoxyCodeLine{00204\ \};}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{colors_8hpp_abda2901961de3e14b8be16ae35f7ab66}{parseHexColor}}(\textcolor{keyword}{const}\ std::string\&\ hex)\ -\/>\ ftxui::Color}
+\DoxyCodeLine{00215\ \{}
+\DoxyCodeLine{00216\ \ \ \textcolor{comment}{//\ Validate\ hex\ format}}
+\DoxyCodeLine{00217\ \ \ std::regex\ \ hex\_regex(\textcolor{stringliteral}{"{}\string^\#([0-\/9a-\/fA-\/F]\{6\})\$"{}});\ \textcolor{comment}{//\ Matches\ \#RRGGBB}}
+\DoxyCodeLine{00218\ \ \ std::smatch\ match;}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \textcolor{keywordflow}{if}\ (!std::regex\_match(hex,\ match,\ hex\_regex))}
+\DoxyCodeLine{00221\ \ \ \{}
+\DoxyCodeLine{00222\ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Invalid\ hexadecimal\ color\ format:\ '"{}}\ <<\ hex}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}'.\ Use\ a\ string\ like\ \`{}\#RRGGBB`."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00224\ \ \ \ \ std::exit(EXIT\_FAILURE);}
+\DoxyCodeLine{00225\ \ \ \}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ \textcolor{comment}{//\ Extract\ RGB\ components\ from\ the\ validated\ hex\ string}}
+\DoxyCodeLine{00228\ \ \ \textcolor{keywordtype}{int}\ r\ =\ std::stoi(hex.substr(1,\ 2),\ \textcolor{keyword}{nullptr},\ 16);}
+\DoxyCodeLine{00229\ \ \ \textcolor{keywordtype}{int}\ g\ =\ std::stoi(hex.substr(3,\ 2),\ \textcolor{keyword}{nullptr},\ 16);}
+\DoxyCodeLine{00230\ \ \ \textcolor{keywordtype}{int}\ b\ =\ std::stoi(hex.substr(5,\ 2),\ \textcolor{keyword}{nullptr},\ 16);}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \textcolor{keywordflow}{return}\ ftxui::Color::RGB(r,\ g,\ b);}
+\DoxyCodeLine{00233\ \}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00242\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{colors_8hpp_acdc424eb9e7792dfd11042db761457fa}{parseColor}}(\textcolor{keyword}{const}\ std::string\&\ color\_name,\ \textcolor{keyword}{const}\ std::string\&\ color\_field,}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ verbose\_logging)\ -\/>\ ftxui::Color}
+\DoxyCodeLine{00244\ \{}
+\DoxyCodeLine{00245\ \ \ \textcolor{keywordflow}{if}\ (color\_name[0]\ ==\ \textcolor{charliteral}{'\#'})}
 \DoxyCodeLine{00246\ \ \ \{}
-\DoxyCodeLine{00247\ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}**\ Error:\ Unsupported\ or\ empty\ color\ '"{}}\ <<\ key\ <<\ \textcolor{stringliteral}{"{}'\ detected\ for\ field\ '"{}}\ <<\ field}
-\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}'.\ Modify\ or\ remove\ that\ color\ field.\ **"{}}\ <<\ std::endl;}
-\DoxyCodeLine{00249\ \ \ \ \ std::exit(EXIT\_FAILURE);\ }
-\DoxyCodeLine{00250\ \ \ \};}
-\DoxyCodeLine{00251\ }
-\DoxyCodeLine{00252\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ ftxui::Color>\ color\_map\ =\ \{}
-\DoxyCodeLine{00253\ \ \ \ \ \{\textcolor{stringliteral}{"{}Black"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae90dfb84e30edf611e326eeb04d680de}{TrueColors::Color::Black}})\},}
-\DoxyCodeLine{00254\ \ \ \ \ \{\textcolor{stringliteral}{"{}White"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da25a81701fbfa4a1efdf660a950c1d006}{TrueColors::Color::White}})\},}
-\DoxyCodeLine{00255\ \ \ \ \ \{\textcolor{stringliteral}{"{}Red"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daee38e4d5dd68c4e440825018d549cb47}{TrueColors::Color::Red}})\},}
-\DoxyCodeLine{00256\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightRed"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daf9a96fb667261a141d10021a66d6ad0f}{TrueColors::Color::LightRed}})\},}
-\DoxyCodeLine{00257\ \ \ \ \ \{\textcolor{stringliteral}{"{}Green"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dad382816a3cbeed082c9e216e7392eed1}{TrueColors::Color::Green}})\},}
-\DoxyCodeLine{00258\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightGreen"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da7a6a38bec67cbc2a39ce22f34e4ed8e2}{TrueColors::Color::LightGreen}})\},}
-\DoxyCodeLine{00259\ \ \ \ \ \{\textcolor{stringliteral}{"{}Blue"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da9594eec95be70e7b1710f730fdda33d9}{TrueColors::Color::Blue}})\},}
-\DoxyCodeLine{00260\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightBlue"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da4d7ff7393a484a7b9ed2e381f5cdeaf7}{TrueColors::Color::LightBlue}})\},}
-\DoxyCodeLine{00261\ \ \ \ \ \{\textcolor{stringliteral}{"{}Yellow"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da51e6cd92b6c45f9affdc158ecca2b8b8}{TrueColors::Color::Yellow}})\},}
-\DoxyCodeLine{00262\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightYellow"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafaf948b65bda38f44b17d156177d1728}{TrueColors::Color::LightYellow}})\},}
-\DoxyCodeLine{00263\ \ \ \ \ \{\textcolor{stringliteral}{"{}Cyan"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da023c239d2f2538f140a20e72c7b73f20}{TrueColors::Color::Cyan}})\},}
-\DoxyCodeLine{00264\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightCyan"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dac37b5ce4ba80a097d82726ae74d34b13}{TrueColors::Color::LightCyan}})\},}
-\DoxyCodeLine{00265\ \ \ \ \ \{\textcolor{stringliteral}{"{}Magenta"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dab91cc2c1416fcca942b61c7ac5b1a9ac}{TrueColors::Color::Magenta}})\},}
-\DoxyCodeLine{00266\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightMagenta"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daf1ec64ef9f82e9fb86b094f8b548f9f1}{TrueColors::Color::LightMagenta}})\},}
-\DoxyCodeLine{00267\ \ \ \ \ \{\textcolor{stringliteral}{"{}Gray"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da994ae1d9731cebe455aff211bcb25b93}{TrueColors::Color::Gray}})\},}
-\DoxyCodeLine{00268\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightGray"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafb55202637692de4a494e9ade4cff2dd}{TrueColors::Color::LightGray}})\},}
-\DoxyCodeLine{00269\ \ \ \ \ \{\textcolor{stringliteral}{"{}DarkGray"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da91e93fc984985226ad4d319a4e4134ab}{TrueColors::Color::DarkGray}})\},}
-\DoxyCodeLine{00270\ \ \ \ \ \{\textcolor{stringliteral}{"{}Orange"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da909cea0c97058cfe2e3ea8d675cb08e1}{TrueColors::Color::Orange}})\},}
-\DoxyCodeLine{00271\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightOrange"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da475e89699fa47c1b7b07977437e16b3c}{TrueColors::Color::LightOrange}})\},}
-\DoxyCodeLine{00272\ \ \ \ \ \{\textcolor{stringliteral}{"{}Purple"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dab9ba865fec061c9706d2fd7ce49c0cc7}{TrueColors::Color::Purple}})\},}
-\DoxyCodeLine{00273\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightPurple"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafef6599756397fc44e38e609d72cc35c}{TrueColors::Color::LightPurple}})\},}
-\DoxyCodeLine{00274\ \ \ \ \ \{\textcolor{stringliteral}{"{}Pink"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da8dc5344bc0746e1cc5abf896ca03bbdf}{TrueColors::Color::Pink}})\},}
-\DoxyCodeLine{00275\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightPink"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dab9c31a17936f5966fd4fbe74f9b09012}{TrueColors::Color::LightPink}})\},}
-\DoxyCodeLine{00276\ \ \ \ \ \{\textcolor{stringliteral}{"{}Teal"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae20385a2b41df1743f787ebef18222b8}{TrueColors::Color::Teal}})\},}
-\DoxyCodeLine{00277\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightTeal"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da44a58aefa71d33bd93c37c69cfcb6856}{TrueColors::Color::LightTeal}})\},}
-\DoxyCodeLine{00278\ \ \ \ \ \{\textcolor{stringliteral}{"{}SkyBlue"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dace0e27a9031d2062e7c3c99c9e691432}{TrueColors::Color::SkyBlue}})\},}
-\DoxyCodeLine{00279\ \ \ \ \ \{\textcolor{stringliteral}{"{}Coral"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da61db47dac8aefe03fc67ee1b65ecd8f6}{TrueColors::Color::Coral}})\},}
-\DoxyCodeLine{00280\ \ \ \ \ \{\textcolor{stringliteral}{"{}Lime"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafc1cebf02dc2ee68655f3e7bf1b84230}{TrueColors::Color::Lime}})\},}
-\DoxyCodeLine{00281\ \ \ \ \ \{\textcolor{stringliteral}{"{}Lavender"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae346c232ce72c429ea0995de9f63f551}{TrueColors::Color::Lavender}})\},}
-\DoxyCodeLine{00282\ \ \ \ \ \{\textcolor{stringliteral}{"{}Crimson"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da2e24b6a6dcc7ea9356fb274402296a06}{TrueColors::Color::Crimson}})\},}
-\DoxyCodeLine{00283\ \ \ \ \ \{\textcolor{stringliteral}{"{}Gold"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da9768feb3fdb1f267b06093bc572952dd}{TrueColors::Color::Gold}})\},}
-\DoxyCodeLine{00284\ \ \ \ \ \{\textcolor{stringliteral}{"{}Indigo"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da8b7b9806e715b01b9021912e0f86935f}{TrueColors::Color::Indigo}})\},}
-\DoxyCodeLine{00285\ \ \ \ \ \{\textcolor{stringliteral}{"{}Mint"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daca8a196f97a48b2bb489f3e849a68418}{TrueColors::Color::Mint}})\},}
-\DoxyCodeLine{00286\ \ \ \ \ \{\textcolor{stringliteral}{"{}Navy"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da13ad5ac690e735fa48cf982532174e79}{TrueColors::Color::Navy}})\},}
-\DoxyCodeLine{00287\ \ \ \ \ \{\textcolor{stringliteral}{"{}Peach"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da53841c6e42a6ce77b6f3b80133c9342c}{TrueColors::Color::Peach}})\},}
-\DoxyCodeLine{00288\ \ \ \ \ \{\textcolor{stringliteral}{"{}Sand"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dacec7ca178e2f7b1ae3a4600868c57aca}{TrueColors::Color::Sand}})\},}
-\DoxyCodeLine{00289\ \ \ \ \ \{\textcolor{stringliteral}{"{}SeaGreen"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da2e9fa83f4491dac5067162194331411e}{TrueColors::Color::SeaGreen}})\},}
-\DoxyCodeLine{00290\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightSeaGreen"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da37cf7970e7976f3f0f926f4e7141fc1c}{TrueColors::Color::LightSeaGreen}})\},}
-\DoxyCodeLine{00291\ \ \ \ \ \{\textcolor{stringliteral}{"{}SlateBlue"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dac375f3201e4105d841391a86cc3f1fc5}{TrueColors::Color::SlateBlue}})\},}
-\DoxyCodeLine{00292\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightSlateBlue"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da08843d30dd5304f696af8703f5522c35}{TrueColors::Color::LightSlateBlue}})\},}
-\DoxyCodeLine{00293\ \ \ \ \ \{\textcolor{stringliteral}{"{}SunsetOrange"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da3d62adaa3a0f93443206bc1528278ba2}{TrueColors::Color::SunsetOrange}})\},}
-\DoxyCodeLine{00294\ \ \ \ \ \{\textcolor{stringliteral}{"{}Turquoise"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dada3a4f0a911cebe3bc75f6e39c324696}{TrueColors::Color::Turquoise}})\},}
-\DoxyCodeLine{00295\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightTurquoise"{}},\ \mbox{\hyperlink{namespaceTrueColors_a5e3fb4538a96657fee0d7ffb9a92fb96}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae5c96e2ad0520ead9cec1a0664a709a9}{TrueColors::Color::LightTurquoise}})\}\};}
-\DoxyCodeLine{00296\ }
-\DoxyCodeLine{00297\ \ \ \textcolor{keyword}{auto}\ it\ =\ color\_map.find(color\_name);}
-\DoxyCodeLine{00298\ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ color\_map.end())}
-\DoxyCodeLine{00299\ \ \ \{}
-\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
-\DoxyCodeLine{00301\ \ \ \}}
-\DoxyCodeLine{00302\ }
-\DoxyCodeLine{00303\ \ \ reportError(color\_field,\ color\_name);}
-\DoxyCodeLine{00304\ \ \ std::exit(EXIT\_FAILURE);}
-\DoxyCodeLine{00305\ \}}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keywordflow}{if}\ (verbose\_logging)}
+\DoxyCodeLine{00248\ \ \ \ \ \{}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[COLORS]\ Parsing\ HEX\ color:\ "{}}\ <<\ color\_name\ <<\ \textcolor{stringliteral}{"{}\ for\ field:\ "{}}\ <<\ color\_field}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00251\ \ \ \ \ \}}
+\DoxyCodeLine{00252\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{colors_8hpp_abda2901961de3e14b8be16ae35f7ab66}{parseHexColor}}(color\_name);}
+\DoxyCodeLine{00253\ \ \ \}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \ \ \textcolor{keyword}{auto}\ reportError\ =\ [](\textcolor{keyword}{const}\ std::string\&\ field,\ \textcolor{keyword}{const}\ std::string\_view\&\ key)}
+\DoxyCodeLine{00256\ \ \ \{}
+\DoxyCodeLine{00257\ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}**\ Error:\ ⚠\ \ Unsupported\ or\ empty\ color\ '"{}}\ <<\ key\ <<\ \textcolor{stringliteral}{"{}'\ detected\ for\ field\ '"{}}}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ field\ <<\ \textcolor{stringliteral}{"{}'.\ Modify\ or\ remove\ that\ color\ field.\ **"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00259\ \ \ \ \ std::exit(EXIT\_FAILURE);\ }
+\DoxyCodeLine{00260\ \ \ \};}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ ftxui::Color>\ color\_map\ =\ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \{\textcolor{stringliteral}{"{}Black"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae90dfb84e30edf611e326eeb04d680de}{TrueColors::Color::Black}})\},}
+\DoxyCodeLine{00264\ \ \ \ \ \{\textcolor{stringliteral}{"{}White"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da25a81701fbfa4a1efdf660a950c1d006}{TrueColors::Color::White}})\},}
+\DoxyCodeLine{00265\ \ \ \ \ \{\textcolor{stringliteral}{"{}Red"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daee38e4d5dd68c4e440825018d549cb47}{TrueColors::Color::Red}})\},}
+\DoxyCodeLine{00266\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightRed"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daf9a96fb667261a141d10021a66d6ad0f}{TrueColors::Color::LightRed}})\},}
+\DoxyCodeLine{00267\ \ \ \ \ \{\textcolor{stringliteral}{"{}Green"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dad382816a3cbeed082c9e216e7392eed1}{TrueColors::Color::Green}})\},}
+\DoxyCodeLine{00268\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightGreen"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da7a6a38bec67cbc2a39ce22f34e4ed8e2}{TrueColors::Color::LightGreen}})\},}
+\DoxyCodeLine{00269\ \ \ \ \ \{\textcolor{stringliteral}{"{}Blue"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da9594eec95be70e7b1710f730fdda33d9}{TrueColors::Color::Blue}})\},}
+\DoxyCodeLine{00270\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightBlue"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da4d7ff7393a484a7b9ed2e381f5cdeaf7}{TrueColors::Color::LightBlue}})\},}
+\DoxyCodeLine{00271\ \ \ \ \ \{\textcolor{stringliteral}{"{}Yellow"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da51e6cd92b6c45f9affdc158ecca2b8b8}{TrueColors::Color::Yellow}})\},}
+\DoxyCodeLine{00272\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightYellow"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafaf948b65bda38f44b17d156177d1728}{TrueColors::Color::LightYellow}})\},}
+\DoxyCodeLine{00273\ \ \ \ \ \{\textcolor{stringliteral}{"{}Cyan"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da023c239d2f2538f140a20e72c7b73f20}{TrueColors::Color::Cyan}})\},}
+\DoxyCodeLine{00274\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightCyan"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dac37b5ce4ba80a097d82726ae74d34b13}{TrueColors::Color::LightCyan}})\},}
+\DoxyCodeLine{00275\ \ \ \ \ \{\textcolor{stringliteral}{"{}Magenta"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dab91cc2c1416fcca942b61c7ac5b1a9ac}{TrueColors::Color::Magenta}})\},}
+\DoxyCodeLine{00276\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightMagenta"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daf1ec64ef9f82e9fb86b094f8b548f9f1}{TrueColors::Color::LightMagenta}})\},}
+\DoxyCodeLine{00277\ \ \ \ \ \{\textcolor{stringliteral}{"{}Gray"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da994ae1d9731cebe455aff211bcb25b93}{TrueColors::Color::Gray}})\},}
+\DoxyCodeLine{00278\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightGray"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafb55202637692de4a494e9ade4cff2dd}{TrueColors::Color::LightGray}})\},}
+\DoxyCodeLine{00279\ \ \ \ \ \{\textcolor{stringliteral}{"{}DarkGray"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da91e93fc984985226ad4d319a4e4134ab}{TrueColors::Color::DarkGray}})\},}
+\DoxyCodeLine{00280\ \ \ \ \ \{\textcolor{stringliteral}{"{}Orange"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da909cea0c97058cfe2e3ea8d675cb08e1}{TrueColors::Color::Orange}})\},}
+\DoxyCodeLine{00281\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightOrange"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da475e89699fa47c1b7b07977437e16b3c}{TrueColors::Color::LightOrange}})\},}
+\DoxyCodeLine{00282\ \ \ \ \ \{\textcolor{stringliteral}{"{}Purple"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dab9ba865fec061c9706d2fd7ce49c0cc7}{TrueColors::Color::Purple}})\},}
+\DoxyCodeLine{00283\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightPurple"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafef6599756397fc44e38e609d72cc35c}{TrueColors::Color::LightPurple}})\},}
+\DoxyCodeLine{00284\ \ \ \ \ \{\textcolor{stringliteral}{"{}Pink"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da8dc5344bc0746e1cc5abf896ca03bbdf}{TrueColors::Color::Pink}})\},}
+\DoxyCodeLine{00285\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightPink"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dab9c31a17936f5966fd4fbe74f9b09012}{TrueColors::Color::LightPink}})\},}
+\DoxyCodeLine{00286\ \ \ \ \ \{\textcolor{stringliteral}{"{}Teal"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae20385a2b41df1743f787ebef18222b8}{TrueColors::Color::Teal}})\},}
+\DoxyCodeLine{00287\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightTeal"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da44a58aefa71d33bd93c37c69cfcb6856}{TrueColors::Color::LightTeal}})\},}
+\DoxyCodeLine{00288\ \ \ \ \ \{\textcolor{stringliteral}{"{}SkyBlue"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dace0e27a9031d2062e7c3c99c9e691432}{TrueColors::Color::SkyBlue}})\},}
+\DoxyCodeLine{00289\ \ \ \ \ \{\textcolor{stringliteral}{"{}Coral"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da61db47dac8aefe03fc67ee1b65ecd8f6}{TrueColors::Color::Coral}})\},}
+\DoxyCodeLine{00290\ \ \ \ \ \{\textcolor{stringliteral}{"{}Lime"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dafc1cebf02dc2ee68655f3e7bf1b84230}{TrueColors::Color::Lime}})\},}
+\DoxyCodeLine{00291\ \ \ \ \ \{\textcolor{stringliteral}{"{}Lavender"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae346c232ce72c429ea0995de9f63f551}{TrueColors::Color::Lavender}})\},}
+\DoxyCodeLine{00292\ \ \ \ \ \{\textcolor{stringliteral}{"{}Crimson"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da2e24b6a6dcc7ea9356fb274402296a06}{TrueColors::Color::Crimson}})\},}
+\DoxyCodeLine{00293\ \ \ \ \ \{\textcolor{stringliteral}{"{}Gold"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da9768feb3fdb1f267b06093bc572952dd}{TrueColors::Color::Gold}})\},}
+\DoxyCodeLine{00294\ \ \ \ \ \{\textcolor{stringliteral}{"{}Indigo"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da8b7b9806e715b01b9021912e0f86935f}{TrueColors::Color::Indigo}})\},}
+\DoxyCodeLine{00295\ \ \ \ \ \{\textcolor{stringliteral}{"{}Mint"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6daca8a196f97a48b2bb489f3e849a68418}{TrueColors::Color::Mint}})\},}
+\DoxyCodeLine{00296\ \ \ \ \ \{\textcolor{stringliteral}{"{}Navy"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da13ad5ac690e735fa48cf982532174e79}{TrueColors::Color::Navy}})\},}
+\DoxyCodeLine{00297\ \ \ \ \ \{\textcolor{stringliteral}{"{}Peach"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da53841c6e42a6ce77b6f3b80133c9342c}{TrueColors::Color::Peach}})\},}
+\DoxyCodeLine{00298\ \ \ \ \ \{\textcolor{stringliteral}{"{}Sand"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dacec7ca178e2f7b1ae3a4600868c57aca}{TrueColors::Color::Sand}})\},}
+\DoxyCodeLine{00299\ \ \ \ \ \{\textcolor{stringliteral}{"{}SeaGreen"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da2e9fa83f4491dac5067162194331411e}{TrueColors::Color::SeaGreen}})\},}
+\DoxyCodeLine{00300\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightSeaGreen"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da37cf7970e7976f3f0f926f4e7141fc1c}{TrueColors::Color::LightSeaGreen}})\},}
+\DoxyCodeLine{00301\ \ \ \ \ \{\textcolor{stringliteral}{"{}SlateBlue"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dac375f3201e4105d841391a86cc3f1fc5}{TrueColors::Color::SlateBlue}})\},}
+\DoxyCodeLine{00302\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightSlateBlue"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da08843d30dd5304f696af8703f5522c35}{TrueColors::Color::LightSlateBlue}})\},}
+\DoxyCodeLine{00303\ \ \ \ \ \{\textcolor{stringliteral}{"{}SunsetOrange"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6da3d62adaa3a0f93443206bc1528278ba2}{TrueColors::Color::SunsetOrange}})\},}
+\DoxyCodeLine{00304\ \ \ \ \ \{\textcolor{stringliteral}{"{}Turquoise"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dada3a4f0a911cebe3bc75f6e39c324696}{TrueColors::Color::Turquoise}})\},}
+\DoxyCodeLine{00305\ \ \ \ \ \{\textcolor{stringliteral}{"{}LightTurquoise"{}},\ \mbox{\hyperlink{namespaceTrueColors_a3784afe8e73efdb0822e9999a0da1c18}{TrueColors::GetColor}}(\mbox{\hyperlink{namespaceTrueColors_aeafabc145297298741b798e8fdc52a6dae5c96e2ad0520ead9cec1a0664a709a9}{TrueColors::Color::LightTurquoise}})\}\};}
 \DoxyCodeLine{00306\ }
-\DoxyCodeLine{00312\ \mbox{\hyperlink{structInLimboColors}{InLimboColors}}\ \mbox{\hyperlink{colors_8hpp_a637d01c5fd950275d85073732fec1d08}{parseColors}}()}
-\DoxyCodeLine{00313\ \{}
-\DoxyCodeLine{00314\ \ \ \mbox{\hyperlink{structInLimboColors}{InLimboColors}}\ colors;}
-\DoxyCodeLine{00315\ }
-\DoxyCodeLine{00316\ \ \ \textcolor{comment}{//\ Mapping\ of\ fields\ in\ the\ InLimboColors\ struct}}
-\DoxyCodeLine{00317\ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ ftxui::Color*>\ field\_map\ =\ \{}
-\DoxyCodeLine{00318\ \ \ \ \ \{\textcolor{stringliteral}{"{}active\_win\_border\_color"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a4e358ee399638df61c706456fcf40767}{active\_win\_border\_color}}\},}
-\DoxyCodeLine{00319\ \ \ \ \ \{\textcolor{stringliteral}{"{}inactive\_win\_border\_color"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a63f4851e8e7873841078562505e3177c}{inactive\_win\_border\_color}}\},}
-\DoxyCodeLine{00320\ \ \ \ \ \{\textcolor{stringliteral}{"{}album\_name\_bg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a5dfc5e1ee91551fd59c958847be3b78a}{album\_name\_bg}}\},}
-\DoxyCodeLine{00321\ \ \ \ \ \{\textcolor{stringliteral}{"{}menu\_cursor\_bg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a69d1f12d371522229fbfb13c7f9ab92f}{menu\_cursor\_bg}}\},}
-\DoxyCodeLine{00322\ \ \ \ \ \{\textcolor{stringliteral}{"{}inactive\_menu\_cursor\_bg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a47ed3b46e314aca5375eab8115ded23d}{inactive\_menu\_cursor\_bg}}\},}
-\DoxyCodeLine{00323\ \ \ \ \ \{\textcolor{stringliteral}{"{}artists\_title\_bg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_ac2e6da4632912694f235c23e27d19bb4}{artists\_title\_bg}}\},}
-\DoxyCodeLine{00324\ \ \ \ \ \{\textcolor{stringliteral}{"{}artists\_title\_fg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_af12f2ea4cae2e14a2d41a941a57e5604}{artists\_title\_fg}}\},}
-\DoxyCodeLine{00325\ \ \ \ \ \{\textcolor{stringliteral}{"{}songs\_title\_bg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a8e83386ccaf42468103b52ad524dbd26}{songs\_title\_bg}}\},}
-\DoxyCodeLine{00326\ \ \ \ \ \{\textcolor{stringliteral}{"{}songs\_title\_fg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a54dfddaa89dfa93e8d42fd2f4e0b6a9d}{songs\_title\_fg}}\},}
-\DoxyCodeLine{00327\ \ \ \ \ \{\textcolor{stringliteral}{"{}song\_queue\_menu\_bor\_col"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_afa375f2950a11edb70942581292f57df}{song\_queue\_menu\_bor\_col}}\},}
-\DoxyCodeLine{00328\ \ \ \ \ \{\textcolor{stringliteral}{"{}song\_queue\_menu\_fg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a7fab96b4dcff8aea094de48020e34b14}{song\_queue\_menu\_fg}}\},}
-\DoxyCodeLine{00329\ \ \ \ \ \{\textcolor{stringliteral}{"{}progress\_bar\_playing\_col"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a5a35db6e7f7b57d15d58d2babde9e5f6}{progress\_bar\_playing\_col}}\},}
-\DoxyCodeLine{00330\ \ \ \ \ \{\textcolor{stringliteral}{"{}progress\_bar\_not\_playing\_col"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a329fc30f8e1f18686178a50003126d31}{progress\_bar\_not\_playing\_col}}\},}
-\DoxyCodeLine{00331\ \ \ \ \ \{\textcolor{stringliteral}{"{}volume\_bar\_col"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a1b9361baade2607c61ab26b154171b2c}{volume\_bar\_col}}\},}
-\DoxyCodeLine{00332\ \ \ \ \ \{\textcolor{stringliteral}{"{}status\_bar\_bg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a09cbb994d96a073868650991cd7f107b}{status\_bar\_bg}}\},}
-\DoxyCodeLine{00333\ \ \ \ \ \{\textcolor{stringliteral}{"{}status\_bar\_artist\_col"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a30d558e131ef5cc80bac532316715331}{status\_bar\_artist\_col}}\},}
-\DoxyCodeLine{00334\ \ \ \ \ \{\textcolor{stringliteral}{"{}status\_bar\_song\_col"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_acedfe8f1d1861349a9b956bc9d3ceeb8}{status\_bar\_song\_col}}\},}
-\DoxyCodeLine{00335\ }
-\DoxyCodeLine{00336\ \ \ \};}
-\DoxyCodeLine{00337\ }
-\DoxyCodeLine{00338\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [field,\ member\_color]\ :\ field\_map)}
-\DoxyCodeLine{00339\ \ \ \{}
-\DoxyCodeLine{00340\ \ \ \ \ std::string\ color\_name\ =\ std::string(\mbox{\hyperlink{toml__parser_8hpp_a19930571a1aced24a71d9a1d6e7c710a}{parseTOMLField}}(\mbox{\hyperlink{toml__parser_8hpp_af66fd044a3918b6803d0f0744276d171}{PARENT\_COLORS}},\ field));}
-\DoxyCodeLine{00341\ \ \ \ \ *member\_color\ \ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{colors_8hpp_a199acdfa1243dcb86ac7e6de0195a7dc}{parseColor}}(color\_name,\ field);}
-\DoxyCodeLine{00342\ \ \ \}}
-\DoxyCodeLine{00343\ }
-\DoxyCodeLine{00344\ \ \ \textcolor{keywordflow}{return}\ colors;}
-\DoxyCodeLine{00345\ \}}
-\DoxyCodeLine{00346\ }
-\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00307\ \ \ \textcolor{keyword}{auto}\ it\ =\ color\_map.find(color\_name);}
+\DoxyCodeLine{00308\ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ color\_map.end())}
+\DoxyCodeLine{00309\ \ \ \{}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{keywordflow}{if}\ (verbose\_logging)}
+\DoxyCodeLine{00311\ \ \ \ \ \{}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[COLORS]\ Parsing\ predefined\ color\ **"{}}\ <<\ color\_name}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}**\ for\ field:\ "{}}\ <<\ color\_field\ <<\ std::endl;}
+\DoxyCodeLine{00314\ \ \ \ \ \}}
+\DoxyCodeLine{00315\ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00316\ \ \ \}}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \ \ reportError(color\_field,\ color\_name);}
+\DoxyCodeLine{00319\ \ \ std::exit(EXIT\_FAILURE);}
+\DoxyCodeLine{00320\ \}}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00327\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{colors_8hpp_af8758bdc34d780b2c5c392397ff6591c}{parseColors}}()\ -\/>\ \mbox{\hyperlink{structInLimboColors}{InLimboColors}}}
+\DoxyCodeLine{00328\ \{}
+\DoxyCodeLine{00329\ \ \ \mbox{\hyperlink{structInLimboColors}{InLimboColors}}\ colors;}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \ \ \textcolor{comment}{//\ Mapping\ of\ fields\ in\ the\ InLimboColors\ struct}}
+\DoxyCodeLine{00332\ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ ftxui::Color*>\ field\_map\ =\ \{}
+\DoxyCodeLine{00333\ \ \ \ \ \{\textcolor{stringliteral}{"{}active\_win\_border\_color"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a4e358ee399638df61c706456fcf40767}{active\_win\_border\_color}}\},}
+\DoxyCodeLine{00334\ \ \ \ \ \{\textcolor{stringliteral}{"{}inactive\_win\_border\_color"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a63f4851e8e7873841078562505e3177c}{inactive\_win\_border\_color}}\},}
+\DoxyCodeLine{00335\ \ \ \ \ \{\textcolor{stringliteral}{"{}album\_name\_bg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a5dfc5e1ee91551fd59c958847be3b78a}{album\_name\_bg}}\},}
+\DoxyCodeLine{00336\ \ \ \ \ \{\textcolor{stringliteral}{"{}album\_name\_fg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a7c0dd9bf341d3098923a55711f3abf3d}{album\_name\_fg}}\},}
+\DoxyCodeLine{00337\ \ \ \ \ \{\textcolor{stringliteral}{"{}menu\_cursor\_bg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a69d1f12d371522229fbfb13c7f9ab92f}{menu\_cursor\_bg}}\},}
+\DoxyCodeLine{00338\ \ \ \ \ \{\textcolor{stringliteral}{"{}inactive\_menu\_cursor\_bg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a47ed3b46e314aca5375eab8115ded23d}{inactive\_menu\_cursor\_bg}}\},}
+\DoxyCodeLine{00339\ \ \ \ \ \{\textcolor{stringliteral}{"{}artists\_title\_bg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_ac2e6da4632912694f235c23e27d19bb4}{artists\_title\_bg}}\},}
+\DoxyCodeLine{00340\ \ \ \ \ \{\textcolor{stringliteral}{"{}artists\_title\_fg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_af12f2ea4cae2e14a2d41a941a57e5604}{artists\_title\_fg}}\},}
+\DoxyCodeLine{00341\ \ \ \ \ \{\textcolor{stringliteral}{"{}artists\_menu\_col\_bg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_ac0208ffac164140d3182405f8d96dc5c}{artists\_menu\_col\_bg}}\},}
+\DoxyCodeLine{00342\ \ \ \ \ \{\textcolor{stringliteral}{"{}songs\_title\_bg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a8e83386ccaf42468103b52ad524dbd26}{songs\_title\_bg}}\},}
+\DoxyCodeLine{00343\ \ \ \ \ \{\textcolor{stringliteral}{"{}songs\_title\_fg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a54dfddaa89dfa93e8d42fd2f4e0b6a9d}{songs\_title\_fg}}\},}
+\DoxyCodeLine{00344\ \ \ \ \ \{\textcolor{stringliteral}{"{}song\_queue\_menu\_bor\_col"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_afa375f2950a11edb70942581292f57df}{song\_queue\_menu\_bor\_col}}\},}
+\DoxyCodeLine{00345\ \ \ \ \ \{\textcolor{stringliteral}{"{}song\_queue\_menu\_fg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a7fab96b4dcff8aea094de48020e34b14}{song\_queue\_menu\_fg}}\},}
+\DoxyCodeLine{00346\ \ \ \ \ \{\textcolor{stringliteral}{"{}progress\_bar\_playing\_col"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a5a35db6e7f7b57d15d58d2babde9e5f6}{progress\_bar\_playing\_col}}\},}
+\DoxyCodeLine{00347\ \ \ \ \ \{\textcolor{stringliteral}{"{}progress\_bar\_not\_playing\_col"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a329fc30f8e1f18686178a50003126d31}{progress\_bar\_not\_playing\_col}}\},}
+\DoxyCodeLine{00348\ \ \ \ \ \{\textcolor{stringliteral}{"{}volume\_bar\_col"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a1b9361baade2607c61ab26b154171b2c}{volume\_bar\_col}}\},}
+\DoxyCodeLine{00349\ \ \ \ \ \{\textcolor{stringliteral}{"{}status\_bar\_bg"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a09cbb994d96a073868650991cd7f107b}{status\_bar\_bg}}\},}
+\DoxyCodeLine{00350\ \ \ \ \ \{\textcolor{stringliteral}{"{}status\_bar\_artist\_col"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_a30d558e131ef5cc80bac532316715331}{status\_bar\_artist\_col}}\},}
+\DoxyCodeLine{00351\ \ \ \ \ \{\textcolor{stringliteral}{"{}status\_bar\_song\_col"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_acedfe8f1d1861349a9b956bc9d3ceeb8}{status\_bar\_song\_col}}\},}
+\DoxyCodeLine{00352\ \ \ \ \ \{\textcolor{stringliteral}{"{}status\_bar\_addn\_info\_col"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_accc24dcaffee8b1b6c16f41d264af47f}{status\_bar\_addn\_info\_col}}\},}
+\DoxyCodeLine{00353\ \ \ \ \ \{\textcolor{stringliteral}{"{}curr\_playing\_song\_col"{}},\ \&colors.\mbox{\hyperlink{structInLimboColors_ad9d0f241291f70523247ecd0cae0cae1}{curr\_playing\_song\_col}}\}}
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ \ \ \};}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \ \ \textcolor{keywordtype}{bool}\ verbose\_logging\ =\ \mbox{\hyperlink{toml__parser_8hpp_a6eb11e4db65b58858c65704ec4daa915}{parseTOMLFieldBool}}(\mbox{\hyperlink{toml__parser_8hpp_a10265fc668d386d5d02e91115db9a7cc}{PARENT\_DBG}},\ \mbox{\hyperlink{toml__parser_8hpp_a6632006e058b691283eecae15d8f2c4c}{PARENT\_DBG\_FIELD\_COLORS\_PARSER\_LOG}});}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \ \ \textcolor{keywordflow}{if}\ (verbose\_logging)}
+\DoxyCodeLine{00360\ \ \ \{}
+\DoxyCodeLine{00361\ \ \ \ \ cout\ <<\ \textcolor{stringliteral}{"{}[COLORS]\ Parsing\ Colors\ in\ config.toml\ ...."{}}\ <<\ endl;}
+\DoxyCodeLine{00362\ \ \ \}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [field,\ member\_color]\ :\ field\_map)}
+\DoxyCodeLine{00365\ \ \ \{}
+\DoxyCodeLine{00366\ \ \ \ \ std::string\ color\_name\ =\ std::string(\mbox{\hyperlink{toml__parser_8hpp_a9a9759bd3909e5f64c6b7acbdd4bc16f}{parseTOMLField}}(\mbox{\hyperlink{toml__parser_8hpp_af66fd044a3918b6803d0f0744276d171}{PARENT\_COLORS}},\ field));}
+\DoxyCodeLine{00367\ \ \ \ \ *member\_color\ \ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{colors_8hpp_acdc424eb9e7792dfd11042db761457fa}{parseColor}}(color\_name,\ field,\ verbose\_logging);}
+\DoxyCodeLine{00368\ \ \ \}}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00370\ \ \ \textcolor{keywordflow}{return}\ colors;}
+\DoxyCodeLine{00371\ \}}
 
 \end{DoxyCode}

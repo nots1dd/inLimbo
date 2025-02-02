@@ -24,11 +24,17 @@ var annotated_dup =
     [ "MPRISService", "classMPRISService.html", "classMPRISService" ],
     [ "MusicPlayer", "classMusicPlayer.html", "classMusicPlayer" ],
     [ "Node", "structNode.html", "structNode" ],
+    [ "PlayingState", "structPlayingState.html", "structPlayingState" ],
+    [ "QueueState", "structQueueState.html", "structQueueState" ],
     [ "RedBlackTree", "classRedBlackTree.html", "classRedBlackTree" ],
+    [ "SearchState", "structSearchState.html", "structSearchState" ],
     [ "SignalHandler", "classSignalHandler.html", "classSignalHandler" ],
     [ "Song", "structSong.html", "structSong" ],
     [ "SongTree", "classSongTree.html", "classSongTree" ],
+    [ "SongTreeState", "structSongTreeState.html", "structSongTreeState" ],
     [ "TagLibParser", "classTagLibParser.html", "classTagLibParser" ],
     [ "ThreadManager", "classThreadManager.html", "classThreadManager" ],
+    [ "Trie", "classTrie.html", "classTrie" ],
+    [ "TrieNode", "classTrieNode.html", "classTrieNode" ],
     [ "WorkerThreadPool", "classWorkerThreadPool.html", "classWorkerThreadPool" ]
 ];

@@ -109,35 +109,152 @@ $(function(){initNavTree('main_8cpp.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">main.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="inode__mapper_8hpp_source.html">dirsort/inode_mapper.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="arg-handler_8hpp_source.html">./arg-handler.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="keymaps_8hpp_source.html">./ui/keymaps.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="inode__mapper_8hpp_source.html">dirsort/inode_mapper.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="signalHandler_8hpp_source.html">signal/signalHandler.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ui__handler_8hpp_source.html">ui/ui_handler.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="arg-handler_8hpp_source.html">./arg-handler.hpp</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a0ddf1224851353fc92bfbff6f499fa97" id="r_a0ddf1224851353fc92bfbff6f499fa97"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ddf1224851353fc92bfbff6f499fa97">main</a> (int argc, char *argv[])</td></tr>
-<tr class="separator:a0ddf1224851353fc92bfbff6f499fa97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86f81edac3570a692b89f1cada4f3124" id="r_a86f81edac3570a692b89f1cada4f3124"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a86f81edac3570a692b89f1cada4f3124">handleArguments</a> (int argc, char *argv[]) -&gt; <a class="el" href="structArgumentHandler_1_1Paths.html">ArgumentHandler::Paths</a></td></tr>
+<tr class="memdesc:a86f81edac3570a692b89f1cada4f3124"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the command line arguments.  <br /></td></tr>
+<tr class="separator:a86f81edac3570a692b89f1cada4f3124"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf7409f78fe62adf2227d9879f6b7786" id="r_aaf7409f78fe62adf2227d9879f6b7786"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaf7409f78fe62adf2227d9879f6b7786">loadOrProcessSongTree</a> (const string &amp;libBinPath, const string &amp;directoryPath) -&gt; <a class="el" href="classSongTree.html">SongTree</a></td></tr>
+<tr class="memdesc:aaf7409f78fe62adf2227d9879f6b7786"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads or processes the song tree from the given directory.  <br /></td></tr>
+<tr class="separator:aaf7409f78fe62adf2227d9879f6b7786"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae10bca782500e6b5b1379b8f10574f62" id="r_ae10bca782500e6b5b1379b8f10574f62"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae10bca782500e6b5b1379b8f10574f62">runMusicPlayer</a> (<a class="el" href="classSongTree.html">SongTree</a> &amp;song_tree) -&gt; int</td></tr>
+<tr class="memdesc:ae10bca782500e6b5b1379b8f10574f62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the music player with the provided song tree.  <br /></td></tr>
+<tr class="separator:ae10bca782500e6b5b1379b8f10574f62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7114aa2dd6837734db57667a298dfcc4" id="r_a7114aa2dd6837734db57667a298dfcc4"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7114aa2dd6837734db57667a298dfcc4">main</a> (int argc, char *argv[]) -&gt; int</td></tr>
+<tr class="memdesc:a7114aa2dd6837734db57667a298dfcc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main entry point of the program.  <br /></td></tr>
+<tr class="separator:a7114aa2dd6837734db57667a298dfcc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a0ddf1224851353fc92bfbff6f499fa97" name="a0ddf1224851353fc92bfbff6f499fa97"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ddf1224851353fc92bfbff6f499fa97">&#9670;&#160;</a></span>main()</h2>
+<a id="a86f81edac3570a692b89f1cada4f3124" name="a86f81edac3570a692b89f1cada4f3124"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86f81edac3570a692b89f1cada4f3124">&#9670;&#160;</a></span>handleArguments()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int main </td>
+          <td class="memname">auto handleArguments </td>
           <td>(</td>
           <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>argc</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>argv</em></span>[]&#160;)</td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>argv</em></span>[]&#160;) -&gt; <a class="el" href="structArgumentHandler_1_1Paths.html">ArgumentHandler::Paths</a>
+</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Handles the command line arguments. </p>
+<p>This function processes the command line arguments and sets the appropriate paths for configuration, library binary, and cache directory. It returns a <code>Paths</code> structure containing the necessary paths for the program's operation.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">argc</td><td>The number of command line arguments. </td></tr>
+    <tr><td class="paramname">argv</td><td>The array of command line arguments. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The <code>Paths</code> structure containing the paths for the configuration, library binary, and cache directory. </dd></dl>
+
+</div>
+</div>
+<a id="aaf7409f78fe62adf2227d9879f6b7786" name="aaf7409f78fe62adf2227d9879f6b7786"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf7409f78fe62adf2227d9879f6b7786">&#9670;&#160;</a></span>loadOrProcessSongTree()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto loadOrProcessSongTree </td>
+          <td>(</td>
+          <td class="paramtype">const string &amp;</td>          <td class="paramname"><span class="paramname"><em>libBinPath</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string &amp;</td>          <td class="paramname"><span class="paramname"><em>directoryPath</em></span>&#160;) -&gt; <a class="el" href="classSongTree.html">SongTree</a>
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Loads or processes the song tree from the given directory. </p>
+<p>This function attempts to load a previously cached song tree from a file. If the song tree cannot be loaded, it processes the directory to generate a new song tree, stores it in a red-black tree structure, and saves the tree to a file for future use.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">libBinPath</td><td>The path to the library binary directory. </td></tr>
+    <tr><td class="paramname">directoryPath</td><td>The path to the directory containing the music files. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The processed or loaded <code><a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a></code> object. </dd></dl>
+
+</div>
+</div>
+<a id="a7114aa2dd6837734db57667a298dfcc4" name="a7114aa2dd6837734db57667a298dfcc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7114aa2dd6837734db57667a298dfcc4">&#9670;&#160;</a></span>main()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto main </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>argc</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>argv</em></span>[]&#160;) -&gt; int
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The main entry point of the program. </p>
+<p>This is the main function that initializes signal handling, parses command line arguments, processes the song tree, and runs the music player. It also measures the time taken for the inode insertion and mapping process and prints the duration to the console.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">argc</td><td>The number of command line arguments. </td></tr>
+    <tr><td class="paramname">argv</td><td>The array of command line arguments. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if the music player runs successfully, or 1 if an error occurs. </dd></dl>
+
+</div>
+</div>
+<a id="ae10bca782500e6b5b1379b8f10574f62" name="ae10bca782500e6b5b1379b8f10574f62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae10bca782500e6b5b1379b8f10574f62">&#9670;&#160;</a></span>runMusicPlayer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto runMusicPlayer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSongTree.html">SongTree</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>song_tree</em></span></td><td>)</td>
+          <td> -&gt; int
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Runs the music player with the provided song tree. </p>
+<p>This function initializes the music player with the provided song tree, keybinds, and color settings, and then runs the player. If any exceptions are encountered, an error message is displayed, and the program exits with a non-zero code.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">song_tree</td><td>The <code><a class="el" href="classSongTree.html" title="Represents a hierarchical tree structure to store songs by artist, album, disc number,...">SongTree</a></code> object containing the music library. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 if the music player runs successfully, or 1 if an error occurs. </dd></dl>
 
 </div>
 </div>

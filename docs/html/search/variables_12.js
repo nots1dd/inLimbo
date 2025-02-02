@@ -1,7 +1,7 @@
 var searchData=
 [
   ['validflags_0',['validFlags',['../classCommandLineArgs.html#a78144ae8a840966935964dd323413008',1,'CommandLineArgs']]],
-  ['version_1',['VERSION',['../arg-handler_8hpp.html#a35aceb690e11a3d78331de7dda9563ae',1,'arg-handler.hpp']]],
+  ['version_5ffile_5fname_1',['VERSION_FILE_NAME',['../arg-handler_8hpp.html#af373b8d5ef3d654b43f29e8f6b4a6ccc',1,'arg-handler.hpp']]],
   ['view_5fcurrent_5fsong_5finfo_2',['view_current_song_info',['../structKeybinds.html#afbfca5b80fd58ffbc08822c518bc4ec2',1,'Keybinds']]],
   ['view_5flyrics_3',['view_lyrics',['../structKeybinds.html#ab7c2068f6c21a4b2d228e0720cbe8ed5',1,'Keybinds']]],
   ['view_5fsong_5fqueue_4',['view_song_queue',['../structKeybinds.html#a928d27528bc64d0d67e4871733e37779',1,'Keybinds']]],

@@ -1,13 +1,15 @@
 \doxysection{src/arg-\/handler.hpp File Reference}
 \hypertarget{arg-handler_8hpp}{}\label{arg-handler_8hpp}\index{src/arg-\/handler.hpp@{src/arg-\/handler.hpp}}
 {\ttfamily \#include "{}./cmd-\/line-\/args.\+hpp"{}}\newline
+{\ttfamily \#include "{}dirsort/songmap.\+hpp"{}}\newline
 {\ttfamily \#include $<$filesystem$>$}\newline
 {\ttfamily \#include $<$iostream$>$}\newline
-{\ttfamily \#include $<$stdexcept$>$}\newline
 {\ttfamily \#include $<$string\+\_\+view$>$}\newline
 {\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
 \doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structSongTreeState}{Song\+Tree\+State}}
 \item 
 class \mbox{\hyperlink{classColorManager}{Color\+Manager}}
 \begin{DoxyCompactList}\small\item\em Provides utilities for managing console colors. \end{DoxyCompactList}\item 
@@ -34,10 +36,14 @@ enum class \mbox{\hyperlink{arg-handler_8hpp_a821042d5f30537f776ce823c5d66aada}{
 \item 
 constexpr const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{arg-handler_8hpp_a66a0a8982b40d72ceed7b95a0d7d280c}{DBUS\+\_\+\+SERVICE\+\_\+\+NAME}}
 \begin{DoxyCompactList}\small\item\em DBus service name used by in\+Limbo. \end{DoxyCompactList}\item 
-constexpr const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{arg-handler_8hpp_a35aceb690e11a3d78331de7dda9563ae}{VERSION}} = "{}2.\+5 (ALPHA)"{}
-\begin{DoxyCompactList}\small\item\em Current version of the application. \end{DoxyCompactList}\item 
+constexpr const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{arg-handler_8hpp_af373b8d5ef3d654b43f29e8f6b4a6ccc}{VERSION\+\_\+\+FILE\+\_\+\+NAME}} = "{}VERSION"{}
+\item 
+constexpr const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{arg-handler_8hpp_a1dea1931820a41f82fc5acb0fab76ea4}{REPOSITORY\+\_\+\+URL}} = "{}https\+://github.\+com/nots1dd/in\+Limbo"{}
+\item 
 bool \mbox{\hyperlink{arg-handler_8hpp_af443d26ff309f6e511dfcae4be89775a}{should\+Run\+App}}
-\begin{DoxyCompactList}\small\item\em Indicates if the application should proceed to run after handling arguments. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Indicates if the application should proceed to run after handling arguments. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{arg-handler_8hpp_a4facf54f696971b5d1e41f376fb0e783}{parse\+Song\+Tree}} = false
+\end{DoxyCompactItemize}
 
 
 \doxysubsection{Enumeration Type Documentation}
@@ -100,6 +106,18 @@ const char\texorpdfstring{$\ast$}{*} DBUS\+\_\+\+SERVICE\+\_\+\+NAME\hspace{0.3c
 
 DBus service name used by in\+Limbo. 
 
+\Hypertarget{arg-handler_8hpp_a4facf54f696971b5d1e41f376fb0e783}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!parseSongTree@{parseSongTree}}
+\index{parseSongTree@{parseSongTree}!arg-\/handler.hpp@{arg-\/handler.hpp}}
+\doxysubsubsection{\texorpdfstring{parseSongTree}{parseSongTree}}
+{\footnotesize\ttfamily \label{arg-handler_8hpp_a4facf54f696971b5d1e41f376fb0e783} 
+bool parse\+Song\+Tree = false}
+
+\Hypertarget{arg-handler_8hpp_a1dea1931820a41f82fc5acb0fab76ea4}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!REPOSITORY\_URL@{REPOSITORY\_URL}}
+\index{REPOSITORY\_URL@{REPOSITORY\_URL}!arg-\/handler.hpp@{arg-\/handler.hpp}}
+\doxysubsubsection{\texorpdfstring{REPOSITORY\_URL}{REPOSITORY\_URL}}
+{\footnotesize\ttfamily \label{arg-handler_8hpp_a1dea1931820a41f82fc5acb0fab76ea4} 
+const char\texorpdfstring{$\ast$}{*} REPOSITORY\+\_\+\+URL = "{}https\+://github.\+com/nots1dd/in\+Limbo"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
 \Hypertarget{arg-handler_8hpp_af443d26ff309f6e511dfcae4be89775a}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!shouldRunApp@{shouldRunApp}}
 \index{shouldRunApp@{shouldRunApp}!arg-\/handler.hpp@{arg-\/handler.hpp}}
 \doxysubsubsection{\texorpdfstring{shouldRunApp}{shouldRunApp}}
@@ -116,13 +134,9 @@ bool should\+Run\+App}
 
 Indicates if the application should proceed to run after handling arguments. 
 
-\Hypertarget{arg-handler_8hpp_a35aceb690e11a3d78331de7dda9563ae}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!VERSION@{VERSION}}
-\index{VERSION@{VERSION}!arg-\/handler.hpp@{arg-\/handler.hpp}}
-\doxysubsubsection{\texorpdfstring{VERSION}{VERSION}}
-{\footnotesize\ttfamily \label{arg-handler_8hpp_a35aceb690e11a3d78331de7dda9563ae} 
-const char\texorpdfstring{$\ast$}{*} VERSION = "{}2.\+5 (ALPHA)"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
-
-
-
-Current version of the application. 
+\Hypertarget{arg-handler_8hpp_af373b8d5ef3d654b43f29e8f6b4a6ccc}\index{arg-\/handler.hpp@{arg-\/handler.hpp}!VERSION\_FILE\_NAME@{VERSION\_FILE\_NAME}}
+\index{VERSION\_FILE\_NAME@{VERSION\_FILE\_NAME}!arg-\/handler.hpp@{arg-\/handler.hpp}}
+\doxysubsubsection{\texorpdfstring{VERSION\_FILE\_NAME}{VERSION\_FILE\_NAME}}
+{\footnotesize\ttfamily \label{arg-handler_8hpp_af373b8d5ef3d654b43f29e8f6b4a6ccc} 
+const char\texorpdfstring{$\ast$}{*} VERSION\+\_\+\+FILE\+\_\+\+NAME = "{}VERSION"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
 

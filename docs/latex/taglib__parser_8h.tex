@@ -33,12 +33,16 @@ void \mbox{\hyperlink{taglib__parser_8h_a1dd3093763fba77a033971b138eda516}{print
 \begin{DoxyCompactList}\small\item\em Prints the metadata of a song to the console. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{send\+Err\+Msg}} (std\+::string \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debug\+Log\+Bool\+Str}}, std\+::string err\+Msg)
 \begin{DoxyCompactList}\small\item\em Sends an error message based on the debug log setting. \end{DoxyCompactList}\item 
-bool \mbox{\hyperlink{taglib__parser_8h_a663081b243b450cd9b222d681eb112bf}{extract\+Thumbnail}} (const std\+::string \&audio\+File\+Path, const std\+::string \&output\+Image\+Path)
+auto \mbox{\hyperlink{taglib__parser_8h_af3fc7742ce3b9bf381198c86f02cdd76}{extract\+Thumbnail}} (const std\+::string \&audio\+File\+Path, const std\+::string \&output\+Image\+Path) -\/$>$ bool
 \begin{DoxyCompactList}\small\item\em Extracts the thumbnail (album art) from an audio file and saves it to an image file. (Works for mp3 and flac) \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 std\+::string \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debug\+Log\+Bool\+Str}}
+\item 
+bool \mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debug\+Log\+Bool}}
+\item 
+int \mbox{\hyperlink{taglib__parser_8h_a32df213bd7516d64a984cc0452596d11}{unknown\+Artist\+Tracks}} = 0
 \end{DoxyCompactItemize}
 
 
@@ -50,11 +54,11 @@ This file defines a {\ttfamily \doxylink{structMetadata}{Metadata}} structure fo
 {\bfseries{Note}}\+: In the Emscripten build, dummy functions are used because Tag\+Lib must be compiled using Emscripten to function correctly in a web environment. 
 
 \doxysubsection{Function Documentation}
-\Hypertarget{taglib__parser_8h_a663081b243b450cd9b222d681eb112bf}\index{taglib\_parser.h@{taglib\_parser.h}!extractThumbnail@{extractThumbnail}}
+\Hypertarget{taglib__parser_8h_af3fc7742ce3b9bf381198c86f02cdd76}\index{taglib\_parser.h@{taglib\_parser.h}!extractThumbnail@{extractThumbnail}}
 \index{extractThumbnail@{extractThumbnail}!taglib\_parser.h@{taglib\_parser.h}}
 \doxysubsubsection{\texorpdfstring{extractThumbnail()}{extractThumbnail()}}
-{\footnotesize\ttfamily \label{taglib__parser_8h_a663081b243b450cd9b222d681eb112bf} 
-bool extract\+Thumbnail (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{audio\+File\+Path}{, }\item[{const std\+::string \&}]{output\+Image\+Path}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{taglib__parser_8h_af3fc7742ce3b9bf381198c86f02cdd76} 
+auto extract\+Thumbnail (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{audio\+File\+Path}{, }\item[{const std\+::string \&}]{output\+Image\+Path}{}\end{DoxyParamCaption}) -\/$>$ bool }
 
 
 
@@ -105,9 +109,21 @@ Sends an error message based on the debug log setting.
 
 
 \doxysubsection{Variable Documentation}
+\Hypertarget{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}\index{taglib\_parser.h@{taglib\_parser.h}!debugLogBool@{debugLogBool}}
+\index{debugLogBool@{debugLogBool}!taglib\_parser.h@{taglib\_parser.h}}
+\doxysubsubsection{\texorpdfstring{debugLogBool}{debugLogBool}}
+{\footnotesize\ttfamily \label{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6} 
+bool debug\+Log\+Bool}
+
 \Hypertarget{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}\index{taglib\_parser.h@{taglib\_parser.h}!debugLogBoolStr@{debugLogBoolStr}}
 \index{debugLogBoolStr@{debugLogBoolStr}!taglib\_parser.h@{taglib\_parser.h}}
 \doxysubsubsection{\texorpdfstring{debugLogBoolStr}{debugLogBoolStr}}
 {\footnotesize\ttfamily \label{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b} 
 std\+::string debug\+Log\+Bool\+Str}
+
+\Hypertarget{taglib__parser_8h_a32df213bd7516d64a984cc0452596d11}\index{taglib\_parser.h@{taglib\_parser.h}!unknownArtistTracks@{unknownArtistTracks}}
+\index{unknownArtistTracks@{unknownArtistTracks}!taglib\_parser.h@{taglib\_parser.h}}
+\doxysubsubsection{\texorpdfstring{unknownArtistTracks}{unknownArtistTracks}}
+{\footnotesize\ttfamily \label{taglib__parser_8h_a32df213bd7516d64a984cc0452596d11} 
+int unknown\+Artist\+Tracks = 0}
 

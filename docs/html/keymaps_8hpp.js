@@ -1,5 +1,5 @@
 var keymaps_8hpp =
 [
     [ "Keybinds", "structKeybinds.html", "structKeybinds" ],
-    [ "parseKeybinds", "keymaps_8hpp.html#a140e0fecc49876baa6c265621cf96518", null ]
+    [ "parseKeybinds", "keymaps_8hpp.html#a74375ab0d7f926eb068b50f3c9fbd3a5", null ]
 ];

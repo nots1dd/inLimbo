@@ -49,6 +49,6 @@ var namespaces_dup =
         [ "Turquoise", "namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6dada3a4f0a911cebe3bc75f6e39c324696", null ],
         [ "LightTurquoise", "namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6dae5c96e2ad0520ead9cec1a0664a709a9", null ]
       ] ],
-      [ "GetColor", "namespaceTrueColors.html#a5e3fb4538a96657fee0d7ffb9a92fb96", null ]
+      [ "GetColor", "namespaceTrueColors.html#a3784afe8e73efdb0822e9999a0da1c18", null ]
     ] ]
 ];

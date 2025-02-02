@@ -1,0 +1,123 @@
+\doxysection{Trie Class Reference}
+\hypertarget{classTrie}{}\label{classTrie}\index{Trie@{Trie}}
+
+
+Implements the \doxylink{classTrie}{Trie} (Prefix Tree) data structure.  
+
+
+
+
+{\ttfamily \#include $<$trie.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classTrie_a6af57e9f25d0d0a2d59eea5a4a802908}{Trie}} ()
+\item 
+void \mbox{\hyperlink{classTrie_aea7c40f02ef29f22da10909e355371a2}{insert}} (const std\+::string \&word, int index)
+\begin{DoxyCompactList}\small\item\em Inserts a word into the \doxylink{classTrie}{Trie}. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classTrie_a73ca289e202e5bf6fbfbb4e3b84df506}{search}} (const std\+::string \&prefix) -\/$>$ std\+::vector$<$ int $>$
+\begin{DoxyCompactList}\small\item\em Searches for words starting with a given prefix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classTrie_a2b3788d7ebfa50acfd6540a894b87d89}{delete\+Word}} (const std\+::string \&word, int index)
+\begin{DoxyCompactList}\small\item\em Deletes a word from the \doxylink{classTrie}{Trie}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classTrie_a4d0e1db753c924e7f93497ea2db1866d}{clear}} ()
+\begin{DoxyCompactList}\small\item\em Clears all nodes in the \doxylink{classTrie}{Trie}. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classTrie_a910f4e955712f50d9c506355a115ced2}{is\+\_\+empty}} () const -\/$>$ bool
+\begin{DoxyCompactList}\small\item\em Checks if the \doxylink{classTrie}{Trie} is empty. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Implements the \doxylink{classTrie}{Trie} (Prefix Tree) data structure. 
+
+This class provides methods to insert artist names into the \doxylink{classTrie}{Trie} and search for all names that start with a given prefix. It stores a list of indices for each node, making it efficient to retrieve all matching names for a prefix. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classTrie_a6af57e9f25d0d0a2d59eea5a4a802908}\index{Trie@{Trie}!Trie@{Trie}}
+\index{Trie@{Trie}!Trie@{Trie}}
+\doxysubsubsection{\texorpdfstring{Trie()}{Trie()}}
+{\footnotesize\ttfamily \label{classTrie_a6af57e9f25d0d0a2d59eea5a4a802908} 
+Trie\+::\+Trie (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classTrie_a4d0e1db753c924e7f93497ea2db1866d}\index{Trie@{Trie}!clear@{clear}}
+\index{clear@{clear}!Trie@{Trie}}
+\doxysubsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily \label{classTrie_a4d0e1db753c924e7f93497ea2db1866d} 
+void Trie\+::clear (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Clears all nodes in the \doxylink{classTrie}{Trie}. 
+
+\Hypertarget{classTrie_a2b3788d7ebfa50acfd6540a894b87d89}\index{Trie@{Trie}!deleteWord@{deleteWord}}
+\index{deleteWord@{deleteWord}!Trie@{Trie}}
+\doxysubsubsection{\texorpdfstring{deleteWord()}{deleteWord()}}
+{\footnotesize\ttfamily \label{classTrie_a2b3788d7ebfa50acfd6540a894b87d89} 
+void Trie\+::delete\+Word (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{word}{, }\item[{int}]{index}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Deletes a word from the \doxylink{classTrie}{Trie}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em word} & The word to delete. \\
+\hline
+{\em index} & The index associated with the word. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classTrie_aea7c40f02ef29f22da10909e355371a2}\index{Trie@{Trie}!insert@{insert}}
+\index{insert@{insert}!Trie@{Trie}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}}
+{\footnotesize\ttfamily \label{classTrie_aea7c40f02ef29f22da10909e355371a2} 
+void Trie\+::insert (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{word}{, }\item[{int}]{index}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Inserts a word into the \doxylink{classTrie}{Trie}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em word} & The word to insert. \\
+\hline
+{\em index} & The index associated with the word. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classTrie_a910f4e955712f50d9c506355a115ced2}\index{Trie@{Trie}!is\_empty@{is\_empty}}
+\index{is\_empty@{is\_empty}!Trie@{Trie}}
+\doxysubsubsection{\texorpdfstring{is\_empty()}{is\_empty()}}
+{\footnotesize\ttfamily \label{classTrie_a910f4e955712f50d9c506355a115ced2} 
+auto Trie\+::is\+\_\+empty (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$ bool   \hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Checks if the \doxylink{classTrie}{Trie} is empty. 
+
+\begin{DoxyReturn}{Returns}
+True if the \doxylink{classTrie}{Trie} is empty, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{classTrie_a73ca289e202e5bf6fbfbb4e3b84df506}\index{Trie@{Trie}!search@{search}}
+\index{search@{search}!Trie@{Trie}}
+\doxysubsubsection{\texorpdfstring{search()}{search()}}
+{\footnotesize\ttfamily \label{classTrie_a73ca289e202e5bf6fbfbb4e3b84df506} 
+auto Trie\+::search (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{prefix}{}\end{DoxyParamCaption}) -\/$>$ std\+::vector$<$int$>$   \hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Searches for words starting with a given prefix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em prefix} & The search prefix. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A vector of indices of matching words. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/helpers/\mbox{\hyperlink{trie_8hpp}{trie.\+hpp}}\end{DoxyCompactItemize}

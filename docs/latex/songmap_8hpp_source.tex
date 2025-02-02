@@ -3,141 +3,352 @@
 \mbox{\hyperlink{songmap_8hpp}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00001\ }
-\DoxyCodeLine{00018\ }
-\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#ifndef\ SONG\_MAP\_HPP}}
-\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ SONG\_MAP\_HPP}}
-\DoxyCodeLine{00021\ }
-\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{taglib__parser_8h}{taglib\_parser.h}}"{}}}
-\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <cereal/archives/binary.hpp>}}
-\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <cereal/types/map.hpp>}}
-\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <cereal/types/string.hpp>}}
-\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <cereal/types/vector.hpp>}}
-\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <fstream>}}
-\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <iostream>}}
-\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <map>}}
-\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ <string>}}
-\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <vector>}}
-\DoxyCodeLine{00032\ }
-\DoxyCodeLine{00040\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structSong_adacc2058bb6263b4f0b68ce61c232b87}{Song}}}
-\DoxyCodeLine{00041\ \{}
-\DoxyCodeLine{00042\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}};\ \ \ \ }
-\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{structMetadata}{Metadata}}\ \ \ \ \ \mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}};\ }
-\DoxyCodeLine{00044\ }
-\DoxyCodeLine{00051\ \ \ \mbox{\hyperlink{structSong_adacc2058bb6263b4f0b68ce61c232b87}{Song}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structMetadata}{Metadata}}\&\ \mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}})\ :\ \mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}}(\mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}}),\ \mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}}(\mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}})\ \{\}}
-\DoxyCodeLine{00052\ }
-\DoxyCodeLine{00056\ \ \ \mbox{\hyperlink{structSong_a1a73ff262627ce78860ec622859cf249}{Song}}()\ :\ \mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}}(0),\ \mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}}()\ \{\}}
-\DoxyCodeLine{00057\ }
-\DoxyCodeLine{00066\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Archive>\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structSong_ac5e11ba0cbf3fd7ac6c649c0e582c621}{serialize}}(Archive\&\ ar)\ \{\ ar(\mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}},\ \mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}});\ \}}
-\DoxyCodeLine{00067\ \};}
-\DoxyCodeLine{00068\ }
-\DoxyCodeLine{00079\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classSongTree}{SongTree}}}
-\DoxyCodeLine{00080\ \{}
-\DoxyCodeLine{00081\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00090\ \ \ std::map<std::string,\ std::map<std::string,\ std::map<unsigned\ int,\ std::map<unsigned\ int,\ Song>>>>}
-\DoxyCodeLine{00091\ \ \ \ \ tree;}
-\DoxyCodeLine{00092\ }
-\DoxyCodeLine{00093\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00102\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSongTree_a5acb6d9c937a04cb784a6fc55fd3f0a3}{addSong}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structSong}{Song}}\&\ song)}
-\DoxyCodeLine{00103\ \ \ \{}
-\DoxyCodeLine{00104\ \ \ \ \ tree[song.\mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}}.\mbox{\hyperlink{structMetadata_a9c925474f678d140c0e0eef6213a160b}{artist}}][song.\mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}}.\mbox{\hyperlink{structMetadata_ad0bb399c882458d760b09c02842d7f09}{album}}][song.\mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}}.\mbox{\hyperlink{structMetadata_a777a78e4b78994e5b0015f7c3d21bc08}{discNumber}}][song.\mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}}.\mbox{\hyperlink{structMetadata_a1991c38d1fd88ef2240aa798bb22c253}{track}}]\ =}
-\DoxyCodeLine{00105\ \ \ \ \ \ \ song;}
-\DoxyCodeLine{00106\ \ \ \}}
-\DoxyCodeLine{00107\ }
-\DoxyCodeLine{00114\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSongTree_a573bb3b4b0372c52b4924212f6db5f2b}{display}}()\textcolor{keyword}{\ const}}
-\DoxyCodeLine{00115\ \textcolor{keyword}{\ \ }\{}
-\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ artistPair\ :\ tree)}
-\DoxyCodeLine{00117\ \ \ \ \ \{}
-\DoxyCodeLine{00118\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Artist:\ "{}}\ <<\ artistPair.first\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00119\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ albumPair\ :\ artistPair.second)}
-\DoxyCodeLine{00120\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ Album:\ "{}}\ <<\ albumPair.first\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ discPair\ :\ albumPair.second)}
-\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ \ \ Disc:\ "{}}\ <<\ discPair.first\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ trackPair\ :\ discPair.second)}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ song\ =\ trackPair.second;}
-\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ \ \ \ \ Track\ "{}}\ <<\ trackPair.first\ <<\ \textcolor{stringliteral}{"{}:\ "{}}\ <<\ song.metadata.title}
-\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\ (Inode:\ "{}}\ <<\ song.inode\ <<\ \textcolor{stringliteral}{"{},\ Artist:\ "{}}\ <<\ song.metadata.artist}
-\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ Album:\ "{}}\ <<\ song.metadata.album\ <<\ \textcolor{stringliteral}{"{},\ Genre:\ "{}}\ <<\ song.metadata.genre}
-\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{})\(\backslash\)n"{}};}
-\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00134\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00135\ \ \ \ \ \}}
-\DoxyCodeLine{00136\ \ \ \}}
-\DoxyCodeLine{00137\ }
-\DoxyCodeLine{00147\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classSongTree_a7004c5b5d92f50e676a8c06f827d4ea4}{getSongsByArtist}}(\textcolor{keyword}{const}\ std::string\&\ artist)\textcolor{keyword}{\ const}}
-\DoxyCodeLine{00148\ \textcolor{keyword}{\ \ }\{}
-\DoxyCodeLine{00149\ \ \ \ \ std::vector<Song>\ result;}
-\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ \ \ \ \ \ \ \ \ artistIt\ =\ tree.find(artist);}
-\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordflow}{if}\ (artistIt\ !=\ tree.end())}
-\DoxyCodeLine{00152\ \ \ \ \ \{}
-\DoxyCodeLine{00153\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ albumPair\ :\ artistIt-\/>second)}
-\DoxyCodeLine{00154\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ discPair\ :\ albumPair.second)}
-\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ trackPair\ :\ discPair.second)}
-\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ result.push\_back(trackPair.second);}
-\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00162\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00163\ \ \ \ \ \}}
-\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{taglib__parser_8h}{taglib\_parser.h}}"{}}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{levenshtein_8hpp}{../helpers/levenshtein.hpp}}"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <cereal/archives/binary.hpp>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <cereal/types/map.hpp>}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <cereal/types/string.hpp>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <cereal/types/vector.hpp>}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ <set>}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structSong_adacc2058bb6263b4f0b68ce61c232b87}{Song}}}
+\DoxyCodeLine{00046\ \{}
+\DoxyCodeLine{00047\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}};\ \ \ \ }
+\DoxyCodeLine{00048\ \ \ \mbox{\hyperlink{structMetadata}{Metadata}}\ \ \ \ \ \mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}};\ }
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00058\ \ \ \mbox{\hyperlink{structSong_adacc2058bb6263b4f0b68ce61c232b87}{Song}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structMetadata}{Metadata}}\&\ \mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}})\ :\ \mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}}(\mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}}),\ \mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}}(\mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}})\ \{\}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00063\ \ \ \mbox{\hyperlink{structSong_a1a73ff262627ce78860ec622859cf249}{Song}}()\ :\ \mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}}(0),\ \mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}}()\ \{\}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00073\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Archive>\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structSong_ac5e11ba0cbf3fd7ac6c649c0e582c621}{serialize}}(Archive\&\ ar)\ \{\ ar(\mbox{\hyperlink{structSong_a2f6cde83cc3ad57dad90d1de5eca0010}{inode}},\ \mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}});\ \}}
+\DoxyCodeLine{00074\ \};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classSongTree}{SongTree}}}
+\DoxyCodeLine{00090\ \{}
+\DoxyCodeLine{00091\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00100\ \ \ std::map<std::string,\ std::map<std::string,\ std::map<unsigned\ int,\ std::map<unsigned\ int,\ Song>>>>}
+\DoxyCodeLine{00101\ \ \ \ \ tree;}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00112\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSongTree_a5acb6d9c937a04cb784a6fc55fd3f0a3}{addSong}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structSong}{Song}}\&\ song)}
+\DoxyCodeLine{00113\ \ \ \{}
+\DoxyCodeLine{00114\ \ \ \ \ tree[song.\mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}}.\mbox{\hyperlink{structMetadata_a9c925474f678d140c0e0eef6213a160b}{artist}}][song.\mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}}.\mbox{\hyperlink{structMetadata_ad0bb399c882458d760b09c02842d7f09}{album}}][song.\mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}}.\mbox{\hyperlink{structMetadata_a777a78e4b78994e5b0015f7c3d21bc08}{discNumber}}][song.\mbox{\hyperlink{structSong_a3d14b92a3f45b281bde7283fe169215d}{metadata}}.\mbox{\hyperlink{structMetadata_a1991c38d1fd88ef2240aa798bb22c253}{track}}]\ =}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ song;}
+\DoxyCodeLine{00116\ \ \ \}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00125\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSongTree_a573bb3b4b0372c52b4924212f6db5f2b}{display}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00126\ \textcolor{keyword}{\ \ }\{}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ totalArtists\ =\ 0,\ totalAlbums\ =\ 0,\ totalDiscs\ =\ 0,\ totalSongs\ =\ 0;}
+\DoxyCodeLine{00128\ \ \ \ \ std::set<std::string>\ uniqueGenres;\ \textcolor{comment}{//\ To\ count\ unique\ genres}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n===\ Music\ Library\ Overview\ ===\(\backslash\)n"{}};}
+\DoxyCodeLine{00131\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}─────────────────────────────────────────────────────────────────────────────\(\backslash\)n"{}};}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ artistPair\ :\ tree)}
+\DoxyCodeLine{00134\ \ \ \ \ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ totalArtists++;}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n🎤\ Artist:\ "{}}\ <<\ artistPair.first\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ albumPair\ :\ artistPair.second)}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ totalAlbums++;}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ ├───\ 📀\ Album:\ "{}}\ <<\ albumPair.first\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ discPair\ :\ albumPair.second)}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ totalDiscs++;}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ │\ \ \ \ 💿\ Disc\ "{}}\ <<\ discPair.first\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ trackPair\ :\ discPair.second)}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ totalSongs++;}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ song\ =\ trackPair.second;}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ uniqueGenres.insert(song.metadata.genre);}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ │\ \ \ \ │\ \ \ \ Track\ "{}}\ <<\ std::setw(2)\ <<\ trackPair.first\ <<\ \textcolor{stringliteral}{"{}:\ "{}}}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ song.metadata.title\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00155\ \ \ \ \ \}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n===\ Library\ Summary\ ===\(\backslash\)n"{}};}
+\DoxyCodeLine{00158\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}─────────────────────────────────────────────────────────────────────────────\(\backslash\)n"{}};}
+\DoxyCodeLine{00159\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}🎤\ Total\ Artists:\ "{}}\ <<\ totalArtists\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00160\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}📀\ Total\ Albums:\ "{}}\ <<\ totalAlbums\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00161\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}💿\ Total\ Discs:\ "{}}\ <<\ totalDiscs\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00162\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}🎵\ Total\ Songs:\ "{}}\ <<\ totalSongs\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00163\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}🎼\ Unique\ Genres:\ "{}}\ <<\ uniqueGenres.size()\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00164\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}=========================\(\backslash\)n"{}};}
 \DoxyCodeLine{00165\ \ \ \}}
 \DoxyCodeLine{00166\ }
-\DoxyCodeLine{00176\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classSongTree_aae8c9fd89c86a51b2b2c0f09d5dd8e20}{getSongsByAlbum}}(\textcolor{keyword}{const}\ std::string\&\ artist,\ \textcolor{keyword}{const}\ std::string\&\ album)\textcolor{keyword}{\ const}}
-\DoxyCodeLine{00177\ \textcolor{keyword}{\ \ }\{}
-\DoxyCodeLine{00178\ \ \ \ \ std::vector<Song>\ result;}
-\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ \ \ \ \ \ \ \ \ artistIt\ =\ tree.find(artist);}
-\DoxyCodeLine{00180\ \ \ \ \ \textcolor{keywordflow}{if}\ (artistIt\ !=\ tree.end())}
-\DoxyCodeLine{00181\ \ \ \ \ \{}
-\DoxyCodeLine{00182\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ albumIt\ =\ artistIt-\/>second.find(album);}
-\DoxyCodeLine{00183\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (albumIt\ !=\ artistIt-\/>second.end())}
-\DoxyCodeLine{00184\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ discPair\ :\ albumIt-\/>second)}
-\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ trackPair\ :\ discPair.second)}
-\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ result.push\_back(trackPair.second);}
-\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00192\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00193\ \ \ \ \ \}}
-\DoxyCodeLine{00194\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
-\DoxyCodeLine{00195\ \ \ \}}
+\DoxyCodeLine{00172\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSongTree_adca5b14b9c60651a1132739ad5ed8ded}{printAllArtists}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00173\ \textcolor{keyword}{\ \ }\{}
+\DoxyCodeLine{00174\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n===\ Artists\ List\ ===\(\backslash\)n"{}};}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ artistPair\ :\ tree)}
+\DoxyCodeLine{00176\ \ \ \ \ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}-\/\ "{}}\ <<\ artistPair.first\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00178\ \ \ \ \ \}}
+\DoxyCodeLine{00179\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}=====================\(\backslash\)n"{}};}
+\DoxyCodeLine{00180\ \ \ \}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00189\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSongTree_a4093a5523a3ffa8d62671a5752ad3ef9}{printSongs}}(\textcolor{keyword}{const}\ std::vector<Song>\&\ songs)}
+\DoxyCodeLine{00190\ \ \ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{keywordflow}{if}\ (songs.empty())}
+\DoxyCodeLine{00192\ \ \ \ \ \{}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}No\ songs\ found.\(\backslash\)n"{}};}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00195\ \ \ \ \ \}}
 \DoxyCodeLine{00196\ }
-\DoxyCodeLine{00204\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classSongTree_a0ef1090449abbd85db3b0a65f854f7d7}{returnSongMap}}()}
-\DoxyCodeLine{00205\ \ \ \{}
-\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keywordflow}{return}\ tree;}
-\DoxyCodeLine{00207\ \ \ \}}
-\DoxyCodeLine{00208\ }
-\DoxyCodeLine{00216\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Archive>\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSongTree_a44501c33435ae05c476616427d407135}{serialize}}(Archive\&\ ar)\ \{\ ar(tree);\ \}}
-\DoxyCodeLine{00217\ }
-\DoxyCodeLine{00226\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSongTree_a82129099237b6deeb36c05fd67ad49b8}{saveToFile}}(\textcolor{keyword}{const}\ std::string\&\ filename)\textcolor{keyword}{\ const}}
-\DoxyCodeLine{00227\ \textcolor{keyword}{\ \ }\{}
-\DoxyCodeLine{00228\ \ \ \ \ std::ofstream\ file(filename,\ std::ios::binary);}
-\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keywordflow}{if}\ (!file)}
-\DoxyCodeLine{00230\ \ \ \ \ \{}
-\DoxyCodeLine{00231\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ open\ file\ for\ saving."{}});}
-\DoxyCodeLine{00232\ \ \ \ \ \}}
-\DoxyCodeLine{00233\ \ \ \ \ cereal::BinaryOutputArchive\ archive(file);}
-\DoxyCodeLine{00234\ \ \ \ \ archive(*\textcolor{keyword}{this});\ \textcolor{comment}{//\ Serialize\ the\ SongTree}}
-\DoxyCodeLine{00235\ \ \ \}}
-\DoxyCodeLine{00236\ }
-\DoxyCodeLine{00245\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSongTree_ab91097161c9b864f5d5888ae963de4b3}{loadFromFile}}(\textcolor{keyword}{const}\ std::string\&\ filename)}
-\DoxyCodeLine{00246\ \ \ \{}
-\DoxyCodeLine{00247\ \ \ \ \ std::ifstream\ file(filename,\ std::ios::binary);}
-\DoxyCodeLine{00248\ \ \ \ \ \textcolor{keywordflow}{if}\ (!file)}
-\DoxyCodeLine{00249\ \ \ \ \ \{}
-\DoxyCodeLine{00250\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ open\ file\ for\ loading."{}});}
-\DoxyCodeLine{00251\ \ \ \ \ \}}
-\DoxyCodeLine{00252\ \ \ \ \ cereal::BinaryInputArchive\ archive(file);}
-\DoxyCodeLine{00253\ \ \ \ \ archive(*\textcolor{keyword}{this});\ \textcolor{comment}{//\ Deserialize\ the\ SongTree}}
-\DoxyCodeLine{00254\ \ \ \}}
-\DoxyCodeLine{00255\ \};}
-\DoxyCodeLine{00256\ }
-\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{comment}{//\ Group\ songs\ by\ album}}
+\DoxyCodeLine{00198\ \ \ \ \ std::map<std::string,\ std::vector<Song>>\ albums;}
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ song\ :\ songs)}
+\DoxyCodeLine{00200\ \ \ \ \ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ albums[song.metadata.album].push\_back(song);}
+\DoxyCodeLine{00202\ \ \ \ \ \}}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)033[1mSongs\ List\(\backslash\)033[0m:\(\backslash\)n"{}};}
+\DoxyCodeLine{00205\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}─────────────────────────────────────\(\backslash\)n"{}};}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ albumPair\ :\ albums)}
+\DoxyCodeLine{00208\ \ \ \ \ \{}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ album\ \ \ \ \ \ =\ albumPair.first;}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ albumSongs\ =\ albumPair.second;}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}├───\ 📀\ Album:\ "{}}\ <<\ album\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}└─\ Total\ Songs:\ "{}}\ <<\ albumSongs.size()\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ song\ :\ albumSongs)}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ \ \ │\ \ Track:\ "{}}\ <<\ song.metadata.title\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}─────────────────────────────────────\(\backslash\)n"{}};}
+\DoxyCodeLine{00221\ \ \ \ \ \}}
+\DoxyCodeLine{00222\ \ \ \}}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00233\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classSongTree_a2e96de00cd23213c9691233ed43fef42}{getSongsByArtist}}(\textcolor{keyword}{const}\ std::string\&\ artist)}
+\DoxyCodeLine{00234\ \ \ \{}
+\DoxyCodeLine{00235\ \ \ \ \ std::vector<Song>\ result;}
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ \ \ \ \ \ \ \ \ artistIt\ =\ tree.find(artist);}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keywordflow}{if}\ (artistIt\ !=\ tree.end())}
+\DoxyCodeLine{00238\ \ \ \ \ \{}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ albumPair\ :\ artistIt-\/>second)}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ discPair\ :\ albumPair.second)}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ trackPair\ :\ discPair.second)}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ result.push\_back(trackPair.second);}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00249\ \ \ \ \ \}}
+\DoxyCodeLine{00250\ \ \ \ \ \mbox{\hyperlink{classSongTree_a4093a5523a3ffa8d62671a5752ad3ef9}{printSongs}}(result);}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00252\ \ \ \}}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00263\ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classSongTree_aae8c9fd89c86a51b2b2c0f09d5dd8e20}{getSongsByAlbum}}(\textcolor{keyword}{const}\ std::string\&\ artist,\ \textcolor{keyword}{const}\ std::string\&\ album)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00264\ \textcolor{keyword}{\ \ }\{}
+\DoxyCodeLine{00265\ \ \ \ \ std::vector<Song>\ result;}
+\DoxyCodeLine{00266\ \ \ \ \ \textcolor{keyword}{auto}\ \ \ \ \ \ \ \ \ \ \ \ \ \ artistIt\ =\ tree.find(artist);}
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{keywordflow}{if}\ (artistIt\ !=\ tree.end())}
+\DoxyCodeLine{00268\ \ \ \ \ \{}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ albumIt\ =\ artistIt-\/>second.find(album);}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (albumIt\ !=\ artistIt-\/>second.end())}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ discPair\ :\ albumIt-\/>second)}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ trackPair\ :\ discPair.second)}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ result.push\_back(trackPair.second);}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00280\ \ \ \ \ \}}
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00282\ \ \ \}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00289\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSongTree_ac5ebd2bb2e9ddd54002fc93aefa80f95}{getSongsByGenreAndPrint}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00290\ \textcolor{keyword}{\ \ }\{}
+\DoxyCodeLine{00291\ \ \ \ \ std::map<std::string,\ std::vector<Song>>\ genreMap;}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \ \ \ \ \textcolor{comment}{//\ Populate\ genreMap\ with\ songs\ grouped\ by\ genre}}
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ artistPair\ :\ tree)}
+\DoxyCodeLine{00295\ \ \ \ \ \{}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ albumPair\ :\ artistPair.second)}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ discPair\ :\ albumPair.second)}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ trackPair\ :\ discPair.second)}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ genreMap[trackPair.second.metadata.genre].push\_back(trackPair.second);}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00306\ \ \ \ \ \}}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n===\ Songs\ Grouped\ by\ Genre\ ===\(\backslash\)n"{}};}
+\DoxyCodeLine{00309\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}──────────────────────────────────────\(\backslash\)n"{}};}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ \ \ \ \ \textcolor{comment}{//\ Print\ each\ genre\ and\ its\ corresponding\ songs}}
+\DoxyCodeLine{00312\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ genrePair\ :\ genreMap)}
+\DoxyCodeLine{00313\ \ \ \ \ \{}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ genre\ =\ genrePair.first;}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ songs\ =\ genrePair.second;}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n🎶\ Genre:\ "{}}\ <<\ genre\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}──────────────────────────────────────\(\backslash\)n"{}};}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ song\ :\ songs)}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}├───\ "{}}\ <<\ song.metadata.title\ <<\ \textcolor{stringliteral}{"{}\ by\ "{}}\ <<\ song.metadata.artist}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\ (Album:\ "{}}\ <<\ song.metadata.album\ <<\ \textcolor{stringliteral}{"{})\(\backslash\)n"{}};}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}──────────────────────────────────────\(\backslash\)n"{}};}
+\DoxyCodeLine{00327\ \ \ \ \ \}}
+\DoxyCodeLine{00328\ \ \ \}}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00337\ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classSongTree_a1d729767c1b3188957b17a3982b8f9b4}{returnSongMap}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ tree;\ \}}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00347\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Archive>\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSongTree_a44501c33435ae05c476616427d407135}{serialize}}(Archive\&\ ar)\ \{\ ar(tree);\ \}}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00357\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSongTree_a82129099237b6deeb36c05fd67ad49b8}{saveToFile}}(\textcolor{keyword}{const}\ std::string\&\ filename)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00358\ \textcolor{keyword}{\ \ }\{}
+\DoxyCodeLine{00359\ \ \ \ \ std::ofstream\ file(filename,\ std::ios::binary);}
+\DoxyCodeLine{00360\ \ \ \ \ \textcolor{keywordflow}{if}\ (!file)}
+\DoxyCodeLine{00361\ \ \ \ \ \{}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ open\ file\ for\ saving."{}});}
+\DoxyCodeLine{00363\ \ \ \ \ \}}
+\DoxyCodeLine{00364\ \ \ \ \ cereal::BinaryOutputArchive\ archive(file);}
+\DoxyCodeLine{00365\ \ \ \ \ archive(*\textcolor{keyword}{this});\ \textcolor{comment}{//\ Serialize\ the\ SongTree}}
+\DoxyCodeLine{00366\ \ \ \}}
+\DoxyCodeLine{00367\ }
+\DoxyCodeLine{00376\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSongTree_ab91097161c9b864f5d5888ae963de4b3}{loadFromFile}}(\textcolor{keyword}{const}\ std::string\&\ filename)}
+\DoxyCodeLine{00377\ \ \ \{}
+\DoxyCodeLine{00378\ \ \ \ \ std::ifstream\ file(filename,\ std::ios::binary);}
+\DoxyCodeLine{00379\ \ \ \ \ \textcolor{keywordflow}{if}\ (!file)}
+\DoxyCodeLine{00380\ \ \ \ \ \{}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ open\ file\ for\ loading."{}});}
+\DoxyCodeLine{00382\ \ \ \ \ \}}
+\DoxyCodeLine{00383\ \ \ \ \ cereal::BinaryInputArchive\ archive(file);}
+\DoxyCodeLine{00384\ \ \ \ \ archive(*\textcolor{keyword}{this});\ \textcolor{comment}{//\ Deserialize\ the\ SongTree}}
+\DoxyCodeLine{00385\ \ \ \}}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00396\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classSongTree_a2dfb9f5a22d18584d7e304e58a9e62ac}{printSongInfo}}(\textcolor{keyword}{const}\ std::string\&\ input)}
+\DoxyCodeLine{00397\ \ \ \{}
+\DoxyCodeLine{00398\ \ \ \ \ \textcolor{keywordtype}{bool}\ isFilePath\ =\ input.find(\textcolor{charliteral}{'/'})\ !=\ std::string::npos\ ||\ input.find(\textcolor{charliteral}{'\(\backslash\)\(\backslash\)'})\ !=\ std::string::npos;}
+\DoxyCodeLine{00399\ }
+\DoxyCodeLine{00400\ \ \ \ \ std::optional<Song>\ foundSong;}
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ \ \ \ \ \textcolor{keywordflow}{if}\ (isFilePath)}
+\DoxyCodeLine{00403\ \ \ \ \ \{}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \textcolor{comment}{//\ If\ input\ is\ a\ file\ path,\ retrieve\ its\ metadata\ using\ inode}}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ std::cout\ <<\ std::endl\ <<\ \textcolor{stringliteral}{"{}>\ Taking\ argument\ as\ a\ possible\ audio\ file\ path..."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \textcolor{keyword}{struct\ }stat\ fileStat;}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stat(input.c\_str(),\ \&fileStat)\ ==\ 0)}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ inode\ =\ fileStat.st\_ino;}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ artistPair\ :\ tree)}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ albumPair\ :\ artistPair.second)}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ discPair\ :\ albumPair.second)}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ trackPair\ :\ discPair.second)}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (trackPair.second.inode\ ==\ inode)}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ foundSong\ =\ trackPair.second;}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00428\ \ \ \ \ \}}
+\DoxyCodeLine{00429\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00430\ \ \ \ \ \{}
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \textcolor{comment}{//\ If\ input\ is\ a\ song\ name,\ search\ by\ title}}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ artistPair\ :\ tree)}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ albumPair\ :\ artistPair.second)}
+\DoxyCodeLine{00435\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ discPair\ :\ albumPair.second)}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ trackPair\ :\ discPair.second)}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{levenshtein_8hpp_a055e26a6c544edff9020f7e52c0c59ca}{levenshteinDistance}}(trackPair.second.metadata.title,\ input)\ <\ 3)\ \textcolor{comment}{//\ Recommended\ limit\ of\ correction\ (else\ it\ will\ go\ bonkers)}}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ foundSong\ =\ trackPair.second;}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00449\ \ \ \ \ \}}
+\DoxyCodeLine{00450\ }
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{keywordflow}{if}\ (foundSong)}
+\DoxyCodeLine{00452\ \ \ \ \ \{}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ song\ =\ *foundSong;}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n🎵\ Song\ Information:\(\backslash\)n"{}};}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}──────────────────────────────────────\(\backslash\)n"{}};}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Title\ \ \ \ \ :\ "{}}\ <<\ song.metadata.title\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Artist\ \ \ \ :\ "{}}\ <<\ song.metadata.artist\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Album\ \ \ \ \ :\ "{}}\ <<\ song.metadata.album\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Disc\ \ \ \ \ \ :\ "{}}\ <<\ song.metadata.discNumber\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Track\ \ \ \ \ :\ "{}}\ <<\ song.metadata.track\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Genre\ \ \ \ \ :\ "{}}\ <<\ song.metadata.genre\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Inode\ \ \ \ \ :\ "{}}\ <<\ song.inode\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!song.metadata.additionalProperties.empty())}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Additional\ Properties:\(\backslash\)n"{}};}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ prop\ :\ song.metadata.additionalProperties)}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (prop.first\ ==\ \textcolor{stringliteral}{"{}LYRICS"{}})}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n📜\ Lyrics:\(\backslash\)n"{}};}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}──────────────────────────────────────\(\backslash\)n"{}};}
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Wrap\ and\ format\ the\ lyrics}}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ lyrics\ =\ prop.second;}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ lineLength\ =\ 80;}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ start\ =\ 0;}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (start\ <\ lyrics.size())}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ end\ =\ start\ +\ lineLength;}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (end\ >\ lyrics.size())\ end\ =\ lyrics.size();}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ lyrics.substr(start,\ end\ -\/\ start)\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ start\ =\ end;}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}──────────────────────────────────────\(\backslash\)n"{}};}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00487\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ -\/\ "{}}\ <<\ prop.first\ <<\ \textcolor{stringliteral}{"{}\ :\ "{}}\ <<\ prop.second\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}No\ additional\ properties\ found!"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}──────────────────────────────────────\(\backslash\)n"{}};}
+\DoxyCodeLine{00498\ \ \ \ \ \}}
+\DoxyCodeLine{00499\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00500\ \ \ \ \ \{}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}⚠️\ \ Song\ not\ found:\ "{}}\ <<\ input\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00502\ \ \ \ \ \}}
+\DoxyCodeLine{00503\ \ \ \}}
+\DoxyCodeLine{00504\ \};}
 
 \end{DoxyCode}

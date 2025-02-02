@@ -1,81 +1,78 @@
 \doxysection{thread\+\_\+manager.\+hpp}
-\hypertarget{thread__manager_8hpp_source}{}\label{thread__manager_8hpp_source}\index{src/ui/thread\_manager.hpp@{src/ui/thread\_manager.hpp}}
+\hypertarget{thread__manager_8hpp_source}{}\label{thread__manager_8hpp_source}\index{src/threads/thread\_manager.hpp@{src/threads/thread\_manager.hpp}}
 \mbox{\hyperlink{thread__manager_8hpp}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00001\ }
 \DoxyCodeLine{00005\ }
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ THREAD\_MANAGER\_HPP}}
-\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#define\ THREAD\_MANAGER\_HPP}}
-\DoxyCodeLine{00008\ }
-\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{workers_8hpp}{../threads/workers.hpp}}"{}}}
-\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <atomic>}}
-\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <future>}}
-\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <memory>}}
-\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <mutex>}}
-\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <thread>}}
-\DoxyCodeLine{00015\ }
-\DoxyCodeLine{00020\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classThreadManager_a613b13ebf45502e4d86c2f9317ec5871}{ThreadManager}}}
-\DoxyCodeLine{00021\ \{}
-\DoxyCodeLine{00022\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00027\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structThreadManager_1_1ThreadState}{ThreadState}}}
-\DoxyCodeLine{00028\ \ \ \{}
-\DoxyCodeLine{00029\ \ \ \ \ std::mutex\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_a472cefdd0390050a0f0d411c32e90b62}{play\_mutex}};\ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00030\ \ \ \ \ std::mutex\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_a85aac76620190fa170441ee95317f0db}{queue\_mutex}};\ \ \ \ \ \ \ }
-\DoxyCodeLine{00031\ \ \ \ \ std::mutex\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_a585ffab57564d2c76a1e5a5c94d9850b}{audioDevicesMutex}};\ }
-\DoxyCodeLine{00032\ }
-\DoxyCodeLine{00033\ \ \ \ \ std::atomic<bool>\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_aa65dcf7ed9375055518411ffcf52eab2}{is\_processing}}\{\textcolor{keyword}{false}\};\ }
-\DoxyCodeLine{00034\ \ \ \ \ std::atomic<bool>\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_acbfe3de9f8e76cfeead80b264b43519c}{is\_playing}}\{\textcolor{keyword}{false}\};\ \ \ \ }
-\DoxyCodeLine{00035\ }
-\DoxyCodeLine{00036\ \ \ \ \ std::future<void>\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structThreadManager_1_1ThreadState_a1ae196f9c12a605986ac045cfc311d3f}{play\_future}};\ \ \ \ \ \ \ }
-\DoxyCodeLine{00037\ \ \ \ \ std::unique\_ptr<std::thread>\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_aa25591186fa1d03768bfe32f76063d19}{mpris\_dbus\_thread}};\ }
-\DoxyCodeLine{00038\ \ \ \ \ std::thread\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_a0ae5594bb4c1ed33073b496b8b8d497d}{playNextSongThread}};\ }
-\DoxyCodeLine{00039\ \ \ \};}
-\DoxyCodeLine{00040\ }
-\DoxyCodeLine{00044\ \ \ \mbox{\hyperlink{classThreadManager_a613b13ebf45502e4d86c2f9317ec5871}{ThreadManager}}()\ :\ worker\_pool(std::make\_unique<\mbox{\hyperlink{classWorkerThreadPool}{WorkerThreadPool}}>())\ \{\}}
-\DoxyCodeLine{00045\ }
-\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{classThreadManager_a18eb12d3d752075318c3672c8efffd5b}{\string~ThreadManager}}()\ \{\ cleanupAllThreads();\ \}}
-\DoxyCodeLine{00050\ }
-\DoxyCodeLine{00055\ \ \ \mbox{\hyperlink{structThreadManager_1_1ThreadState}{ThreadState}}\&\ \mbox{\hyperlink{classThreadManager_a68d674d82375bbf4cbaeda427df036a2}{getThreadState}}()\ \{\ \textcolor{keywordflow}{return}\ thread\_state;\ \}}
-\DoxyCodeLine{00056\ }
-\DoxyCodeLine{00061\ \ \ \mbox{\hyperlink{classWorkerThreadPool}{WorkerThreadPool}}\&\ \mbox{\hyperlink{classThreadManager_aaa649c0d04519f63cd596cf7fdcaa7de}{getWorkerThreadPool}}()\ \{\ \textcolor{keywordflow}{return}\ *worker\_pool;\ \}}
-\DoxyCodeLine{00062\ }
-\DoxyCodeLine{00067\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classThreadManager_a8c0b77d668ea526a62b556b42751a5a6}{lockPlayMutex}}(\mbox{\hyperlink{structThreadManager_1_1ThreadState}{ThreadState}}\&\ thread\_state)}
-\DoxyCodeLine{00068\ \ \ \{}
-\DoxyCodeLine{00069\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(thread\_state.play\_mutex);}
-\DoxyCodeLine{00070\ \ \ \}}
-\DoxyCodeLine{00071\ }
-\DoxyCodeLine{00076\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classThreadManager_a45396e761e53aa3960095d0fa1b256cf}{lockQueueMutex}}(\mbox{\hyperlink{structThreadManager_1_1ThreadState}{ThreadState}}\&\ thread\_state)}
-\DoxyCodeLine{00077\ \ \ \{}
-\DoxyCodeLine{00078\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(thread\_state.queue\_mutex);}
-\DoxyCodeLine{00079\ \ \ \}}
-\DoxyCodeLine{00080\ }
-\DoxyCodeLine{00081\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00085\ \ \ \textcolor{keywordtype}{void}\ cleanupAllThreads()}
-\DoxyCodeLine{00086\ \ \ \{}
-\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordflow}{try}}
-\DoxyCodeLine{00088\ \ \ \ \ \{}
-\DoxyCodeLine{00089\ \ \ \ \ \ \ \textcolor{comment}{//\ Clean\ up\ playNextSongThread\ if\ joinable.}}
-\DoxyCodeLine{00090\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (thread\_state.\mbox{\hyperlink{structThreadManager_1_1ThreadState_a0ae5594bb4c1ed33073b496b8b8d497d}{playNextSongThread}}.joinable())}
-\DoxyCodeLine{00091\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ thread\_state.\mbox{\hyperlink{structThreadManager_1_1ThreadState_a0ae5594bb4c1ed33073b496b8b8d497d}{playNextSongThread}}.join();}
-\DoxyCodeLine{00093\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00094\ \ \ \ \ \}}
-\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::exception\&\ e)}
-\DoxyCodeLine{00096\ \ \ \ \ \{}
-\DoxyCodeLine{00097\ \ \ \ \ \ \ \textcolor{comment}{//\ Log\ exceptions\ during\ cleanup\ (adjust\ logging\ mechanism\ as\ needed).}}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Exception\ during\ thread\ cleanup:\ "{}}\ <<\ e.what()\ <<\ std::endl;}
-\DoxyCodeLine{00099\ \ \ \ \ \}}
-\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordflow}{catch}\ (...)}
-\DoxyCodeLine{00101\ \ \ \ \ \{}
-\DoxyCodeLine{00102\ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Unknown\ exception\ during\ thread\ cleanup."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00103\ \ \ \ \ \}}
-\DoxyCodeLine{00104\ \ \ \}}
-\DoxyCodeLine{00105\ }
-\DoxyCodeLine{00109\ \ \ \mbox{\hyperlink{structThreadManager_1_1ThreadState}{ThreadState}}\ thread\_state;}
-\DoxyCodeLine{00110\ }
-\DoxyCodeLine{00114\ \ \ std::unique\_ptr<WorkerThreadPool>\ worker\_pool;}
-\DoxyCodeLine{00115\ \};}
-\DoxyCodeLine{00116\ }
-\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ THREAD\_MANAGER\_HPP}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{workers_8hpp}{workers.hpp}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <future>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classThreadManager_a613b13ebf45502e4d86c2f9317ec5871}{ThreadManager}}}
+\DoxyCodeLine{00020\ \{}
+\DoxyCodeLine{00021\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00026\ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structThreadManager_1_1ThreadState}{ThreadState}}}
+\DoxyCodeLine{00027\ \ \ \{}
+\DoxyCodeLine{00028\ \ \ \ \ std::mutex\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_a472cefdd0390050a0f0d411c32e90b62}{play\_mutex}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00029\ \ \ \ \ std::mutex\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_a85aac76620190fa170441ee95317f0db}{queue\_mutex}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00030\ \ \ \ \ std::mutex\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_a585ffab57564d2c76a1e5a5c94d9850b}{audioDevicesMutex}};\ }
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ std::atomic<bool>\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_aa65dcf7ed9375055518411ffcf52eab2}{is\_processing}}\{\textcolor{keyword}{false}\};\ }
+\DoxyCodeLine{00033\ \ \ \ \ std::atomic<bool>\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_acbfe3de9f8e76cfeead80b264b43519c}{is\_playing}}\{\textcolor{keyword}{false}\};\ \ \ \ }
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ std::future<void>\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structThreadManager_1_1ThreadState_a1ae196f9c12a605986ac045cfc311d3f}{play\_future}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00036\ \ \ \ \ std::unique\_ptr<std::thread>\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_aa25591186fa1d03768bfe32f76063d19}{mpris\_dbus\_thread}};\ }
+\DoxyCodeLine{00037\ \ \ \ \ std::thread\ \mbox{\hyperlink{structThreadManager_1_1ThreadState_a0ae5594bb4c1ed33073b496b8b8d497d}{playNextSongThread}};\ }
+\DoxyCodeLine{00038\ \ \ \};}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00043\ \ \ \mbox{\hyperlink{classThreadManager_a613b13ebf45502e4d86c2f9317ec5871}{ThreadManager}}()\ :\ worker\_pool(std::make\_shared<\mbox{\hyperlink{classWorkerThreadPool}{WorkerThreadPool}}>())\ \{\}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00048\ \ \ \textcolor{comment}{/*\string~ThreadManager()\ \{\ cleanupAllThreads();\ \}*/}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00054\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classThreadManager_a46b42b1798d4aa874edd8d4fa6ee0ed7}{getThreadState}}()\ -\/>\ \mbox{\hyperlink{structThreadManager_1_1ThreadState}{ThreadState}}\&\ \{\ \textcolor{keywordflow}{return}\ thread\_state;\ \}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00060\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classThreadManager_aba98251e64455c0a166d524f68f1674b}{getWorkerThreadPool}}()\ -\/>\ \mbox{\hyperlink{classWorkerThreadPool}{WorkerThreadPool}}\&\ \{\ \textcolor{keywordflow}{return}\ *worker\_pool;\ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00066\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classThreadManager_a8c0b77d668ea526a62b556b42751a5a6}{lockPlayMutex}}(\mbox{\hyperlink{structThreadManager_1_1ThreadState}{ThreadState}}\&\ thread\_state)}
+\DoxyCodeLine{00067\ \ \ \{}
+\DoxyCodeLine{00068\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(thread\_state.play\_mutex);}
+\DoxyCodeLine{00069\ \ \ \}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00075\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classThreadManager_a45396e761e53aa3960095d0fa1b256cf}{lockQueueMutex}}(\mbox{\hyperlink{structThreadManager_1_1ThreadState}{ThreadState}}\&\ thread\_state)}
+\DoxyCodeLine{00076\ \ \ \{}
+\DoxyCodeLine{00077\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(thread\_state.queue\_mutex);}
+\DoxyCodeLine{00078\ \ \ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00084\ \ \ \textcolor{keywordtype}{void}\ cleanupAllThreads()}
+\DoxyCodeLine{00085\ \ \ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00087\ \ \ \ \ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \textcolor{comment}{//\ Clean\ up\ playNextSongThread\ if\ joinable.}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (thread\_state.\mbox{\hyperlink{structThreadManager_1_1ThreadState_a0ae5594bb4c1ed33073b496b8b8d497d}{playNextSongThread}}.joinable())}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ thread\_state.\mbox{\hyperlink{structThreadManager_1_1ThreadState_a0ae5594bb4c1ed33073b496b8b8d497d}{playNextSongThread}}.join();}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00093\ \ \ \ \ \}}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::exception\&\ e)}
+\DoxyCodeLine{00095\ \ \ \ \ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \textcolor{comment}{//\ Log\ exceptions\ during\ cleanup\ (adjust\ logging\ mechanism\ as\ needed).}}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Exception\ during\ thread\ cleanup:\ "{}}\ <<\ e.what()\ <<\ std::endl;}
+\DoxyCodeLine{00098\ \ \ \ \ \}}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordflow}{catch}\ (...)}
+\DoxyCodeLine{00100\ \ \ \ \ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Unknown\ exception\ during\ thread\ cleanup."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00102\ \ \ \ \ \}}
+\DoxyCodeLine{00103\ \ \ \}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00108\ \ \ \mbox{\hyperlink{structThreadManager_1_1ThreadState}{ThreadState}}\ thread\_state;}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00113\ \ \ std::shared\_ptr<WorkerThreadPool>\ worker\_pool;}
+\DoxyCodeLine{00114\ \};}
 
 \end{DoxyCode}

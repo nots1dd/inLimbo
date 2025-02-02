@@ -1,4 +1,4 @@
 var classMPRISService =
 [
-    [ "MPRISService", "classMPRISService.html#afbe327c0dc95de1266aa0a514f234a18", null ]
+    [ "MPRISService", "classMPRISService.html#a3ddcdff95474784fa359f0a1a1c68f5a", null ]
 ];

@@ -112,13 +112,12 @@ $(function(){initNavTree('ui__handler_8hpp.html',''); initResizable(true); });
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="mpris-service_8hpp_source.html">../dbus/mpris-service.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="audio__playback_8hpp_source.html">../music/audio_playback.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="thread__manager_8hpp_source.html">../threads/thread_manager.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="scroller_8hpp_source.html">./components/scroller.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="properties_8hpp_source.html">./properties.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="thread__manager_8hpp_source.html">./thread_manager.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="keymaps_8hpp_source.html">keymaps.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="songmap_8hpp_source.html">dirsort/songmap.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="misc_8hpp_source.html">misc.hpp</a>&quot;</code><br />
-<code>#include &lt;ftxui/dom/elements.hpp&gt;</code><br />
-<code>#include &lt;unordered_set&gt;</code><br />
+<code>#include &quot;<a class="el" href="state_8hpp_source.html">states/state.hpp</a>&quot;</code><br />
 </div>
 <p><a href="ui__handler_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -134,16 +133,6 @@ Macros</h2></td></tr>
 <tr class="separator:af8d79d91bf9f2edeb736c974183720ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a103ed232a5c657b9a072c989787856bb" id="r_a103ed232a5c657b9a072c989787856bb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a103ed232a5c657b9a072c989787856bb">STATUS_PAUSED</a>&#160;&#160;&#160;&quot;!!&quot;</td></tr>
 <tr class="separator:a103ed232a5c657b9a072c989787856bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba56a61f453fc60302c6c87189871467" id="r_aba56a61f453fc60302c6c87189871467"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba56a61f453fc60302c6c87189871467">LYRICS_AVAIL</a>&#160;&#160;&#160;&quot;L*&quot;</td></tr>
-<tr class="separator:aba56a61f453fc60302c6c87189871467"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1801a0eef7108118fc5a54e6098ebfa" id="r_ad1801a0eef7108118fc5a54e6098ebfa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1801a0eef7108118fc5a54e6098ebfa">ADDN_PROPS_AVAIL</a>&#160;&#160;&#160;&quot;&amp;*&quot;</td></tr>
-<tr class="separator:ad1801a0eef7108118fc5a54e6098ebfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae404e170bcac700cdc2e87d1c5ba04f5" id="r_ae404e170bcac700cdc2e87d1c5ba04f5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae404e170bcac700cdc2e87d1c5ba04f5">STATUS_BAR_DELIM</a>&#160;&#160;&#160;&quot; | &quot;</td></tr>
-<tr class="separator:ae404e170bcac700cdc2e87d1c5ba04f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5fe6a723443d277de55e15b8e2a30d2" id="r_ac5fe6a723443d277de55e15b8e2a30d2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5fe6a723443d277de55e15b8e2a30d2">MAX_LENGTH_SONG_NAME</a>&#160;&#160;&#160;50</td></tr>
-<tr class="separator:ac5fe6a723443d277de55e15b8e2a30d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6199aa5ef4a8655f98529342f12e188f" id="r_a6199aa5ef4a8655f98529342f12e188f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6199aa5ef4a8655f98529342f12e188f">MAX_LENGTH_ARTIST_NAME</a>&#160;&#160;&#160;30</td></tr>
-<tr class="separator:a6199aa5ef4a8655f98529342f12e188f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1e2d4655431d80420094738cb479ba9" id="r_ab1e2d4655431d80420094738cb479ba9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1e2d4655431d80420094738cb479ba9">SHOW_MAIN_UI</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:ab1e2d4655431d80420094738cb479ba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfd022c0da8ae34ff96773141ac69756" id="r_abfd022c0da8ae34ff96773141ac69756"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abfd022c0da8ae34ff96773141ac69756">SHOW_HELP_SCREEN</a>&#160;&#160;&#160;1</td></tr>
@@ -156,67 +145,12 @@ Macros</h2></td></tr>
 <tr class="separator:a6b14eb33959e2e18990f68dd88278345"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad76251869caf9c11eaf3cb506af18083" id="r_ad76251869caf9c11eaf3cb506af18083"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad76251869caf9c11eaf3cb506af18083">SHOW_AUDIO_CONF_SCREEN</a>&#160;&#160;&#160;5</td></tr>
 <tr class="separator:ad76251869caf9c11eaf3cb506af18083"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80adb448ba3e041dcba51652783b6f64" id="r_a80adb448ba3e041dcba51652783b6f64"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a80adb448ba3e041dcba51652783b6f64">SHOW_SEARCH_INPUT</a>&#160;&#160;&#160;6</td></tr>
+<tr class="separator:a80adb448ba3e041dcba51652783b6f64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2599a56212bf57db1c1039fd3b2cf367" id="r_a2599a56212bf57db1c1039fd3b2cf367"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2599a56212bf57db1c1039fd3b2cf367">MIN_DEBOUNCE_TIME_IN_MS</a>&#160;&#160;&#160;500</td></tr>
 <tr class="separator:a2599a56212bf57db1c1039fd3b2cf367"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="ad1801a0eef7108118fc5a54e6098ebfa" name="ad1801a0eef7108118fc5a54e6098ebfa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1801a0eef7108118fc5a54e6098ebfa">&#9670;&#160;</a></span>ADDN_PROPS_AVAIL</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ADDN_PROPS_AVAIL&#160;&#160;&#160;&quot;&amp;*&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aba56a61f453fc60302c6c87189871467" name="aba56a61f453fc60302c6c87189871467"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba56a61f453fc60302c6c87189871467">&#9670;&#160;</a></span>LYRICS_AVAIL</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LYRICS_AVAIL&#160;&#160;&#160;&quot;L*&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6199aa5ef4a8655f98529342f12e188f" name="a6199aa5ef4a8655f98529342f12e188f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6199aa5ef4a8655f98529342f12e188f">&#9670;&#160;</a></span>MAX_LENGTH_ARTIST_NAME</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define MAX_LENGTH_ARTIST_NAME&#160;&#160;&#160;30</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac5fe6a723443d277de55e15b8e2a30d2" name="ac5fe6a723443d277de55e15b8e2a30d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac5fe6a723443d277de55e15b8e2a30d2">&#9670;&#160;</a></span>MAX_LENGTH_SONG_NAME</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define MAX_LENGTH_SONG_NAME&#160;&#160;&#160;50</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>STRING TRUNCATION MACROS </p>
-
-</div>
-</div>
 <a id="a2599a56212bf57db1c1039fd3b2cf367" name="a2599a56212bf57db1c1039fd3b2cf367"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2599a56212bf57db1c1039fd3b2cf367">&#9670;&#160;</a></span>MIN_DEBOUNCE_TIME_IN_MS</h2>
 
@@ -302,6 +236,20 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="a80adb448ba3e041dcba51652783b6f64" name="a80adb448ba3e041dcba51652783b6f64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80adb448ba3e041dcba51652783b6f64">&#9670;&#160;</a></span>SHOW_SEARCH_INPUT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SHOW_SEARCH_INPUT&#160;&#160;&#160;6</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a6b14eb33959e2e18990f68dd88278345" name="a6b14eb33959e2e18990f68dd88278345"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6b14eb33959e2e18990f68dd88278345">&#9670;&#160;</a></span>SHOW_SONG_INFO_SCREEN</h2>
 
@@ -310,20 +258,6 @@ Macros</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">#define SHOW_SONG_INFO_SCREEN&#160;&#160;&#160;4</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae404e170bcac700cdc2e87d1c5ba04f5" name="ae404e170bcac700cdc2e87d1c5ba04f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae404e170bcac700cdc2e87d1c5ba04f5">&#9670;&#160;</a></span>STATUS_BAR_DELIM</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define STATUS_BAR_DELIM&#160;&#160;&#160;&quot; | &quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">

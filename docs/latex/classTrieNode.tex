@@ -1,0 +1,70 @@
+\doxysection{Trie\+Node Class Reference}
+\hypertarget{classTrieNode}{}\label{classTrieNode}\index{TrieNode@{TrieNode}}
+
+
+Represents a single node in the \doxylink{classTrie}{Trie}.  
+
+
+
+
+{\ttfamily \#include $<$trie.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classTrieNode_a3c44872f26b52fa29a38c91e69b22103}{Trie\+Node}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::unordered\+\_\+map$<$ char, \mbox{\hyperlink{classTrieNode}{Trie\+Node}} \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{classTrieNode_a05e3e28111eae62cee67dd544942fda1}{children}}
+\item 
+std\+::vector$<$ int $>$ \mbox{\hyperlink{classTrieNode_a4dfa161e2b39e90f1ba30abcf171e0ea}{indices}}
+\item 
+bool \mbox{\hyperlink{classTrieNode_ab2732ce1e141346865d997859836d663}{is\+End\+Of\+Word}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a single node in the \doxylink{classTrie}{Trie}. 
+
+A \doxylink{classTrieNode}{Trie\+Node} stores children nodes for each possible character, a list of indices representing the positions of words in the original dataset, and a flag indicating if the node is the end of a valid word.
+
+\begin{DoxyNote}{Note}
+The {\ttfamily children} unordered\+\_\+map stores the next character in the string as a key and the corresponding child node as the value. 
+\end{DoxyNote}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classTrieNode_a3c44872f26b52fa29a38c91e69b22103}\index{TrieNode@{TrieNode}!TrieNode@{TrieNode}}
+\index{TrieNode@{TrieNode}!TrieNode@{TrieNode}}
+\doxysubsubsection{\texorpdfstring{TrieNode()}{TrieNode()}}
+{\footnotesize\ttfamily \label{classTrieNode_a3c44872f26b52fa29a38c91e69b22103} 
+Trie\+Node\+::\+Trie\+Node (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classTrieNode_a05e3e28111eae62cee67dd544942fda1}\index{TrieNode@{TrieNode}!children@{children}}
+\index{children@{children}!TrieNode@{TrieNode}}
+\doxysubsubsection{\texorpdfstring{children}{children}}
+{\footnotesize\ttfamily \label{classTrieNode_a05e3e28111eae62cee67dd544942fda1} 
+std\+::unordered\+\_\+map$<$char, \mbox{\hyperlink{classTrieNode}{Trie\+Node}}\texorpdfstring{$\ast$}{*}$>$ Trie\+Node\+::children}
+
+\Hypertarget{classTrieNode_a4dfa161e2b39e90f1ba30abcf171e0ea}\index{TrieNode@{TrieNode}!indices@{indices}}
+\index{indices@{indices}!TrieNode@{TrieNode}}
+\doxysubsubsection{\texorpdfstring{indices}{indices}}
+{\footnotesize\ttfamily \label{classTrieNode_a4dfa161e2b39e90f1ba30abcf171e0ea} 
+std\+::vector$<$int$>$ Trie\+Node\+::indices}
+
+\Hypertarget{classTrieNode_ab2732ce1e141346865d997859836d663}\index{TrieNode@{TrieNode}!isEndOfWord@{isEndOfWord}}
+\index{isEndOfWord@{isEndOfWord}!TrieNode@{TrieNode}}
+\doxysubsubsection{\texorpdfstring{isEndOfWord}{isEndOfWord}}
+{\footnotesize\ttfamily \label{classTrieNode_ab2732ce1e141346865d997859836d663} 
+bool Trie\+Node\+::is\+End\+Of\+Word}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/helpers/\mbox{\hyperlink{trie_8hpp}{trie.\+hpp}}\end{DoxyCompactItemize}

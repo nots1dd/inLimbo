@@ -141,7 +141,7 @@ Macros</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a4e5a70aee06dc4617ec426e02bf9bb00" id="r_a4e5a70aee06dc4617ec426e02bf9bb00"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e5a70aee06dc4617ec426e02bf9bb00">DIRECTORY_FIELD</a></td></tr>
 <tr class="separator:a4e5a70aee06dc4617ec426e02bf9bb00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3200e6f22db9908dba1dbb7761e7e1b2" id="r_a3200e6f22db9908dba1dbb7761e7e1b2"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3200e6f22db9908dba1dbb7761e7e1b2">DEBUG_LOG_PARSE</a> = string(<a class="el" href="toml__parser_8hpp.html#a19930571a1aced24a71d9a1d6e7c710a">parseTOMLField</a>(<a class="el" href="toml__parser_8hpp.html#a10265fc668d386d5d02e91115db9a7cc">PARENT_DBG</a>, <a class="el" href="toml__parser_8hpp.html#addfc43cbcf5a4328846696cee721a4de">PARENT_DBG_FIELD_PARSER_LOG</a>))</td></tr>
+<tr class="memitem:a3200e6f22db9908dba1dbb7761e7e1b2" id="r_a3200e6f22db9908dba1dbb7761e7e1b2"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3200e6f22db9908dba1dbb7761e7e1b2">DEBUG_LOG_PARSE</a> = string(<a class="el" href="toml__parser_8hpp.html#a9a9759bd3909e5f64c6b7acbdd4bc16f">parseTOMLField</a>(<a class="el" href="toml__parser_8hpp.html#a10265fc668d386d5d02e91115db9a7cc">PARENT_DBG</a>, <a class="el" href="toml__parser_8hpp.html#a9b133a50d58c5718bc07c6e73286378e">PARENT_DBG_FIELD_TAGLIB_PARSER_LOG</a>))</td></tr>
 <tr class="separator:a3200e6f22db9908dba1dbb7761e7e1b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -181,7 +181,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">string DEBUG_LOG_PARSE = string(<a class="el" href="toml__parser_8hpp.html#a19930571a1aced24a71d9a1d6e7c710a">parseTOMLField</a>(<a class="el" href="toml__parser_8hpp.html#a10265fc668d386d5d02e91115db9a7cc">PARENT_DBG</a>, <a class="el" href="toml__parser_8hpp.html#addfc43cbcf5a4328846696cee721a4de">PARENT_DBG_FIELD_PARSER_LOG</a>))</td>
+          <td class="memname">string DEBUG_LOG_PARSE = string(<a class="el" href="toml__parser_8hpp.html#a9a9759bd3909e5f64c6b7acbdd4bc16f">parseTOMLField</a>(<a class="el" href="toml__parser_8hpp.html#a10265fc668d386d5d02e91115db9a7cc">PARENT_DBG</a>, <a class="el" href="toml__parser_8hpp.html#a9b133a50d58c5718bc07c6e73286378e">PARENT_DBG_FIELD_TAGLIB_PARSER_LOG</a>))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -199,11 +199,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= string(<a class="code hl_function" href="toml__parser_8hpp.html#a19930571a1aced24a71d9a1d6e7c710a">parseTOMLField</a>(</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= string(<a class="code hl_function" href="toml__parser_8hpp.html#a9a9759bd3909e5f64c6b7acbdd4bc16f">parseTOMLField</a>(</div>
 <div class="line">  <a class="code hl_define" href="toml__parser_8hpp.html#aa93a16ba4156c106728f723319c63320">PARENT_LIB</a>, <a class="code hl_define" href="toml__parser_8hpp.html#a7904e33d7508ef59ae38aa75f76493bb">PARENT_LIB_FIELD_DIR</a>))</div>
-<div class="ttc" id="atoml__parser_8hpp_html_a19930571a1aced24a71d9a1d6e7c710a"><div class="ttname"><a href="toml__parser_8hpp.html#a19930571a1aced24a71d9a1d6e7c710a">parseTOMLField</a></div><div class="ttdeci">string_view parseTOMLField(string parent, string field)</div><div class="ttdoc">Parses a string field from the TOML configuration.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:145</div></div>
-<div class="ttc" id="atoml__parser_8hpp_html_a7904e33d7508ef59ae38aa75f76493bb"><div class="ttname"><a href="toml__parser_8hpp.html#a7904e33d7508ef59ae38aa75f76493bb">PARENT_LIB_FIELD_DIR</a></div><div class="ttdeci">#define PARENT_LIB_FIELD_DIR</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:19</div></div>
-<div class="ttc" id="atoml__parser_8hpp_html_aa93a16ba4156c106728f723319c63320"><div class="ttname"><a href="toml__parser_8hpp.html#aa93a16ba4156c106728f723319c63320">PARENT_LIB</a></div><div class="ttdeci">#define PARENT_LIB</div><div class="ttdoc">Macros for parent and field names used in the TOML configuration.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:17</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_a7904e33d7508ef59ae38aa75f76493bb"><div class="ttname"><a href="toml__parser_8hpp.html#a7904e33d7508ef59ae38aa75f76493bb">PARENT_LIB_FIELD_DIR</a></div><div class="ttdeci">#define PARENT_LIB_FIELD_DIR</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:18</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_a9a9759bd3909e5f64c6b7acbdd4bc16f"><div class="ttname"><a href="toml__parser_8hpp.html#a9a9759bd3909e5f64c6b7acbdd4bc16f">parseTOMLField</a></div><div class="ttdeci">auto parseTOMLField(string parent, string field) -&gt; string_view</div><div class="ttdoc">Parses a string field from the TOML configuration.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:144</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_aa93a16ba4156c106728f723319c63320"><div class="ttname"><a href="toml__parser_8hpp.html#aa93a16ba4156c106728f723319c63320">PARENT_LIB</a></div><div class="ttdeci">#define PARENT_LIB</div><div class="ttdoc">Macros for parent and field names used in the TOML configuration.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:16</div></div>
 </div><!-- fragment -->
 </div>
 </div>

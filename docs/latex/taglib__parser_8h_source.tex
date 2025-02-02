@@ -3,277 +3,329 @@
 \mbox{\hyperlink{taglib__parser_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00001\ }
-\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#ifndef\ TAGLIB\_PARSER\_H}}
-\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ TAGLIB\_PARSER\_H}}
-\DoxyCodeLine{00012\ }
-\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <filesystem>}}
-\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <fstream>}}
-\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <iostream>}}
-\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <string>}}
-\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <sys/stat.h>}}
-\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#ifndef\ \_\_EMSCRIPTEN\_\_}}
-\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <taglib/fileref.h>}}
-\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <taglib/tag.h>}}
-\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <taglib/id3v2tag.h>}}
-\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <taglib/mpegfile.h>}}
-\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <taglib/attachedpictureframe.h>}}
-\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <taglib/tpropertymap.h>}}
-\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <taglib/flacfile.h>}}
-\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <png.h>}}
-\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
-\DoxyCodeLine{00029\ }
-\DoxyCodeLine{00030\ \textcolor{keyword}{namespace\ }fs\ =\ std::filesystem;}
-\DoxyCodeLine{00031\ }
-\DoxyCodeLine{00038\ }
-\DoxyCodeLine{00039\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structMetadata}{Metadata}}}
-\DoxyCodeLine{00040\ \{}
-\DoxyCodeLine{00041\ \ \ std::string\ \mbox{\hyperlink{structMetadata_a4ef2e2685f50d2a79b973f752f05fc40}{title}}\ =\ \textcolor{stringliteral}{"{}Unknown\ Title"{}};\ }
-\DoxyCodeLine{00042\ \ \ std::string\ \mbox{\hyperlink{structMetadata_a9c925474f678d140c0e0eef6213a160b}{artist}}\ =\ \textcolor{stringliteral}{"{}Unknown\ Artist"{}};\ }
-\DoxyCodeLine{00043\ \ \ std::string\ \mbox{\hyperlink{structMetadata_ad0bb399c882458d760b09c02842d7f09}{album}}\ =\ \textcolor{stringliteral}{"{}Unknown\ Album"{}};\ }
-\DoxyCodeLine{00044\ \ \ std::string\ \mbox{\hyperlink{structMetadata_af1f1a30b5d78b0b972c9c5c49d493891}{genre}}\ =\ \textcolor{stringliteral}{"{}Unknown\ Genre"{}};\ }
-\DoxyCodeLine{00045\ \ \ std::string\ \mbox{\hyperlink{structMetadata_a526f9ca995119be7b51da282f09d6f64}{comment}}\ =\ \textcolor{stringliteral}{"{}No\ Comment"{}};\ }
-\DoxyCodeLine{00046\ \ \ std::string\ \mbox{\hyperlink{structMetadata_a924a915cd57891725d23d689d0ef2834}{fileType}}\ =\ \textcolor{stringliteral}{"{}NULL"{}};}
-\DoxyCodeLine{00047\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structMetadata_a0f53b33fb05426a436767b71a7bb7f13}{year}}\ =\ 0;\ }
-\DoxyCodeLine{00048\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structMetadata_a1991c38d1fd88ef2240aa798bb22c253}{track}}\ =\ 0;\ }
-\DoxyCodeLine{00049\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structMetadata_a777a78e4b78994e5b0015f7c3d21bc08}{discNumber}}\ =\ 0;\ }
-\DoxyCodeLine{00050\ \ \ std::string\ \mbox{\hyperlink{structMetadata_a5a3933635bffdb997a7f8eee6f83f415}{lyrics}}\ =\ \textcolor{stringliteral}{"{}No\ Lyrics"{}};\ }
-\DoxyCodeLine{00051\ \ \ std::unordered\_map<std::string,\ std::string>\ \mbox{\hyperlink{structMetadata_aa903f78de79e265504cef7be279342ac}{additionalProperties}};\ }
-\DoxyCodeLine{00052\ \ \ std::string\ \mbox{\hyperlink{structMetadata_a107cf834ce2cbac4def960a2f922cfae}{filePath}};\ }
-\DoxyCodeLine{00053\ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structMetadata_a771632db88529039cf44cb65af7ecaba}{duration}}\ =\ 0.0f;\ }
-\DoxyCodeLine{00054\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structMetadata_aa17e49aff3ab62aec124b7d7d52adb0c}{bitrate}}\ =\ 0;\ }
-\DoxyCodeLine{00055\ }
-\DoxyCodeLine{00060\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Archive>}
-\DoxyCodeLine{00061\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structMetadata_a80ccc1f2c4ea520ea929e1b52501adc1}{serialize}}(Archive\&\ ar)}
-\DoxyCodeLine{00062\ \ \ \{}
-\DoxyCodeLine{00063\ \ \ \ \ ar(\mbox{\hyperlink{structMetadata_a4ef2e2685f50d2a79b973f752f05fc40}{title}},\ \mbox{\hyperlink{structMetadata_a9c925474f678d140c0e0eef6213a160b}{artist}},\ \mbox{\hyperlink{structMetadata_ad0bb399c882458d760b09c02842d7f09}{album}},\ \mbox{\hyperlink{structMetadata_af1f1a30b5d78b0b972c9c5c49d493891}{genre}},\ \mbox{\hyperlink{structMetadata_a526f9ca995119be7b51da282f09d6f64}{comment}},\ \mbox{\hyperlink{structMetadata_a0f53b33fb05426a436767b71a7bb7f13}{year}},\ \mbox{\hyperlink{structMetadata_a1991c38d1fd88ef2240aa798bb22c253}{track}},\ \mbox{\hyperlink{structMetadata_a777a78e4b78994e5b0015f7c3d21bc08}{discNumber}},\ \mbox{\hyperlink{structMetadata_a5a3933635bffdb997a7f8eee6f83f415}{lyrics}},\ \mbox{\hyperlink{structMetadata_aa903f78de79e265504cef7be279342ac}{additionalProperties}},\ \mbox{\hyperlink{structMetadata_a107cf834ce2cbac4def960a2f922cfae}{filePath}},\ \mbox{\hyperlink{structMetadata_a771632db88529039cf44cb65af7ecaba}{duration}},\ \mbox{\hyperlink{structMetadata_aa17e49aff3ab62aec124b7d7d52adb0c}{bitrate}});}
-\DoxyCodeLine{00064\ \ \ \}}
-\DoxyCodeLine{00065\ \};}
-\DoxyCodeLine{00066\ }
-\DoxyCodeLine{00074\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classTagLibParser_ae17fbbefed079d5457c3a53af0328080}{TagLibParser}}}
-\DoxyCodeLine{00075\ \{}
-\DoxyCodeLine{00076\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00081\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{classTagLibParser_ae17fbbefed079d5457c3a53af0328080}{TagLibParser}}(\textcolor{keyword}{const}\ std::string\&\ debugString);}
-\DoxyCodeLine{00082\ }
-\DoxyCodeLine{00089\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classTagLibParser_a42f060c96746baf0e495bb8bed4a2778}{parseFile}}(\textcolor{keyword}{const}\ std::string\&\ filePath,\ \mbox{\hyperlink{structMetadata}{Metadata}}\&\ metadata);}
-\DoxyCodeLine{00090\ }
-\DoxyCodeLine{00097\ \ \ std::unordered\_map<std::string,\ Metadata>\ \mbox{\hyperlink{classTagLibParser_ac7e0277f5bf46433d1bf64b9e0154641}{parseFromInode}}(ino\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ inode,}
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ directory);}
-\DoxyCodeLine{00099\ \};}
-\DoxyCodeLine{00100\ }
-\DoxyCodeLine{00105\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{taglib__parser_8h_a1dd3093763fba77a033971b138eda516}{printMetadata}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structMetadata}{Metadata}}\&\ metadata);}
-\DoxyCodeLine{00106\ }
-\DoxyCodeLine{00112\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(std::string\ \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ std::string\ errMsg);}
-\DoxyCodeLine{00113\ }
-\DoxyCodeLine{00114\ \textcolor{comment}{//\ variable\ to\ keep\ track\ of\ user's\ preference\ of\ debug\ logs}}
-\DoxyCodeLine{00115\ std::string\ \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}};}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#pragma\ once\ }}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <filesystem>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <sys/stat.h>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#ifndef\ \_\_EMSCRIPTEN\_\_}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <taglib/fileref.h>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <taglib/tag.h>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <taglib/id3v2tag.h>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <taglib/mpegfile.h>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <taglib/attachedpictureframe.h>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <taglib/tpropertymap.h>}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <taglib/flacfile.h>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <png.h>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{namespace\ }fs\ =\ std::filesystem;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structMetadata}{Metadata}}}
+\DoxyCodeLine{00039\ \{}
+\DoxyCodeLine{00040\ \ \ std::string\ \mbox{\hyperlink{structMetadata_a4ef2e2685f50d2a79b973f752f05fc40}{title}}\ =\ \textcolor{stringliteral}{"{}Unknown\ Title"{}};\ }
+\DoxyCodeLine{00041\ \ \ std::string\ \mbox{\hyperlink{structMetadata_a9c925474f678d140c0e0eef6213a160b}{artist}}\ =\ \textcolor{stringliteral}{"{}<Unknown\ Artist>"{}};\ }
+\DoxyCodeLine{00042\ \ \ std::string\ \mbox{\hyperlink{structMetadata_ad0bb399c882458d760b09c02842d7f09}{album}}\ =\ \textcolor{stringliteral}{"{}Unknown\ Album"{}};\ }
+\DoxyCodeLine{00043\ \ \ std::string\ \mbox{\hyperlink{structMetadata_af1f1a30b5d78b0b972c9c5c49d493891}{genre}}\ =\ \textcolor{stringliteral}{"{}Unknown\ Genre"{}};\ }
+\DoxyCodeLine{00044\ \ \ std::string\ \mbox{\hyperlink{structMetadata_a526f9ca995119be7b51da282f09d6f64}{comment}}\ =\ \textcolor{stringliteral}{"{}No\ Comment"{}};\ }
+\DoxyCodeLine{00045\ \ \ std::string\ \mbox{\hyperlink{structMetadata_a924a915cd57891725d23d689d0ef2834}{fileType}}\ =\ \textcolor{stringliteral}{"{}NULL"{}};}
+\DoxyCodeLine{00046\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structMetadata_a0f53b33fb05426a436767b71a7bb7f13}{year}}\ =\ 0;\ }
+\DoxyCodeLine{00047\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structMetadata_a1991c38d1fd88ef2240aa798bb22c253}{track}}\ =\ 0;\ }
+\DoxyCodeLine{00048\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structMetadata_a777a78e4b78994e5b0015f7c3d21bc08}{discNumber}}\ =\ 0;\ }
+\DoxyCodeLine{00049\ \ \ std::string\ \mbox{\hyperlink{structMetadata_a5a3933635bffdb997a7f8eee6f83f415}{lyrics}}\ =\ \textcolor{stringliteral}{"{}No\ Lyrics"{}};\ }
+\DoxyCodeLine{00050\ \ \ std::unordered\_map<std::string,\ std::string>\ \mbox{\hyperlink{structMetadata_aa903f78de79e265504cef7be279342ac}{additionalProperties}};\ }
+\DoxyCodeLine{00051\ \ \ std::string\ \mbox{\hyperlink{structMetadata_a107cf834ce2cbac4def960a2f922cfae}{filePath}};\ }
+\DoxyCodeLine{00052\ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{structMetadata_a771632db88529039cf44cb65af7ecaba}{duration}}\ =\ 0.0f;\ }
+\DoxyCodeLine{00053\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structMetadata_aa17e49aff3ab62aec124b7d7d52adb0c}{bitrate}}\ =\ 0;\ }
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00059\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Archive>}
+\DoxyCodeLine{00060\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structMetadata_a80ccc1f2c4ea520ea929e1b52501adc1}{serialize}}(Archive\&\ ar)}
+\DoxyCodeLine{00061\ \ \ \{}
+\DoxyCodeLine{00062\ \ \ \ \ ar(\mbox{\hyperlink{structMetadata_a4ef2e2685f50d2a79b973f752f05fc40}{title}},\ \mbox{\hyperlink{structMetadata_a9c925474f678d140c0e0eef6213a160b}{artist}},\ \mbox{\hyperlink{structMetadata_ad0bb399c882458d760b09c02842d7f09}{album}},\ \mbox{\hyperlink{structMetadata_af1f1a30b5d78b0b972c9c5c49d493891}{genre}},\ \mbox{\hyperlink{structMetadata_a526f9ca995119be7b51da282f09d6f64}{comment}},\ \mbox{\hyperlink{structMetadata_a0f53b33fb05426a436767b71a7bb7f13}{year}},\ \mbox{\hyperlink{structMetadata_a1991c38d1fd88ef2240aa798bb22c253}{track}},\ \mbox{\hyperlink{structMetadata_a777a78e4b78994e5b0015f7c3d21bc08}{discNumber}},\ \mbox{\hyperlink{structMetadata_a5a3933635bffdb997a7f8eee6f83f415}{lyrics}},\ \mbox{\hyperlink{structMetadata_aa903f78de79e265504cef7be279342ac}{additionalProperties}},\ \mbox{\hyperlink{structMetadata_a107cf834ce2cbac4def960a2f922cfae}{filePath}},\ \mbox{\hyperlink{structMetadata_a771632db88529039cf44cb65af7ecaba}{duration}},\ \mbox{\hyperlink{structMetadata_aa17e49aff3ab62aec124b7d7d52adb0c}{bitrate}});}
+\DoxyCodeLine{00063\ \ \ \}}
+\DoxyCodeLine{00064\ \};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classTagLibParser_ae17fbbefed079d5457c3a53af0328080}{TagLibParser}}}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00080\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{classTagLibParser_ae17fbbefed079d5457c3a53af0328080}{TagLibParser}}(\textcolor{keyword}{const}\ std::string\&\ debugString);}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00088\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTagLibParser_a3f8962f27b1c8713beaa577ed8e7ec91}{parseFile}}(\textcolor{keyword}{const}\ std::string\&\ filePath,\ \mbox{\hyperlink{structMetadata}{Metadata}}\&\ metadata)\ -\/>\ bool;}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00096\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTagLibParser_a7cd224b41a07560899f0968f8ad3c093}{parseFromInode}}(ino\_t\ inode,\ \textcolor{keyword}{const}\ std::string\&\ directory)\ -\/>\ std::unordered\_map<std::string,\ Metadata>;}
+\DoxyCodeLine{00097\ \};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00103\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{taglib__parser_8h_a1dd3093763fba77a033971b138eda516}{printMetadata}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structMetadata}{Metadata}}\&\ metadata);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00110\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(std::string\ \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ std::string\ errMsg);}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{comment}{//\ variable\ to\ keep\ track\ of\ user's\ preference\ of\ debug\ logs}}
+\DoxyCodeLine{00113\ std::string\ \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}};}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}};}
 \DoxyCodeLine{00116\ }
-\DoxyCodeLine{00117\ \textcolor{comment}{//\ Constructor\ with\ parameter}}
-\DoxyCodeLine{00118\ \mbox{\hyperlink{classTagLibParser_ae17fbbefed079d5457c3a53af0328080}{TagLibParser::TagLibParser}}(\textcolor{keyword}{const}\ std::string\&\ debugString)\ \{\ \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}}\ =\ debugString;\ \}}
-\DoxyCodeLine{00119\ }
-\DoxyCodeLine{00120\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(std::string\ \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ std::string\ errMsg)}
-\DoxyCodeLine{00121\ \{}
-\DoxyCodeLine{00122\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}}\ ==\ \textcolor{stringliteral}{"{}false"{}})}
-\DoxyCodeLine{00123\ \ \ \{}
-\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00125\ \ \ \}}
-\DoxyCodeLine{00126\ }
-\DoxyCodeLine{00127\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}}\ ==\ \textcolor{stringliteral}{"{}true"{}})}
-\DoxyCodeLine{00128\ \ \ \{}
-\DoxyCodeLine{00129\ \ \ \ \ std::cerr\ <<\ errMsg\ <<\ std::endl;}
-\DoxyCodeLine{00130\ \ \ \}}
-\DoxyCodeLine{00131\ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{00132\ \ \ \{}
-\DoxyCodeLine{00133\ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}invalid\ field\ in\ config.toml:\ "{}}\ <<\ \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}}\ <<\ std::endl;}
-\DoxyCodeLine{00134\ \ \ \}}
-\DoxyCodeLine{00135\ }
-\DoxyCodeLine{00136\ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{00137\ \}}
-\DoxyCodeLine{00138\ }
-\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#ifndef\ \_\_EMSCRIPTEN\_\_\ }\textcolor{comment}{//\ TagLib-\/specific\ implementations}}
+\DoxyCodeLine{00117\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{taglib__parser_8h_a32df213bd7516d64a984cc0452596d11}{unknownArtistTracks}}\ =\ 0;}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{comment}{//\ Constructor\ with\ parameter}}
+\DoxyCodeLine{00120\ \mbox{\hyperlink{classTagLibParser_ae17fbbefed079d5457c3a53af0328080}{TagLibParser::TagLibParser}}(\textcolor{keyword}{const}\ std::string\&\ debugString)\ \{\ \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}}\ =\ debugString;\ \mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}}\ =\ \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}}\ ==\ \textcolor{stringliteral}{"{}true"{}}\ ?\ true\ :\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(std::string\ \mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ std::string\ errMsg)}
+\DoxyCodeLine{00123\ \{}
+\DoxyCodeLine{00124\ \ \ }
+\DoxyCodeLine{00125\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}})}
+\DoxyCodeLine{00126\ \ \ \{}
+\DoxyCodeLine{00127\ \ \ \ \ std::cerr\ <<\ errMsg\ <<\ std::endl;}
+\DoxyCodeLine{00128\ \ \ \}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00131\ \}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#ifndef\ \_\_EMSCRIPTEN\_\_\ }\textcolor{comment}{//\ TagLib-\/specific\ implementations}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{comment}{//\ Function\ to\ parse\ metadata\ from\ a\ file}}
+\DoxyCodeLine{00136\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTagLibParser_a3f8962f27b1c8713beaa577ed8e7ec91}{TagLibParser::parseFile}}(\textcolor{keyword}{const}\ std::string\&\ filePath,\ \mbox{\hyperlink{structMetadata}{Metadata}}\&\ metadata)\ -\/>\ \textcolor{keywordtype}{bool}\ \{}
+\DoxyCodeLine{00137\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}})\ \{}
+\DoxyCodeLine{00138\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}-\/-\/\ [TAG\ PARSE]\ Parsing\ file:\ "{}}\ <<\ filePath\ <<\ std::endl;}
+\DoxyCodeLine{00139\ \ \ \}}
 \DoxyCodeLine{00140\ }
-\DoxyCodeLine{00141\ \textcolor{comment}{//\ Function\ to\ parse\ metadata\ from\ a\ file}}
-\DoxyCodeLine{00142\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classTagLibParser_a42f060c96746baf0e495bb8bed4a2778}{TagLibParser::parseFile}}(\textcolor{keyword}{const}\ std::string\&\ filePath,\ \mbox{\hyperlink{structMetadata}{Metadata}}\&\ metadata)\ \{}
-\DoxyCodeLine{00143\ \ \ TagLib::FileRef\ file(filePath.c\_str());}
-\DoxyCodeLine{00144\ \ \ std::string\ \ \ \ \ errMsg;}
+\DoxyCodeLine{00141\ \ \ TagLib::FileRef\ file(filePath.c\_str());}
+\DoxyCodeLine{00142\ \ \ std::string\ errMsg;}
+\DoxyCodeLine{00143\ \ \ }
+\DoxyCodeLine{00144\ \ \ \textcolor{comment}{//\ If\ file\ is\ invalid\ or\ cannot\ be\ opened}}
 \DoxyCodeLine{00145\ \ \ \textcolor{keywordflow}{if}\ (file.isNull())\ \{}
 \DoxyCodeLine{00146\ \ \ \ \ errMsg\ =\ \textcolor{stringliteral}{"{}Error:\ Failed\ to\ open\ file:\ "{}}\ +\ filePath;}
 \DoxyCodeLine{00147\ \ \ \ \ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(\mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ errMsg);}
-\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00149\ \ \ \}}
-\DoxyCodeLine{00150\ }
-\DoxyCodeLine{00151\ \ \ \textcolor{keywordflow}{if}\ (!file.tag())\ \{}
-\DoxyCodeLine{00152\ \ \ \ \ errMsg\ =\ \textcolor{stringliteral}{"{}Error:\ No\ tag\ information\ found\ in\ file:\ "{}}\ +\ filePath;}
-\DoxyCodeLine{00153\ \ \ \ \ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(\mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ errMsg);}
-\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00155\ \ \ \}}
-\DoxyCodeLine{00156\ }
-\DoxyCodeLine{00157\ \ \ TagLib::Tag*\ tag\ =\ file.tag();}
-\DoxyCodeLine{00158\ \ \ metadata.\mbox{\hyperlink{structMetadata_a4ef2e2685f50d2a79b973f752f05fc40}{title}}\ \ \ =\ tag-\/>title().isEmpty()\ ?\ \textcolor{stringliteral}{"{}Unknown\ Title"{}}\ :\ tag-\/>title().to8Bit(\textcolor{keyword}{true});}
-\DoxyCodeLine{00159\ \ \ metadata.\mbox{\hyperlink{structMetadata_a9c925474f678d140c0e0eef6213a160b}{artist}}\ \ =\ tag-\/>artist().isEmpty()\ ?\ \textcolor{stringliteral}{"{}Unknown\ Artist"{}}\ :\ tag-\/>artist().to8Bit(\textcolor{keyword}{true});}
-\DoxyCodeLine{00160\ \ \ metadata.\mbox{\hyperlink{structMetadata_ad0bb399c882458d760b09c02842d7f09}{album}}\ \ \ =\ tag-\/>album().isEmpty()\ ?\ \textcolor{stringliteral}{"{}Unknown\ Album"{}}\ :\ tag-\/>album().to8Bit(\textcolor{keyword}{true});}
-\DoxyCodeLine{00161\ \ \ metadata.\mbox{\hyperlink{structMetadata_af1f1a30b5d78b0b972c9c5c49d493891}{genre}}\ \ \ =\ tag-\/>genre().isEmpty()\ ?\ \textcolor{stringliteral}{"{}Unknown\ Genre"{}}\ :\ tag-\/>genre().to8Bit(\textcolor{keyword}{true});}
-\DoxyCodeLine{00162\ \ \ metadata.\mbox{\hyperlink{structMetadata_a526f9ca995119be7b51da282f09d6f64}{comment}}\ =\ tag-\/>comment().isEmpty()\ ?\ \textcolor{stringliteral}{"{}No\ Comment"{}}\ :\ tag-\/>comment().to8Bit(\textcolor{keyword}{true});}
-\DoxyCodeLine{00163\ \ \ metadata.\mbox{\hyperlink{structMetadata_a0f53b33fb05426a436767b71a7bb7f13}{year}}\ \ \ \ =\ tag-\/>year()\ ==\ 0\ ?\ 0\ :\ tag-\/>year();}
-\DoxyCodeLine{00164\ \ \ metadata.\mbox{\hyperlink{structMetadata_a1991c38d1fd88ef2240aa798bb22c253}{track}}\ \ \ =\ tag-\/>track()\ ==\ 0\ ?\ 0\ :\ tag-\/>track();}
-\DoxyCodeLine{00165\ \ \ }
-\DoxyCodeLine{00166\ \ \ TagLib::AudioProperties\ *audioProperties\ =\ file.audioProperties();}
-\DoxyCodeLine{00167\ \ \ \textcolor{keywordflow}{if}\ (audioProperties)\ \{}
-\DoxyCodeLine{00168\ \ \ \ \ metadata.\mbox{\hyperlink{structMetadata_a771632db88529039cf44cb65af7ecaba}{duration}}\ =\ audioProperties-\/>length();\ \textcolor{comment}{//\ Duration\ in\ seconds}}
-\DoxyCodeLine{00169\ \ \ \ \ metadata.\mbox{\hyperlink{structMetadata_aa17e49aff3ab62aec124b7d7d52adb0c}{bitrate}}\ =\ (audioProperties-\/>bitrate()\ ==\ 0)\ ?\ -\/1\ :\ audioProperties-\/>bitrate();}
-\DoxyCodeLine{00170\ \ \ \}}
-\DoxyCodeLine{00171\ }
-\DoxyCodeLine{00172\ \ \ \textcolor{comment}{//\ Keep\ track\ of\ file\ path}}
-\DoxyCodeLine{00173\ \ \ metadata.\mbox{\hyperlink{structMetadata_a107cf834ce2cbac4def960a2f922cfae}{filePath}}\ =\ filePath;}
-\DoxyCodeLine{00174\ }
-\DoxyCodeLine{00175\ \ \ \textcolor{comment}{//\ Extract\ additional\ properties\ such\ as\ lyrics\ and\ disc\ number}}
-\DoxyCodeLine{00176\ \ \ TagLib::PropertyMap\ properties\ =\ file.file()-\/>properties();}
-\DoxyCodeLine{00177\ \ \ \textcolor{keywordflow}{if}\ (properties.contains(\textcolor{stringliteral}{"{}DISCNUMBER"{}}))\ \{}
-\DoxyCodeLine{00178\ \ \ \ \ metadata.\mbox{\hyperlink{structMetadata_a777a78e4b78994e5b0015f7c3d21bc08}{discNumber}}\ =\ properties[\textcolor{stringliteral}{"{}DISCNUMBER"{}}].toString().toInt();}
-\DoxyCodeLine{00179\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00180\ \ \ \ \ metadata.\mbox{\hyperlink{structMetadata_a777a78e4b78994e5b0015f7c3d21bc08}{discNumber}}\ =\ 0;}
-\DoxyCodeLine{00181\ \ \ \}}
-\DoxyCodeLine{00182\ }
-\DoxyCodeLine{00183\ \ \ \textcolor{keywordflow}{if}\ (properties.contains(\textcolor{stringliteral}{"{}LYRICS"{}}))\ \{}
-\DoxyCodeLine{00184\ \ \ \ \ metadata.\mbox{\hyperlink{structMetadata_a5a3933635bffdb997a7f8eee6f83f415}{lyrics}}\ =\ properties[\textcolor{stringliteral}{"{}LYRICS"{}}].toString().to8Bit(\textcolor{keyword}{true});}
-\DoxyCodeLine{00185\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00186\ \ \ \ \ metadata.\mbox{\hyperlink{structMetadata_a5a3933635bffdb997a7f8eee6f83f415}{lyrics}}\ =\ \textcolor{stringliteral}{"{}No\ Lyrics"{}};}
-\DoxyCodeLine{00187\ \ \ \}}
-\DoxyCodeLine{00188\ }
-\DoxyCodeLine{00189\ \ \ \textcolor{comment}{//\ Populate\ additional\ properties\ if\ needed}}
-\DoxyCodeLine{00190\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ prop\ :\ properties)\ \{}
-\DoxyCodeLine{00191\ \ \ \ \ std::string\ key\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ prop.first.to8Bit(\textcolor{keyword}{true});}
-\DoxyCodeLine{00192\ \ \ \ \ std::string\ value\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ prop.second.toString().to8Bit(\textcolor{keyword}{true});}
-\DoxyCodeLine{00193\ \ \ \ \ metadata.\mbox{\hyperlink{structMetadata_aa903f78de79e265504cef7be279342ac}{additionalProperties}}[key]\ =\ value;}
-\DoxyCodeLine{00194\ \ \ \}}
-\DoxyCodeLine{00195\ }
-\DoxyCodeLine{00196\ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00197\ \}}
-\DoxyCodeLine{00198\ }
-\DoxyCodeLine{00199\ \textcolor{comment}{//\ Function\ to\ parse\ metadata\ based\ on\ inode}}
-\DoxyCodeLine{00200\ std::unordered\_map<std::string,\ Metadata>\ \mbox{\hyperlink{classTagLibParser_ac7e0277f5bf46433d1bf64b9e0154641}{TagLibParser::parseFromInode}}(ino\_t\ inode,\ \textcolor{keyword}{const}\ std::string\&\ directory)\ \{}
-\DoxyCodeLine{00201\ \ \ std::unordered\_map<std::string,\ Metadata>\ metadataMap;}
-\DoxyCodeLine{00202\ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempErrMsg;}
-\DoxyCodeLine{00203\ }
-\DoxyCodeLine{00204\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ entry\ :\ fs::recursive\_directory\_iterator(directory))\ \{}
-\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keyword}{struct\ }stat\ fileStat;}
-\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keywordflow}{if}\ (stat(entry.path().c\_str(),\ \&fileStat)\ ==\ 0)\ \{}
-\DoxyCodeLine{00207\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (fileStat.st\_ino\ ==\ inode)\ \{}
-\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structMetadata}{Metadata}}\ metadata;}
-\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classTagLibParser_a42f060c96746baf0e495bb8bed4a2778}{parseFile}}(entry.path().string(),\ metadata))\ \{}
-\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ metadataMap[entry.path().string()]\ =\ metadata;}
-\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ tempErrMsg\ =\ \textcolor{stringliteral}{"{}Error:\ Unable\ to\ parse\ metadata\ for\ file:\ "{}}\ +\ entry.path().string();}
-\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(\mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ tempErrMsg);}
-\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00215\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00216\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00217\ \ \ \ \ \ \ tempErrMsg\ =\ \textcolor{stringliteral}{"{}Error:\ Unable\ to\ stat\ file:\ "{}}\ +\ entry.path().string();}
-\DoxyCodeLine{00218\ \ \ \ \ \ \ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(\mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ tempErrMsg);}
-\DoxyCodeLine{00219\ \ \ \ \ \}}
-\DoxyCodeLine{00220\ \ \ \}}
-\DoxyCodeLine{00221\ }
-\DoxyCodeLine{00222\ \ \ \textcolor{keywordflow}{return}\ metadataMap;}
-\DoxyCodeLine{00223\ \}}
-\DoxyCodeLine{00224\ }
-\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{//\ Stub\ implementations\ for\ Emscripten}}
-\DoxyCodeLine{00226\ }
-\DoxyCodeLine{00233\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classTagLibParser_a42f060c96746baf0e495bb8bed4a2778}{TagLibParser::parseFile}}(\textcolor{keyword}{const}\ std::string\&\ filePath,\ \mbox{\hyperlink{structMetadata}{Metadata}}\&\ metadata)\ \{}
-\DoxyCodeLine{00234\ \ \ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(\mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ \textcolor{stringliteral}{"{}TagLib\ is\ not\ available\ in\ this\ build."{}});}
-\DoxyCodeLine{00235\ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00236\ \}}
-\DoxyCodeLine{00237\ }
-\DoxyCodeLine{00244\ std::unordered\_map<std::string,\ Metadata>\ \mbox{\hyperlink{classTagLibParser_ac7e0277f5bf46433d1bf64b9e0154641}{TagLibParser::parseFromInode}}(ino\_t\ inode,\ \textcolor{keyword}{const}\ std::string\&\ directory)\ \{}
-\DoxyCodeLine{00245\ \ \ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(\mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ \textcolor{stringliteral}{"{}TagLib\ is\ not\ available\ in\ this\ build."{}});}
-\DoxyCodeLine{00246\ \ \ \textcolor{keywordflow}{return}\ \{\};}
-\DoxyCodeLine{00247\ \}}
-\DoxyCodeLine{00248\ }
-\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_EMSCRIPTEN\_\_}}
-\DoxyCodeLine{00250\ }
-\DoxyCodeLine{00251\ \textcolor{comment}{//\ Function\ to\ print\ metadata}}
-\DoxyCodeLine{00252\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{taglib__parser_8h_a1dd3093763fba77a033971b138eda516}{printMetadata}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structMetadata}{Metadata}}\&\ metadata)\ \{}
-\DoxyCodeLine{00253\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Title:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_a4ef2e2685f50d2a79b973f752f05fc40}{title}}\ <<\ std::endl;}
-\DoxyCodeLine{00254\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Artist:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_a9c925474f678d140c0e0eef6213a160b}{artist}}\ <<\ std::endl;}
-\DoxyCodeLine{00255\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Album:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_ad0bb399c882458d760b09c02842d7f09}{album}}\ <<\ std::endl;}
-\DoxyCodeLine{00256\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Genre:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_af1f1a30b5d78b0b972c9c5c49d493891}{genre}}\ <<\ std::endl;}
-\DoxyCodeLine{00257\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Comment:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_a526f9ca995119be7b51da282f09d6f64}{comment}}\ <<\ std::endl;}
-\DoxyCodeLine{00258\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Year:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_a0f53b33fb05426a436767b71a7bb7f13}{year}}\ <<\ std::endl;}
-\DoxyCodeLine{00259\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Track:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_a1991c38d1fd88ef2240aa798bb22c253}{track}}\ <<\ std::endl;}
-\DoxyCodeLine{00260\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Disc\ Number:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_a777a78e4b78994e5b0015f7c3d21bc08}{discNumber}}\ <<\ std::endl;}
-\DoxyCodeLine{00261\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Lyrics:\ "{}}\ <<\ std::endl\ <<\ metadata.\mbox{\hyperlink{structMetadata_a5a3933635bffdb997a7f8eee6f83f415}{lyrics}}\ <<\ std::endl;}
-\DoxyCodeLine{00262\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}+++++++++++++++++++++++++++"{}}\ <<\ std::endl;}
-\DoxyCodeLine{00263\ \}}
-\DoxyCodeLine{00264\ }
-\DoxyCodeLine{00271\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{taglib__parser_8h_a663081b243b450cd9b222d681eb112bf}{extractThumbnail}}(\textcolor{keyword}{const}\ std::string\&\ audioFilePath,\ \textcolor{keyword}{const}\ std::string\&\ outputImagePath)\ \{}
-\DoxyCodeLine{00272\ \ \ \ \ \textcolor{comment}{//\ Determine\ the\ file\ type\ based\ on\ the\ extension}}
-\DoxyCodeLine{00273\ \ \ \ \ std::string\ extension\ =\ audioFilePath.substr(audioFilePath.find\_last\_of(\textcolor{charliteral}{'.'})\ +\ 1);}
-\DoxyCodeLine{00274\ }
-\DoxyCodeLine{00275\ \ \ \ \ \textcolor{keywordflow}{if}\ (extension\ ==\ \textcolor{stringliteral}{"{}mp3"{}})\ \{}
-\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Handle\ MP3\ files\ (ID3v2\ tag)}}
-\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ TagLib::MPEG::File\ mpegFile(audioFilePath.c\_str());}
-\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!mpegFile.isValid())\ \{}
-\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Could\ not\ open\ MP3\ file."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00282\ }
-\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ TagLib::ID3v2::Tag*\ id3v2Tag\ =\ mpegFile.ID3v2Tag();}
-\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!id3v2Tag)\ \{}
-\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ No\ ID3v2\ tags\ found\ in\ the\ MP3\ file."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00288\ }
-\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ TagLib::ID3v2::FrameList\&\ frameList\ =\ id3v2Tag-\/>frameListMap()[\textcolor{stringliteral}{"{}APIC"{}}];}
-\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (frameList.isEmpty())\ \{}
-\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ No\ embedded\ album\ art\ found\ in\ the\ MP3\ file."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00294\ }
-\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ apicFrame\ =\ \textcolor{keyword}{dynamic\_cast<}TagLib::ID3v2::AttachedPictureFrame*\textcolor{keyword}{>}(frameList.front());}
-\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!apicFrame)\ \{}
-\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Failed\ to\ retrieve\ album\ art\ from\ MP3."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00300\ }
-\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ pictureData\ =\ apicFrame-\/>picture();}
-\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ std::ofstream\ outputFile(outputImagePath,\ std::ios::binary);}
-\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!outputFile)\ \{}
-\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Could\ not\ create\ output\ image\ file."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00307\ }
-\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ outputFile.write(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}*\textcolor{keyword}{>}(pictureData.data()),\ pictureData.size());}
-\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ outputFile.close();}
-\DoxyCodeLine{00310\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (extension\ ==\ \textcolor{stringliteral}{"{}flac"{}})\ \{}
-\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Handle\ FLAC\ files}}
-\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ TagLib::FLAC::File\ flacFile(audioFilePath.c\_str(),\ \textcolor{keyword}{true});}
-\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!flacFile.isValid())\ \{}
-\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Could\ not\ open\ FLAC\ file."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00317\ }
-\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ TagLib::List<TagLib::FLAC::Picture*>\&\ pictureList\ =\ flacFile.pictureList();}
-\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pictureList.isEmpty())\ \{}
-\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ No\ album\ art\ found\ in\ the\ FLAC\ file."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00323\ }
-\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ pictureData\ =\ pictureList.front()-\/>data();}
-\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ std::ofstream\ outputFile(outputImagePath,\ std::ios::binary);}
-\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!outputFile)\ \{}
-\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Could\ not\ create\ output\ image\ file."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00330\ }
-\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ outputFile.write(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}*\textcolor{keyword}{>}(pictureData.data()),\ pictureData.size());}
-\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ outputFile.close();}
-\DoxyCodeLine{00333\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Unsupported\ file\ format.\ Only\ MP3\ and\ FLAC\ are\ supported."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00336\ \ \ \ \ \}}
-\DoxyCodeLine{00337\ }
-\DoxyCodeLine{00338\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00339\ \}}
-\DoxyCodeLine{00340\ }
-\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ TAGLIB\_PARSER\_H}}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}})\ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[TAG\ PARSE]\ "{}}\ <<\ errMsg\ <<\ std::endl;}
+\DoxyCodeLine{00150\ \ \ \ \ \}}
+\DoxyCodeLine{00151\ \ \ \ \ metadata.title\ =\ filePath.substr(filePath.find\_last\_of(\textcolor{stringliteral}{"{}/\(\backslash\)\(\backslash\)"{}})\ +\ 1);\ \textcolor{comment}{//\ Use\ the\ file\ name\ }}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00153\ \ \ \}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \textcolor{comment}{//\ If\ file\ has\ no\ tag\ information}}
+\DoxyCodeLine{00156\ \ \ \textcolor{keywordflow}{if}\ (!file.tag())\ \{}
+\DoxyCodeLine{00157\ \ \ \ \ errMsg\ =\ \textcolor{stringliteral}{"{}Error:\ No\ tag\ information\ found\ in\ file:\ "{}}\ +\ filePath;}
+\DoxyCodeLine{00158\ \ \ \ \ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(\mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ errMsg);}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}})\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[TAG\ PARSE]\ "{}}\ <<\ errMsg\ <<\ std::endl;}
+\DoxyCodeLine{00161\ \ \ \ \ \}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{comment}{//\ Fallback\ metadata\ in\ case\ there\ is\ no\ tag\ information}}
+\DoxyCodeLine{00164\ \ \ \ \ metadata.title\ =\ filePath.substr(filePath.find\_last\_of(\textcolor{stringliteral}{"{}/\(\backslash\)\(\backslash\)"{}})\ +\ 1);\ \textcolor{comment}{//\ Use\ the\ file\ name\ }}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00166\ \ \ \}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \textcolor{comment}{//\ If\ the\ file\ contains\ tag\ data,\ continue\ processing}}
+\DoxyCodeLine{00169\ \ \ TagLib::Tag*\ tag\ =\ file.tag();}
+\DoxyCodeLine{00170\ \ \ metadata.title\ =\ tag-\/>title().isEmpty()\ ?\ filePath.substr(filePath.find\_last\_of(\textcolor{stringliteral}{"{}/\(\backslash\)\(\backslash\)"{}})\ +\ 1)\ :\ tag-\/>title().to8Bit(\textcolor{keyword}{true});}
+\DoxyCodeLine{00171\ \ \ metadata.artist\ =\ tag-\/>artist().isEmpty()\ ?\ \textcolor{stringliteral}{"{}<Unknown\ Artist>"{}}\ :\ tag-\/>artist().to8Bit(\textcolor{keyword}{true});}
+\DoxyCodeLine{00172\ \ \ metadata.album\ =\ tag-\/>album().isEmpty()\ ?\ \textcolor{stringliteral}{"{}Unknown\ Album"{}}\ :\ tag-\/>album().to8Bit(\textcolor{keyword}{true});}
+\DoxyCodeLine{00173\ \ \ metadata.genre\ =\ tag-\/>genre().isEmpty()\ ?\ \textcolor{stringliteral}{"{}Unknown\ Genre"{}}\ :\ tag-\/>genre().to8Bit(\textcolor{keyword}{true});}
+\DoxyCodeLine{00174\ \ \ metadata.comment\ =\ tag-\/>comment().isEmpty()\ ?\ \textcolor{stringliteral}{"{}No\ Comment"{}}\ :\ tag-\/>comment().to8Bit(\textcolor{keyword}{true});}
+\DoxyCodeLine{00175\ \ \ metadata.year\ =\ tag-\/>year()\ ==\ 0\ ?\ 0\ :\ tag-\/>year();}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \textcolor{comment}{//\ Track\ logic}}
+\DoxyCodeLine{00178\ \ \ metadata.track\ =\ tag-\/>track();}
+\DoxyCodeLine{00179\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}})\ \{}
+\DoxyCodeLine{00180\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[TAG\ PARSE]\ Track:\ "{}}\ <<\ (tag-\/>track()\ ==\ 0\ ?\ \textcolor{stringliteral}{"{}(No\ Track,\ using\ fallback)"{}}\ :\ std::to\_string(tag-\/>track()))\ <<\ std::endl;}
+\DoxyCodeLine{00181\ \ \ \ \ }
+\DoxyCodeLine{00182\ \ \ \}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \textcolor{keywordflow}{if}\ (tag-\/>track()\ ==\ 0)\ \{}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordflow}{if}\ (metadata.artist\ ==\ \textcolor{stringliteral}{"{}<Unknown\ Artist>"{}})\ \{}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \mbox{\hyperlink{taglib__parser_8h_a32df213bd7516d64a984cc0452596d11}{unknownArtistTracks}}++;}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ metadata.track\ =\ \mbox{\hyperlink{taglib__parser_8h_a32df213bd7516d64a984cc0452596d11}{unknownArtistTracks}};}
+\DoxyCodeLine{00188\ \ \ \ \ \}}
+\DoxyCodeLine{00189\ \ \ \}}
+\DoxyCodeLine{00190\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}})\ std::cout\ <<\ \textcolor{stringliteral}{"{}[TAG\ PARSE]\ \ Assigned\ track\ number:\ "{}}\ <<\ metadata.track\ <<\ std::endl;}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \textcolor{comment}{//\ Audio\ Properties}}
+\DoxyCodeLine{00193\ \ \ TagLib::AudioProperties\ *audioProperties\ =\ file.audioProperties();}
+\DoxyCodeLine{00194\ \ \ \textcolor{keywordflow}{if}\ (audioProperties)\ \{}
+\DoxyCodeLine{00195\ \ \ \ \ metadata.duration\ =\ audioProperties-\/>length();\ \textcolor{comment}{//\ Duration\ in\ seconds}}
+\DoxyCodeLine{00196\ \ \ \ \ metadata.bitrate\ =\ (audioProperties-\/>bitrate()\ ==\ 0)\ ?\ -\/1\ :\ audioProperties-\/>bitrate();}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}})\ \{}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[TAG\ PARSE]\ Audio\ properties\ found:"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[TAG\ PARSE]\ \ Duration:\ "{}}\ <<\ metadata.duration\ <<\ \textcolor{stringliteral}{"{}\ seconds"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[TAG\ PARSE]\ \ Bitrate:\ "{}}\ <<\ metadata.bitrate\ <<\ \textcolor{stringliteral}{"{}\ kbps"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00202\ \ \ \ \ \}}
+\DoxyCodeLine{00203\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}})\ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[TAG\ PARSE]\ No\ audio\ properties\ found."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00206\ \ \ \ \ \}}
+\DoxyCodeLine{00207\ \ \ \ \ metadata.duration\ =\ 0.0f;}
+\DoxyCodeLine{00208\ \ \ \ \ metadata.bitrate\ =\ 0;}
+\DoxyCodeLine{00209\ \ \ \}}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \textcolor{comment}{//\ Keep\ track\ of\ file\ path}}
+\DoxyCodeLine{00212\ \ \ metadata.filePath\ =\ filePath;}
+\DoxyCodeLine{00213\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}})\ \{}
+\DoxyCodeLine{00214\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[TAG\ PARSE]\ File\ Path:\ "{}}\ <<\ metadata.filePath\ <<\ std::endl;}
+\DoxyCodeLine{00215\ \ \ \}}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \textcolor{comment}{//\ Extract\ additional\ properties\ such\ as\ lyrics\ and\ disc\ number}}
+\DoxyCodeLine{00218\ \ \ TagLib::PropertyMap\ properties\ =\ file.file()-\/>properties();}
+\DoxyCodeLine{00219\ \ \ \textcolor{keywordflow}{if}\ (properties.contains(\textcolor{stringliteral}{"{}DISCNUMBER"{}}))\ \{}
+\DoxyCodeLine{00220\ \ \ \ \ metadata.discNumber\ =\ properties[\textcolor{stringliteral}{"{}DISCNUMBER"{}}].toString().toInt();}
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}})\ \{}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[TAG\ PARSE]\ Disc\ Number:\ "{}}\ <<\ metadata.discNumber\ <<\ std::endl;}
+\DoxyCodeLine{00223\ \ \ \ \ \}}
+\DoxyCodeLine{00224\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00225\ \ \ \ \ metadata.discNumber\ =\ 0;}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}})\ \{}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[TAG\ PARSE]\ Disc\ Number:\ (Not\ Available)"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00228\ \ \ \ \ \}}
+\DoxyCodeLine{00229\ \ \ \}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \textcolor{keywordflow}{if}\ (properties.contains(\textcolor{stringliteral}{"{}LYRICS"{}}))\ \{}
+\DoxyCodeLine{00232\ \ \ \ \ metadata.lyrics\ =\ properties[\textcolor{stringliteral}{"{}LYRICS"{}}].toString().to8Bit(\textcolor{keyword}{true});}
+\DoxyCodeLine{00233\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00234\ \ \ \ \ metadata.lyrics\ =\ \textcolor{stringliteral}{"{}No\ Lyrics"{}};}
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}})\ \{}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}[TAG\ PARSE]\ Lyrics:\ (Not\ Available)"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00237\ \ \ \ \ \}}
+\DoxyCodeLine{00238\ \ \ \}}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \ \ \textcolor{comment}{//\ Populate\ additional\ properties\ if\ needed}}
+\DoxyCodeLine{00241\ \ \ \textcolor{keywordflow}{if}\ (!properties.isEmpty())\ \{}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{taglib__parser_8h_a4fb921b47cb496f77917ce7922e769e6}{debugLogBool}})\ std::cout\ <<\ \textcolor{stringliteral}{"{}[TAG\ PARSE]\ Additional\ properties\ found!"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ prop\ :\ properties)\ \{}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ std::string\ key\ =\ prop.first.to8Bit(\textcolor{keyword}{true});}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ std::string\ value\ =\ prop.second.toString().to8Bit(\textcolor{keyword}{true});}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ metadata.additionalProperties[key]\ =\ value;}
+\DoxyCodeLine{00247\ \ \ \ \ \}}
+\DoxyCodeLine{00248\ \ \ \}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00251\ \}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \textcolor{comment}{//\ Function\ to\ parse\ metadata\ based\ on\ inode}}
+\DoxyCodeLine{00254\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTagLibParser_a7cd224b41a07560899f0968f8ad3c093}{TagLibParser::parseFromInode}}(ino\_t\ inode,\ \textcolor{keyword}{const}\ std::string\&\ directory)\ -\/>\ std::unordered\_map<std::string,\ Metadata>\ \{}
+\DoxyCodeLine{00255\ \ \ std::unordered\_map<std::string,\ Metadata>\ metadataMap;}
+\DoxyCodeLine{00256\ \ \ std::string\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempErrMsg;}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ entry\ :\ fs::recursive\_directory\_iterator(directory))\ \{}
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{keyword}{struct\ }stat\ fileStat;}
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{keywordflow}{if}\ (stat(entry.path().c\_str(),\ \&fileStat)\ ==\ 0)\ \{}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (fileStat.st\_ino\ ==\ inode)\ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structMetadata}{Metadata}}\ metadata;}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classTagLibParser_a3f8962f27b1c8713beaa577ed8e7ec91}{parseFile}}(entry.path().string(),\ metadata))\ \{}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ metadataMap[entry.path().string()]\ =\ metadata;}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ tempErrMsg\ =\ \textcolor{stringliteral}{"{}Error:\ Unable\ to\ parse\ metadata\ for\ file:\ "{}}\ +\ entry.path().string();}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(\mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ tempErrMsg);}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00270\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ tempErrMsg\ =\ \textcolor{stringliteral}{"{}Error:\ Unable\ to\ stat\ file:\ "{}}\ +\ entry.path().string();}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(\mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ tempErrMsg);}
+\DoxyCodeLine{00273\ \ \ \ \ \}}
+\DoxyCodeLine{00274\ \ \ \}}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ \textcolor{keywordflow}{return}\ metadataMap;}
+\DoxyCodeLine{00277\ \}}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{//\ Stub\ implementations\ for\ Emscripten}}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00287\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classTagLibParser_a3f8962f27b1c8713beaa577ed8e7ec91}{TagLibParser::parseFile}}(\textcolor{keyword}{const}\ std::string\&\ filePath,\ \mbox{\hyperlink{structMetadata}{Metadata}}\&\ metadata)\ \{}
+\DoxyCodeLine{00288\ \ \ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(\mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ \textcolor{stringliteral}{"{}TagLib\ is\ not\ available\ in\ this\ build."{}});}
+\DoxyCodeLine{00289\ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00290\ \}}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00298\ std::unordered\_map<std::string,\ Metadata>\ \mbox{\hyperlink{classTagLibParser_a7cd224b41a07560899f0968f8ad3c093}{TagLibParser::parseFromInode}}(ino\_t\ inode,\ \textcolor{keyword}{const}\ std::string\&\ directory)\ \{}
+\DoxyCodeLine{00299\ \ \ \mbox{\hyperlink{taglib__parser_8h_afff220fe53f14744f741b6945e3e765b}{sendErrMsg}}(\mbox{\hyperlink{taglib__parser_8h_a273c56409c0777c9b2750bb3f59f076b}{debugLogBoolStr}},\ \textcolor{stringliteral}{"{}TagLib\ is\ not\ available\ in\ this\ build."{}});}
+\DoxyCodeLine{00300\ \ \ \textcolor{keywordflow}{return}\ \{\};}
+\DoxyCodeLine{00301\ \}}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_EMSCRIPTEN\_\_}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \textcolor{comment}{//\ Function\ to\ print\ metadata}}
+\DoxyCodeLine{00306\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{taglib__parser_8h_a1dd3093763fba77a033971b138eda516}{printMetadata}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structMetadata}{Metadata}}\&\ metadata)\ \{}
+\DoxyCodeLine{00307\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Title:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_a4ef2e2685f50d2a79b973f752f05fc40}{title}}\ <<\ std::endl;}
+\DoxyCodeLine{00308\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Artist:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_a9c925474f678d140c0e0eef6213a160b}{artist}}\ <<\ std::endl;}
+\DoxyCodeLine{00309\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Album:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_ad0bb399c882458d760b09c02842d7f09}{album}}\ <<\ std::endl;}
+\DoxyCodeLine{00310\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Genre:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_af1f1a30b5d78b0b972c9c5c49d493891}{genre}}\ <<\ std::endl;}
+\DoxyCodeLine{00311\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Comment:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_a526f9ca995119be7b51da282f09d6f64}{comment}}\ <<\ std::endl;}
+\DoxyCodeLine{00312\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Year:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_a0f53b33fb05426a436767b71a7bb7f13}{year}}\ <<\ std::endl;}
+\DoxyCodeLine{00313\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Track:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_a1991c38d1fd88ef2240aa798bb22c253}{track}}\ <<\ std::endl;}
+\DoxyCodeLine{00314\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Disc\ Number:\ "{}}\ <<\ metadata.\mbox{\hyperlink{structMetadata_a777a78e4b78994e5b0015f7c3d21bc08}{discNumber}}\ <<\ std::endl;}
+\DoxyCodeLine{00315\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Lyrics:\ "{}}\ <<\ std::endl\ <<\ metadata.\mbox{\hyperlink{structMetadata_a5a3933635bffdb997a7f8eee6f83f415}{lyrics}}\ <<\ std::endl;}
+\DoxyCodeLine{00316\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}+++++++++++++++++++++++++++"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00317\ \}}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00325\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{taglib__parser_8h_af3fc7742ce3b9bf381198c86f02cdd76}{extractThumbnail}}(\textcolor{keyword}{const}\ std::string\&\ audioFilePath,\ \textcolor{keyword}{const}\ std::string\&\ outputImagePath)\ -\/>\ \textcolor{keywordtype}{bool}\ \{}
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{comment}{//\ Determine\ the\ file\ type\ based\ on\ the\ extension}}
+\DoxyCodeLine{00327\ \ \ \ \ std::string\ extension\ =\ audioFilePath.substr(audioFilePath.find\_last\_of(\textcolor{charliteral}{'.'})\ +\ 1);}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{keywordflow}{if}\ (extension\ ==\ \textcolor{stringliteral}{"{}mp3"{}})\ \{}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Handle\ MP3\ files\ (ID3v2\ tag)}}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ TagLib::MPEG::File\ mpegFile(audioFilePath.c\_str());}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!mpegFile.isValid())\ \{}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Could\ not\ open\ MP3\ file."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ TagLib::ID3v2::Tag*\ id3v2Tag\ =\ mpegFile.ID3v2Tag();}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!id3v2Tag)\ \{}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ No\ ID3v2\ tags\ found\ in\ the\ MP3\ file."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ TagLib::ID3v2::FrameList\&\ frameList\ =\ id3v2Tag-\/>frameListMap()[\textcolor{stringliteral}{"{}APIC"{}}];}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (frameList.isEmpty())\ \{}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ No\ embedded\ album\ art\ found\ in\ the\ MP3\ file."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ apicFrame\ =\ \textcolor{keyword}{dynamic\_cast<}TagLib::ID3v2::AttachedPictureFrame*\textcolor{keyword}{>}(frameList.front());}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!apicFrame)\ \{}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Failed\ to\ retrieve\ album\ art\ from\ MP3."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ pictureData\ =\ apicFrame-\/>picture();}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ std::ofstream\ outputFile(outputImagePath,\ std::ios::binary);}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!outputFile)\ \{}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Could\ not\ create\ output\ image\ file."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ outputFile.write(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}*\textcolor{keyword}{>}(pictureData.data()),\ pictureData.size());}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ outputFile.close();}
+\DoxyCodeLine{00364\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (extension\ ==\ \textcolor{stringliteral}{"{}flac"{}})\ \{}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Handle\ FLAC\ files}}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ TagLib::FLAC::File\ flacFile(audioFilePath.c\_str(),\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!flacFile.isValid())\ \{}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Could\ not\ open\ FLAC\ file."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ TagLib::List<TagLib::FLAC::Picture*>\&\ pictureList\ =\ flacFile.pictureList();}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pictureList.isEmpty())\ \{}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ No\ album\ art\ found\ in\ the\ FLAC\ file."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ pictureData\ =\ pictureList.front()-\/>data();}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ std::ofstream\ outputFile(outputImagePath,\ std::ios::binary);}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!outputFile)\ \{}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Could\ not\ create\ output\ image\ file."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00384\ }
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ outputFile.write(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}*\textcolor{keyword}{>}(pictureData.data()),\ pictureData.size());}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ outputFile.close();}
+\DoxyCodeLine{00387\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error:\ Unsupported\ file\ format.\ Only\ MP3\ and\ FLAC\ are\ supported."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00390\ \ \ \ \ \}}
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00392\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00393\ \}}
 
 \end{DoxyCode}

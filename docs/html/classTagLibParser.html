@@ -121,12 +121,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae17fbbefed079d5457c3a53af0328080" id="r_ae17fbbefed079d5457c3a53af0328080"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae17fbbefed079d5457c3a53af0328080">TagLibParser</a> (const std::string &amp;debugString)</td></tr>
 <tr class="memdesc:ae17fbbefed079d5457c3a53af0328080"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for <a class="el" href="classTagLibParser.html" title="A class for parsing metadata from audio files.">TagLibParser</a>.  <br /></td></tr>
 <tr class="separator:ae17fbbefed079d5457c3a53af0328080"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42f060c96746baf0e495bb8bed4a2778" id="r_a42f060c96746baf0e495bb8bed4a2778"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a42f060c96746baf0e495bb8bed4a2778">parseFile</a> (const std::string &amp;filePath, <a class="el" href="structMetadata.html">Metadata</a> &amp;metadata)</td></tr>
-<tr class="memdesc:a42f060c96746baf0e495bb8bed4a2778"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse metadata from an audio file.  <br /></td></tr>
-<tr class="separator:a42f060c96746baf0e495bb8bed4a2778"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7e0277f5bf46433d1bf64b9e0154641" id="r_ac7e0277f5bf46433d1bf64b9e0154641"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::string, <a class="el" href="structMetadata.html">Metadata</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac7e0277f5bf46433d1bf64b9e0154641">parseFromInode</a> (ino_t inode, const std::string &amp;directory)</td></tr>
-<tr class="memdesc:ac7e0277f5bf46433d1bf64b9e0154641"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse metadata from files in a directory based on inode.  <br /></td></tr>
-<tr class="separator:ac7e0277f5bf46433d1bf64b9e0154641"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f8962f27b1c8713beaa577ed8e7ec91" id="r_a3f8962f27b1c8713beaa577ed8e7ec91"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f8962f27b1c8713beaa577ed8e7ec91">parseFile</a> (const std::string &amp;filePath, <a class="el" href="structMetadata.html">Metadata</a> &amp;metadata) -&gt; bool</td></tr>
+<tr class="memdesc:a3f8962f27b1c8713beaa577ed8e7ec91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse metadata from an audio file.  <br /></td></tr>
+<tr class="separator:a3f8962f27b1c8713beaa577ed8e7ec91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cd224b41a07560899f0968f8ad3c093" id="r_a7cd224b41a07560899f0968f8ad3c093"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7cd224b41a07560899f0968f8ad3c093">parseFromInode</a> (ino_t inode, const std::string &amp;directory) -&gt; std::unordered_map&lt; std::string, <a class="el" href="structMetadata.html">Metadata</a> &gt;</td></tr>
+<tr class="memdesc:a7cd224b41a07560899f0968f8ad3c093"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse metadata from files in a directory based on inode.  <br /></td></tr>
+<tr class="separator:a7cd224b41a07560899f0968f8ad3c093"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A class for parsing metadata from audio files. </p>
@@ -166,21 +166,21 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a42f060c96746baf0e495bb8bed4a2778" name="a42f060c96746baf0e495bb8bed4a2778"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a42f060c96746baf0e495bb8bed4a2778">&#9670;&#160;</a></span>parseFile()</h2>
+<a id="a3f8962f27b1c8713beaa577ed8e7ec91" name="a3f8962f27b1c8713beaa577ed8e7ec91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f8962f27b1c8713beaa577ed8e7ec91">&#9670;&#160;</a></span>parseFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool TagLibParser::parseFile </td>
+          <td class="memname">auto TagLibParser::parseFile </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>filePath</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structMetadata.html">Metadata</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>metadata</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="structMetadata.html">Metadata</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>metadata</em></span>&#160;) -&gt; bool</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -197,21 +197,21 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac7e0277f5bf46433d1bf64b9e0154641" name="ac7e0277f5bf46433d1bf64b9e0154641"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7e0277f5bf46433d1bf64b9e0154641">&#9670;&#160;</a></span>parseFromInode()</h2>
+<a id="a7cd224b41a07560899f0968f8ad3c093" name="a7cd224b41a07560899f0968f8ad3c093"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cd224b41a07560899f0968f8ad3c093">&#9670;&#160;</a></span>parseFromInode()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::unordered_map&lt; std::string, <a class="el" href="structMetadata.html">Metadata</a> &gt; TagLibParser::parseFromInode </td>
+          <td class="memname">auto TagLibParser::parseFromInode </td>
           <td>(</td>
           <td class="paramtype">ino_t</td>          <td class="paramname"><span class="paramname"><em>inode</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>directory</em></span>&#160;)</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>directory</em></span>&#160;) -&gt; std::unordered_map&lt;std::string, <a class="el" href="structMetadata.html">Metadata</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">

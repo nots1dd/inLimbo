@@ -105,14 +105,17 @@ $(function(){initNavTree('misc_8hpp.html',''); initResizable(true); });
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">misc.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="taglib__parser_8h_source.html">../dirsort/taglib_parser.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="arg-handler_8hpp_source.html">../arg-handler.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="taglib__parser_8h_source.html">../dirsort/taglib_parser.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="colors_8hpp_source.html">./colors.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="keymaps_8hpp_source.html">./keymaps.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="image__view_8hpp_source.html">components/image_view.hpp</a>&quot;</code><br />
+<code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;cctype&gt;</code><br />
 <code>#include &lt;ftxui/component/captured_mouse.hpp&gt;</code><br />
 <code>#include &lt;ftxui/component/component.hpp&gt;</code><br />
@@ -125,48 +128,169 @@ $(function(){initNavTree('misc_8hpp.html',''); initResizable(true); });
 </div>
 <p><a href="misc_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structComponentState.html">ComponentState</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ac5fe6a723443d277de55e15b8e2a30d2" id="r_ac5fe6a723443d277de55e15b8e2a30d2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5fe6a723443d277de55e15b8e2a30d2">MAX_LENGTH_SONG_NAME</a>&#160;&#160;&#160;50</td></tr>
+<tr class="separator:ac5fe6a723443d277de55e15b8e2a30d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6199aa5ef4a8655f98529342f12e188f" id="r_a6199aa5ef4a8655f98529342f12e188f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6199aa5ef4a8655f98529342f12e188f">MAX_LENGTH_ARTIST_NAME</a>&#160;&#160;&#160;30</td></tr>
+<tr class="separator:a6199aa5ef4a8655f98529342f12e188f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38f7063ec36148c340a4547d8e17b660" id="r_a38f7063ec36148c340a4547d8e17b660"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38f7063ec36148c340a4547d8e17b660">SONG_TITLE_DELIM</a>&#160;&#160;&#160;&quot; • &quot;</td></tr>
+<tr class="separator:a38f7063ec36148c340a4547d8e17b660"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba56a61f453fc60302c6c87189871467" id="r_aba56a61f453fc60302c6c87189871467"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba56a61f453fc60302c6c87189871467">LYRICS_AVAIL</a>&#160;&#160;&#160;&quot;L*&quot;</td></tr>
+<tr class="separator:aba56a61f453fc60302c6c87189871467"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1801a0eef7108118fc5a54e6098ebfa" id="r_ad1801a0eef7108118fc5a54e6098ebfa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1801a0eef7108118fc5a54e6098ebfa">ADDN_PROPS_AVAIL</a>&#160;&#160;&#160;&quot;&amp;*&quot;</td></tr>
+<tr class="separator:ad1801a0eef7108118fc5a54e6098ebfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae404e170bcac700cdc2e87d1c5ba04f5" id="r_ae404e170bcac700cdc2e87d1c5ba04f5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae404e170bcac700cdc2e87d1c5ba04f5">STATUS_BAR_DELIM</a>&#160;&#160;&#160;&quot; | &quot;</td></tr>
+<tr class="separator:ae404e170bcac700cdc2e87d1c5ba04f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a32a12e3a8f61c86e816a42396b92e301" id="r_a32a12e3a8f61c86e816a42396b92e301"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32a12e3a8f61c86e816a42396b92e301">handleToggleMute</a> (int *volume, int *lastVolume, bool *muted) -&gt; int</td></tr>
+<tr class="separator:a32a12e3a8f61c86e816a42396b92e301"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a971329da198146110e1e71346d7be95a" id="r_a971329da198146110e1e71346d7be95a"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a971329da198146110e1e71346d7be95a">formatDiscTrackInfo</a> (const int &amp;disc_number, const int &amp;track_number)</td></tr>
+<tr class="separator:a971329da198146110e1e71346d7be95a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf1411473752280ae12e7bbeb259ca4c" id="r_acf1411473752280ae12e7bbeb259ca4c"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf1411473752280ae12e7bbeb259ca4c">formatLyrics</a> (const std::string &amp;lyrics)</td></tr>
 <tr class="separator:acf1411473752280ae12e7bbeb259ca4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e2246f99124f69740c8012be4b75c36" id="r_a2e2246f99124f69740c8012be4b75c36"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e2246f99124f69740c8012be4b75c36">charToStr</a> (char ch)</td></tr>
-<tr class="separator:a2e2246f99124f69740c8012be4b75c36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b8a1dade19d0cf89a3c2e3f336b01c8" id="r_a6b8a1dade19d0cf89a3c2e3f336b01c8"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b8a1dade19d0cf89a3c2e3f336b01c8">formatAdditionalInfo</a> (const std::string &amp;genre, const bool &amp;has_comment, const bool &amp;has_lyrics, const bool &amp;show_bitrate, const int &amp;bitrate) -&gt; std::string</td></tr>
+<tr class="separator:a6b8a1dade19d0cf89a3c2e3f336b01c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38892037627158c30e20ad3d882929c0" id="r_a38892037627158c30e20ad3d882929c0"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38892037627158c30e20ad3d882929c0">charToStr</a> (char ch) -&gt; std::string</td></tr>
+<tr class="separator:a38892037627158c30e20ad3d882929c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbc96af0b52cf5c1b6921dbaa39454a9" id="r_acbc96af0b52cf5c1b6921dbaa39454a9"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acbc96af0b52cf5c1b6921dbaa39454a9">FormatTime</a> (int seconds)</td></tr>
 <tr class="separator:acbc96af0b52cf5c1b6921dbaa39454a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1dd4ac00b301270766d69bfd131b1a8a" id="r_a1dd4ac00b301270766d69bfd131b1a8a"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1dd4ac00b301270766d69bfd131b1a8a">getTrueColor</a> (<a class="el" href="namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6d">TrueColors::Color</a> color)</td></tr>
 <tr class="separator:a1dd4ac00b301270766d69bfd131b1a8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1895c5b44b9fcf7e8609b74d59f1333c" id="r_a1895c5b44b9fcf7e8609b74d59f1333c"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1895c5b44b9fcf7e8609b74d59f1333c">getTrueBGColor</a> (<a class="el" href="namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6d">TrueColors::Color</a> color)</td></tr>
 <tr class="separator:a1895c5b44b9fcf7e8609b74d59f1333c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0e7f463ba7f6a6f02a1bd7bd7e33054" id="r_aa0e7f463ba7f6a6f02a1bd7bd7e33054"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0e7f463ba7f6a6f02a1bd7bd7e33054">renderAlbumName</a> (const std::string &amp;album_name, const int &amp;year, ftxui::Color sel_color)</td></tr>
-<tr class="separator:aa0e7f463ba7f6a6f02a1bd7bd7e33054"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fcb063cf073d7a1067d0431dad277b6" id="r_a5fcb063cf073d7a1067d0431dad277b6"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5fcb063cf073d7a1067d0431dad277b6">renderAlbumName</a> (const std::string &amp;album_name, const int &amp;year, ftxui::Color sel_color, ftxui::Color sel_color_fg)</td></tr>
+<tr class="separator:a5fcb063cf073d7a1067d0431dad277b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62d9f40a75073b83bbdb4c23378a211b" id="r_a62d9f40a75073b83bbdb4c23378a211b"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62d9f40a75073b83bbdb4c23378a211b">renderSongName</a> (const std::string &amp;disc_track_info, const std::string &amp;song_name, const int &amp;duration)</td></tr>
 <tr class="separator:a62d9f40a75073b83bbdb4c23378a211b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b8148459d48503dab72c85f83e43de5" id="r_a3b8148459d48503dab72c85f83e43de5"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b8148459d48503dab72c85f83e43de5">RenderArtistNames</a> (const std::vector&lt; std::string &gt; &amp;artist_list)</td></tr>
+<tr class="separator:a3b8148459d48503dab72c85f83e43de5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac17ffa793bef7aa522f2efc1e40be89a" id="r_ac17ffa793bef7aa522f2efc1e40be89a"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac17ffa793bef7aa522f2efc1e40be89a">CreateMenu</a> (const std::vector&lt; std::string &gt; *vecLines, int *currLine)</td></tr>
 <tr class="separator:ac17ffa793bef7aa522f2efc1e40be89a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8cf36d4dbe5e1c02b0afc2ca2b33e6cf" id="r_a8cf36d4dbe5e1c02b0afc2ca2b33e6cf"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cf36d4dbe5e1c02b0afc2ca2b33e6cf">RenderSongMenu</a> (const std::vector&lt; Element &gt; &amp;items)</td></tr>
 <tr class="separator:a8cf36d4dbe5e1c02b0afc2ca2b33e6cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa40cf4a9ca2dd2a38f2086cd49aef14d" id="r_aa40cf4a9ca2dd2a38f2086cd49aef14d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa40cf4a9ca2dd2a38f2086cd49aef14d">getMimeTypeFromExtension</a> (const std::string &amp;filePath)</td></tr>
-<tr class="separator:aa40cf4a9ca2dd2a38f2086cd49aef14d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48aff9dfdc661e62e4d9d50000e5f53e" id="r_a48aff9dfdc661e62e4d9d50000e5f53e"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a48aff9dfdc661e62e4d9d50000e5f53e">RenderArtistMenu</a> (const std::vector&lt; std::string &gt; &amp;artist_list)</td></tr>
+<tr class="separator:a48aff9dfdc661e62e4d9d50000e5f53e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c1d5923fa6b279e4313df6ae6f5c7d4" id="r_a2c1d5923fa6b279e4313df6ae6f5c7d4"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c1d5923fa6b279e4313df6ae6f5c7d4">getMimeTypeFromExtension</a> (const std::string &amp;filePath) -&gt; std::string</td></tr>
+<tr class="separator:a2c1d5923fa6b279e4313df6ae6f5c7d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c3039a58e757a40c335b936c371e767" id="r_a3c3039a58e757a40c335b936c371e767"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c3039a58e757a40c335b936c371e767">RenderThumbnail</a> (const std::string &amp;songFilePath, const std::string &amp;cacheDirPath, const std::string &amp;songTitle, const std::string &amp;artistName, const std::string &amp;albumName, const std::string &amp;genre, unsigned int year, unsigned int trackNumber, unsigned int discNumber, float progress)</td></tr>
 <tr class="separator:a3c3039a58e757a40c335b936c371e767"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad679fa505cafd606a870f5834d2f93af" id="r_ad679fa505cafd606a870f5834d2f93af"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad679fa505cafd606a870f5834d2f93af">RenderSearchBar</a> (std::string &amp;user_input) -&gt; Element</td></tr>
+<tr class="separator:ad679fa505cafd606a870f5834d2f93af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4280012329c5a877666414fa33117a92" id="r_a4280012329c5a877666414fa33117a92"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4280012329c5a877666414fa33117a92">RenderDialog</a> (const std::string &amp;dialog_message) -&gt; Element</td></tr>
+<tr class="separator:a4280012329c5a877666414fa33117a92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0354bc85b6985716667c480ef2d82f54" id="r_a0354bc85b6985716667c480ef2d82f54"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0354bc85b6985716667c480ef2d82f54">RenderHelpScreen</a> (<a class="el" href="structKeybinds.html">Keybinds</a> &amp;global_keybinds) -&gt; Element</td></tr>
+<tr class="separator:a0354bc85b6985716667c480ef2d82f54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94fbb4f267f7e6d5eeb261bf64d990a4" id="r_a94fbb4f267f7e6d5eeb261bf64d990a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a94fbb4f267f7e6d5eeb261bf64d990a4">searchModeIndices</a> (const std::vector&lt; std::string &gt; &amp;words, const std::string &amp;prefix, std::vector&lt; int &gt; &amp;search_indices)</td></tr>
+<tr class="separator:a94fbb4f267f7e6d5eeb261bf64d990a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a751e0ebbe56441032165705c236e7162" id="r_a751e0ebbe56441032165705c236e7162"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a751e0ebbe56441032165705c236e7162">UpdateSelectedIndex</a> (int &amp;index, int max_size, bool move_down)</td></tr>
+<tr class="separator:a751e0ebbe56441032165705c236e7162"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b4adf051dfbd664a7f59f21db30b3ab" id="r_a7b4adf051dfbd664a7f59f21db30b3ab"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b4adf051dfbd664a7f59f21db30b3ab">RenderStatusBar</a> (const std::string &amp;status, const std::string &amp;current_song_info, const std::string &amp;additional_info, const std::string &amp;year_info, <a class="el" href="structInLimboColors.html">InLimboColors</a> &amp;global_colors, const std::string &amp;current_artist) -&gt; Element</td></tr>
+<tr class="separator:a7b4adf051dfbd664a7f59f21db30b3ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4388e6383f77a5314a89ba0519b1aa4" id="r_aa4388e6383f77a5314a89ba0519b1aa4"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4388e6383f77a5314a89ba0519b1aa4">RenderVolumeBar</a> (int volume, ftxui::Color volume_bar_col) -&gt; Element</td></tr>
+<tr class="separator:aa4388e6383f77a5314a89ba0519b1aa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a2e2246f99124f69740c8012be4b75c36" name="a2e2246f99124f69740c8012be4b75c36"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e2246f99124f69740c8012be4b75c36">&#9670;&#160;</a></span>charToStr()</h2>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="ad1801a0eef7108118fc5a54e6098ebfa" name="ad1801a0eef7108118fc5a54e6098ebfa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1801a0eef7108118fc5a54e6098ebfa">&#9670;&#160;</a></span>ADDN_PROPS_AVAIL</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::string charToStr </td>
+          <td class="memname">#define ADDN_PROPS_AVAIL&#160;&#160;&#160;&quot;&amp;*&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aba56a61f453fc60302c6c87189871467" name="aba56a61f453fc60302c6c87189871467"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba56a61f453fc60302c6c87189871467">&#9670;&#160;</a></span>LYRICS_AVAIL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LYRICS_AVAIL&#160;&#160;&#160;&quot;L*&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6199aa5ef4a8655f98529342f12e188f" name="a6199aa5ef4a8655f98529342f12e188f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6199aa5ef4a8655f98529342f12e188f">&#9670;&#160;</a></span>MAX_LENGTH_ARTIST_NAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_LENGTH_ARTIST_NAME&#160;&#160;&#160;30</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac5fe6a723443d277de55e15b8e2a30d2" name="ac5fe6a723443d277de55e15b8e2a30d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5fe6a723443d277de55e15b8e2a30d2">&#9670;&#160;</a></span>MAX_LENGTH_SONG_NAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_LENGTH_SONG_NAME&#160;&#160;&#160;50</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>STRING TRUNCATION MACROS </p>
+
+</div>
+</div>
+<a id="a38f7063ec36148c340a4547d8e17b660" name="a38f7063ec36148c340a4547d8e17b660"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38f7063ec36148c340a4547d8e17b660">&#9670;&#160;</a></span>SONG_TITLE_DELIM</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SONG_TITLE_DELIM&#160;&#160;&#160;&quot; • &quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae404e170bcac700cdc2e87d1c5ba04f5" name="ae404e170bcac700cdc2e87d1c5ba04f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae404e170bcac700cdc2e87d1c5ba04f5">&#9670;&#160;</a></span>STATUS_BAR_DELIM</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STATUS_BAR_DELIM&#160;&#160;&#160;&quot; | &quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a38892037627158c30e20ad3d882929c0" name="a38892037627158c30e20ad3d882929c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38892037627158c30e20ad3d882929c0">&#9670;&#160;</a></span>charToStr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto charToStr </td>
           <td>(</td>
           <td class="paramtype">char</td>          <td class="paramname"><span class="paramname"><em>ch</em></span></td><td>)</td>
-          <td></td>
+          <td> -&gt; std::string
+</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -188,6 +312,64 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>currLine</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6b8a1dade19d0cf89a3c2e3f336b01c8" name="a6b8a1dade19d0cf89a3c2e3f336b01c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b8a1dade19d0cf89a3c2e3f336b01c8">&#9670;&#160;</a></span>formatAdditionalInfo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto formatAdditionalInfo </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>genre</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;</td>          <td class="paramname"><span class="paramname"><em>has_comment</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;</td>          <td class="paramname"><span class="paramname"><em>has_lyrics</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;</td>          <td class="paramname"><span class="paramname"><em>show_bitrate</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>bitrate</em></span>&#160;) -&gt; std::string
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a971329da198146110e1e71346d7be95a" name="a971329da198146110e1e71346d7be95a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a971329da198146110e1e71346d7be95a">&#9670;&#160;</a></span>formatDiscTrackInfo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto formatDiscTrackInfo </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>disc_number</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>track_number</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -228,17 +410,18 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa40cf4a9ca2dd2a38f2086cd49aef14d" name="aa40cf4a9ca2dd2a38f2086cd49aef14d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa40cf4a9ca2dd2a38f2086cd49aef14d">&#9670;&#160;</a></span>getMimeTypeFromExtension()</h2>
+<a id="a2c1d5923fa6b279e4313df6ae6f5c7d4" name="a2c1d5923fa6b279e4313df6ae6f5c7d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c1d5923fa6b279e4313df6ae6f5c7d4">&#9670;&#160;</a></span>getMimeTypeFromExtension()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::string getMimeTypeFromExtension </td>
+          <td class="memname">auto getMimeTypeFromExtension </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>filePath</em></span></td><td>)</td>
-          <td></td>
+          <td> -&gt; std::string
+</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -279,8 +462,35 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa0e7f463ba7f6a6f02a1bd7bd7e33054" name="aa0e7f463ba7f6a6f02a1bd7bd7e33054"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0e7f463ba7f6a6f02a1bd7bd7e33054">&#9670;&#160;</a></span>renderAlbumName()</h2>
+<a id="a32a12e3a8f61c86e816a42396b92e301" name="a32a12e3a8f61c86e816a42396b92e301"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32a12e3a8f61c86e816a42396b92e301">&#9670;&#160;</a></span>handleToggleMute()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto handleToggleMute </td>
+          <td>(</td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>volume</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>lastVolume</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool *</td>          <td class="paramname"><span class="paramname"><em>muted</em></span>&#160;) -&gt; int
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5fcb063cf073d7a1067d0431dad277b6" name="a5fcb063cf073d7a1067d0431dad277b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5fcb063cf073d7a1067d0431dad277b6">&#9670;&#160;</a></span>renderAlbumName()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -298,7 +508,100 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">ftxui::Color</td>          <td class="paramname"><span class="paramname"><em>sel_color</em></span>&#160;)</td>
+          <td class="paramtype">ftxui::Color</td>          <td class="paramname"><span class="paramname"><em>sel_color</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ftxui::Color</td>          <td class="paramname"><span class="paramname"><em>sel_color_fg</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a48aff9dfdc661e62e4d9d50000e5f53e" name="a48aff9dfdc661e62e4d9d50000e5f53e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48aff9dfdc661e62e4d9d50000e5f53e">&#9670;&#160;</a></span>RenderArtistMenu()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto RenderArtistMenu </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>artist_list</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3b8148459d48503dab72c85f83e43de5" name="a3b8148459d48503dab72c85f83e43de5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b8148459d48503dab72c85f83e43de5">&#9670;&#160;</a></span>RenderArtistNames()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto RenderArtistNames </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>artist_list</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4280012329c5a877666414fa33117a92" name="a4280012329c5a877666414fa33117a92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4280012329c5a877666414fa33117a92">&#9670;&#160;</a></span>RenderDialog()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto RenderDialog </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>dialog_message</em></span></td><td>)</td>
+          <td> -&gt; Element
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0354bc85b6985716667c480ef2d82f54" name="a0354bc85b6985716667c480ef2d82f54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0354bc85b6985716667c480ef2d82f54">&#9670;&#160;</a></span>RenderHelpScreen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto RenderHelpScreen </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structKeybinds.html">Keybinds</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>global_keybinds</em></span></td><td>)</td>
+          <td> -&gt; Element
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad679fa505cafd606a870f5834d2f93af" name="ad679fa505cafd606a870f5834d2f93af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad679fa505cafd606a870f5834d2f93af">&#9670;&#160;</a></span>RenderSearchBar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto RenderSearchBar </td>
+          <td>(</td>
+          <td class="paramtype">std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>user_input</em></span></td><td>)</td>
+          <td> -&gt; Element
+</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -342,6 +645,48 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>duration</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7b4adf051dfbd664a7f59f21db30b3ab" name="a7b4adf051dfbd664a7f59f21db30b3ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b4adf051dfbd664a7f59f21db30b3ab">&#9670;&#160;</a></span>RenderStatusBar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto RenderStatusBar </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>status</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>current_song_info</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>additional_info</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>year_info</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structInLimboColors.html">InLimboColors</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>global_colors</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>current_artist</em></span>&#160;) -&gt; Element
+</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -403,6 +748,80 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>progress</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa4388e6383f77a5314a89ba0519b1aa4" name="aa4388e6383f77a5314a89ba0519b1aa4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4388e6383f77a5314a89ba0519b1aa4">&#9670;&#160;</a></span>RenderVolumeBar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto RenderVolumeBar </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>volume</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ftxui::Color</td>          <td class="paramname"><span class="paramname"><em>volume_bar_col</em></span>&#160;) -&gt; Element
+</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a94fbb4f267f7e6d5eeb261bf64d990a4" name="a94fbb4f267f7e6d5eeb261bf64d990a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94fbb4f267f7e6d5eeb261bf64d990a4">&#9670;&#160;</a></span>searchModeIndices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void searchModeIndices </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>words</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>prefix</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; int &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>search_indices</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a751e0ebbe56441032165705c236e7162" name="a751e0ebbe56441032165705c236e7162"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a751e0ebbe56441032165705c236e7162">&#9670;&#160;</a></span>UpdateSelectedIndex()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UpdateSelectedIndex </td>
+          <td>(</td>
+          <td class="paramtype">int &amp;</td>          <td class="paramname"><span class="paramname"><em>index</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>max_size</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>move_down</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">

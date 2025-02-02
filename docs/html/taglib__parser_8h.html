@@ -148,35 +148,39 @@ Functions</h2></td></tr>
 <tr class="memitem:afff220fe53f14744f741b6945e3e765b" id="r_afff220fe53f14744f741b6945e3e765b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afff220fe53f14744f741b6945e3e765b">sendErrMsg</a> (std::string <a class="el" href="#a273c56409c0777c9b2750bb3f59f076b">debugLogBoolStr</a>, std::string errMsg)</td></tr>
 <tr class="memdesc:afff220fe53f14744f741b6945e3e765b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an error message based on the debug log setting.  <br /></td></tr>
 <tr class="separator:afff220fe53f14744f741b6945e3e765b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a663081b243b450cd9b222d681eb112bf" id="r_a663081b243b450cd9b222d681eb112bf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a663081b243b450cd9b222d681eb112bf">extractThumbnail</a> (const std::string &amp;audioFilePath, const std::string &amp;outputImagePath)</td></tr>
-<tr class="memdesc:a663081b243b450cd9b222d681eb112bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts the thumbnail (album art) from an audio file and saves it to an image file. (Works for mp3 and flac)  <br /></td></tr>
-<tr class="separator:a663081b243b450cd9b222d681eb112bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3fc7742ce3b9bf381198c86f02cdd76" id="r_af3fc7742ce3b9bf381198c86f02cdd76"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3fc7742ce3b9bf381198c86f02cdd76">extractThumbnail</a> (const std::string &amp;audioFilePath, const std::string &amp;outputImagePath) -&gt; bool</td></tr>
+<tr class="memdesc:af3fc7742ce3b9bf381198c86f02cdd76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts the thumbnail (album art) from an audio file and saves it to an image file. (Works for mp3 and flac)  <br /></td></tr>
+<tr class="separator:af3fc7742ce3b9bf381198c86f02cdd76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a273c56409c0777c9b2750bb3f59f076b" id="r_a273c56409c0777c9b2750bb3f59f076b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a273c56409c0777c9b2750bb3f59f076b">debugLogBoolStr</a></td></tr>
 <tr class="separator:a273c56409c0777c9b2750bb3f59f076b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fb921b47cb496f77917ce7922e769e6" id="r_a4fb921b47cb496f77917ce7922e769e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4fb921b47cb496f77917ce7922e769e6">debugLogBool</a></td></tr>
+<tr class="separator:a4fb921b47cb496f77917ce7922e769e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32df213bd7516d64a984cc0452596d11" id="r_a32df213bd7516d64a984cc0452596d11"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32df213bd7516d64a984cc0452596d11">unknownArtistTracks</a> = 0</td></tr>
+<tr class="separator:a32df213bd7516d64a984cc0452596d11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A header file for the <a class="el" href="classTagLibParser.html" title="A class for parsing metadata from audio files.">TagLibParser</a> class and <a class="el" href="structMetadata.html" title="A structure to hold metadata information for a song.">Metadata</a> structure, used to parse metadata from audio files. </p>
 <p>This file defines a <code><a class="el" href="structMetadata.html" title="A structure to hold metadata information for a song.">Metadata</a></code> structure for storing song information such as title, artist, album, and more. It also defines the <code><a class="el" href="classTagLibParser.html" title="A class for parsing metadata from audio files.">TagLibParser</a></code> class for reading and extracting metadata from audio files using the TagLib library. In addition, the file provides utility functions for printing metadata, handling error messages, and extracting thumbnails from audio files.</p>
 <p><b>Note</b>: In the Emscripten build, dummy functions are used because TagLib must be compiled using Emscripten to function correctly in a web environment. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a663081b243b450cd9b222d681eb112bf" name="a663081b243b450cd9b222d681eb112bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a663081b243b450cd9b222d681eb112bf">&#9670;&#160;</a></span>extractThumbnail()</h2>
+<a id="af3fc7742ce3b9bf381198c86f02cdd76" name="af3fc7742ce3b9bf381198c86f02cdd76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3fc7742ce3b9bf381198c86f02cdd76">&#9670;&#160;</a></span>extractThumbnail()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool extractThumbnail </td>
+          <td class="memname">auto extractThumbnail </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>audioFilePath</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>outputImagePath</em></span>&#160;)</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>outputImagePath</em></span>&#160;) -&gt; bool </td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -249,6 +253,20 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="a4fb921b47cb496f77917ce7922e769e6" name="a4fb921b47cb496f77917ce7922e769e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fb921b47cb496f77917ce7922e769e6">&#9670;&#160;</a></span>debugLogBool</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool debugLogBool</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a273c56409c0777c9b2750bb3f59f076b" name="a273c56409c0777c9b2750bb3f59f076b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a273c56409c0777c9b2750bb3f59f076b">&#9670;&#160;</a></span>debugLogBoolStr</h2>
 
@@ -257,6 +275,20 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">std::string debugLogBoolStr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a32df213bd7516d64a984cc0452596d11" name="a32df213bd7516d64a984cc0452596d11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32df213bd7516d64a984cc0452596d11">&#9670;&#160;</a></span>unknownArtistTracks</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int unknownArtistTracks = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">

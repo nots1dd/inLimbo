@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['redblacktree_0',['RedBlackTree',['../classRedBlackTree.html',1,'']]]
+  ['queuestate_0',['QueueState',['../structQueueState.html',1,'']]]
 ];

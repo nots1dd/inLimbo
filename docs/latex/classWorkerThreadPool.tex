@@ -2,22 +2,32 @@
 \hypertarget{classWorkerThreadPool}{}\label{classWorkerThreadPool}\index{WorkerThreadPool@{WorkerThreadPool}}
 
 
+A thread pool that manages a collection of worker threads.  
+
+
+
+
 {\ttfamily \#include $<$workers.\+hpp$>$}
 
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{classWorkerThreadPool_a060a705b0877a7733c5edf3723ef7705}{Worker\+Thread\+Pool}} (size\+\_\+t thread\+\_\+count=std\+::thread\+::hardware\+\_\+concurrency())
-\begin{DoxyCompactList}\small\item\em Construct a worker thread pool with a specified number of threads. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Constructs a worker thread pool with a specified number of threads. \end{DoxyCompactList}\item 
 {\footnotesize template$<$class F, class... Args$>$ }\\auto \mbox{\hyperlink{classWorkerThreadPool_ae326efda62a625c6b07f099a950696e5}{enqueue}} (F \&\&f, Args \&\&... args) -\/$>$ std\+::future$<$ typename std\+::result\+\_\+of$<$ F(Args...)$>$\+::type $>$
-\begin{DoxyCompactList}\small\item\em Enqueue a task to be executed by worker threads. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Enqueues a task to be executed by the worker threads. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classWorkerThreadPool_a6e2ff558062ca50fad6297e83bd4e9ed}{\texorpdfstring{$\sim$}{\string~}\+Worker\+Thread\+Pool}} ()
-\begin{DoxyCompactList}\small\item\em Gracefully shutdown the thread pool. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Gracefully shuts down the thread pool. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classWorkerThreadPool_a061dc7111f2c9292a1dc05925f06d81f}{Worker\+Thread\+Pool}} (const \mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}} \&)=delete
 \item 
-\mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}} \& \mbox{\hyperlink{classWorkerThreadPool_a68d5ee70ce73b90d5e3cdd1e4ff16e57}{operator=}} (const \mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}} \&)=delete
+auto \mbox{\hyperlink{classWorkerThreadPool_a91131a08a0f2f123f2ba9d61ecfd4583}{operator=}} (const \mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}} \&) -\/$>$ \mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}} \&=delete
 \end{DoxyCompactItemize}
 
+
+\doxysubsection{Detailed Description}
+A thread pool that manages a collection of worker threads. 
+
+This class allows the management of a pool of threads to execute tasks concurrently. The pool will execute submitted tasks asynchronously using worker threads. The tasks are queued and workers are assigned to execute them. Once a task is completed, the worker is available for another task. The pool supports graceful shutdown and ensures no task is left unfinished when the pool is stopped. 
 
 \doxysubsection{Constructor \& Destructor Documentation}
 \Hypertarget{classWorkerThreadPool_a060a705b0877a7733c5edf3723ef7705}\index{WorkerThreadPool@{WorkerThreadPool}!WorkerThreadPool@{WorkerThreadPool}}
@@ -28,11 +38,13 @@ Worker\+Thread\+Pool\+::\+Worker\+Thread\+Pool (\begin{DoxyParamCaption}\item[{s
 
 
 
-Construct a worker thread pool with a specified number of threads. 
+Constructs a worker thread pool with a specified number of threads. 
+
+Initializes the pool with a given number of threads, which defaults to the number of hardware threads available on the system. Each worker thread will continuously wait for tasks and execute them as they are added to the queue.
 
 
 \begin{DoxyParams}{Parameters}
-{\em thread\+\_\+count} & Number of worker threads to initialize \\
+{\em thread\+\_\+count} & The number of threads to initialize. Defaults to the number of hardware threads. \\
 \hline
 \end{DoxyParams}
 \Hypertarget{classWorkerThreadPool_a6e2ff558062ca50fad6297e83bd4e9ed}\index{WorkerThreadPool@{WorkerThreadPool}!````~WorkerThreadPool@{\texorpdfstring{$\sim$}{\string~}WorkerThreadPool}}
@@ -43,9 +55,9 @@ Worker\+Thread\+Pool\+::\texorpdfstring{$\sim$}{\string~}\+Worker\+Thread\+Pool 
 
 
 
-Gracefully shutdown the thread pool. 
+Gracefully shuts down the thread pool. 
 
-\Hypertarget{classWorkerThreadPool_a061dc7111f2c9292a1dc05925f06d81f}\index{WorkerThreadPool@{WorkerThreadPool}!WorkerThreadPool@{WorkerThreadPool}}
+This method will stop accepting new tasks and wait for all worker threads to finish their current tasks before destroying the pool. Once all threads have finished, the destructor will join all threads, ensuring they are properly cleaned up. \Hypertarget{classWorkerThreadPool_a061dc7111f2c9292a1dc05925f06d81f}\index{WorkerThreadPool@{WorkerThreadPool}!WorkerThreadPool@{WorkerThreadPool}}
 \index{WorkerThreadPool@{WorkerThreadPool}!WorkerThreadPool@{WorkerThreadPool}}
 \doxysubsubsection{\texorpdfstring{WorkerThreadPool()}{WorkerThreadPool()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily \label{classWorkerThreadPool_a061dc7111f2c9292a1dc05925f06d81f} 
@@ -63,23 +75,37 @@ auto Worker\+Thread\+Pool\+::enqueue (\begin{DoxyParamCaption}\item[{F \&\&}]{f}
 
 
 
-Enqueue a task to be executed by worker threads. 
+Enqueues a task to be executed by the worker threads. 
+
+This method allows submitting a task to the pool. The task will be executed by one of the available worker threads. The function returns a std\+::future that can be used to retrieve the result of the task once it is completed.
 
 
 \begin{DoxyTemplParams}{Template Parameters}
-{\em F} & Type of the function/callable \\
+{\em F} & The type of the callable (function, lambda, etc.) to be executed. \\
 \hline
-{\em Args} & Types of arguments \\
+{\em Args} & The types of arguments that the callable accepts. \\
 \hline
 \end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em f} & The function or callable to be executed. \\
+\hline
+{\em args} & The arguments to pass to the callable. \\
+\hline
+\end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-std\+::future containing the result of the task 
+std\+::future\texorpdfstring{$<$}{<}typename std\+::result\+\_\+of$<$\+F(\+Args...)$>$\+::type\texorpdfstring{$>$}{>} A future representing the result of the task once it finishes executing.
 \end{DoxyReturn}
-\Hypertarget{classWorkerThreadPool_a68d5ee70ce73b90d5e3cdd1e4ff16e57}\index{WorkerThreadPool@{WorkerThreadPool}!operator=@{operator=}}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::runtime\+\_\+error} & If the thread pool has been stopped and no more tasks can be enqueued. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{classWorkerThreadPool_a91131a08a0f2f123f2ba9d61ecfd4583}\index{WorkerThreadPool@{WorkerThreadPool}!operator=@{operator=}}
 \index{operator=@{operator=}!WorkerThreadPool@{WorkerThreadPool}}
 \doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
-{\footnotesize\ttfamily \label{classWorkerThreadPool_a68d5ee70ce73b90d5e3cdd1e4ff16e57} 
-\mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}} \& Worker\+Thread\+Pool\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+{\footnotesize\ttfamily \label{classWorkerThreadPool_a91131a08a0f2f123f2ba9d61ecfd4583} 
+auto Worker\+Thread\+Pool\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}} \&}]{}{}\end{DoxyParamCaption}) -\/$>$  \mbox{\hyperlink{classWorkerThreadPool}{Worker\+Thread\+Pool}} \&=delete\hspace{0.3cm}{\ttfamily [delete]}}
 
 
 

@@ -124,14 +124,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ade3387406ebf3bf900d561b8e72a2a3c" id="r_ade3387406ebf3bf900d561b8e72a2a3c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade3387406ebf3bf900d561b8e72a2a3c">~MiniAudioPlayer</a> ()</td></tr>
 <tr class="memdesc:ade3387406ebf3bf900d561b8e72a2a3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys the <a class="el" href="classMiniAudioPlayer.html" title="A class for playing audio using the MiniAudio library.">MiniAudioPlayer</a> object, stopping any playback and cleaning up resources.  <br /></td></tr>
 <tr class="separator:ade3387406ebf3bf900d561b8e72a2a3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54f92bf7ee24754c88ebbcf294fe65e2" id="r_a54f92bf7ee24754c88ebbcf294fe65e2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structAudioDevice.html">AudioDevice</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a54f92bf7ee24754c88ebbcf294fe65e2">enumerateDevices</a> ()</td></tr>
-<tr class="separator:a54f92bf7ee24754c88ebbcf294fe65e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8931efed21c3040f70023ff77553d74" id="r_aa8931efed21c3040f70023ff77553d74"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8931efed21c3040f70023ff77553d74">setDevice</a> (const ma_device_id &amp;id)</td></tr>
-<tr class="memdesc:aa8931efed21c3040f70023ff77553d74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the device ID for playback.  <br /></td></tr>
-<tr class="separator:aa8931efed21c3040f70023ff77553d74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add00a354c2bdd42a3d929e8203f5c4f1" id="r_add00a354c2bdd42a3d929e8203f5c4f1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add00a354c2bdd42a3d929e8203f5c4f1">loadFile</a> (const std::string &amp;filePath, bool reloadNextFile)</td></tr>
-<tr class="memdesc:add00a354c2bdd42a3d929e8203f5c4f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an audio file for playback.  <br /></td></tr>
-<tr class="separator:add00a354c2bdd42a3d929e8203f5c4f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ccbfda68bf9a5f232f5c1ec67545a58" id="r_a0ccbfda68bf9a5f232f5c1ec67545a58"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ccbfda68bf9a5f232f5c1ec67545a58">enumerateDevices</a> () -&gt; std::vector&lt; <a class="el" href="structAudioDevice.html">AudioDevice</a> &gt;</td></tr>
+<tr class="separator:a0ccbfda68bf9a5f232f5c1ec67545a58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50aa0687df837c77d142f8ba284607ef" id="r_a50aa0687df837c77d142f8ba284607ef"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50aa0687df837c77d142f8ba284607ef">loadFileAsync</a> (const std::string &amp;filePath, bool reloadNextFile) -&gt; std::future&lt; int &gt;</td></tr>
+<tr class="memdesc:a50aa0687df837c77d142f8ba284607ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the device ID for playback.  <br /></td></tr>
+<tr class="separator:a50aa0687df837c77d142f8ba284607ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afaed2fe579e6ec80066056d622f42b8a" id="r_afaed2fe579e6ec80066056d622f42b8a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afaed2fe579e6ec80066056d622f42b8a">play</a> ()</td></tr>
 <tr class="memdesc:afaed2fe579e6ec80066056d622f42b8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts playback of the loaded audio file.  <br /></td></tr>
 <tr class="separator:afaed2fe579e6ec80066056d622f42b8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -147,18 +144,29 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab2c4bae21c2ea00b2f3af8b697835950" id="r_ab2c4bae21c2ea00b2f3af8b697835950"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab2c4bae21c2ea00b2f3af8b697835950">setVolume</a> (float volume)</td></tr>
 <tr class="memdesc:ab2c4bae21c2ea00b2f3af8b697835950"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the volume of the audio playback.  <br /></td></tr>
 <tr class="separator:ab2c4bae21c2ea00b2f3af8b697835950"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ba783ad7c4b8b695298ff5d554e1922" id="r_a0ba783ad7c4b8b695298ff5d554e1922"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ba783ad7c4b8b695298ff5d554e1922">getVolume</a> () const</td></tr>
-<tr class="memdesc:a0ba783ad7c4b8b695298ff5d554e1922"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current volume of the audio playback.  <br /></td></tr>
-<tr class="separator:a0ba783ad7c4b8b695298ff5d554e1922"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ccaf3af3d5377c91dbf24685a7e3440" id="r_a4ccaf3af3d5377c91dbf24685a7e3440"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ccaf3af3d5377c91dbf24685a7e3440">isCurrentlyPlaying</a> ()</td></tr>
-<tr class="memdesc:a4ccaf3af3d5377c91dbf24685a7e3440"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the sound is currently playing.  <br /></td></tr>
-<tr class="separator:a4ccaf3af3d5377c91dbf24685a7e3440"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af23b5fbce361c592b6916bc2955db1e5" id="r_af23b5fbce361c592b6916bc2955db1e5"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af23b5fbce361c592b6916bc2955db1e5">getDuration</a> ()</td></tr>
-<tr class="memdesc:af23b5fbce361c592b6916bc2955db1e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the total duration of the sound in seconds.  <br /></td></tr>
-<tr class="separator:af23b5fbce361c592b6916bc2955db1e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac173876d6e4accb4100ecd7fa1e0ac69" id="r_ac173876d6e4accb4100ecd7fa1e0ac69"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac173876d6e4accb4100ecd7fa1e0ac69">seekTime</a> (int seconds)</td></tr>
-<tr class="memdesc:ac173876d6e4accb4100ecd7fa1e0ac69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Seeks to a specific time in the audio (in seconds).  <br /></td></tr>
-<tr class="separator:ac173876d6e4accb4100ecd7fa1e0ac69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2133c80fc532329d753c1d7f5307617" id="r_ad2133c80fc532329d753c1d7f5307617"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2133c80fc532329d753c1d7f5307617">getVolume</a> () const -&gt; float</td></tr>
+<tr class="memdesc:ad2133c80fc532329d753c1d7f5307617"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current volume of the audio playback.  <br /></td></tr>
+<tr class="separator:ad2133c80fc532329d753c1d7f5307617"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a360a39076f0fb1249cd9a60801e25e63" id="r_a360a39076f0fb1249cd9a60801e25e63"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a360a39076f0fb1249cd9a60801e25e63">isCurrentlyPlaying</a> () -&gt; bool</td></tr>
+<tr class="memdesc:a360a39076f0fb1249cd9a60801e25e63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the sound is currently playing.  <br /></td></tr>
+<tr class="separator:a360a39076f0fb1249cd9a60801e25e63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97ba0a1b7a32003427a42ee4b61edb7d" id="r_a97ba0a1b7a32003427a42ee4b61edb7d"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a97ba0a1b7a32003427a42ee4b61edb7d">getDurationAsync</a> () -&gt; std::future&lt; float &gt;</td></tr>
+<tr class="memdesc:a97ba0a1b7a32003427a42ee4b61edb7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the total duration of the sound in seconds. (async function)  <br /></td></tr>
+<tr class="separator:a97ba0a1b7a32003427a42ee4b61edb7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6635f847ff764abab1d183e2d8dd2028" id="r_a6635f847ff764abab1d183e2d8dd2028"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6635f847ff764abab1d183e2d8dd2028">seekTime</a> (int seconds) -&gt; double</td></tr>
+<tr class="memdesc:a6635f847ff764abab1d183e2d8dd2028"><td class="mdescLeft">&#160;</td><td class="mdescRight">Seeks to a specific time in the audio (in seconds).  <br /></td></tr>
+<tr class="separator:a6635f847ff764abab1d183e2d8dd2028"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff394fbef12b47db2ff981085ab8083b" id="r_aff394fbef12b47db2ff981085ab8083b"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff394fbef12b47db2ff981085ab8083b">getAudioPlaybackDetails</a> () const -&gt; std::vector&lt; std::string &gt;</td></tr>
+<tr class="memdesc:aff394fbef12b47db2ff981085ab8083b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets detailed information about the current audio playback configuration.  <br /></td></tr>
+<tr class="separator:aff394fbef12b47db2ff981085ab8083b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a68f9d83649d1646e8a1474aa1db6ba" id="r_a2a68f9d83649d1646e8a1474aa1db6ba"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a68f9d83649d1646e8a1474aa1db6ba">getChannelLayoutString</a> (ma_uint32 channels) const -&gt; std::string</td></tr>
+<tr class="separator:a2a68f9d83649d1646e8a1474aa1db6ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98d404c6047b94777549ebd2c3fd44d8" id="r_a98d404c6047b94777549ebd2c3fd44d8"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98d404c6047b94777549ebd2c3fd44d8">getFormatString</a> (ma_format format) const -&gt; std::string</td></tr>
+<tr class="separator:a98d404c6047b94777549ebd2c3fd44d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a790dd7d0ce5195126768741a50affc13" id="r_a790dd7d0ce5195126768741a50affc13"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a790dd7d0ce5195126768741a50affc13">getBitsPerSample</a> (ma_format format) const -&gt; uint32_t</td></tr>
+<tr class="separator:a790dd7d0ce5195126768741a50affc13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3349624f003bdfa624cc2544831d470e" id="r_a3349624f003bdfa624cc2544831d470e"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3349624f003bdfa624cc2544831d470e">getPlaybackStateString</a> () const -&gt; std::string</td></tr>
+<tr class="separator:a3349624f003bdfa624cc2544831d470e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A class for playing audio using the MiniAudio library. </p>
@@ -227,8 +235,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a54f92bf7ee24754c88ebbcf294fe65e2" name="a54f92bf7ee24754c88ebbcf294fe65e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54f92bf7ee24754c88ebbcf294fe65e2">&#9670;&#160;</a></span>enumerateDevices()</h2>
+<a id="a0ccbfda68bf9a5f232f5c1ec67545a58" name="a0ccbfda68bf9a5f232f5c1ec67545a58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ccbfda68bf9a5f232f5c1ec67545a58">&#9670;&#160;</a></span>enumerateDevices()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,10 +245,11 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; <a class="el" href="structAudioDevice.html">AudioDevice</a> &gt; MiniAudioPlayer::enumerateDevices </td>
+          <td class="memname">auto MiniAudioPlayer::enumerateDevices </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
+          <td> -&gt; std::vector&lt;<a class="el" href="structAudioDevice.html">AudioDevice</a>&gt;
+  </td>
         </tr>
       </table>
   </td>
@@ -252,8 +261,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af23b5fbce361c592b6916bc2955db1e5" name="af23b5fbce361c592b6916bc2955db1e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af23b5fbce361c592b6916bc2955db1e5">&#9670;&#160;</a></span>getDuration()</h2>
+<a id="aff394fbef12b47db2ff981085ab8083b" name="aff394fbef12b47db2ff981085ab8083b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff394fbef12b47db2ff981085ab8083b">&#9670;&#160;</a></span>getAudioPlaybackDetails()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -262,10 +271,93 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">float MiniAudioPlayer::getDuration </td>
+          <td class="memname">auto MiniAudioPlayer::getAudioPlaybackDetails </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
+          <td> const -&gt; std::vector&lt;std::string&gt;
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets detailed information about the current audio playback configuration. </p>
+<p>This method retrieves and returns details such as the sample rate, channels, format, and other playback-related information for the current audio.</p>
+<dl class="section return"><dt>Returns</dt><dd>A formatted string containing detailed audio configuration and playback information. </dd></dl>
+
+</div>
+</div>
+<a id="a790dd7d0ce5195126768741a50affc13" name="a790dd7d0ce5195126768741a50affc13"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a790dd7d0ce5195126768741a50affc13">&#9670;&#160;</a></span>getBitsPerSample()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto MiniAudioPlayer::getBitsPerSample </td>
+          <td>(</td>
+          <td class="paramtype">ma_format</td>          <td class="paramname"><span class="paramname"><em>format</em></span></td><td>)</td>
+          <td> const -&gt; uint32_t
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2a68f9d83649d1646e8a1474aa1db6ba" name="a2a68f9d83649d1646e8a1474aa1db6ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a68f9d83649d1646e8a1474aa1db6ba">&#9670;&#160;</a></span>getChannelLayoutString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto MiniAudioPlayer::getChannelLayoutString </td>
+          <td>(</td>
+          <td class="paramtype">ma_uint32</td>          <td class="paramname"><span class="paramname"><em>channels</em></span></td><td>)</td>
+          <td> const -&gt; std::string
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a97ba0a1b7a32003427a42ee4b61edb7d" name="a97ba0a1b7a32003427a42ee4b61edb7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97ba0a1b7a32003427a42ee4b61edb7d">&#9670;&#160;</a></span>getDurationAsync()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto MiniAudioPlayer::getDurationAsync </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> -&gt; std::future&lt;float&gt;
+  </td>
         </tr>
       </table>
   </td>
@@ -275,7 +367,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the total duration of the sound in seconds. </p>
+<p>Gets the total duration of the sound in seconds. (async function) </p>
 <p>This method retrieves the total duration of the loaded audio file in seconds.</p>
 <dl class="section return"><dt>Returns</dt><dd>The duration of the sound in seconds. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
@@ -287,8 +379,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0ba783ad7c4b8b695298ff5d554e1922" name="a0ba783ad7c4b8b695298ff5d554e1922"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ba783ad7c4b8b695298ff5d554e1922">&#9670;&#160;</a></span>getVolume()</h2>
+<a id="a98d404c6047b94777549ebd2c3fd44d8" name="a98d404c6047b94777549ebd2c3fd44d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98d404c6047b94777549ebd2c3fd44d8">&#9670;&#160;</a></span>getFormatString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -297,15 +389,67 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">float MiniAudioPlayer::getVolume </td>
+          <td class="memname">auto MiniAudioPlayer::getFormatString </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype">ma_format</td>          <td class="paramname"><span class="paramname"><em>format</em></span></td><td>)</td>
+          <td> const -&gt; std::string
+  </td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3349624f003bdfa624cc2544831d470e" name="a3349624f003bdfa624cc2544831d470e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3349624f003bdfa624cc2544831d470e">&#9670;&#160;</a></span>getPlaybackStateString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto MiniAudioPlayer::getPlaybackStateString </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const -&gt; std::string
+  </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad2133c80fc532329d753c1d7f5307617" name="ad2133c80fc532329d753c1d7f5307617"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2133c80fc532329d753c1d7f5307617">&#9670;&#160;</a></span>getVolume()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto MiniAudioPlayer::getVolume </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const -&gt; float </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -316,8 +460,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a4ccaf3af3d5377c91dbf24685a7e3440" name="a4ccaf3af3d5377c91dbf24685a7e3440"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4ccaf3af3d5377c91dbf24685a7e3440">&#9670;&#160;</a></span>isCurrentlyPlaying()</h2>
+<a id="a360a39076f0fb1249cd9a60801e25e63" name="a360a39076f0fb1249cd9a60801e25e63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a360a39076f0fb1249cd9a60801e25e63">&#9670;&#160;</a></span>isCurrentlyPlaying()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -326,10 +470,11 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool MiniAudioPlayer::isCurrentlyPlaying </td>
+          <td class="memname">auto MiniAudioPlayer::isCurrentlyPlaying </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
+          <td> -&gt; bool
+  </td>
         </tr>
       </table>
   </td>
@@ -345,8 +490,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="add00a354c2bdd42a3d929e8203f5c4f1" name="add00a354c2bdd42a3d929e8203f5c4f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add00a354c2bdd42a3d929e8203f5c4f1">&#9670;&#160;</a></span>loadFile()</h2>
+<a id="a50aa0687df837c77d142f8ba284607ef" name="a50aa0687df837c77d142f8ba284607ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50aa0687df837c77d142f8ba284607ef">&#9670;&#160;</a></span>loadFileAsync()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -355,14 +500,15 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int MiniAudioPlayer::loadFile </td>
+          <td class="memname">auto MiniAudioPlayer::loadFileAsync </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>filePath</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>reloadNextFile</em></span>&#160;)</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>reloadNextFile</em></span>&#160;) -&gt; std::future&lt;int&gt;
+  </td>
         </tr>
       </table>
   </td>
@@ -372,7 +518,14 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Loads an audio file for playback. </p>
+<p>Sets the device ID for playback. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The device ID to set for playback.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Loads an audio file for playback.</p>
 <p>This method loads the audio file into memory for playback. If a file is already loaded, it is unloaded before loading the new file. If the player is currently playing, it stops the playback first.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -486,8 +639,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac173876d6e4accb4100ecd7fa1e0ac69" name="ac173876d6e4accb4100ecd7fa1e0ac69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac173876d6e4accb4100ecd7fa1e0ac69">&#9670;&#160;</a></span>seekTime()</h2>
+<a id="a6635f847ff764abab1d183e2d8dd2028" name="a6635f847ff764abab1d183e2d8dd2028"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6635f847ff764abab1d183e2d8dd2028">&#9670;&#160;</a></span>seekTime()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -496,10 +649,11 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double MiniAudioPlayer::seekTime </td>
+          <td class="memname">auto MiniAudioPlayer::seekTime </td>
           <td>(</td>
           <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>seconds</em></span></td><td>)</td>
-          <td></td>
+          <td> -&gt; double
+  </td>
         </tr>
       </table>
   </td>
@@ -518,39 +672,6 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The actual time (in seconds) that the sound was seeked to. </dd></dl>
-
-</div>
-</div>
-<a id="aa8931efed21c3040f70023ff77553d74" name="aa8931efed21c3040f70023ff77553d74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8931efed21c3040f70023ff77553d74">&#9670;&#160;</a></span>setDevice()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void MiniAudioPlayer::setDevice </td>
-          <td>(</td>
-          <td class="paramtype">const ma_device_id &amp;</td>          <td class="paramname"><span class="paramname"><em>id</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Sets the device ID for playback. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">id</td><td>The device ID to set for playback. </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>

@@ -107,149 +107,158 @@ $(function(){initNavTree('toml__parser_8hpp_source.html',''); initResizable(true
   <div class="headertitle"><div class="title">toml_parser.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="toml__parser_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef TOML_PARSER_HPP</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define TOML_PARSER_HPP</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;toml.hpp&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;cstdlib&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;filesystem&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">using namespace </span>std;</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span>fs = std::filesystem;</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#aa93a16ba4156c106728f723319c63320">   17</a></span><span class="preprocessor">#define PARENT_LIB            &quot;library&quot;   </span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a92261746a473bcb8362d9137634a5a75">   18</a></span><span class="preprocessor">#define PARENT_LIB_FIELD_NAME &quot;name&quot;      </span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a7904e33d7508ef59ae38aa75f76493bb">   19</a></span><span class="preprocessor">#define PARENT_LIB_FIELD_DIR  &quot;directory&quot; </span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a392cc09f85ec01c77982dafa6bf29631">   21</a></span><span class="preprocessor">#define PARENT_FTP                &quot;ftp&quot;           </span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#ab485862337b7bcf40adf313b686f57f2">   22</a></span><span class="preprocessor">#define PARENT_FTP_FIELD_USER     &quot;username&quot;      </span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a8a5ad3b98be5584a7e3afaefe04ba3b8">   23</a></span><span class="preprocessor">#define PARENT_FTP_FIELD_SALT     &quot;salt&quot;          </span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#ac3eb75d2f5670fffbfaa73d5326f9ca1">   24</a></span><span class="preprocessor">#define PARENT_FTP_FIELD_PWD_HASH &quot;password_hash&quot; </span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a10265fc668d386d5d02e91115db9a7cc">   26</a></span><span class="preprocessor">#define PARENT_DBG                  &quot;debug&quot;      </span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#addfc43cbcf5a4328846696cee721a4de">   27</a></span><span class="preprocessor">#define PARENT_DBG_FIELD_PARSER_LOG &quot;parser_log&quot; </span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">/* SPECIAL KEYBINDS MACROS */</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a68fd11c312f2eb908cc3cf08ae9b9c28">   30</a></span><span class="preprocessor">#define PARENT_KEYBINDS           &quot;keybinds&quot; </span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#aa6b5fdeebb278e6f01a1100d911f359a">   31</a></span><span class="preprocessor">#define SPECIAL_KEYBIND_ENTER_STR &quot;Enter&quot;    </span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a02f4670d2039e360c451f232420182ac">   32</a></span><span class="preprocessor">#define SPECIAL_KEYBIND_TAB_STR   &quot;Tab&quot;      </span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#aac0a4c91d4fed2417a52d531798d7367">   33</a></span><span class="preprocessor">#define SPECIAL_KEYBIND_SPACE_STR &quot;Space&quot;    </span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#af66fd044a3918b6803d0f0744276d171">   35</a></span><span class="preprocessor">#define PARENT_COLORS &quot;colors&quot; </span><span class="preprocessor"></span></div>
+<a href="toml__parser_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;toml.hpp&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;cstdlib&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;filesystem&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">using namespace </span>std;</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span>fs = std::filesystem;</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#aa93a16ba4156c106728f723319c63320">   16</a></span><span class="preprocessor">#define PARENT_LIB            &quot;library&quot;   </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a92261746a473bcb8362d9137634a5a75">   17</a></span><span class="preprocessor">#define PARENT_LIB_FIELD_NAME &quot;name&quot;      </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a7904e33d7508ef59ae38aa75f76493bb">   18</a></span><span class="preprocessor">#define PARENT_LIB_FIELD_DIR  &quot;directory&quot; </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a392cc09f85ec01c77982dafa6bf29631">   20</a></span><span class="preprocessor">#define PARENT_FTP                &quot;ftp&quot;           </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#ab485862337b7bcf40adf313b686f57f2">   21</a></span><span class="preprocessor">#define PARENT_FTP_FIELD_USER     &quot;username&quot;      </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a8a5ad3b98be5584a7e3afaefe04ba3b8">   22</a></span><span class="preprocessor">#define PARENT_FTP_FIELD_SALT     &quot;salt&quot;          </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#ac3eb75d2f5670fffbfaa73d5326f9ca1">   23</a></span><span class="preprocessor">#define PARENT_FTP_FIELD_PWD_HASH &quot;password_hash&quot; </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a10265fc668d386d5d02e91115db9a7cc">   25</a></span><span class="preprocessor">#define PARENT_DBG &quot;debug&quot; </span><span class="preprocessor"></span></div>
+<div class="foldopen" id="foldopen00026" data-start="" data-end="">
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a9b133a50d58c5718bc07c6e73286378e">   26</a></span><span class="preprocessor">#define PARENT_DBG_FIELD_TAGLIB_PARSER_LOG \</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">  &quot;taglib_parser_log&quot; </span><span class="preprocessor"></span></div>
+</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a6632006e058b691283eecae15d8f2c4c">   28</a></span><span class="preprocessor">#define PARENT_DBG_FIELD_COLORS_PARSER_LOG   &quot;colors_parser_log&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a3dbbf241f204ad3fec4382233f7a771b">   29</a></span><span class="preprocessor">#define PARENT_DBG_FIELD_KEYBINDS_PARSER_LOG &quot;keybinds_parser_log&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">/* SPECIAL KEYBINDS MACROS */</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a68fd11c312f2eb908cc3cf08ae9b9c28">   32</a></span><span class="preprocessor">#define PARENT_KEYBINDS           &quot;keybinds&quot; </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#aa6b5fdeebb278e6f01a1100d911f359a">   33</a></span><span class="preprocessor">#define SPECIAL_KEYBIND_ENTER_STR &quot;Enter&quot;    </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a02f4670d2039e360c451f232420182ac">   34</a></span><span class="preprocessor">#define SPECIAL_KEYBIND_TAB_STR   &quot;Tab&quot;      </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#aac0a4c91d4fed2417a52d531798d7367">   35</a></span><span class="preprocessor">#define SPECIAL_KEYBIND_SPACE_STR &quot;Space&quot;    </span><span class="preprocessor"></span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a3bd9928cc13c4d6738fc29a44b27d764">   37</a></span><span class="preprocessor">#define PARENT_UI &quot;ui&quot; </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#af66fd044a3918b6803d0f0744276d171">   37</a></span><span class="preprocessor">#define PARENT_COLORS &quot;colors&quot; </span><span class="preprocessor"></span></div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a47dcae2a56f85f30e8670519b59c4318">   39</a></span><span class="preprocessor">#define CUSTOM_CONFIG_MACRO &quot;INLIMBO_CONFIG_HOME&quot; </span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span></div>
-<div class="foldopen" id="foldopen00053" data-start="{" data-end="}">
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a07c9e72beb8cdba986557305a7605558">   53</a></span><span class="keywordtype">string</span> <a class="code hl_function" href="toml__parser_8hpp.html#a07c9e72beb8cdba986557305a7605558">getBaseConfigPath</a>()</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>{</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="keyword">const</span> <span class="keywordtype">char</span>* customConfigHome = getenv(<a class="code hl_define" href="toml__parser_8hpp.html#a47dcae2a56f85f30e8670519b59c4318">CUSTOM_CONFIG_MACRO</a>);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keywordflow">if</span> (customConfigHome)</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordflow">return</span> string(customConfigHome);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  }</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keyword">const</span> <span class="keywordtype">char</span>* homeDir = getenv(<span class="stringliteral">&quot;HOME&quot;</span>);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keywordflow">if</span> (!homeDir)</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  {</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    cerr &lt;&lt; <span class="stringliteral">&quot;ERROR: HOME environment variable not found.&quot;</span> &lt;&lt; endl;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    exit(EXIT_FAILURE);</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  }</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keywordflow">return</span> string(homeDir) + <span class="stringliteral">&quot;/.config/inLimbo/&quot;</span>;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>}</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a3bd9928cc13c4d6738fc29a44b27d764">   39</a></span><span class="preprocessor">#define PARENT_UI &quot;ui&quot; </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a47dcae2a56f85f30e8670519b59c4318">   41</a></span><span class="preprocessor">#define CUSTOM_CONFIG_MACRO &quot;INLIMBO_CONFIG_HOME&quot; </span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span></div>
+<div class="foldopen" id="foldopen00055" data-start="{" data-end="}">
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a07c9e72beb8cdba986557305a7605558">   55</a></span><span class="keywordtype">string</span> <a class="code hl_function" href="toml__parser_8hpp.html#a07c9e72beb8cdba986557305a7605558">getBaseConfigPath</a>()</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>{</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <span class="keyword">const</span> <span class="keywordtype">char</span>* customConfigHome = getenv(<a class="code hl_define" href="toml__parser_8hpp.html#a47dcae2a56f85f30e8670519b59c4318">CUSTOM_CONFIG_MACRO</a>);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <span class="keywordflow">if</span> (customConfigHome)</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">return</span> string(customConfigHome);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  }</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keyword">const</span> <span class="keywordtype">char</span>* homeDir = getenv(<span class="stringliteral">&quot;HOME&quot;</span>);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keywordflow">if</span> (!homeDir)</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    cerr &lt;&lt; <span class="stringliteral">&quot;ERROR: HOME environment variable not found.&quot;</span> &lt;&lt; endl;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    exit(EXIT_FAILURE);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  }</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keywordflow">return</span> string(homeDir) + <span class="stringliteral">&quot;/.config/inLimbo/&quot;</span>;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>}</div>
 </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span></div>
-<div class="foldopen" id="foldopen00079" data-start="{" data-end="}">
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#ac64fc49e7109184bcb320cfb361219af">   79</a></span><span class="keywordtype">string</span> <a class="code hl_function" href="toml__parser_8hpp.html#ac64fc49e7109184bcb320cfb361219af">getConfigPath</a>(<span class="keywordtype">string</span> fileName)</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>{</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="toml__parser_8hpp.html#a07c9e72beb8cdba986557305a7605558">getBaseConfigPath</a>() + fileName;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>}</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#ac64fc49e7109184bcb320cfb361219af">   81</a></span><span class="keywordtype">string</span> <a class="code hl_function" href="toml__parser_8hpp.html#ac64fc49e7109184bcb320cfb361219af">getConfigPath</a>(<span class="keywordtype">string</span> fileName) { <span class="keywordflow">return</span> <a class="code hl_function" href="toml__parser_8hpp.html#a07c9e72beb8cdba986557305a7605558">getBaseConfigPath</a>() + fileName; }</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="foldopen" id="foldopen00083" data-start="{" data-end="}">
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a52da76b1cc7e2b996b1cadab35d4e567">   83</a></span><span class="keywordtype">string</span> <a class="code hl_function" href="toml__parser_8hpp.html#a52da76b1cc7e2b996b1cadab35d4e567">getCachePath</a>()</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>{</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keyword">const</span> <span class="keywordtype">char</span>* homeDir = std::getenv(<span class="stringliteral">&quot;HOME&quot;</span>);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <span class="keywordflow">if</span> (!homeDir)</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    cerr &lt;&lt; <span class="stringliteral">&quot;ERROR: HOME environment variable not found.&quot;</span> &lt;&lt; endl;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    exit(EXIT_FAILURE); </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  }</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keywordtype">string</span> cacheFilePath = string(homeDir) + <span class="stringliteral">&quot;/.cache/inLimbo/&quot;</span>;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <span class="keywordflow">return</span> cacheFilePath;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>}</div>
 </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="foldopen" id="foldopen00084" data-start="{" data-end="}">
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a52da76b1cc7e2b996b1cadab35d4e567">   84</a></span><span class="keywordtype">string</span> <a class="code hl_function" href="toml__parser_8hpp.html#a52da76b1cc7e2b996b1cadab35d4e567">getCachePath</a>()</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>{</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <span class="keyword">const</span> <span class="keywordtype">char</span>* homeDir = std::getenv(<span class="stringliteral">&quot;HOME&quot;</span>);</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="keywordflow">if</span> (!homeDir)</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  {</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    cerr &lt;&lt; <span class="stringliteral">&quot;ERROR: HOME environment variable not found.&quot;</span> &lt;&lt; endl;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    exit(EXIT_FAILURE); </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  }</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keywordtype">string</span> cacheFilePath = string(homeDir) + <span class="stringliteral">&quot;/.cache/inLimbo/&quot;</span>;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="keywordflow">return</span> cacheFilePath;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>}</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a9ae7f1652e5197b6891b1f3417f3a4e9">  105</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="toml__parser_8hpp.html#a9ae7f1652e5197b6891b1f3417f3a4e9">configFileExists</a>(<span class="keyword">const</span> <span class="keywordtype">string</span>&amp; filePath) { <span class="keywordflow">return</span> fs::exists(filePath); }</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span></div>
+<div class="foldopen" id="foldopen00116" data-start="{" data-end="}">
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#ab0f9ee0b01e2b1ec3208d0323ee8957b">  116</a></span><span class="keyword">auto</span> <a class="code hl_function" href="toml__parser_8hpp.html#ab0f9ee0b01e2b1ec3208d0323ee8957b">loadConfig</a>()</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>{</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  <span class="keywordtype">string</span> configFilePath = <a class="code hl_function" href="toml__parser_8hpp.html#ac64fc49e7109184bcb320cfb361219af">getConfigPath</a>(<span class="stringliteral">&quot;config.toml&quot;</span>);</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <span class="keywordflow">if</span> (!<a class="code hl_function" href="toml__parser_8hpp.html#a9ae7f1652e5197b6891b1f3417f3a4e9">configFileExists</a>(configFilePath))</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  {</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    cerr &lt;&lt; <span class="stringliteral">&quot;ERROR: config.toml not found in &quot;</span> &lt;&lt; configFilePath &lt;&lt; endl;</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    exit(EXIT_FAILURE);</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  }</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  cout &lt;&lt; <span class="stringliteral">&quot;-- CONFIG: Loading config.toml file: &quot;</span> &lt;&lt; configFilePath &lt;&lt; endl;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  <span class="keywordflow">return</span> toml::parse_file(configFilePath);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>}</div>
 </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a9ae7f1652e5197b6891b1f3417f3a4e9">  106</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="toml__parser_8hpp.html#a9ae7f1652e5197b6891b1f3417f3a4e9">configFileExists</a>(<span class="keyword">const</span> <span class="keywordtype">string</span>&amp; filePath) { <span class="keywordflow">return</span> fs::exists(filePath); }</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span></div>
-<div class="foldopen" id="foldopen00117" data-start="{" data-end="}">
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#ab0f9ee0b01e2b1ec3208d0323ee8957b">  117</a></span><span class="keyword">auto</span> <a class="code hl_function" href="toml__parser_8hpp.html#ab0f9ee0b01e2b1ec3208d0323ee8957b">loadConfig</a>()</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>{</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  <span class="keywordtype">string</span> configFilePath = <a class="code hl_function" href="toml__parser_8hpp.html#ac64fc49e7109184bcb320cfb361219af">getConfigPath</a>(<span class="stringliteral">&quot;config.toml&quot;</span>);</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <span class="keywordflow">if</span> (!<a class="code hl_function" href="toml__parser_8hpp.html#a9ae7f1652e5197b6891b1f3417f3a4e9">configFileExists</a>(configFilePath))</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  {</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    cerr &lt;&lt; <span class="stringliteral">&quot;ERROR: config.toml not found in &quot;</span> &lt;&lt; configFilePath &lt;&lt; endl;</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    exit(EXIT_FAILURE);</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  }</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  cout &lt;&lt; <span class="stringliteral">&quot;-- CONFIG: Loading config.toml file: &quot;</span> &lt;&lt; configFilePath &lt;&lt; endl;</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  <span class="keywordflow">return</span> toml::parse_file(configFilePath);</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>}</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a9635b1b895fa15bcf1184ca6dac8476b">  132</a></span><span class="keyword">auto</span> <a class="code hl_variable" href="toml__parser_8hpp.html#a9635b1b895fa15bcf1184ca6dac8476b">config</a> = <a class="code hl_function" href="toml__parser_8hpp.html#ab0f9ee0b01e2b1ec3208d0323ee8957b">loadConfig</a>();</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span></div>
+<div class="foldopen" id="foldopen00144" data-start="{" data-end="}">
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a9a9759bd3909e5f64c6b7acbdd4bc16f">  144</a></span><span class="keyword">auto</span> <a class="code hl_function" href="toml__parser_8hpp.html#a9a9759bd3909e5f64c6b7acbdd4bc16f">parseTOMLField</a>(<span class="keywordtype">string</span> parent, <span class="keywordtype">string</span> field) -&gt; string_view</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>{</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="toml__parser_8hpp.html#a9635b1b895fa15bcf1184ca6dac8476b">config</a>[parent][field].value_or(</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="stringliteral">&quot;&quot;</span>sv); </div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>}</div>
 </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span></div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a9635b1b895fa15bcf1184ca6dac8476b">  133</a></span><span class="keyword">auto</span> <a class="code hl_variable" href="toml__parser_8hpp.html#a9635b1b895fa15bcf1184ca6dac8476b">config</a> = <a class="code hl_function" href="toml__parser_8hpp.html#ab0f9ee0b01e2b1ec3208d0323ee8957b">loadConfig</a>();</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span></div>
-<div class="foldopen" id="foldopen00145" data-start="{" data-end="}">
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a19930571a1aced24a71d9a1d6e7c710a">  145</a></span>string_view <a class="code hl_function" href="toml__parser_8hpp.html#a19930571a1aced24a71d9a1d6e7c710a">parseTOMLField</a>(<span class="keywordtype">string</span> parent, <span class="keywordtype">string</span> field)</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>{</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="toml__parser_8hpp.html#a9635b1b895fa15bcf1184ca6dac8476b">config</a>[parent][field].value_or(</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="stringliteral">&quot;&quot;</span>sv); </div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>}</div>
-</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span></div>
 <div class="foldopen" id="foldopen00161" data-start="{" data-end="}">
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a8d5e9ae7e728f5d76e3d29b767a9b8e5">  161</a></span>string_view <a class="code hl_function" href="toml__parser_8hpp.html#a8d5e9ae7e728f5d76e3d29b767a9b8e5">parseTOMLFieldCustom</a>(<span class="keyword">const</span> toml::parse_result&amp; custom_config, <span class="keywordtype">string</span> parent, <span class="keywordtype">string</span> field)</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>{</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  <span class="keywordflow">return</span> custom_config[parent][field].value_or(</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="stringliteral">&quot;&quot;</span>sv); </div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>}</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a555727478007fa0e36c967ec545ccf1f">  161</a></span><span class="keyword">auto</span> <a class="code hl_function" href="toml__parser_8hpp.html#a555727478007fa0e36c967ec545ccf1f">parseTOMLFieldCustom</a>(<span class="keyword">const</span> toml::parse_result&amp; custom_config, <span class="keywordtype">string</span> parent,</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                          <span class="keywordtype">string</span> field) -&gt; string_view</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>{</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>  <span class="keywordflow">return</span> custom_config[parent][field].value_or(</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="stringliteral">&quot;&quot;</span>sv); </div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>}</div>
 </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span></div>
-<div class="foldopen" id="foldopen00177" data-start="{" data-end="}">
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a0032a51dfcdddb12160bf671f29001f1">  177</a></span>int64_t <a class="code hl_function" href="toml__parser_8hpp.html#a0032a51dfcdddb12160bf671f29001f1">parseTOMLFieldInt</a>(<span class="keywordtype">string</span> parent, <span class="keywordtype">string</span> field)</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>{</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="toml__parser_8hpp.html#a9635b1b895fa15bcf1184ca6dac8476b">config</a>[parent][field].value_or(</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    -1); </div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>}</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span></div>
+<div class="foldopen" id="foldopen00178" data-start="{" data-end="}">
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a523559870b0baf1323e43e2f4997f95f">  178</a></span><span class="keyword">auto</span> <a class="code hl_function" href="toml__parser_8hpp.html#a523559870b0baf1323e43e2f4997f95f">parseTOMLFieldInt</a>(<span class="keywordtype">string</span> parent, <span class="keywordtype">string</span> field) -&gt; int64_t</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>{</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="toml__parser_8hpp.html#a9635b1b895fa15bcf1184ca6dac8476b">config</a>[parent][field].value_or(</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    -1); </div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>}</div>
 </div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span></div>
-<div class="foldopen" id="foldopen00193" data-start="{" data-end="}">
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a8687daac99771caf3f8f1f2c203d6fde">  193</a></span>int64_t <a class="code hl_function" href="toml__parser_8hpp.html#a8687daac99771caf3f8f1f2c203d6fde">parseTOMLFieldIntCustom</a>(<span class="keyword">const</span> toml::parse_result&amp; custom_config, <span class="keywordtype">string</span> parent, <span class="keywordtype">string</span> field)</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>{</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>  <span class="keywordflow">return</span> custom_config[parent][field].value_or(</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    -1); </div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>}</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span></div>
+<div class="foldopen" id="foldopen00195" data-start="{" data-end="}">
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a981c846888e9379bcd247dbb739de240">  195</a></span><span class="keyword">auto</span> <a class="code hl_function" href="toml__parser_8hpp.html#a981c846888e9379bcd247dbb739de240">parseTOMLFieldIntCustom</a>(<span class="keyword">const</span> toml::parse_result&amp; custom_config, <span class="keywordtype">string</span> parent,</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                             <span class="keywordtype">string</span> field) -&gt; int64_t</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>{</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  <span class="keywordflow">return</span> custom_config[parent][field].value_or(</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    -1); </div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>}</div>
 </div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="atoml__parser_8hpp_html_a0032a51dfcdddb12160bf671f29001f1"><div class="ttname"><a href="toml__parser_8hpp.html#a0032a51dfcdddb12160bf671f29001f1">parseTOMLFieldInt</a></div><div class="ttdeci">int64_t parseTOMLFieldInt(string parent, string field)</div><div class="ttdoc">Parses an integer field from the TOML configuration.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:177</div></div>
-<div class="ttc" id="atoml__parser_8hpp_html_a07c9e72beb8cdba986557305a7605558"><div class="ttname"><a href="toml__parser_8hpp.html#a07c9e72beb8cdba986557305a7605558">getBaseConfigPath</a></div><div class="ttdeci">string getBaseConfigPath()</div><div class="ttdoc">Retrieves the path to the configuration directory.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:53</div></div>
-<div class="ttc" id="atoml__parser_8hpp_html_a19930571a1aced24a71d9a1d6e7c710a"><div class="ttname"><a href="toml__parser_8hpp.html#a19930571a1aced24a71d9a1d6e7c710a">parseTOMLField</a></div><div class="ttdeci">string_view parseTOMLField(string parent, string field)</div><div class="ttdoc">Parses a string field from the TOML configuration.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:145</div></div>
-<div class="ttc" id="atoml__parser_8hpp_html_a47dcae2a56f85f30e8670519b59c4318"><div class="ttname"><a href="toml__parser_8hpp.html#a47dcae2a56f85f30e8670519b59c4318">CUSTOM_CONFIG_MACRO</a></div><div class="ttdeci">#define CUSTOM_CONFIG_MACRO</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:39</div></div>
-<div class="ttc" id="atoml__parser_8hpp_html_a52da76b1cc7e2b996b1cadab35d4e567"><div class="ttname"><a href="toml__parser_8hpp.html#a52da76b1cc7e2b996b1cadab35d4e567">getCachePath</a></div><div class="ttdeci">string getCachePath()</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:84</div></div>
-<div class="ttc" id="atoml__parser_8hpp_html_a8687daac99771caf3f8f1f2c203d6fde"><div class="ttname"><a href="toml__parser_8hpp.html#a8687daac99771caf3f8f1f2c203d6fde">parseTOMLFieldIntCustom</a></div><div class="ttdeci">int64_t parseTOMLFieldIntCustom(const toml::parse_result &amp;custom_config, string parent, string field)</div><div class="ttdoc">Parses an integer field from a custom TOML configuration set by the INLIMBO_CONFIG_HOME macro at runt...</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:193</div></div>
-<div class="ttc" id="atoml__parser_8hpp_html_a8d5e9ae7e728f5d76e3d29b767a9b8e5"><div class="ttname"><a href="toml__parser_8hpp.html#a8d5e9ae7e728f5d76e3d29b767a9b8e5">parseTOMLFieldCustom</a></div><div class="ttdeci">string_view parseTOMLFieldCustom(const toml::parse_result &amp;custom_config, string parent, string field)</div><div class="ttdoc">Parses a string field from a custom TOML configuration that is called by the INLIMBO_CONFIG_HOME macr...</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:161</div></div>
-<div class="ttc" id="atoml__parser_8hpp_html_a9635b1b895fa15bcf1184ca6dac8476b"><div class="ttname"><a href="toml__parser_8hpp.html#a9635b1b895fa15bcf1184ca6dac8476b">config</a></div><div class="ttdeci">auto config</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:133</div></div>
-<div class="ttc" id="atoml__parser_8hpp_html_a9ae7f1652e5197b6891b1f3417f3a4e9"><div class="ttname"><a href="toml__parser_8hpp.html#a9ae7f1652e5197b6891b1f3417f3a4e9">configFileExists</a></div><div class="ttdeci">bool configFileExists(const string &amp;filePath)</div><div class="ttdoc">Checks if the configuration file exists.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:106</div></div>
-<div class="ttc" id="atoml__parser_8hpp_html_ab0f9ee0b01e2b1ec3208d0323ee8957b"><div class="ttname"><a href="toml__parser_8hpp.html#ab0f9ee0b01e2b1ec3208d0323ee8957b">loadConfig</a></div><div class="ttdeci">auto loadConfig()</div><div class="ttdoc">Loads the configuration file.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:117</div></div>
-<div class="ttc" id="atoml__parser_8hpp_html_ac64fc49e7109184bcb320cfb361219af"><div class="ttname"><a href="toml__parser_8hpp.html#ac64fc49e7109184bcb320cfb361219af">getConfigPath</a></div><div class="ttdeci">string getConfigPath(string fileName)</div><div class="ttdoc">Retrieves the full path to the configuration file.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:79</div></div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
+<div class="foldopen" id="foldopen00202" data-start="{" data-end="}">
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno"><a class="line" href="toml__parser_8hpp.html#a6eb11e4db65b58858c65704ec4daa915">  202</a></span><span class="keyword">auto</span> <a class="code hl_function" href="toml__parser_8hpp.html#a6eb11e4db65b58858c65704ec4daa915">parseTOMLFieldBool</a>(<span class="keyword">const</span> <span class="keywordtype">string</span>&amp; parent, <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; field) -&gt; <span class="keywordtype">bool</span></div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>{</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>  <span class="keywordflow">if</span> (<span class="keywordtype">string</span>(<a class="code hl_function" href="toml__parser_8hpp.html#a9a9759bd3909e5f64c6b7acbdd4bc16f">parseTOMLField</a>(parent, field)) == <span class="stringliteral">&quot;true&quot;</span>)</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>}</div>
+</div>
+<div class="ttc" id="atoml__parser_8hpp_html_a07c9e72beb8cdba986557305a7605558"><div class="ttname"><a href="toml__parser_8hpp.html#a07c9e72beb8cdba986557305a7605558">getBaseConfigPath</a></div><div class="ttdeci">string getBaseConfigPath()</div><div class="ttdoc">Retrieves the path to the configuration directory.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:55</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_a47dcae2a56f85f30e8670519b59c4318"><div class="ttname"><a href="toml__parser_8hpp.html#a47dcae2a56f85f30e8670519b59c4318">CUSTOM_CONFIG_MACRO</a></div><div class="ttdeci">#define CUSTOM_CONFIG_MACRO</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:41</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_a523559870b0baf1323e43e2f4997f95f"><div class="ttname"><a href="toml__parser_8hpp.html#a523559870b0baf1323e43e2f4997f95f">parseTOMLFieldInt</a></div><div class="ttdeci">auto parseTOMLFieldInt(string parent, string field) -&gt; int64_t</div><div class="ttdoc">Parses an integer field from the TOML configuration.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:178</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_a52da76b1cc7e2b996b1cadab35d4e567"><div class="ttname"><a href="toml__parser_8hpp.html#a52da76b1cc7e2b996b1cadab35d4e567">getCachePath</a></div><div class="ttdeci">string getCachePath()</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:83</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_a555727478007fa0e36c967ec545ccf1f"><div class="ttname"><a href="toml__parser_8hpp.html#a555727478007fa0e36c967ec545ccf1f">parseTOMLFieldCustom</a></div><div class="ttdeci">auto parseTOMLFieldCustom(const toml::parse_result &amp;custom_config, string parent, string field) -&gt; string_view</div><div class="ttdoc">Parses a string field from a custom TOML configuration that is called by the INLIMBO_CONFIG_HOME macr...</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:161</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_a6eb11e4db65b58858c65704ec4daa915"><div class="ttname"><a href="toml__parser_8hpp.html#a6eb11e4db65b58858c65704ec4daa915">parseTOMLFieldBool</a></div><div class="ttdeci">auto parseTOMLFieldBool(const string &amp;parent, const string &amp;field) -&gt; bool</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:202</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_a9635b1b895fa15bcf1184ca6dac8476b"><div class="ttname"><a href="toml__parser_8hpp.html#a9635b1b895fa15bcf1184ca6dac8476b">config</a></div><div class="ttdeci">auto config</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:132</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_a981c846888e9379bcd247dbb739de240"><div class="ttname"><a href="toml__parser_8hpp.html#a981c846888e9379bcd247dbb739de240">parseTOMLFieldIntCustom</a></div><div class="ttdeci">auto parseTOMLFieldIntCustom(const toml::parse_result &amp;custom_config, string parent, string field) -&gt; int64_t</div><div class="ttdoc">Parses an integer field from a custom TOML configuration set by the INLIMBO_CONFIG_HOME macro at runt...</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:195</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_a9a9759bd3909e5f64c6b7acbdd4bc16f"><div class="ttname"><a href="toml__parser_8hpp.html#a9a9759bd3909e5f64c6b7acbdd4bc16f">parseTOMLField</a></div><div class="ttdeci">auto parseTOMLField(string parent, string field) -&gt; string_view</div><div class="ttdoc">Parses a string field from the TOML configuration.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:144</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_a9ae7f1652e5197b6891b1f3417f3a4e9"><div class="ttname"><a href="toml__parser_8hpp.html#a9ae7f1652e5197b6891b1f3417f3a4e9">configFileExists</a></div><div class="ttdeci">bool configFileExists(const string &amp;filePath)</div><div class="ttdoc">Checks if the configuration file exists.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:105</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_ab0f9ee0b01e2b1ec3208d0323ee8957b"><div class="ttname"><a href="toml__parser_8hpp.html#ab0f9ee0b01e2b1ec3208d0323ee8957b">loadConfig</a></div><div class="ttdeci">auto loadConfig()</div><div class="ttdoc">Loads the configuration file.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:116</div></div>
+<div class="ttc" id="atoml__parser_8hpp_html_ac64fc49e7109184bcb320cfb361219af"><div class="ttname"><a href="toml__parser_8hpp.html#ac64fc49e7109184bcb320cfb361219af">getConfigPath</a></div><div class="ttdeci">string getConfigPath(string fileName)</div><div class="ttdoc">Retrieves the full path to the configuration file.</div><div class="ttdef"><b>Definition</b> toml_parser.hpp:81</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

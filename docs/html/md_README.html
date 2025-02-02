@@ -109,7 +109,7 @@ $(function(){initNavTree('md_README.html',''); initResizable(true); });
 <div class="contents">
 <div class="textblock"><div align="center"> <img src="assets/logo/inLimbo.jpg" alt="Logo" class="inline"/> </div><div align="center"> <h1 style="font-weight: bold; font-size: 3em; color: #3498db;">inLimbo</h1>
 </div><div align="center"> </div><p align="center"></p>
-<p><img src="https://img.shields.io/badge/License-GNU GPL%20v3-blue" alt="License" class="inline"/> <img src="https://img.shields.io/badge/Version-2.0%20alpha-red" alt="Version" class="inline"/> <img src="https://img.shields.io/badge/Build-passing-brightgreen" alt="Build" class="inline"/> </p>
+<p><img src="https://img.shields.io/badge/License-GNU GPL%20v3-blue" alt="License" class="inline"/> <img src="https://img.shields.io/badge/Version-3.0%20alpha-red" alt="Version" class="inline"/> <img src="https://img.shields.io/badge/Build-passing-brightgreen" alt="Build" class="inline"/> </p>
 <p align="center"></p>
 <p><a href="https://nots1dd.github.io/inLimbo">Documentation</a> · <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#features">Features</a> · <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#looks">Looks</a> . <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#building">Get Started</a> · <a href="https://github.com/nots1dd/inLimbo/issues">Report a bug</a> </p>
 <dl class="section warning"><dt>Warning</dt><dd><br  />
@@ -120,7 +120,12 @@ $(function(){initNavTree('md_README.html',''); initResizable(true); });
 </dd></dl>
 <p>The inLimbo project aims to be a new upcoming TUI music player for UNIX based systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.</p>
 <h2><a class="anchor" id="autotoc_md20"></a>
-Features</h2>
+<b>Why</b></h2>
+<p>There are a dozen of great music players out there that do a really good job of making my music experience top notch, but nothing was ever perfect. So I tried making something that in my opinion comes closest to my ideal TUI music player.</p>
+<p>Why would you want to stay in Limbo?</p>
+<p>Sometimes it feels good to be stuck in a weird place in your life, and it feels even better to be stuck in Limbo with music :)</p>
+<h2><a class="anchor" id="autotoc_md21"></a>
+<b>Features</b></h2>
 <ul>
 <li><b>Fully configurable</b>: <a class="el" href="structKeybinds.html" title="Struct to hold keybinding mappings.">Keybinds</a>, library, FTP credentials, and more, all in one <code>config.toml</code> file located in <code>$HOME/.config/inLimbo/config.toml</code></li>
 <li><b>Very fast and easy to use</b>: Optimized for speed and usability.</li>
@@ -128,12 +133,13 @@ Features</h2>
 <li><b>Clean and nice TUI experience</b>: Interact with your music library seamlessly in a terminal interface.</li>
 <li><b>Showcases all the metadata</b>: Displays song metadata, including lyrics, genre, and more, for every file in your library.</li>
 <li><b>Plays and caters to many audio file formats</b>: Compatible with a variety of audio formats, depending on the capabilities of <a href="https://github.com/mackron/miniaudio">miniaudio</a>.</li>
-<li><b>Customizable</b>: Add your own color palette to inLimbo ;)</li>
+<li><b>Customizable</b>: Heavily customizable TUI with custom keybinds, colors, UI designs and much more to come...</li>
+<li><b>Privacy</b>: No data is collected by inLimbo other than a backtrace of when the application catches a critical signal like <code>SIGSEGV</code>, <code>SIGABRT</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md21"></a>
-LOOKS</h2>
-<div align="center"> <img src="assets/gifs/inLimbo-1.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> <img src="assets/gifs/inLimbo-3.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md22"></a>
-DEPENDENCIES</h2>
+<h2><a class="anchor" id="autotoc_md22"></a>
+<b>LOOKS</b></h2>
+<div align="center"> <img src="assets/gifs/inLimbo-1.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> <img src="assets/gifs/inLimbo-3.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md23"></a>
+<b>DEPENDENCIES</b></h2>
 <dl class="section important"><dt>Important</dt><dd><br  />
  It is <b>HIGHLY</b> recommended to have FFmpeg installed in your system <br  />
 <br  />
@@ -170,8 +176,8 @@ DEPENDENCIES</h2>
 <br  />
 </dd></dl>
 <p><b>FTXUI</b> is fetched from GitHub <a href="https://github.com/ArthurSonzogni/FTXUI/">here</a> itself during building so <b>NO</b> need to install it separately.</p>
-<h2><a class="anchor" id="autotoc_md23"></a>
-GOAL</h2>
+<h2><a class="anchor" id="autotoc_md24"></a>
+<b>GOAL</b></h2>
 <p>The goal of this project is just to find peace and solitude for me as I try to create something I wanted for a long time</p>
 <p>Here are a few novelties that may or may not have been added yet:</p>
 <ol type="1">
@@ -183,19 +189,192 @@ GOAL</h2>
 <li>Active testing of the codebase using GTest Suite</li>
 <li>Security ensured using CodeQL workflow</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md24"></a>
+<h2><a class="anchor" id="autotoc_md25"></a>
 <b>BUILDING</b></h2>
+<dl class="section important"><dt>Important</dt><dd><br  />
+ inLimbo has been <b>TRIED AND TESTED</b> in the following GNU/Linux distros: <br  />
+<br  />
+<ol type="1">
+<li>Arch Linux (x86-64 arch)</li>
+<li>Ubuntu (x86-64 arch)</li>
+<li>Fedora/Nobara Linux (x86-64 arch) <br  />
+<br  />
+ As long as your distribution can install &amp; build the requirements, there should <em>NOT</em> be any issue <br  />
+<br  />
+</li>
+</ol>
+</dd></dl>
 <p>You will need CMake and Make (GNU Make for BSD) for this (and git obvi)</p>
 <p>A simple command using makefile should build everything you want:</p>
 <div class="fragment"><div class="line">make build-all</div>
+</div><!-- fragment --><p>For a <b>GLOBAL BUILD</b>:</p>
+<div class="fragment"><div class="line">make build-global</div>
 </div><!-- fragment --><p>Check out <a href="https://github.com/nots1dd/inLimbo/blob/main/BUILD.md">BUILD.md</a> for more options to build targets</p>
 <dl class="section note"><dt>Note</dt><dd><br  />
  To try debug build check out <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#debugging">DEBUGGING</a> <br  />
 <br  />
 </dd></dl>
-<h2><a class="anchor" id="autotoc_md25"></a>
-DEBUGGING</h2>
+<h1><a class="anchor" id="autotoc_md26"></a>
+<b>Getting Started with inLimbo</b></h1>
+<h2><a class="anchor" id="autotoc_md27"></a>
+Running inLimbo</h2>
+<p>To get started with <b>inLimbo</b>, run the following command:</p>
+<div class="fragment"><div class="line">inLimbo # or wherever you have built the binary</div>
+</div><!-- fragment --><p>To get help regarding the command-line arguments available with inLimbo, you can use the <code>--help</code> option:</p>
+<div class="fragment"><div class="line">inLimbo --help</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md28"></a>
+Cache and Directory Management</h2>
+<p>If you update the song directory in <code>config.toml</code>, <b>inLimbo</b> does not automatically remove the static serialized <code>lib.bin</code> file, which is used to load the song map.</p>
+<p>To ensure that <b>inLimbo</b> loads the directory dynamically, use the following command:</p>
+<div class="fragment"><div class="line">inLimbo --update-cache-run</div>
+</div><!-- fragment --><p>You can also merge the dynamic load with other arguments like so:</p>
+<div class="fragment"><div class="line">inLimbo --update-cache-run --print-song-tree # will create a new song map and print it regardless of lib.bin data</div>
+</div><!-- fragment --><p>Note that this will result in slower song map times as the song map is generated dynamically on each run.</p>
+<h2><a class="anchor" id="autotoc_md29"></a>
+<b>Command-Line Arguments</b></h2>
+<ul>
+<li><code>--help</code> <b>Description</b>: Display help information about available arguments for inLimbo.</li>
+<li><code>--version</code> <b>Description</b>: Display the version number of inLimbo.</li>
+<li><code>--clear-cache</code> <b>Description</b>: Clear cached data, which includes the song map and other temporary data stored by the application.</li>
+<li><code>--show-config-file</code> <b>Description</b>: Display the path to the configuration file used by inLimbo.</li>
+<li><code>--show-log-dir</code> <b>Description</b>: Show the directory path where logs are stored for inLimbo.</li>
+<li><code>--show-dbus-name</code> <b>Description</b>: Show the DBus service name used by inLimbo.</li>
+<li><code>--update-cache-run</code> <b>Description</b>: Update the cache file and run the application. This will make inLimbo load the directory dynamically every time (note that this will result in slower song map times).</li>
+<li><code>--print-song-tree</code> <b>Description</b>: Print the song map parsed from the directory. This shows the structure of the song tree and how songs are organized.</li>
+<li><code>--print-artists-all</code> <b>Description</b>: Print all parsed artists from the song map. This will list all artists found in the directory and their corresponding songs.</li>
+<li><code>--print-songs-by-artist</code> <b>Description</b>: Print all the songs of a given artist. This argument requires you to specify the artist’s name, and it will list all songs by that artist.</li>
+<li><code>--print-songs-by-genre-all</code> <b>Description</b>: Print all parsed genres and their song mappings. This will show all the genres available in the song map and list songs under each genre.</li>
+<li><code>--print-song-info</code> <b>Description</b>: Print every parsed information (even default info) regarding a song (Arguments: Can take <b>SONG NAME</b> or <b>FILE PATH</b>)</li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd><br  />
+ To utilize these arguments to the fullest, it is <b>HIGHLY</b> recommended to use something like <code>less</code>/<code>bat</code> that allows for neat terminal output traversal (will allow for you to view the entire song tree parsing) <br  />
+<br  />
+ <div class="fragment"><div class="line">inLimbo --print-song-tree | bat # an example of using bat to view the song tree (can traverse the output easily)</div>
+</div><!-- fragment --> <br  />
+<br  />
+ This ensures that you do not have any struggle with viewing the entire console output. <br  />
+<br  />
+</dd></dl>
+<p>There will be more command-line arguments in the future...</p>
+<h2><a class="anchor" id="autotoc_md30"></a>
+<b>CONFIGURATION</b></h2>
+<p>There is quite a lot to configure in the inLimbo project. A basic config file will be setup in your <code>$HOME/.config/inLimbo/</code> directory while using CMake to build</p>
+<dl class="section important"><dt>Important</dt><dd><br  />
+ Check out <a href="https://github.com/nots1dd/inLimbo/blob/main/src/parser/examples/config.toml">config.toml</a> to see all the possible fields for configuration <br  />
+<br  />
+ <b>IT IS UNDER HEAVY DEVELOPMENT SO EXPECT BREAKING CHANGES WITH EACH COMMIT</b> <br  />
+<br  />
+</dd></dl>
+<p><b>COLORS FORMAT</b></p>
+<p>-&gt; Hexadecimal <code>#RRGGBB</code> format</p>
+<p>-&gt; <a class="el" href="namespaceTrueColors.html">TrueColors</a> (Solid predefined colors):</p>
+<dl class="section note"><dt>Note</dt><dd><br  />
+ For <a class="el" href="namespaceTrueColors.html">TrueColors</a>, check out <a href="https://github.com/nots1dd/inLimbo/blob/main/COLORS.md">COLORS</a> for more information on how to set up colors in <code>inLimbo</code> <br  />
+<br  />
+</dd></dl>
+<p><b>DEFAULT KEYBINDS</b></p>
+<h3><a class="anchor" id="autotoc_md31"></a>
+<b>General Navigation</b></h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Keybind   </th><th class="markdownTableHeadNone">Action    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>q</code>   </td><td class="markdownTableBodyNone"><b>Quit the application</b>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>Tab</code>   </td><td class="markdownTableBodyNone"><b>Toggle focus</b> between the "Artists" and "Songs" panes    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>?</code>   </td><td class="markdownTableBodyNone"><b>Show or hide the help menu</b>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>/</code>   </td><td class="markdownTableBodyNone"><b>Open the search menu</b>   </td></tr>
+</table>
+<h3><a class="anchor" id="autotoc_md32"></a>
+<b>Scrolling and Selection</b></h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Keybind   </th><th class="markdownTableHeadNone">Action    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>j</code>   </td><td class="markdownTableBodyNone"><b>Scroll down</b> (move selection down in the list)    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>k</code>   </td><td class="markdownTableBodyNone"><b>Scroll up</b> (move selection up in the list)    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>0</code>   </td><td class="markdownTableBodyNone"><b>Move to the next search result</b> (if search is active)    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>9</code>   </td><td class="markdownTableBodyNone"><b>Move to the previous search result</b> (if search is active)   </td></tr>
+</table>
+<h3><a class="anchor" id="autotoc_md33"></a>
+<b>Playback Controls</b></h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Keybind   </th><th class="markdownTableHeadNone">Action    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>Space</code>   </td><td class="markdownTableBodyNone"><b>Toggle play/pause</b> for the currently playing song    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>Enter</code>   </td><td class="markdownTableBodyNone"><b>Play the currently selected song</b>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>n</code>   </td><td class="markdownTableBodyNone"><b>Play the next song</b> in the queue    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>p</code>   </td><td class="markdownTableBodyNone"><b>Play the previous song</b> in the queue    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>r</code>   </td><td class="markdownTableBodyNone"><b>Replay the current song</b>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>m</code>   </td><td class="markdownTableBodyNone"><b>Toggle mute</b> on/off   </td></tr>
+</table>
+<h3><a class="anchor" id="autotoc_md34"></a>
+<b>Seeking and Volume Control</b></h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Keybind   </th><th class="markdownTableHeadNone">Action    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>h</code>   </td><td class="markdownTableBodyNone"><b>Seek backward by 5 seconds</b>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>l</code>   </td><td class="markdownTableBodyNone"><b>Seek forward by 5 seconds</b>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>=</code>   </td><td class="markdownTableBodyNone"><b>Increase volume</b>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>-</code>   </td><td class="markdownTableBodyNone"><b>Decrease volume</b>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>w</code>   </td><td class="markdownTableBodyNone"><b>Toggle between available audio devices</b>   </td></tr>
+</table>
+<h3><a class="anchor" id="autotoc_md35"></a>
+<b>Song and Queue Management</b></h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Keybind   </th><th class="markdownTableHeadNone">Action    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>a</code>   </td><td class="markdownTableBodyNone"><b>Add the currently selected song to the queue</b>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>e</code>   </td><td class="markdownTableBodyNone"><b>Add all songs of the selected artist to the queue</b>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>b</code>   </td><td class="markdownTableBodyNone"><b>Play this song next</b> (insert it into the queue immediately after the current song)    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>d</code>   </td><td class="markdownTableBodyNone"><b>Remove the currently selected song from the queue</b>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>3</code>   </td><td class="markdownTableBodyNone"><b>View the current song queue</b>   </td></tr>
+</table>
+<h3><a class="anchor" id="autotoc_md36"></a>
+<b>Song Information and UI Navigation</b></h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Keybind   </th><th class="markdownTableHeadNone">Action    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>1</code>   </td><td class="markdownTableBodyNone"><b>Go to the main UI screen</b>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>2</code> or <code>L</code>   </td><td class="markdownTableBodyNone"><b>View lyrics of the currently playing song</b>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>i</code>   </td><td class="markdownTableBodyNone"><b>View detailed information about the current song</b>   </td></tr>
+</table>
+<h3><a class="anchor" id="autotoc_md37"></a>
+<b>Status Bar &amp; UI Settings</b></h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Keybind   </th><th class="markdownTableHeadNone">Action    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>true/false</code> (UI setting)   </td><td class="markdownTableBodyNone"><b>Show or hide bitrate information</b> in the status bar   </td></tr>
+</table>
+<div align="center"> <img src="assets/gifs/inLimbo-2.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md38"></a>
+<b>DEBUGGING</b></h2>
 <p>inLimbo is in active development and is prone to having <em>A LOT</em> of issues</p>
+<p>-&gt; Makefile also allows for building and running of a debug build.</p>
 <p>To try out <b>DEBUG BUILD</b> to find bugs/issues:</p>
 <ol type="1">
 <li>Debug build with <code>AddressSanitizer</code> (ASan):</li>
@@ -217,27 +396,12 @@ DEBUGGING</h2>
 <p>-&gt; Threads</p>
 <p>-&gt; Address Sanitation (ASan)</p>
 <p>-&gt; Undefined Behaviour Sanitation (UBSan)</p>
-<h2><a class="anchor" id="autotoc_md26"></a>
-CONFIGURATION</h2>
-<p>There is quite a lot to configure in the inLimbo project. A basic config file will be setup in your <code>$HOME/.config/inLimbo/</code> directory while using CMake to build</p>
-<dl class="section important"><dt>Important</dt><dd><br  />
- Check out <a href="https://github.com/nots1dd/inLimbo/blob/main/src/parser/examples/config.toml">config.toml</a> to see all the possible fields for configuration <br  />
-<br  />
- <b>IT IS UNDER HEAVY DEVELOPMENT SO EXPECT BREAKING CHANGES WITH EACH COMMIT</b> <br  />
-<br  />
-</dd></dl>
-<p><b>COLORS FORMAT</b></p>
-<p>-&gt; Hexadecimal <code>#RRGGBB</code> format</p>
-<p>-&gt; <a class="el" href="namespaceTrueColors.html">TrueColors</a> (Solid predefined colors):</p>
-<dl class="section note"><dt>Note</dt><dd><br  />
- For <a class="el" href="namespaceTrueColors.html">TrueColors</a>, check out <a href="https://github.com/nots1dd/inLimbo/blob/main/COLORS.md">COLORS</a> for more information on how to set up colors in <code>inLimbo</code> <br  />
-<br  />
-</dd></dl>
-<div align="center"> <img src="assets/gifs/inLimbo-2.gif" alt="inLimbo Demo GIF" width="600" class="inline"/> </div><h2><a class="anchor" id="autotoc_md27"></a>
-DIRECTORY SORTING</h2>
+<h2><a class="anchor" id="autotoc_md39"></a>
+<b>DIRECTORY SORTING</b></h2>
+<p>inLimbo reads a directory and attempts to parse each inode for its metadata using TagLib, and accordingly creates a song map datastructure that is utilized to efficiently traverse the required artist, album, song etc.</p>
 <p>To know more about inLimbo Project's logical flow on creating a song map, visit <a href="https://github.com/nots1dd/inLimbo/blob/main/src/dirsort/SONGMAP.md">SONGMAP</a></p>
-<h2><a class="anchor" id="autotoc_md28"></a>
-TESTING</h2>
+<h2><a class="anchor" id="autotoc_md40"></a>
+<b>TESTING</b></h2>
 <p>The inLimbo project is aiming to be more aware of how bad its codebase is, hence I am setting up unit tests for most if not all functions/classes that should:</p>
 <ol type="1">
 <li>Give more clarity on how the logical flow of the function/class works in a test suite</li>
@@ -245,8 +409,8 @@ TESTING</h2>
 <li>Should give more confidence in the code structure if such tests pass</li>
 </ol>
 <p>The testing is done using GTest, read <a href="https;//github.com/nots1dd/inLimbo/blob/main/tests/TESTS,md">TESTS.md</a> to understand more on how tests are configured and built</p>
-<h2><a class="anchor" id="autotoc_md29"></a>
-DOCUMENTATION</h2>
+<h2><a class="anchor" id="autotoc_md41"></a>
+<b>DOCUMENTATION</b></h2>
 <p>There is a primitive Doxygen documention set up for the inLimbo project, that should explain a lot more about the thought process and idea behind every aspect of the codebase.</p>
 <p>Man page is also under progress</p>
 <p>To generate and view doxygen documentation locally:</p>
@@ -257,7 +421,7 @@ DOCUMENTATION</h2>
 </div><!-- fragment --><p>It is much easier to use the script <code>make_docs.sh</code></p>
 <div class="fragment"><div class="line">./make_docs.sh</div>
 </div><!-- fragment --><p>Or you could just visit <a href="https://nots1dd.github.io/inLimbo/">inLimbo Website</a></p>
-<h2><a class="anchor" id="autotoc_md30"></a>
+<h2><a class="anchor" id="autotoc_md42"></a>
 CREDITS</h2>
 <p><b>LOGO</b>:</p>
 <p><em>DISCLAIMER</em>: This is not an original logo nor was it commisioned by me</p>
@@ -266,6 +430,8 @@ CREDITS</h2>
 <p>To parse the <a href="https://github.com/nots1dd/inlimbo/blob/main/src/parser/examples/config.toml">config.toml</a> is thanks to <a href="https://github.com/marzer/tomlplusplus">TOML++</a></p>
 <p><b>AUDIO PLAYBACK &amp; API</b>:</p>
 <p>Audio playback and capture is thanks to <a href="https://github.com/mackron/miniaudio">miniaudio</a></p>
+<p><b>INSPIRATIONS</b>:</p>
+<p>This music player's UI flow is heavily inspired by <a href="https://github.com/cmus/cmus">CMUS</a>, it seemed (to me atleast) the fastest and most responsive and logical UI/UX design of a TUI that has a great balance between looking good and feeling smooth</p>
 <hr  />
 <p>inLimbo is Free and Open Source Software Licensed under <a href="https://github.com/nots1dd/inlimbo/blob/main/LICENSE">GNU GPL v3</a> </p>
 </div></div><!-- contents -->

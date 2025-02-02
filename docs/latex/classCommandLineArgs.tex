@@ -14,11 +14,11 @@ Parses and validates command-\/line arguments.
 \item 
 \mbox{\hyperlink{classCommandLineArgs_a1c67b951a142614aac165c87a9804e1a}{Command\+Line\+Args}} (int argc, char \texorpdfstring{$\ast$}{*}argv\mbox{[}$\,$\mbox{]})
 \begin{DoxyCompactList}\small\item\em Constructs a \doxylink{classCommandLineArgs}{Command\+Line\+Args} object and parses command-\/line arguments. \end{DoxyCompactList}\item 
-std\+::string \mbox{\hyperlink{classCommandLineArgs_aed48cc4e9324c706042acb43ace91a1e}{get}} (const std\+::string \&flag, const std\+::string \&default\+Value="{}"{}) const
+auto \mbox{\hyperlink{classCommandLineArgs_af4274817a5528e3aa73117e80f8fe5dd}{get}} (const std\+::string \&flag, const std\+::string \&default\+Value="{}"{}) const -\/$>$ std\+::string
 \begin{DoxyCompactList}\small\item\em Retrieves the value associated with a flag. \end{DoxyCompactList}\item 
-bool \mbox{\hyperlink{classCommandLineArgs_a9e468eecc878b283c0a2070858868f0f}{has\+Flag}} (const std\+::string \&flag) const
+auto \mbox{\hyperlink{classCommandLineArgs_a8d8db92f07e7ea891150eb4307130db4}{has\+Flag}} (const std\+::string \&flag) const -\/$>$ bool
 \begin{DoxyCompactList}\small\item\em Checks if a specific flag was provided. \end{DoxyCompactList}\item 
-const std\+::vector$<$ std\+::string $>$ \& \mbox{\hyperlink{classCommandLineArgs_ad49f8db1c03381d9f87a8ffd48546cf8}{get\+Positional\+Args}} () const
+auto \mbox{\hyperlink{classCommandLineArgs_a0087974d9a91f312d43115aa4cb224b9}{get\+Positional\+Args}} () const -\/$>$ const std\+::vector$<$ std\+::string $>$ \&
 \begin{DoxyCompactList}\small\item\em Retrieves the list of positional arguments. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classCommandLineArgs_a23bfeb76513b5a88ec4af37d6f60269e}{print\+Usage}} (const std\+::string \&program\+Name) const
 \begin{DoxyCompactList}\small\item\em Prints usage information and program details. \end{DoxyCompactList}\end{DoxyCompactItemize}
@@ -57,11 +57,11 @@ If parsing fails, an error message is displayed, usage information is printed, a
 
 
 \doxysubsection{Member Function Documentation}
-\Hypertarget{classCommandLineArgs_aed48cc4e9324c706042acb43ace91a1e}\index{CommandLineArgs@{CommandLineArgs}!get@{get}}
+\Hypertarget{classCommandLineArgs_af4274817a5528e3aa73117e80f8fe5dd}\index{CommandLineArgs@{CommandLineArgs}!get@{get}}
 \index{get@{get}!CommandLineArgs@{CommandLineArgs}}
 \doxysubsubsection{\texorpdfstring{get()}{get()}}
-{\footnotesize\ttfamily \label{classCommandLineArgs_aed48cc4e9324c706042acb43ace91a1e} 
-std\+::string Command\+Line\+Args\+::get (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{flag}{, }\item[{const std\+::string \&}]{default\+Value}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily \label{classCommandLineArgs_af4274817a5528e3aa73117e80f8fe5dd} 
+auto Command\+Line\+Args\+::get (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{flag}{, }\item[{const std\+::string \&}]{default\+Value}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption}) const -\/$>$ std\+::string   \hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
 
 
 
@@ -79,11 +79,11 @@ If the flag is not present, a default value is returned.
 \begin{DoxyReturn}{Returns}
 The value associated with the flag or the default value if the flag is not found. 
 \end{DoxyReturn}
-\Hypertarget{classCommandLineArgs_ad49f8db1c03381d9f87a8ffd48546cf8}\index{CommandLineArgs@{CommandLineArgs}!getPositionalArgs@{getPositionalArgs}}
+\Hypertarget{classCommandLineArgs_a0087974d9a91f312d43115aa4cb224b9}\index{CommandLineArgs@{CommandLineArgs}!getPositionalArgs@{getPositionalArgs}}
 \index{getPositionalArgs@{getPositionalArgs}!CommandLineArgs@{CommandLineArgs}}
 \doxysubsubsection{\texorpdfstring{getPositionalArgs()}{getPositionalArgs()}}
-{\footnotesize\ttfamily \label{classCommandLineArgs_ad49f8db1c03381d9f87a8ffd48546cf8} 
-const std\+::vector$<$ std\+::string $>$ \& Command\+Line\+Args\+::get\+Positional\+Args (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily \label{classCommandLineArgs_a0087974d9a91f312d43115aa4cb224b9} 
+auto Command\+Line\+Args\+::get\+Positional\+Args (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$ const std\+::vector$<$std\+::string$>$\&   \hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
 
 
 
@@ -92,11 +92,11 @@ Retrieves the list of positional arguments.
 \begin{DoxyReturn}{Returns}
 A reference to a vector containing the positional arguments. 
 \end{DoxyReturn}
-\Hypertarget{classCommandLineArgs_a9e468eecc878b283c0a2070858868f0f}\index{CommandLineArgs@{CommandLineArgs}!hasFlag@{hasFlag}}
+\Hypertarget{classCommandLineArgs_a8d8db92f07e7ea891150eb4307130db4}\index{CommandLineArgs@{CommandLineArgs}!hasFlag@{hasFlag}}
 \index{hasFlag@{hasFlag}!CommandLineArgs@{CommandLineArgs}}
 \doxysubsubsection{\texorpdfstring{hasFlag()}{hasFlag()}}
-{\footnotesize\ttfamily \label{classCommandLineArgs_a9e468eecc878b283c0a2070858868f0f} 
-bool Command\+Line\+Args\+::has\+Flag (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{flag}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily \label{classCommandLineArgs_a8d8db92f07e7ea891150eb4307130db4} 
+auto Command\+Line\+Args\+::has\+Flag (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{flag}{}\end{DoxyParamCaption}) const -\/$>$ bool   \hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
 
 
 
@@ -138,9 +138,18 @@ const std\+::vector$<$ std\+::string $>$ Command\+Line\+Args\+::valid\+Flags\hsp
 
 {\bfseries Initial value\+:}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{=\ \{}
-\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}-\/-\/help"{}},\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/show-\/dbus-\/name"{}},\ \ \textcolor{stringliteral}{"{}-\/-\/version"{}},\ \textcolor{stringliteral}{"{}-\/-\/clear-\/cache"{}},\ \textcolor{stringliteral}{"{}-\/-\/show-\/config-\/file"{}},}
-\DoxyCodeLine{\ \ \textcolor{stringliteral}{"{}-\/-\/show-\/log-\/dir"{}},\ \textcolor{stringliteral}{"{}-\/-\/update-\/cache-\/run"{}}\}}
+\DoxyCodeLine{=\ \{\textcolor{stringliteral}{"{}-\/-\/help"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/show-\/dbus-\/name"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/version"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/clear-\/cache"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/show-\/config-\/file"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/show-\/log-\/dir"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/update-\/cache-\/run"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/print-\/song-\/tree"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/print-\/songs-\/by-\/artist"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/print-\/songs-\/by-\/genre-\/all"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/print-\/song-\/info"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}-\/-\/print-\/artists-\/all"{}}\}}
 
 \end{DoxyCode}
 

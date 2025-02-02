@@ -2,19 +2,19 @@
 \hypertarget{audio__playback_8hpp_source}{}\label{audio__playback_8hpp_source}\index{src/music/audio\_playback.hpp@{src/music/audio\_playback.hpp}}
 \mbox{\hyperlink{audio__playback_8hpp}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ AUDIO\_PLAYBACK\_HPP}}
-\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ AUDIO\_PLAYBACK\_HPP}}
-\DoxyCodeLine{00003\ }
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ MINIAUDIO\_IMPLEMENTATION}}
-\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}miniaudio.h"{}}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#define\ MINIAUDIO\_IMPLEMENTATION}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}miniaudio.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <future>}}
 \DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <iostream>}}
 \DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <mutex>}}
 \DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <stdexcept>}}
 \DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <string>}}
 \DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <thread>}}
 \DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <vector>}}
-\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <filesystem>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <sstream>}}
 \DoxyCodeLine{00014\ }
 \DoxyCodeLine{00019\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structAudioDevice}{AudioDevice}}}
 \DoxyCodeLine{00020\ \{}
@@ -37,291 +37,461 @@
 \DoxyCodeLine{00046\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ deviceSet;\ }
 \DoxyCodeLine{00047\ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ wasPaused;\ }
 \DoxyCodeLine{00048\ \ \ uint64\_t\ \ \ \ pausePosition;\ \ }
-\DoxyCodeLine{00049\ \ \ std::thread\ playbackThread,\ audioDeviceThread;\ }
-\DoxyCodeLine{00050\ \ \ std::mutex\ \ mtx,\ devicesMutex;\ \ \ \ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00051\ \ \ std::vector<AudioDevice>\ devices;}
-\DoxyCodeLine{00052\ }
-\DoxyCodeLine{00053\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00061\ \ \ \mbox{\hyperlink{classMiniAudioPlayer_ad8fc2362d2046790cf6bdcb9ec4933f1}{MiniAudioPlayer}}()\ :\ isPlaying(false),\ wasPaused(false),\ pausePosition(0),\ deviceSet(false)}
-\DoxyCodeLine{00062\ \ \ \{}
-\DoxyCodeLine{00063\ \ \ \ \ engine\_config\ =\ ma\_engine\_config\_init();}
-\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_engine\_init(\&engine\_config,\ \&engine)\ !=\ MA\_SUCCESS)}
-\DoxyCodeLine{00065\ \ \ \ \ \{}
-\DoxyCodeLine{00066\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ initialize\ MiniAudio\ engine."{}});}
-\DoxyCodeLine{00067\ \ \ \ \ \}}
-\DoxyCodeLine{00068\ }
-\DoxyCodeLine{00069\ \ \ \ \ deviceConfig\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ ma\_device\_config\_init(ma\_device\_type\_playback);}
-\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_context\_init(\textcolor{keyword}{nullptr},\ 0,\ \textcolor{keyword}{nullptr},\ \&context)\ !=\ MA\_SUCCESS)}
-\DoxyCodeLine{00071\ \ \ \ \ \{}
-\DoxyCodeLine{00072\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ initialize\ audio\ context."{}});}
-\DoxyCodeLine{00073\ \ \ \ \ \}}
-\DoxyCodeLine{00074\ }
-\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_device\_init(\textcolor{keyword}{nullptr},\ \&deviceConfig,\ \&device)\ !=\ MA\_SUCCESS)\ }
-\DoxyCodeLine{00076\ \ \ \ \ \{}
-\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ initialize\ playback\ device."{}});}
-\DoxyCodeLine{00078\ \ \ \ \ \}}
-\DoxyCodeLine{00079\ }
-\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_device\_start(\&device)\ !=\ MA\_SUCCESS)\ \{}
-\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ ma\_device\_uninit(\&device);}
-\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ start\ playback\ device."{}});}
-\DoxyCodeLine{00083\ \ \ \ \ \}}
-\DoxyCodeLine{00084\ \ \ \}}
-\DoxyCodeLine{00085\ }
-\DoxyCodeLine{00092\ \ \ \mbox{\hyperlink{classMiniAudioPlayer_ade3387406ebf3bf900d561b8e72a2a3c}{\string~MiniAudioPlayer}}()}
-\DoxyCodeLine{00093\ \ \ \{}
-\DoxyCodeLine{00094\ \ \ \ \ \mbox{\hyperlink{classMiniAudioPlayer_a8233c5e0b8bb3a14402dc89281719029}{stop}}();}
-\DoxyCodeLine{00095\ \ \ \ \ ma\_device\_uninit(\&device);}
-\DoxyCodeLine{00096\ \ \ \ \ ma\_context\_uninit(\&context);}
-\DoxyCodeLine{00097\ \ \ \ \ ma\_engine\_uninit(\&engine);}
-\DoxyCodeLine{00098\ \ \ \}}
-\DoxyCodeLine{00099\ }
-\DoxyCodeLine{00100\ \ \ std::vector<AudioDevice>\ \mbox{\hyperlink{classMiniAudioPlayer_a54f92bf7ee24754c88ebbcf294fe65e2}{enumerateDevices}}()}
-\DoxyCodeLine{00101\ \ \ \{}
-\DoxyCodeLine{00102\ \ \ \ \ \ \ std::vector<AudioDevice>\ localDevices;}
-\DoxyCodeLine{00103\ }
-\DoxyCodeLine{00104\ \ \ \ \ \ \ audioDeviceThread\ =\ std::thread([\textcolor{keyword}{this},\ \&localDevices]()\ \{}
-\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
-\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ma\_device\_info*\ playbackDevices;}
-\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ma\_uint32\ playbackDeviceCount;}
-\DoxyCodeLine{00108\ }
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Enumerate\ devices}}
-\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ma\_result\ result\ =\ ma\_context\_get\_devices(\&context,\ \&playbackDevices,\ \&playbackDeviceCount,\ \textcolor{keyword}{nullptr},\ \textcolor{keyword}{nullptr});}
-\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (result\ !=\ MA\_SUCCESS)}
-\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ enumerate\ playback\ devices."{}});}
-\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00115\ }
-\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Log\ device\ info\ for\ debugging}}
-\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Found\ "{}}\ <<\ playbackDeviceCount\ <<\ \textcolor{stringliteral}{"{}\ playback\ devices:\(\backslash\)n"{}};}
-\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (ma\_uint32\ i\ =\ 0;\ i\ <\ playbackDeviceCount;\ ++i)\ \{}
-\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Device\ "{}}\ <<\ i\ <<\ \textcolor{stringliteral}{"{}:\ "{}}\ <<\ playbackDevices[i].name\ <<\ std::endl;}
-\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \ \ std::thread\ playbackThread,}
+\DoxyCodeLine{00050\ \ \ \ \ audioDeviceThread;\ }
+\DoxyCodeLine{00051\ \ \ std::mutex\ mtx,\ devicesMutex;\ }
+\DoxyCodeLine{00052\ \ \ std::vector<AudioDevice>\ devices;}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00062\ \ \ \mbox{\hyperlink{classMiniAudioPlayer_ad8fc2362d2046790cf6bdcb9ec4933f1}{MiniAudioPlayer}}()\ :\ isPlaying(false),\ wasPaused(false),\ pausePosition(0),\ deviceSet(false)}
+\DoxyCodeLine{00063\ \ \ \{}
+\DoxyCodeLine{00064\ \ \ \ \ engine\_config\ =\ ma\_engine\_config\_init();}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_engine\_init(\&engine\_config,\ \&engine)\ !=\ MA\_SUCCESS)}
+\DoxyCodeLine{00066\ \ \ \ \ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ initialize\ MiniAudio\ engine."{}});}
+\DoxyCodeLine{00068\ \ \ \ \ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ deviceConfig\ =\ ma\_device\_config\_init(ma\_device\_type\_playback);}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_context\_init(\textcolor{keyword}{nullptr},\ 0,\ \textcolor{keyword}{nullptr},\ \&context)\ !=\ MA\_SUCCESS)}
+\DoxyCodeLine{00072\ \ \ \ \ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ initialize\ audio\ context."{}});}
+\DoxyCodeLine{00074\ \ \ \ \ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_device\_init(\textcolor{keyword}{nullptr},\ \&deviceConfig,\ \&device)\ !=\ MA\_SUCCESS)}
+\DoxyCodeLine{00077\ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ initialize\ playback\ device."{}});}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_device\_start(\&device)\ !=\ MA\_SUCCESS)}
+\DoxyCodeLine{00082\ \ \ \ \ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ ma\_device\_uninit(\&device);}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ start\ playback\ device."{}});}
+\DoxyCodeLine{00085\ \ \ \ \ \}}
+\DoxyCodeLine{00086\ \ \ \}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00094\ \ \ \mbox{\hyperlink{classMiniAudioPlayer_ade3387406ebf3bf900d561b8e72a2a3c}{\string~MiniAudioPlayer}}()}
+\DoxyCodeLine{00095\ \ \ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \mbox{\hyperlink{classMiniAudioPlayer_a8233c5e0b8bb3a14402dc89281719029}{stop}}();}
+\DoxyCodeLine{00097\ \ \ \ \ ma\_device\_uninit(\&device);}
+\DoxyCodeLine{00098\ \ \ \ \ ma\_context\_uninit(\&context);}
+\DoxyCodeLine{00099\ \ \ \ \ ma\_engine\_uninit(\&engine);}
+\DoxyCodeLine{00100\ \ \ \}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classMiniAudioPlayer_a0ccbfda68bf9a5f232f5c1ec67545a58}{enumerateDevices}}()\ -\/>\ std::vector<AudioDevice>}
+\DoxyCodeLine{00103\ \ \ \{}
+\DoxyCodeLine{00104\ \ \ \ \ std::vector<AudioDevice>\ localDevices;}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ audioDeviceThread\ =\ std::thread(}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ [\textcolor{keyword}{this},\ \&localDevices]()}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ ma\_device\_info*\ playbackDevices;}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ ma\_uint32\ \ \ \ \ \ \ playbackDeviceCount;}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Enumerate\ devices}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ ma\_result\ result\ =\ ma\_context\_get\_devices(\&context,\ \&playbackDevices,}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&playbackDeviceCount,\ \textcolor{keyword}{nullptr},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (result\ !=\ MA\_SUCCESS)}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ enumerate\ playback\ devices."{}});}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00121\ }
-\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Safely\ copy\ devices}}
-\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ lock(devicesMutex);}
-\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ devices.clear();}
-\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (ma\_uint32\ i\ =\ 0;\ i\ <\ playbackDeviceCount;\ ++i)\ \{}
-\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ devices.push\_back(\{playbackDevices[i].name,\ playbackDevices[i].id\});}
-\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ localDevices\ =\ devices;}
-\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00131\ }
-\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::exception\&\ e)\ \{}
-\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error\ in\ enumerateDevices\ thread:\ "{}}\ <<\ e.what()\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
-\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00135\ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00136\ }
-\DoxyCodeLine{00137\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (audioDeviceThread.joinable())\ audioDeviceThread.join();\ \textcolor{comment}{//\ Wait\ for\ the\ thread\ to\ finish}}
-\DoxyCodeLine{00138\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ localDevices;}
-\DoxyCodeLine{00139\ \ \ \}}
-\DoxyCodeLine{00140\ }
-\DoxyCodeLine{00146\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMiniAudioPlayer_aa8931efed21c3040f70023ff77553d74}{setDevice}}(\textcolor{keyword}{const}\ ma\_device\_id\&\ \textcolor{keywordtype}{id})}
-\DoxyCodeLine{00147\ \ \ \{}
-\DoxyCodeLine{00148\ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);}
-\DoxyCodeLine{00149\ \ \ \ \ deviceID\ \ =\ id;}
-\DoxyCodeLine{00150\ \ \ \ \ deviceConfig.playback.pDeviceID\ =\ \&deviceID;}
-\DoxyCodeLine{00151\ \ \ \ \ deviceSet\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00152\ \ \ \}}
-\DoxyCodeLine{00153\ }
-\DoxyCodeLine{00165\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classMiniAudioPlayer_add00a354c2bdd42a3d929e8203f5c4f1}{loadFile}}(\textcolor{keyword}{const}\ std::string\&\ filePath,\ \textcolor{keywordtype}{bool}\ reloadNextFile)}
-\DoxyCodeLine{00166\ \ \ \{}
-\DoxyCodeLine{00167\ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);}
-\DoxyCodeLine{00168\ }
-\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keywordflow}{if}\ (isPlaying)}
-\DoxyCodeLine{00170\ \ \ \ \ \{}
-\DoxyCodeLine{00171\ \ \ \ \ \ \ \mbox{\hyperlink{classMiniAudioPlayer_a8233c5e0b8bb3a14402dc89281719029}{stop}}();}
-\DoxyCodeLine{00172\ \ \ \ \ \}}
-\DoxyCodeLine{00173\ }
-\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keywordflow}{if}\ (!std::filesystem::exists(filePath))}
-\DoxyCodeLine{00175\ \ \ \ \ \{}
-\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}File\ does\ not\ exist:\ "{}}\ +\ filePath);}
-\DoxyCodeLine{00177\ \ \ \ \ \}}
-\DoxyCodeLine{00178\ \ \ \ \ }
-\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keywordflow}{if}\ (reloadNextFile)}
-\DoxyCodeLine{00180\ \ \ \ \ \ \ ma\_sound\_uninit(\&sound);}
-\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keywordflow}{if}\ (deviceSet)}
-\DoxyCodeLine{00182\ \ \ \ \ \{}
-\DoxyCodeLine{00183\ \ \ \ \ \ \ deviceConfig.playback.pDeviceID\ =\ \&deviceID;}
-\DoxyCodeLine{00184\ \ \ \ \ \}}
-\DoxyCodeLine{00185\ }
-\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_sound\_init\_from\_file(\&engine,\ filePath.c\_str(),\ MA\_SOUND\_FLAG\_STREAM,\ \textcolor{keyword}{nullptr},\ \textcolor{keyword}{nullptr},}
-\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&sound)\ !=\ MA\_SUCCESS)}
-\DoxyCodeLine{00188\ \ \ \ \ \{}
-\DoxyCodeLine{00189\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ load\ audio\ file:\ "{}}\ +\ filePath);}
-\DoxyCodeLine{00190\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
-\DoxyCodeLine{00191\ \ \ \ \ \}}
-\DoxyCodeLine{00192\ }
-\DoxyCodeLine{00193\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
-\DoxyCodeLine{00194\ \ \ \}}
-\DoxyCodeLine{00195\ }
-\DoxyCodeLine{00204\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMiniAudioPlayer_afaed2fe579e6ec80066056d622f42b8a}{play}}()}
-\DoxyCodeLine{00205\ \ \ \{}
-\DoxyCodeLine{00206\ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);\ \textcolor{comment}{//\ Protect\ shared\ state}}
-\DoxyCodeLine{00207\ \ \ \ \ deviceConfig.playback.pDeviceID\ =\ \&deviceID;}
-\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keywordflow}{if}\ (!isPlaying)}
-\DoxyCodeLine{00209\ \ \ \ \ \{}
-\DoxyCodeLine{00210\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_sound\_start(\&sound)\ !=\ MA\_SUCCESS)}
-\DoxyCodeLine{00211\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ play\ the\ sound."{}});}
-\DoxyCodeLine{00213\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00214\ \ \ \ \ \ \ isPlaying\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00215\ }
-\DoxyCodeLine{00216\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (playbackThread.joinable())\ playbackThread.join();}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Safely\ copy\ devices}}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ lock(devicesMutex);}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ devices.clear();}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (ma\_uint32\ i\ =\ 0;\ i\ <\ playbackDeviceCount;\ ++i)}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ devices.push\_back(\{playbackDevices[i].name,\ playbackDevices[i].id\});}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ localDevices\ =\ devices;}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::exception\&\ e)}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Error\ in\ enumerateDevices\ thread:\ "{}}\ <<\ e.what()\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordflow}{if}\ (audioDeviceThread.joinable())}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ audioDeviceThread.join();\ \textcolor{comment}{//\ Wait\ for\ the\ thread\ to\ finish}}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordflow}{return}\ localDevices;}
+\DoxyCodeLine{00142\ \ \ \}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00149\ \ \ \textcolor{comment}{//\ This\ does\ not\ work\ will\ figure\ some\ way\ to\ fix\ this}}
+\DoxyCodeLine{00150\ \ \ \textcolor{comment}{/*void\ setDevice(const\ ma\_device\_id\&\ id)*/}}
+\DoxyCodeLine{00151\ \ \ \textcolor{comment}{/*\{*/}}
+\DoxyCodeLine{00152\ \ \ \textcolor{comment}{/*\ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);*/}}
+\DoxyCodeLine{00153\ \ \ \textcolor{comment}{/**/}}
+\DoxyCodeLine{00154\ \ \ \textcolor{comment}{/*\ \ \ \ if\ (!deviceSet)\ \{*/}}
+\DoxyCodeLine{00155\ \ \ \textcolor{comment}{/*\ \ \ \ \ \ \ \ std::cerr\ <<\ "{}Device\ not\ initialized!\(\backslash\)n"{};*/}}
+\DoxyCodeLine{00156\ \ \ \textcolor{comment}{/*\ \ \ \ \ \ \ \ return;*/}}
+\DoxyCodeLine{00157\ \ \ \textcolor{comment}{/*\ \ \ \ \}*/}}
+\DoxyCodeLine{00158\ \ \ \textcolor{comment}{/**/}}
+\DoxyCodeLine{00159\ \ \ \textcolor{comment}{/*\ \ \ \ //\ Stop\ current\ playback*/}}
+\DoxyCodeLine{00160\ \ \ \textcolor{comment}{/*\ \ \ \ ma\_device\_stop(\&device);*/}}
+\DoxyCodeLine{00161\ \ \ \textcolor{comment}{/**/}}
+\DoxyCodeLine{00162\ \ \ \textcolor{comment}{/*\ \ \ \ //\ Set\ new\ device*/}}
+\DoxyCodeLine{00163\ \ \ \textcolor{comment}{/*\ \ \ \ deviceID\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ id;*/}}
+\DoxyCodeLine{00164\ \ \ \textcolor{comment}{/*\ \ \ \ deviceConfig.playback.pDeviceID\ =\ \&deviceID;*/}}
+\DoxyCodeLine{00165\ \ \ \textcolor{comment}{/**/}}
+\DoxyCodeLine{00166\ \ \ \textcolor{comment}{/*\ \ \ \ //\ Restart\ playback*/}}
+\DoxyCodeLine{00167\ \ \ \textcolor{comment}{/*\ \ \ \ if\ (ma\_device\_start(\&device)\ !=\ MA\_SUCCESS)\ \{*/}}
+\DoxyCodeLine{00168\ \ \ \textcolor{comment}{/*\ \ \ \ \ \ \ \ std::cerr\ <<\ "{}Failed\ to\ restart\ audio\ device\ after\ switch.\(\backslash\)n"{};*/}}
+\DoxyCodeLine{00169\ \ \ \textcolor{comment}{/*\ \ \ \ \}*/}}
+\DoxyCodeLine{00170\ \ \ \textcolor{comment}{/*\}*/}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00183\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classMiniAudioPlayer_a50aa0687df837c77d142f8ba284607ef}{loadFileAsync}}(\textcolor{keyword}{const}\ std::string\&\ filePath,\ \textcolor{keywordtype}{bool}\ reloadNextFile)\ -\/>\ std::future<int>}
+\DoxyCodeLine{00184\ \ \ \{}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordflow}{return}\ std::async(std::launch::async,}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [\textcolor{keyword}{this},\ filePath,\ reloadNextFile]()}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isPlaying)}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classMiniAudioPlayer_a8233c5e0b8bb3a14402dc89281719029}{stop}}();}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ File\ check\ is\ done\ before\ loading\ the\ file\ so\ this\ seems\ like\ an}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ unnecessary\ sanity\ check\ that\ can\ be\ removed}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*if\ (!std::filesystem::exists(filePath))*/}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\{*/}}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ \ \ \ throw\ std::runtime\_error("{}File\ does\ not\ exist:\ "{}\ +\ filePath);*/}}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\}*/}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (reloadNextFile)}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ma\_sound\_uninit(\&sound);}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (deviceSet)}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ deviceConfig.playback.pDeviceID\ =\ \&deviceID;}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_sound\_init\_from\_file(\&engine,\ filePath.c\_str(),\ MA\_SOUND\_FLAG\_STREAM,}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{nullptr},\ \textcolor{keyword}{nullptr},\ \&sound)\ !=\ MA\_SUCCESS)}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ load\ audio\ file:\ "{}}\ +\ filePath);}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00217\ }
-\DoxyCodeLine{00218\ \ \ \ \ \ \ \textcolor{comment}{//\ Start\ a\ new\ playback\ thread}}
-\DoxyCodeLine{00219\ \ \ \ \ \ \ playbackThread\ =\ std::thread(}
-\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ [\textcolor{keyword}{this}]()}
-\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (isPlaying)}
-\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!ma\_sound\_is\_playing(\&sound))}
-\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);\ \textcolor{comment}{//\ Protect\ shared\ state}}
-\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isPlaying\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ std::this\_thread::sleep\_for(std::chrono::milliseconds(100));}
-\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \});}
-\DoxyCodeLine{00233\ \ \ \ \ \}}
-\DoxyCodeLine{00234\ \ \ \ \ mtx.unlock();}
-\DoxyCodeLine{00235\ \ \ \}}
-\DoxyCodeLine{00236\ }
-\DoxyCodeLine{00245\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMiniAudioPlayer_a9e0326f4904c8dc484730a9f1588d60d}{pause}}()}
-\DoxyCodeLine{00246\ \ \ \{}
-\DoxyCodeLine{00247\ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);\ \textcolor{comment}{//\ Protect\ shared\ state}}
-\DoxyCodeLine{00248\ \ \ \ \ \textcolor{keywordflow}{if}\ (isPlaying)}
-\DoxyCodeLine{00249\ \ \ \ \ \{}
-\DoxyCodeLine{00250\ \ \ \ \ \ \ \textcolor{comment}{//\ Store\ the\ current\ position\ before\ stopping}}
-\DoxyCodeLine{00251\ \ \ \ \ \ \ pausePosition\ =\ ma\_sound\_get\_time\_in\_pcm\_frames(\&sound);}
-\DoxyCodeLine{00252\ }
-\DoxyCodeLine{00253\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_sound\_stop(\&sound)\ !=\ MA\_SUCCESS)}
-\DoxyCodeLine{00254\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ pause\ the\ sound."{}});}
-\DoxyCodeLine{00256\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00257\ \ \ \ \ \ \ isPlaying\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00258\ \ \ \ \ \ \ wasPaused\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00259\ }
-\DoxyCodeLine{00260\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (playbackThread.joinable())}
-\DoxyCodeLine{00261\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ playbackThread.join();}
-\DoxyCodeLine{00263\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00264\ \ \ \ \ \}}
-\DoxyCodeLine{00265\ \ \ \ \ \textcolor{keywordflow}{else}\ }
-\DoxyCodeLine{00266\ \ \ \ \ \{}
-\DoxyCodeLine{00267\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}No\ song\ is\ playing..."{}});}
-\DoxyCodeLine{00268\ \ \ \ \ \}}
-\DoxyCodeLine{00269\ \ \ \}}
-\DoxyCodeLine{00270\ }
-\DoxyCodeLine{00277\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMiniAudioPlayer_a76e2cf58ef484743383411c267d1e6b3}{resume}}()}
-\DoxyCodeLine{00278\ \ \ \{}
-\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keywordflow}{if}\ (wasPaused)}
-\DoxyCodeLine{00280\ \ \ \ \ \{}
-\DoxyCodeLine{00281\ \ \ \ \ \ \ \textcolor{comment}{//\ Seek\ to\ the\ stored\ position\ and\ start\ playing\ again}}
-\DoxyCodeLine{00282\ \ \ \ \ \ \ ma\_sound\_seek\_to\_pcm\_frame(\&sound,\ pausePosition);}
-\DoxyCodeLine{00283\ \ \ \ \ \ \ \mbox{\hyperlink{classMiniAudioPlayer_afaed2fe579e6ec80066056d622f42b8a}{play}}();\ \textcolor{comment}{//\ Call\ play()\ to\ resume\ playback\ from\ the\ correct\ position}}
-\DoxyCodeLine{00284\ \ \ \ \ \ \ wasPaused\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00285\ \ \ \ \ \}}
-\DoxyCodeLine{00286\ \ \ \}}
-\DoxyCodeLine{00287\ }
-\DoxyCodeLine{00294\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMiniAudioPlayer_a8233c5e0b8bb3a14402dc89281719029}{stop}}()}
-\DoxyCodeLine{00295\ \ \ \{}
-\DoxyCodeLine{00296\ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);\ \textcolor{comment}{//\ Protect\ shared\ state}}
-\DoxyCodeLine{00297\ \ \ \ \ \textcolor{keywordflow}{if}\ (isPlaying)}
-\DoxyCodeLine{00298\ \ \ \ \ \{}
-\DoxyCodeLine{00299\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_sound\_stop(\&sound)\ !=\ MA\_SUCCESS)}
-\DoxyCodeLine{00300\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ stop\ the\ sound."{}});}
-\DoxyCodeLine{00302\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00303\ \ \ \ \ \ \ isPlaying\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00304\ \ \ \ \ \ \ ma\_sound\_seek\_to\_pcm\_frame(\&sound,\ 0);}
-\DoxyCodeLine{00305\ \ \ \ \ \}}
-\DoxyCodeLine{00306\ }
-\DoxyCodeLine{00307\ \ \ \ \ \textcolor{keywordflow}{if}\ (playbackThread.joinable())}
-\DoxyCodeLine{00308\ \ \ \ \ \{}
-\DoxyCodeLine{00309\ \ \ \ \ \ \ playbackThread.join();}
-\DoxyCodeLine{00310\ \ \ \ \ \}}
-\DoxyCodeLine{00311\ \ \ \}}
-\DoxyCodeLine{00312\ }
-\DoxyCodeLine{00322\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMiniAudioPlayer_ab2c4bae21c2ea00b2f3af8b697835950}{setVolume}}(\textcolor{keywordtype}{float}\ volume)}
-\DoxyCodeLine{00323\ \ \ \{}
-\DoxyCodeLine{00324\ \ \ \ \ \textcolor{keywordflow}{if}\ (volume\ <\ 0.0f\ ||\ volume\ >\ 1.0f)}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;\ \textcolor{comment}{//\ Success}}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00220\ \ \ \}}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00230\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMiniAudioPlayer_afaed2fe579e6ec80066056d622f42b8a}{play}}()}
+\DoxyCodeLine{00231\ \ \ \{}
+\DoxyCodeLine{00232\ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);\ \textcolor{comment}{//\ Protect\ shared\ state}}
+\DoxyCodeLine{00233\ \ \ \ \ deviceConfig.playback.pDeviceID\ =\ \&deviceID;}
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{keywordflow}{if}\ (!isPlaying)}
+\DoxyCodeLine{00235\ \ \ \ \ \{}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_sound\_start(\&sound)\ !=\ MA\_SUCCESS)}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ play\ the\ sound."{}});}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ isPlaying\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (playbackThread.joinable())}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ playbackThread.join();}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \textcolor{comment}{//\ Start\ a\ new\ playback\ thread}}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ playbackThread\ =\ std::thread(}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ [\textcolor{keyword}{this}]()}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (isPlaying)}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!ma\_sound\_is\_playing(\&sound))}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);\ \textcolor{comment}{//\ Protect\ shared\ state}}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isPlaying\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ std::this\_thread::sleep\_for(std::chrono::milliseconds(50));}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00260\ \ \ \ \ \}}
+\DoxyCodeLine{00261\ \ \ \ \ mtx.unlock();}
+\DoxyCodeLine{00262\ \ \ \}}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00272\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMiniAudioPlayer_a9e0326f4904c8dc484730a9f1588d60d}{pause}}()}
+\DoxyCodeLine{00273\ \ \ \{}
+\DoxyCodeLine{00274\ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);\ \textcolor{comment}{//\ Protect\ shared\ state}}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{keywordflow}{if}\ (isPlaying)}
+\DoxyCodeLine{00276\ \ \ \ \ \{}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \textcolor{comment}{//\ Store\ the\ current\ position\ before\ stopping}}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ pausePosition\ =\ ma\_sound\_get\_time\_in\_pcm\_frames(\&sound);}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_sound\_stop(\&sound)\ !=\ MA\_SUCCESS)}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ pause\ the\ sound."{}});}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ isPlaying\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ wasPaused\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (playbackThread.joinable())}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ playbackThread.join();}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00291\ \ \ \ \ \}}
+\DoxyCodeLine{00292\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00293\ \ \ \ \ \{}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}No\ song\ is\ playing..."{}});}
+\DoxyCodeLine{00295\ \ \ \ \ \}}
+\DoxyCodeLine{00296\ \ \ \}}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00304\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMiniAudioPlayer_a76e2cf58ef484743383411c267d1e6b3}{resume}}()}
+\DoxyCodeLine{00305\ \ \ \{}
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{keywordflow}{if}\ (wasPaused)}
+\DoxyCodeLine{00307\ \ \ \ \ \{}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \textcolor{comment}{//\ Seek\ to\ the\ stored\ position\ and\ start\ playing\ again}}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ ma\_sound\_seek\_to\_pcm\_frame(\&sound,\ pausePosition);}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \mbox{\hyperlink{classMiniAudioPlayer_afaed2fe579e6ec80066056d622f42b8a}{play}}();\ \textcolor{comment}{//\ Call\ play()\ to\ resume\ playback\ from\ the\ correct\ position}}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ wasPaused\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00312\ \ \ \ \ \}}
+\DoxyCodeLine{00313\ \ \ \}}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00321\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMiniAudioPlayer_a8233c5e0b8bb3a14402dc89281719029}{stop}}()}
+\DoxyCodeLine{00322\ \ \ \{}
+\DoxyCodeLine{00323\ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);\ \textcolor{comment}{//\ Protect\ shared\ state}}
+\DoxyCodeLine{00324\ \ \ \ \ \textcolor{keywordflow}{if}\ (isPlaying)}
 \DoxyCodeLine{00325\ \ \ \ \ \{}
-\DoxyCodeLine{00326\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::invalid\_argument(\textcolor{stringliteral}{"{}Volume\ must\ be\ between\ 0.0\ and\ 1.0."{}});}
-\DoxyCodeLine{00327\ \ \ \ \ \}}
-\DoxyCodeLine{00328\ \ \ \ \ ma\_sound\_set\_volume(\&sound,\ volume);}
-\DoxyCodeLine{00329\ \ \ \}}
-\DoxyCodeLine{00330\ }
-\DoxyCodeLine{00338\ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classMiniAudioPlayer_a0ba783ad7c4b8b695298ff5d554e1922}{getVolume}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ ma\_sound\_get\_volume(\&sound);\ \}}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_sound\_stop(\&sound)\ !=\ MA\_SUCCESS)}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ stop\ the\ sound."{}});}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ isPlaying\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ ma\_sound\_seek\_to\_pcm\_frame(\&sound,\ 0);}
+\DoxyCodeLine{00332\ \ \ \ \ \}}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keywordflow}{if}\ (playbackThread.joinable())}
+\DoxyCodeLine{00335\ \ \ \ \ \{}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ playbackThread.join();}
+\DoxyCodeLine{00337\ \ \ \ \ \}}
+\DoxyCodeLine{00338\ \ \ \}}
 \DoxyCodeLine{00339\ }
-\DoxyCodeLine{00347\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classMiniAudioPlayer_a4ccaf3af3d5377c91dbf24685a7e3440}{isCurrentlyPlaying}}()}
-\DoxyCodeLine{00348\ \ \ \{}
-\DoxyCodeLine{00349\ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);\ \textcolor{comment}{//\ Protect\ shared\ state}}
-\DoxyCodeLine{00350\ \ \ \ \ \textcolor{keywordflow}{return}\ isPlaying;}
-\DoxyCodeLine{00351\ \ \ \}}
-\DoxyCodeLine{00352\ }
-\DoxyCodeLine{00361\ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classMiniAudioPlayer_af23b5fbce361c592b6916bc2955db1e5}{getDuration}}()}
-\DoxyCodeLine{00362\ \ \ \{}
-\DoxyCodeLine{00363\ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);\ \textcolor{comment}{//\ Protect\ shared\ state}}
-\DoxyCodeLine{00364\ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_sound\_get\_time\_in\_milliseconds(\&sound)\ !=\ MA\_SUCCESS)}
-\DoxyCodeLine{00365\ \ \ \ \ \{}
-\DoxyCodeLine{00366\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ get\ sound\ duration."{}});}
-\DoxyCodeLine{00367\ \ \ \ \ \}}
-\DoxyCodeLine{00368\ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ duration\ =\ 0.0f;}
-\DoxyCodeLine{00369\ \ \ \ \ ma\_result\ result\ \ \ =\ ma\_sound\_get\_length\_in\_seconds(\&sound,\ \&duration);}
-\DoxyCodeLine{00370\ \ \ \ \ \textcolor{keywordflow}{if}\ (result\ !=\ MA\_SUCCESS)}
-\DoxyCodeLine{00371\ \ \ \ \ \{}
-\DoxyCodeLine{00372\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ get\ sound\ duration.\ Result:\ "{}}\ +\ std::to\_string(result));}
-\DoxyCodeLine{00373\ \ \ \ \ \}}
-\DoxyCodeLine{00374\ \ \ \ \ \textcolor{keywordflow}{return}\ duration;}
-\DoxyCodeLine{00375\ \ \ \}}
-\DoxyCodeLine{00376\ }
-\DoxyCodeLine{00385\ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classMiniAudioPlayer_ac173876d6e4accb4100ecd7fa1e0ac69}{seekTime}}(\textcolor{keywordtype}{int}\ seconds)}
-\DoxyCodeLine{00386\ \ \ \{}
-\DoxyCodeLine{00387\ \ \ \ \ \textcolor{keywordflow}{if}\ (isPlaying)}
-\DoxyCodeLine{00388\ \ \ \ \ \{}
-\DoxyCodeLine{00389\ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);\ \textcolor{comment}{//\ Protect\ shared\ state}}
-\DoxyCodeLine{00390\ }
-\DoxyCodeLine{00391\ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ sample\ rate\ of\ the\ sound}}
-\DoxyCodeLine{00392\ \ \ \ \ \ \ ma\_uint32\ sampleRate\ =\ ma\_engine\_get\_sample\_rate(\&engine);}
-\DoxyCodeLine{00393\ }
-\DoxyCodeLine{00394\ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ total\ length\ of\ the\ sound\ in\ PCM\ frames}}
-\DoxyCodeLine{00395\ \ \ \ \ \ \ ma\_uint64\ totalFrames;}
-\DoxyCodeLine{00396\ \ \ \ \ \ \ ma\_result\ result\ =\ ma\_sound\_get\_length\_in\_pcm\_frames(\&sound,\ \&totalFrames);}
-\DoxyCodeLine{00397\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (result\ !=\ MA\_SUCCESS)}
-\DoxyCodeLine{00398\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Failed\ to\ get\ total\ PCM\ frames."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00400\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00401\ }
-\DoxyCodeLine{00402\ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ current\ position\ in\ PCM\ frames}}
-\DoxyCodeLine{00403\ \ \ \ \ \ \ ma\_uint64\ currentFrames\ =\ ma\_sound\_get\_time\_in\_pcm\_frames(\&sound);}
-\DoxyCodeLine{00404\ }
-\DoxyCodeLine{00405\ \ \ \ \ \ \ \textcolor{comment}{//\ Calculate\ the\ new\ position\ in\ PCM\ frames}}
-\DoxyCodeLine{00406\ \ \ \ \ \ \ ma\_int64\ newFrames\ =}
-\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}ma\_int64\textcolor{keyword}{>}(currentFrames)\ +\ \textcolor{keyword}{static\_cast<}ma\_int64\textcolor{keyword}{>}(seconds)\ *\ sampleRate;}
-\DoxyCodeLine{00408\ }
-\DoxyCodeLine{00409\ \ \ \ \ \ \ \textcolor{comment}{//\ Clamp\ the\ new\ position\ to\ valid\ bounds}}
-\DoxyCodeLine{00410\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (newFrames\ <\ 0)}
-\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ newFrames\ =\ seconds\ =\ 0;}
-\DoxyCodeLine{00412\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{static\_cast<}ma\_uint64\textcolor{keyword}{>}(newFrames)\ >\ totalFrames)}
-\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ newFrames\ =\ totalFrames;}
-\DoxyCodeLine{00414\ }
-\DoxyCodeLine{00415\ \ \ \ \ \ \ result\ =\ ma\_sound\_seek\_to\_pcm\_frame(\&sound,\ \textcolor{keyword}{static\_cast<}ma\_uint64\textcolor{keyword}{>}(newFrames));}
-\DoxyCodeLine{00416\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (result\ !=\ MA\_SUCCESS)}
-\DoxyCodeLine{00417\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Failed\ to\ seek\ sound."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00419\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00420\ }
-\DoxyCodeLine{00421\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{double})seconds;}
-\DoxyCodeLine{00422\ \ \ \ \ \}}
-\DoxyCodeLine{00423\ \ \ \ \ \textcolor{keywordflow}{else}\ }
-\DoxyCodeLine{00424\ \ \ \ \ \{\ \ }
-\DoxyCodeLine{00425\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}-\/-\/\ Audio\ is\ not\ playing,\ cannot\ seek\ time"{}});}
-\DoxyCodeLine{00426\ \ \ \ \ \}}
-\DoxyCodeLine{00427\ \ \ \}}
-\DoxyCodeLine{00428\ \};}
-\DoxyCodeLine{00429\ }
-\DoxyCodeLine{00430\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00349\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMiniAudioPlayer_ab2c4bae21c2ea00b2f3af8b697835950}{setVolume}}(\textcolor{keywordtype}{float}\ volume)}
+\DoxyCodeLine{00350\ \ \ \{}
+\DoxyCodeLine{00351\ \ \ \ \ \textcolor{keywordflow}{if}\ (volume\ <\ 0.0f\ ||\ volume\ >\ 1.0f)}
+\DoxyCodeLine{00352\ \ \ \ \ \{}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::invalid\_argument(\textcolor{stringliteral}{"{}Volume\ must\ be\ between\ 0.0\ and\ 1.0."{}});}
+\DoxyCodeLine{00354\ \ \ \ \ \}}
+\DoxyCodeLine{00355\ \ \ \ \ ma\_sound\_set\_volume(\&sound,\ volume);}
+\DoxyCodeLine{00356\ \ \ \}}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00365\ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classMiniAudioPlayer_ad2133c80fc532329d753c1d7f5307617}{getVolume}}()\ const\ -\/>\ \textcolor{keywordtype}{float}\ \{\ \textcolor{keywordflow}{return}\ ma\_sound\_get\_volume(\&sound);\ \}}
+\DoxyCodeLine{00366\ }
+\DoxyCodeLine{00374\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classMiniAudioPlayer_a360a39076f0fb1249cd9a60801e25e63}{isCurrentlyPlaying}}()\ -\/>\ \textcolor{keywordtype}{bool}}
+\DoxyCodeLine{00375\ \ \ \{}
+\DoxyCodeLine{00376\ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);\ \textcolor{comment}{//\ Protect\ shared\ state}}
+\DoxyCodeLine{00377\ \ \ \ \ \textcolor{keywordflow}{return}\ isPlaying;}
+\DoxyCodeLine{00378\ \ \ \}}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00388\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classMiniAudioPlayer_a97ba0a1b7a32003427a42ee4b61edb7d}{getDurationAsync}}()\ -\/>\ std::future<float>}
+\DoxyCodeLine{00389\ \ \ \{}
+\DoxyCodeLine{00390\ \ \ \ \ \textcolor{keywordflow}{return}\ std::async(std::launch::async,}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [\textcolor{keyword}{this}]()}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);\ \textcolor{comment}{//\ Protect\ shared\ state}}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_sound\_get\_time\_in\_milliseconds(\&sound)\ !=\ MA\_SUCCESS)}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ get\ sound\ duration."{}});}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ duration\ =\ 0.0f;}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ma\_result\ result\ \ \ =\ ma\_sound\_get\_length\_in\_seconds(\&sound,\ \&duration);}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (result\ !=\ MA\_SUCCESS)}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Failed\ to\ get\ sound\ duration.\ Result:\ "{}}\ +}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::to\_string(result));}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ duration;}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00409\ \ \ \}}
+\DoxyCodeLine{00410\ }
+\DoxyCodeLine{00419\ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classMiniAudioPlayer_a6635f847ff764abab1d183e2d8dd2028}{seekTime}}(\textcolor{keywordtype}{int}\ seconds)\ -\/>\ \textcolor{keywordtype}{double}}
+\DoxyCodeLine{00420\ \ \ \{}
+\DoxyCodeLine{00421\ \ \ \ \ \textcolor{keywordflow}{if}\ (isPlaying)}
+\DoxyCodeLine{00422\ \ \ \ \ \{}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(mtx);\ \textcolor{comment}{//\ Protect\ shared\ state}}
+\DoxyCodeLine{00424\ }
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ sample\ rate\ of\ the\ sound}}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ ma\_uint32\ sampleRate\ =\ ma\_engine\_get\_sample\_rate(\&engine);}
+\DoxyCodeLine{00427\ }
+\DoxyCodeLine{00428\ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ total\ length\ of\ the\ sound\ in\ PCM\ frames}}
+\DoxyCodeLine{00429\ \ \ \ \ \ \ ma\_uint64\ totalFrames;}
+\DoxyCodeLine{00430\ \ \ \ \ \ \ ma\_result\ result\ =\ ma\_sound\_get\_length\_in\_pcm\_frames(\&sound,\ \&totalFrames);}
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (result\ !=\ MA\_SUCCESS)}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Failed\ to\ get\ total\ PCM\ frames."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ current\ position\ in\ PCM\ frames}}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ ma\_uint64\ currentFrames\ =\ ma\_sound\_get\_time\_in\_pcm\_frames(\&sound);}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \textcolor{comment}{//\ Calculate\ the\ new\ position\ in\ PCM\ frames}}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ ma\_int64\ newFrames\ =}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}ma\_int64\textcolor{keyword}{>}(currentFrames)\ +\ \textcolor{keyword}{static\_cast<}ma\_int64\textcolor{keyword}{>}(seconds)\ *\ sampleRate;}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \textcolor{comment}{//\ Clamp\ the\ new\ position\ to\ valid\ bounds}}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (newFrames\ <\ 0)}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ newFrames\ =\ seconds\ =\ 0;}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{static\_cast<}ma\_uint64\textcolor{keyword}{>}(newFrames)\ >\ totalFrames)}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ newFrames\ =\ totalFrames;}
+\DoxyCodeLine{00448\ }
+\DoxyCodeLine{00449\ \ \ \ \ \ \ result\ =\ ma\_sound\_seek\_to\_pcm\_frame(\&sound,\ \textcolor{keyword}{static\_cast<}ma\_uint64\textcolor{keyword}{>}(newFrames));}
+\DoxyCodeLine{00450\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (result\ !=\ MA\_SUCCESS)}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}Failed\ to\ seek\ sound."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{double})seconds;}
+\DoxyCodeLine{00456\ \ \ \ \ \}}
+\DoxyCodeLine{00457\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00458\ \ \ \ \ \{}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}-\/-\/\ Audio\ is\ not\ playing,\ cannot\ seek\ time"{}});}
+\DoxyCodeLine{00460\ \ \ \ \ \}}
+\DoxyCodeLine{00461\ \ \ \}}
+\DoxyCodeLine{00462\ }
+\DoxyCodeLine{00471\ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classMiniAudioPlayer_aff394fbef12b47db2ff981085ab8083b}{getAudioPlaybackDetails}}()\ const\ -\/>\ std::vector<std::\textcolor{keywordtype}{string}>}
+\DoxyCodeLine{00472\ \ \ \{}
+\DoxyCodeLine{00473\ \ \ \ \ std::vector<std::string>\ details;}
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00475\ \ \ \ \ \textcolor{comment}{//\ Get\ audio\ engine's\ sample\ rate}}
+\DoxyCodeLine{00476\ \ \ \ \ ma\_uint32\ sampleRate\ =\ ma\_engine\_get\_sample\_rate(\&engine);}
+\DoxyCodeLine{00477\ \ \ \ \ \textcolor{keywordflow}{if}\ (sampleRate\ ==\ 0)}
+\DoxyCodeLine{00478\ \ \ \ \ \{}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ details.emplace\_back(\textcolor{stringliteral}{"{}WARNING:\ Could\ not\ detect\ sample\ rate,\ using\ default\ 44100\ Hz"{}});}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ sampleRate\ =\ 44100;}
+\DoxyCodeLine{00481\ \ \ \ \ \}}
+\DoxyCodeLine{00482\ }
+\DoxyCodeLine{00483\ \ \ \ \ \textcolor{comment}{//\ Get\ channels\ from\ the\ device\ config}}
+\DoxyCodeLine{00484\ \ \ \ \ ma\_uint32\ channels\ =\ deviceConfig.playback.channels;}
+\DoxyCodeLine{00485\ \ \ \ \ \textcolor{keywordflow}{if}\ (channels\ ==\ 0)}
+\DoxyCodeLine{00486\ \ \ \ \ \{}
+\DoxyCodeLine{00487\ \ \ \ \ \ \ details.emplace\_back(\textcolor{stringliteral}{"{}WARNING:\ Could\ not\ detect\ channels,\ using\ default\ stereo"{}});}
+\DoxyCodeLine{00488\ \ \ \ \ \ \ channels\ =\ 2;}
+\DoxyCodeLine{00489\ \ \ \ \ \}}
+\DoxyCodeLine{00490\ }
+\DoxyCodeLine{00491\ \ \ \ \ \textcolor{comment}{//\ Get\ format\ from\ the\ device\ config}}
+\DoxyCodeLine{00492\ \ \ \ \ ma\_format\ format\ =\ deviceConfig.playback.format;}
+\DoxyCodeLine{00493\ \ \ \ \ \textcolor{keywordflow}{if}\ (format\ ==\ ma\_format\_unknown)}
+\DoxyCodeLine{00494\ \ \ \ \ \{}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ details.emplace\_back(\textcolor{stringliteral}{"{}WARNING:\ Could\ not\ detect\ format,\ using\ default\ f32"{}});}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ format\ =\ ma\_format\_f32;}
+\DoxyCodeLine{00497\ \ \ \ \ \}}
+\DoxyCodeLine{00498\ }
+\DoxyCodeLine{00499\ \ \ \ \ \textcolor{comment}{//\ Header}}
+\DoxyCodeLine{00500\ \ \ \ \ details.emplace\_back(\textcolor{stringliteral}{"{}===\ Audio\ Playback\ Details\ ==="{}});}
+\DoxyCodeLine{00501\ }
+\DoxyCodeLine{00502\ \ \ \ \ \textcolor{comment}{//\ Audio\ Configuration}}
+\DoxyCodeLine{00503\ \ \ \ \ details.emplace\_back(\textcolor{stringliteral}{"{}\(\backslash\)nAudio\ Configuration:"{}});}
+\DoxyCodeLine{00504\ \ \ \ \ \{}
+\DoxyCodeLine{00505\ \ \ \ \ \ \ std::ostringstream\ oss;}
+\DoxyCodeLine{00506\ \ \ \ \ \ \ oss\ <<\ \textcolor{stringliteral}{"{}\ \ Sample\ Rate:\ "{}}\ <<\ sampleRate\ <<\ \textcolor{stringliteral}{"{}\ Hz"{}};}
+\DoxyCodeLine{00507\ \ \ \ \ \ \ details.emplace\_back(oss.str());}
+\DoxyCodeLine{00508\ }
+\DoxyCodeLine{00509\ \ \ \ \ \ \ oss.str(\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00510\ \ \ \ \ \ \ oss\ <<\ \textcolor{stringliteral}{"{}\ \ Channels:\ "{}}\ <<\ channels\ <<\ \textcolor{stringliteral}{"{}\ ("{}}\ <<\ \mbox{\hyperlink{classMiniAudioPlayer_a2a68f9d83649d1646e8a1474aa1db6ba}{getChannelLayoutString}}(channels)\ <<\ \textcolor{stringliteral}{"{})"{}};}
+\DoxyCodeLine{00511\ \ \ \ \ \ \ details.emplace\_back(oss.str());}
+\DoxyCodeLine{00512\ }
+\DoxyCodeLine{00513\ \ \ \ \ \ \ oss.str(\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00514\ \ \ \ \ \ \ oss\ <<\ \textcolor{stringliteral}{"{}\ \ Format:\ "{}}\ <<\ \mbox{\hyperlink{classMiniAudioPlayer_a98d404c6047b94777549ebd2c3fd44d8}{getFormatString}}(format)\ <<\ \textcolor{stringliteral}{"{}\ ("{}}\ <<\ \mbox{\hyperlink{classMiniAudioPlayer_a790dd7d0ce5195126768741a50affc13}{getBitsPerSample}}(format)\ <<\ \textcolor{stringliteral}{"{}-\/bit)"{}};}
+\DoxyCodeLine{00515\ \ \ \ \ \ \ details.emplace\_back(oss.str());}
+\DoxyCodeLine{00516\ \ \ \ \ \}}
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00518\ \ \ \ \ \textcolor{comment}{//\ Playback\ State}}
+\DoxyCodeLine{00519\ \ \ \ \ details.emplace\_back(\textcolor{stringliteral}{"{}\(\backslash\)nPlayback\ State:"{}});}
+\DoxyCodeLine{00520\ \ \ \ \ \{}
+\DoxyCodeLine{00521\ \ \ \ \ \ \ std::ostringstream\ oss;}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ oss\ <<\ \textcolor{stringliteral}{"{}\ \ Status:\ "{}}\ <<\ \mbox{\hyperlink{classMiniAudioPlayer_a3349624f003bdfa624cc2544831d470e}{getPlaybackStateString}}();}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ details.emplace\_back(oss.str());}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ oss.str(\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ oss\ <<\ \textcolor{stringliteral}{"{}\ \ Looping:\ "{}}\ <<\ (soundConfig.isLooping\ ?\ \textcolor{stringliteral}{"{}Yes"{}}\ :\ \textcolor{stringliteral}{"{}No"{}});}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ details.emplace\_back(oss.str());}
+\DoxyCodeLine{00527\ \ \ \ \ \}}
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00529\ \ \ \ \ \textcolor{keywordflow}{return}\ details;}
+\DoxyCodeLine{00530\ \ \ \}}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ \ \ \textcolor{comment}{//\ Helper\ functions\ remain\ the\ same}}
+\DoxyCodeLine{00533\ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classMiniAudioPlayer_a2a68f9d83649d1646e8a1474aa1db6ba}{getChannelLayoutString}}(ma\_uint32\ channels)\ \textcolor{keyword}{const}\ -\/>\ std::string}
+\DoxyCodeLine{00534\ \ \ \{}
+\DoxyCodeLine{00535\ \ \ \ \ \textcolor{keywordflow}{switch}\ (channels)}
+\DoxyCodeLine{00536\ \ \ \ \ \{}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 1:}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Mono"{}};}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 2:}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Stereo"{}};}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 3:}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}2.1"{}};}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 4:}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Quadraphonic"{}};}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 5:}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}5.0"{}};}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 6:}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}5.1"{}};}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 7:}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}6.1"{}};}
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 8:}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}7.1"{}};}
+\DoxyCodeLine{00553\ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00554\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00555\ \ \ \ \ \ \ \ \ std::ostringstream\ oss;}
+\DoxyCodeLine{00556\ \ \ \ \ \ \ \ \ oss\ <<\ channels\ <<\ \textcolor{stringliteral}{"{}\ channels"{}};}
+\DoxyCodeLine{00557\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ oss.str();}
+\DoxyCodeLine{00558\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00559\ \ \ \ \ \}}
+\DoxyCodeLine{00560\ \ \ \}}
+\DoxyCodeLine{00561\ }
+\DoxyCodeLine{00562\ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classMiniAudioPlayer_a98d404c6047b94777549ebd2c3fd44d8}{getFormatString}}(ma\_format\ format)\ \textcolor{keyword}{const}\ -\/>\ std::string}
+\DoxyCodeLine{00563\ \ \ \{}
+\DoxyCodeLine{00564\ \ \ \ \ \textcolor{keywordflow}{switch}\ (format)}
+\DoxyCodeLine{00565\ \ \ \ \ \{}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ ma\_format\_f32:}
+\DoxyCodeLine{00567\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}32-\/bit\ float"{}};}
+\DoxyCodeLine{00568\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ ma\_format\_s16:}
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}16-\/bit\ signed\ PCM"{}};}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ ma\_format\_u8:}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}8-\/bit\ unsigned\ PCM"{}};}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ ma\_format\_s24:}
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}24-\/bit\ signed\ PCM"{}};}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ ma\_format\_s32:}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}32-\/bit\ signed\ PCM"{}};}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Unknown\ format"{}};}
+\DoxyCodeLine{00578\ \ \ \ \ \}}
+\DoxyCodeLine{00579\ \ \ \}}
+\DoxyCodeLine{00580\ }
+\DoxyCodeLine{00581\ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classMiniAudioPlayer_a790dd7d0ce5195126768741a50affc13}{getBitsPerSample}}(ma\_format\ format)\ \textcolor{keyword}{const}\ -\/>\ uint32\_t}
+\DoxyCodeLine{00582\ \ \ \{}
+\DoxyCodeLine{00583\ \ \ \ \ \textcolor{keywordflow}{switch}\ (format)}
+\DoxyCodeLine{00584\ \ \ \ \ \{}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ ma\_format\_f32:}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 32;}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ ma\_format\_s16:}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 16;}
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ ma\_format\_u8:}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 8;}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ ma\_format\_s24:}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 24;}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ ma\_format\_s32:}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 32;}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00596\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00597\ \ \ \ \ \}}
+\DoxyCodeLine{00598\ \ \ \}}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00600\ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classMiniAudioPlayer_a3349624f003bdfa624cc2544831d470e}{getPlaybackStateString}}()\ const\ -\/>\ std::\textcolor{keywordtype}{string}}
+\DoxyCodeLine{00601\ \ \ \{}
+\DoxyCodeLine{00602\ \ \ \ \ \textcolor{keywordflow}{if}\ (isPlaying)}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Playing"{}};}
+\DoxyCodeLine{00604\ \ \ \ \ \textcolor{keywordflow}{if}\ (wasPaused)}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Paused"{}};}
+\DoxyCodeLine{00606\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Stopped"{}};}
+\DoxyCodeLine{00607\ \ \ \}}
+\DoxyCodeLine{00608\ \};}
 
 \end{DoxyCode}

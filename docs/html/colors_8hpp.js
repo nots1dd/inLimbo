@@ -46,8 +46,8 @@ var colors_8hpp =
       [ "TrueColors::Color::Turquoise", "namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6dada3a4f0a911cebe3bc75f6e39c324696", null ],
       [ "TrueColors::Color::LightTurquoise", "namespaceTrueColors.html#aeafabc145297298741b798e8fdc52a6dae5c96e2ad0520ead9cec1a0664a709a9", null ]
     ] ],
-    [ "TrueColors::GetColor", "namespaceTrueColors.html#a5e3fb4538a96657fee0d7ffb9a92fb96", null ],
-    [ "parseColor", "colors_8hpp.html#a199acdfa1243dcb86ac7e6de0195a7dc", null ],
-    [ "parseColors", "colors_8hpp.html#a637d01c5fd950275d85073732fec1d08", null ],
-    [ "parseHexColor", "colors_8hpp.html#a38d72813e90e14f8b18e88cd4af7c9da", null ]
+    [ "TrueColors::GetColor", "namespaceTrueColors.html#a3784afe8e73efdb0822e9999a0da1c18", null ],
+    [ "parseColor", "colors_8hpp.html#acdc424eb9e7792dfd11042db761457fa", null ],
+    [ "parseColors", "colors_8hpp.html#af8758bdc34d780b2c5c392397ff6591c", null ],
+    [ "parseHexColor", "colors_8hpp.html#abda2901961de3e14b8be16ae35f7ab66", null ]
 ];

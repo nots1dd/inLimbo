@@ -1,5 +1,6 @@
 var arg_handler_8hpp =
 [
+    [ "SongTreeState", "structSongTreeState.html", "structSongTreeState" ],
     [ "ColorManager", "classColorManager.html", null ],
     [ "ArgumentHandler", "classArgumentHandler.html", "classArgumentHandler" ],
     [ "ArgumentHandler::Paths", "structArgumentHandler_1_1Paths.html", "structArgumentHandler_1_1Paths" ],
@@ -13,6 +14,8 @@ var arg_handler_8hpp =
       [ "Magenta", "arg-handler_8hpp.html#a821042d5f30537f776ce823c5d66aadaab91cc2c1416fcca942b61c7ac5b1a9ac", null ]
     ] ],
     [ "DBUS_SERVICE_NAME", "arg-handler_8hpp.html#a66a0a8982b40d72ceed7b95a0d7d280c", null ],
+    [ "parseSongTree", "arg-handler_8hpp.html#a4facf54f696971b5d1e41f376fb0e783", null ],
+    [ "REPOSITORY_URL", "arg-handler_8hpp.html#a1dea1931820a41f82fc5acb0fab76ea4", null ],
     [ "shouldRunApp", "arg-handler_8hpp.html#af443d26ff309f6e511dfcae4be89775a", null ],
-    [ "VERSION", "arg-handler_8hpp.html#a35aceb690e11a3d78331de7dda9563ae", null ]
+    [ "VERSION_FILE_NAME", "arg-handler_8hpp.html#af373b8d5ef3d654b43f29e8f6b4a6ccc", null ]
 ];

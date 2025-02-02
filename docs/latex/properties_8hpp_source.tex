@@ -2,74 +2,71 @@
 \hypertarget{properties_8hpp_source}{}\label{properties_8hpp_source}\index{src/ui/properties.hpp@{src/ui/properties.hpp}}
 \mbox{\hyperlink{properties_8hpp}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ PROPERTIES\_HPP}}
-\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ PROPERTIES\_HPP}}
-\DoxyCodeLine{00003\ }
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{toml__parser_8hpp}{../parser/toml\_parser.hpp}}"{}}}
-\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <iostream>}}
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string\_view>}}
-\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
-\DoxyCodeLine{00008\ }
-\DoxyCodeLine{00014\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structGlobalProps}{GlobalProps}}}
-\DoxyCodeLine{00015\ \{}
-\DoxyCodeLine{00016\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structGlobalProps_a34cf315805e80d05d18dabeb853ec8e1}{show\_bitrate}};\ }
-\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ more\ properties\ here\ as\ needed}}
-\DoxyCodeLine{00018\ \};}
-\DoxyCodeLine{00019\ }
-\DoxyCodeLine{00029\ \mbox{\hyperlink{structGlobalProps}{GlobalProps}}\ \mbox{\hyperlink{properties_8hpp_a01d540760c5345b3ca7398fb1771a21c}{parseProps}}()}
-\DoxyCodeLine{00030\ \{}
-\DoxyCodeLine{00031\ \ \ \mbox{\hyperlink{structGlobalProps}{GlobalProps}}\ gprops;}
-\DoxyCodeLine{00032\ }
-\DoxyCodeLine{00043\ \ \ \textcolor{keyword}{auto}\ reportWarning\ =}
-\DoxyCodeLine{00044\ \ \ \ \ [](\textcolor{keyword}{const}\ std::string\&\ field,\ \textcolor{keyword}{const}\ std::string\_view\&\ value,\ \textcolor{keyword}{const}\ std::string\&\ default\_val)}
-\DoxyCodeLine{00045\ \ \ \{}
-\DoxyCodeLine{00046\ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}!!\ Warning:\ Invalid\ value\ '"{}}\ <<\ value\ <<\ \textcolor{stringliteral}{"{}'\ detected\ for\ field\ '"{}}\ <<\ field}
-\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}'.\ Using\ default\ value\ '"{}}\ <<\ default\_val\ <<\ \textcolor{stringliteral}{"{}'."{}}\ <<\ std::endl;}
-\DoxyCodeLine{00048\ \ \ \};}
-\DoxyCodeLine{00049\ }
-\DoxyCodeLine{00061\ \ \ \textcolor{keyword}{auto}\ handle\_bool\_prop\ =\ [\&](\textcolor{keyword}{const}\ std::string\_view\&\ value,\ \textcolor{keyword}{const}\ std::string\&\ field,}
-\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ default\_val)\ -\/>\ \textcolor{keywordtype}{bool}}
-\DoxyCodeLine{00063\ \ \ \{}
-\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordflow}{if}\ (value.empty())}
-\DoxyCodeLine{00065\ \ \ \ \ \{}
-\DoxyCodeLine{00066\ \ \ \ \ \ \ reportWarning(field,\ value,\ default\_val\ ?\ \textcolor{stringliteral}{"{}true"{}}\ :\ \textcolor{stringliteral}{"{}false"{}});}
-\DoxyCodeLine{00067\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ default\_val;}
-\DoxyCodeLine{00068\ \ \ \ \ \}}
-\DoxyCodeLine{00069\ }
-\DoxyCodeLine{00070\ \ \ \ \ std::string\ value\_lower;}
-\DoxyCodeLine{00071\ \ \ \ \ value\_lower.reserve(value.size());}
-\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{char}\ c\ :\ value)}
-\DoxyCodeLine{00073\ \ \ \ \ \{}
-\DoxyCodeLine{00074\ \ \ \ \ \ \ value\_lower\ +=\ std::tolower(c);}
-\DoxyCodeLine{00075\ \ \ \ \ \}}
-\DoxyCodeLine{00076\ }
-\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordflow}{if}\ (value\_lower\ ==\ \textcolor{stringliteral}{"{}true"{}}\ ||\ value\_lower\ ==\ \textcolor{stringliteral}{"{}1"{}}\ ||\ value\_lower\ ==\ \textcolor{stringliteral}{"{}yes"{}})}
-\DoxyCodeLine{00078\ \ \ \ \ \{}
-\DoxyCodeLine{00079\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00080\ \ \ \ \ \}}
-\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordflow}{if}\ (value\_lower\ ==\ \textcolor{stringliteral}{"{}false"{}}\ ||\ value\_lower\ ==\ \textcolor{stringliteral}{"{}0"{}}\ ||\ value\_lower\ ==\ \textcolor{stringliteral}{"{}no"{}})}
-\DoxyCodeLine{00082\ \ \ \ \ \{}
-\DoxyCodeLine{00083\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00084\ \ \ \ \ \}}
-\DoxyCodeLine{00085\ }
-\DoxyCodeLine{00086\ \ \ \ \ reportWarning(field,\ value,\ default\_val\ ?\ \textcolor{stringliteral}{"{}true"{}}\ :\ \textcolor{stringliteral}{"{}false"{}});}
-\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordflow}{return}\ default\_val;}
-\DoxyCodeLine{00088\ \ \ \};}
-\DoxyCodeLine{00089\ }
-\DoxyCodeLine{00090\ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ std::pair<bool\&,\ bool>>\ field\_map\ =\ \{}
-\DoxyCodeLine{00091\ \ \ \ \ \{\textcolor{stringliteral}{"{}show\_bitrate"{}},\ \{gprops.\mbox{\hyperlink{structGlobalProps_a34cf315805e80d05d18dabeb853ec8e1}{show\_bitrate}},\ \textcolor{keyword}{false}\}\},}
-\DoxyCodeLine{00092\ \ \ \};}
-\DoxyCodeLine{00093\ }
-\DoxyCodeLine{00094\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [field,\ field\_info]\ :\ field\_map)}
-\DoxyCodeLine{00095\ \ \ \{}
-\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [field\_ref,\ default\_val]\ =\ field\_info;}
-\DoxyCodeLine{00097\ \ \ \ \ std::string\_view\ value\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{toml__parser_8hpp_a19930571a1aced24a71d9a1d6e7c710a}{parseTOMLField}}(\mbox{\hyperlink{toml__parser_8hpp_a3bd9928cc13c4d6738fc29a44b27d764}{PARENT\_UI}},\ field);}
-\DoxyCodeLine{00098\ \ \ \ \ field\_ref\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ handle\_bool\_prop(value,\ field,\ default\_val);}
-\DoxyCodeLine{00099\ \ \ \}}
-\DoxyCodeLine{00100\ }
-\DoxyCodeLine{00101\ \ \ \textcolor{keywordflow}{return}\ gprops;}
-\DoxyCodeLine{00102\ \}}
-\DoxyCodeLine{00103\ }
-\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{toml__parser_8hpp}{../parser/toml\_parser.hpp}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string\_view>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structGlobalProps}{GlobalProps}}}
+\DoxyCodeLine{00014\ \{}
+\DoxyCodeLine{00015\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structGlobalProps_a34cf315805e80d05d18dabeb853ec8e1}{show\_bitrate}};\ }
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ more\ properties\ here\ as\ needed}}
+\DoxyCodeLine{00017\ \};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{properties_8hpp_a5dedf695a4353d53426e78ca8155574e}{parseProps}}()\ -\/>\ \mbox{\hyperlink{structGlobalProps}{GlobalProps}}}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \ \ \mbox{\hyperlink{structGlobalProps}{GlobalProps}}\ gprops;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00042\ \ \ \textcolor{keyword}{auto}\ reportWarning\ =}
+\DoxyCodeLine{00043\ \ \ \ \ [](\textcolor{keyword}{const}\ std::string\&\ field,\ \textcolor{keyword}{const}\ std::string\_view\&\ value,\ \textcolor{keyword}{const}\ std::string\&\ default\_val)}
+\DoxyCodeLine{00044\ \ \ \{}
+\DoxyCodeLine{00045\ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}!!\ Warning:\ Invalid\ value\ '"{}}\ <<\ value\ <<\ \textcolor{stringliteral}{"{}'\ detected\ for\ field\ '"{}}\ <<\ field}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}'.\ Using\ default\ value\ '"{}}\ <<\ default\_val\ <<\ \textcolor{stringliteral}{"{}'."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00047\ \ \ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00060\ \ \ \textcolor{keyword}{auto}\ handle\_bool\_prop\ =\ [\&](\textcolor{keyword}{const}\ std::string\_view\&\ value,\ \textcolor{keyword}{const}\ std::string\&\ field,}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ default\_val)\ -\/>\ \textcolor{keywordtype}{bool}}
+\DoxyCodeLine{00062\ \ \ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordflow}{if}\ (value.empty())}
+\DoxyCodeLine{00064\ \ \ \ \ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ reportWarning(field,\ value,\ default\_val\ ?\ \textcolor{stringliteral}{"{}true"{}}\ :\ \textcolor{stringliteral}{"{}false"{}});}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ default\_val;}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ std::string\ value\_lower;}
+\DoxyCodeLine{00070\ \ \ \ \ value\_lower.reserve(value.size());}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{char}\ c\ :\ value)}
+\DoxyCodeLine{00072\ \ \ \ \ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ value\_lower\ +=\ std::tolower(c);}
+\DoxyCodeLine{00074\ \ \ \ \ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordflow}{if}\ (value\_lower\ ==\ \textcolor{stringliteral}{"{}true"{}}\ ||\ value\_lower\ ==\ \textcolor{stringliteral}{"{}1"{}}\ ||\ value\_lower\ ==\ \textcolor{stringliteral}{"{}yes"{}})}
+\DoxyCodeLine{00077\ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordflow}{if}\ (value\_lower\ ==\ \textcolor{stringliteral}{"{}false"{}}\ ||\ value\_lower\ ==\ \textcolor{stringliteral}{"{}0"{}}\ ||\ value\_lower\ ==\ \textcolor{stringliteral}{"{}no"{}})}
+\DoxyCodeLine{00081\ \ \ \ \ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00083\ \ \ \ \ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ reportWarning(field,\ value,\ default\_val\ ?\ \textcolor{stringliteral}{"{}true"{}}\ :\ \textcolor{stringliteral}{"{}false"{}});}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordflow}{return}\ default\_val;}
+\DoxyCodeLine{00087\ \ \ \};}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ std::pair<bool\&,\ bool>>\ field\_map\ =\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \{\textcolor{stringliteral}{"{}show\_bitrate"{}},\ \{gprops.\mbox{\hyperlink{structGlobalProps_a34cf315805e80d05d18dabeb853ec8e1}{show\_bitrate}},\ \textcolor{keyword}{false}\}\},}
+\DoxyCodeLine{00091\ \ \ \};}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [field,\ field\_info]\ :\ field\_map)}
+\DoxyCodeLine{00094\ \ \ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [field\_ref,\ default\_val]\ =\ field\_info;}
+\DoxyCodeLine{00096\ \ \ \ \ std::string\_view\ value\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{toml__parser_8hpp_a9a9759bd3909e5f64c6b7acbdd4bc16f}{parseTOMLField}}(\mbox{\hyperlink{toml__parser_8hpp_a3bd9928cc13c4d6738fc29a44b27d764}{PARENT\_UI}},\ field);}
+\DoxyCodeLine{00097\ \ \ \ \ field\_ref\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ handle\_bool\_prop(value,\ field,\ default\_val);}
+\DoxyCodeLine{00098\ \ \ \}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \textcolor{keywordflow}{return}\ gprops;}
+\DoxyCodeLine{00101\ \}}
 
 \end{DoxyCode}

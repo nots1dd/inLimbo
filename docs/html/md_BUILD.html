@@ -107,16 +107,32 @@ $(function(){initNavTree('md_BUILD.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">inLimbo Build Guide</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md32"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md44"></a></p>
 <p>This project uses a <code>Makefile</code> to automate the build process. The <code>Makefile</code> supports different build configurations to help with development, testing, and production. Below are the various types of builds you can perform and how to use them.</p>
 <p>You can build the inLimbo in two ways:</p>
 <ol type="1">
 <li>Makefile (uses CMake)</li>
 <li>Manually building using CMake commands</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md33"></a>
+<dl class="section note"><dt>Note</dt><dd><br  />
+ If you want to use a custom compiler rather than the default compiler defined in: <code>CMAKE_CXX_COMPILER</code> macro by CMake, <br  />
+<br  />
+ Append <code>CMAKE_EXTRA_FLAGS="-D CMAKE_CXX_COMPILER=/path/to/your/compiler"</code> to the make command like so: <br  />
+<br  />
+ <div class="fragment"><div class="line"># Let us say I want to compile using clang++:</div>
+<div class="line">make build CMAKE_EXTRA_FLAGS=&quot;-D CMAKE_CXX_COMPILER=clang++&quot;</div>
+<div class="line"># To rebuild </div>
+<div class="line">make rebuild </div>
+</div><!-- fragment --> <br  />
+<br  />
+ The CMAKE_EXTRA_FLAGS macro is passable to <code>build</code>, <code>build-all</code>, <code>asan</code>, <code>build-test</code>, <code>build-test-all</code>, <code>tsan</code>. <br  />
+<br  />
+ There is some issue where clang++ starts a scratch compilation even though the build files are present and only a few source files are changed. <br  />
+<br  />
+</dd></dl>
+<h1><a class="anchor" id="autotoc_md45"></a>
 Available Build Targets</h1>
-<h2><a class="anchor" id="autotoc_md34"></a>
+<h2><a class="anchor" id="autotoc_md46"></a>
 1. <b>all</b></h2>
 <p>This is the default target, and it will perform a full build of the project.</p>
 <ul>
@@ -125,7 +141,7 @@ Available Build Targets</h1>
 <li><b>Description</b>: This will run the <code>build-all</code> target, which first executes the initialization script (<code>init.sh</code>) and then proceeds with the build.</li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md36"></a>
+<h2><a class="anchor" id="autotoc_md48"></a>
 2. <b>build</b></h2>
 <p>This target performs a clean build with the default <code>Release</code> configuration.</p>
 <ul>
@@ -139,7 +155,7 @@ Available Build Targets</h1>
 </li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md38"></a>
+<h2><a class="anchor" id="autotoc_md50"></a>
 3. <b>rebuild</b></h2>
 <p>This target will rebuild the project, even if it was previously built.</p>
 <ul>
@@ -152,7 +168,7 @@ Available Build Targets</h1>
 </li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md40"></a>
+<h2><a class="anchor" id="autotoc_md52"></a>
 4. <b>asan (AddressSanitizer)</b></h2>
 <p>This target builds the project with <b>AddressSanitizer</b>, which helps detect memory errors.</p>
 <ul>
@@ -165,7 +181,7 @@ Available Build Targets</h1>
 </li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md42"></a>
+<h2><a class="anchor" id="autotoc_md54"></a>
 5. <b>asan_run</b></h2>
 <p>This target runs the AddressSanitizer build after it has been built.</p>
 <ul>
@@ -178,7 +194,7 @@ Available Build Targets</h1>
 </li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md44"></a>
+<h2><a class="anchor" id="autotoc_md56"></a>
 6. <b>tsan (ThreadSanitizer)</b></h2>
 <p>This target builds the project with <b>ThreadSanitizer</b>, which detects data races in multi-threaded code.</p>
 <ul>
@@ -191,7 +207,7 @@ Available Build Targets</h1>
 </li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md46"></a>
+<h2><a class="anchor" id="autotoc_md58"></a>
 7. <b>tsan_run</b></h2>
 <p>This target runs the ThreadSanitizer build after it has been built.</p>
 <ul>
@@ -204,7 +220,7 @@ Available Build Targets</h1>
 </li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md48"></a>
+<h2><a class="anchor" id="autotoc_md60"></a>
 8. <b>build-test</b></h2>
 <p>This target builds the project with testing enabled. (Also useful for rebuilding tests)</p>
 <ul>
@@ -218,7 +234,7 @@ Available Build Targets</h1>
 </li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md50"></a>
+<h2><a class="anchor" id="autotoc_md62"></a>
 9. <b>build-test-all</b></h2>
 <p>This target runs the initialization script and builds the project with testing enabled.</p>
 <ul>
@@ -231,7 +247,7 @@ Available Build Targets</h1>
 </li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md52"></a>
+<h2><a class="anchor" id="autotoc_md64"></a>
 10. <b>clean</b></h2>
 <p>This target removes all build artifacts, effectively cleaning the project.</p>
 <ul>
@@ -243,7 +259,7 @@ Available Build Targets</h1>
 </li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md54"></a>
+<h2><a class="anchor" id="autotoc_md66"></a>
 11. <b>init</b></h2>
 <p>This target runs the initialization script (<code>init.sh</code>).</p>
 <ul>
@@ -255,20 +271,33 @@ Available Build Targets</h1>
 </li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md56"></a>
-12. <b>global_build</b></h2>
+<h2><a class="anchor" id="autotoc_md68"></a>
+12. <b>build-global</b></h2>
 <p>This target builds and installs the project globally.</p>
 <ul>
-<li><b>Command</b>: <div class="fragment"><div class="line">make global_build</div>
+<li><b>Command</b>: <div class="fragment"><div class="line">make build-global</div>
 </div><!-- fragment --></li>
 <li><b>Description</b>:<ul>
-<li>This will configure the build with a <code>BUILD_GLOBAL</code> flag and install the project using <code>ninja</code> after the build completes.</li>
-<li>Useful for installing the project globally for system-wide usage.</li>
+<li>Just runs sudo make install after building for target local release (adds inLimbo.desktop and icon to system wide directories)</li>
 </ul>
 </li>
 </ul>
 <hr  />
-<h2><a class="anchor" id="autotoc_md58"></a>
+<h2><a class="anchor" id="autotoc_md70"></a>
+12. <b>build-global-uninstall</b></h2>
+<p>This target uninstalls every system wide installed file of inLimbo using <code>install_manifests.txt</code> in build directory.</p>
+<ul>
+<li><b>Command</b>: <div class="fragment"><div class="line">make build-global-uninstall</div>
+</div><!-- fragment --></li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd><br  />
+ If you remove <code>build/</code> directory, the <code>install_manifests.txt</code> will not exist so this wont work <br  />
+<br  />
+ Will come with a workaround in the future <br  />
+<br  />
+</dd></dl>
+<hr  />
+<h2><a class="anchor" id="autotoc_md72"></a>
 13. <b>verbose</b></h2>
 <p>This target enables verbose output during the build process.</p>
 <ul>
@@ -281,7 +310,7 @@ Available Build Targets</h1>
 </li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md60"></a>
+<h1><a class="anchor" id="autotoc_md74"></a>
 <b>MANUAL BUILD</b>:</h1>
 <dl class="section warning"><dt>Warning</dt><dd><br  />
  Proceed with manual build <b>ONLY</b> if you know what you are doing. <br  />
@@ -311,11 +340,7 @@ Available Build Targets</h1>
 <div class="line">make -j</div>
 <div class="line">./run_webassembly.py # assuming the compilation has no errors</div>
 <div class="line"># This will run in port 8000</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><br  />
- Debug building using make needs to be setup, will be available soon. (it may not work using make currently) <br  />
-<br  />
- </dd></dl>
-</div></div><!-- contents -->
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
