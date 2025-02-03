@@ -10,6 +10,7 @@
 
 #include "./cmd-line-args.hpp"
 #include "dirsort/songmap.hpp"
+#include "network/instance.hpp"
 #include <filesystem>
 #include <iostream>
 #include <string_view>
@@ -18,12 +19,14 @@
 // Constants
 constexpr const char* DBUS_SERVICE_NAME =
   "org.mpris.MediaPlayer2.inLimbo"; ///< DBus service name used by inLimbo.
-constexpr const char* VERSION_FILE_NAME = "VERSION";
-constexpr const char* REPOSITORY_URL    = "https://github.com/nots1dd/inLimbo";
+constexpr const char* VERSION_FILE_NAME        = "VERSION";
+constexpr const char* GLOBAL_VERSION_FILE_NAME = "/usr/share/inLimbo/VERSION";
+constexpr const char* REPOSITORY_URL           = "https://github.com/nots1dd/inLimbo";
 
 bool shouldRunApp =
   false; ///< Indicates if the application should proceed to run after handling arguments.
-bool parseSongTree = false;
+bool parseSongTree       = false;
+bool awaitSocketInstance = false;
 
 struct SongTreeState
 {
@@ -31,9 +34,15 @@ struct SongTreeState
   bool        printArtistsAll    = false;
   bool        printSongsByArtist = false;
   bool        printSongsGenreAll = false;
-  bool printSongInfo = false;
+  bool        printSongInfo      = false;
   std::string artist;
   std::string song;
+};
+
+struct SocketState
+{
+  bool printSocketInfo   = false;
+  bool unlinkSocketForce = false;
 };
 
 /**
@@ -105,6 +114,8 @@ public:
 
   static inline SongTreeState song_tree_parse_state = {};
 
+  static inline SocketState socket_state = {};
+
   /**
    * @brief Handles command-line arguments and executes corresponding actions.
    *
@@ -124,6 +135,8 @@ public:
       {"--version", [&]() { handleVersion(); }},
       {"--clear-cache", [&]() { handleClearCache(paths.libBinPath); }},
       {"--show-config-file", [&]() { handleShowConfig(paths.configPath); }},
+      {"--socket-info", [&]() { handleSocketInfo(); }},
+      {"--socket-unlink-force", [&]() { handleSocketUnlinkForce(); }},
       {"--show-log-dir", [&]() { handleShowLogDir(paths.cacheDir); }},
       {"--show-dbus-name", [&]() { handleShowDBusName(); }},
       {"--update-cache-run", [&]() { handleUpdateCacheRun(paths.libBinPath); }},
@@ -172,6 +185,18 @@ public:
     }
   }
 
+  static auto processSocketInstance(SingleInstanceLock& socketInstance)
+  {
+    if (ArgumentHandler::socket_state.printSocketInfo)
+    {
+      socketInstance.printSocketInfo();
+    }
+    if (ArgumentHandler::socket_state.unlinkSocketForce)
+    {
+      socketInstance.cleanup();
+    }
+  }
+
 private:
   /**
    * @brief Prints a message with a specific console color.
@@ -196,19 +221,45 @@ private:
   {
     cmdArgs.printUsage(programName);
   }
-
+  /**
+   * @brief Reads the version from the local or global VERSION file.
+   *
+   * Tries to open the local `VERSION_FILE_NAME` first. If not found, attempts to read from the
+   * global `GLOBAL_VERSION_FILE_NAME`. Returns `"Unknown Version"` if neither file is found.
+   *
+   * @return The content of the version file as a string.
+   */
   static auto readVersionFromFile() -> std::string
   {
-    std::ifstream versionFile(VERSION_FILE_NAME); // Open the VERSION file
-    if (!versionFile)
+    // First, try to open the local VERSION file
+    std::ifstream versionFile(VERSION_FILE_NAME);
+    if (versionFile)
     {
-      std::cerr << "Error: Unable to open VERSION file!" << std::endl;
-      return "Unknown Version"; // Return default version if file can't be opened
+      std::stringstream buffer;
+      buffer << versionFile.rdbuf();
+      return buffer.str();
+    }
+    else
+    {
+      std::cerr << "Warning: Unable to open local VERSION file at " << VERSION_FILE_NAME
+                << std::endl;
     }
 
-    std::stringstream buffer;
-    buffer << versionFile.rdbuf(); // Read the file content into a string stream
-    return buffer.str();           // Return the string content
+    // If the local VERSION file doesn't exist or failed, try to open the global VERSION file
+    std::ifstream globalVersionFile(GLOBAL_VERSION_FILE_NAME);
+    if (globalVersionFile)
+    {
+      std::stringstream buffer;
+      buffer << globalVersionFile.rdbuf();
+      return buffer.str();
+    }
+    else
+    {
+      std::cerr << "Error: Unable to open global VERSION file at " << GLOBAL_VERSION_FILE_NAME
+                << std::endl;
+    }
+
+    return "Unknown Version";
   }
 
   /**
@@ -293,39 +344,119 @@ private:
     shouldRunApp = true;
   }
 
+  /**
+   * @brief Parses the song map and sets flags to run the application.
+   *
+   * This function triggers the parsing of the song tree and sets the `shouldRunApp`
+   * flag to `true`, indicating that the application should proceed with execution.
+   */
   static void parseSongMap()
   {
     parseSongTree = true;
-    shouldRunApp = true;
+    shouldRunApp  = true;
   }
 
+  /**
+   * @brief Initializes socket handling and sets flags for socket management.
+   *
+   * This function sets the `shouldRunApp` flag to `true` and prepares the application
+   * to handle socket connections by setting the `awaitSocketInstance` flag.
+   */
+  static void socketInit()
+  {
+    shouldRunApp        = true;
+    awaitSocketInstance = true;
+  }
+
+  /**
+   * @brief Sets the flag to print the song tree and triggers song map parsing.
+   *
+   * This function sets the `printSongTree` flag to `true` in the `song_tree_parse_state`
+   * and calls `parseSongMap` to initiate parsing of the song map.
+   */
   static void handlePrintSongTree()
   {
     song_tree_parse_state.printSongTree = true;
     parseSongMap();
   }
 
+  /**
+   * @brief Sets the flag to print all artists and triggers song map parsing.
+   *
+   * This function sets the `printArtistsAll` flag to `true` in the `song_tree_parse_state`
+   * and calls `parseSongMap` to initiate parsing of the song map.
+   */
   static void handlePrintArtistsAll()
   {
     parseSongMap();
     song_tree_parse_state.printArtistsAll = true;
   }
 
+  /**
+   * @brief Sets the flag to print songs by a specific artist and triggers song map parsing.
+   *
+   * This function sets the `printSongsByArtist` flag to `true` in the `song_tree_parse_state`
+   * and assigns the artist's name to the `artist` field in the `song_tree_parse_state`.
+   * It also calls `parseSongMap` to initiate parsing of the song map.
+   *
+   * @param artistName The name of the artist whose songs should be printed.
+   */
   static void handlePrintSongsByArtist(std::string artistName)
   {
     parseSongMap();
     song_tree_parse_state.printSongsByArtist = true;
     song_tree_parse_state.artist             = artistName;
   }
+
+  /**
+   * @brief Sets the flag to print all songs by genre and triggers song map parsing.
+   *
+   * This function sets the `printSongsGenreAll` flag to `true` in the `song_tree_parse_state`
+   * and calls `parseSongMap` to initiate parsing of the song map.
+   */
   static void handlePrintSongsByGenreAll()
   {
     parseSongMap();
     song_tree_parse_state.printSongsGenreAll = true;
   }
+
+  /**
+   * @brief Sets the flag to print information about a specific song and triggers song map parsing.
+   *
+   * This function sets the `printSongInfo` flag to `true` in the `song_tree_parse_state`
+   * and assigns the song name to the `song` field in the `song_tree_parse_state`.
+   * It also calls `parseSongMap` to initiate parsing of the song map.
+   *
+   * @param songName The name of the song whose information should be printed.
+   */
   static void handleSongInfo(std::string songName)
   {
     parseSongMap();
     song_tree_parse_state.printSongInfo = true;
-    song_tree_parse_state.song = songName;
+    song_tree_parse_state.song          = songName;
+  }
+
+  /**
+   * @brief Sets the flag to print socket information and initializes socket handling.
+   *
+   * This function calls `socketInit` to prepare for socket management and sets the
+   * `printSocketInfo` flag to `true` in the `socket_state`.
+   */
+  static void handleSocketInfo()
+  {
+    socketInit();
+    socket_state.printSocketInfo = true;
+  }
+
+  /**
+   * @brief Sets the flag to forcefully unlink the socket and initializes socket handling.
+   *
+   * This function calls `socketInit` to prepare for socket management and sets the
+   * `unlinkSocketForce` flag to `true` in the `socket_state`.
+   */
+  static void handleSocketUnlinkForce()
+  {
+    socketInit();
+    socket_state.unlinkSocketForce = true;
   }
 };

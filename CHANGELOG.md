@@ -1027,3 +1027,36 @@ Medium commit with very satisfactory refactoring changes, some features to the c
 - Fixing current_position bug when run refresh thread is woken up a lot of times (BIG)
 
 ---
+
+## [ALPHA 3.1] --- 03-02-2025
+
+### Added
+- Instance lock using Unix domain socket binding with `src/network/instance.hpp`
+
+- 2 more arguments `--socket-info`, `--socket-unlink-force` with subsequent docs and implementation
+
+- Finally man page has been added with required information
+
+### Changed
+- Subsequent file changes to accomodate for single instance lock with unix domain
+
+- Added new completions to all completion files
+
+- Man page is now moved to `/usr/share/man/man1/` when doing global build for inLimbo
+
+### Fixed
+- Multiple spawning instances of inLimbo is no longer possible (would complicate things with mpris and RW problems with audio files possibly)
+
+### Removed
+**NIL**
+
+Small commit with a nice QOL change to avoid any unnecessary complications and docs update
+
+### Known Issues to fix in immediate commits
+- Holding the keybind for PlayNextSong() / PlayPrevSong() doesnt break anything, but MiniAudioPlayer class is not as responsive as the UI, so it lags behind (MAJOR ISSUE)
+
+(The outcome of the above issue would be that if you hold PlayNextSong() func call and it goes to Song A, the MiniAudioPlayer might still be playing Song B, which appears BEFORE Song A)
+
+- Fixing current_position bug when run refresh thread is woken up a lot of times (BIG)
+
+---

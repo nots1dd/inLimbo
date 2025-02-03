@@ -120,7 +120,7 @@ else()
 endif()
 
 # --- Handle Global Build ---------------------------------------------------------
-if(DEFINED GLOBAL_BUILD AND GLOBAL_BUILD)
+if(DEFINED BUILD_GLOBAL AND BUILD_GLOBAL)
   set(CMAKE_BUILD_TYPE "Global")
   set(CMAKE_INSTALL_PREFIX "/usr/")
   message(STATUS "Starting GLOBAL_BUILD for inLimbo...")
@@ -129,7 +129,8 @@ if(DEFINED GLOBAL_BUILD AND GLOBAL_BUILD)
 
   install(FILES assets/inLimbo.desktop DESTINATION share/applications)
   install(FILES assets/logo/inLimbo.png DESTINATION share/icons/hicolor/256x256/apps)
-
+  install(FILES assets/manpage/inLimbo.1 DESTINATION share/man/man1)
+  install(FILES ./VERSION DESTINATION share/inLimbo/)
 else()
   # Local build (build in ./build directory)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/build")

@@ -1,5 +1,6 @@
 #include "./arg-handler.hpp"
 #include "./ui/keymaps.hpp"
+#include "network/instance.hpp"
 #include "dirsort/inode_mapper.hpp"
 #include "signal/signalHandler.hpp"
 #include "ui/ui_handler.hpp"
@@ -78,7 +79,6 @@ auto runMusicPlayer(SongTree& song_tree) -> int
   Keybinds      global_keybinds = parseKeybinds();
   InLimboColors global_colors   = parseColors();
   MusicPlayer   player(library_map, global_keybinds, global_colors);
-
   try
   {
     player.Run();
@@ -99,6 +99,8 @@ auto runMusicPlayer(SongTree& song_tree) -> int
  * processes the song tree, and runs the music player. It also measures the time taken for the
  * inode insertion and mapping process and prints the duration to the console.
  *
+ * Also binds a Unix domain socket and ensures that only one instance is running.
+ *
  * @param argc The number of command line arguments.
  * @param argv The array of command line arguments.
  * @return 0 if the music player runs successfully, or 1 if an error occurs.
@@ -106,6 +108,7 @@ auto runMusicPlayer(SongTree& song_tree) -> int
 auto main(int argc, char* argv[]) -> int
 {
   SignalHandler::getInstance().setup();
+  auto socketInstance = std::make_unique<SingleInstanceLock>();  // RAII 
   string                 directoryPath = string(parseTOMLField(PARENT_LIB, PARENT_LIB_FIELD_DIR));
   ArgumentHandler::Paths paths         = handleArguments(argc, argv);
 
@@ -116,6 +119,16 @@ auto main(int argc, char* argv[]) -> int
   {
     ArgumentHandler::processSongTreeArguments(song_tree);
     return 0;
+  }
+  if (awaitSocketInstance)
+  {
+    ArgumentHandler::processSocketInstance(*socketInstance);
+    return 0;
+  }
+
+  if (!socketInstance->isLocked())
+  {
+    return EXIT_FAILURE;
   }
 
   auto end = chrono::high_resolution_clock::now();

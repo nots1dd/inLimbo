@@ -257,7 +257,7 @@ private:
    */
   static void on_bus_acquired(GDBusConnection* connection, const gchar* name, gpointer user_data)
   {
-    std::cout << "Acquired bus name: " << name << std::endl;
+    std::cout << ">> Acquired bus name: " << name << std::endl;
   }
 
   /**

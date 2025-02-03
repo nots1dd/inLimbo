@@ -13,6 +13,8 @@ _inLimbo_completions() {
         "--print-songs-by-artist:Print all the songs of a given artist"
         "--print-songs-by-genre-all:Print all parsed genre and their song mappings"
         "--print-song-info:Print every parsed field of a song name / filepath"
+        "--socket-info:Gives information on the socket binding of inLimbo"
+        "--socket-unlink-force:Forcibly remove the socket binding if present and undesired"
     )
     _describe -t options "inLimbo options" opts
 }

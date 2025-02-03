@@ -146,6 +146,13 @@ To get started with **inLimbo**, run the following command:
 inLimbo # or wherever you have built the binary
 ```
 
+> [!IMPORTANT]
+> 
+> inLimbo acquires a Unix domain socket binding on runtime at `/tmp/inLimbo.sock`
+> 
+> This is to ensure that multiple instances **CANNOT** run at the same time (avoids a lot of complications especially with DBus interfacing)
+> 
+
 To get help regarding the command-line arguments available with inLimbo, you can use the `--help` option:
 
 ```bash
@@ -207,6 +214,12 @@ Note that this will result in slower song map times as the song map is generated
 
 - `--print-song-info`
 **Description**: Print every parsed information (even default info) regarding a song (Arguments: Can take **SONG NAME** or **FILE PATH**)
+
+- `--socket-info`
+**Description**: Prints the information about the Unix domain socket binding of inLimbo 
+
+- `--socket-unlink-force`
+**Description**: Forcibly removes (unlinks) the Unix domain socket binding even if the application is running
 
 > [!NOTE]
 > 
@@ -402,7 +415,5 @@ Audio playback and capture is thanks to [miniaudio](https://github.com/mackron/m
 **INSPIRATIONS**:
 
 This music player's UI flow is heavily inspired by [CMUS](https://github.com/cmus/cmus), it seemed (to me atleast) the fastest and most responsive and logical UI/UX design of a TUI that has a great balance between looking good and feeling smooth
-
-----
 
 inLimbo is Free and Open Source Software Licensed under [GNU GPL v3](https://github.com/nots1dd/inlimbo/blob/main/LICENSE)
