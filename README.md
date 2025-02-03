@@ -377,8 +377,6 @@ The testing is done using GTest, read [TESTS.md](https;//github.com/nots1dd/inLi
 
 There is a primitive Doxygen documention set up for the inLimbo project, that should explain a lot more about the thought process and idea behind every aspect of the codebase.
 
-Man page is also under progress
-
 To generate and view doxygen documentation locally:
 
 ```bash 
@@ -393,6 +391,16 @@ It is much easier to use the script `make_docs.sh`
 ```bash
 ./make_docs.sh
 ```
+
+### Manual Page
+
+You can always refer to the man-page: (**Ensure that you have manpage-dev package installed**)
+
+```bash 
+man inLimbo
+```
+
+It should provide with an in-depth documentation of everything you need.
 
 Or you could just visit [inLimbo Website](https://nots1dd.github.io/inLimbo/)
 
