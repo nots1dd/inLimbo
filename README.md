@@ -40,13 +40,15 @@ Sometimes it feels good to be stuck in a weird place in your life, and it feels 
 ## **Features**
 
 - **Fully configurable**: Keybinds, library, FTP credentials, and more, all in one `config.toml` file located in `$HOME/.config/inLimbo/config.toml`
-- **Very fast and easy to use**: Optimized for speed and usability.
+- **Very fast and easy to use**: Optimized for speed and usability. (Supports vim keybindings and CMUS like song traversal)
+- **Versatile**: Aside from the TUI, a lot of support is available from its CLI as well for faster fetch of your desired data.
 - **Very few external dependencies**: Minimal setup required to get started.
 - **Clean and nice TUI experience**: Interact with your music library seamlessly in a terminal interface.
-- **Showcases all the metadata**: Displays song metadata, including lyrics, genre, and more, for every file in your library.
-- **Plays and caters to many audio file formats**: Compatible with a variety of audio formats, depending on the capabilities of [miniaudio](https://github.com/mackron/miniaudio).
+- **Caters to a lot of audio files**: The project is kept in mind to support for popular audio formats like `MP3`, `FLAC`, `OGG`, `WAV`, `M4A`, etc. which adds to inLimbo's flexibility and power
+- **Showcases all the metadata**: Displays song metadata, including lyrics, genre, and more, for every file in your library. (Will allow even embedding in the future)
 - **Customizable**: Heavily customizable TUI with custom keybinds, colors, UI designs and much more to come...
 - **Privacy**: No data is collected by inLimbo other than a backtrace of when the application catches a critical signal like `SIGSEGV`, `SIGABRT`
+- **Security**: Code has thorough scrutiny for any forms of vulnerability through CodeQL CI, GoogleTest Suite and better C++ coding practices. The application also ensures basic security features like binding to a Unix domain socket to ensure single instance spawn, very verbose debugging, ASan & TSan debug builds for further analysis of the inLimbo project binaries.
 
 ## **LOOKS**
 
