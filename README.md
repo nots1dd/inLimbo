@@ -52,6 +52,16 @@ Sometimes it feels good to be stuck in a weird place in your life, and it feels 
 
 ## **LOOKS**
 
+Demo Video at [here](https://github.com/nots1dd/inLimbo/blob/main/assets/inLimboDemo.mkv)
+
+<details>
+  <summary>Click to view demo</summary>
+  <video controls>
+  <source src="assets/inLimboDemo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+  </video>
+</details>
+
 <div align="center">
   <img src="assets/gifs/inLimbo-1.gif" alt="inLimbo Demo GIF" width="600">
   <img src="assets/gifs/inLimbo-3.gif" alt="inLimbo Demo GIF" width="600">
