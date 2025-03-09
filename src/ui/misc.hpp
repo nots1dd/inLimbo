@@ -23,6 +23,7 @@
 #define SONG_TITLE_DELIM " • "
 #define LYRICS_AVAIL     "L*"
 #define ADDN_PROPS_AVAIL "&*"
+#define SEARCH_MODE      "[Search%]"
 #define STATUS_BAR_DELIM " | "
 
 auto handleToggleMute(int* volume, int* lastVolume, bool* muted) -> int

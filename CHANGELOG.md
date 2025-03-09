@@ -1,5 +1,38 @@
 # CHANGELOG 
 
+## Most Recent CHANGELOG 
+
+```markdown
+## [ALPHA 3.2] --- 09-03-2025
+
+### Added
+**NIL**
+
+### Changed
+- Current position now handles race conditions through `std::atomic_ref`
+
+- Bumped up CXX standard to C++20
+
+- Properly handling of lifetimes of searching items through the search mode
+
+- Status bar now shows when search mode is active for better UX
+
+### Fixed
+- Issue of FTXUI loop handle breaking when `global_keybinds.search_item*` was invoked
+
+### Removed
+**NIL**
+
+Small commit with a nice QOL change to avoid any unnecessary complications and docs update
+
+### Known Issues to fix in immediate commits
+- Holding the keybind for PlayNextSong() / PlayPrevSong() doesnt break anything, but MiniAudioPlayer class is not as responsive as the UI, so it lags behind (MAJOR ISSUE)
+
+(The outcome of the above issue would be that if you hold PlayNextSong() func call and it goes to Song A, the MiniAudioPlayer might still be playing Song B, which appears BEFORE Song A)
+
+- Fixing current_position bug when run refresh thread is woken up a lot of times (BIG)
+```
+
 This is the CHANGELOG file for [inLimbo](https://github.com/nots1dd/inLimbo)
 
 All notable changes to this project will be documented in this file.
@@ -1046,6 +1079,35 @@ Medium commit with very satisfactory refactoring changes, some features to the c
 
 ### Fixed
 - Multiple spawning instances of inLimbo is no longer possible (would complicate things with mpris and RW problems with audio files possibly)
+
+### Removed
+**NIL**
+
+Small commit with a nice QOL change to avoid any unnecessary complications and docs update
+
+### Known Issues to fix in immediate commits
+- Holding the keybind for PlayNextSong() / PlayPrevSong() doesnt break anything, but MiniAudioPlayer class is not as responsive as the UI, so it lags behind (MAJOR ISSUE)
+
+(The outcome of the above issue would be that if you hold PlayNextSong() func call and it goes to Song A, the MiniAudioPlayer might still be playing Song B, which appears BEFORE Song A)
+
+- Fixing current_position bug when run refresh thread is woken up a lot of times (BIG)
+
+---
+
+## [ALPHA 3.2] --- 09-03-2025
+
+### Added
+**NIL**
+
+### Changed
+- Current position now handles race conditions through `std::atomic_ref`
+
+- Bumped up CXX standard to C++20
+
+- Properly handling of lifetimes of searching items through the search mode
+
+### Fixed
+- Issue of FTXUI loop handle breaking when `global_keybinds.search_item*` was invoked
 
 ### Removed
 **NIL**

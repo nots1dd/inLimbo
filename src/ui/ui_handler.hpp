@@ -82,10 +82,10 @@ public:
 
             if (INL_Thread_State.is_playing)
             {
-              current_position += 0.1;
+              IncrementCurrentPosition(0.1);
               // [TODO]: FIX BUG=> If we have a lot of activity (say we spam a lot of up/down,
               // eventually after 10-15s, it will force itself to the next song)
-              if (current_position >= GetCurrentSongDuration())
+              if (GetCurrentPosition() >= GetCurrentSongDuration())
               {
                 PlayNextSong();
                 UpdatePlayingState();
@@ -129,10 +129,10 @@ public:
   }
 
 private:
-  PlayingState current_playing_state;
-  SearchState  current_search_state;
+  PlayingState   current_playing_state;
+  SearchState    current_search_state;
   ComponentState INL_Component_State;
-  QueueState   qState;
+  QueueState     qState;
 
   std::unique_ptr<MPRISService> mprisService;
 
@@ -179,10 +179,10 @@ private:
   int selected_inode          = 1; // First element is always going to album name so we ignore it
   int current_lyric_line      = 0;
   std::vector<Element> lyricElements;
-  int                  volume           = 50;
-  bool                 muted            = false;
-  int                  lastVolume       = volume;
-  double               current_position = 0;
+  int                  volume                 = 50;
+  bool                 muted                  = false;
+  int                  lastVolume             = volume;
+  double               current_position_value = 0.0;
   int active_screen = 0; // 0 -> Main UI ; 1 -> Show help ; 2 -> Show lyrics; 3 -> Songs queue
                          // screen; 4 -> Song info screen; 5 -> Audio sinks screen
   bool               should_quit      = false;
@@ -206,6 +206,24 @@ private:
     // player so doing it here is fine)
     for (size_t i = 0; i < current_artist_names.size(); ++i)
       current_search_state.ArtistSearchTrie.insert(current_artist_names[i], i);
+  }
+
+  auto GetCurrentPosition() -> double
+  {
+    std::atomic_ref<double> current_position(current_position_value);
+    return current_position.load(std::memory_order_relaxed);
+  }
+
+  void IncrementCurrentPosition(double value)
+  {
+    std::atomic_ref<double> current_position(current_position_value);
+    current_position.fetch_add(value, std::memory_order_relaxed);
+  }
+
+  void ResetCurrentPosition()
+  {
+    std::atomic_ref<double> current_position(current_position_value);
+    current_position.store(0.0, std::memory_order_relaxed);
   }
 
   void SetDialogMessage(const std::string& message)
@@ -364,7 +382,7 @@ private:
         return;
       }
 
-      current_position = 0;
+      ResetCurrentPosition();
       PlayCurrentSong();
       UpdatePlayingState();
     }
@@ -378,7 +396,7 @@ private:
 
   void ReplaySong()
   {
-    current_position = 0;
+    ResetCurrentPosition();
     PlayCurrentSong();
     UpdatePlayingState();
     return;
@@ -411,7 +429,7 @@ private:
         return;
       }
 
-      current_position = 0;
+      ResetCurrentPosition();
       PlayCurrentSong();
       UpdatePlayingState();
     }
@@ -673,12 +691,8 @@ private:
       Renderer([&]() mutable { return RenderArtistMenu(current_artist_names); }), &selected_artist,
       global_colors.artists_menu_col_bg, global_colors.inactive_menu_cursor_bg);
     INL_Component_State.songs_list = Scroller(
-      Renderer(
-        [&]() mutable
-        {
-          return RenderSongMenu(current_song_elements);
-        }),
-      &selected_inode, global_colors.menu_cursor_bg, global_colors.inactive_menu_cursor_bg);
+      Renderer([&]() mutable { return RenderSongMenu(current_song_elements); }), &selected_inode,
+      global_colors.menu_cursor_bg, global_colors.inactive_menu_cursor_bg);
 
     auto main_container =
       Container::Horizontal({INL_Component_State.artists_list, INL_Component_State.songs_list});
@@ -812,7 +826,7 @@ private:
               if (Song* current_song = qState.GetCurrentSongFromQueue())
               {
                 // Enqueue all songs by the current artist
-                current_position = 0;
+                ResetCurrentPosition();
                 PlayCurrentSong();
                 UpdatePlayingState();
               }
@@ -859,15 +873,15 @@ private:
           else if (is_keybind_match(global_keybinds.seek_ahead_5) && INL_Thread_State.is_playing)
           {
             seekBuffer = audio_player->seekTime(5);
-            current_position += seekBuffer;
+            IncrementCurrentPosition(seekBuffer);
             return true;
           }
           else if (is_keybind_match(global_keybinds.seek_behind_5) && INL_Thread_State.is_playing)
           {
-            if (current_position > 5)
+            if (GetCurrentPosition() > 5)
             {
               seekBuffer = audio_player->seekTime(-5);
-              current_position += seekBuffer;
+              IncrementCurrentPosition(seekBuffer);
             }
             else
             {
@@ -961,7 +975,7 @@ private:
             EnqueueAllSongsByArtist(current_artist_names[selected_artist], false);
             if (!INL_Thread_State.is_playing)
             {
-              current_position = 0;
+              ResetCurrentPosition();
               PlayCurrentSong();
               UpdatePlayingState();
             }
@@ -982,38 +996,44 @@ private:
           }
           else if (is_keybind_match(global_keybinds.search_item_next))
           {
-            if (focus_on_artists)
+            if (is_search_active)
             {
-              // Increment index and wrap around if necessary
-              UpdateSelectedIndex(current_search_state.artistIndex, searchIndices.size(), true);
-              selected_artist = searchIndices[current_search_state.artistIndex];
-              UpdateSongsForArtist(current_artist_names[selected_artist]);
-              return true;
-            }
-            else
-            {
-              // Inc index and wrap around if necessary
-              UpdateSelectedIndex(current_search_state.songIndex, searchIndices.size(), true);
-              selected_inode = searchIndices[current_search_state.songIndex];
-              return true;
+              if (focus_on_artists)
+              {
+                // Increment index and wrap around if necessary
+                UpdateSelectedIndex(current_search_state.artistIndex, searchIndices.size(), true);
+                selected_artist = searchIndices[current_search_state.artistIndex];
+                UpdateSongsForArtist(current_artist_names[selected_artist]);
+                return true;
+              }
+              else
+              {
+                // Inc index and wrap around if necessary
+                UpdateSelectedIndex(current_search_state.songIndex, searchIndices.size(), true);
+                selected_inode = searchIndices[current_search_state.songIndex];
+                return true;
+              }
             }
           }
           else if (is_keybind_match(global_keybinds.search_item_prev))
           {
-            if (focus_on_artists)
+            if (is_search_active)
             {
-              // Decrement index and wrap around if necessary
-              UpdateSelectedIndex(current_search_state.artistIndex, searchIndices.size(), false);
-              selected_artist = searchIndices[current_search_state.artistIndex];
-              UpdateSongsForArtist(current_artist_names[selected_artist]);
-              return true;
-            }
-            else
-            {
-              // Decrement index and wrap around if necessary
-              UpdateSelectedIndex(current_search_state.songIndex, searchIndices.size(), false);
-              selected_inode = searchIndices[current_search_state.songIndex];
-              return true;
+              if (focus_on_artists)
+              {
+                // Decrement index and wrap around if necessary
+                UpdateSelectedIndex(current_search_state.artistIndex, searchIndices.size(), false);
+                selected_artist = searchIndices[current_search_state.artistIndex];
+                UpdateSongsForArtist(current_artist_names[selected_artist]);
+                return true;
+              }
+              else
+              {
+                // Decrement index and wrap around if necessary
+                UpdateSelectedIndex(current_search_state.songIndex, searchIndices.size(), false);
+                selected_inode = searchIndices[current_search_state.songIndex];
+                return true;
+              }
             }
           }
         }
@@ -1052,7 +1072,8 @@ private:
         }
         else if (is_keybind_match('x'))
         {
-          show_dialog = false;
+          show_dialog      = false;
+          is_search_active = false;
           return true;
         }
 
@@ -1064,7 +1085,7 @@ private:
                [&]
                {
                  int   duration = GetCurrentSongDuration();
-                 float progress = duration > 0 ? (float)current_position / duration : 0;
+                 float progress = duration > 0 ? (float)GetCurrentPosition() / duration : 0;
 
                  Element interface;
                  switch (active_screen)
@@ -1274,7 +1295,7 @@ private:
                             : color(global_colors.progress_bar_not_playing_col);
 
     return hbox({
-      text(FormatTime((int)current_position)) | progress_style,
+      text(FormatTime((int)GetCurrentPosition())) | progress_style,
       gauge(progress) | flex | progress_style,
       text(FormatTime(GetCurrentSongDuration())) | progress_style,
     });
@@ -1316,8 +1337,9 @@ private:
         current_playing_state.has_lyrics, global_props.show_bitrate, current_playing_state.bitrate);
     }
 
-    std::string status =
-      std::string("  ") + (INL_Thread_State.is_playing ? STATUS_PLAYING : STATUS_PAUSED) + "  ";
+    std::string status = std::string(" ") + (is_search_active ? SEARCH_MODE : std::string("")) +
+                         " " + (INL_Thread_State.is_playing ? STATUS_PLAYING : STATUS_PAUSED) +
+                         "  ";
 
     auto left_pane = vbox({
                        text(" Artists") | bold | color(global_colors.artists_title_bg) | inverted,
@@ -1335,9 +1357,10 @@ private:
                       }) |
                       borderHeavy | color(GetCurrWinColor(!focus_on_artists));
 
+    // [TODO]: Add dynamic terminal sizes through FTXUI
     auto panes = vbox({hbox({
-                         left_pane | size(WIDTH, EQUAL, 100) | size(HEIGHT, EQUAL, 100) | flex,
-                         right_pane | size(WIDTH, EQUAL, 100) | size(HEIGHT, EQUAL, 100) | flex,
+                         left_pane | size(WIDTH, EQUAL, 100) | flex,
+                         right_pane | size(WIDTH, EQUAL, 100) | flex,
                        }) |
                        flex}) |
                  flex;
