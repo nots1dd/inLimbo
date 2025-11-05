@@ -154,7 +154,7 @@ setup_fish_completion() {
 }
 
 # Example usage
-show_msg "1. Download header 'toml.hpp'" $TOML_PARSER_URL "./src/parser/"
+show_msg "1. Download header 'toml.hpp'" $TOML_PARSER_URL "./include/inlimbo/toml/"
 show_msg "2. Download header 'miniaudio.h'" $MINIAUDIO_URL "./src/music/"
 show_msg "3. Download header 'CImg.h'" $CIMG_URL "./src/ui/components/libs/"
 

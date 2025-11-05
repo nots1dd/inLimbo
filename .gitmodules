@@ -1,0 +1,19 @@
+[submodule "external/miniaudio"]
+	path = external/miniaudio
+	url = https://github.com/mackron/miniaudio.git
+    branch = master
+
+[submodule "external/tomlplusplus"]
+	path = external/tomlplusplus
+	url = https://github.com/marzer/tomlplusplus.git
+    branch = master
+
+[submodule "external/spdlog"]
+	path = external/spdlog
+	url = https://github.com/gabime/spdlog.git
+    branch = master
+
+[submodule "external/cereal"]
+	path = external/cereal
+	url = https://github.com/USCiLab/cereal.git
+  branch = master

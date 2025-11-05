@@ -19,6 +19,30 @@
   <a href="https://github.com/nots1dd/inLimbo/issues">Report a bug</a>
 </p>
 
+> [!CAUTION]
+> 
+> This is the develop branch!
+> 
+> Currently u need to go to `src/` and run:
+> 
+> Firstly ensure that you have **ALL** the dependencies resolved.
+> (**spdlog**, **toml++**, **miniaudio** and **cereal** should all be resolved by git and cmake itself!)
+> 
+> You will have to install **CMake**, **Git**, **C++17 Compiler (GCC/Clang/MSVC)**, **libbacktrace**!!
+> 
+> Have the repo cloned **WITH THE SUBMODULES**:
+> 
+> ```bash
+> # clone repo with recursive SUBMODULES
+> git clone -b develop https://github.com/nots1dd/inlimbo --recursive
+> 
+> cmake -S . -B build 
+> cmake --build build
+> ```
+> 
+> Current build should allow for compilation in windows but I have **NOT** tested it yet.
+> 
+
 > [!WARNING]
 > 
 > inLimbo is a WIP

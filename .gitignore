@@ -11,8 +11,8 @@ src/network/client
 src/network/server
 src/network/*.pem
 src/parser/*.out
-src/parser/toml.hpp
-src/music/miniaudio.h
-src/ui/components/libs/CImg.h
+*/**/toml.hpp
+*/**/miniaudio.h
+*/**/CImg.h
 docs/
 .cache/
