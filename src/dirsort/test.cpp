@@ -1,68 +1,72 @@
 #include "core/InodeMapper.hpp"
-#include "Logger.hpp"
-#include "StackTrace.hpp"
-#include "core/SongTree.hpp"
 #include "toml/Parser.hpp"
-#include "utils/Env-Vars.hpp"
+#include "Logger.hpp"
 #include "utils/signal/SignalHandler.hpp"
 #include "utils/timer/Timer.hpp"
 
 auto main(int argc, char* argv[]) -> int
 {
-  RECORD_FUNC_TO_BACKTRACE("MAIN");
+    RECORD_FUNC_TO_BACKTRACE("MAIN");
+    utils::SignalHandler::getInstance().setup();
 
-  utils::SignalHandler::getInstance().setup();
+    const std::string directoryPath = string(parser::parseTOMLField("library", "directory"));
+    const std::string libBinPath    = utils::getConfigPath(LIB_BIN_NAME);
 
-  string          directoryPath = string(parser::parseTOMLField("library", "directory"));
+    LOG_INFO("Configured music directory: {}", directoryPath);
 
-  LOG_INFO("Directory found: {}", directoryPath);
+    util::Timer<> timer;
+    dirsort::RedBlackTree<ino_t, dirsort::Song> rbt;
+    InodeFileMapper mapper;
+    dirsort::SongTree song_tree;
 
-  string          libBinPath   = utils::getConfigPath(LIB_BIN_NAME);
-  dirsort::RedBlackTree<ino_t, dirsort::Song> rbt;
-  InodeFileMapper mapper;
+    // Try to load the cache; if invalid or missing, rebuild it
+    bool needRebuild = false;
+    try {
+        song_tree.loadFromFile(libBinPath);
 
-  util::Timer<> timer;
-  dirsort::SongTree song_tree;
+        const std::string cachedPath = song_tree.returnMusicPath();
+        if (cachedPath != directoryPath) {
+            LOG_WARN("Cached directory '{}' differs from configured '{}'. Rebuilding...",
+                     cachedPath, directoryPath);
+            needRebuild = true;
+        } else {
+            LOG_INFO("Loaded song tree from cache (directory: {}).", cachedPath);
+        }
+    }
+    catch (const std::exception& e) {
+        LOG_ERROR("Failed to load cache: {}. Rebuilding...", e.what());
+        needRebuild = true;
+    }
 
-  rbt.setVisitCallback([&song_tree](const ino_t& inode, dirsort::Song& song) {
-        // TagLib parsing per-inode — reuse the same parser instance if desired
-        // DEBUG_LOG_PARSE is assumed to be available in your config or parser module
+    // Define parsing callback once
+    rbt.setVisitCallback([&song_tree](const ino_t& inode, dirsort::Song& song) {
         TagLibParser parser(dirsort::DEBUG_LOG_PARSE);
         auto metadataMap = parser.parseFromInode(inode, dirsort::DIRECTORY_FIELD);
+
         if (metadataMap.empty()) {
             LOG_WARN("No metadata found for inode {}: {}", inode, song.metadata.filePath);
             return;
         }
 
-        for (const auto& pair : metadataMap) {
-            // pair.first = filename, pair.second = metadata (as in your previous code)
-            song_tree.addSong(dirsort::Song(inode, pair.second));
-        }
-  });
+        for (const auto& [filename, metadata] : metadataMap)
+            song_tree.addSong(dirsort::Song(inode, metadata));
+    });
 
-  // Try to load the song tree from file
-  try
-  {
-    song_tree.loadFromFile(libBinPath);
-    LOG_INFO("Successfully loaded song tree from cache file.");
-  }
-  catch (const std::exception& e)
-  {
-    LOG_ERROR("Could not load song tree from file: {}", e.what());
-    LOG_INFO("Processing directory instead...");
+    if (needRebuild) {
 
-    processDirectory(directoryPath, rbt, mapper);
-    rbt.inorder();
-    song_tree.saveToFile(libBinPath);
+        song_tree.clear();
 
-    LOG_INFO("Saved generated song tree to cache: {}", libBinPath);
-  }
+        processDirectory(directoryPath, rbt, mapper);
+        rbt.inorder(); // triggers parsing callback
+        song_tree.setMusicPath(directoryPath);
+        song_tree.saveToFile(libBinPath);
+        LOG_INFO("Saved updated song tree to cache: {}", libBinPath);
+    }
 
-  auto        library_map = song_tree.returnSongMap();
+    auto library_map = song_tree.returnSongMap();
 
-  song_tree.display();
+    song_tree.display(dirsort::DisplayMode::Summary);
 
-  LOG_INFO("Inode insertion, mapping, and parsing completed in {:.2f} ms", timer.elapsed_ms());
-
-  return 0;
+    LOG_INFO("Inode mapping and parsing completed in {:.2f} ms", timer.elapsed_ms());
+    return 0;
 }

@@ -220,5 +220,5 @@ private:
     core::TraceScope trace_scope_instance(cat, __FUNCTION__)
 #endif
 
-#define DUMP_TRACE \
+#define DUMP_TRACE() \
     core::EventLog<std::string>::instance().dump_to_stdout();

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Config.hpp"
 #include "toml.hpp"
 #include "Logger.hpp"
 #include "utils/Env-Vars.hpp"
@@ -45,7 +46,7 @@ namespace parser {
  * @param filePath The path to the configuration file.
  * @return `true` if the file exists, otherwise `false`.
  */
-auto configFileExists(const string& filePath) -> bool { return fs::exists(filePath); }
+FORCE_INLINE auto configFileExists(const string& filePath) -> bool { return fs::exists(filePath); }
 
 /**
  * @brief Loads the configuration file.
@@ -56,7 +57,7 @@ auto configFileExists(const string& filePath) -> bool { return fs::exists(filePa
  * @return A `toml::parse_result` object representing the parsed configuration.
  * @throws std::runtime_error If the configuration file does not exist or cannot be parsed.
  */
-auto loadConfig()
+FORCE_INLINE auto loadConfig()
 {
   string configFilePath = utils::getConfigPath("config.toml");
 
@@ -72,7 +73,7 @@ auto loadConfig()
 }
 
 /** Parse the configuration file during the initialization */
-auto config = loadConfig();
+inline auto config = loadConfig();
 
 /**
  * @brief Parses a string field from the TOML configuration.
@@ -84,7 +85,7 @@ auto config = loadConfig();
  * @param field The field name within the parent section (e.g., "name").
  * @return A string view representing the value of the field.
  */
-auto parseTOMLField(string parent, string field) -> string_view
+FORCE_INLINE auto parseTOMLField(string parent, string field) -> string_view
 {
   return config[parent][field].value_or(
     ""sv); /**< If the field is not found, return an empty string view. */
@@ -101,7 +102,7 @@ auto parseTOMLField(string parent, string field) -> string_view
  * @param field The field name within the parent section (e.g., "name").
  * @return A string view representing the value of the field.
  */
-auto parseTOMLFieldCustom(const toml::parse_result& custom_config, string parent,
+FORCE_INLINE auto parseTOMLFieldCustom(const toml::parse_result& custom_config, string parent,
                           string field) -> string_view
 {
   return custom_config[parent][field].value_or(
@@ -118,7 +119,7 @@ auto parseTOMLFieldCustom(const toml::parse_result& custom_config, string parent
  * @param field The field name within the parent section (e.g., "username").
  * @return The integer value of the field, or -1 if the field is not found.
  */
-auto parseTOMLFieldInt(string parent, string field) -> int64_t
+FORCE_INLINE auto parseTOMLFieldInt(string parent, string field) -> int64_t
 {
   return config[parent][field].value_or(
     -1); /**< If the field is not found, return -1 as default. */
@@ -135,14 +136,14 @@ auto parseTOMLFieldInt(string parent, string field) -> int64_t
  * @param field The field name within the parent section (e.g., "username").
  * @return The integer value of the field, or -1 if the field is not found.
  */
-auto parseTOMLFieldIntCustom(const toml::parse_result& custom_config, string parent,
+FORCE_INLINE auto parseTOMLFieldIntCustom(const toml::parse_result& custom_config, string parent,
                              string field) -> int64_t
 {
   return custom_config[parent][field].value_or(
     -1); /**< If the field is not found, return -1 as default. */
 }
 
-auto parseTOMLFieldBool(const string& parent, const string& field) -> bool
+FORCE_INLINE auto parseTOMLFieldBool(const string& parent, const string& field) -> bool
 {
   if (string(parseTOMLField(parent, field)) == "true")
     return true;

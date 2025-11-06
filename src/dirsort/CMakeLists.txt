@@ -12,13 +12,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_compile_options(-Wall -Wextra -Wpedantic -g)
 
 # -----------------------------------------------------------
-# Source files
-# -----------------------------------------------------------
-set(SOURCES
-    test.cpp
-)
-
-# -----------------------------------------------------------
 # External Dependencies
 # -----------------------------------------------------------
 set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/../../external)
@@ -27,7 +20,7 @@ set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/../../external)
 add_library(tomlplusplus INTERFACE)
 target_include_directories(tomlplusplus INTERFACE ${EXTERNAL_DIR}/tomlplusplus)
 
-# --- Miniaudio (single header)
+# --- Miniaudio (header-only)
 add_library(miniaudio INTERFACE)
 target_include_directories(miniaudio INTERFACE ${EXTERNAL_DIR}/miniaudio)
 
@@ -38,7 +31,6 @@ target_include_directories(cereal INTERFACE ${EXTERNAL_DIR}/cereal/include/cerea
 # --- spdlog (compiled)
 set(SPDLOG_DIR ${EXTERNAL_DIR}/spdlog)
 
-# Clone spdlog automatically if not found
 if(NOT EXISTS ${SPDLOG_DIR}/CMakeLists.txt)
     message(STATUS "spdlog not found — cloning into ${SPDLOG_DIR}")
     execute_process(
@@ -47,34 +39,70 @@ if(NOT EXISTS ${SPDLOG_DIR}/CMakeLists.txt)
     )
 endif()
 
-# Build spdlog as a proper target
 add_subdirectory(${SPDLOG_DIR} ${CMAKE_BINARY_DIR}/spdlog_build EXCLUDE_FROM_ALL)
+set_target_properties(spdlog PROPERTIES POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # -----------------------------------------------------------
-# System Dependencies via pkg-config
+# System Dependencies
 # -----------------------------------------------------------
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(TAGLIB REQUIRED taglib)
 
 # -----------------------------------------------------------
-# Target setup
+# Backend Shared Library
 # -----------------------------------------------------------
+set(INLIMBO_CORE_SOURCES
+    ../../src/core/RBTree.cc
+    ../../src/core/SongTree.cc
+    ../../src/core/taglib/Parser.cc
+)
+
+add_library(inlimbo-core SHARED ${INLIMBO_CORE_SOURCES})
+
+target_include_directories(inlimbo-core
+    PUBLIC
+        ../../include/inlimbo
+        ${TAGLIB_INCLUDE_DIRS}
+        ${EXTERNAL_DIR}/tomlplusplus
+)
+
+target_link_libraries(inlimbo-core
+    PUBLIC
+        ${TAGLIB_LIBRARIES}
+        spdlog::spdlog
+        tomlplusplus
+        cereal
+        miniaudio
+        backtrace
+)
+
+set_target_properties(inlimbo-core PROPERTIES
+    OUTPUT_NAME "inlimbo-core"
+    POSITION_INDEPENDENT_CODE ON
+)
+
+# -----------------------------------------------------------
+# Test Executable
+# -----------------------------------------------------------
+set(SOURCES     
+  test.cpp
+)
+
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE
-    ../../include/inlimbo
-    ${TAGLIB_INCLUDE_DIRS}
-    ${EXTERNAL_DIR}/tomlplusplus
+target_include_directories(${PROJECT_NAME}
+    PRIVATE
+        ../../include/inlimbo
 )
 
 target_link_libraries(${PROJECT_NAME}
-    ${TAGLIB_LIBRARIES}
-    spdlog::spdlog
-    backtrace
+    PRIVATE
+        inlimbo-core
 )
 
 # -----------------------------------------------------------
-# RPATH & Build Options (Linux)
+# RPATH & Build Options
 # -----------------------------------------------------------
 if(UNIX AND NOT APPLE)
     set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -98,7 +126,6 @@ message(STATUS "${SEP}  Compiler         : ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_
 message(STATUS "${SEP}  C++ Standard     : C++${CMAKE_CXX_STANDARD}")
 message(STATUS "${SEP}  Build Directory  : ${CMAKE_BINARY_DIR}")
 message(STATUS "${SEP}  Source Directory : ${CMAKE_SOURCE_DIR}")
-message(STATUS "${SEP}  Executable Path  : ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 message(STATUS "${SEP}")
 message(STATUS "${SEP}  ── External Dependencies ───────────────────────────────")
 message(STATUS "${SEP}  • TOML++     : ${EXTERNAL_DIR}/tomlplusplus")

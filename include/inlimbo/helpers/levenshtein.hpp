@@ -33,7 +33,7 @@
  * the table. The time complexity of this algorithm is O(m * n), where m and n are the lengths of
  * the two input strings.
  */
-auto levenshteinDistance(const std::string& s1, const std::string& s2) -> size_t
+inline auto levenshteinDistance(const std::string& s1, const std::string& s2) -> size_t
 {
   size_t len1 = s1.size(); ///< Length of the first string.
   size_t len2 = s2.size(); ///< Length of the second string.

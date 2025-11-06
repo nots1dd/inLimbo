@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <execinfo.h>
 #include "Logger.hpp"
+#include "StackTrace.hpp"
 
 namespace utils {
 
@@ -44,7 +45,7 @@ private:
 
         // Generate backtrace inline (for console + file if logger supports it)
         LOG_CRITICAL("Printing Backtrace...");
-        DUMP_TRACE;
+        DUMP_TRACE();
         LOG_CRITICAL("Backtrace print ended.");
 
         LOG_CRITICAL("Application terminated due to fatal signal.");

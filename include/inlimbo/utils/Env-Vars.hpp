@@ -1,13 +1,14 @@
 #pragma once
 
 #include <string>
+#include "Config.hpp"
 #include "Logger.hpp"
 
 #define CUSTOM_CONFIG_MACRO "INLIMBO_CONFIG_HOME" /**< Custom config.toml macro setup */
 
 namespace utils {
 
-auto getHomeDir() -> const std::string 
+FORCE_INLINE auto getHomeDir() -> const std::string 
 {
   const char* homeDir = getenv("HOME");
   if (!homeDir)
@@ -31,7 +32,7 @@ auto getHomeDir() -> const std::string
  * @throws std::runtime_error If the HOME environment variable is not found and no custom path is
  *         provided.
  */
-auto getBaseConfigPath() -> std::string
+FORCE_INLINE auto getBaseConfigPath() -> std::string
 {
   const char* customConfigHome = getenv(CUSTOM_CONFIG_MACRO);
   if (customConfigHome)
@@ -50,9 +51,9 @@ auto getBaseConfigPath() -> std::string
  * @param fileName The name of the configuration file (e.g., "config.toml").
  * @return A string representing the full path to the configuration file.
  */
-auto getConfigPath(std::string fileName) -> std::string { return getBaseConfigPath() + fileName; }
+FORCE_INLINE auto getConfigPath(std::string fileName) -> std::string { return getBaseConfigPath() + fileName; }
 
-auto getCachePath() -> const std::string
+FORCE_INLINE auto getCachePath() -> const std::string
 {
   const std::string cacheFilePath = getHomeDir() + "/.cache/inLimbo/";
 

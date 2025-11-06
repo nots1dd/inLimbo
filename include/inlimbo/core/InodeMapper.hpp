@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Logger.hpp"
-#include "RBTree.hpp"
+#include "core/RBTree.hpp"
 #include "core/SongTree.hpp"
 #include <cstring>
 #include <dirent.h>
@@ -46,35 +46,57 @@ public:
   }
 };
 
-void processDirectory(const string& dirPath, dirsort::RedBlackTree<ino_t, dirsort::Song>& rbt, InodeFileMapper& mapper)
+inline void iterateDirectory(
+    const std::string& dirPath,
+    const std::function<void(const std::string& fullPath,
+                             const struct stat& fileStat)>& onEntry)
 {
-  DIR* dir = opendir(dirPath.c_str());
-  if (!dir)
-  {
-    LOG_ERROR("Could not open directory: {}", dirPath);
-    exit(EXIT_FAILURE);
-  }
+    RECORD_FUNC_TO_BACKTRACE("IterateDirectory");
 
-  struct dirent* entry;
-  while ((entry = readdir(dir)) != nullptr)
-  {
-    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+    DIR* dir = opendir(dirPath.c_str());
+    if (!dir)
     {
-      continue;
+        LOG_ERROR("Could not open directory: {}", dirPath);
+        return; // Do not exit here — allow caller to decide
     }
 
-    const string      fullPath = dirPath + "/" + entry->d_name;
-    struct stat fileStat;
-    if (stat(fullPath.c_str(), &fileStat) == 0)
+    struct dirent* entry;
+    while ((entry = readdir(dir)) != nullptr)
     {
-      rbt.insert(fileStat.st_ino);
-      mapper.addMapping(fileStat.st_ino, fullPath, true);
-    }
-    else
-    {
-      LOG_WARN("Could not stat file: {}!", fullPath);
-    }
-  }
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+            continue;
 
-  closedir(dir);
+        std::string fullPath = dirPath + "/" + entry->d_name;
+        struct stat fileStat{};
+        if (stat(fullPath.c_str(), &fileStat) != 0)
+        {
+            LOG_WARN("Could not stat file: {}!", fullPath);
+            continue;
+        }
+
+        // Invoke callback for every valid entry
+        onEntry(fullPath, fileStat);
+    }
+
+    closedir(dir);
+}
+
+inline void processDirectory(const std::string& dirPath,
+                             dirsort::RedBlackTree<ino_t, dirsort::Song>& rbt,
+                             InodeFileMapper& mapper)
+{
+    RECORD_FUNC_TO_BACKTRACE("ProcessDirectory");
+
+    iterateDirectory(dirPath, [&](const std::string& fullPath, const struct stat& fileStat)
+    {
+        if (S_ISREG(fileStat.st_mode))
+        {
+            rbt.insert(fileStat.st_ino);
+            mapper.addMapping(fileStat.st_ino, fullPath, true);
+        }
+        else
+        {
+            LOG_DEBUG("Skipping non-regular file: {}", fullPath);
+        }
+    });
 }
