@@ -4,14 +4,25 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include <sstream>
 #include <algorithm>
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
+#ifdef PLATFORM_WINDOWS
+    #include <windows.h>
+#else
+    #include <unistd.h>
+    #include <sys/utsname.h>
+#endif
+
 // singleton logging class that can be used anywhere
 //
 // note that log level, log file path and log file pattern can all be set via ENVIRONMENT_VARIABLES!
+
+#define __INLIMBO_DEFAULT_LOG_FILE__    "inlimbo/logs/core.log"
+#define __INLIMBO_DEFAULT_LOG_PATTERN__ "[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%n] %v"
 
 namespace core {
 
@@ -48,9 +59,9 @@ public:
     // Optional manual init if desired
     static void init(const std::string& name = "core",
                      LogMode mode = LogMode::ConsoleAndFile,
-                     const std::string& file = "logs/core.log",
+                     const std::string& file = __INLIMBO_DEFAULT_LOG_FILE__,
                      spdlog::level::level_enum level = spdlog::level::trace,
-                     const std::string& pattern = "[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%n] %v")
+                     const std::string& pattern = __INLIMBO_DEFAULT_LOG_PATTERN__)
     {
         auto& instance = get_instance();
         if (instance)
@@ -76,6 +87,8 @@ public:
         logger->flush_on(spdlog::level::trace);
 
         instance = logger;
+
+        print_banner(file, level, pattern);
     }
 
     static void set_level(spdlog::level::level_enum level) {
@@ -113,6 +126,42 @@ private:
     static auto get_instance() -> std::shared_ptr<spdlog::logger>& {
         static std::shared_ptr<spdlog::logger> instance = nullptr;
         return instance;
+    }
+
+    static void print_banner(const std::string& file,
+                             spdlog::level::level_enum level,
+                             const std::string& pattern)
+    {
+        auto& log = get_instance();
+        if (!log)
+            return;
+
+#if defined(PLATFORM_WINDOWS)
+        SYSTEM_INFO sysinfo;
+        GetSystemInfo(&sysinfo);
+        DWORD pid = GetCurrentProcessId();
+        std::string sysname = "Windows";
+        std::string arch = std::to_string(sysinfo.dwProcessorType);
+#else
+        struct utsname uts{};
+        uname(&uts);
+        pid_t pid = getpid();
+        std::string sysname = uts.sysname;
+        std::string arch = uts.machine;
+#endif
+
+        const char* level_name = spdlog::level::to_short_c_str(level);
+        std::ostringstream tid_ss;
+        tid_ss << std::this_thread::get_id();
+
+        log->info("┌────────────────────────────── InLimbo Logger Initialized ──────────────────────────────┐");
+        log->info("│  Log Level   : {}", level_name);
+        log->info("│  Pattern     : {}", pattern);
+        log->info("│  Output File : {}", file);
+        log->info("│  System      : {} ({})", sysname, arch);
+        log->info("│  PID         : {}", pid);
+        log->info("│  Thread ID   : {}", tid_ss.str());
+        log->info("└────────────────────────────────────────────────────────────────────────────────────────┘");
     }
 };
 

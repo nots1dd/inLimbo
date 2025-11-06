@@ -2,12 +2,14 @@
 
 #include "toml.hpp"
 #include "Logger.hpp"
+#include "utils/Env-Vars.hpp"
 #include <cstdlib>
 #include <filesystem>
-#include <iostream>
 
 using namespace std;
 namespace fs = std::filesystem;
+
+namespace parser {
 
 
 /**
@@ -35,60 +37,6 @@ namespace fs = std::filesystem;
 
 #define PARENT_UI "ui" /**< Parent section for ui settings */
 
-#define CUSTOM_CONFIG_MACRO "INLIMBO_CONFIG_HOME" /**< Custom config.toml macro setup */
-
-auto getHomeDir() -> const string 
-{
-  const char* homeDir = getenv("HOME");
-  if (!homeDir)
-  {
-    LOG_ERROR("HOME environment variable not found!");
-    exit(EXIT_FAILURE);
-  }
-
-  return string(homeDir);
-}
-
-/**
- * @brief Retrieves the path to the configuration directory.
- *
- * By default, this function uses the HOME environment variable to determine the user's home
- * directory. However, it checks for the presence of a `INLIMBO_CONFIG_HOME` environment variable
- * first, which can override the default location. This allows for custom configuration paths during
- * testing.
- *
- * @return A string representing the base path to the configuration directory.
- * @throws std::runtime_error If the HOME environment variable is not found and no custom path is
- *         provided.
- */
-auto getBaseConfigPath() -> string
-{
-  const char* customConfigHome = getenv(CUSTOM_CONFIG_MACRO);
-  if (customConfigHome)
-  {
-    return {customConfigHome};
-  }
-
-  return getHomeDir() + "/.config/inLimbo/";
-}
-
-/**
- * @brief Retrieves the full path to the configuration file.
- *
- * This constructs the full path to a specific configuration file.
- *
- * @param fileName The name of the configuration file (e.g., "config.toml").
- * @return A string representing the full path to the configuration file.
- */
-auto getConfigPath(string fileName) -> string { return getBaseConfigPath() + fileName; }
-
-auto getCachePath() -> const string
-{
-  const string cacheFilePath = getHomeDir() + "/.cache/inLimbo/";
-
-  return cacheFilePath;
-}
-
 /**
  * @brief Checks if the configuration file exists.
  *
@@ -110,7 +58,7 @@ auto configFileExists(const string& filePath) -> bool { return fs::exists(filePa
  */
 auto loadConfig()
 {
-  string configFilePath = getConfigPath("config.toml");
+  string configFilePath = utils::getConfigPath("config.toml");
 
   if (!configFileExists(configFilePath))
   {
@@ -199,4 +147,6 @@ auto parseTOMLFieldBool(const string& parent, const string& field) -> bool
   if (string(parseTOMLField(parent, field)) == "true")
     return true;
   return false;
+}
+
 }

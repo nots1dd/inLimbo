@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Logger.hpp"
 #include "RBTree.hpp"
+#include "core/SongTree.hpp"
 #include <cstring>
 #include <dirent.h>
 #include <fcntl.h>
@@ -44,7 +46,7 @@ public:
   }
 };
 
-void processDirectory(const string& dirPath, dirsort::RedBlackTree& rbt, InodeFileMapper& mapper)
+void processDirectory(const string& dirPath, dirsort::RedBlackTree<ino_t, dirsort::Song>& rbt, InodeFileMapper& mapper)
 {
   DIR* dir = opendir(dirPath.c_str());
   if (!dir)

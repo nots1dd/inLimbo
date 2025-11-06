@@ -135,7 +135,7 @@ auto TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) ->
 
   TagLib::FileRef file(filePath.c_str());
   std::string errMsg;
-  
+ 
   // If file is invalid or cannot be opened
   if (file.isNull()) {
     errMsg = "Failed to open file: " + filePath;

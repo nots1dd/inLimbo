@@ -162,14 +162,11 @@ public:
 
     void dump_to_stdout() const {
         std::lock_guard<std::mutex> lock(mutex_);
-        std::cout << "\n========== Event Trace Dump ==========\n";
         for (size_t i = 0; i < events_.size(); ++i) {
             const auto& ev = events_[i];
             std::cout << "\nEvent #" << i + 1 << "\n";
             std::cout << ev.summary();
-            std::cout << "--------------------------------------\n";
         }
-        std::cout << "============ End of Trace ============\n";
     }
 
 private:
