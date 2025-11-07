@@ -21,9 +21,7 @@
 
 > [!CAUTION]
 > 
-> This is the develop branch!
-> 
-> Currently u need to go to `src/` and run:
+> This is the develop branch! 
 > 
 > Firstly ensure that you have **ALL** the dependencies resolved.
 > (**spdlog**, **toml++**, **miniaudio** and **cereal** should all be resolved by git and cmake itself!)
