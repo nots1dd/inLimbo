@@ -82,7 +82,11 @@ auto main(int argc, char* argv[]) -> int
     song_tree.display(dirsort::DisplayMode::Summary);
     LOG_INFO("Library displayed in {:.2f} ms", timer.elapsed_ms());  
 
-    auto exampleFilePath = utils::songmap::findSongByName(g_songMap, "Weird Fishes / Arpeggi")->metadata.filePath;
+    auto exampleSong = utils::songmap::findSongByName(g_songMap, "duvet");
+
+    assert(exampleSong != nullptr && "Example file not found in the library!");
+
+    auto exampleFilePath = exampleSong->metadata.filePath;
 
     LOG_INFO("Example file from 'In Rainbows': {}", exampleFilePath);
 
@@ -147,7 +151,7 @@ auto main(int argc, char* argv[]) -> int
         }
     });
 
-    // Main thread stays responsive
+    // Main thread stays responsive (we are assuming the UI runs here)
     while (engine.shouldRun())
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 

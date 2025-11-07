@@ -3,6 +3,7 @@
 #include "Config.hpp"
 #include "thread/Map.hpp"   // for threads::SafeMap
 #include "core/SongTree.hpp" // for Song, Artist, Album, etc.
+#include "String.hpp"
 #include <vector>
 #include <functional>
 #include <iostream>
@@ -51,7 +52,7 @@ inline INLIMBO_API_CPP auto countTracks(const threads::SafeMap<dirsort::SongMap>
     });
 }
 
-// ---------- FETCH FUNCTIONS ----------
+// ---------- FETCH FUNCTIONS (Selective) ----------
 
 inline INLIMBO_API_CPP auto findSongByName(
     const threads::SafeMap<dirsort::SongMap>& safeMap,
@@ -63,7 +64,7 @@ inline INLIMBO_API_CPP auto findSongByName(
             for (const auto& [album, discs] : albums)
                 for (const auto& [disc, tracks] : discs)
                     for (const auto& [track, song] : tracks)
-                        if (song.metadata.title == songName)
+                        if (string::iequals_fast(song.metadata.title, songName))
                             return &song;
         return nullptr;
     });
@@ -76,16 +77,61 @@ inline INLIMBO_API_CPP auto findSongByNameAndArtist(
 {
     RECORD_FUNC_TO_BACKTRACE("utils::songmap::findSongByNameAndArtist");
     return safeMap.withReadLock([&](const auto& map) -> const dirsort::Song* {
-        if (auto itArtist = map.find(artistName); itArtist != map.end()) {
-            for (const auto& [album, discs] : itArtist->second)
+        for (const auto& [artist, albums] : map) {
+            if (!string::iequals_fast(artist, artistName))
+                continue;
+            for (const auto& [album, discs] : albums)
                 for (const auto& [disc, tracks] : discs)
                     for (const auto& [track, song] : tracks)
-                        if (song.metadata.title == songName)
+                        if (string::iequals_fast(song.metadata.title, songName))
                             return &song;
         }
         return nullptr;
     });
 }
+
+inline INLIMBO_API_CPP auto getAlbumsByArtist(
+    const threads::SafeMap<dirsort::SongMap>& safeMap, const Artist& artist) -> Albums
+{
+    RECORD_FUNC_TO_BACKTRACE("utils::songmap::getAlbumsByArtist");
+    return safeMap.withReadLock([&](const auto& map) {
+        std::vector<Album> albums;
+        for (const auto& [a, albumMap] : map) {
+            if (string::iequals_fast(a, artist)) {
+                albums.reserve(albumMap.size());
+                for (const auto& [album, _] : albumMap)
+                    albums.push_back(album);
+                break;
+            }
+        }
+        return albums;
+    });
+}
+
+inline INLIMBO_API_CPP auto getSongsByAlbum(
+    const threads::SafeMap<dirsort::SongMap>& safeMap,
+    const Artist& artist, const Album& album) -> std::vector<dirsort::Song>
+{
+    RECORD_FUNC_TO_BACKTRACE("utils::songmap::getSongsByAlbum");
+    return safeMap.withReadLock([&](const auto& map) {
+        std::vector<dirsort::Song> songs;
+        for (const auto& [a, albums] : map) {
+            if (!string::iequals_fast(a, artist))
+                continue;
+            for (const auto& [alb, discs] : albums) {
+                if (!string::iequals_fast(alb, album))
+                    continue;
+                for (const auto& [disc, tracks] : discs)
+                    for (const auto& [track, song] : tracks)
+                        songs.push_back(song);
+                return songs;
+            }
+        }
+        return songs;
+    });
+}
+
+// ---------- FETCH FUNCTIONS ----------
 
 inline INLIMBO_API_CPP auto getAllArtists(const threads::SafeMap<dirsort::SongMap>& safeMap) -> Artists {
     RECORD_FUNC_TO_BACKTRACE("utils::songmap::getAllArtists");
@@ -98,34 +144,31 @@ inline INLIMBO_API_CPP auto getAllArtists(const threads::SafeMap<dirsort::SongMa
     });
 }
 
-inline INLIMBO_API_CPP auto getAlbumsByArtist(const threads::SafeMap<dirsort::SongMap>& safeMap,
-                                            const Artist& artist) -> Albums {
-    RECORD_FUNC_TO_BACKTRACE("utils::songmap::getAlbumsByArtist");
-    return safeMap.withReadLock([&](const auto& map) {
+inline INLIMBO_API_CPP auto getAllAlbums(const threads::SafeMap<dirsort::SongMap>& safeMap) -> Albums {
+    RECORD_FUNC_TO_BACKTRACE("utils::songmap::getAllAlbums");
+    return safeMap.withReadLock([](const auto& map) {
         std::vector<Album> albums;
-        if (auto it = map.find(artist); it != map.end()) {
-            albums.reserve(it->second.size());
-            for (const auto& [album, _] : it->second)
+        for (const auto& [artist, albumMap] : map)
+            for (const auto& [album, _] : albumMap)
                 albums.push_back(album);
-        }
         return albums;
     });
 }
 
-inline INLIMBO_API_CPP auto getSongsByAlbum(const threads::SafeMap<dirsort::SongMap>& safeMap,
-                                         const Artist& artist, const Album& album) -> std::vector<dirsort::Song> {
-    RECORD_FUNC_TO_BACKTRACE("utils::songmap::getSongsByAlbum");
+inline INLIMBO_API_CPP auto getAllGenres(
+    const threads::SafeMap<dirsort::SongMap>& safeMap) -> Genres
+{
+    RECORD_FUNC_TO_BACKTRACE("utils::songmap::getALLGenres");
     return safeMap.withReadLock([&](const auto& map) {
-        std::vector<dirsort::Song> songs;
-        if (auto it_artist = map.find(artist); it_artist != map.end()) {
-            if (auto it_album = it_artist->second.find(album);
-                it_album != it_artist->second.end()) {
-                for (const auto& [disc, tracks] : it_album->second)
+        std::set<Genre> genreSet;
+
+        for (const auto& [artist, albums] : map)
+            for (const auto& [album, discs] : albums)
+                for (const auto& [disc, tracks] : discs)
                     for (const auto& [track, song] : tracks)
-                        songs.push_back(song);
-            }
-        }
-        return songs;
+                        genreSet.insert(song.metadata.genre);
+
+        return Genres(genreSet.begin(), genreSet.end());
     });
 }
 

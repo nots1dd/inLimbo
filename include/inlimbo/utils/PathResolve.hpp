@@ -2,6 +2,7 @@
 
 #include "Env-Vars.hpp"
 #include "Config.hpp"
+#include "Logger.hpp"
 #include <string>
 
 namespace utils {
