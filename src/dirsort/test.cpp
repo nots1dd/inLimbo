@@ -88,7 +88,7 @@ auto main(int argc, char* argv[]) -> int
 
     auto exampleFilePath = exampleSong->metadata.filePath;
 
-    LOG_INFO("Example file from 'In Rainbows': {}", exampleFilePath);
+    LOG_INFO("Example file: {}", exampleFilePath);
 
     audio::AudioEngine engine;
 
@@ -123,7 +123,6 @@ auto main(int argc, char* argv[]) -> int
     LOG_INFO("Selected device index: {} -> {}", selectedIndex, devices[selectedIndex].name);
 
     try {
-        LOG_INFO("Initializing playback engine for device '{}'...", devices[selectedIndex].name);
         engine.initEngineForDevice(&devices[selectedIndex].id);
         LOG_INFO("Playback engine successfully initialized for '{}'", devices[selectedIndex].name);
     } catch (const std::exception& e) {
@@ -133,20 +132,88 @@ auto main(int argc, char* argv[]) -> int
 
     engine.printDeviceInfo();
     engine.loadSound(exampleFilePath);
-    engine.setVolume(0.5f);
+    engine.setVolume(1.0f);
     
+    // simple interactive loop to connect with audio backend (should work well with any UI frontend)
     engine.startInteractiveLoop([](audio::AudioEngine& eng) {
         std::string cmd;
-        while (eng.shouldRun()) {
-            std::cout << "[play/pause/quit]: ";
-            std::getline(std::cin, cmd);
 
-            if (cmd == "pause") eng.pause();
-            else if (cmd == "play") eng.play();
-            else if (cmd == "quit") {
-                std::cout << "Stopping playback...\n";
+        std::cout << "\nAudio Control Commands:\n"
+                  << "  play              → Resume playback\n"
+                  << "  pause             → Pause playback\n"
+                  << "  restart           → Restart current track\n"
+                  << "  back <seconds>    → Rewind by N seconds\n"
+                  << "  forward <seconds> → Skip ahead by N seconds\n"
+                  << "  seek <seconds>    → Seek to absolute N seconds\n"
+                  << "  volume <0.0-1.0>  → Set playback volume\n"
+                  << "  quit              → Stop and exit\n"
+                  << "──────────────────────────────────────────────\n";
+
+        while (eng.shouldRun()) {
+            std::cout << "\n[audio]> ";
+            if (!std::getline(std::cin, cmd))
+                break; // EOF or input stream closed
+
+            std::istringstream iss(cmd);
+            std::string action;
+            iss >> action;
+
+            if (action == "play") {
+                eng.play();
+                std::cout << "Resumed playback.\n";
+            } 
+            else if (action == "pause") {
+                eng.pause();
+                std::cout << "Paused.\n";
+            }
+            else if (action == "restart") {
+                eng.restart();
+                std::cout << "Restarted track.\n";
+            }
+            else if (action == "seek") {
+                double seconds = 0.0;
+                if (iss >> seconds) {
+                    eng.seekTo(seconds);
+                    std::cout << "Seeked to " << seconds << " seconds.\n";
+                } else {
+                    std::cout << "Usage: seek <seconds>\n";
+                }
+            }
+            else if (action == "back") {
+                double seconds = 0.0;
+                if (iss >> seconds) {
+                    eng.seekBackward(seconds);
+                    std::cout << "Rewound " << seconds << " seconds.\n";
+                } else {
+                    std::cout << "Usage: back <seconds>\n";
+                }
+            }
+            else if (action == "forward") {
+                double seconds = 0.0;
+                if (iss >> seconds) {
+                    eng.seekForward(seconds);
+                    std::cout << "Skipped ahead " << seconds << " seconds.\n";
+                } else {
+                    std::cout << "Usage: forward <seconds>\n";
+                }
+            }
+            else if (action == "volume") {
+                float vol = -1.0f;
+                if (iss >> vol && vol >= 0.0f && vol <= 1.0f) {
+                    eng.setVolume(vol);
+                    std::cout << "Volume set to " << vol * 100.0f << "%.\n";
+                } else {
+                    std::cout << "Usage: volume <0.0 - 1.0>\n";
+                }
+            }
+            else if (action == "quit") {
+                std::cout << "🛑  Stopping playback and exiting...\n";
                 eng.stopInteractiveLoop();
                 break;
+            }
+            else if (!action.empty()) {
+                std::cout << "Unknown command: " << action << "\n"
+                          << "Type one of: play, pause, restart, seek, back, forward, volume, quit\n";
             }
         }
     });

@@ -192,21 +192,59 @@ public:
         ma_sound_start(sounds_[soundIndex].get());
     }
 
-    void seekForward(size_t soundIndex, ma_uint64 frames) {
-        assert(soundIndex < sounds_.size() && "Invalid sound index in seekForward()");
-        ma_uint64 cursor{};
+    [[nodiscard]] auto getPlaybackTime(size_t soundIndex = 0) const -> std::pair<double, double> {
+        assert(soundIndex < sounds_.size() && "Invalid sound index in getPlaybackTime()");
+        ma_uint64 cursor{}, total{};
         ma_sound_get_cursor_in_pcm_frames(sounds_[soundIndex].get(), &cursor);
-        ma_sound_seek_to_pcm_frame(sounds_[soundIndex].get(), cursor + frames);
-        LOG_DEBUG("Seeked forward {} frames on sound {}", frames, soundIndex);
+        ma_sound_get_length_in_pcm_frames(sounds_[soundIndex].get(), &total);
+
+        auto sampleRate = scast<double>(ma_engine_get_sample_rate(engines_.front().get()));
+        return { cursor / sampleRate, total / sampleRate };
+    }
+    
+    void seekTo(double seconds, size_t soundIndex = 0) {
+        RECORD_FUNC_TO_BACKTRACE("AudioEngine::seekTo");
+        assert(soundIndex < sounds_.size() && "Invalid sound index in seekTo()");
+        
+        ma_uint64 frame = secondsToFrames(seconds);
+
+        ma_uint64 totalFrames{};
+        ma_sound_get_length_in_pcm_frames(sounds_[soundIndex].get(), &totalFrames);
+        if (frame > totalFrames) frame = totalFrames;
+
+        ma_sound_seek_to_pcm_frame(sounds_[soundIndex].get(), frame);
+        LOG_INFO("Seeked to {:.2f} sec (frame {} of {})", seconds, frame, totalFrames);
     }
 
-    void seekBackward(size_t soundIndex, ma_uint64 frames) {
+    void seekForward(double seconds, size_t soundIndex = 0) {
+        RECORD_FUNC_TO_BACKTRACE("AudioEngine::seekForward");
+        assert(soundIndex < sounds_.size() && "Invalid sound index in seekForward()");
+
+        ma_uint64 offsetFrames = secondsToFrames(seconds);
+
+        ma_uint64 cursor{}, totalFrames{};
+        ma_sound_get_cursor_in_pcm_frames(sounds_[soundIndex].get(), &cursor);
+        ma_sound_get_length_in_pcm_frames(sounds_[soundIndex].get(), &totalFrames);
+
+        ma_uint64 newFrame = std::min(cursor + offsetFrames, totalFrames);
+        ma_sound_seek_to_pcm_frame(sounds_[soundIndex].get(), newFrame);
+
+        LOG_INFO("Seeked forward {:.2f} sec → frame {}/{}", seconds, newFrame, totalFrames);
+    }
+
+    void seekBackward(double seconds, size_t soundIndex = 0) {
         RECORD_FUNC_TO_BACKTRACE("AudioEngine::seekBackward");
         assert(soundIndex < sounds_.size() && "Invalid sound index in seekBackward()");
+
+        ma_uint64 offsetFrames = secondsToFrames(seconds);
+
         ma_uint64 cursor{};
         ma_sound_get_cursor_in_pcm_frames(sounds_[soundIndex].get(), &cursor);
-        ma_sound_seek_to_pcm_frame(sounds_[soundIndex].get(), cursor > frames ? cursor - frames : 0);
-        LOG_DEBUG("Seeked backward {} frames on sound {}", frames, soundIndex);
+
+        ma_uint64 newFrame = (cursor > offsetFrames) ? (cursor - offsetFrames) : 0;
+        ma_sound_seek_to_pcm_frame(sounds_[soundIndex].get(), newFrame);
+
+        LOG_INFO("Seeked backward {:.2f} sec → frame {}", seconds, newFrame);
     }
 
     void setVolume(float volume, size_t soundIndex = 0) {
@@ -296,6 +334,11 @@ private:
         auto* engine = recast<ma_engine*>(pDevice->pUserData);
         assert(engine != nullptr && "dataCallback: pUserData is null!");
         ma_engine_read_pcm_frames(engine, pOutput, frameCount, nullptr);
+    }
+    
+    auto secondsToFrames(double seconds) -> ma_uint64 {    
+        auto sampleRate = ma_engine_get_sample_rate(engines_.front().get());
+        return static_cast<ma_uint64>(seconds * sampleRate);
     }
 };
 
