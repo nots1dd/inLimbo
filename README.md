@@ -26,7 +26,7 @@
 > Firstly ensure that you have **ALL** the dependencies resolved.
 > (**spdlog**, **toml++**, **miniaudio** and **cereal** should all be resolved by git and cmake itself!)
 > 
-> You will have to install **CMake**, **Git**, **C++17 Compiler (GCC/Clang/MSVC)**, **libbacktrace**!!
+> You will have to install **CMake**, **Git**, **C++20 Compiler (GCC/Clang/MSVC)**, **libbacktrace**!!
 > 
 > Have the repo cloned **WITH THE SUBMODULES**:
 > 
