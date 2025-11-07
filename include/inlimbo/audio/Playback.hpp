@@ -55,6 +55,7 @@ public:
     ~AudioEngine() noexcept {
         RECORD_FUNC_TO_BACKTRACE("AudioEngine::~AudioEngine");
         try {
+            stopInteractiveLoop();
             cleanup();
             ma_context_uninit(&context_);
             ma_resource_manager_uninit(&resourceManager_);
