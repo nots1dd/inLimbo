@@ -9,6 +9,91 @@
 #include "audio/Playback.hpp"
 #include <format>
 
+static auto printBanner()
+{
+  std::cout << "──────────────────────────────────────────────\n"
+            << "\nAudio Control Commands:\n"
+            << "  play, pause, restart, back <s>, forward <s>, seek <s>\n"
+            << "  volume <0.0–1.0>, info, quit\n"
+            << "──────────────────────────────────────────────\n";
+}
+
+static auto handleAudioCommand(audio::AudioEngine& eng,
+                               const std::string& input,
+                               const Metadata& meta) -> bool
+{
+    std::istringstream iss(input);
+    std::string cmd;
+    iss >> cmd;
+
+    if (cmd.empty())
+        return true;
+
+    const auto toLower = [](std::string s) {
+        std::transform(s.begin(), s.end(), s.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
+        return s;
+    };
+
+    cmd = toLower(cmd);
+
+    if (cmd == "play") {
+        eng.play();
+        std::cout << "-- Resumed playback.\n";
+    }
+    else if (cmd == "pause") {
+        eng.pause();
+        std::cout << "-- Paused.\n";
+    }
+    else if (cmd == "restart") {
+        eng.restart();
+        std::cout << "-- Restarted track.\n";
+    }
+    else if (cmd == "info") {
+        std::cout << "\n📀 Metadata Info:\n"
+                  << "  Title:    " << meta.title << "\n"
+                  << "  Artist:   " << meta.artist << "\n"
+                  << "  Album:    " << meta.album << "\n"
+                  << "  Track:    " << meta.discNumber << "/" << meta.track << "\n"
+                  << "  Year:     " << meta.year << "\n"
+                  << "  Duration: " << meta.duration << " sec\n"
+                  << "  Bitrate:  " << meta.bitrate << " kbps\n";
+    }
+    else if (cmd == "seek" || cmd == "back" || cmd == "forward") {
+        double seconds = 0.0;
+        if (!(iss >> seconds)) {
+            std::cout << "Usage: " << cmd << " <seconds>\n";
+            return true;
+        }
+
+        if (cmd == "seek")       eng.seekTo(seconds);
+        else if (cmd == "back")  eng.seekBackward(seconds);
+        else if (cmd == "forward") eng.seekForward(seconds);
+
+        std::cout << "-- Seek: " << cmd << " " << seconds << "s\n";
+    }
+    else if (cmd == "volume") {
+        float vol = -1.0f;
+        if (!(iss >> vol) || vol < 0.0f || vol > 1.0f) {
+            std::cout << "Usage: volume <0.0 - 1.0>\n";
+            return true;
+        }
+        eng.setVolume(vol);
+        std::cout << "-- Volume set to " << vol * 100.0f << "%.\n";
+    }
+    else if (cmd == "quit") {
+        std::cout << "!! Stopping playback and exiting...\n";
+        eng.stopInteractiveLoop();
+        return false;
+    }
+    else {
+        std::cout << "❓ Unknown command: " << cmd << "\n"
+                  << "Available: play, pause, info, restart, seek, back, forward, volume, info, quit\n";
+    }
+
+    return true;
+}
+
 auto main(int argc, char* argv[]) -> int
 {
     RECORD_FUNC_TO_BACKTRACE("MAIN");
@@ -87,6 +172,7 @@ auto main(int argc, char* argv[]) -> int
     assert(exampleSong != nullptr && "Example file not found in the library!");
 
     auto exampleFilePath = exampleSong->metadata.filePath;
+    auto exampleFileMetadata = exampleSong->metadata;
 
     LOG_INFO("Example file: {}", exampleFilePath);
 
@@ -135,86 +221,18 @@ auto main(int argc, char* argv[]) -> int
     engine.setVolume(1.0f);
     
     // simple interactive loop to connect with audio backend (should work well with any UI frontend)
-    engine.startInteractiveLoop([](audio::AudioEngine& eng) {
+    engine.startInteractiveLoop([&exampleFileMetadata](audio::AudioEngine& eng) {
         std::string cmd;
-
-        std::cout << "\nAudio Control Commands:\n"
-                  << "  play              → Resume playback\n"
-                  << "  pause             → Pause playback\n"
-                  << "  restart           → Restart current track\n"
-                  << "  back <seconds>    → Rewind by N seconds\n"
-                  << "  forward <seconds> → Skip ahead by N seconds\n"
-                  << "  seek <seconds>    → Seek to absolute N seconds\n"
-                  << "  volume <0.0-1.0>  → Set playback volume\n"
-                  << "  quit              → Stop and exit\n"
-                  << "──────────────────────────────────────────────\n";
+        
+        printBanner();
 
         while (eng.shouldRun()) {
             std::cout << "\n[audio]> ";
             if (!std::getline(std::cin, cmd))
-                break; // EOF or input stream closed
-
-            std::istringstream iss(cmd);
-            std::string action;
-            iss >> action;
-
-            if (action == "play") {
-                eng.play();
-                std::cout << "Resumed playback.\n";
-            } 
-            else if (action == "pause") {
-                eng.pause();
-                std::cout << "Paused.\n";
-            }
-            else if (action == "restart") {
-                eng.restart();
-                std::cout << "Restarted track.\n";
-            }
-            else if (action == "seek") {
-                double seconds = 0.0;
-                if (iss >> seconds) {
-                    eng.seekTo(seconds);
-                    std::cout << "Seeked to " << seconds << " seconds.\n";
-                } else {
-                    std::cout << "Usage: seek <seconds>\n";
-                }
-            }
-            else if (action == "back") {
-                double seconds = 0.0;
-                if (iss >> seconds) {
-                    eng.seekBackward(seconds);
-                    std::cout << "Rewound " << seconds << " seconds.\n";
-                } else {
-                    std::cout << "Usage: back <seconds>\n";
-                }
-            }
-            else if (action == "forward") {
-                double seconds = 0.0;
-                if (iss >> seconds) {
-                    eng.seekForward(seconds);
-                    std::cout << "Skipped ahead " << seconds << " seconds.\n";
-                } else {
-                    std::cout << "Usage: forward <seconds>\n";
-                }
-            }
-            else if (action == "volume") {
-                float vol = -1.0f;
-                if (iss >> vol && vol >= 0.0f && vol <= 1.0f) {
-                    eng.setVolume(vol);
-                    std::cout << "Volume set to " << vol * 100.0f << "%.\n";
-                } else {
-                    std::cout << "Usage: volume <0.0 - 1.0>\n";
-                }
-            }
-            else if (action == "quit") {
-                std::cout << "🛑  Stopping playback and exiting...\n";
-                eng.stopInteractiveLoop();
                 break;
-            }
-            else if (!action.empty()) {
-                std::cout << "Unknown command: " << action << "\n"
-                          << "Type one of: play, pause, restart, seek, back, forward, volume, quit\n";
-            }
+
+            if (!handleAudioCommand(eng, cmd, exampleFileMetadata))
+                break;
         }
     });
 
