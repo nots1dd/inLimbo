@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils/Env-Vars.hpp"
 #include <memory>
 #include <string>
 #include <vector>
@@ -109,9 +110,9 @@ public:
 private:
     // Initialize using environment variables
     static void init_from_env() {
-        const char* env_file = std::getenv("INLIMBO_LOG_FILE");
-        const char* env_level = std::getenv("INLIMBO_LOG_LEVEL");
-        const char* env_pattern = std::getenv("INLIMBO_LOG_PATTERN");
+        const char* env_file = std::getenv(INLIMBO_LOG_FILE_ENV);
+        const char* env_level = std::getenv(INLIMBO_LOG_LEVEL_ENV);
+        const char* env_pattern = std::getenv(INLIMBO_LOG_PATTERN_ENV);
 
         const std::string file = env_file ? env_file : "logs/core.log";
         const std::string pattern = env_pattern ? env_pattern :

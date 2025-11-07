@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Config.hpp"
 #include "Logger.hpp"
 #include "core/RBTree.hpp"
 #include "core/SongTree.hpp"
@@ -17,7 +18,7 @@ using namespace std;
 
 #define LIB_BIN_NAME "lib.bin"
 
-class InodeFileMapper
+class INLIMBO_API_CPP InodeFileMapper
 {
 private:
   unordered_map<ino_t, string> inodeToPath;

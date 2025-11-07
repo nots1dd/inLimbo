@@ -4,7 +4,7 @@ project(dirsort-test LANGUAGES CXX)
 # -----------------------------------------------------------
 # Build configuration
 # -----------------------------------------------------------
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -15,6 +15,7 @@ add_compile_options(-Wall -Wextra -Wpedantic -g)
 # External Dependencies
 # -----------------------------------------------------------
 set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/../../external)
+set(SPDLOG_GH_URL https://github.com/gabime/spdlog.git)
 
 # --- TOML++ (header-only)
 add_library(tomlplusplus INTERFACE)
@@ -34,7 +35,7 @@ set(SPDLOG_DIR ${EXTERNAL_DIR}/spdlog)
 if(NOT EXISTS ${SPDLOG_DIR}/CMakeLists.txt)
     message(STATUS "spdlog not found — cloning into ${SPDLOG_DIR}")
     execute_process(
-        COMMAND git clone --branch master https://github.com/gabime/spdlog.git ${SPDLOG_DIR}
+        COMMAND git clone --branch master ${SPDLOG_GH_URL} ${SPDLOG_DIR}
         WORKING_DIRECTORY ${EXTERNAL_DIR}
     )
 endif()

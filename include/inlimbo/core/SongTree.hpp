@@ -49,8 +49,13 @@ struct Song
 };
 
 // ============================================================
-// SongTree Declaration
+// SongTree Declaration (NOT THREAD SAFE)
 // ============================================================
+//
+// Note that this structure is used ONLY for serialization and deserialization.
+// The in-memory representation used during runtime is a threads::SafeMap<SongMap>.
+//
+// This is majorly also used for cmdline querying and printing the song library.
 using SongMap = std::map<Artist, std::map<Album, std::map<Disc, std::map<Track, Song>>>>;
 
 class SongTree

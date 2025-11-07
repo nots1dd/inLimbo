@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils/Env-Vars.hpp"
 #include <string>
 #include <utility>
 #include <vector>
@@ -13,6 +14,19 @@
 #include <cxxabi.h>
 
 namespace core {
+
+// Cached check for INLIMBO_STACK_TRACE_DUMP
+inline auto is_stack_trace_enabled() -> bool {
+    static const bool enabled = [] {
+        if (const char* val = std::getenv(INLIMBO_STACK_TRACE_DUMP_ENV)) {
+            std::string s = val;
+            for (auto& c : s) c = static_cast<char>(std::tolower(c));
+            return (s == "1" || s == "true" || s == "yes" || s == "on");
+        }
+        return false;
+    }();
+    return enabled;
+}
 
 struct StackFrame {
     std::string function;
@@ -115,10 +129,10 @@ struct Event {
     Payload data;
     StackTrace trace;
 
-    Event(std::string cat, const Payload& payload)
+    Event(std::string cat, Payload  payload)
         : timestamp(timestamp_now()),
           category(std::move(cat)),
-          data(payload),
+          data(std::move(payload)),
           trace(BacktraceCollector::capture(2)) {}
 
     [[nodiscard]] auto summary() const -> std::string {
@@ -220,5 +234,12 @@ private:
     core::TraceScope trace_scope_instance(cat, __FUNCTION__)
 #endif
 
-#define DUMP_TRACE() \
-    core::EventLog<std::string>::instance().dump_to_stdout();
+#define DUMP_TRACE()                                                      \
+    do {                                                                  \
+        if (core::is_stack_trace_enabled()) {                     \
+            core::EventLog<std::string>::instance().dump_to_stdout();     \
+        } else {                                                          \
+            std::cout << "[Trace disabled] Set INLIMBO_STACK_TRACE_DUMP=1 "\
+                         "to enable stack trace logging.\n";              \
+        }                                                                 \
+    } while (0)
