@@ -162,6 +162,24 @@
 
 #define STATIC_ASSERT(expr, msg) static_assert((expr), msg)
 
+#ifdef NDEBUG
+#define ASSERT_MSG(expr, msg) ((void)0)
+#else
+#define ASSERT_MSG(expr, msg) do {                                           \
+    if (!(expr)) {                                                           \
+        std::ostringstream _oss;                                             \
+        _oss << "\n🚨 Assertion failed!\n"                                   \
+             << "  Expression : " << #expr << "\n"                           \
+             << "  Message    : " << msg << "\n"                             \
+             << "  Function   : " << __func__ << "\n"                        \
+             << "  Location   : " << __FILE__ << ":" << __LINE__ << "\n"    \
+             << "----------- IGNORE BACKTRACE -----------\n\n";              \
+        std::cerr << _oss.str() << std::flush;                               \
+        std::abort();                                                        \
+    }                                                                        \
+} while (0)
+#endif
+
 // ============================================================
 // Build Config
 // ============================================================

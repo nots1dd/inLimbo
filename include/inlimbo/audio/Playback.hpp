@@ -9,17 +9,16 @@
 #include <vector>
 #include <memory>
 #include <stdexcept>
-#include <cassert>
 #include "Logger.hpp"
 
 namespace audio {
 
+struct DeviceInfo {
+    std::string name;
+    ma_device_id id;
+};
+
 class AudioEngine {
-public:
-    struct DeviceInfo {
-        std::string name;
-        ma_device_id id;
-    };
 
 private:
     ma_context context_{};
@@ -91,7 +90,7 @@ public:
         RECORD_FUNC_TO_BACKTRACE("AudioEngine::initEngineForDevice");
         LOG_INFO("Initializing playback device...");
 
-        assert(deviceId != nullptr && "initEngineForDevice called with nullptr deviceId");
+        ASSERT_MSG(deviceId != nullptr, "initEngineForDevice called with nullptr deviceId");
 
         auto device = std::make_unique<ma_device>();
         auto engine = std::make_unique<ma_engine>();
@@ -105,7 +104,7 @@ public:
         deviceConfig.pUserData          = nullptr;
 
         ma_result result = ma_device_init(&context_, &deviceConfig, device.get());
-        assert(result == MA_SUCCESS && "ma_device_init failed");
+        ASSERT_MSG(result == MA_SUCCESS, "ma_device_init failed");
         if (result != MA_SUCCESS) {
             LOG_CRITICAL("Failed to initialize playback device.");
             throw std::runtime_error("Failed to initialize playback device");
@@ -117,7 +116,7 @@ public:
         engineConfig.noAutoStart      = MA_TRUE;
 
         result = ma_engine_init(&engineConfig, engine.get());
-        assert(result == MA_SUCCESS && "ma_engine_init failed");
+        ASSERT_MSG(result == MA_SUCCESS, "ma_engine_init failed");
         if (result != MA_SUCCESS) {
             LOG_ERROR("Failed to initialize engine for device.");
             ma_device_uninit(device.get());
@@ -125,10 +124,10 @@ public:
         }
 
         device->pUserData = engine.get();
-        assert(device->pUserData == engine.get() && "pUserData pointer assignment failed!");
+        ASSERT_MSG(device->pUserData == engine.get(), "pUserData pointer assignment failed!");
 
         result = ma_engine_start(engine.get());
-        assert(result == MA_SUCCESS && "ma_engine_start failed");
+        ASSERT_MSG(result == MA_SUCCESS, "ma_engine_start failed");
         if (result != MA_SUCCESS) {
             LOG_ERROR("Failed to start audio engine.");
             ma_engine_uninit(engine.get());
@@ -141,14 +140,14 @@ public:
         devices_.push_back(std::move(device));
         engines_.push_back(std::move(engine));
 
-        assert(devices_.size() == engines_.size() && "Device/Engine arrays should match 1:1");
-        assert(devices_.back()->pUserData != nullptr && "Device pUserData should not be null after init");
+        ASSERT_MSG(devices_.size() == engines_.size(), "Device/Engine arrays should match 1:1");
+        ASSERT_MSG(devices_.back()->pUserData != nullptr, "Device pUserData should not be null after init");
     }
 
     void loadSound(const std::string& filepath, size_t engineIndex = 0) {
         RECORD_FUNC_TO_BACKTRACE("AudioEngine::loadSound");
-        assert(!filepath.empty() && "Empty filepath passed to loadSound()");
-        assert(engineIndex < engines_.size() && "Engine index out of range before loadSound");
+        ASSERT_MSG(!filepath.empty(), "Empty filepath passed to loadSound()");
+        ASSERT_MSG(engineIndex < engines_.size(), "Engine index out of range before loadSound");
 
         LOG_INFO("Loading sound: {}", filepath);
 
@@ -160,7 +159,7 @@ public:
             MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_STREAM,
             nullptr, nullptr, sound.get());
 
-        assert(result == MA_SUCCESS && "ma_sound_init_from_file failed");
+        ASSERT_MSG(result == MA_SUCCESS, "ma_sound_init_from_file failed");
         if (result != MA_SUCCESS) {
             LOG_ERROR("Failed to load sound: {}", filepath);
             throw std::runtime_error("Failed to load sound: " + filepath);
@@ -174,26 +173,26 @@ public:
 
     void play(size_t soundIndex = 0) {
         RECORD_FUNC_TO_BACKTRACE("AudioEngine::play");
-        assert(soundIndex < sounds_.size() && "Invalid sound index in play()");
+        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in play()");
         LOG_INFO("Playing sound index {}", soundIndex);
         ma_sound_start(sounds_[soundIndex].get());
     }
 
     void pause(size_t soundIndex = 0) {
-        assert(soundIndex < sounds_.size() && "Invalid sound index in pause()");
+        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in pause()");
         LOG_INFO("Pausing sound index {}", soundIndex);
         ma_sound_stop(sounds_[soundIndex].get());
     }
 
     void restart(size_t soundIndex = 0) {
-        assert(soundIndex < sounds_.size() && "Invalid sound index in restart()");
+        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in restart()");
         LOG_INFO("Restarting sound index {}", soundIndex);
         ma_sound_seek_to_pcm_frame(sounds_[soundIndex].get(), 0);
         ma_sound_start(sounds_[soundIndex].get());
     }
 
     [[nodiscard]] auto getPlaybackTime(size_t soundIndex = 0) const -> std::pair<double, double> {
-        assert(soundIndex < sounds_.size() && "Invalid sound index in getPlaybackTime()");
+        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in getPlaybackTime()");
         ma_uint64 cursor{}, total{};
         ma_sound_get_cursor_in_pcm_frames(sounds_[soundIndex].get(), &cursor);
         ma_sound_get_length_in_pcm_frames(sounds_[soundIndex].get(), &total);
@@ -204,7 +203,7 @@ public:
     
     void seekTo(double seconds, size_t soundIndex = 0) {
         RECORD_FUNC_TO_BACKTRACE("AudioEngine::seekTo");
-        assert(soundIndex < sounds_.size() && "Invalid sound index in seekTo()");
+        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in seekTo()");
         
         ma_uint64 frame = secondsToFrames(seconds);
 
@@ -218,7 +217,7 @@ public:
 
     void seekForward(double seconds, size_t soundIndex = 0) {
         RECORD_FUNC_TO_BACKTRACE("AudioEngine::seekForward");
-        assert(soundIndex < sounds_.size() && "Invalid sound index in seekForward()");
+        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in seekForward()");
 
         ma_uint64 offsetFrames = secondsToFrames(seconds);
 
@@ -234,7 +233,7 @@ public:
 
     void seekBackward(double seconds, size_t soundIndex = 0) {
         RECORD_FUNC_TO_BACKTRACE("AudioEngine::seekBackward");
-        assert(soundIndex < sounds_.size() && "Invalid sound index in seekBackward()");
+        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in seekBackward()");
 
         ma_uint64 offsetFrames = secondsToFrames(seconds);
 
@@ -249,15 +248,15 @@ public:
 
     void setVolume(float volume, size_t soundIndex = 0) {
         RECORD_FUNC_TO_BACKTRACE("AudioEngine::setVolume");
-        assert(soundIndex < sounds_.size() && "Invalid sound index in setVolume()");
-        assert(volume >= 0.0f && volume <= 1.5f && "Volume out of safe range (0.0 - 1.5)");
+        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in setVolume()");
+        ASSERT_MSG(volume >= 0.0f && volume <= 1.5f, "Volume out of safe range (0.0 - 1.5)");
         LOG_INFO("Setting volume of sound {} to {:.2f}", soundIndex, volume);
         ma_sound_set_volume(sounds_[soundIndex].get(), volume);
     }
 
     void printDeviceInfo(size_t deviceIndex = 0) const {
         RECORD_FUNC_TO_BACKTRACE("AudioEngine::printDeviceInfo");
-        assert(deviceIndex < devices_.size() && "Invalid device index in printDeviceInfo()");
+        ASSERT_MSG(deviceIndex < devices_.size(), "Invalid device index in printDeviceInfo()");
         const auto& dev = *devices_[deviceIndex];
         LOG_INFO("Device Info -> Name: {}, Channels: {}, SampleRate: {}",
                  dev.playback.name, dev.playback.channels, dev.sampleRate);
@@ -281,7 +280,7 @@ public:
         sounds_.clear();
 
         for (auto& engine : engines_) {
-            assert(engine->pDevice != nullptr && "Engine has null device pointer during cleanup");
+            ASSERT_MSG(engine->pDevice != nullptr, "Engine has null device pointer during cleanup");
             ma_engine_uninit(engine.get());
         }
         engines_.clear();
@@ -330,9 +329,9 @@ private:
 
     static void dataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount) {
         (void)pInput;
-        assert(pDevice != nullptr && "dataCallback got null device pointer");
+        ASSERT_MSG(pDevice != nullptr, "dataCallback got null device pointer");
         auto* engine = recast<ma_engine*>(pDevice->pUserData);
-        assert(engine != nullptr && "dataCallback: pUserData is null!");
+        ASSERT_MSG(engine != nullptr, "dataCallback: pUserData is null!");
         ma_engine_read_pcm_frames(engine, pOutput, frameCount, nullptr);
     }
     

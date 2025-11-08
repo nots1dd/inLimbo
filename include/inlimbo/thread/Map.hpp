@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/SongTree.hpp"
 #include <mutex>
 #include <shared_mutex>
 #include <optional>
@@ -66,6 +67,7 @@ public:
         return fn(map_);
     }
 
+    // this shud be used with the intention of modifying the map
     template <typename Fn>
     auto withWriteLock(Fn&& fn) -> decltype(auto) {
         std::unique_lock lock(mtx_);
@@ -74,3 +76,5 @@ public:
 };
 
 } // namespace thread
+
+extern threads::SafeMap<dirsort::SongMap> g_songMap;

@@ -20,10 +20,39 @@ Song::Song() : inode(0), metadata() {}
 
 void SongTree::addSong(const Song& song)
 {
-    auto& artistMap = tree[song.metadata.artist];
+    auto& artistMap = map[song.metadata.artist];
     auto& albumMap  = artistMap[song.metadata.album];
     auto& discMap   = albumMap[song.metadata.discNumber];
-    discMap[song.metadata.track] = song;
+    auto& trackMap  = discMap[song.metadata.track];
+
+    // Insert song by inode
+    trackMap[song.inode] = song;
+    
+    LOG_TRACE("Added song '{}' by '{}' [Album: {}, Disc: {}, Track: {}, inode: {}]",
+         song.metadata.title, song.metadata.artist, song.metadata.album,
+         song.metadata.discNumber, song.metadata.track, song.inode);
+}
+
+// ------------------------------------------------------------
+void SongTree::saveToFile(const std::string& filename) const
+{
+    std::ofstream file(filename, std::ios::binary);
+    if (!file)
+        throw std::runtime_error("Failed to open file for saving.");
+
+    cereal::BinaryOutputArchive archive(file);
+    archive(*this);
+}
+
+// ------------------------------------------------------------
+void SongTree::loadFromFile(const std::string& filename)
+{
+    std::ifstream file(filename, std::ios::binary);
+    if (!file)
+        throw std::runtime_error("Failed to open file for loading.");
+
+    cereal::BinaryInputArchive archive(file);
+    archive(*this);
 }
 
 // ------------------------------------------------------------
@@ -38,7 +67,7 @@ void SongTree::display(DisplayMode mode) const
     if (print_tree)
         std::cout << "─────────────────────────────────────────────────────────────────────────────\n";
 
-    for (const auto& artistPair : tree)
+    for (const auto& artistPair : map)
     {
         totalArtists++;
         if (print_tree)
@@ -58,13 +87,16 @@ void SongTree::display(DisplayMode mode) const
 
                 for (const auto& trackPair : discPair.second)
                 {
-                    totalSongs++;
-                    const auto& song = trackPair.second;
-                    uniqueGenres.insert(song.metadata.genre);
+                    for (const auto& inodePair : trackPair.second)
+                    {
+                        totalSongs++;
+                        const auto& song = inodePair.second;
+                        uniqueGenres.insert(song.metadata.genre);
 
-                    if (print_tree)
-                        std::cout << "  │    │    Track " << std::setw(2)
-                                  << trackPair.first << ": " << song.metadata.title << "\n";
+                        if (print_tree)
+                            std::cout << "  │    │    Track " << std::setw(2)
+                                      << trackPair.first << ": " << song.metadata.title << "\n";
+                    }
                 }
             }
         }
@@ -83,7 +115,7 @@ void SongTree::display(DisplayMode mode) const
 void SongTree::printAllArtists() const
 {
     std::cout << "\n──────────────────────────────── All Artists ────────────────────────────\n";
-    for (const auto& artistPair : tree)
+    for (const auto& artistPair : map)
         std::cout << "- " << artistPair.first << "\n";
     std::cout << "────────────────────────────────────────────────────────────────────────────\n";
 }
@@ -123,13 +155,14 @@ void SongTree::printSongs(const std::vector<Song>& songs)
 auto SongTree::getSongsByArtist(const std::string& artist)
 {
     std::vector<Song> result;
-    auto artistIt = tree.find(artist);
-    if (artistIt != tree.end())
+    auto artistIt = map.find(artist);
+    if (artistIt != map.end())
     {
         for (const auto& albumPair : artistIt->second)
             for (const auto& discPair : albumPair.second)
                 for (const auto& trackPair : discPair.second)
-                    result.push_back(trackPair.second);
+                    for (const auto& inodePair : trackPair.second)
+                        result.push_back(inodePair.second);
     }
     printSongs(result);
     return result;
@@ -139,15 +172,16 @@ auto SongTree::getSongsByArtist(const std::string& artist)
 auto SongTree::getSongsByAlbum(const std::string& artist, const std::string& album) const
 {
     std::vector<Song> result;
-    auto artistIt = tree.find(artist);
-    if (artistIt != tree.end())
+    auto artistIt = map.find(artist);
+    if (artistIt != map.end())
     {
         auto albumIt = artistIt->second.find(album);
         if (albumIt != artistIt->second.end())
         {
             for (const auto& discPair : albumIt->second)
                 for (const auto& trackPair : discPair.second)
-                    result.push_back(trackPair.second);
+                    for (const auto& inodePair : trackPair.second)
+                        result.push_back(inodePair.second);
         }
     }
     return result;
@@ -158,11 +192,12 @@ void SongTree::getSongsByGenreAndPrint() const
 {
     std::map<std::string, std::vector<Song>> genreMap;
 
-    for (const auto& artistPair : tree)
+    for (const auto& artistPair : map)
         for (const auto& albumPair : artistPair.second)
             for (const auto& discPair : albumPair.second)
                 for (const auto& trackPair : discPair.second)
-                    genreMap[trackPair.second.metadata.genre].push_back(trackPair.second);
+                    for (const auto& inodePair : trackPair.second)
+                        genreMap[inodePair.second.metadata.genre].push_back(inodePair.second);
 
     std::cout << "\n=== Songs Grouped by Genre ===\n";
     std::cout << "──────────────────────────────────────\n";
@@ -186,28 +221,6 @@ void SongTree::getSongsByGenreAndPrint() const
 }
 
 // ------------------------------------------------------------
-void SongTree::saveToFile(const std::string& filename) const
-{
-    std::ofstream file(filename, std::ios::binary);
-    if (!file)
-        throw std::runtime_error("Failed to open file for saving.");
-
-    cereal::BinaryOutputArchive archive(file);
-    archive(*this);
-}
-
-// ------------------------------------------------------------
-void SongTree::loadFromFile(const std::string& filename)
-{
-    std::ifstream file(filename, std::ios::binary);
-    if (!file)
-        throw std::runtime_error("Failed to open file for loading.");
-
-    cereal::BinaryInputArchive archive(file);
-    archive(*this);
-}
-
-// ------------------------------------------------------------
 void SongTree::printSongInfo(const std::string& input)
 {
     bool isFilePath = input.find('/') != std::string::npos || input.find('\\') != std::string::npos;
@@ -220,22 +233,24 @@ void SongTree::printSongInfo(const std::string& input)
         if (stat(input.c_str(), &fileStat) == 0)
         {
             unsigned int inode = fileStat.st_ino;
-            for (const auto& artistPair : tree)
+            for (const auto& artistPair : map)
                 for (const auto& albumPair : artistPair.second)
                     for (const auto& discPair : albumPair.second)
                         for (const auto& trackPair : discPair.second)
-                            if (trackPair.second.inode == inode)
-                                foundSong = trackPair.second;
+                            for (const auto& inodePair : trackPair.second)
+                                if (inodePair.first == inode)
+                                    foundSong = inodePair.second;
         }
     }
     else
     {
-        for (const auto& artistPair : tree)
+        for (const auto& artistPair : map)
             for (const auto& albumPair : artistPair.second)
                 for (const auto& discPair : albumPair.second)
                     for (const auto& trackPair : discPair.second)
-                        if (levenshteinDistance(trackPair.second.metadata.title, input) < 3)
-                            foundSong = trackPair.second;
+                        for (const auto& inodePair : trackPair.second)
+                            if (levenshteinDistance(inodePair.second.metadata.title, input) < 3)
+                                foundSong = inodePair.second;
     }
 
     if (foundSong)

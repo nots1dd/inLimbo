@@ -18,13 +18,13 @@ auto TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) ->
 
     TagLib::FileRef file(filePath.c_str());
     if (file.isNull()) {
-        sendErrMsg("Failed to open file: " + filePath);
+        LOG_WARN("Failed to open file: {}", filePath);
         metadata.title = fs::path(filePath).filename().string();
         return false;
     }
 
     if (!file.tag()) {
-        sendErrMsg("No tag information found in file: " + filePath);
+        LOG_WARN("No tag information found in file: {}", filePath);
         metadata.title = fs::path(filePath).filename().string();
         return true;
     }
@@ -73,24 +73,94 @@ auto TagLibParser::parseFromInode(ino_t inode, const std::string& directory) -> 
             if (parseFile(entry.path().string(), m))
                 result[entry.path().string()] = m;
             else
-                sendErrMsg("Unable to parse: " + entry.path().string());
+                LOG_WARN("Unable to parse: {}", entry.path().string());
         }
     }
     return result;
 }
 
+auto TagLibParser::modifyMetadata(const std::string& filePath, const Metadata& newData) -> bool {
+    std::string ext = fs::path(filePath).extension().string();
+    bool success = false;
+
+    try {
+        if (ext == ".mp3") {
+            TagLib::MPEG::File file(filePath.c_str());
+            if (!file.isValid()) {
+                sendErrMsg("Invalid MP3 file: " + filePath);
+                return false;
+            }
+
+            TagLib::ID3v2::Tag* tag = file.ID3v2Tag(true);
+            if (!tag) {
+                LOG_WARN("Unable to get ID3v2 tag for: {}", filePath);
+                return false;
+            }
+
+            if (!newData.title.empty()) tag->setTitle(TagLib::String(newData.title, TagLib::String::UTF8));
+            if (!newData.artist.empty()) tag->setArtist(TagLib::String(newData.artist, TagLib::String::UTF8));
+            if (!newData.album.empty()) tag->setAlbum(TagLib::String(newData.album, TagLib::String::UTF8));
+            if (!newData.genre.empty()) tag->setGenre(TagLib::String(newData.genre, TagLib::String::UTF8));
+            if (!newData.comment.empty()) tag->setComment(TagLib::String(newData.comment, TagLib::String::UTF8));
+            if (newData.year != 0) tag->setYear(newData.year);
+            if (newData.track != 0) tag->setTrack(newData.track);
+
+            file.save();
+            success = true;
+        }
+        else if (ext == ".flac") {
+            TagLib::FLAC::File file(filePath.c_str());
+            if (!file.isValid()) {
+                LOG_WARN("Invalid FLAC file: {}", filePath);
+                return false;
+            }
+
+            TagLib::Tag* tag = file.tag();
+            if (!tag) {
+                LOG_WARN("Unable to get tag for FLAC file: {}", filePath);
+                return false;
+            }
+
+            if (!newData.title.empty()) tag->setTitle(TagLib::String(newData.title, TagLib::String::UTF8));
+            if (!newData.artist.empty()) tag->setArtist(TagLib::String(newData.artist, TagLib::String::UTF8));
+            if (!newData.album.empty()) tag->setAlbum(TagLib::String(newData.album, TagLib::String::UTF8));
+            if (!newData.genre.empty()) tag->setGenre(TagLib::String(newData.genre, TagLib::String::UTF8));
+            if (!newData.comment.empty()) tag->setComment(TagLib::String(newData.comment, TagLib::String::UTF8));
+            if (newData.year != 0) tag->setYear(newData.year);
+            if (newData.track != 0) tag->setTrack(newData.track);
+
+            file.save();
+            success = true;
+        }
+        else {
+            LOG_WARN("Unsupported file type for metadata modification: {}", ext);
+            return false;
+        }
+
+        if (debugLogBool && success)
+            LOG_INFO("Metadata updated successfully for: {}", filePath);
+
+    } catch (const std::exception& e) {
+        LOG_WARN("Exception during metadata update: {}", e.what());
+        success = false;
+    }
+
+    return success;
+}
+
 void printMetadata(const Metadata& metadata) {
-    std::cout << "Title: " << metadata.title << "\n"
-              << "Artist: " << metadata.artist << "\n"
-              << "Album: " << metadata.album << "\n"
-              << "Genre: " << metadata.genre << "\n"
-              << "Comment: " << metadata.comment << "\n"
-              << "Year: " << metadata.year << "\n"
-              << "Track: " << metadata.track << "\n"
-              << "Disc: " << metadata.discNumber << "\n"
-              << "Lyrics: " << metadata.lyrics << "\n"
+    std::cout << "Title:    " << metadata.title << "\n"
+              << "Artist:   " << metadata.artist << "\n"
+              << "Album:    " << metadata.album << "\n"
+              << "Genre:    " << metadata.genre << "\n"
+              << "Comment:  " << metadata.comment << "\n"
+              << "Year:     " << metadata.year << "\n"
+              << "Track:    " << metadata.track << "\n"
+              << "Disc:     " << metadata.discNumber << "\n"
+              << "Lyrics:   " << metadata.lyrics << "\n"
+              << "Path:     " << metadata.filePath << "\n"
               << "Duration: " << metadata.duration << "s\n"
-              << "Bitrate: " << metadata.bitrate << "kbps\n"
+              << "Bitrate:  " << metadata.bitrate << "kbps\n"
               << "----------------------------------------\n";
 }
 

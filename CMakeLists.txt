@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(dirsort-test LANGUAGES CXX)
+project(inLimbo LANGUAGES CXX)
 
 # -----------------------------------------------------------
 # Build configuration

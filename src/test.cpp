@@ -1,116 +1,42 @@
+#include "Config.hpp"
 #include "core/InodeMapper.hpp"
 #include "thread/Map.hpp"
 #include "thread/Map.hpp"
 #include "toml/Parser.hpp"
 #include "Logger.hpp"
-#include "utils/SongMap.hpp"
+#include "query/SongMap.hpp"
 #include "utils/signal/SignalHandler.hpp"
 #include "utils/timer/Timer.hpp"
 #include "audio/Playback.hpp"
-#include <format>
+#include "frontend/cmd-line/CMD-LINE.hpp"
 
-static auto printBanner()
-{
-  std::cout << "──────────────────────────────────────────────\n"
-            << "\nAudio Control Commands:\n"
-            << "  play, pause, restart, back <s>, forward <s>, seek <s>\n"
-            << "  volume <0.0–1.0>, info, quit\n"
-            << "──────────────────────────────────────────────\n";
-}
-
-static auto handleAudioCommand(audio::AudioEngine& eng,
-                               const std::string& input,
-                               const Metadata& meta) -> bool
-{
-    std::istringstream iss(input);
-    std::string cmd;
-    iss >> cmd;
-
-    if (cmd.empty())
-        return true;
-
-    const auto toLower = [](std::string s) {
-        std::transform(s.begin(), s.end(), s.begin(),
-                       [](unsigned char c) { return std::tolower(c); });
-        return s;
-    };
-
-    cmd = toLower(cmd);
-
-    if (cmd == "play") {
-        eng.play();
-        std::cout << "-- Resumed playback.\n";
-    }
-    else if (cmd == "pause") {
-        eng.pause();
-        std::cout << "-- Paused.\n";
-    }
-    else if (cmd == "restart") {
-        eng.restart();
-        std::cout << "-- Restarted track.\n";
-    }
-    else if (cmd == "info") {
-        std::cout << "\n📀 Metadata Info:\n"
-                  << "  Title:    " << meta.title << "\n"
-                  << "  Artist:   " << meta.artist << "\n"
-                  << "  Album:    " << meta.album << "\n"
-                  << "  Track:    " << meta.discNumber << "/" << meta.track << "\n"
-                  << "  Year:     " << meta.year << "\n"
-                  << "  Duration: " << meta.duration << " sec\n"
-                  << "  Bitrate:  " << meta.bitrate << " kbps\n";
-    }
-    else if (cmd == "seek" || cmd == "back" || cmd == "forward") {
-        double seconds = 0.0;
-        if (!(iss >> seconds)) {
-            std::cout << "Usage: " << cmd << " <seconds>\n";
-            return true;
-        }
-
-        if (cmd == "seek")       eng.seekTo(seconds);
-        else if (cmd == "back")  eng.seekBackward(seconds);
-        else if (cmd == "forward") eng.seekForward(seconds);
-
-        std::cout << "-- Seek: " << cmd << " " << seconds << "s\n";
-    }
-    else if (cmd == "volume") {
-        float vol = -1.0f;
-        if (!(iss >> vol) || vol < 0.0f || vol > 1.0f) {
-            std::cout << "Usage: volume <0.0 - 1.0>\n";
-            return true;
-        }
-        eng.setVolume(vol);
-        std::cout << "-- Volume set to " << vol * 100.0f << "%.\n";
-    }
-    else if (cmd == "quit") {
-        std::cout << "!! Stopping playback and exiting...\n";
-        eng.stopInteractiveLoop();
-        return false;
-    }
-    else {
-        std::cout << "❓ Unknown command: " << cmd << "\n"
-                  << "Available: play, pause, info, restart, seek, back, forward, volume, info, quit\n";
-    }
-
-    return true;
-}
+threads::SafeMap<dirsort::SongMap> g_songMap;
 
 auto main(int argc, char* argv[]) -> int
 {
     RECORD_FUNC_TO_BACKTRACE("MAIN");
     utils::SignalHandler::getInstance().setup();
+    
+    TagLibParser parser(dirsort::DEBUG_LOG_PARSE);
+
+    if (argc <= 1 || (argc > 2 && (std::string(argv[1]) == "--help" || std::string(argv[1]) == "-h"))) {
+        std::cout << "Usage: " << argv[0] << " [example_song_name] [--edit-metadata]\n"
+                  << "  example_song_name : Name of a song to demonstrate playback (default: 'Example Song')\n"
+                  << "  --edit-metadata   : Simulate editing metadata of the example song after playback\n";
+        return 0;
+    }
+    
+    const std::string exampleSongName = argc > 1 ? argv[1] : "Example Song";
 
     const std::string directoryPath = string(parser::parseTOMLField("library", "directory"));
     const std::string libBinPath    = utils::getConfigPath(LIB_BIN_NAME);
 
-    LOG_INFO("Configured music directory: {}", directoryPath);
+    LOG_INFO("Configured music directory: {} and found song name: {}", directoryPath, exampleSongName);
 
     util::Timer<> timer;
     dirsort::RedBlackTree<ino_t, dirsort::Song> rbt;
     InodeFileMapper mapper;
     dirsort::SongTree song_tree;
-
-    // Global thread-safe SongMap instance
-    static threads::SafeMap<dirsort::SongMap> g_songMap;
 
     bool needRebuild = false;
     try {
@@ -131,8 +57,7 @@ auto main(int argc, char* argv[]) -> int
     }
 
     // Define parsing callback once
-    rbt.setVisitCallback([&song_tree](const ino_t& inode, dirsort::Song& song) {
-        TagLibParser parser(dirsort::DEBUG_LOG_PARSE);
+    rbt.setVisitCallback([&song_tree, &parser](const ino_t& inode, dirsort::Song& song) {
         auto metadataMap = parser.parseFromInode(inode, dirsort::DIRECTORY_FIELD);
 
         if (metadataMap.empty()) {
@@ -162,14 +87,18 @@ auto main(int argc, char* argv[]) -> int
     // Thread-safe replacement (atomic swap)
     g_songMap.replace(std::move(library_map));
 
+    query::songmap::read::forEachSong(g_songMap, [](const Artist& artist, const Album& album, const Disc disc, const Track track, const ino_t inode, const auto& song){
+      LOG_INFO("Found song {}: {} by {} in {} ({}/{})", inode, song.metadata.title, artist, album, disc, track);
+  });
+
     // synchronous display
     timer.reset();
     song_tree.display(dirsort::DisplayMode::Summary);
     LOG_INFO("Library displayed in {:.2f} ms", timer.elapsed_ms());  
 
-    auto exampleSong = utils::songmap::findSongByName(g_songMap, "duvet");
+    auto exampleSong = query::songmap::read::findSongByName(g_songMap, exampleSongName);
 
-    assert(exampleSong != nullptr && "Example file not found in the library!");
+    ASSERT_MSG(exampleSong != nullptr, "Example file not found in the library!");
 
     auto exampleFilePath = exampleSong->metadata.filePath;
     auto exampleFileMetadata = exampleSong->metadata;
@@ -184,27 +113,61 @@ auto main(int argc, char* argv[]) -> int
         return 1;
     }
 
-    std::cout << "\nAvailable Playback Devices:\n";
-    for (size_t i = 0; i < devices.size(); ++i)
-        std::cout << "  [" << i << "] " << devices[i].name << "\n";
+    // now you can do some cool things with g_songMap like querying songs by artist/album, etc. (check query/SongMap.hpp)
+    // 
+    //auto songs = utils::songmap::read::getSongsByAlbum(g_songMap, "Radiohead", "In Rainbows");
 
-    // Ask user for device index
-    size_t selectedIndex = 0;
-    while (true) {
-        std::cout << "\nSelect a playback device index: ";
-        if (!(std::cin >> selectedIndex)) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            LOG_WARN("Invalid input. Please enter a number.");
-            continue;
-        }
+    //for (const auto& song : songs) {
+    //  std::string s = std::format(" - {} (Disc {} :Track {})\n", song.metadata.title, song.metadata.discNumber, song.metadata.track);
+    //  std::cout << s;
+    //}
+    
+        if (argc > 2 && std::string(argv[2]) == "--edit-metadata")
+    {
+      // now let us modify the metadata of the example file and see if we can update the song map
+      // 
+      // something to note is that we arent actually changing the file's metadata on disk here,
+      // we are just simulating a metadata change in memory and updating the song map accordingly.
+      //
+      // in the future we can use taglib itself to modify the required metadata.
+      auto newSongObj = *exampleSong; // copy existing
+      newSongObj.metadata.title = exampleSong->metadata.title + " (Edited)";
+      
+      LOG_INFO("Setting new title as : {} -> {} to '{}' path.", exampleSong->metadata.title, newSongObj.metadata.title, newSongObj.metadata.filePath);
+      
+      LOG_INFO("replaceSongObjAndUpdateMetadata(): looking for oldSong.inode={}, newSong.inode={}",
+         exampleSong->inode, newSongObj.inode);
 
-        if (selectedIndex >= devices.size()) {
-            LOG_WARN("Invalid index {}. Valid range: [0 - {}]", selectedIndex, devices.size() - 1);
-            continue;
-        }
-        break;
+      bool replaced = query::songmap::mut::replaceSongObjAndUpdateMetadata(
+          g_songMap,
+          *exampleSong,
+          newSongObj, parser);
+
+      // now we need to play this in the song tree and save it back to disk via serialization
+      if (replaced) {
+          LOG_INFO("Successfully replaced song object in SongMap.");
+        
+          // firstly update the true metadata using taglib 
+
+          // Rebuild SongTree from updated SongMap
+          song_tree.clear();
+          song_tree.newSongMap(g_songMap.snapshot());
+          song_tree.setMusicPath(directoryPath);
+          song_tree.saveToFile(libBinPath);
+          LOG_INFO("Saved updated song tree to cache after metadata modification: {}", libBinPath);
+      }
+      else {
+          LOG_ERROR("Failed to replace song object in SongMap.");
+      }
     }
+    
+    // initialize the frontend 
+    //
+    // NOTE!! THE SONG MAP WILL BECOME EMPTY AFTER THIS CALL!!!!
+    // 
+    // future access points are all within the cmdInterface object
+    frontend::cmdline::Interface cmdInterface(g_songMap); 
+    const size_t selectedIndex = cmdInterface.selectAudioDevice(devices);
 
     LOG_INFO("Selected device index: {} -> {}", selectedIndex, devices[selectedIndex].name);
 
@@ -221,32 +184,18 @@ auto main(int argc, char* argv[]) -> int
     engine.setVolume(1.0f);
     
     // simple interactive loop to connect with audio backend (should work well with any UI frontend)
-    engine.startInteractiveLoop([&exampleFileMetadata](audio::AudioEngine& eng) {
-        std::string cmd;
-        
-        printBanner();
-
-        while (eng.shouldRun()) {
-            std::cout << "\n[audio]> ";
-            if (!std::getline(std::cin, cmd))
-                break;
-
-            if (!handleAudioCommand(eng, cmd, exampleFileMetadata))
-                break;
-        }
+    engine.startInteractiveLoop([&cmdInterface, &exampleFileMetadata](audio::AudioEngine& eng) { 
+        cmdInterface.run(eng, exampleFileMetadata);
     });
 
     // Main thread stays responsive (we are assuming the UI runs here)
     while (engine.shouldRun())
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-
-    //auto songs = utils::songmap::getSongsByAlbum(g_songMap, "Radiohead", "In Rainbows");
-
-    //for (const auto& song : songs) {
-    //  std::string s = std::format(" - {} (Disc {} :Track {})\n", song.metadata.title, song.metadata.discNumber, song.metadata.track);
-    //  std::cout << s;
-    //}
-    
+    // frontend should cleanup and exit gracefully. song map is destroyed within the frontend object 
+    // 
+    // other things to note is that the frontend is responsible for saving any changes to the song map back to disk
+    // via cereal serialization through SongTree object.
+  
     return 0;
 }

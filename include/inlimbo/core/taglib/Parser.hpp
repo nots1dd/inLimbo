@@ -54,6 +54,8 @@ public:
 
     auto parseFile(const std::string& filePath, Metadata& metadata) -> bool;
     auto parseFromInode(ino_t inode, const std::string& directory) -> std::unordered_map<std::string, Metadata>;
+    
+    auto modifyMetadata(const std::string& filePath, const Metadata& newData) -> bool;
 
 private:
     void sendErrMsg(const std::string& errMsg);
