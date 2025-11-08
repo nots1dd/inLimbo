@@ -58,11 +58,11 @@ inline INLIMBO_API_CPP auto getSongsByAlbum(
     const threads::SafeMap<dirsort::SongMap>& safeMap,
     const Artist& artist,
     const Album& album
-) -> const std::vector<dirsort::Song>
+) -> const dirsort::Songs
 {
     RECORD_FUNC_TO_BACKTRACE("query::songmap::read::getSongsByAlbum");
     return safeMap.withReadLock([&](const auto& map) {
-        std::vector<dirsort::Song> songs;
+        dirsort::Songs songs;
         for (const auto& [a, albums] : map) {
             if (!strhelp::iequals_fast(a, artist))
                 continue;
@@ -179,7 +179,7 @@ inline INLIMBO_API_CPP auto replaceSongObjAndUpdateMetadata(
                                          artist, album, disc, track, inodeKey);
 
                                 song = newSong;
-                                LOG_INFO("Replaced song object for inode={} successfully.", inodeKey);
+                                LOG_DEBUG("Replaced song object for inode={} successfully.", inodeKey);
 
                                 // Update metadata on disk
                                 if (parser.modifyMetadata(newSong.metadata.filePath, newSong.metadata)) {

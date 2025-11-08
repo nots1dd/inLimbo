@@ -60,6 +60,7 @@ struct Song
 // This was initially done to account for duplicated metadata files.
 //
 using SongMap = std::map<Artist, std::map<Album, std::map<Disc, std::map<Track ,std::map<ino_t, Song>>>>>;
+using Songs = std::vector<Song>;
 
 using InodeMap = std::map<ino_t, Song>;
 using TrackMap = std::map<Track, InodeMap>;
@@ -96,7 +97,7 @@ public:
 
     // Query methods
     void printAllArtists() const;
-    void printSongs(const std::vector<Song>& songs);
+    void printSongs(const Songs& songs);
     auto getSongsByArtist(const std::string& artist);
     [[nodiscard]] auto getSongsByAlbum(const std::string& artist, const std::string& album) const;
     void getSongsByGenreAndPrint() const;

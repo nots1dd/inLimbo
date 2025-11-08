@@ -121,7 +121,7 @@ void SongTree::printAllArtists() const
 }
 
 // ------------------------------------------------------------
-void SongTree::printSongs(const std::vector<Song>& songs)
+void SongTree::printSongs(const Songs& songs)
 {
     if (songs.empty())
     {
@@ -129,7 +129,7 @@ void SongTree::printSongs(const std::vector<Song>& songs)
         return;
     }
 
-    std::map<std::string, std::vector<Song>> albums;
+    BucketedMap<Album, Song> albums;
     for (const auto& song : songs)
         albums[song.metadata.album].push_back(song);
 
@@ -154,7 +154,7 @@ void SongTree::printSongs(const std::vector<Song>& songs)
 // ------------------------------------------------------------
 auto SongTree::getSongsByArtist(const std::string& artist)
 {
-    std::vector<Song> result;
+    Songs result;
     auto artistIt = map.find(artist);
     if (artistIt != map.end())
     {
@@ -169,9 +169,9 @@ auto SongTree::getSongsByArtist(const std::string& artist)
 }
 
 // ------------------------------------------------------------
-auto SongTree::getSongsByAlbum(const std::string& artist, const std::string& album) const
+auto SongTree::getSongsByAlbum(const Artist& artist, const Album& album) const
 {
-    std::vector<Song> result;
+    Songs result;
     auto artistIt = map.find(artist);
     if (artistIt != map.end())
     {
@@ -190,7 +190,7 @@ auto SongTree::getSongsByAlbum(const std::string& artist, const std::string& alb
 // ------------------------------------------------------------
 void SongTree::getSongsByGenreAndPrint() const
 {
-    std::map<std::string, std::vector<Song>> genreMap;
+    std::map<std::string, Songs> genreMap;
 
     for (const auto& artistPair : map)
         for (const auto& albumPair : artistPair.second)

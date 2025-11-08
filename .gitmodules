@@ -17,3 +17,8 @@
 	path = external/cereal
 	url = https://github.com/USCiLab/cereal.git
   branch = master
+
+[submodule "external/cxxopts"]
+	path = external/cxxopts
+	url = https://github.com/jarro2783/cxxopts.git
+    branch = master

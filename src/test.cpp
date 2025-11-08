@@ -86,6 +86,15 @@ auto main(int argc, char* argv[]) -> int
 
     // Thread-safe replacement (atomic swap)
     g_songMap.replace(std::move(library_map));
+    
+    // now you can do some cool things with g_songMap like querying songs by artist/album, etc. (check query/SongMap.hpp)
+    // 
+    // auto songs = query::songmap::read::getSongsByAlbum(g_songMap, "Radiohead", "In Rainbows");
+
+    // for (const auto& song : songs) {
+    //   std::string s = std::format(" - {} (Disc {} :Track {})\n", song.metadata.title, song.metadata.discNumber, song.metadata.track);
+    //   std::cout << s;
+    // }
 
     query::songmap::read::forEachSong(g_songMap, [](const Artist& artist, const Album& album, const Disc disc, const Track track, const ino_t inode, const auto& song){
       LOG_INFO("Found song {}: {} by {} in {} ({}/{})", inode, song.metadata.title, artist, album, disc, track);
@@ -113,16 +122,8 @@ auto main(int argc, char* argv[]) -> int
         return 1;
     }
 
-    // now you can do some cool things with g_songMap like querying songs by artist/album, etc. (check query/SongMap.hpp)
-    // 
-    //auto songs = utils::songmap::read::getSongsByAlbum(g_songMap, "Radiohead", "In Rainbows");
-
-    //for (const auto& song : songs) {
-    //  std::string s = std::format(" - {} (Disc {} :Track {})\n", song.metadata.title, song.metadata.discNumber, song.metadata.track);
-    //  std::cout << s;
-    //}
     
-        if (argc > 2 && std::string(argv[2]) == "--edit-metadata")
+    if (argc > 2 && std::string(argv[2]) == "--edit-metadata")
     {
       // now let us modify the metadata of the example file and see if we can update the song map
       // 
