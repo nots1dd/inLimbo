@@ -19,6 +19,8 @@
   <a href="https://github.com/nots1dd/inLimbo/issues">Report a bug</a>
 </p>
 
+**MOST OF THIS README IS OUTDATED OR IRRELEVANT TO THIS BRANCH.**
+
 > [!CAUTION]
 > 
 > This is the develop branch! 
@@ -114,18 +116,6 @@ Demo Video at [here](https://github.com/nots1dd/inLimbo/blob/main/assets/inLimbo
 | **ImageMagick** | `imagemagick`             | `ImageMagick`                 | `imagemagick`                |
 | **X11**         | `libx11-dev`              | `libX11-devel`                | `libx11`                     |
 | **PNG**         | `libpng-dev`              | `libpng-devel`                | `libpng`                     |
-| **cereal**      | `libcereal-dev`           | `libcereal-devel`             | `cereal`                     |
-
-> [!NOTE]
-> 
-> If cereal is **NOT** available in your linux distribution,
-> 
-> ```bash
-> git clone https://github.com/USCiLab/cereal.git # download cereal 
-> mv cereal/include/* /usr/include/ # moves include/cereal headers to your include directory 
-> # If you find that risky, just modify CMakeLists.txt to include cereal's directory for building
-> ```
-> 
 
 **FTXUI** is fetched from GitHub [here](https://github.com/ArthurSonzogni/FTXUI/) itself during building so **NO** need to install it separately.
 
@@ -453,13 +443,21 @@ Or you could just visit [inLimbo Website](https://nots1dd.github.io/inLimbo/)
 
 It is a basic stock image found online. I got it from [here](https://unsplash.com/photos/black-and-white-decor-FrQKfzoTgsw)
 
-**TOML PARSER**:
+**TOML PARSER: TOML++**:
 
 To parse the [config.toml](https://github.com/nots1dd/inlimbo/blob/main/src/parser/examples/config.toml) is thanks to [TOML++](https://github.com/marzer/tomlplusplus)
 
-**AUDIO PLAYBACK & API**:
+**Command Line Parsing (Arguments): CXXOPTS**:
 
-Audio playback and capture is thanks to [miniaudio](https://github.com/mackron/miniaudio)
+To parse the command line arguments (and sparing me time to work on the actual project) is thanks to [cxxopts](https://github.com/jarro2783/cxxopts)
+
+**Serialization: Cereal**:
+
+Easy and fast serialization and deserialization of song map is thanks to [cereal](https://github.com/USCiLab/cereal/)
+
+**Logging: spdlog**:
+
+Modular and fast logging is thanks to [spdlog](https://github.com/gabime/spdlog)
 
 **INSPIRATIONS**:
 
