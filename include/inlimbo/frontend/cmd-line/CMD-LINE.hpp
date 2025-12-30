@@ -145,7 +145,7 @@ private:
             case 'r': eng.restart(); break;
             case 'b': pendingSeek_ -= 2.0; break;
             case 'f': pendingSeek_ += 2.0; break;
-            case '+': eng.setVolume(std::min(1.5f, eng.getVolume() + 0.05f)); break;
+            case '=': eng.setVolume(std::min(1.5f, eng.getVolume() + 0.05f)); break;
             case '-': eng.setVolume(std::max(0.0f, eng.getVolume() - 0.05f)); break;
             case 'i': showMeta(meta); break;
             case 'q': return false;
@@ -163,8 +163,6 @@ private:
                   << "Path  : " << m.filePath << "\n\n"
                   << "Press any key...\n";
         std::cout.flush();
-        char _;
-        read(STDIN_FILENO, &_, 1);
     }
 };
 

@@ -1,4 +1,5 @@
 #include "audio/Playback.hpp"
+#include "Logger.hpp"
 #include "StackTrace.hpp"
 
 namespace audio
@@ -42,7 +43,6 @@ auto AudioEngine::enumeratePlaybackDevices() -> Devices {
                       
                       std::string desc;
                       
-                      // Build comprehensive description
                       if (cardLongName && pcmName) {
                           desc = std::string(cardLongName) + " - " + pcmName;
                           if (pcmId && strlen(pcmId) > 0) {
@@ -93,18 +93,19 @@ auto AudioEngine::loadSound(const std::string& path) -> std::optional<size_t> {
   try {
       auto s = std::make_unique<Sound>();
 
-      if (avformat_open_input(&s->fmt, path.c_str(), nullptr, nullptr) < 0) {
+      // Open input with RAII wrapper
+      AVFormatContext* rawFmt = nullptr;
+      if (avformat_open_input(&rawFmt, path.c_str(), nullptr, nullptr) < 0) {
+          return std::nullopt;
+      }
+      s->fmt.reset(rawFmt);
+
+      if (avformat_find_stream_info(s->fmt.get(), nullptr) < 0) {
           return std::nullopt;
       }
 
-      if (avformat_find_stream_info(s->fmt, nullptr) < 0) {
-          avformat_close_input(&s->fmt);
-          return std::nullopt;
-      }
-
-      s->streamIndex = av_find_best_stream(s->fmt, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
+      s->streamIndex = av_find_best_stream(s->fmt.get(), AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
       if (s->streamIndex < 0) {
-          avformat_close_input(&s->fmt);
           return std::nullopt;
       }
 
@@ -112,20 +113,17 @@ auto AudioEngine::loadSound(const std::string& path) -> std::optional<size_t> {
 
       const AVCodec* codec = avcodec_find_decoder(s->stream->codecpar->codec_id);
       if (!codec) {
-          avformat_close_input(&s->fmt);
           return std::nullopt;
       }
 
-      s->dec = avcodec_alloc_context3(codec);
-      if (!s->dec) {
-          avformat_close_input(&s->fmt);
+      AVCodecContext* rawDec = avcodec_alloc_context3(codec);
+      if (!rawDec) {
           return std::nullopt;
       }
+      s->dec.reset(rawDec);
 
-      if (avcodec_parameters_to_context(s->dec, s->stream->codecpar) < 0 ||
-          avcodec_open2(s->dec, codec, nullptr) < 0) {
-          avcodec_free_context(&s->dec);
-          avformat_close_input(&s->fmt);
+      if (avcodec_parameters_to_context(s->dec.get(), s->stream->codecpar) < 0 ||
+          avcodec_open2(s->dec.get(), codec, nullptr) < 0) {
           return std::nullopt;
       }
 
@@ -143,34 +141,34 @@ auto AudioEngine::loadSound(const std::string& path) -> std::optional<size_t> {
           (s->stream->duration * s->sampleRate * s->stream->time_base.num) / 
           s->stream->time_base.den - s->startSkip - s->endSkip;
 
-      // Setup resampler
+      // Setup resampler with RAII
       AVChannelLayout outLayout, inLayout;
       av_channel_layout_default(&outLayout, 2);
       av_channel_layout_copy(&inLayout, &s->dec->ch_layout);
 
+      SwrContext* rawSwr = nullptr;
       if (swr_alloc_set_opts2(
-              &s->swr,
+              &rawSwr,
               &outLayout, AV_SAMPLE_FMT_FLT, s->sampleRate,
               &inLayout, s->dec->sample_fmt, s->dec->sample_rate,
               0, nullptr) < 0) {
           av_channel_layout_uninit(&outLayout);
           av_channel_layout_uninit(&inLayout);
-          avcodec_free_context(&s->dec);
-          avformat_close_input(&s->fmt);
           return std::nullopt;
       }
+      s->swr.reset(rawSwr);
 
-      if (swr_init(s->swr) < 0) {
-          swr_free(&s->swr);
+      if (swr_init(s->swr.get()) < 0) {
           av_channel_layout_uninit(&outLayout);
           av_channel_layout_uninit(&inLayout);
-          avcodec_free_context(&s->dec);
-          avformat_close_input(&s->fmt);
           return std::nullopt;
       }
 
       av_channel_layout_uninit(&outLayout);
       av_channel_layout_uninit(&inLayout);
+
+      // NOW initialize buffers based on actual audio parameters
+      s->initializeBuffers();
 
       size_t index = m_sounds.size();
       m_sounds.push_back(std::move(s));
@@ -209,6 +207,9 @@ void AudioEngine::pause(size_t index) {
 }
 
 void AudioEngine::stop(size_t index) {
+
+    RECORD_FUNC_TO_BACKTRACE("AudioEngine::stop");
+
     std::unique_lock<std::mutex> lock(m_mutex);
     m_playbackState = PlaybackState::Stopped;
     m_isRunning = false;
@@ -236,6 +237,7 @@ auto AudioEngine::getPlaybackTime(size_t i) const
 }
 
 // seek
+
 void AudioEngine::seekTo(double seconds, size_t i) {
     if (i >= m_sounds.size()) return;
     
@@ -262,6 +264,7 @@ void AudioEngine::seekBackward(double sec, size_t i) {
 }
 
 // private methods
+
 void AudioEngine::initAlsa(const std::string& deviceName) {
     int err;
     if ((err = snd_pcm_open(&m_pcmData, deviceName.c_str(), SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
@@ -269,7 +272,6 @@ void AudioEngine::initAlsa(const std::string& deviceName) {
                                std::string(snd_strerror(err)));
     }
     
-    // Try FLOAT_LE first, fall back to S16_LE if not supported
     std::array<snd_pcm_format_t, 3> formatsToTry = {
         SND_PCM_FORMAT_FLOAT_LE,
         SND_PCM_FORMAT_S32_LE,
@@ -296,7 +298,7 @@ void AudioEngine::initAlsa(const std::string& deviceName) {
     
     if (!success) {
         snd_pcm_close(m_pcmData);
-        m_pcmData= nullptr;
+        m_pcmData = nullptr;
         throw std::runtime_error("Cannot set audio parameters with any supported format: " + 
                                std::string(snd_strerror(err)));
     }
@@ -306,13 +308,18 @@ void AudioEngine::shutdownAlsa() {
     if (m_pcmData) {
         snd_pcm_drain(m_pcmData);
         snd_pcm_close(m_pcmData);
-        m_pcmData= nullptr;
+        m_pcmData = nullptr;
     }
 }
 
-// decode
 void AudioEngine::decodeAndPlay() {
-    alignas(16) static thread_local float out[1024 * 2];
+
+    // playback buffer - 512 FRAMES * 2 channels = 1024 SAMPLES
+    constexpr size_t FRAMES_PER_BUFFER = 512;
+    constexpr size_t MAX_CHANNELS = 8; // Support up to 7.1 audio
+    static thread_local std::vector<float> playbackBuffer(FRAMES_PER_BUFFER * MAX_CHANNELS);
+    static thread_local std::vector<i16> playbackBuffer16(FRAMES_PER_BUFFER * MAX_CHANNELS);
+    static thread_local std::vector<i32> playbackBuffer32(FRAMES_PER_BUFFER * MAX_CHANNELS);
 
     for (const auto& sp : m_sounds) {
         auto& s = *sp;
@@ -320,110 +327,132 @@ void AudioEngine::decodeAndPlay() {
         if (s.seekPending.exchange(false)) {
             i64 frame = s.seekTargetFrame.load();
             av_seek_frame(
-                s.fmt, s.streamIndex,
+                s.fmt.get(), s.streamIndex,
                 av_rescale_q(frame, {1, s.sampleRate}, s.stream->time_base),
                 AVSEEK_FLAG_BACKWARD);
 
-            avcodec_flush_buffers(s.dec);
-            s.ring.clear();
+            avcodec_flush_buffers(s.dec.get());
+            s.ring->clear();
             s.cursorFrames.store(frame - s.startSkip);
             s.eof = false;
         }
 
         if (s.eof) continue;
 
-        while (s.ring.available() < 512 && !s.eof)
+        // Decode more data if ring buffer needs more
+        // Check for samples: 512 frames * channels
+        const size_t samplesNeeded = FRAMES_PER_BUFFER * s.channels;
+        while (s.ring->available() < samplesNeeded && s.ring->space() > 0 && !s.eof) {
             decodeStep(s);
+        }
 
-        if (s.ring.available() >= 512) {
-            s.ring.read(out, 512);
-            float vol = m_volume.load();
+        if (s.ring->available() >= samplesNeeded) {
+            // Read samples from ring buffer
+            size_t samplesRead = s.ring->read(playbackBuffer.data(), samplesNeeded);
+            size_t framesRead = samplesRead / s.channels;
             
-            // Convert and apply volume based on device format
-            if (m_pcmFormat == SND_PCM_FORMAT_FLOAT_LE) {
-                for (int i = 0; i < 1024; ++i)
-                    out[i] *= vol;
+            if (framesRead > 0) {
+                float vol = m_volume.load();
                 
-                int r = snd_pcm_writei(m_pcmData, out, 512);
-                if (r == -EPIPE) {
-                    snd_pcm_prepare(m_pcmData);
-                } else if (r < 0) {
-                    snd_pcm_recover(m_pcmData, r, 0);
+                if (m_pcmFormat == SND_PCM_FORMAT_FLOAT_LE) {
+                    for (size_t i = 0; i < samplesRead; ++i)
+                        playbackBuffer[i] *= vol;
+                    
+                    int r = snd_pcm_writei(m_pcmData, playbackBuffer.data(), framesRead);
+                    if (r == -EPIPE) {
+                        snd_pcm_prepare(m_pcmData);
+                    } else if (r < 0) {
+                        snd_pcm_recover(m_pcmData, r, 0);
+                    }
+                } else if (m_pcmFormat == SND_PCM_FORMAT_S16_LE) {
+                    for (size_t i = 0; i < samplesRead; ++i) {
+                        float sample = std::clamp(playbackBuffer[i] * vol, -1.0f, 1.0f);
+                        playbackBuffer16[i] = static_cast<i16>(sample * 32767.0f);
+                    }
+                    
+                    int r = snd_pcm_writei(m_pcmData, playbackBuffer16.data(), framesRead);
+                    if (r == -EPIPE) {
+                        snd_pcm_prepare(m_pcmData);
+                    } else if (r < 0) {
+                        snd_pcm_recover(m_pcmData, r, 0);
+                    }
+                } else if (m_pcmFormat == SND_PCM_FORMAT_S32_LE) {
+                    for (size_t i = 0; i < samplesRead; ++i) {
+                        float sample = std::clamp(playbackBuffer[i] * vol, -1.0f, 1.0f);
+                        playbackBuffer32[i] = static_cast<i32>(sample * 2147483647.0f);
+                    }
+                    
+                    int r = snd_pcm_writei(m_pcmData, playbackBuffer32.data(), framesRead);
+                    if (r == -EPIPE) {
+                        snd_pcm_prepare(m_pcmData);
+                    } else if (r < 0) {
+                        snd_pcm_recover(m_pcmData, r, 0);
+                    }
                 }
-            } else if (m_pcmFormat == SND_PCM_FORMAT_S16_LE) {
-                alignas(16) static thread_local i16 out16[1024 * 2];
-                for (int i = 0; i < 1024; ++i) {
-                    float sample = std::clamp(out[i] * vol, -1.0f, 1.0f);
-                    out16[i] = static_cast<i16>(sample * 32767.0f);
-                }
-                
-                int r = snd_pcm_writei(m_pcmData, out16, 512);
-                if (r == -EPIPE) {
-                    snd_pcm_prepare(m_pcmData);
-                } else if (r < 0) {
-                    snd_pcm_recover(m_pcmData, r, 0);
-                }
-            } else if (m_pcmFormat == SND_PCM_FORMAT_S32_LE) {
-                alignas(16) static thread_local i32 out32[1024 * 2];
-                for (int i = 0; i < 1024; ++i) {
-                    float sample = std::clamp(out[i] * vol, -1.0f, 1.0f);
-                    out32[i] = static_cast<i32>(sample * 2147483647.0f);
-                }
-                
-                int r = snd_pcm_writei(m_pcmData, out32, 512);
-                if (r == -EPIPE) {
-                    snd_pcm_prepare(m_pcmData);
-                } else if (r < 0) {
-                    snd_pcm_recover(m_pcmData, r, 0);
-                }
-            }
 
-            s.cursorFrames += 512;
+                s.cursorFrames += framesRead;
+            }
         }
     }
 }
 
 void AudioEngine::decodeStep(Sound& s) {
+
     AVPacket pkt;
-    AVFrame* frame = av_frame_alloc();
+    AVFramePtr frame(av_frame_alloc());
 
     if (!frame) {
         s.eof = true;
         return;
     }
 
-    if (av_read_frame(s.fmt, &pkt) < 0) {
+    if (av_read_frame(s.fmt.get(), &pkt) < 0) {
         s.eof = true;
-        av_frame_free(&frame);
         return;
     }
 
     if (pkt.stream_index == s.streamIndex) {
-        if (avcodec_send_packet(s.dec, &pkt) >= 0) {
-            while (avcodec_receive_frame(s.dec, frame) == 0) {
-                int outSamples = swr_get_out_samples(s.swr, frame->nb_samples);
+        if (avcodec_send_packet(s.dec.get(), &pkt) >= 0) {
+            while (avcodec_receive_frame(s.dec.get(), frame.get()) == 0) {
+                // outFrames is the number of FRAMES we'll get after resampling
+                int outFrames = swr_get_out_samples(s.swr.get(), frame->nb_samples);
 
-                if (outSamples > 0) {
-                    std::vector<float> tmp(outSamples * s.channels);
+                if (outFrames > 0) {
+                    // Calculate total samples needed (frames * channels)
+                    size_t totalSamples = outFrames * s.channels;
+                    
+                    // Check if ring buffer has space
+                    if (s.ring->space() < totalSamples) {
+                        break; // Ring buffer full, stop decoding
+                    }
+                    
+                    // Ensure decode buffer is large enough (dynamically resize if needed)
+                    if (s.decodeBuffer.size() < totalSamples) {
+                        s.decodeBuffer.resize(totalSamples);
+                    }
+                    
                     ui8* outPtrs[] = {
-                        reinterpret_cast<ui8*>(tmp.data())
+                        reinterpret_cast<ui8*>(s.decodeBuffer.data())
                     };
 
-                    int n = swr_convert(
-                        s.swr,
-                        outPtrs, outSamples,
+                    // swr_convert returns number of FRAMES converted
+                    int framesConverted = swr_convert(
+                        s.swr.get(),
+                        outPtrs, outFrames,
                         (const uint8_t**)frame->data,
                         frame->nb_samples);
 
-                    if (n > 0)
-                        s.ring.write(tmp.data(), n);
+                    if (framesConverted > 0) {
+                        // Write SAMPLES to ring buffer (frames * channels)
+                        size_t samplesToWrite = framesConverted * s.channels;
+                        s.ring->write(s.decodeBuffer.data(), samplesToWrite);
+                    }
                 }
             }
         }
     }
 
     av_packet_unref(&pkt);
-    av_frame_free(&frame);
 }
 
 }

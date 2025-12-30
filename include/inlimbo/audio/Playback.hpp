@@ -7,7 +7,6 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include <stdexcept>
 #include <chrono>
 #include <mutex>
 #include <optional>
@@ -72,11 +71,13 @@ public:
     INLIMBO_API_CPP void seekBackward(double seconds, size_t i = 0);
 
     INLIMBO_API_CPP void setVolume(float v, size_t index = 0) {
+        if (index >= m_sounds.size()) return;
         m_volume.store(std::clamp(v, 0.0f, 1.5f));
     }
 
     INLIMBO_API_CPP [[nodiscard]] auto getVolume(size_t index = 0) const -> float {
-        return m_volume.load();
+        if (index < m_sounds.size()) return m_volume.load();
+        return 0.0f;
     }
 
     INLIMBO_API_CPP [[nodiscard]] auto getSoundCount() const -> size_t {
@@ -97,9 +98,9 @@ public:
     }
 
 private:
-    snd_pcm_t* m_pcmData= nullptr;
+    snd_pcm_t* m_pcmData = nullptr;
     snd_pcm_format_t m_pcmFormat = SND_PCM_FORMAT_FLOAT_LE;
-    static constexpr int m_rate = 48000;
+    static constexpr int m_rate = DEFAULT_SOUND_SAMPLE_RATE;
     std::string m_currentDevice = "default";
 
     Sounds_ptr m_sounds;

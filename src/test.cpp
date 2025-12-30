@@ -213,6 +213,7 @@ auto main(int argc, char* argv[]) -> int
       }
 
       const auto songIdx = *engine.loadSound(exampleFilePath);
+      LOG_INFO("Loaded example song into playback engine with index: {}", songIdx);
       engine.setVolume(normalizedVolume);
 
       engine.restart();

@@ -1,47 +1,75 @@
 #pragma once
 
 #include <cstddef>
+#include <mutex>
 #include <vector>
 
-struct RingBuffer {
+template<typename T>
+class RingBuffer {
+private:
+    std::vector<T> m_buffer;
+    size_t m_capacity;
+    size_t m_readPos{0};
+    size_t m_writePos{};
+    size_t m_size{0};
+    mutable std::mutex m_mutex;
 
-    std::vector<float> data;
-    size_t r = 0, w = 0;
-    size_t size = 0;
+public:
+    explicit RingBuffer(size_t capacity) 
+        : m_buffer(capacity)
+        , m_capacity(capacity)
+        {}
 
-    explicit RingBuffer(size_t frames = 0) {
-        resize(frames);
-    }
-
-    void resize(size_t frames) {
-        data.assign(frames * 2, 0.0f); // stereo float
-        size = frames;
-        r = w = 0;
-    }
-
-    [[nodiscard]] auto available() const -> size_t {
-        return (w >= r) ? (w - r) : (size - (r - w));
-    }
-
-    [[nodiscard]] auto free() const -> size_t {
-        return size - available() - 1;
-    }
-
-    void write(const float* in, size_t frames) {
-        for (size_t i = 0; i < frames * 2; ++i) {
-            data[(w * 2 + i) % (size * 2)] = in[i];
+    // Returns number of elements actually written
+    auto write(const T* data, size_t count) -> size_t {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        
+        size_t space = m_capacity - m_size;
+        size_t toWrite = std::min(count, space);
+        
+        for (size_t i = 0; i < toWrite; ++i) {
+            m_buffer[m_writePos] = data[i];
+            m_writePos = (m_writePos + 1) % m_capacity;
         }
-        w = (w + frames) % size;
+        
+        m_size += toWrite;
+        return toWrite;
     }
 
-    void read(float* out, size_t frames) {
-        for (size_t i = 0; i < frames * 2; ++i) {
-            out[i] = data[(r * 2 + i) % (size * 2)];
+    // Returns number of elements actually read
+    auto read(T* data, size_t count) -> size_t {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        
+        size_t toRead = std::min(count, m_size);
+        
+        for (size_t i = 0; i < toRead; ++i) {
+            data[i] = m_buffer[m_readPos];
+            m_readPos = (m_readPos + 1) % m_capacity;
         }
-        r = (r + frames) % size;
+        
+        m_size -= toRead;
+        return toRead;
+    }
+
+    auto capacity() const -> size_t {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        return m_capacity;
+    }
+
+    auto available() const -> size_t {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        return m_size;
+    }
+
+    auto space() const -> size_t {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        return m_capacity - m_size;
     }
 
     void clear() {
-        r = w = 0;
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_readPos = 0;
+        m_writePos = 0;
+        m_size = 0;
     }
 };
