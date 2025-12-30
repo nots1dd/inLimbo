@@ -8,6 +8,22 @@
 
 namespace util {
 
+
+// ---------------------------------------------------------------------------
+// Generic Time utility
+// ---------------------------------------------------------------------------
+inline auto timestamp_now() -> std::string {
+    using namespace std::chrono;
+    auto now = system_clock::now();
+    auto t = system_clock::to_time_t(now);
+    auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
+
+    std::ostringstream oss;
+    oss << std::put_time(std::localtime(&t), "%F %T")
+        << "." << std::setw(3) << std::setfill('0') << ms.count();
+    return oss.str();
+}
+
 /// High-resolution, type-safe timer for benchmarking or profiling.
 ///
 /// Usage examples:
@@ -52,6 +68,11 @@ public:
     void reset() noexcept {
         running_ = true;
         start_time_ = clock::now();
+    }
+
+    void restart() noexcept {
+        reset();
+        start();
     }
 
     /// Elapsed duration since start, or until stopped

@@ -68,6 +68,7 @@ target_include_directories(inlimbo-core
         include/inlimbo
         ${TAGLIB_INCLUDE_DIRS}
         ${EXTERNAL_DIR}/tomlplusplus
+        ${EXTERNAL_DIR}/cxxopts/include
 )
 
 target_link_libraries(inlimbo-core

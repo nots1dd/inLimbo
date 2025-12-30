@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utils/Env-Vars.hpp"
+#include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
@@ -35,7 +36,7 @@ enum class LogMode {
 
 inline auto parse_log_level(const std::string& level_str) -> spdlog::level::level_enum {
     std::string s = level_str;
-    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+    std::ranges::transform(s, s.begin(), ::tolower);
     if (s == "trace") return spdlog::level::trace;
     if (s == "debug") return spdlog::level::debug;
     if (s == "info") return spdlog::level::info;
@@ -51,7 +52,7 @@ public:
     // Access singleton logger, lazy-init
     static auto get() -> std::shared_ptr<spdlog::logger>& {
         static std::once_flag init_flag;
-        std::call_once(init_flag, []() {
+        std::call_once(init_flag, []() -> void {
             init_from_env(); // automatically setup from env vars
         });
         return get_instance();

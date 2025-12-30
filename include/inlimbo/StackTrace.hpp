@@ -1,11 +1,11 @@
 #pragma once
 
 #include "utils/Env-Vars.hpp"
+#include "utils/timer/Timer.hpp"
 #include <string>
 #include <utility>
 #include <vector>
 #include <mutex>
-#include <chrono>
 #include <sstream>
 #include <iomanip>
 #include <iostream>
@@ -17,15 +17,16 @@ namespace core {
 
 // Cached check for INLIMBO_STACK_TRACE_DUMP
 inline auto is_stack_trace_enabled() -> bool {
-    static const bool enabled = [] {
-        if (const char* val = std::getenv(INLIMBO_STACK_TRACE_DUMP_ENV)) {
-            std::string s = val;
-            for (auto& c : s) c = static_cast<char>(std::tolower(c));
-            return (s == "1" || s == "true" || s == "yes" || s == "on");
-        }
-        return false;
-    }();
-    return enabled;
+  static const bool enabled = []() -> bool {
+      if (const char* val = std::getenv(INLIMBO_STACK_TRACE_DUMP_ENV)) {
+          std::string s = val;
+          for (auto& c : s) c = static_cast<char>(std::tolower(c));
+          return (s == "1" || s == "true" || s == "yes" || s == "on");
+      }
+      return false;
+  }();
+
+  return enabled;
 }
 
 struct StackFrame {
@@ -105,21 +106,6 @@ private:
 };
 
 // ---------------------------------------------------------------------------
-// Time utility
-// ---------------------------------------------------------------------------
-inline auto timestamp_now() -> std::string {
-    using namespace std::chrono;
-    auto now = system_clock::now();
-    auto t = system_clock::to_time_t(now);
-    auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
-
-    std::ostringstream oss;
-    oss << std::put_time(std::localtime(&t), "%F %T")
-        << "." << std::setw(3) << std::setfill('0') << ms.count();
-    return oss.str();
-}
-
-// ---------------------------------------------------------------------------
 // Event type
 // ---------------------------------------------------------------------------
 template <typename Payload = std::string>
@@ -130,7 +116,7 @@ struct Event {
     StackTrace trace;
 
     Event(std::string cat, Payload  payload)
-        : timestamp(timestamp_now()),
+        : timestamp(util::timestamp_now()),
           category(std::move(cat)),
           data(std::move(payload)),
           trace(BacktraceCollector::capture(2)) {}
