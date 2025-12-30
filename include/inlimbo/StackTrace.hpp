@@ -7,37 +7,79 @@
 #include <vector>
 #include <mutex>
 #include <sstream>
-#include <iomanip>
 #include <iostream>
+#include <cstdlib>
 #include <backtrace.h>
 #include <backtrace-supported.h>
 #include <cxxabi.h>
+#include <unistd.h>
 
 namespace core {
 
-// Cached check for INLIMBO_STACK_TRACE_DUMP
 inline auto is_stack_trace_enabled() -> bool {
-  static const bool enabled = []() -> bool {
-      if (const char* val = std::getenv(INLIMBO_STACK_TRACE_DUMP_ENV)) {
-          std::string s = val;
-          for (auto& c : s) c = static_cast<char>(std::tolower(c));
-          return (s == "1" || s == "true" || s == "yes" || s == "on");
-      }
-      return false;
-  }();
+    static const bool enabled = []() -> bool {
+        if (const char* v = std::getenv(INLIMBO_STACK_TRACE_DUMP_ENV)) {
+            std::string s(v);
+            for (auto& c : s) c = static_cast<char>(std::tolower(c));
+            return s == "1" || s == "true" || s == "yes" || s == "on";
+        }
+        return false;
+    }();
+    return enabled;
+}
 
-  return enabled;
+inline auto use_color() -> bool {
+    return isatty(fileno(stdout));
+}
+
+inline auto color(const char* c, const std::string& s) -> std::string {
+    if (!use_color()) return s;
+    return std::string(c) + s + "\033[0m";
+}
+
+inline auto bold(const std::string& s)   { return color("\033[1m", s); }
+inline auto cyan(const std::string& s)   { return color("\033[36m", s); }
+inline auto green(const std::string& s)  { return color("\033[32m", s); }
+inline auto red(const std::string& s)    { return color("\033[31m", s); }
+inline auto dim(const std::string& s)    { return color("\033[2m", s); }
+inline auto yellow(const std::string& s) { return color("\033[33m", s); }
+
+inline auto simplify_symbol(std::string s) -> std::string {
+    auto cut = [&](const std::string& tok) -> void {
+        if (auto p = s.find(tok); p != std::string::npos)
+            s.erase(p);
+    };
+
+    cut("std::__cxx11::");
+    cut("std::");
+    cut("core::");
+    cut("inline ");
+    cut("static ");
+
+    if (auto p = s.find('<'); p != std::string::npos)
+        s.erase(p);
+
+    return s;
 }
 
 struct StackFrame {
     std::string function;
-    std::string filename;
-    int lineno = 0;
+    std::string file;
+    int line = 0;
 
-    [[nodiscard]] auto to_string() const -> std::string {
+    [[nodiscard]] auto to_string(size_t depth) const -> std::string {
         std::ostringstream oss;
-        oss << "↳ " << function
-            << "  [" << filename << ":" << lineno << "]";
+        oss << "  ";
+        for (size_t i = 0; i < depth; ++i)
+            oss << "│ ";
+
+        oss << cyan("→ ") << cyan(function) << "\n";
+        oss << "  ";
+        for (size_t i = 0; i < depth; ++i)
+            oss << "│ ";
+
+        oss << dim("  at ") << dim(file)
+            << yellow(":" + std::to_string(line)) << "\n";
         return oss.str();
     }
 };
@@ -48,184 +90,150 @@ struct StackTrace {
     [[nodiscard]] auto to_string() const -> std::string {
         std::ostringstream oss;
         for (size_t i = 0; i < frames.size(); ++i)
-            oss << "    #" << std::setw(2) << i << "  "
-                << frames[i].to_string() << "\n";
+            oss << frames[i].to_string(i);
         return oss.str();
     }
 };
 
 class BacktraceCollector {
 public:
-    static auto capture(int skip = 0, int max_frames = 64) -> StackTrace {
+    static auto capture(int skip = 0) -> StackTrace {
         StackTrace trace;
         static backtrace_state* state =
-            backtrace_create_state(nullptr, 0, error_callback, nullptr);
+            backtrace_create_state(nullptr, 0, error_cb, nullptr);
 
-        if (!state) {
-            trace.frames.push_back({"<no backtrace>", "<unknown>", 0});
-            return trace;
-        }
+        if (!state) return trace;
 
-        backtrace_full(state, skip + 1, full_callback, error_callback, &trace);
-
-        if ((int)trace.frames.size() > max_frames)
-            trace.frames.resize(max_frames);
-
+        backtrace_full(state, skip + 1, frame_cb, error_cb, &trace);
         return trace;
     }
 
 private:
-    static void error_callback(void*, const char* msg, int errnum) {
-        std::cerr << "libbacktrace error: "
-                  << (msg ? msg : "(null)") << " code=" << errnum << "\n";
-    }
+    static void error_cb(void*, const char*, int) {}
 
-    static auto full_callback(void* data, uintptr_t /*pc*/,
-                              const char* filename, int lineno,
-                              const char* function) -> int {
+    static auto frame_cb(void* data, uintptr_t,
+                         const char* file, int line,
+                         const char* func) -> int {
         auto* trace = static_cast<StackTrace*>(data);
         StackFrame f;
-        f.filename = filename ? filename : "<unknown>";
-        f.function = demangle(function);
-        f.lineno = lineno;
-        trace->frames.push_back(std::move(f));
+        f.file = file ? file : "<unknown>";
+        f.line = line;
+        f.function = simplify_symbol(demangle(func));
+        trace->frames.emplace_back(std::move(f));
         return 0;
     }
 
     static auto demangle(const char* name) -> std::string {
-        if (!name)
-            return "<unknown>";
-        int status = 0;
+        if (!name) return "<unknown>";
+        int st = 0;
         size_t len = 0;
-        char* demangled = abi::__cxa_demangle(name, nullptr, &len, &status);
-        std::string result =
-            (status == 0 && demangled) ? demangled : name;
-        free(demangled);
-        return result;
+        char* out = abi::__cxa_demangle(name, nullptr, &len, &st);
+        std::string r = (st == 0 && out) ? out : name;
+        std::free(out);
+        return r;
     }
 };
 
-// ---------------------------------------------------------------------------
-// Event type
-// ---------------------------------------------------------------------------
 template <typename Payload = std::string>
 struct Event {
-    std::string timestamp;
-    std::string category;
+    std::string ts;
+    std::string cat;
     Payload data;
     StackTrace trace;
 
-    Event(std::string cat, Payload  payload)
-        : timestamp(util::timestamp_now()),
-          category(std::move(cat)),
-          data(std::move(payload)),
-          trace(BacktraceCollector::capture(2)) {}
+    Event(std::string c, Payload p)
+        : ts(util::timestamp_now()),
+          cat(std::move(c)),
+          data(std::move(p)),
+          trace(BacktraceCollector::capture(3)) {}
 
-    [[nodiscard]] auto summary() const -> std::string {
+    [[nodiscard]] auto summary(size_t index) const -> std::string {
+        constexpr size_t width = 60;
+
+        auto pad = [](std::string s) -> std::string {
+            if (s.size() < width - 2)
+                s += std::string(width - 2 - s.size(), ' ');
+            return s;
+        };
+
         std::ostringstream oss;
-        oss << "┌───────────────────────────────────────────────┐\n"
-            << "│ [" << timestamp << "] " << category << "\n"
-            << "│ " << data << "\n"
-            << "└───────────────────────────────────────────────┘\n";
-        oss << "    Stack Trace:\n" << trace.to_string();
+
+        std::string line1 = bold(ts) + "  " + cat;
+        std::string line2 = data;
+
+        oss << "┌" << std::string(width - 2, '-') << "┐\n";
+        oss << "│ " << "\n";
+        oss << "│ " << "#" << index << " " << pad(line1) << "\n";
+        oss << "│ " << pad(line2) << "\n";
+        oss << "│ " << "\n";
+        oss << "└" << std::string(width - 2, '-') << "┘\n";
+
+        oss << trace.to_string();
         return oss.str();
     }
 };
 
-// ---------------------------------------------------------------------------
-// Event log
-// ---------------------------------------------------------------------------
 template <typename Payload = std::string>
 class EventLog {
 public:
-    using event_type = Event<Payload>;
-
     static auto instance() -> EventLog& {
-        static EventLog<Payload> inst;
+        static EventLog inst;
         return inst;
     }
 
-    void record(const std::string& category, const Payload& payload) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        events_.emplace_back(category, payload);
-    }
-
-    void clear() {
-        std::lock_guard<std::mutex> lock(mutex_);
-        events_.clear();
-    }
-
-    auto get_all() const -> std::vector<event_type> {
-        std::lock_guard<std::mutex> lock(mutex_);
-        return events_;
+    void record(const std::string& cat, const Payload& p) {
+        std::lock_guard<std::mutex> l(m_);
+        events_.emplace_back(cat, p);
     }
 
     void dump_to_stdout() const {
-        std::lock_guard<std::mutex> lock(mutex_);
-        for (size_t i = 0; i < events_.size(); ++i) {
-            const auto& ev = events_[i];
-            std::cout << "\nEvent #" << i + 1 << "\n";
-            std::cout << ev.summary();
+        std::lock_guard<std::mutex> l(m_);
+        size_t index = 0;
+        for (const auto& e : events_) {
+            std::cout << "\n" << e.summary(index++);
         }
     }
 
 private:
-    EventLog() = default;
-    mutable std::mutex mutex_;
-    std::vector<event_type> events_;
+    mutable std::mutex m_;
+    std::vector<Event<Payload>> events_;
 };
 
 class TraceScope {
 public:
-    explicit TraceScope(std::string category,
-                        std::string details = "")
-        : category_(std::move(category)),
-          details_(demangle_pretty(details)) {
-        EventLog<std::string>::instance().record(category_,
-                                                 "Entered " + details_);
+    TraceScope(std::string cat, std::string fn)
+        : cat_(std::move(cat)), fn_(simplify_symbol(fn)) {
+        EventLog<std::string>::instance()
+            .record(cat_, green("enter ") + fn_);
     }
 
     ~TraceScope() {
-        EventLog<std::string>::instance().record(category_,
-                                                 "Exited " + details_);
+        EventLog<std::string>::instance()
+            .record(cat_, red("exit  ") + fn_);
     }
 
 private:
-    std::string category_;
-    std::string details_;
-
-    static auto demangle_pretty(const std::string& raw) -> std::string {
-#if defined(__GNUC__) || defined(__clang__)
-        // __PRETTY_FUNCTION__ already gives a demangled signature,
-        // but we can clean it up to remove extra "static", "inline", etc. if needed.
-        return raw;
-#elif defined(_MSC_VER)
-        return raw;  // __FUNCSIG__ is already human-readable
-#else
-        return raw;
-#endif
-    }
+    std::string cat_;
+    std::string fn_;
 };
 
 } // namespace core
 
 #if defined(__GNUC__) || defined(__clang__)
 #define RECORD_FUNC_TO_BACKTRACE(cat) \
-    core::TraceScope trace_scope_instance(cat, __PRETTY_FUNCTION__)
+    core::TraceScope trace_scope(cat, __PRETTY_FUNCTION__)
 #elif defined(_MSC_VER)
 #define RECORD_FUNC_TO_BACKTRACE(cat) \
-    core::TraceScope trace_scope_instance(cat, __FUNCSIG__)
+    core::TraceScope trace_scope(cat, __FUNCSIG__)
 #else
 #define RECORD_FUNC_TO_BACKTRACE(cat) \
-    core::TraceScope trace_scope_instance(cat, __FUNCTION__)
+    core::TraceScope trace_scope(cat, __FUNCTION__)
 #endif
 
 #define DUMP_TRACE()                                                      \
     do {                                                                  \
-        if (core::is_stack_trace_enabled()) {                     \
+        if (core::is_stack_trace_enabled())                               \
             core::EventLog<std::string>::instance().dump_to_stdout();     \
-        } else {                                                          \
-            std::cout << "[Trace disabled] Set INLIMBO_STACK_TRACE_DUMP=1 "\
-                         "to enable stack trace logging.\n";              \
-        }                                                                 \
+        else                                                              \
+            std::cout << "[trace disabled] set " << INLIMBO_STACK_TRACE_DUMP_ENV << "=1 to dump.\n";                            \
     } while (0)
