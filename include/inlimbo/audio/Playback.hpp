@@ -1,343 +1,138 @@
 #pragma once
 
 #include "Config.hpp"
-#include "StackTrace.hpp"
-#define MINIAUDIO_IMPLEMENTATION
-#include "miniaudio.h"
+#include "Sound.hpp"
 
-#include <string>
+#include <thread>
 #include <vector>
-#include <memory>
+#include <string>
+#include <algorithm>
 #include <stdexcept>
-#include "Logger.hpp"
+#include <chrono>
+#include <mutex>
+#include <optional>
+
+extern "C" {
+#include <alsa/asoundlib.h>
+}
 
 namespace audio {
 
-struct DeviceInfo {
+struct Device {
     std::string name;
-    ma_device_id id;
+    std::string description;
+    int cardIndex = -1;
+    int deviceIndex = -1;
+    bool isDefault = false;
+};
+
+using Devices = std::vector<Device>;
+
+enum class PlaybackState : uint8_t {
+    Stopped,
+    Playing,
+    Paused
 };
 
 class AudioEngine {
-
-private:
-    ma_context context_{};
-    ma_resource_manager resourceManager_{};
-
-    // Store objects as unique_ptr to ensure stable addresses (miniaudio structs are not movable!)
-    std::vector<std::unique_ptr<ma_engine>> engines_;
-    std::vector<std::unique_ptr<ma_device>> devices_;
-    std::vector<std::unique_ptr<ma_sound>>  sounds_;
-
 public:
     AudioEngine() {
-        LOG_INFO("Initializing miniaudio context...");
-        ma_context_config config = ma_context_config_init();
-        if (ma_context_init(nullptr, 0, &config, &context_) != MA_SUCCESS) {
-            LOG_CRITICAL("Failed to initialize miniaudio context");
-            throw std::runtime_error("Failed to initialize miniaudio context");
-        }
-
-        ma_resource_manager_config rmConfig = ma_resource_manager_config_init();
-        rmConfig.decodedFormat     = ma_format_f32;
-        rmConfig.decodedSampleRate = 48000;
-
-        LOG_INFO("Initializing resource manager (48000 Hz, float32)...");
-        if (ma_resource_manager_init(&rmConfig, &resourceManager_) != MA_SUCCESS) {
-            LOG_CRITICAL("Failed to initialize resource manager");
-            throw std::runtime_error("Failed to initialize resource manager");
-        }
-
-        LOG_DEBUG("AudioEngine successfully initialized.");
+        av_log_set_level(AV_LOG_ERROR);
     }
 
     ~AudioEngine() noexcept {
-        RECORD_FUNC_TO_BACKTRACE("AudioEngine::~AudioEngine");
-        try {
-            stopInteractiveLoop();
-            cleanup();
-            ma_context_uninit(&context_);
-            ma_resource_manager_uninit(&resourceManager_);
-        } catch (const std::exception& e) {
-            LOG_ERROR("Exception during AudioEngine destruction: {}", e.what());
+        stop();
+        cleanup();
+        shutdownAlsa();
+    }
+
+    // Properly enumerate ALSA devices
+    INLIMBO_API_CPP auto enumeratePlaybackDevices() -> Devices;
+    INLIMBO_API_CPP void initEngineForDevice(const std::string& deviceName = "default");
+
+    INLIMBO_API_CPP auto loadSound(const std::string& path) -> std::optional<size_t>;
+
+    INLIMBO_API_CPP void play(size_t index = 0);
+    INLIMBO_API_CPP void pause(size_t index = 0);
+    INLIMBO_API_CPP void stop(size_t index = 0);
+
+    INLIMBO_API_CPP void restart(size_t i = 0) {
+        seekTo(0.0, i);
+        play(i);
+    }
+
+    INLIMBO_API_CPP [[nodiscard]] auto isPlaying(size_t index = 0) const -> bool {
+        return index < m_sounds.size() && m_playbackState == PlaybackState::Playing;
+    }
+
+    INLIMBO_API_CPP auto getPlaybackTime(size_t i = 0) const -> std::optional<std::pair<double, double>>;
+
+    INLIMBO_API_CPP void seekTo(double seconds, size_t i = 0);
+    INLIMBO_API_CPP void seekForward(double seconds, size_t i = 0);
+    INLIMBO_API_CPP void seekBackward(double seconds, size_t i = 0);
+
+    INLIMBO_API_CPP void setVolume(float v, size_t index = 0) {
+        m_volume.store(std::clamp(v, 0.0f, 1.5f));
+    }
+
+    INLIMBO_API_CPP [[nodiscard]] auto getVolume(size_t index = 0) const -> float {
+        return m_volume.load();
+    }
+
+    INLIMBO_API_CPP [[nodiscard]] auto getSoundCount() const -> size_t {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        return m_sounds.size();
+    }
+
+    INLIMBO_API_CPP [[nodiscard]] auto getCurrentDevice() const -> std::string {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        return m_currentDevice;
+    }
+
+    INLIMBO_API_CPP void unloadSound(size_t index) {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        if (index < m_sounds.size()) {
+            m_sounds.erase(m_sounds.begin() + index);
         }
-    }
-
-    [[nodiscard]] auto enumeratePlaybackDevices() -> std::vector<DeviceInfo> {
-        RECORD_FUNC_TO_BACKTRACE("AudioEngine::enumeratePlaybackDevices");
-        LOG_TRACE("Enumerating playback devices...");
-        ma_device_info* pPlaybackDeviceInfos = nullptr;
-        ma_uint32 playbackDeviceCount = 0;
-
-        if (ma_context_get_devices(const_cast<ma_context*>(&context_),
-                                   &pPlaybackDeviceInfos, &playbackDeviceCount,
-                                   nullptr, nullptr) != MA_SUCCESS) {
-            LOG_ERROR("Failed to get playback devices.");
-            throw std::runtime_error("Failed to get playback devices");
-        }
-
-        std::vector<DeviceInfo> list;
-        for (ma_uint32 i = 0; i < playbackDeviceCount; ++i) {
-            list.push_back({pPlaybackDeviceInfos[i].name, pPlaybackDeviceInfos[i].id});
-            LOG_DEBUG("Found device: {}", pPlaybackDeviceInfos[i].name);
-        }
-
-        LOG_INFO("Found {} playback devices.", list.size());
-        return list;
-    }
-
-    void initEngineForDevice(const ma_device_id* deviceId) {
-        RECORD_FUNC_TO_BACKTRACE("AudioEngine::initEngineForDevice");
-        LOG_INFO("Initializing playback device...");
-
-        ASSERT_MSG(deviceId != nullptr, "initEngineForDevice called with nullptr deviceId");
-
-        auto device = std::make_unique<ma_device>();
-        auto engine = std::make_unique<ma_engine>();
-
-        ma_device_config deviceConfig = ma_device_config_init(ma_device_type_playback);
-        deviceConfig.playback.pDeviceID = deviceId;
-        deviceConfig.playback.format    = resourceManager_.config.decodedFormat;
-        deviceConfig.playback.channels  = 0;
-        deviceConfig.sampleRate         = resourceManager_.config.decodedSampleRate;
-        deviceConfig.dataCallback       = dataCallback;
-        deviceConfig.pUserData          = nullptr;
-
-        ma_result result = ma_device_init(&context_, &deviceConfig, device.get());
-        ASSERT_MSG(result == MA_SUCCESS, "ma_device_init failed");
-        if (result != MA_SUCCESS) {
-            LOG_CRITICAL("Failed to initialize playback device.");
-            throw std::runtime_error("Failed to initialize playback device");
-        }
-
-        ma_engine_config engineConfig = ma_engine_config_init();
-        engineConfig.pDevice          = device.get();
-        engineConfig.pResourceManager = &resourceManager_;
-        engineConfig.noAutoStart      = MA_TRUE;
-
-        result = ma_engine_init(&engineConfig, engine.get());
-        ASSERT_MSG(result == MA_SUCCESS, "ma_engine_init failed");
-        if (result != MA_SUCCESS) {
-            LOG_ERROR("Failed to initialize engine for device.");
-            ma_device_uninit(device.get());
-            throw std::runtime_error("Failed to initialize engine for device");
-        }
-
-        device->pUserData = engine.get();
-        ASSERT_MSG(device->pUserData == engine.get(), "pUserData pointer assignment failed!");
-
-        result = ma_engine_start(engine.get());
-        ASSERT_MSG(result == MA_SUCCESS, "ma_engine_start failed");
-        if (result != MA_SUCCESS) {
-            LOG_ERROR("Failed to start audio engine.");
-            ma_engine_uninit(engine.get());
-            ma_device_uninit(device.get());
-            throw std::runtime_error("Failed to start engine");
-        }
-
-        LOG_INFO("Playback engine started successfully.");
-
-        devices_.push_back(std::move(device));
-        engines_.push_back(std::move(engine));
-
-        ASSERT_MSG(devices_.size() == engines_.size(), "Device/Engine arrays should match 1:1");
-        ASSERT_MSG(devices_.back()->pUserData != nullptr, "Device pUserData should not be null after init");
-    }
-
-    void loadSound(const std::string& filepath, size_t engineIndex = 0) {
-        RECORD_FUNC_TO_BACKTRACE("AudioEngine::loadSound");
-        ASSERT_MSG(!filepath.empty(), "Empty filepath passed to loadSound()");
-        ASSERT_MSG(engineIndex < engines_.size(), "Engine index out of range before loadSound");
-
-        LOG_INFO("Loading sound: {}", filepath);
-
-        auto sound = std::make_unique<ma_sound>();
-        ma_result result = ma_sound_init_from_file(
-            engines_[engineIndex].get(), filepath.c_str(),
-            MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE |
-            MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC |
-            MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_STREAM,
-            nullptr, nullptr, sound.get());
-
-        ASSERT_MSG(result == MA_SUCCESS, "ma_sound_init_from_file failed");
-        if (result != MA_SUCCESS) {
-            LOG_ERROR("Failed to load sound: {}", filepath);
-            throw std::runtime_error("Failed to load sound: " + filepath);
-        }
-
-        LOG_DEBUG("Sound loaded successfully: {}", filepath);
-        sounds_.push_back(std::move(sound));
-    }
-
-    // --- Playback Controls ---
-
-    void play(size_t soundIndex = 0) {
-        RECORD_FUNC_TO_BACKTRACE("AudioEngine::play");
-        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in play()");
-        LOG_INFO("Playing sound index {}", soundIndex);
-        ma_sound_start(sounds_[soundIndex].get());
-    }
-
-    void pause(size_t soundIndex = 0) {
-        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in pause()");
-        LOG_INFO("Pausing sound index {}", soundIndex);
-        ma_sound_stop(sounds_[soundIndex].get());
-    }
-
-    void restart(size_t soundIndex = 0) {
-        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in restart()");
-        LOG_INFO("Restarting sound index {}", soundIndex);
-        ma_sound_seek_to_pcm_frame(sounds_[soundIndex].get(), 0);
-        ma_sound_start(sounds_[soundIndex].get());
-    }
-
-    [[nodiscard]] auto getPlaybackTime(size_t soundIndex = 0) const -> std::pair<double, double> {
-        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in getPlaybackTime()");
-        ma_uint64 cursor{}, total{};
-        ma_sound_get_cursor_in_pcm_frames(sounds_[soundIndex].get(), &cursor);
-        ma_sound_get_length_in_pcm_frames(sounds_[soundIndex].get(), &total);
-
-        auto sampleRate = scast<double>(ma_engine_get_sample_rate(engines_.front().get()));
-        return { cursor / sampleRate, total / sampleRate };
-    }
-    
-    void seekTo(double seconds, size_t soundIndex = 0) {
-        RECORD_FUNC_TO_BACKTRACE("AudioEngine::seekTo");
-        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in seekTo()");
-        
-        ma_uint64 frame = secondsToFrames(seconds);
-
-        ma_uint64 totalFrames{};
-        ma_sound_get_length_in_pcm_frames(sounds_[soundIndex].get(), &totalFrames);
-        if (frame > totalFrames) frame = totalFrames;
-
-        ma_sound_seek_to_pcm_frame(sounds_[soundIndex].get(), frame);
-        LOG_INFO("Seeked to {:.2f} sec (frame {} of {})", seconds, frame, totalFrames);
-    }
-
-    void seekForward(double seconds, size_t soundIndex = 0) {
-        RECORD_FUNC_TO_BACKTRACE("AudioEngine::seekForward");
-        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in seekForward()");
-
-        ma_uint64 offsetFrames = secondsToFrames(seconds);
-
-        ma_uint64 cursor{}, totalFrames{};
-        ma_sound_get_cursor_in_pcm_frames(sounds_[soundIndex].get(), &cursor);
-        ma_sound_get_length_in_pcm_frames(sounds_[soundIndex].get(), &totalFrames);
-
-        ma_uint64 newFrame = std::min(cursor + offsetFrames, totalFrames);
-        ma_sound_seek_to_pcm_frame(sounds_[soundIndex].get(), newFrame);
-
-        LOG_INFO("Seeked forward {:.2f} sec → frame {}/{}", seconds, newFrame, totalFrames);
-    }
-
-    void seekBackward(double seconds, size_t soundIndex = 0) {
-        RECORD_FUNC_TO_BACKTRACE("AudioEngine::seekBackward");
-        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in seekBackward()");
-
-        ma_uint64 offsetFrames = secondsToFrames(seconds);
-
-        ma_uint64 cursor{};
-        ma_sound_get_cursor_in_pcm_frames(sounds_[soundIndex].get(), &cursor);
-
-        ma_uint64 newFrame = (cursor > offsetFrames) ? (cursor - offsetFrames) : 0;
-        ma_sound_seek_to_pcm_frame(sounds_[soundIndex].get(), newFrame);
-
-        LOG_INFO("Seeked backward {:.2f} sec → frame {}", seconds, newFrame);
-    }
-
-    void setVolume(float volume, size_t soundIndex = 0) {
-        RECORD_FUNC_TO_BACKTRACE("AudioEngine::setVolume");
-        ASSERT_MSG(soundIndex < sounds_.size(), "Invalid sound index in setVolume()");
-        ASSERT_MSG(volume >= 0.0f && volume <= 1.5f, "Volume out of safe range (0.0 - 1.5)");
-        LOG_INFO("Setting volume of sound {} to {:.2f}", soundIndex, volume);
-        ma_sound_set_volume(sounds_[soundIndex].get(), volume);
-    }
-
-    void printDeviceInfo(size_t deviceIndex = 0) const {
-        RECORD_FUNC_TO_BACKTRACE("AudioEngine::printDeviceInfo");
-        ASSERT_MSG(deviceIndex < devices_.size(), "Invalid device index in printDeviceInfo()");
-        const auto& dev = *devices_[deviceIndex];
-        LOG_INFO("Device Info -> Name: {}, Channels: {}, SampleRate: {}",
-                 dev.playback.name, dev.playback.channels, dev.sampleRate);
-    }
-
-    void cleanup() {
-        RECORD_FUNC_TO_BACKTRACE("AudioEngine::cleanup");
-        LOG_DEBUG("Cleaning up audio resources...");
-
-        LOG_DEBUG("Cleanup: {} sounds, {} engines, {} devices",
-                  sounds_.size(), engines_.size(), devices_.size());
-
-        if (sounds_.empty() || (engines_.empty() && devices_.empty())) {
-            LOG_DEBUG("No audio resources to clean up.");
-            return;
-        }
-
-        for (auto& sound : sounds_) {
-            ma_sound_uninit(sound.get());
-        }
-        sounds_.clear();
-
-        for (auto& engine : engines_) {
-            ASSERT_MSG(engine->pDevice != nullptr, "Engine has null device pointer during cleanup");
-            ma_engine_uninit(engine.get());
-        }
-        engines_.clear();
-
-        for (auto& device : devices_) {
-            ma_device_state state = ma_device_get_state(device.get());
-            LOG_DEBUG("Device cleanup: state={}", static_cast<int>(state));
-            if (state == ma_device_state_started) {
-                LOG_WARN("Device still started at cleanup! Forcing stop...");
-                ma_device_stop(device.get());
-            }
-            ma_device_uninit(device.get());
-        }
-        devices_.clear();
-
-        LOG_INFO("Audio cleanup completed successfully.");
-    }
-
-    void startInteractiveLoop(std::function<void(AudioEngine&)> loopLogic) {
-        stopInteractiveLoop(); // stop old loop if any
-
-        shouldRun_.store(true);
-        loopThread_ = std::thread([this, loopLogic = std::move(loopLogic)] {
-            try {
-                loopLogic(*this);
-            } catch (const std::exception& e) {
-                std::cerr << "[AudioEngine] Loop error: " << e.what() << '\n';
-            }
-        });
-    }
-
-    void stopInteractiveLoop() {
-        RECORD_FUNC_TO_BACKTRACE("AudioEngine::stopInteractiveLoop");
-        shouldRun_.store(false);
-        if (loopThread_.joinable())
-            loopThread_.join();
-    }
-
-    [[nodiscard]] auto shouldRun() const noexcept -> bool {
-        return shouldRun_.load();
     }
 
 private:
-    std::atomic<bool> shouldRun_{false};
-    std::thread loopThread_;
+    snd_pcm_t* m_pcmData= nullptr;
+    snd_pcm_format_t m_pcmFormat = SND_PCM_FORMAT_FLOAT_LE;
+    static constexpr int m_rate = 48000;
+    std::string m_currentDevice = "default";
 
-    static void dataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount) {
-        (void)pInput;
-        ASSERT_MSG(pDevice != nullptr, "dataCallback got null device pointer");
-        auto* engine = recast<ma_engine*>(pDevice->pUserData);
-        ASSERT_MSG(engine != nullptr, "dataCallback: pUserData is null!");
-        ma_engine_read_pcm_frames(engine, pOutput, frameCount, nullptr);
+    Sounds_ptr m_sounds;
+    std::atomic<float> m_volume{1.0f};
+    std::atomic<bool> m_isRunning{false};
+    std::atomic<PlaybackState> m_playbackState{PlaybackState::Stopped};
+    std::thread m_audioThread;
+    mutable std::mutex m_mutex;
+
+    void startThread() {
+        if (m_isRunning) return;
+        m_isRunning = true;
+        m_audioThread = std::thread(&AudioEngine::audioLoop, this);
     }
-    
-    auto secondsToFrames(double seconds) -> ma_uint64 {    
-        auto sampleRate = ma_engine_get_sample_rate(engines_.front().get());
-        return static_cast<ma_uint64>(seconds * sampleRate);
+
+    void initAlsa(const std::string& deviceName = "default");
+    void shutdownAlsa();
+
+    void audioLoop() {
+        while (m_isRunning) {
+            if (m_playbackState == PlaybackState::Playing)
+                decodeAndPlay();
+            else
+                std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        }
+    }
+
+    void decodeAndPlay();
+    void decodeStep(Sound& s);
+
+    void cleanup() {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_sounds.clear();
     }
 };
 

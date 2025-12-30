@@ -57,7 +57,7 @@ auto main(int argc, char* argv[]) -> int
     }
 
     // Define parsing callback once
-    rbt.setVisitCallback([&song_tree, &parser](const ino_t& inode, dirsort::Song& song) {
+    rbt.setVisitCallback([&song_tree, &parser](const ino_t& inode, dirsort::Song& song) -> void {
         auto metadataMap = parser.parseFromInode(inode, dirsort::DIRECTORY_FIELD);
 
         if (metadataMap.empty()) {
@@ -70,17 +70,20 @@ auto main(int argc, char* argv[]) -> int
     });
 
     if (needRebuild) {
+        timer.reset();
+        timer.start();
         song_tree.clear();
 
         processDirectory(directoryPath, rbt, mapper);
         rbt.inorder(); // triggers parsing callback
         song_tree.setMusicPath(directoryPath);
+        timer.stop();
         song_tree.saveToFile(libBinPath);
-        LOG_INFO("Saved updated song tree to cache: {}", libBinPath);
+        LOG_INFO("Saved updated song tree to cache: {} in {} ms", libBinPath, timer.elapsed_ms());
     }
 
     // Generate SongMap from SongTree
-    auto library_map = song_tree.returnSongMap();
+    const auto library_map = song_tree.returnSongMap();
 
     LOG_INFO("Inode mapping and parsing completed in {:.2f} ms", timer.elapsed_ms());
 
@@ -96,8 +99,8 @@ auto main(int argc, char* argv[]) -> int
     //   std::cout << s;
     // }
 
-    query::songmap::read::forEachSong(g_songMap, [](const Artist& artist, const Album& album, const Disc disc, const Track track, const ino_t inode, const auto& song){
-      LOG_INFO("Found song {}: {} by {} in {} ({}/{})", inode, song.metadata.title, artist, album, disc, track);
+    query::songmap::read::forEachSong(g_songMap, [](const Artist& artist, const Album& album, const Disc disc, const Track track, const ino_t inode, const auto& song) -> void {
+      LOG_TRACE("Found song {}: {} by {} in {} ({}/{})", inode, song.metadata.title, artist, album, disc, track);
   });
 
     // synchronous display
@@ -173,25 +176,20 @@ auto main(int argc, char* argv[]) -> int
     LOG_INFO("Selected device index: {} -> {}", selectedIndex, devices[selectedIndex].name);
 
     try {
-        engine.initEngineForDevice(&devices[selectedIndex].id);
+        // useless
+        engine.initEngineForDevice(devices[selectedIndex].name);
         LOG_INFO("Playback engine successfully initialized for '{}'", devices[selectedIndex].name);
     } catch (const std::exception& e) {
         LOG_CRITICAL("Failed to initialize playback engine for device '{}': {}", devices[selectedIndex].name, e.what());
         return 1;
     }
 
-    engine.printDeviceInfo();
-    engine.loadSound(exampleFilePath);
+    const auto songIdx = *engine.loadSound(exampleFilePath);
     engine.setVolume(1.0f);
-    
-    // simple interactive loop to connect with audio backend (should work well with any UI frontend)
-    engine.startInteractiveLoop([&cmdInterface, &exampleFileMetadata](audio::AudioEngine& eng) { 
-        cmdInterface.run(eng, exampleFileMetadata);
-    });
 
-    // Main thread stays responsive (we are assuming the UI runs here)
-    while (engine.shouldRun())
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    engine.restart();
+    cmdInterface.run(engine, exampleFileMetadata);
+    engine.stop();    
 
     // frontend should cleanup and exit gracefully. song map is destroyed within the frontend object 
     // 

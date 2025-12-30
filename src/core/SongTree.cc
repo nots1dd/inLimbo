@@ -1,4 +1,6 @@
 #include "core/SongTree.hpp"
+#include "helpers/levenshtein.hpp"
+#include <set>
 
 namespace dirsort
 {

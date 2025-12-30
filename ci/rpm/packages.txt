@@ -1,0 +1,8 @@
+@development-tools
+cmake
+pkgconf-pkg-config
+git
+ffmpeg-devel
+alsa-lib-devel
+taglib-devel
+libbacktrace-devel

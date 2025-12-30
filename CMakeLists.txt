@@ -21,10 +21,6 @@ set(SPDLOG_GH_URL https://github.com/gabime/spdlog.git)
 add_library(tomlplusplus INTERFACE)
 target_include_directories(tomlplusplus INTERFACE ${EXTERNAL_DIR}/tomlplusplus)
 
-# --- Miniaudio (header-only)
-add_library(miniaudio INTERFACE)
-target_include_directories(miniaudio INTERFACE ${EXTERNAL_DIR}/miniaudio)
-
 # --- Cereal (header-only)
 add_library(cereal INTERFACE)
 target_include_directories(cereal INTERFACE ${EXTERNAL_DIR}/cereal/include/cereal)
@@ -49,6 +45,11 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # -----------------------------------------------------------
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(TAGLIB REQUIRED taglib)
+pkg_check_modules(AVFORMAT REQUIRED libavformat)
+pkg_check_modules(AVCODEC  REQUIRED libavcodec)
+pkg_check_modules(AVUTIL   REQUIRED libavutil)
+pkg_check_modules(SWRESAMPLE REQUIRED libswresample)
+pkg_check_modules(ALSA REQUIRED alsa)
 
 # -----------------------------------------------------------
 # Backend Shared Library
@@ -57,6 +58,7 @@ set(INLIMBO_CORE_SOURCES
     src/core/RBTree.cc
     src/core/SongTree.cc
     src/core/taglib/Parser.cc
+    src/audio/Playback.cc
 )
 
 add_library(inlimbo-core SHARED ${INLIMBO_CORE_SOURCES})
@@ -74,8 +76,12 @@ target_link_libraries(inlimbo-core
         spdlog::spdlog
         tomlplusplus
         cereal
-        miniaudio
         backtrace
+        avformat
+        swresample
+        avutil
+        avcodec
+        asound
 )
 
 set_target_properties(inlimbo-core PROPERTIES
@@ -94,7 +100,7 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME}
     PRIVATE
-        ../../include/inlimbo
+        include/inlimbo
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -130,9 +136,15 @@ message(STATUS "${SEP}  Source Directory : ${CMAKE_SOURCE_DIR}")
 message(STATUS "${SEP}")
 message(STATUS "${SEP}  ── External Dependencies ───────────────────────────────")
 message(STATUS "${SEP}  • TOML++     : ${EXTERNAL_DIR}/tomlplusplus")
-message(STATUS "${SEP}  • miniaudio  : ${EXTERNAL_DIR}/miniaudio")
 message(STATUS "${SEP}  • cereal     : ${EXTERNAL_DIR}/cereal/include/cereal")
 message(STATUS "${SEP}  • spdlog     : ${SPDLOG_DIR}")
+message(STATUS "${SEP}")
+message(STATUS "${SEP}  ── Multimedia / Audio ───────────────────────────────")
+message(STATUS "${SEP}  • libavformat  : ${AVFORMAT_VERSION} (${AVFORMAT_LIBRARIES})")
+message(STATUS "${SEP}  • libavcodec   : ${AVCODEC_VERSION} (${AVCODEC_LIBRARIES})")
+message(STATUS "${SEP}  • libavutil    : ${AVUTIL_VERSION} (${AVUTIL_LIBRARIES})")
+message(STATUS "${SEP}  • libswresample: ${SWRESAMPLE_VERSION} (${SWRESAMPLE_LIBRARIES})")
+message(STATUS "${SEP}  • ALSA         : ${ALSA_VERSION} (${ALSA_LIBRARIES})")
 message(STATUS "${SEP}")
 message(STATUS "${SEP}  ── System Libraries ────────────────────────────────────")
 message(STATUS "${SEP}  • TagLib     : ${TAGLIB_INCLUDE_DIRS}")

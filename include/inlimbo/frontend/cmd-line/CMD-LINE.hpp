@@ -1,184 +1,170 @@
 #pragma once
 
 #include <iostream>
-#include <sstream>
-#include <algorithm>
+#include <iomanip>
+#include <thread>
+#include <atomic>
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <poll.h>
+#include <chrono>
+#include <cmath>
 
 #include "audio/Playback.hpp"
 #include "core/SongTree.hpp"
 #include "core/taglib/Parser.hpp"
-#include "query/SongMap.hpp"
+#include "thread/Map.hpp"
 
-namespace frontend::cmdline
-{
+namespace frontend::cmdline {
 
-class Interface
-{
+#define UI_CLEAR        "\033[H\033[J"
+#define UI_TITLE        "\033[1;36mInLimbo Player\033[0m"
+#define UI_PLAY         "▶"
+#define UI_PAUSE        "⏸"
+#define UI_BAR_FILL     "█"
+#define UI_BAR_EMPTY    "░"
+
+class Interface {
 public:
     explicit Interface(threads::SafeMap<dirsort::SongMap>& songMap)
         : songs_(std::move(songMap)) {}
 
-    void run(audio::AudioEngine& eng, const Metadata& meta)
-    {
-        printBanner();
-        std::string input;
+    void run(audio::AudioEngine& eng, const Metadata& meta) {
+        enableRawMode();
+        running_.store(true);
 
-        while (eng.shouldRun()) {
-            std::cout << "\n[audio]> ";
-            if (!std::getline(std::cin, input))
-                break;
+        std::thread status([&]() -> void { statusLoop(eng, meta); });
+        std::thread input ([&]() -> void { inputLoop(eng, meta); });
+        std::thread seek  ([&]() -> void { seekLoop(eng); });
 
-            if (!handleCommand(eng, input, meta))
-                break;
-        }
+        while (running_.load())
+            std::this_thread::sleep_for(std::chrono::milliseconds(40));
+
+        running_.store(false);
+        disableRawMode();
+
+        if (input.joinable())  input.join();
+        if (status.joinable()) status.join();
+        if (seek.joinable())   seek.join();
     }
 
-    auto selectAudioDevice(const std::vector<audio::DeviceInfo>& devices) -> size_t
-    {
-        std::cout << "\nAvailable Playback Devices:\n";
+    auto selectAudioDevice(const audio::Devices& devices) -> size_t {
+        std::cout << "\nPlayback Devices:\n";
         for (size_t i = 0; i < devices.size(); ++i)
-            std::cout << "  [" << i << "] " << devices[i].name << "\n";
+            std::cout << " [" << i << "] " << devices[i].description << "\n";
 
-        size_t selectedIndex = 0;
-        while (true) {
-            std::cout << "\nSelect a playback device index: ";
-            if (!(std::cin >> selectedIndex)) {
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "Invalid input. Please enter a number.\n";
-                continue;
-            }
-
-            if (selectedIndex >= devices.size()) {
-                std::cout << "Invalid index " << selectedIndex
-                          << ". Valid range: [0 - " << devices.size() - 1 << "]\n";
-                continue;
-            }
-            break;
+        size_t idx = 0;
+        for (;;) {
+            std::cout << "\nSelect device: ";
+            if (std::cin >> idx && idx < devices.size())
+                break;
+            std::cin.clear();
+            std::cin.ignore(1024, '\n');
         }
-        // Clear the newline left in the input buffer
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        return selectedIndex;
+        std::cin.ignore(1024, '\n');
+        return idx;
     }
 
 private:
     threads::SafeMap<dirsort::SongMap> songs_;
+    std::atomic<bool> running_{false};
+    std::atomic<double> pendingSeek_{0.0};
+    termios orig_{};
 
-    static void printBanner()
-    {
-        std::cout << "──────────────────────────────────────────────\n"
-                  << " Audio Control Interface\n"
-                  << "──────────────────────────────────────────────\n"
-                  << " Commands:\n"
-                  << "  play, pause, restart, back <s>, forward <s>, seek <s>\n"
-                  << "  volume <0.0–1.0>, info, list songs, list artists, quit\n"
-                  << "──────────────────────────────────────────────\n";
+    void enableRawMode() {
+        tcgetattr(STDIN_FILENO, &orig_);
+        termios raw = orig_;
+        raw.c_lflag &= ~(ICANON | ECHO);
+        tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+        fcntl(STDIN_FILENO, F_SETFL, O_NONBLOCK);
     }
 
-    static auto toLower(std::string s) -> std::string
-    {
-        std::transform(s.begin(), s.end(), s.begin(),
-                       [](unsigned char c) { return std::tolower(c); });
-        return s;
+    void disableRawMode() {
+        tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_);
     }
 
-    auto handleCommand(audio::AudioEngine& eng,
-                       const std::string& input,
-                       const Metadata& meta) -> bool
-    {
-        std::istringstream iss(input);
-        std::string cmd;
-        iss >> cmd;
-        if (cmd.empty())
-            return true;
+    void statusLoop(audio::AudioEngine& eng, const Metadata& met) {
+        while (running_.load()) {
+            draw(eng, met);
+            std::this_thread::sleep_for(std::chrono::milliseconds(120));
+        }
+    }
 
-        cmd = toLower(cmd);
+    void draw(const audio::AudioEngine& eng, const Metadata& met) {
+        auto [pos, len] = *eng.getPlaybackTime();
+        float vol = eng.getVolume() * 100.0f;
+        bool play = eng.isPlaying();
 
-        if (cmd == "play") {
-            eng.play();
-            std::cout << "-- Resumed playback.\n";
-        }
-        else if (cmd == "pause") {
-            eng.pause();
-            std::cout << "-- Paused.\n";
-        }
-        else if (cmd == "restart") {
-            eng.restart();
-            std::cout << "-- Restarted track.\n";
-        }
-        else if (cmd == "info") {
-            printMetadata(meta);
-        }
-        else if (cmd == "seek" || cmd == "back" || cmd == "forward") {
-            double seconds = 0.0;
-            if (!(iss >> seconds)) {
-                std::cout << "Usage: " << cmd << " <seconds>\n";
-                return true;
+        constexpr int W = 50;
+        int filled = len > 0.0 ? int((pos / len) * W) : 0;
+
+        showMeta(met);    
+
+        std::cout << (play ? UI_PLAY : UI_PAUSE) << "  "
+                  << std::fixed << std::setprecision(1)
+                  << pos << " / " << len << " s   Vol "
+                  << std::setw(3) << int(vol) << "%\n\n";
+
+        for (int i = 0; i < W; ++i)
+            std::cout << (i < filled ? UI_BAR_FILL : UI_BAR_EMPTY);
+
+        std::cout << "\n\n[p] play  [s] stop  [r] restart  [b/f] seek  [+/-] vol  [q] quit\n";
+        std::cout.flush();
+    }
+
+    void inputLoop(audio::AudioEngine& eng, const Metadata& meta) {
+        pollfd pfd{.fd=STDIN_FILENO, .events=POLLIN, .revents=0};
+        while (running_.load()) {
+            if (poll(&pfd, 1, 25) > 0) {
+                char c;
+                if (read(STDIN_FILENO, &c, 1) > 0) {
+                    if (!handleKey(eng, c, meta))
+                        break;
+                }
             }
-
-            if (cmd == "seek") eng.seekTo(seconds);
-            else if (cmd == "back") eng.seekBackward(seconds);
-            else eng.seekForward(seconds);
-
-            std::cout << "-- Seek: " << cmd << " " << seconds << "s\n";
         }
-        else if (cmd == "volume") {
-            float vol = -1.0f;
-            if (!(iss >> vol) || vol < 0.0f || vol > 1.0f) {
-                std::cout << "Usage: volume <0.0 - 1.0>\n";
-                return true;
+        running_.store(false);
+    }
+
+    void seekLoop(audio::AudioEngine& eng) {
+        while (running_.load()) {
+            double d = pendingSeek_.exchange(0.0);
+            if (std::abs(d) > 0.01) {
+                if (d > 0.0) eng.seekForward(d);
+                else         eng.seekBackward(-d);
             }
-            eng.setVolume(vol);
-            std::cout << "-- Volume set to " << vol * 100.0f << "%.\n";
+            std::this_thread::sleep_for(std::chrono::milliseconds(70));
         }
-        else if (cmd == "list") {
-            std::string what;
-            iss >> what;
-            if (what == "songs")
-                listSongs();
-            else if (what == "artists")
-                listArtists();
-            else
-                std::cout << "Usage: list <songs|artists>\n";
-        }
-        else if (cmd == "quit") {
-            std::cout << "!! Stopping playback and exiting...\n";
-            eng.stopInteractiveLoop();
-            return false;
-        }
-        else {
-            std::cout << "?? Unknown command: " << cmd << "\n"
-                      << "Available: play, pause, restart, seek, back, forward, "
-                         "volume, info, list songs, list artists, quit\n";
-        }
+    }
 
+    auto handleKey(audio::AudioEngine& eng, char c, const Metadata& meta) -> bool {
+        switch (c) {
+            case 'p': eng.play(); break;
+            case 's': eng.pause(); break;
+            case 'r': eng.restart(); break;
+            case 'b': pendingSeek_ -= 2.0; break;
+            case 'f': pendingSeek_ += 2.0; break;
+            case '+': eng.setVolume(std::min(1.5f, eng.getVolume() + 0.05f)); break;
+            case '-': eng.setVolume(std::max(0.0f, eng.getVolume() - 0.05f)); break;
+            case 'i': showMeta(meta); break;
+            case 'q': return false;
+            default: break;
+        }
         return true;
     }
 
-    void listArtists() const
-    {
-      query::songmap::read::forEachArtist(songs_, [](const Artist& artist, const dirsort::AlbumMap& albums) {
-          std::cout << "Artist: " << artist << "\n";
-          std::cout << "  Albums (" << albums.size() << "):\n";
-
-          for (const auto& [albumName, discs] : albums) {
-              std::cout << "    - " << albumName << " (" << discs.size() << " discs)\n";
-          }
-      });
-    }
-
-    void listSongs() const
-    {
-      query::songmap::read::forEachSong(songs_, [](const Artist& artist, const Album& album, const Disc disc, const Track track, const ino_t inode, const dirsort::Song& song) {
-          std::cout << "Artist: " << artist
-                    << " | Album: " << album
-                    << " | Disc: " << disc
-                    << " | Track: " << track
-                    << " | Inode: " << inode
-                    << " | Title: " << song.metadata.title
-                    << " | File: " << song.metadata.filePath
-                    << "\n";
-      });
+    static void showMeta(const Metadata& m) {
+        std::cout << UI_CLEAR
+                  << UI_TITLE << "\n\n"
+                  << "Title : " << m.title  << "\n"
+                  << "Artist: " << m.artist << "\n"
+                  << "Album : " << m.album  << "\n"
+                  << "Path  : " << m.filePath << "\n\n"
+                  << "Press any key...\n";
+        std::cout.flush();
+        char _;
+        read(STDIN_FILENO, &_, 1);
     }
 };
 

@@ -61,7 +61,7 @@ inline INLIMBO_API_CPP auto getSongsByAlbum(
 ) -> const dirsort::Songs
 {
     RECORD_FUNC_TO_BACKTRACE("query::songmap::read::getSongsByAlbum");
-    return safeMap.withReadLock([&](const auto& map) {
+    return safeMap.withReadLock([&](const auto& map) -> const dirsort::Songs {
         dirsort::Songs songs;
         for (const auto& [a, albums] : map) {
             if (!strhelp::iequals_fast(a, artist))
@@ -85,7 +85,7 @@ inline INLIMBO_API_CPP auto countTracks(
 ) -> size_t
 {
     RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countTracks");
-    return safeMap.withReadLock([](const auto& map) {
+    return safeMap.withReadLock([](const auto& map) -> size_t {
         size_t total = 0;
         for (const auto& [artist, albums] : map)
             for (const auto& [album, discs] : albums)
@@ -105,7 +105,7 @@ inline INLIMBO_API_CPP void forEachArtist(
     const std::function<void(const Artist&, const dirsort::AlbumMap&)>& fn
 )
 {
-    safeMap.withReadLock([&](const auto& map) {
+    safeMap.withReadLock([&](const auto& map) -> void {
         for (const auto& [artist, albums] : map)
             fn(artist, albums);  // AlbumMap is still Album -> Disc -> Track -> inode -> Song
     });
@@ -116,7 +116,7 @@ inline INLIMBO_API_CPP void forEachAlbum(
     const std::function<void(const Artist&, const Album&, const dirsort::DiscMap&)>& fn
 )
 {
-    safeMap.withReadLock([&](const auto& map) {
+    safeMap.withReadLock([&](const auto& map) -> void {
         for (const auto& [artist, albums] : map)
             for (const auto& [album, discs] : albums)
                 fn(artist, album, discs); // DiscMap is still Disc -> Track -> inode -> Song
@@ -128,7 +128,7 @@ inline INLIMBO_API_CPP void forEachDisc(
     const std::function<void(const Artist&, const Album&, const Disc disc, const dirsort::TrackMap&)>& fn
 )
 {
-    safeMap.withReadLock([&](const auto& map) {
+    safeMap.withReadLock([&](const auto& map) -> void {
         for (const auto& [artist, albums] : map)
             for (const auto& [album, discs] : albums)
                 for (const auto& [disc, tracks] : discs)
@@ -142,7 +142,7 @@ inline INLIMBO_API_CPP void forEachSong(
     const std::function<void(const Artist&, const Album&, const Disc disc, const Track track, const ino_t inode, const dirsort::Song&)>& fn
 )
 {
-    safeMap.withReadLock([&](const auto& map) {
+    safeMap.withReadLock([&](const auto& map) -> void {
         for (const auto& [artist, albums] : map)
             for (const auto& [album, discs] : albums)
                 for (const auto& [disc, tracks] : discs)

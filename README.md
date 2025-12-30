@@ -31,7 +31,14 @@
 > Have the repo cloned **WITH THE SUBMODULES**:
 > 
 > ```bash
-> # clone repo with recursive SUBMODULES
+> # clone and load submodules 
+> git clone https://github.com/nots1dd/inlimbo 
+> cd inlimbo 
+> git checkout develop
+> git submodule update --init --recursive
+> 
+> # or 
+> # clone repo with recursive SUBMODULES directly
 > git clone -b develop https://github.com/nots1dd/inlimbo --recursive
 > 
 > cmake -S . -B build 

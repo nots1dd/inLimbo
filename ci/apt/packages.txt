@@ -1,0 +1,10 @@
+build-essential
+cmake
+pkg-config
+git
+libavformat-dev
+libavcodec-dev
+libavutil-dev
+libswresample-dev
+libasound2-dev
+libtag1-dev

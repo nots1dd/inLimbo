@@ -1,20 +1,14 @@
 #pragma once
 
-#include "Config.hpp"
 #include "taglib/Parser.hpp"
 #include "StackTrace.hpp"
-#include "helpers/levenshtein.hpp"
 
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/map.hpp>
 #include <cereal/types/string.hpp>
 #include <cereal/types/vector.hpp>
 
-#include <fstream>
-#include <iomanip>
 #include <map>
-#include <optional>
-#include <set>
 #include <string>
 #include <vector>
 #include <sys/stat.h> // for inode/stat lookup
