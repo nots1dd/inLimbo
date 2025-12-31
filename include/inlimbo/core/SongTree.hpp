@@ -2,6 +2,7 @@
 
 #include "taglib/Parser.hpp"
 #include "StackTrace.hpp"
+#include "utils/String.hpp"
 
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/map.hpp>
@@ -110,21 +111,21 @@ namespace song::sort
 inline auto byArtist(const Artist& a) -> SongPredicate
 {
     return [a](const Artist& artist, auto&, auto, auto, auto&) -> bool {
-        return artist == a;
+        return utils::string::iequals_fast(artist, a);
     };
 }
 
 inline auto byAlbum(const Artist& a, const Album& al) -> SongPredicate
 {
     return [a, al](const Artist& artist, const Album& album, auto, auto, auto&) -> bool {
-        return artist == a && album == al;
+        return utils::string::iequals_fast(artist, a) && utils::string::iequals_fast(album, al);
     };
 }
 
 inline auto byGenre(const Genre& g) -> SongPredicate
 {
     return [g](auto&, auto&, auto, auto, const Song& s) -> bool {
-        return s.metadata.genre == g;
+        return utils::string::iequals_fast(s.metadata.genre, g);
     };
 }
 

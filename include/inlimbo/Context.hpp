@@ -25,7 +25,7 @@ inline void setupArgs(cli::CmdLine& args)
     args.add<std::string>(
         "General",
         "song", 's',
-        "Example song name",
+        "Play song name",
         std::nullopt,
         [](const std::string& s) -> bool { return !s.empty(); },
         "song name cannot be empty, if not provided defaults to null!" 
@@ -40,10 +40,19 @@ inline void setupArgs(cli::CmdLine& args)
         "Volume must be between 0.0 and 100.0"
     );
 
-    args.addFlag(
-        "General",
+    args.add<std::string>(
+        "Modify",
         "edit-metadata", 'e',
-        "Simulate editing metadata before playback"
+        "Edit metadata (title only for now) before playback",
+        std::nullopt,
+        [](const std::string& s) -> bool { return !s.empty(); },
+        "Metadata edit requires a non-empty song name, will default to null"
+    );
+
+    args.addFlag(
+      "General",
+      "rebuild-library", 'r',
+      "Force rebuild of the music library cache"
     );
 
     args.addFlag(
@@ -69,6 +78,40 @@ inline void setupArgs(cli::CmdLine& args)
         "print-summary", 'S',
         "Print library summary and exit"
     );
+
+    args.addFlag(
+        "Query",
+        "print-songs-paths", 'P',
+        "Print all song paths and exit"
+    );
+
+    args.add<std::string>(
+        "Query",
+        "print-songs-by-artist", 'a',
+        "Print all songs by artist name",
+        std::nullopt,
+        [](const std::string& s) -> bool { return !s.empty(); },
+        "Artist name defaults to null."
+    );
+
+    args.add<std::string>(
+      "Query",
+      "print-songs-by-album", 'l',
+      "Print all songs by album name",
+      std::nullopt,
+      [](const std::string& s) -> bool { return !s.empty(); },
+      "Album name defaults to null."
+    );
+
+    args.add<std::string>(
+    "Query",
+    "print-songs-by-genre", 'g',
+    "Print all songs by genre name",
+    std::nullopt,
+    [](const std::string& s) -> bool { return !s.empty(); },
+    "Genre name defaults to null."
+    );
+
 }
 
 enum class PrintAction {
@@ -76,6 +119,10 @@ enum class PrintAction {
     Artists,
     Albums,
     Genres,
+    SongPaths,
+    SongsByArtist,
+    SongsByAlbum,
+    SongsByGenre,
     Summary
 };
 
@@ -115,6 +162,10 @@ inline auto resolvePrintAction(const cli::CmdLine& args) -> PrintAction
     if (args.has("print-artists")) return PrintAction::Artists;
     if (args.has("print-albums"))  return PrintAction::Albums;
     if (args.has("print-genre"))   return PrintAction::Genres;
+    if (args.has("print-songs"))   return PrintAction::SongPaths;
+    if (args.has("print-songs-by-artist")) return PrintAction::SongsByArtist;
+    if (args.has("print-songs-by-album"))  return PrintAction::SongsByAlbum;
+    if (args.has("print-songs-by-genre"))  return PrintAction::SongsByGenre;
     if (args.has("print-summary")) return PrintAction::Summary;
     return PrintAction::None;
 }
@@ -134,6 +185,30 @@ inline void maybeHandlePrintActions(AppContext& ctx)
         case PrintAction::Genres:
             helpers::cmdline::printGenres(ctx.songTree);
             break;
+        case PrintAction::SongPaths:
+            helpers::cmdline::printSongPaths(ctx.songTree);
+            break;
+        case PrintAction::SongsByArtist: {
+            const std::string artistName =
+                ctx.cmdlineArgs.getOptional<std::string>("print-songs-by-artist")
+                .value_or("");
+            helpers::cmdline::printSongsByArtist(ctx.songTree, artistName);
+            break;
+        }
+        case PrintAction::SongsByAlbum: {
+            const std::string albumName =
+                ctx.cmdlineArgs.getOptional<std::string>("print-songs-by-album")
+                .value_or("");
+            helpers::cmdline::printSongsByAlbum(ctx.songTree, albumName);
+            break;
+        }
+        case PrintAction::SongsByGenre: {
+            const std::string genreName =
+                ctx.cmdlineArgs.getOptional<std::string>("print-songs-by-genre")
+                .value_or("");
+            helpers::cmdline::printSongsByGenre(ctx.songTree, genreName);
+            break;
+        }
         case PrintAction::Summary:
             helpers::cmdline::printSummary(ctx.songTree);
             break;
@@ -172,6 +247,7 @@ inline auto initializeContext(int argc, char** argv) -> AppContext
 inline static void buildOrLoadLibrary(AppContext& ctx)
 {
     bool rebuild = false;
+    rebuild = ctx.cmdlineArgs.has("rebuild-library");
 
     try {
         ctx.songTree.loadFromFile(ctx.binPath);
@@ -219,19 +295,62 @@ inline static void maybeEditMetadata(AppContext& ctx)
     auto song = helpers::query::songmap::read::findSongByName(g_songMap, ctx.songName);
     ASSERT_MSG(song, "Song not found");
 
-    auto edited = *song;
-    edited.metadata.title += " (Edited)";
+    const std::string oldTitle = song->metadata.title;
 
-    if (!helpers::query::songmap::mut::replaceSongObjAndUpdateMetadata(
-            g_songMap, *song, edited, ctx.parser))
+    const auto newTitleOpt = ctx.cmdlineArgs.getOptional<std::string>("edit-metadata");
+    if (!newTitleOpt || newTitleOpt->empty()) {
+        LOG_WARN("Edit metadata requested but no new title provided. Skipping.");
         return;
+    }
 
+    const std::string& newTitle = *newTitleOpt;
+
+    if (oldTitle == newTitle) {
+        LOG_INFO("Metadata edit requested but title is unchanged: '{}'", oldTitle);
+        return;
+    }
+
+    auto edited = *song;
+    edited.metadata.title = newTitle;
+
+    LOG_INFO(
+        "Editing song metadata:\n"
+        "  • File : {}\n"
+        "  • Title: '{}' → '{}'",
+        song->metadata.filePath,
+        oldTitle,
+        newTitle
+    );
+
+    const bool replaced =
+        helpers::query::songmap::mut::replaceSongObjAndUpdateMetadata(
+            g_songMap, *song, edited, ctx.parser
+        );
+
+    if (!replaced) {
+        LOG_ERROR(
+            "Failed to update metadata for file: {}",
+            song->metadata.filePath
+        );
+        return;
+    }
+
+    // Rebuild SongTree + persist cache
     ctx.songTree.clear();
     ctx.songTree.newSongMap(g_songMap.snapshot());
     ctx.songTree.setMusicPath(ctx.musicDir);
     ctx.songTree.saveToFile(ctx.binPath);
 
-    LOG_INFO("Metadata updated and cache rewritten");
+    LOG_INFO(
+        "Metadata update successful. Cache rewritten: '{}' → '{}'",
+        oldTitle,
+        newTitle
+    );
+
+    LOG_INFO("Exiting cleanly after metadata edit.");
+
+    // need to exit here as in-memory song object name is wrong
+    std::exit(EXIT_SUCCESS);
 }
 
 inline static void runFrontend(AppContext& ctx)

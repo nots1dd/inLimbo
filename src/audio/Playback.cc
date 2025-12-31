@@ -127,7 +127,7 @@ auto AudioEngine::loadSound(const std::string& path) -> std::optional<size_t> {
           return std::nullopt;
       }
 
-      s->sampleRate = s->dec->sample_rate;
+      s->sampleRate = m_rate;
       s->channels   = 2;
 
       // Extract encoder delay/padding
@@ -149,7 +149,7 @@ auto AudioEngine::loadSound(const std::string& path) -> std::optional<size_t> {
       SwrContext* rawSwr = nullptr;
       if (swr_alloc_set_opts2(
               &rawSwr,
-              &outLayout, AV_SAMPLE_FMT_FLT, s->sampleRate,
+              &outLayout, AV_SAMPLE_FMT_FLT, m_rate,
               &inLayout, s->dec->sample_fmt, s->dec->sample_rate,
               0, nullptr) < 0) {
           av_channel_layout_uninit(&outLayout);
@@ -438,7 +438,7 @@ void AudioEngine::decodeStep(Sound& s) {
                     int framesConverted = swr_convert(
                         s.swr.get(),
                         outPtrs, outFrames,
-                        (const uint8_t**)frame->data,
+                        (const ui8**)frame->data,
                         frame->nb_samples);
 
                     if (framesConverted > 0) {

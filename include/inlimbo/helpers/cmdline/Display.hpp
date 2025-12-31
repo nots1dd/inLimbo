@@ -89,6 +89,73 @@ inline void printSongs(
     }
 }
 
+inline void printSongsByArtist(
+    const SongTree& tree,
+    const Artist& artist)
+{
+    auto pred = song::sort::byArtist(artist);
+
+    std::cout << "\nSongs by " << artist << ":\n";
+    std::cout << "────────────────────────────\n";
+
+    for (const Song& s : tree.range(pred)) {
+        std::cout
+            << "• " << s.metadata.title
+            << " [" << s.metadata.album << "]\n";
+    }
+}
+
+inline void printSongsByAlbum(
+    const SongTree& tree,
+    const Album& album)
+{
+    std::cout << "\nSongs in album '" << album << "':\n";
+    std::cout << "────────────────────────────\n";
+
+    for (const Song& s : tree.range({})) {
+        if (utils::string::iequals_fast(s.metadata.album, album)) {
+            std::cout
+                << "• " << s.metadata.title
+                << " — " << s.metadata.artist << "\n";
+        }
+    }
+}
+
+inline void printSongsByGenre(
+    const SongTree& tree,
+    const Genre& genre)
+{
+    auto pred = song::sort::byGenre(genre);
+
+    std::cout << "\nSongs in genre '" << genre << "':\n";
+    std::cout << "────────────────────────────\n";
+
+    for (const Song& s : tree.range(pred)) {
+        std::cout
+            << "• " << s.metadata.title
+            << " — " << s.metadata.artist
+            << " [" << s.metadata.album << "]\n";
+    }
+}
+
+// ------------------------------------------------------------
+// Print song paths (title, artist, absolute path)
+// ------------------------------------------------------------
+inline void printSongPaths(
+    const SongTree& tree,
+    SongPredicate pred = {})
+{
+    std::cout << "\nSong Paths:\n";
+    std::cout << "────────────────────────────\n";
+
+    for (const Song& s : tree.range(pred)) {
+        std::cout
+            << "• " << s.metadata.title
+            << " — " << s.metadata.artist << "\n"
+            << "    " << s.metadata.filePath << "\n";
+    }
+}
+
 // ------------------------------------------------------------
 // Print library summary
 // ------------------------------------------------------------
