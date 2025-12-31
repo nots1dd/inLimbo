@@ -81,13 +81,13 @@ inline void setupArgs(cli::CmdLine& args)
 
     args.addFlag(
         "Query",
-        "print-songs-paths", 'P',
+        "songs-paths", 'P',
         "Print all song paths and exit"
     );
 
     args.add<std::string>(
         "Query",
-        "print-songs-by-artist", 'a',
+        "songs-artist", 'a',
         "Print all songs by artist name",
         std::nullopt,
         [](const std::string& s) -> bool { return !s.empty(); },
@@ -96,7 +96,7 @@ inline void setupArgs(cli::CmdLine& args)
 
     args.add<std::string>(
       "Query",
-      "print-songs-by-album", 'l',
+      "songs-album", 'l',
       "Print all songs by album name",
       std::nullopt,
       [](const std::string& s) -> bool { return !s.empty(); },
@@ -105,7 +105,7 @@ inline void setupArgs(cli::CmdLine& args)
 
     args.add<std::string>(
     "Query",
-    "print-songs-by-genre", 'g',
+    "songs-genre", 'g',
     "Print all songs by genre name",
     std::nullopt,
     [](const std::string& s) -> bool { return !s.empty(); },

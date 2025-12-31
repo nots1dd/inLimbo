@@ -113,7 +113,7 @@ public:
         }
 
         if (has("help"))
-            throw HelpRequested{ m_options.help() };
+            throw HelpRequested{ colorizeHelp(m_options.help()) };
 
         for (const auto& opt : m_requiredOptions) {
             if (!has(opt)) {
@@ -198,6 +198,39 @@ private:
         out += "  • Reason : " + reason + "\n\n";
         out += "  Hint: Run with " + cyan("--help") + "\n";
         return out;
+    }
+
+    static auto colorizeHelp(const std::string& help) -> std::string
+    {
+        std::ostringstream out;
+        std::istringstream in(help);
+        std::string line;
+
+        bool firstLine = true;
+
+        while (std::getline(in, line)) {
+
+            if (firstLine && !line.empty()) {
+                out << "\n"
+                    << bold(color("\033[32m", line))  // bold green title
+                    << "\n\n";
+                firstLine = false;
+                continue;
+            }
+
+            firstLine = false;
+
+            // ---- Group headers ----
+            if (line.ends_with("options:")) {
+                out << bold(color("\033[36m", line)) << "\n";
+                continue;
+            }
+
+            // ---- Normal lines ----
+            out << line << "\n";
+        }
+
+        return out.str();
     }
 
     static auto makeSpec(const std::string& longName, char shortName) -> std::string {
