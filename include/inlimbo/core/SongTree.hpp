@@ -13,7 +13,7 @@
 #include <vector>
 #include <sys/stat.h> // for inode/stat lookup
 
-namespace dirsort
+namespace core
 {
 
 // ============================================================
@@ -61,6 +61,96 @@ using TrackMap = std::map<Track, InodeMap>;
 using DiscMap  = std::map<Disc, TrackMap>;
 using AlbumMap = std::map<Album, DiscMap>;
 
+enum class VisitResult {
+    Continue,
+    Stop
+};
+
+using SongTreeVisitor =
+    std::function<VisitResult(
+        const Artist&,
+        const Album&,
+        Disc,
+        Track,
+        const Song&
+    )>;
+
+using ArtistVisitor = std::function<VisitResult(const Artist&)>;
+using AlbumVisitor  = std::function<VisitResult(const Artist&, const Album&)>;
+using DiscVisitor   = std::function<VisitResult(const Artist&, const Album&, Disc)>;
+
+struct SongTreeCallbacks {
+    std::function<void()> onBegin = {};
+    ArtistVisitor         onArtist = {};
+    AlbumVisitor          onAlbum = {};
+    DiscVisitor           onDisc = {};
+    SongTreeVisitor       onSong = {};
+    std::function<void(
+        int artists,
+        int albums,
+        int discs,
+        int songs,
+        int uniqueGenres
+    )> onSummary = {};
+    std::function<void()> onEnd = {};
+};
+
+using SongPredicate =
+    std::function<bool(
+        const Artist&,
+        const Album&,
+        Disc,
+        Track,
+        const Song&
+    )>;
+
+namespace song::sort 
+{
+
+inline auto byArtist(const Artist& a) -> SongPredicate
+{
+    return [a](const Artist& artist, auto&, auto, auto, auto&) -> bool {
+        return artist == a;
+    };
+}
+
+inline auto byAlbum(const Artist& a, const Album& al) -> SongPredicate
+{
+    return [a, al](const Artist& artist, const Album& album, auto, auto, auto&) -> bool {
+        return artist == a && album == al;
+    };
+}
+
+inline auto byGenre(const Genre& g) -> SongPredicate
+{
+    return [g](auto&, auto&, auto, auto, const Song& s) -> bool {
+        return s.metadata.genre == g;
+    };
+}
+
+inline auto allOf(SongPredicate a, SongPredicate b) -> SongPredicate
+{
+    return [=](auto&&... args) -> auto {
+        return a(args...) && b(args...);
+    };
+}
+
+inline auto anyOf(SongPredicate a, SongPredicate b) -> SongPredicate
+{
+    return [=](auto&&... args) -> auto {
+        return a(args...) || b(args...);
+    };
+}
+
+inline auto notOf(SongPredicate p) -> SongPredicate
+{
+    return [=](auto&&... args) -> auto {
+        return !p(args...);
+    };
+}
+
+} // namespace song::sort
+
 // ============================================================
 // SongTree Declaration (NOT THREAD SAFE)
 // ============================================================
@@ -70,52 +160,55 @@ using AlbumMap = std::map<Album, DiscMap>;
 //
 // This is majorly also used for cmdline querying and printing the song library.
 
+class SongTreeRange;
+
 class SongTree
 {
 private:
-    SongMap map;
-    std::string musicPath;    
+    SongMap m_songMap;
+    std::string m_musicPath;    
     
 public:
     // Core methods
     void addSong(const Song& song);
-    void display(DisplayMode mode = DisplayMode::Summary) const;
-    void setMusicPath(const std::string& path) { musicPath = path; }
+    void traverse(const SongTreeCallbacks& cb) const;
+    auto findSong(
+    const std::function<bool(const Song&)>& predicate,
+    const std::function<void(const Song&)>& onFound
+    ) const -> bool;
+    void forEach(
+    const SongPredicate& pred,
+    const SongTreeVisitor& visitor
+    ) const;
+    [[nodiscard]] auto range(SongPredicate pred) const -> SongTreeRange;
+    void setMusicPath(const std::string& path) { m_musicPath = path; }
     
     void clear()
     {
         RECORD_FUNC_TO_BACKTRACE("SongTree::clear");
-        map.clear();
-        musicPath.clear();
+        m_songMap.clear();
+        m_musicPath.clear();
     }
 
     // Query methods
-    void printAllArtists() const;
-    void printSongs(const Songs& songs);
-    auto getSongsByArtist(const std::string& artist);
-    [[nodiscard]] auto getSongsByAlbum(const std::string& artist, const std::string& album) const;
-    void getSongsByGenreAndPrint() const;
-    [[nodiscard]] auto returnSongMap() const { return map; }
+    [[nodiscard]] auto returnSongMap() const { return m_songMap; }
     // note that this replaces the entire song map and newMap is no longer valid after this call
     [[nodiscard]] auto newSongMap(const SongMap& newMap)
     {
         RECORD_FUNC_TO_BACKTRACE("SongTree::replaceSongMap");
-        map = std::move(newMap);
+        m_songMap = std::move(newMap);
     }
-    [[nodiscard]] auto returnMusicPath() const { return musicPath; }
+    [[nodiscard]] auto returnMusicPath() const { return m_musicPath; }
 
     // Persistence
     template <class Archive>
     void serialize(Archive& ar)
     {
-        ar(map, musicPath);
+        ar(m_songMap, m_musicPath);
     }
 
     void saveToFile(const std::string& filename) const;
     void loadFromFile(const std::string& filename);
-
-    // Info
-    void printSongInfo(const std::string& input);
 };
 
-} // namespace dirsort
+} // namespace core

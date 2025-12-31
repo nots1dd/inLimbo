@@ -58,6 +58,7 @@ set(INLIMBO_CORE_SOURCES
     src/core/RBTree.cc
     src/core/SongTree.cc
     src/core/taglib/Parser.cc
+    src/core/DirectoryWalker.cc
     src/audio/Playback.cc
 )
 

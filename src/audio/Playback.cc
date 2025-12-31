@@ -287,7 +287,7 @@ void AudioEngine::initAlsa(const std::string& deviceName) {
             2,
             m_rate,
             1,
-            20000);
+            50000);
         
         if (err >= 0) {
             m_pcmFormat = format;
@@ -314,7 +314,6 @@ void AudioEngine::shutdownAlsa() {
 
 void AudioEngine::decodeAndPlay() {
 
-    // playback buffer - 512 FRAMES * 2 channels = 1024 SAMPLES
     constexpr size_t FRAMES_PER_BUFFER = 512;
     constexpr size_t MAX_CHANNELS = 8; // Support up to 7.1 audio
     static thread_local std::vector<float> playbackBuffer(FRAMES_PER_BUFFER * MAX_CHANNELS);

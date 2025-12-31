@@ -2,25 +2,25 @@
 
 #include "Config.hpp"
 #include "thread/Map.hpp"    // threads::SafeMap
-#include "core/SongTree.hpp" // dirsort::Song, Artist, Album, etc.
+#include "core/SongTree.hpp" // core::Song, Artist, Album, etc.
 #include "utils/String.hpp"
 #include <vector>
 #include <functional>
 #include "core/taglib/Parser.hpp"
 
-namespace query::songmap {
+namespace helpers::query::songmap {
 
 namespace strhelp = utils::string;
 
 namespace read {
 
 inline INLIMBO_API_CPP auto findSongByName(
-    const threads::SafeMap<dirsort::SongMap>& safeMap,
+    const threads::SafeMap<core::SongMap>& safeMap,
     const std::string& songName
-) -> const dirsort::Song*
+) -> const core::Song*
 {
-    RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongByName");
-    return safeMap.withReadLock([&](const auto& map) -> const dirsort::Song* {
+    RECORD_FUNC_TO_BACKTRACE("helpers::query::songmap::read::findSongByName");
+    return safeMap.withReadLock([&](const auto& map) -> const core::Song* {
         for (const auto& [artist, albums] : map)
             for (const auto& [album, discs] : albums)
                 for (const auto& [disc, tracks] : discs)
@@ -33,13 +33,13 @@ inline INLIMBO_API_CPP auto findSongByName(
 }
 
 inline INLIMBO_API_CPP auto findSongByNameAndArtist(
-    const threads::SafeMap<dirsort::SongMap>& safeMap,
+    const threads::SafeMap<core::SongMap>& safeMap,
     const Artist& artistName,
     const std::string& songName
-) -> const dirsort::Song*
+) -> const core::Song*
 {
-    RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongByNameAndArtist");
-    return safeMap.withReadLock([&](const auto& map) -> const dirsort::Song* {
+    RECORD_FUNC_TO_BACKTRACE("helpers::query::songmap::read::findSongByNameAndArtist");
+    return safeMap.withReadLock([&](const auto& map) -> const core::Song* {
         for (const auto& [artist, albums] : map) {
             if (!strhelp::iequals_fast(artist, artistName))
                 continue;
@@ -55,14 +55,14 @@ inline INLIMBO_API_CPP auto findSongByNameAndArtist(
 }
 
 inline INLIMBO_API_CPP auto getSongsByAlbum(
-    const threads::SafeMap<dirsort::SongMap>& safeMap,
+    const threads::SafeMap<core::SongMap>& safeMap,
     const Artist& artist,
     const Album& album
-) -> const dirsort::Songs
+) -> const core::Songs
 {
-    RECORD_FUNC_TO_BACKTRACE("query::songmap::read::getSongsByAlbum");
-    return safeMap.withReadLock([&](const auto& map) -> const dirsort::Songs {
-        dirsort::Songs songs;
+    RECORD_FUNC_TO_BACKTRACE("helpers::query::songmap::read::getSongsByAlbum");
+    return safeMap.withReadLock([&](const auto& map) -> const core::Songs {
+        core::Songs songs;
         for (const auto& [a, albums] : map) {
             if (!strhelp::iequals_fast(a, artist))
                 continue;
@@ -81,10 +81,10 @@ inline INLIMBO_API_CPP auto getSongsByAlbum(
 }
 
 inline INLIMBO_API_CPP auto countTracks(
-    const threads::SafeMap<dirsort::SongMap>& safeMap
+    const threads::SafeMap<core::SongMap>& safeMap
 ) -> size_t
 {
-    RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countTracks");
+    RECORD_FUNC_TO_BACKTRACE("helpers::query::songmap::read::countTracks");
     return safeMap.withReadLock([](const auto& map) -> size_t {
         size_t total = 0;
         for (const auto& [artist, albums] : map)
@@ -101,8 +101,8 @@ inline INLIMBO_API_CPP auto countTracks(
 // ------------------------------------------------------------
 
 inline INLIMBO_API_CPP void forEachArtist(
-    const threads::SafeMap<dirsort::SongMap>& safeMap,
-    const std::function<void(const Artist&, const dirsort::AlbumMap&)>& fn
+    const threads::SafeMap<core::SongMap>& safeMap,
+    const std::function<void(const Artist&, const core::AlbumMap&)>& fn
 )
 {
     safeMap.withReadLock([&](const auto& map) -> void {
@@ -112,8 +112,8 @@ inline INLIMBO_API_CPP void forEachArtist(
 }
 
 inline INLIMBO_API_CPP void forEachAlbum(
-    const threads::SafeMap<dirsort::SongMap>& safeMap,
-    const std::function<void(const Artist&, const Album&, const dirsort::DiscMap&)>& fn
+    const threads::SafeMap<core::SongMap>& safeMap,
+    const std::function<void(const Artist&, const Album&, const core::DiscMap&)>& fn
 )
 {
     safeMap.withReadLock([&](const auto& map) -> void {
@@ -124,8 +124,8 @@ inline INLIMBO_API_CPP void forEachAlbum(
 }
 
 inline INLIMBO_API_CPP void forEachDisc(
-    const threads::SafeMap<dirsort::SongMap>& safeMap,
-    const std::function<void(const Artist&, const Album&, const Disc disc, const dirsort::TrackMap&)>& fn
+    const threads::SafeMap<core::SongMap>& safeMap,
+    const std::function<void(const Artist&, const Album&, const Disc disc, const core::TrackMap&)>& fn
 )
 {
     safeMap.withReadLock([&](const auto& map) -> void {
@@ -138,8 +138,8 @@ inline INLIMBO_API_CPP void forEachDisc(
 }
 
 inline INLIMBO_API_CPP void forEachSong(
-    const threads::SafeMap<dirsort::SongMap>& safeMap,
-    const std::function<void(const Artist&, const Album&, const Disc disc, const Track track, const ino_t inode, const dirsort::Song&)>& fn
+    const threads::SafeMap<core::SongMap>& safeMap,
+    const std::function<void(const Artist&, const Album&, const Disc disc, const Track track, const ino_t inode, const core::Song&)>& fn
 )
 {
     safeMap.withReadLock([&](const auto& map) -> void {
@@ -157,13 +157,13 @@ inline INLIMBO_API_CPP void forEachSong(
 namespace mut {
 
 inline INLIMBO_API_CPP auto replaceSongObjAndUpdateMetadata(
-    threads::SafeMap<dirsort::SongMap>& safeMap,
-    const dirsort::Song& oldSong,
-    const dirsort::Song& newSong,
+    threads::SafeMap<core::SongMap>& safeMap,
+    const core::Song& oldSong,
+    const core::Song& newSong,
     TagLibParser& parser
 ) -> bool
 {
-    RECORD_FUNC_TO_BACKTRACE("query::songmap::mut::replaceSongObjByInode");
+    RECORD_FUNC_TO_BACKTRACE("helpers::query::songmap::mut::replaceSongObjByInode");
 
     ASSERT_MSG(oldSong.inode == newSong.inode, "Inode details changed! Will not be writing...");
     LOG_INFO("Song map size: {}", safeMap.snapshot().size());
@@ -205,4 +205,4 @@ inline INLIMBO_API_CPP auto replaceSongObjAndUpdateMetadata(
 
 } // namespace mut
 
-} // namespace query::songmap
+} // namespace helpers::query::songmap

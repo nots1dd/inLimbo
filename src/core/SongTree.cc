@@ -1,8 +1,7 @@
 #include "core/SongTree.hpp"
-#include "helpers/levenshtein.hpp"
 #include <set>
 
-namespace dirsort
+namespace core
 {
 
 // ============================================================
@@ -22,7 +21,7 @@ Song::Song() : inode(0), metadata() {}
 
 void SongTree::addSong(const Song& song)
 {
-    auto& artistMap = map[song.metadata.artist];
+    auto& artistMap = m_songMap[song.metadata.artist];
     auto& albumMap  = artistMap[song.metadata.album];
     auto& discMap   = albumMap[song.metadata.discNumber];
     auto& trackMap  = discMap[song.metadata.track];
@@ -58,249 +57,101 @@ void SongTree::loadFromFile(const std::string& filename)
 }
 
 // ------------------------------------------------------------
-void SongTree::display(DisplayMode mode) const
+void SongTree::traverse(const SongTreeCallbacks& cb) const
 {
-    RECORD_FUNC_TO_BACKTRACE("Dirsort");
+    RECORD_FUNC_TO_BACKTRACE("SongTree::traverse");
 
-    const bool print_tree = (mode == DisplayMode::FullTree);
     int totalArtists = 0, totalAlbums = 0, totalDiscs = 0, totalSongs = 0;
     std::set<Genre> uniqueGenres;
 
-    if (print_tree)
-        std::cout << "─────────────────────────────────────────────────────────────────────────────\n";
+    if (cb.onBegin)
+        cb.onBegin();
 
-    for (const auto& artistPair : map)
+    for (const auto& [artist, albums] : m_songMap)
     {
-        totalArtists++;
-        if (print_tree)
-            std::cout << "\nArtist: " << artistPair.first << "\n";
+        ++totalArtists;
+        if (cb.onArtist &&
+            cb.onArtist(artist) == VisitResult::Stop)
+            goto done;
 
-        for (const auto& albumPair : artistPair.second)
+        for (const auto& [album, discs] : albums)
         {
-            totalAlbums++;
-            if (print_tree)
-                std::cout << "  ├─── Album: " << albumPair.first << "\n";
+            ++totalAlbums;
+            if (cb.onAlbum &&
+                cb.onAlbum(artist, album) == VisitResult::Stop)
+                goto done;
 
-            for (const auto& discPair : albumPair.second)
+            for (const auto& [disc, tracks] : discs)
             {
-                totalDiscs++;
-                if (print_tree)
-                    std::cout << "  │    Disc " << discPair.first << "\n";
+                ++totalDiscs;
+                if (cb.onDisc &&
+                    cb.onDisc(artist, album, disc) == VisitResult::Stop)
+                    goto done;
 
-                for (const auto& trackPair : discPair.second)
+                for (const auto& [track, inodes] : tracks)
                 {
-                    for (const auto& inodePair : trackPair.second)
+                    for (const auto& [_, song] : inodes)
                     {
-                        totalSongs++;
-                        const auto& song = inodePair.second;
+                        ++totalSongs;
                         uniqueGenres.insert(song.metadata.genre);
 
-                        if (print_tree)
-                            std::cout << "  │    │    Track " << std::setw(2)
-                                      << trackPair.first << ": " << song.metadata.title << "\n";
+                        if (cb.onSong &&
+                            cb.onSong(artist, album, disc, track, song)
+                                == VisitResult::Stop)
+                            goto done;
                     }
                 }
             }
         }
     }
 
-    std::cout << "──────────────────────────────── Library Summary ────────────────────────────\n";
-    std::cout << "Total Artists: " << totalArtists << "\n";
-    std::cout << "Total Albums : " << totalAlbums << "\n";
-    std::cout << "Total Discs  : " << totalDiscs << "\n";
-    std::cout << "Total Songs  : " << totalSongs << "\n";
-    std::cout << "Unique Genres: " << uniqueGenres.size() << "\n";
-    std::cout << "─────────────────────────────────────────────────────────────────────────────\n";
+done:
+    if (cb.onSummary)
+        cb.onSummary(
+            totalArtists,
+            totalAlbums,
+            totalDiscs,
+            totalSongs,
+            static_cast<int>(uniqueGenres.size())
+        );
+
+    if (cb.onEnd)
+        cb.onEnd();
 }
 
-// ------------------------------------------------------------
-void SongTree::printAllArtists() const
+auto SongTree::findSong(
+    const std::function<bool(const Song&)>& predicate,
+    const std::function<void(const Song&)>& onFound
+) const -> bool
 {
-    std::cout << "\n──────────────────────────────── All Artists ────────────────────────────\n";
-    for (const auto& artistPair : map)
-        std::cout << "- " << artistPair.first << "\n";
-    std::cout << "────────────────────────────────────────────────────────────────────────────\n";
-}
+    bool found = false;
 
-// ------------------------------------------------------------
-void SongTree::printSongs(const Songs& songs)
-{
-    if (songs.empty())
-    {
-        std::cout << "No songs found.\n";
-        return;
-    }
-
-    BucketedMap<Album, Song> albums;
-    for (const auto& song : songs)
-        albums[song.metadata.album].push_back(song);
-
-    std::cout << "\nSongs List:\n";
-    std::cout << "─────────────────────────────────────\n";
-
-    for (const auto& albumPair : albums)
-    {
-        const auto& album      = albumPair.first;
-        const auto& albumSongs = albumPair.second;
-
-        std::cout << "├─── Album: " << album << "\n";
-        std::cout << "└─ Total Songs: " << albumSongs.size() << "\n";
-
-        for (const auto& song : albumSongs)
-            std::cout << "    │  Track: " << song.metadata.title << "\n";
-
-        std::cout << "─────────────────────────────────────\n";
-    }
-}
-
-// ------------------------------------------------------------
-auto SongTree::getSongsByArtist(const std::string& artist)
-{
-    Songs result;
-    auto artistIt = map.find(artist);
-    if (artistIt != map.end())
-    {
-        for (const auto& albumPair : artistIt->second)
-            for (const auto& discPair : albumPair.second)
-                for (const auto& trackPair : discPair.second)
-                    for (const auto& inodePair : trackPair.second)
-                        result.push_back(inodePair.second);
-    }
-    printSongs(result);
-    return result;
-}
-
-// ------------------------------------------------------------
-auto SongTree::getSongsByAlbum(const Artist& artist, const Album& album) const
-{
-    Songs result;
-    auto artistIt = map.find(artist);
-    if (artistIt != map.end())
-    {
-        auto albumIt = artistIt->second.find(album);
-        if (albumIt != artistIt->second.end())
-        {
-            for (const auto& discPair : albumIt->second)
-                for (const auto& trackPair : discPair.second)
-                    for (const auto& inodePair : trackPair.second)
-                        result.push_back(inodePair.second);
-        }
-    }
-    return result;
-}
-
-// ------------------------------------------------------------
-void SongTree::getSongsByGenreAndPrint() const
-{
-    std::map<std::string, Songs> genreMap;
-
-    for (const auto& artistPair : map)
-        for (const auto& albumPair : artistPair.second)
-            for (const auto& discPair : albumPair.second)
-                for (const auto& trackPair : discPair.second)
-                    for (const auto& inodePair : trackPair.second)
-                        genreMap[inodePair.second.metadata.genre].push_back(inodePair.second);
-
-    std::cout << "\n=== Songs Grouped by Genre ===\n";
-    std::cout << "──────────────────────────────────────\n";
-
-    for (const auto& genrePair : genreMap)
-    {
-        const auto& genre = genrePair.first;
-        const auto& songs = genrePair.second;
-
-        std::cout << "\nGenre: " << genre << "\n";
-        std::cout << "──────────────────────────────────────\n";
-
-        for (const auto& song : songs)
-        {
-            std::cout << "├─── " << song.metadata.title
-                      << " by " << song.metadata.artist
-                      << " (Album: " << song.metadata.album << ")\n";
-        }
-        std::cout << "──────────────────────────────────────\n";
-    }
-}
-
-// ------------------------------------------------------------
-void SongTree::printSongInfo(const std::string& input)
-{
-    bool isFilePath = input.find('/') != std::string::npos || input.find('\\') != std::string::npos;
-    std::optional<Song> foundSong;
-
-    if (isFilePath)
-    {
-        std::cout << "\n> Taking argument as a possible audio file path...\n";
-        struct stat fileStat {};
-        if (stat(input.c_str(), &fileStat) == 0)
-        {
-            unsigned int inode = fileStat.st_ino;
-            for (const auto& artistPair : map)
-                for (const auto& albumPair : artistPair.second)
-                    for (const auto& discPair : albumPair.second)
-                        for (const auto& trackPair : discPair.second)
-                            for (const auto& inodePair : trackPair.second)
-                                if (inodePair.first == inode)
-                                    foundSong = inodePair.second;
-        }
-    }
-    else
-    {
-        for (const auto& artistPair : map)
-            for (const auto& albumPair : artistPair.second)
-                for (const auto& discPair : albumPair.second)
-                    for (const auto& trackPair : discPair.second)
-                        for (const auto& inodePair : trackPair.second)
-                            if (levenshteinDistance(inodePair.second.metadata.title, input) < 3)
-                                foundSong = inodePair.second;
-    }
-
-    if (foundSong)
-    {
-        const auto& song = *foundSong;
-        std::cout << "\nSong Information:\n";
-        std::cout << "──────────────────────────────────────\n";
-        std::cout << "Title     : " << song.metadata.title << "\n";
-        std::cout << "Artist    : " << song.metadata.artist << "\n";
-        std::cout << "Album     : " << song.metadata.album << "\n";
-        std::cout << "Disc      : " << song.metadata.discNumber << "\n";
-        std::cout << "Track     : " << song.metadata.track << "\n";
-        std::cout << "Genre     : " << song.metadata.genre << "\n";
-        std::cout << "Inode     : " << song.inode << "\n";
-
-        if (!song.metadata.additionalProperties.empty())
-        {
-            std::cout << "Additional Properties:\n";
-            for (const auto& prop : song.metadata.additionalProperties)
-            {
-                if (prop.first == "LYRICS")
-                {
-                    std::cout << "\nLyrics:\n";
-                    std::cout << "──────────────────────────────────────\n";
-
-                    const std::string& lyrics = prop.second;
-                    size_t lineLength = 80;
-                    for (size_t start = 0; start < lyrics.size(); start += lineLength)
-                        std::cout << lyrics.substr(start, std::min(lineLength, lyrics.size() - start)) << "\n";
-
-                    std::cout << "──────────────────────────────────────\n";
-                }
-                else
-                {
-                    std::cout << "  - " << prop.first << " : " << prop.second << "\n";
-                }
+    traverse({
+        .onSong = [&](auto&, auto&, auto, auto, const Song& s) -> auto {
+            if (predicate(s)) {
+                onFound(s);
+                found = true;
+                return VisitResult::Stop;
             }
+            return VisitResult::Continue;
         }
-        else
-        {
-            std::cout << "No additional properties found!\n";
-        }
-        std::cout << "──────────────────────────────────────\n";
-    }
-    else
-    {
-        std::cout << "⚠️  Song not found: " << input << "\n";
-    }
+    });
+
+    return found;
 }
 
-} // namespace dirsort
+void SongTree::forEach(
+    const SongPredicate& pred,
+    const SongTreeVisitor& visitor
+) const
+{
+    traverse({
+        .onSong = [&](auto& a, auto& al, auto d, auto t, const Song& s) -> auto {
+            if (!pred(a, al, d, t, s))
+                return VisitResult::Continue;
+            return visitor(a, al, d, t, s);
+        }
+    });
+}
+
+} // namespace core

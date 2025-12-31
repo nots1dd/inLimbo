@@ -77,4 +77,4 @@ public:
 
 } // namespace thread
 
-extern threads::SafeMap<dirsort::SongMap> g_songMap;
+extern threads::SafeMap<core::SongMap> g_songMap;

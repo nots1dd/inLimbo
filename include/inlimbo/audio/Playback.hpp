@@ -27,7 +27,7 @@ struct Device {
 
 using Devices = std::vector<Device>;
 
-enum class PlaybackState : uint8_t {
+enum class PlaybackState : ui8 {
     Stopped,
     Playing,
     Paused

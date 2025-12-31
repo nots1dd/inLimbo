@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 
+namespace helpers
+{
+
 /**
  * @file levenshteinDist.hpp
  * @brief Contains the implementation of the Levenshtein distance algorithm.
@@ -68,4 +71,6 @@ inline auto levenshteinDistance(const std::string& s1, const std::string& s2) ->
   // Return the computed Levenshtein distance, which is the value at the bottom-right corner of the
   // table.
   return dist[len1][len2];
+}
+
 }

@@ -27,21 +27,21 @@ namespace frontend::cmdline {
 
 class Interface {
 public:
-    explicit Interface(threads::SafeMap<dirsort::SongMap>& songMap)
-        : songs_(std::move(songMap)) {}
+    explicit Interface(threads::SafeMap<core::SongMap>& songMap)
+        : m_songMapTS(std::move(songMap)) {}
 
     void run(audio::AudioEngine& eng, const Metadata& meta) {
         enableRawMode();
-        running_.store(true);
+        m_isRunning.store(true);
 
         std::thread status([&]() -> void { statusLoop(eng, meta); });
         std::thread input ([&]() -> void { inputLoop(eng, meta); });
         std::thread seek  ([&]() -> void { seekLoop(eng); });
 
-        while (running_.load())
+        while (m_isRunning.load())
             std::this_thread::sleep_for(std::chrono::milliseconds(40));
 
-        running_.store(false);
+        m_isRunning.store(false);
         disableRawMode();
 
         if (input.joinable())  input.join();
@@ -67,25 +67,25 @@ public:
     }
 
 private:
-    threads::SafeMap<dirsort::SongMap> songs_;
-    std::atomic<bool> running_{false};
-    std::atomic<double> pendingSeek_{0.0};
-    termios orig_{};
+    threads::SafeMap<core::SongMap> m_songMapTS;
+    std::atomic<bool> m_isRunning{false};
+    std::atomic<double> m_pendingSeek{0.0};
+    termios m_termOrig{};
 
     void enableRawMode() {
-        tcgetattr(STDIN_FILENO, &orig_);
-        termios raw = orig_;
+        tcgetattr(STDIN_FILENO, &m_termOrig);
+        termios raw = m_termOrig;
         raw.c_lflag &= ~(ICANON | ECHO);
         tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
         fcntl(STDIN_FILENO, F_SETFL, O_NONBLOCK);
     }
 
     void disableRawMode() {
-        tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_);
+        tcsetattr(STDIN_FILENO, TCSAFLUSH, &m_termOrig);
     }
 
     void statusLoop(audio::AudioEngine& eng, const Metadata& met) {
-        while (running_.load()) {
+        while (m_isRunning.load()) {
             draw(eng, met);
             std::this_thread::sleep_for(std::chrono::milliseconds(120));
         }
@@ -115,7 +115,7 @@ private:
 
     void inputLoop(audio::AudioEngine& eng, const Metadata& meta) {
         pollfd pfd{.fd=STDIN_FILENO, .events=POLLIN, .revents=0};
-        while (running_.load()) {
+        while (m_isRunning.load()) {
             if (poll(&pfd, 1, 25) > 0) {
                 char c;
                 if (read(STDIN_FILENO, &c, 1) > 0) {
@@ -124,12 +124,12 @@ private:
                 }
             }
         }
-        running_.store(false);
+        m_isRunning.store(false);
     }
 
     void seekLoop(audio::AudioEngine& eng) {
-        while (running_.load()) {
-            double d = pendingSeek_.exchange(0.0);
+        while (m_isRunning.load()) {
+            double d = m_pendingSeek.exchange(0.0);
             if (std::abs(d) > 0.01) {
                 if (d > 0.0) eng.seekForward(d);
                 else         eng.seekBackward(-d);
@@ -143,8 +143,8 @@ private:
             case 'p': eng.play(); break;
             case 's': eng.pause(); break;
             case 'r': eng.restart(); break;
-            case 'b': pendingSeek_ -= 2.0; break;
-            case 'f': pendingSeek_ += 2.0; break;
+            case 'b': m_pendingSeek -= 2.0; break;
+            case 'f': m_pendingSeek += 2.0; break;
             case '=': eng.setVolume(std::min(1.5f, eng.getVolume() + 0.05f)); break;
             case '-': eng.setVolume(std::max(0.0f, eng.getVolume() - 0.05f)); break;
             case 'i': showMeta(meta); break;
