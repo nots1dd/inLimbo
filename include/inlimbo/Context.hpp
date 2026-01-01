@@ -157,7 +157,9 @@ struct AppContext
 
   explicit AppContext() = delete;
   AppContext(const std::string& program, const std::string& description)
-      : m_cmdLine(program, description), m_debugLogTagLibField(parser::parseTOMLField("debug", "taglib_parser_log")), m_tagLibParser(m_debugLogTagLibField)
+      : m_cmdLine(program, description),
+        m_debugLogTagLibField(parser::parseTOMLField("debug", "taglib_parser_log")),
+        m_tagLibParser(m_debugLogTagLibField)
   {
     setupArgs(m_cmdLine);
   }
@@ -166,10 +168,10 @@ struct AppContext
   cli::CmdLine m_cmdLine;
 
   // CLI
-  std::string m_songName     = {};
+  std::string m_songName            = {};
   std::string m_debugLogTagLibField = {};
-  bool        m_editMetadata = false;
-  float       volume         = 1.0f;
+  bool        m_editMetadata        = false;
+  float       volume                = 1.0f;
 
   PrintAction m_printAction = PrintAction::None;
 
@@ -191,16 +193,16 @@ inline auto resolvePrintAction(const cli::CmdLine& args) -> PrintAction
     return PrintAction::Albums;
   if (args.has("print-genre"))
     return PrintAction::Genres;
-  if (args.has("print-songs"))
-    return PrintAction::SongPaths;
-  if (args.has("print-songs-by-artist"))
-    return PrintAction::SongsByArtist;
-  if (args.has("print-songs-by-album"))
-    return PrintAction::SongsByAlbum;
-  if (args.has("print-songs-by-genre"))
-    return PrintAction::SongsByGenre;
   if (args.has("print-summary"))
     return PrintAction::Summary;
+  if (args.has("songs-paths"))
+    return PrintAction::SongPaths;
+  if (args.has("songs-artist"))
+    return PrintAction::SongsByArtist;
+  if (args.has("songs-album"))
+    return PrintAction::SongsByAlbum;
+  if (args.has("songs-genre"))
+    return PrintAction::SongsByGenre;
   return PrintAction::None;
 }
 
@@ -220,33 +222,33 @@ inline void maybeHandlePrintActions(AppContext& ctx)
     case PrintAction::Genres:
       helpers::cmdline::printGenres(ctx.m_songTree);
       break;
+    case PrintAction::Summary:
+      helpers::cmdline::printSummary(ctx.m_songTree);
+      break;
     case PrintAction::SongPaths:
       helpers::cmdline::printSongPaths(ctx.m_songTree);
       break;
     case PrintAction::SongsByArtist:
     {
       const std::string artistName =
-        ctx.m_cmdLine.getOptional<std::string>("print-songs-by-artist").value_or("");
+        ctx.m_cmdLine.getOptional<std::string>("songs-artist").value_or("");
       helpers::cmdline::printSongsByArtist(ctx.m_songTree, artistName);
       break;
     }
     case PrintAction::SongsByAlbum:
     {
       const std::string albumName =
-        ctx.m_cmdLine.getOptional<std::string>("print-songs-by-album").value_or("");
+        ctx.m_cmdLine.getOptional<std::string>("songs-album").value_or("");
       helpers::cmdline::printSongsByAlbum(ctx.m_songTree, albumName);
       break;
     }
     case PrintAction::SongsByGenre:
     {
       const std::string genreName =
-        ctx.m_cmdLine.getOptional<std::string>("print-songs-by-genre").value_or("");
+        ctx.m_cmdLine.getOptional<std::string>("songs-genre").value_or("");
       helpers::cmdline::printSongsByGenre(ctx.m_songTree, genreName);
       break;
     }
-    case PrintAction::Summary:
-      helpers::cmdline::printSummary(ctx.m_songTree);
-      break;
     default:
       break;
   }
