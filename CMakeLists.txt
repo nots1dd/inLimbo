@@ -93,6 +93,11 @@ target_link_libraries(inLimbo-core
         asound
 )
 
+target_compile_definitions(inLimbo-core
+    PRIVATE
+        $<$<CONFIG:Debug>:INLIMBO_DEBUG_BUILD>
+)
+
 set_target_properties(inLimbo-core PROPERTIES
     OUTPUT_NAME "inLimbo-core"
     POSITION_INDEPENDENT_CODE ON
@@ -115,6 +120,11 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         inLimbo-core
+)
+
+target_compile_definitions(${PROJECT_NAME}
+    PRIVATE
+        $<$<CONFIG:Debug>:INLIMBO_DEBUG_BUILD>
 )
 
 # -----------------------------------------------------------

@@ -3,6 +3,10 @@
 #include <cstddef>
 #include <utility>
 
+#ifdef INLIMBO_DEBUG_BUILD
+#warning "INLIMBO_DEBUG_BUILD is enabled!"
+#endif
+
 // ============================================================
 // Project and Version Info
 // ============================================================

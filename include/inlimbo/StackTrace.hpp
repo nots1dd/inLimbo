@@ -1,17 +1,9 @@
 #pragma once
 
 #include "utils/Env-Vars.hpp"
-#include "utils/timer/Timer.hpp"
-#include <backtrace-supported.h>
-#include <backtrace.h>
-#include <cstdlib>
-#include <cxxabi.h>
-#include <iostream>
-#include <mutex>
 #include <sstream>
 #include <string>
 #include <unistd.h>
-#include <utility>
 #include <vector>
 
 namespace core
@@ -105,6 +97,17 @@ struct StackTrace
   }
 };
 
+#ifdef INLIMBO_DEBUG_BUILD
+
+#include "utils/timer/Timer.hpp"
+#include <backtrace-supported.h>
+#include <backtrace.h>
+#include <cstdlib>
+#include <cxxabi.h>
+#include <iostream>
+#include <mutex>
+#include <utility>
+
 class BacktraceCollector
 {
 public:
@@ -139,8 +142,7 @@ private:
     if (!name)
       return "<unknown>";
     int         st  = 0;
-    size_t      len = 0;
-    char*       out = abi::__cxa_demangle(name, nullptr, &len, &st);
+    char*       out = abi::__cxa_demangle(name, nullptr, nullptr, &st);
     std::string r   = (st == 0 && out) ? out : name;
     std::free(out);
     return r;
@@ -235,6 +237,16 @@ private:
   std::string m_func;
 };
 
+#else
+
+class TraceScope
+{
+public:
+  TraceScope(...) {}
+};
+
+#endif
+
 } // namespace core
 
 #if defined(__GNUC__) || defined(__clang__)
@@ -245,6 +257,7 @@ private:
 #define RECORD_FUNC_TO_BACKTRACE(cat) core::TraceScope trace_scope(cat, __FUNCTION__)
 #endif
 
+#ifdef INLIMBO_DEBUG_BUILD
 #define DUMP_TRACE()                                                                           \
   do                                                                                           \
   {                                                                                            \
@@ -253,3 +266,10 @@ private:
     else                                                                                       \
       std::cout << "[trace disabled] set " << INLIMBO_STACK_TRACE_DUMP_ENV << "=1 to dump.\n"; \
   } while (0)
+#else
+#define DUMP_TRACE()                                                      \
+  do                                                                      \
+  {                                                                       \
+    std::cout << "[trace disabled] build without INLIMBO_DEBUG_BUILD.\n"; \
+  } while (0)
+#endif

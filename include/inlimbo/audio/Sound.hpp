@@ -87,7 +87,7 @@ struct Sound
   std::atomic<bool> eof{false};
 
   // Dynamic ring buffer - size calculated in constructor
-  std::unique_ptr<RingBuffer<float>> ring;
+  std::unique_ptr<utils::RingBuffer<float>> ring;
 
   // Reusable decode buffer - size calculated based on audio params
   std::vector<float> decodeBuffer;
@@ -105,7 +105,7 @@ struct Sound
     // Ring buffer: RING_BUFFER_SECONDS of audio at current sample rate
     // Size in samples = seconds * sampleRate * channels
     auto ringBufferSamples = static_cast<size_t>(RING_BUFFER_SECONDS * sampleRate * channels);
-    ring                   = std::make_unique<RingBuffer<float>>(ringBufferSamples);
+    ring                   = std::make_unique<utils::RingBuffer<float>>(ringBufferSamples);
 
     // Decode buffer: DECODE_BUFFER_SECONDS of audio or MIN_DECODE_BUFFER_FRAMES, whichever is
     // larger This ensures we can handle large codec frames

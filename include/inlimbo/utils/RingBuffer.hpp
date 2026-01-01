@@ -4,6 +4,9 @@
 #include <mutex>
 #include <vector>
 
+namespace utils
+{
+
 template <typename T> class RingBuffer
 {
 private:
@@ -78,3 +81,5 @@ public:
     m_size     = 0;
   }
 };
+
+} // namespace utils

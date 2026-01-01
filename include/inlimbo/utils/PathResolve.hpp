@@ -34,7 +34,7 @@ FORCE_INLINE auto getHomeDir() -> const std::string
  */
 FORCE_INLINE auto getBaseConfigPath() -> std::string
 {
-  const char* customConfigHome = getenv(CUSTOM_CONFIG_MACRO);
+  const char* customConfigHome = getenv(INLIMBO_CUSTOM_CONFIG_ENV);
   if (customConfigHome)
   {
     return {customConfigHome};
