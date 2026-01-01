@@ -334,8 +334,8 @@ void AudioEngine::initAlsa(const std::string& deviceName)
 
     if (err >= 0)
     {
-      m_backendInfo.format = format;
-      success              = true;
+      m_backendInfo.pcmFormat = format;
+      success                 = true;
       break;
     }
   }
@@ -406,7 +406,7 @@ void AudioEngine::decodeAndPlay()
       {
         float vol = m_volume.load();
 
-        if (m_backendInfo.format == SND_PCM_FORMAT_FLOAT_LE)
+        if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_FLOAT_LE)
         {
           for (size_t i = 0; i < samplesRead; ++i)
             playbackBuffer[i] *= vol;
@@ -421,7 +421,7 @@ void AudioEngine::decodeAndPlay()
             snd_pcm_recover(m_pcmData, r, 0);
           }
         }
-        else if (m_backendInfo.format == SND_PCM_FORMAT_S16_LE)
+        else if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_S16_LE)
         {
           for (size_t i = 0; i < samplesRead; ++i)
           {
@@ -439,7 +439,7 @@ void AudioEngine::decodeAndPlay()
             snd_pcm_recover(m_pcmData, r, 0);
           }
         }
-        else if (m_backendInfo.format == SND_PCM_FORMAT_S32_LE)
+        else if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_S32_LE)
         {
           for (size_t i = 0; i < samplesRead; ++i)
           {

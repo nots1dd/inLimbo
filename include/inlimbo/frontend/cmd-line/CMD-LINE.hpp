@@ -37,7 +37,7 @@ public:
     m_isRunning.store(true);
 
     std::thread status([&]() -> void { statusLoop(eng, meta); });
-    std::thread input([&]() -> void { inputLoop(eng, meta); });
+    std::thread input([&]() -> void { inputLoop(eng); });
     std::thread seek([&]() -> void { seekLoop(eng); });
 
     while (m_isRunning.load())
@@ -101,14 +101,15 @@ private:
 
   void draw(const audio::AudioEngine& eng, const Metadata& met)
   {
-    auto [pos, len] = *eng.getPlaybackTime();
-    float vol       = eng.getVolume() * 100.0f;
-    bool  play      = eng.isPlaying();
+    auto [pos, len]        = *eng.getPlaybackTime();
+    float      vol         = eng.getVolume() * 100.0f;
+    bool       play        = eng.isPlaying();
+    const auto backendInfo = eng.getBackendInfo();
 
     constexpr int W      = 50;
     int           filled = len > 0.0 ? int((pos / len) * W) : 0;
 
-    showMeta(met);
+    showMetadataAndBackendInfo(met, backendInfo);
 
     std::cout << (play ? UI_PLAY : UI_PAUSE) << "  " << std::fixed << std::setprecision(1) << pos
               << " / " << len << " s   Vol " << std::setw(3) << int(vol) << "%\n\n";
@@ -120,7 +121,7 @@ private:
     std::cout.flush();
   }
 
-  void inputLoop(audio::AudioEngine& eng, const Metadata& meta)
+  void inputLoop(audio::AudioEngine& eng)
   {
     pollfd pfd{.fd = STDIN_FILENO, .events = POLLIN, .revents = 0};
     while (m_isRunning.load())
@@ -130,7 +131,7 @@ private:
         char c;
         if (read(STDIN_FILENO, &c, 1) > 0)
         {
-          if (!handleKey(eng, c, meta))
+          if (!handleKey(eng, c))
             break;
         }
       }
@@ -154,7 +155,7 @@ private:
     }
   }
 
-  auto handleKey(audio::AudioEngine& eng, char c, const Metadata& meta) -> bool
+  auto handleKey(audio::AudioEngine& eng, char c) -> bool
   {
     switch (c)
     {
@@ -179,9 +180,6 @@ private:
       case '-':
         eng.setVolume(std::max(0.0f, eng.getVolume() - 0.05f));
         break;
-      case 'i':
-        showMeta(meta);
-        break;
       case 'q':
         return false;
       default:
@@ -190,13 +188,19 @@ private:
     return true;
   }
 
-  static void showMeta(const Metadata& m)
+  static void showMetadataAndBackendInfo(const Metadata& m, const audio::BackendInfo& backendInfo)
   {
     std::cout << UI_CLEAR << UI_TITLE << "\n\n"
-              << "Title : " << m.title << "\n"
-              << "Artist: " << m.artist << "\n"
-              << "Album : " << m.album << "\n"
-              << "Path  : " << m.filePath << "\n\n"
+              << "Title   : " << m.title << "\n"
+              << "Artist  : " << m.artist << "\n"
+              << "Album   : " << m.album << "\n"
+              << "Genre   : " << m.genre << "\n"
+              << "Bitrate : " << m.bitrate << " kbps\n"
+              << "Path    : " << m.filePath << "\n\n"
+              << "------ AudioBackend Info ------\n"
+              << "Sample Rate : " << backendInfo.sampleRate << " Hz\n"
+              << "Channels    : " << backendInfo.channels << "\n"
+              << "Format      : " << backendInfo.pcmFormat << "\n\n"
               << "Press any key...\n";
     std::cout.flush();
   }

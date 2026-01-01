@@ -31,9 +31,10 @@ struct Device
 struct BackendInfo
 {
   Device           dev;
-  int              sampleRate = DEFAULT_SOUND_SAMPLE_RATE;
-  int              channels   = DEFAULT_SOUND_CHANNELS;
-  snd_pcm_format_t format     = SND_PCM_FORMAT_FLOAT_LE;
+  int              sampleRate    = DEFAULT_SOUND_SAMPLE_RATE;
+  int              channels      = DEFAULT_SOUND_CHANNELS;
+  snd_pcm_format_t pcmFormat     = SND_PCM_FORMAT_FLOAT_LE;
+  std::string      pcmFormatName = {};
 };
 
 using Devices = std::vector<Device>;
@@ -90,6 +91,12 @@ public:
     if (index >= m_sounds.size())
       return;
     m_volume.store(std::clamp(v, 0.0f, 1.5f));
+  }
+
+  INLIMBO_API_CPP auto getBackendInfo() const -> BackendInfo
+  {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    return m_backendInfo;
   }
 
   INLIMBO_API_CPP [[nodiscard]] auto getVolume(size_t index = 0) const -> float
