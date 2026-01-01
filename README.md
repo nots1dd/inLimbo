@@ -19,13 +19,14 @@
   <a href="https://github.com/nots1dd/inLimbo/issues">Report a bug</a>
 </p>
 
-> [!WARNING]
+> [!CAUTION]
+>
+> **INLIMBO IS NOT A STABLE PROJECT!**
 > 
-> inLimbo is a WIP
-> 
-> Most aspects of the project are under heavy development
-> and no stable release is present as of yet.
-> 
+> This branch is **pretty BROKEN** and unmaintainable for me,
+> hence a new branch `develop` has an upcoming draft on fixing it.
+>
+> Details are [here](https://github.com/nots1dd/inLimbo/pull/5) 
 
 The inLimbo project aims to be a new upcoming TUI music player for UNIX based systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.
 
