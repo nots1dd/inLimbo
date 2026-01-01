@@ -3,6 +3,8 @@
 #include "Config.hpp"
 #include "Env-Vars.hpp"
 #include "Logger.hpp"
+#include <iostream>
+#include <stdexcept>
 #include <string>
 
 namespace utils
@@ -13,8 +15,7 @@ FORCE_INLINE auto getHomeDir() -> const std::string
   const char* homeDir = getenv("HOME");
   if (!homeDir)
   {
-    LOG_ERROR("HOME environment variable not found!");
-    exit(EXIT_FAILURE);
+    throw std::runtime_error("HOME environment variable not found! Exiting program...");
   }
 
   return std::string(homeDir);

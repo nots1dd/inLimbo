@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utils/Env-Vars.hpp"
+#include "utils/PathResolve.hpp"
 #include <algorithm>
 #include <cstdlib>
 #include <memory>
@@ -22,8 +23,9 @@
 //
 // note that log level, log file path and log file pattern can all be set via ENVIRONMENT_VARIABLES!
 
-#define __INLIMBO_DEFAULT_LOG_FILE__    "inlimbo/logs/core.log"
-#define __INLIMBO_DEFAULT_LOG_PATTERN__ "[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%n] %v"
+#define __INLIMBO_DEFAULT_LOG_FILE__ \
+  "logs/core.log" // default here is relative to a base directory like cache (~/.cache/)
+#define __INLIMBO_DEFAULT_LOG_PATTERN__ "[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] %v"
 
 namespace core
 {
@@ -132,9 +134,9 @@ private:
     const char* env_level   = std::getenv(INLIMBO_LOG_LEVEL_ENV);
     const char* env_pattern = std::getenv(INLIMBO_LOG_PATTERN_ENV);
 
-    const std::string file = env_file ? env_file : "logs/core.log";
-    const std::string pattern =
-      env_pattern ? env_pattern : "[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%n] %v";
+    const std::string file =
+      env_file ? env_file : (utils::getCachePath() + __INLIMBO_DEFAULT_LOG_FILE__);
+    const std::string pattern = env_pattern ? env_pattern : __INLIMBO_DEFAULT_LOG_PATTERN__;
     const spdlog::level::level_enum level =
       env_level ? parse_log_level(env_level) : spdlog::level::info;
 

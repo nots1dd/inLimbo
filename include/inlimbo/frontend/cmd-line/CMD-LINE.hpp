@@ -191,10 +191,8 @@ private:
   static void showMetadataAndBackendInfo(const Metadata& m, const audio::BackendInfo& backendInfo)
   {
     std::cout << UI_CLEAR << UI_TITLE << "\n\n"
-              << "Title   : " << m.title << "\n"
-              << "Artist  : " << m.artist << "\n"
-              << "Album   : " << m.album << "\n"
-              << "Genre   : " << m.genre << "\n"
+              << "Song    : " << m.title << " by " << m.artist << "\n"
+              << "Album   : " << m.album << " (" << m.genre << ")\n"
               << "Bitrate : " << m.bitrate << " kbps\n"
               << "Path    : " << m.filePath << "\n\n"
               << "------ AudioBackend Info ------\n"

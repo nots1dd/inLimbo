@@ -6,7 +6,7 @@
 #include <string_view>
 #include <utility>
 
-namespace util
+namespace utils
 {
 
 // ---------------------------------------------------------------------------
@@ -162,4 +162,4 @@ private:
   Timer<ClockT, DurationT> timer_;
 };
 
-} // namespace util
+} // namespace utils

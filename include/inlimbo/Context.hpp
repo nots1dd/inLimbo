@@ -171,7 +171,7 @@ struct AppContext
   std::string m_songName            = {};
   std::string m_debugLogTagLibField = {};
   bool        m_editMetadata        = false;
-  float       volume                = 1.0f;
+  float       m_volume              = {};
 
   PrintAction m_printAction = PrintAction::None;
 
@@ -182,7 +182,7 @@ struct AppContext
   // Core objects
   TagLibParser   m_tagLibParser;
   core::SongTree m_songTree = {};
-  util::Timer<>  m_timer    = {};
+  utils::Timer<> m_timer    = {};
 };
 
 inline auto resolvePrintAction(const cli::CmdLine& args) -> PrintAction
@@ -267,7 +267,7 @@ inline auto initializeContext(int argc, char** argv) -> AppContext
   ctx.m_editMetadata = ctx.m_cmdLine.has("edit-metadata");
 
   const float vol = ctx.m_cmdLine.getOptional<float>("volume").value_or(75.0f);
-  ctx.volume      = std::clamp(vol / 100.0f, 0.0f, 1.5f);
+  ctx.m_volume    = std::clamp(vol / 100.0f, 0.0f, 1.5f);
 
   ctx.m_printAction = resolvePrintAction(ctx.m_cmdLine);
 
@@ -402,7 +402,7 @@ inline static void runFrontend(AppContext& ctx)
   const size_t                 devIdx = ui.selectAudioDevice(devices);
 
   engine.initEngineForDevice(devices[devIdx].name);
-  engine.setVolume(ctx.volume);
+  engine.setVolume(ctx.m_volume);
 
   const auto idx = *engine.loadSound(song->metadata.filePath);
   engine.restart();

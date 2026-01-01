@@ -86,10 +86,8 @@ public:
   INLIMBO_API_CPP void seekForward(double seconds, size_t i = 0);
   INLIMBO_API_CPP void seekBackward(double seconds, size_t i = 0);
 
-  INLIMBO_API_CPP void setVolume(float v, size_t index = 0)
+  INLIMBO_API_CPP void setVolume(float v)
   {
-    if (index >= m_sounds.size())
-      return;
     m_volume.store(std::clamp(v, 0.0f, 1.5f));
   }
 
