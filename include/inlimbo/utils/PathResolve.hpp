@@ -3,7 +3,6 @@
 #include "Config.hpp"
 #include "Env-Vars.hpp"
 #include "Logger.hpp"
-#include <iostream>
 #include <stdexcept>
 #include <string>
 

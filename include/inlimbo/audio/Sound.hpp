@@ -66,8 +66,22 @@ using AVCodecContextPtr  = std::unique_ptr<AVCodecContext, AVCodecContextDeleter
 using SwrContextPtr      = std::unique_ptr<SwrContext, SwrContextDeleter>;
 using AVFramePtr         = std::unique_ptr<AVFrame, AVFrameDeleter>;
 
+struct AudioFormat
+{
+  uint sampleRate;
+  uint channels;
+  AVSampleFormat sampleFmt;
+  AVChannelLayout channelLayout;
+
+  std::string sampleFmtName;
+};
+
 struct Sound
 {
+
+  AudioFormat source;   // exact file properties
+  AudioFormat target;   // engine output format (matches backend)
+
   AVFormatContextPtr fmt;
   AVCodecContextPtr  dec;
   SwrContextPtr      swr;

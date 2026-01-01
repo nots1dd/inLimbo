@@ -30,11 +30,27 @@ struct Device
 
 struct BackendInfo
 {
-  Device           dev;
-  int              sampleRate    = DEFAULT_SOUND_SAMPLE_RATE;
-  int              channels      = DEFAULT_SOUND_CHANNELS;
-  snd_pcm_format_t pcmFormat     = SND_PCM_FORMAT_FLOAT_LE;
-  std::string      pcmFormatName = {};
+  Device dev;
+
+  // ---------------------------------------------------------
+  // Audio format (NEGOTIATED, not requested)
+  // ---------------------------------------------------------
+  uint             sampleRate = DEFAULT_SOUND_SAMPLE_RATE;
+  uint             channels   = DEFAULT_SOUND_CHANNELS;
+  snd_pcm_format_t pcmFormat  = SND_PCM_FORMAT_UNKNOWN;
+  std::string      pcmFormatName;
+
+  snd_pcm_uframes_t periodSize = 0; // frames
+  snd_pcm_uframes_t bufferSize = 0; // frames
+  double            latencyMs  = 0.0;
+
+  bool isActive   = false;
+  bool isPlaying  = false;
+  bool isPaused   = false;
+  bool isDraining = false;
+
+  uint64_t xruns  = 0; // underrun count
+  uint64_t writes = 0; // snd_pcm_writei calls
 };
 
 using Devices = std::vector<Device>;
@@ -86,10 +102,7 @@ public:
   INLIMBO_API_CPP void seekForward(double seconds, size_t i = 0);
   INLIMBO_API_CPP void seekBackward(double seconds, size_t i = 0);
 
-  INLIMBO_API_CPP void setVolume(float v)
-  {
-    m_volume.store(std::clamp(v, 0.0f, 1.5f));
-  }
+  INLIMBO_API_CPP void setVolume(float v) { m_volume.store(std::clamp(v, 0.0f, 1.5f)); }
 
   INLIMBO_API_CPP auto getBackendInfo() const -> BackendInfo
   {
@@ -115,6 +128,9 @@ public:
     std::lock_guard<std::mutex> lock(m_mutex);
     return m_currentDevice;
   }
+
+  Sound& getSound(size_t index);
+  const Sound& getSound(size_t index) const;
 
   INLIMBO_API_CPP void unloadSound(size_t index)
   {

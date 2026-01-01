@@ -104,12 +104,12 @@ private:
     auto [pos, len]        = *eng.getPlaybackTime();
     float      vol         = eng.getVolume() * 100.0f;
     bool       play        = eng.isPlaying();
-    const auto backendInfo = eng.getBackendInfo();
+    const audio::Sound& songObj      = eng.getSound(0);
 
     constexpr int W      = 50;
     int           filled = len > 0.0 ? int((pos / len) * W) : 0;
 
-    showMetadataAndBackendInfo(met, backendInfo);
+    showMetadataAndBackendInfo(met, songObj);
 
     std::cout << (play ? UI_PLAY : UI_PAUSE) << "  " << std::fixed << std::setprecision(1) << pos
               << " / " << len << " s   Vol " << std::setw(3) << int(vol) << "%\n\n";
@@ -188,17 +188,16 @@ private:
     return true;
   }
 
-  static void showMetadataAndBackendInfo(const Metadata& m, const audio::BackendInfo& backendInfo)
+  static void showMetadataAndBackendInfo(const Metadata& m, const audio::Sound& sound)
   {
     std::cout << UI_CLEAR << UI_TITLE << "\n\n"
               << "Song    : " << m.title << " by " << m.artist << "\n"
               << "Album   : " << m.album << " (" << m.genre << ")\n"
               << "Bitrate : " << m.bitrate << " kbps\n"
               << "Path    : " << m.filePath << "\n\n"
-              << "------ AudioBackend Info ------\n"
-              << "Sample Rate : " << backendInfo.sampleRate << " Hz\n"
-              << "Channels    : " << backendInfo.channels << "\n"
-              << "Format      : " << backendInfo.pcmFormat << "\n\n"
+              << "Sample Rate : " << sound.source.sampleRate << " Hz\n"
+              << "Channels    : " << sound.source.channels << "\n"
+              << "Format      : " << sound.source.sampleFmtName << "\n\n"
               << "Press any key...\n";
     std::cout.flush();
   }
