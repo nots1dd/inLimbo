@@ -2,13 +2,9 @@
 
 #include "Config.hpp"
 #include <cstddef>
-#include <string>
 
 namespace utils
 {
-
-extern std::string DIRECTORY_FIELD;
-extern std::string DEBUG_LOG_PARSE;
 
 // ============================================================
 // Constants

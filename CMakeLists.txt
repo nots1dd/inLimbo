@@ -63,7 +63,6 @@ pkg_check_modules(ALSA REQUIRED alsa)
 # Backend Shared Library
 # -----------------------------------------------------------
 set(INLIMBO_CORE_SOURCES
-    src/utils/RBTree.cc
     src/core/SongTree.cc
     src/core/taglib/Parser.cc
     src/core/DirectoryWalker.cc
