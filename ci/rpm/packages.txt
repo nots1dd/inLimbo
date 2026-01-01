@@ -1,8 +1,14 @@
 @development-tools
-cmake
-pkgconf-pkg-config
-git
+ffmpeg
 ffmpeg-devel
+alsa-lib
 alsa-lib-devel
+taglib
 taglib-devel
 libbacktrace-devel
+pkg-config
+clang
+clang-tools-extra
+cmake
+make
+git

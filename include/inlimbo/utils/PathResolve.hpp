@@ -1,13 +1,14 @@
 #pragma once
 
-#include "Env-Vars.hpp"
 #include "Config.hpp"
+#include "Env-Vars.hpp"
 #include "Logger.hpp"
 #include <string>
 
-namespace utils {
+namespace utils
+{
 
-FORCE_INLINE auto getHomeDir() -> const std::string 
+FORCE_INLINE auto getHomeDir() -> const std::string
 {
   const char* homeDir = getenv("HOME");
   if (!homeDir)
@@ -50,7 +51,10 @@ FORCE_INLINE auto getBaseConfigPath() -> std::string
  * @param fileName The name of the configuration file (e.g., "config.toml").
  * @return A string representing the full path to the configuration file.
  */
-FORCE_INLINE auto getConfigPath(std::string fileName) -> std::string { return getBaseConfigPath() + fileName; }
+FORCE_INLINE auto getConfigPath(std::string fileName) -> std::string
+{
+  return getBaseConfigPath() + fileName;
+}
 
 FORCE_INLINE auto getCachePath() -> const std::string
 {
@@ -59,4 +63,4 @@ FORCE_INLINE auto getCachePath() -> const std::string
   return cacheFilePath;
 }
 
-}
+} // namespace utils

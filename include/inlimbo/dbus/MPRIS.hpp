@@ -320,8 +320,8 @@ private:
    */
   static auto handle_root_get_property(GDBusConnection* connection, const char* sender,
                                        const char* object_path, const char* interface_name,
-                                       const char* property_name, GError** error,
-                                       void* user_data) -> GVariant*
+                                       const char* property_name, GError** error, void* user_data)
+    -> GVariant*
   {
     auto* service = static_cast<MPRISService*>(user_data);
 
@@ -358,8 +358,8 @@ private:
    */
   static auto handle_player_get_property(GDBusConnection* connection, const char* sender,
                                          const char* object_path, const char* interface_name,
-                                         const char* property_name, GError** error,
-                                         void* user_data) -> GVariant*
+                                         const char* property_name, GError** error, void* user_data)
+    -> GVariant*
   {
     auto* service = static_cast<MPRISService*>(user_data);
 

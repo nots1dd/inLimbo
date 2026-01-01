@@ -14,7 +14,7 @@ using namespace std;
 
 #define LIB_BIN_NAME "lib.bin"
 
-namespace core 
+namespace core
 {
 
 class INLIMBO_API_CPP InodeFileMapper
@@ -46,4 +46,4 @@ public:
   }
 };
 
-}
+} // namespace core

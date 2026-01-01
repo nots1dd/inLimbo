@@ -1,8 +1,10 @@
 base-devel
-cmake
-pkgconf
-git
 ffmpeg
-alsa-lib
 taglib
-libbacktrace
+alsa-lib
+pkgconf
+clang
+clang-tools-extra
+cmake
+make
+git

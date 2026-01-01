@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Config.hpp"
-#include "toml.hpp"
 #include "Logger.hpp"
+#include "toml.hpp"
 #include "utils/PathResolve.hpp"
 #include <cstdlib>
 #include <filesystem>
@@ -10,8 +10,8 @@
 using namespace std;
 namespace fs = std::filesystem;
 
-namespace parser {
-
+namespace parser
+{
 
 /**
  * @brief Macros for parent and field names used in the TOML configuration.
@@ -103,7 +103,7 @@ FORCE_INLINE auto parseTOMLField(string parent, string field) -> string_view
  * @return A string view representing the value of the field.
  */
 FORCE_INLINE auto parseTOMLFieldCustom(const toml::parse_result& custom_config, string parent,
-                          string field) -> string_view
+                                       string field) -> string_view
 {
   return custom_config[parent][field].value_or(
     ""sv); /**< If the field is not found, return an empty string view. */
@@ -137,7 +137,7 @@ FORCE_INLINE auto parseTOMLFieldInt(string parent, string field) -> int64_t
  * @return The integer value of the field, or -1 if the field is not found.
  */
 FORCE_INLINE auto parseTOMLFieldIntCustom(const toml::parse_result& custom_config, string parent,
-                             string field) -> int64_t
+                                          string field) -> int64_t
 {
   return custom_config[parent][field].value_or(
     -1); /**< If the field is not found, return -1 as default. */
@@ -150,4 +150,4 @@ FORCE_INLINE auto parseTOMLFieldBool(const string& parent, const string& field) 
   return false;
 }
 
-}
+} // namespace parser

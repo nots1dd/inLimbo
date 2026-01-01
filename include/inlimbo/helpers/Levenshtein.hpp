@@ -73,4 +73,4 @@ inline auto levenshteinDistance(const std::string& s1, const std::string& s2) ->
   return dist[len1][len2];
 }
 
-}
+} // namespace helpers

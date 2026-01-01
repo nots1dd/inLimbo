@@ -2,8 +2,8 @@
 
 // all the environment variable macros used in inLimbo
 
-#define CUSTOM_CONFIG_MACRO "INLIMBO_CONFIG_HOME" /**< Custom config.toml macro setup */
+#define CUSTOM_CONFIG_MACRO          "INLIMBO_CONFIG_HOME" /**< Custom config.toml macro setup */
 #define INLIMBO_STACK_TRACE_DUMP_ENV "INLIMBO_STACK_TRACE_DUMP"
-#define INLIMBO_LOG_FILE_ENV "INLIMBO_LOG_FILE"
-#define INLIMBO_LOG_LEVEL_ENV "INLIMBO_LOG_LEVEL"
-#define INLIMBO_LOG_PATTERN_ENV "INLIMBO_LOG_PATTERN"
+#define INLIMBO_LOG_FILE_ENV         "INLIMBO_LOG_FILE"
+#define INLIMBO_LOG_LEVEL_ENV        "INLIMBO_LOG_LEVEL"
+#define INLIMBO_LOG_PATTERN_ENV      "INLIMBO_LOG_PATTERN"

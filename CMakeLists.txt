@@ -15,15 +15,23 @@ add_compile_options(-Wall -Wextra -Wpedantic -g)
 # External Dependencies
 # -----------------------------------------------------------
 set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/external)
+set(CXXOPTS_INCLUDE_DIRS ${EXTERNAL_DIR}/cxxopts/include)
+set(TOMLPLUSPLUS_INCLUDE_DIRS ${EXTERNAL_DIR}/tomlplusplus)
+set(CEREAL_INCLUDE_DIRS ${EXTERNAL_DIR}/cereal/include)
+
 set(SPDLOG_GH_URL https://github.com/gabime/spdlog.git)
 
 # --- TOML++ (header-only)
 add_library(tomlplusplus INTERFACE)
-target_include_directories(tomlplusplus INTERFACE ${EXTERNAL_DIR}/tomlplusplus)
+target_include_directories(tomlplusplus INTERFACE ${TOMLPLUSPLUS_INCLUDE_DIRS})
 
 # --- Cereal (header-only)
 add_library(cereal INTERFACE)
-target_include_directories(cereal INTERFACE ${EXTERNAL_DIR}/cereal/include/cereal)
+target_include_directories(cereal INTERFACE ${CEREAL_INCLUDE_DIRS})
+
+# --- cxxopts (header-only)
+add_library(cxxopts INTERFACE)
+target_include_directories(cxxopts INTERFACE ${CXXOPTS_INCLUDE_DIRS})
 
 # --- spdlog (compiled)
 set(SPDLOG_DIR ${EXTERNAL_DIR}/spdlog)
@@ -55,29 +63,28 @@ pkg_check_modules(ALSA REQUIRED alsa)
 # Backend Shared Library
 # -----------------------------------------------------------
 set(INLIMBO_CORE_SOURCES
-    src/core/RBTree.cc
+    src/utils/RBTree.cc
     src/core/SongTree.cc
     src/core/taglib/Parser.cc
     src/core/DirectoryWalker.cc
     src/audio/Playback.cc
 )
 
-add_library(inlimbo-core SHARED ${INLIMBO_CORE_SOURCES})
+add_library(inLimbo-core SHARED ${INLIMBO_CORE_SOURCES})
 
-target_include_directories(inlimbo-core
+target_include_directories(inLimbo-core
     PUBLIC
         include/inlimbo
         ${TAGLIB_INCLUDE_DIRS}
-        ${EXTERNAL_DIR}/tomlplusplus
-        ${EXTERNAL_DIR}/cxxopts/include
+        ${TOMLPLUSPLUS_INCLUDE_DIRS}
+        ${CXXOPTS_INCLUDE_DIRS}
+        ${CEREAL_INCLUDE_DIRS}
 )
 
-target_link_libraries(inlimbo-core
+target_link_libraries(inLimbo-core
     PUBLIC
         ${TAGLIB_LIBRARIES}
         spdlog::spdlog
-        tomlplusplus
-        cereal
         backtrace
         avformat
         swresample
@@ -86,8 +93,8 @@ target_link_libraries(inlimbo-core
         asound
 )
 
-set_target_properties(inlimbo-core PROPERTIES
-    OUTPUT_NAME "inlimbo-core"
+set_target_properties(inLimbo-core PROPERTIES
+    OUTPUT_NAME "inLimbo-core"
     POSITION_INDEPENDENT_CODE ON
 )
 
@@ -107,7 +114,7 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
-        inlimbo-core
+        inLimbo-core
 )
 
 # -----------------------------------------------------------
@@ -137,8 +144,9 @@ message(STATUS "${SEP}  Build Directory  : ${CMAKE_BINARY_DIR}")
 message(STATUS "${SEP}  Source Directory : ${CMAKE_SOURCE_DIR}")
 message(STATUS "${SEP}")
 message(STATUS "${SEP}  ── External Dependencies ───────────────────────────────")
-message(STATUS "${SEP}  • TOML++     : ${EXTERNAL_DIR}/tomlplusplus")
-message(STATUS "${SEP}  • cereal     : ${EXTERNAL_DIR}/cereal/include/cereal")
+message(STATUS "${SEP}  • TOML++     : ${TOMLPLUSPLUS_INCLUDE_DIRS}")
+message(STATUS "${SEP}  • cereal     : ${CEREAL_INCLUDE_DIRS}")
+message(STATUS "${SEP}  • cxxopts    : ${CXXOPTS_INCLUDE_DIRS}")
 message(STATUS "${SEP}  • spdlog     : ${SPDLOG_DIR}")
 message(STATUS "${SEP}")
 message(STATUS "${SEP}  ── Multimedia / Audio ───────────────────────────────")

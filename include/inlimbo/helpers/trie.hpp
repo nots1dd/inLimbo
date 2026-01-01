@@ -1,9 +1,9 @@
 #pragma once
 
+#include <algorithm> // For std::transform
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <algorithm>  // For std::transform
 
 /**
  * @file Trie.h
@@ -29,8 +29,8 @@ class TrieNode
 {
 public:
   std::unordered_map<char, TrieNode*> children;
-  std::vector<int> indices;
-  bool isEndOfWord;
+  std::vector<int>                    indices;
+  bool                                isEndOfWord;
 
   TrieNode() : isEndOfWord(false) {}
 };
@@ -66,7 +66,7 @@ private:
     {
       // Remove the index from this node
       auto& indices = node->indices;
-      auto it = std::find(indices.begin(), indices.end(), index);
+      auto  it      = std::find(indices.begin(), indices.end(), index);
       if (it != indices.end())
       {
         indices.erase(it);
@@ -97,7 +97,7 @@ public:
    */
   void insert(const std::string& word, int index)
   {
-    TrieNode* node = root;
+    TrieNode*   node       = root;
     std::string lower_word = toLowerCase(word);
 
     for (char c : lower_word)
@@ -121,14 +121,14 @@ public:
    */
   auto search(const std::string& prefix) -> std::vector<int>
   {
-    TrieNode* node = root;
+    TrieNode*   node         = root;
     std::string lower_prefix = toLowerCase(prefix);
 
     for (char c : lower_prefix)
     {
       if (!node->children.count(c))
       {
-        return {};  // No match found
+        return {}; // No match found
       }
       node = node->children[c];
     }
@@ -142,10 +142,7 @@ public:
    * @param word The word to delete.
    * @param index The index associated with the word.
    */
-  void deleteWord(const std::string& word, int index)
-  {
-    deleteWord(root, word, index);
-  }
+  void deleteWord(const std::string& word, int index) { deleteWord(root, word, index); }
 
   /**
    * @brief Clears all nodes in the Trie.
@@ -161,8 +158,5 @@ public:
    *
    * @return True if the Trie is empty, false otherwise.
    */
-  [[nodiscard]] auto is_empty() const -> bool
-  {
-    return root->children.empty();
-  }
+  [[nodiscard]] auto is_empty() const -> bool { return root->children.empty(); }
 };
