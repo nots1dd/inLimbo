@@ -6,6 +6,19 @@
 #include <unistd.h>
 #include <vector>
 
+#ifdef INLIMBO_DEBUG_BUILD
+
+#include "utils/timer/Timer.hpp"
+#include <backtrace-supported.h>
+#include <backtrace.h>
+#include <cstdlib>
+#include <cxxabi.h>
+#include <iostream>
+#include <mutex>
+#include <utility>
+
+#endif
+
 namespace core
 {
 
@@ -99,15 +112,6 @@ struct StackTrace
 
 #ifdef INLIMBO_DEBUG_BUILD
 
-#include "utils/timer/Timer.hpp"
-#include <backtrace-supported.h>
-#include <backtrace.h>
-#include <cstdlib>
-#include <cxxabi.h>
-#include <iostream>
-#include <mutex>
-#include <utility>
-
 class BacktraceCollector
 {
 public:
@@ -142,7 +146,8 @@ private:
     if (!name)
       return "<unknown>";
     int         st  = 0;
-    char*       out = abi::__cxa_demangle(name, nullptr, nullptr, &st);
+    size_t      len = 0;
+    char*       out = abi::__cxa_demangle(name, nullptr, &len, &st);
     std::string r   = (st == 0 && out) ? out : name;
     std::free(out);
     return r;
