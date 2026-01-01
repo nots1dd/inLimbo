@@ -3,6 +3,11 @@
 #include "thread/Map.hpp"
 #include "utils/signal/SignalHandler.hpp"
 
+// this is optional to have, but useful for debugging
+#ifdef INLIMBO_DEBUG_BUILD
+#warning "INLIMBO_DEBUG_BUILD is enabled!"
+#endif
+
 threads::SafeMap<core::SongMap> g_songMap;
 
 auto main(int argc, char* argv[]) -> int
