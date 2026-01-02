@@ -97,7 +97,7 @@ Sometimes it feels good to be stuck in a weird place in your life, and it feels 
 > As long as your distribution can install & build the requirements, there should *NOT* be any issue
 > 
 
-Check out [BUILD.md](https://github.com/nots1dd/inLimbo/blob/main/BUILD.md) for more options to build targets
+Check out [BUILD.md](https://github.com/nots1dd/inLimbo/blob/develop/BUILD.md) for more options to build targets
 
 ## CREDITS
 

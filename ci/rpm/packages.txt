@@ -1,6 +1,10 @@
 @development-tools
 ffmpeg
-ffmpeg-devel
+ffmpeg-free-devel
+libavcodec-free-devel
+libavutil-free-devel
+libavformat-free-devel
+libswresample-free-devel
 alsa-lib
 alsa-lib-devel
 taglib
