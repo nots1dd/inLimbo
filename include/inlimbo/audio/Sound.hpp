@@ -68,9 +68,9 @@ using AVFramePtr         = std::unique_ptr<AVFrame, AVFrameDeleter>;
 
 struct AudioFormat
 {
-  uint sampleRate;
-  uint channels;
-  AVSampleFormat sampleFmt;
+  uint            sampleRate;
+  uint            channels;
+  AVSampleFormat  sampleFmt;
   AVChannelLayout channelLayout;
 
   std::string sampleFmtName;
@@ -79,8 +79,8 @@ struct AudioFormat
 struct Sound
 {
 
-  AudioFormat source;   // exact file properties
-  AudioFormat target;   // engine output format (matches backend)
+  AudioFormat source; // exact file properties
+  AudioFormat target; // engine output format (matches backend)
 
   AVFormatContextPtr fmt;
   AVCodecContextPtr  dec;

@@ -162,7 +162,7 @@ template <typename Payload = std::string> struct Event
   StackTrace  trace;
 
   Event(std::string c, Payload p)
-      : ts(util::timestamp_now()), cat(std::move(c)), data(std::move(p)),
+      : ts(utils::timestamp_now()), cat(std::move(c)), data(std::move(p)),
         trace(BacktraceCollector::capture(3))
   {
   }

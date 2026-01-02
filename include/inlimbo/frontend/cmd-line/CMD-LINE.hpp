@@ -101,10 +101,10 @@ private:
 
   void draw(const audio::AudioEngine& eng, const Metadata& met)
   {
-    auto [pos, len]        = *eng.getPlaybackTime();
-    float      vol         = eng.getVolume() * 100.0f;
-    bool       play        = eng.isPlaying();
-    const audio::Sound& songObj      = eng.getSound(0);
+    auto [pos, len]             = *eng.getPlaybackTime();
+    float               vol     = eng.getVolume() * 100.0f;
+    bool                play    = eng.isPlaying();
+    const audio::Sound& songObj = eng.getSound(0);
 
     constexpr int W      = 50;
     int           filled = len > 0.0 ? int((pos / len) * W) : 0;

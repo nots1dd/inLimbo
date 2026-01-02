@@ -1,5 +1,4 @@
 #include "Context.hpp"
-
 #include "Logger.hpp"
 #include "audio/Playback.hpp"
 #include "core/InodeMapper.hpp"
@@ -22,7 +21,7 @@ namespace inlimbo
 // clang-format off
 void setupArgs(cli::CmdLine& args)
 {
-  args.add<std::string>(
+  args.add<Title>(
     "General",
     "song",
     's',
@@ -100,7 +99,19 @@ void setupArgs(cli::CmdLine& args)
     "Print all song paths and exit"
   );
 
-  args.add<std::string>(
+  args.add<Title>(
+    "Query",
+    "print-song",
+    'E',
+    "Print song info and exit",
+    std::nullopt,
+    [](const std::string& s) -> bool {
+      return !s.empty();
+    },
+    "Song name defaults to null."
+  );
+
+  args.add<Artist>(
     "Query",
     "songs-artist",
     'a',
@@ -112,7 +123,7 @@ void setupArgs(cli::CmdLine& args)
     "Artist name defaults to null."
   );
 
-  args.add<std::string>(
+  args.add<Album>(
     "Query",
     "songs-album",
     'l',
@@ -124,7 +135,7 @@ void setupArgs(cli::CmdLine& args)
     "Album name defaults to null."
   );
 
-  args.add<std::string>(
+  args.add<Genre>(
     "Query",
     "songs-genre",
     'g',
@@ -140,12 +151,10 @@ void setupArgs(cli::CmdLine& args)
 
 // ------------------------------------------------------------
 
-AppContext::AppContext(const std::string& program,
-                       const std::string& description)
-  : m_cmdLine(program, description),
-    m_debugLogTagLibField(
-      parser::parseTOMLField("debug", "taglib_parser_log")),
-    m_tagLibParser(m_debugLogTagLibField)
+AppContext::AppContext(const std::string& program, const std::string& description)
+    : m_cmdLine(program, description),
+      m_debugLogTagLibField(tomlparser::parseTOMLField("debug", "taglib_parser_log")),
+      m_tagLibParser(m_debugLogTagLibField)
 {
   setupArgs(m_cmdLine);
 }
@@ -154,14 +163,24 @@ AppContext::AppContext(const std::string& program,
 
 auto resolvePrintAction(const cli::CmdLine& args) -> PrintAction
 {
-  if (args.has("print-artists"))   return PrintAction::Artists;
-  if (args.has("print-albums"))    return PrintAction::Albums;
-  if (args.has("print-genre"))     return PrintAction::Genres;
-  if (args.has("print-summary"))   return PrintAction::Summary;
-  if (args.has("songs-paths"))     return PrintAction::SongPaths;
-  if (args.has("songs-artist"))    return PrintAction::SongsByArtist;
-  if (args.has("songs-album"))     return PrintAction::SongsByAlbum;
-  if (args.has("songs-genre"))     return PrintAction::SongsByGenre;
+  if (args.has("print-artists"))
+    return PrintAction::Artists;
+  if (args.has("print-song"))
+    return PrintAction::SongInfo;
+  if (args.has("print-albums"))
+    return PrintAction::Albums;
+  if (args.has("print-genre"))
+    return PrintAction::Genres;
+  if (args.has("print-summary"))
+    return PrintAction::Summary;
+  if (args.has("songs-paths"))
+    return PrintAction::SongPaths;
+  if (args.has("songs-artist"))
+    return PrintAction::SongsByArtist;
+  if (args.has("songs-album"))
+    return PrintAction::SongsByAlbum;
+  if (args.has("songs-genre"))
+    return PrintAction::SongsByGenre;
   return PrintAction::None;
 }
 
@@ -175,29 +194,35 @@ void maybeHandlePrintActions(AppContext& ctx)
   switch (ctx.m_printAction)
   {
     case PrintAction::Artists:
-      helpers::cmdline::printArtists(ctx.m_songTree); break;
+      helpers::cmdline::printArtists(ctx.m_songTree);
+      break;
+    case PrintAction::SongInfo:
+      helpers::cmdline::printSongInfo(
+        ctx.m_songTree, ctx.m_cmdLine.getOptional<Title>("print-song").value_or(""));
+      break;
     case PrintAction::Albums:
-      helpers::cmdline::printAlbums(ctx.m_songTree); break;
+      helpers::cmdline::printAlbums(ctx.m_songTree);
+      break;
     case PrintAction::Genres:
-      helpers::cmdline::printGenres(ctx.m_songTree); break;
+      helpers::cmdline::printGenres(ctx.m_songTree);
+      break;
     case PrintAction::Summary:
-      helpers::cmdline::printSummary(ctx.m_songTree); break;
+      helpers::cmdline::printSummary(ctx.m_songTree);
+      break;
     case PrintAction::SongPaths:
-      helpers::cmdline::printSongPaths(ctx.m_songTree); break;
+      helpers::cmdline::printSongPaths(ctx.m_songTree);
+      break;
     case PrintAction::SongsByArtist:
       helpers::cmdline::printSongsByArtist(
-        ctx.m_songTree,
-        ctx.m_cmdLine.getOptional<std::string>("songs-artist").value_or(""));
+        ctx.m_songTree, ctx.m_cmdLine.getOptional<Artist>("songs-artist").value_or(""));
       break;
     case PrintAction::SongsByAlbum:
       helpers::cmdline::printSongsByAlbum(
-        ctx.m_songTree,
-        ctx.m_cmdLine.getOptional<std::string>("songs-album").value_or(""));
+        ctx.m_songTree, ctx.m_cmdLine.getOptional<Album>("songs-album").value_or(""));
       break;
     case PrintAction::SongsByGenre:
       helpers::cmdline::printSongsByGenre(
-        ctx.m_songTree,
-        ctx.m_cmdLine.getOptional<std::string>("songs-genre").value_or(""));
+        ctx.m_songTree, ctx.m_cmdLine.getOptional<Genre>("songs-genre").value_or(""));
       break;
     default:
       break;
@@ -212,30 +237,17 @@ auto initializeContext(int argc, char** argv) -> AppContext
   AppContext ctx("inLimbo", "inLimbo (CMD-LINE) music library tool");
 
   ctx.m_cmdLine.parse(argc, argv);
+  ctx.m_songName = ctx.m_cmdLine.getOptional<std::string>("song").value_or("");
+  ctx.m_editMetadata = ctx.m_cmdLine.has("edit-metadata");
 
-  ctx.m_songName     =
-    ctx.m_cmdLine.getOptional<std::string>("song").value_or("");
+  const float vol = ctx.m_cmdLine.getOptional<float>("volume").value_or(75.0f);
 
-  ctx.m_editMetadata =
-    ctx.m_cmdLine.has("edit-metadata");
+  ctx.m_volume = std::clamp(vol / 100.0f, 0.0f, 1.5f);
+  ctx.m_printAction = resolvePrintAction(ctx.m_cmdLine);
+  ctx.m_musicDir = tomlparser::parseTOMLField("library", "directory");
+  ctx.m_binPath = utils::getConfigPath(LIB_BIN_NAME);
 
-  const float vol =
-    ctx.m_cmdLine.getOptional<float>("volume").value_or(75.0f);
-
-  ctx.m_volume =
-    std::clamp(vol / 100.0f, 0.0f, 1.5f);
-
-  ctx.m_printAction =
-    resolvePrintAction(ctx.m_cmdLine);
-
-  ctx.m_musicDir =
-    parser::parseTOMLField("library", "directory");
-
-  ctx.m_binPath =
-    utils::getConfigPath(LIB_BIN_NAME);
-
-  LOG_INFO("Configured directory: {}, song query: {}",
-           ctx.m_musicDir, ctx.m_songName);
+  LOG_INFO("Configured directory: {}, song query: {}", ctx.m_musicDir, ctx.m_songName);
 
   return ctx;
 }
@@ -271,8 +283,7 @@ void buildOrLoadLibrary(AppContext& ctx)
 
   for (const auto [inode] : rbt)
   {
-    for (auto& [_, md] :
-         ctx.m_tagLibParser.parseFromInode(inode, ctx.m_musicDir))
+    for (auto& [_, md] : ctx.m_tagLibParser.parseFromInode(inode, ctx.m_musicDir))
     {
       ctx.m_songTree.addSong(core::Song{inode, md});
     }
@@ -282,8 +293,7 @@ void buildOrLoadLibrary(AppContext& ctx)
   ctx.m_songTree.saveToFile(ctx.m_binPath);
   g_songMap.replace(ctx.m_songTree.returnSongMap());
 
-  LOG_INFO("Library rebuilt in {:.3f} ms",
-           ctx.m_timer.elapsed_ms());
+  LOG_INFO("Library rebuilt in {:.3f} ms", ctx.m_timer.elapsed_ms());
 }
 
 void maybeEditMetadata(AppContext& ctx)
@@ -291,24 +301,20 @@ void maybeEditMetadata(AppContext& ctx)
   if (!ctx.m_editMetadata)
     return;
 
-  auto song =
-    helpers::query::songmap::read::findSongByName(
-      g_songMap, ctx.m_songName);
+  auto song = helpers::query::songmap::read::findSongByName(g_songMap, ctx.m_songName);
 
   ASSERT_MSG(song, "Song not found");
 
-  const auto newTitleOpt =
-    ctx.m_cmdLine.getOptional<std::string>("edit-metadata");
+  const auto newTitleOpt = ctx.m_cmdLine.getOptional<std::string>("edit-metadata");
 
   if (!newTitleOpt || newTitleOpt->empty())
     return;
 
-  auto edited = *song;
+  auto edited           = *song;
   edited.metadata.title = *newTitleOpt;
 
-  const bool replaced =
-    helpers::query::songmap::mut::replaceSongObjAndUpdateMetadata(
-      g_songMap, *song, edited, ctx.m_tagLibParser);
+  const bool replaced = helpers::query::songmap::mut::replaceSongObjAndUpdateMetadata(
+    g_songMap, *song, edited, ctx.m_tagLibParser);
 
   ASSERT_MSG(replaced, "Metadata update failed");
 
@@ -321,23 +327,20 @@ void maybeEditMetadata(AppContext& ctx)
 
 void runFrontend(AppContext& ctx)
 {
-  auto song =
-    helpers::query::songmap::read::findSongByName(
-      g_songMap, ctx.m_songName);
+  auto song = helpers::query::songmap::read::findSongByName(g_songMap, ctx.m_songName);
 
   ASSERT_MSG(song, "Song not found");
 
   audio::AudioEngine engine;
-  auto devices = engine.enumeratePlaybackDevices();
+  auto               devices = engine.enumeratePlaybackDevices();
 
   frontend::cmdline::Interface ui(g_songMap);
-  size_t devIdx = ui.selectAudioDevice(devices);
+  size_t                       devIdx = ui.selectAudioDevice(devices);
 
   engine.initEngineForDevice(devices[devIdx].name);
   engine.setVolume(ctx.m_volume);
 
-  const auto idx =
-    *engine.loadSound(song->metadata.filePath);
+  const auto idx = *engine.loadSound(song->metadata.filePath);
 
   engine.restart();
   ui.run(engine, song->metadata);

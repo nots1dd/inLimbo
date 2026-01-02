@@ -66,8 +66,10 @@ set(INLIMBO_CORE_SOURCES
     src/core/SongTree.cc
     src/core/taglib/Parser.cc
     src/core/DirectoryWalker.cc
+    src/helpers/cmdline/Display.cc
     src/audio/Playback.cc
     src/Context.cc
+    src/CmdLine.cc
 )
 
 add_library(inLimbo-core SHARED ${INLIMBO_CORE_SOURCES})

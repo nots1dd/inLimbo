@@ -1,10 +1,7 @@
 #pragma once
 
 #include "../MetadataTypes.hpp"
-#include "Logger.hpp"
 #include <filesystem>
-#include <fstream>
-#include <iostream>
 #include <string>
 #include <sys/stat.h>
 #include <unordered_map>
@@ -25,16 +22,15 @@ namespace fs = std::filesystem;
  */
 struct Metadata
 {
-  std::string                                  title      = "Unknown Title";
-  Artist                                       artist     = "<Unknown Artist>";
-  Album                                        album      = "Unknown Album";
-  Genre                                        genre      = "Unknown Genre";
-  std::string                                  comment    = "No Comment";
-  std::string                                  fileType   = "NULL";
-  Year                                         year       = 0;
-  Track                                        track      = 0;
-  Disc                                         discNumber = 0;
-  Lyrics                                       lyrics     = "No Lyrics";
+  Title                                        title       = "<Unknown Title>";
+  Artist                                       artist      = "<Unknown Artist>";
+  Album                                        album       = "<Unknown Album>";
+  Genre                                        genre       = "<Unknown Genre>";
+  std::string                                  comment     = "<No Comment>";
+  Year                                         year        = 0;
+  Track                                        track       = 0;
+  Disc                                         discNumber  = 0;
+  Lyrics                                       lyrics      = "No Lyrics";
   std::unordered_map<std::string, std::string> additionalProperties;
   std::string                                  filePath;
   float                                        duration = 0.0f;
@@ -65,11 +61,6 @@ private:
   void sendErrMsg(const std::string& errMsg);
   bool debugLogBool = false;
 };
-
-/**
- * @brief Prints the metadata of a song to stdout.
- */
-void printMetadata(const Metadata& metadata);
 
 /**
  * @brief Extracts album art (thumbnail) from audio files (MP3, FLAC).

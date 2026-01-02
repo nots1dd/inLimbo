@@ -10,33 +10,8 @@
 using namespace std;
 namespace fs = std::filesystem;
 
-namespace parser
+namespace tomlparser
 {
-
-/**
- * @brief Macros for parent and field names used in the TOML configuration.
- *
- * These macros represent the sections and fields in the TOML configuration file.
- */
-#define PARENT_LIB            "library"   /**< Parent section for library settings */
-#define PARENT_LIB_FIELD_NAME "name"      /**< Field for the library name */
-#define PARENT_LIB_FIELD_DIR  "directory" /**< Field for the library directory */
-
-#define PARENT_DBG "debug" /**< Parent section for debug settings */
-#define PARENT_DBG_FIELD_TAGLIB_PARSER_LOG \
-  "taglib_parser_log" /**< Field for debug parser log setting */
-#define PARENT_DBG_FIELD_COLORS_PARSER_LOG   "colors_parser_log"
-#define PARENT_DBG_FIELD_KEYBINDS_PARSER_LOG "keybinds_parser_log"
-
-/* SPECIAL KEYBINDS MACROS */
-#define PARENT_KEYBINDS           "keybinds" /**< Parent section for keybinds */
-#define SPECIAL_KEYBIND_ENTER_STR "Enter"    /**< Special keybind for Enter */
-#define SPECIAL_KEYBIND_TAB_STR   "Tab"      /**< Special keybind for Tab */
-#define SPECIAL_KEYBIND_SPACE_STR "Space"    /**< Special keybind for Space */
-
-#define PARENT_COLORS "colors" /**< Parent section for color settings */
-
-#define PARENT_UI "ui" /**< Parent section for ui settings */
 
 /**
  * @brief Checks if the configuration file exists.
@@ -150,4 +125,4 @@ FORCE_INLINE auto parseTOMLFieldBool(const string& parent, const string& field) 
   return false;
 }
 
-} // namespace parser
+} // namespace tomlparser

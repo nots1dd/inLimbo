@@ -4,6 +4,7 @@
 
 #include <dirent.h>
 #include <fcntl.h>
+#include <stdexcept>
 #include <unistd.h>
 
 namespace core
@@ -16,8 +17,9 @@ auto DirectoryWalker::walk(const EntryCallback& cb) -> bool
   int fd = open(m_root.c_str(), O_RDONLY | O_DIRECTORY);
   if (fd < 0)
   {
-    LOG_ERROR("Failed to open directory: {}", m_root);
-    return false;
+    const std::string errMsg = "Failed to open directory: '" + m_root + "'";
+    // We cannot continue if dirwalk fails
+    throw std::runtime_error(errMsg);
   }
 
   walkFd(fd, cb);

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+using Title  = std::string;
 using Album  = std::string;
 using Artist = std::string;
 using Genre  = std::string;

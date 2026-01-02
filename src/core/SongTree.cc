@@ -1,4 +1,6 @@
 #include "core/SongTree.hpp"
+#include "Logger.hpp"
+#include <fstream>
 #include <set>
 
 namespace core

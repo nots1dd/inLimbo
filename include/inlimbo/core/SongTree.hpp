@@ -92,16 +92,41 @@ using SongPredicate = std::function<bool(const Artist&, const Album&, Disc, Trac
 namespace song::sort
 {
 
+inline auto byTitle(const Title& t) -> SongPredicate
+{
+  return [t](auto&, auto&, auto, auto, const Song& s) -> bool
+  { return utils::string::iequals_fast(s.metadata.title, t); };
+}
+
+inline auto byTrack(int track) -> SongPredicate
+{
+  return [track](auto&, auto&, auto, int trk, auto&) -> bool { return trk == track; };
+}
+
 inline auto byArtist(const Artist& a) -> SongPredicate
 {
   return [a](const Artist& artist, auto&, auto, auto, auto&) -> bool
   { return utils::string::iequals_fast(artist, a); };
 }
 
-inline auto byAlbum(const Artist& a, const Album& al) -> SongPredicate
+inline auto byAlbum(const Album& a) -> SongPredicate
+{
+  return [a](auto, const Album& album, auto, auto, auto&) -> bool 
+  {
+    return utils::string::iequals_fast(album, a);
+  };
+}
+
+inline auto byArtistAlbum(const Artist& a, const Album& al) -> SongPredicate
 {
   return [a, al](const Artist& artist, const Album& album, auto, auto, auto&) -> bool
   { return utils::string::iequals_fast(artist, a) && utils::string::iequals_fast(album, al); };
+}
+
+inline auto byYear(uint year) -> SongPredicate
+{
+  return [year](auto&, auto&, auto, auto, const Song& s) -> bool
+  { return s.metadata.year == year; };
 }
 
 inline auto byGenre(const Genre& g) -> SongPredicate

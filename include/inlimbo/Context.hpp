@@ -6,7 +6,6 @@
 #include "utils/timer/Timer.hpp"
 #include <string>
 
-
 namespace inlimbo
 {
 
@@ -16,6 +15,7 @@ enum class PrintAction
 {
   None,
   Artists,
+  SongInfo,
   Albums,
   Genres,
   SongPaths,

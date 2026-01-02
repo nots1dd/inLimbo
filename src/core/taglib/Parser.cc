@@ -1,4 +1,7 @@
 #include "core/taglib/Parser.hpp"
+#include "Logger.hpp"
+#include <fstream>
+#include <iostream>
 
 static int unknownArtistTracks = 0;
 
@@ -39,19 +42,16 @@ auto TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) ->
   metadata.title =
     tag->title().isEmpty() ? fs::path(filePath).filename().string() : tag->title().to8Bit(true);
   metadata.artist  = tag->artist().isEmpty() ? "<Unknown Artist>" : tag->artist().to8Bit(true);
-  metadata.album   = tag->album().isEmpty() ? "Unknown Album" : tag->album().to8Bit(true);
-  metadata.genre   = tag->genre().isEmpty() ? "Unknown Genre" : tag->genre().to8Bit(true);
-  metadata.comment = tag->comment().isEmpty() ? "No Comment" : tag->comment().to8Bit(true);
+  metadata.album   = tag->album().isEmpty() ? "<Unknown Album>" : tag->album().to8Bit(true);
+  metadata.genre   = tag->genre().isEmpty() ? "<Unknown Genre>" : tag->genre().to8Bit(true);
+  metadata.comment = tag->comment().isEmpty() ? "<No Comment>" : tag->comment().to8Bit(true);
   metadata.year    = tag->year();
   metadata.track   = tag->track();
-
-  if (metadata.track == 0 && metadata.artist == "<Unknown Artist>")
-    metadata.track = ++unknownArtistTracks;
 
   TagLib::AudioProperties* audioProps = file.audioProperties();
   if (audioProps)
   {
-    metadata.duration = audioProps->length();
+    metadata.duration = audioProps->lengthInSeconds();
     metadata.bitrate  = audioProps->bitrate();
   }
 
@@ -60,6 +60,26 @@ auto TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) ->
   TagLib::PropertyMap props = file.file()->properties();
   if (props.contains("DISCNUMBER"))
     metadata.discNumber = props["DISCNUMBER"].toString().toInt();
+
+  // this is required to sort features in a song properly.
+  //
+  // if a song is indexed as <Song> feat. <Artist B> but it is in
+  // the album of Artist A, the metadata in artist tag of TagLib
+  // shows: <Artist A>/<Artist B>
+  //
+  // This isnt entirely wrong, it lets us know features and mixed songs.
+  //
+  // But when fetching albums which is very important, the song tree screws up.
+  //
+  // It finds a new key (<Artist A>/<Artist B>) and will use that as a "new" artist.
+  // So the album although maybe downloaded by the user, it wont show up contiguosly.
+  //
+  // If we dont find this property "ALBUMARTIST", we have the fallback artist tag anyway.
+  if (props.contains("ALBUMARTIST"))
+    metadata.artist = props["ALBUMARTIST"].toString().to8Bit(true);
+
+  if (metadata.track == 0 && metadata.artist == "<Unknown Artist>")
+    metadata.track = ++unknownArtistTracks;
 
   if (props.contains("LYRICS"))
     metadata.lyrics = props["LYRICS"].toString().to8Bit(true);
@@ -183,23 +203,6 @@ auto TagLibParser::modifyMetadata(const std::string& filePath, const Metadata& n
   }
 
   return success;
-}
-
-void printMetadata(const Metadata& metadata)
-{
-  std::cout << "Title:    " << metadata.title << "\n"
-            << "Artist:   " << metadata.artist << "\n"
-            << "Album:    " << metadata.album << "\n"
-            << "Genre:    " << metadata.genre << "\n"
-            << "Comment:  " << metadata.comment << "\n"
-            << "Year:     " << metadata.year << "\n"
-            << "Track:    " << metadata.track << "\n"
-            << "Disc:     " << metadata.discNumber << "\n"
-            << "Lyrics:   " << metadata.lyrics << "\n"
-            << "Path:     " << metadata.filePath << "\n"
-            << "Duration: " << metadata.duration << "s\n"
-            << "Bitrate:  " << metadata.bitrate << "kbps\n"
-            << "----------------------------------------\n";
 }
 
 auto extractThumbnail(const std::string& audioFilePath, const std::string& outputImagePath) -> bool
