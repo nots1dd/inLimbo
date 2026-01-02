@@ -6,6 +6,11 @@ SRC_DIRS := src include
 BUILD_DIR := build
 BUILD_DBG_DIR := build-dbg
 
+# libbacktrace stuff
+BACKTRACE_DIR := external/libbacktrace
+BACKTRACE_BUILD_DIR := $(BACKTRACE_DIR)/build
+BACKTRACE_PREFIX := $(BACKTRACE_BUILD_DIR)/install
+
 # Find source files
 CPP_FILES := $(shell find $(SRC_DIRS) -type f \( -name "*.cpp" -o -name "*.cc" -o -name "*.cxx" \))
 HDR_FILES := $(shell find $(SRC_DIRS) -type f \( -name "*.h" -o -name "*.hpp" \))
@@ -39,11 +44,54 @@ COLOR_CYAN  := \033[36m
 # ============================================================
 
 .PHONY: \
-	fmt fmt-check tidy clean \
+	fmt fmt-check tidy clean init-dep-backtrace\
 	buildx build build-dbg rebuild rebuild-dbg \
 	test test-dbg \
 	verify-deps install-deps \
 	stats all-checks help
+
+# ============================================================
+# Submodule stuff
+# ============================================================
+
+submod-check:
+	@echo -e "$(COLOR_BLUE)▶ Checking git submodules...$(COLOR_RESET)"
+	@if git submodule status --recursive | grep -q '^-'; then \
+		echo -e "$(COLOR_RED)✗ Some submodules are NOT initialized$(COLOR_RESET)"; \
+		echo -e "  Run: $(COLOR_CYAN)git submodule update --init --recursive$(COLOR_RESET)"; \
+		exit 1; \
+	else \
+		echo -e "$(COLOR_GREEN)✔ All submodules are initialized$(COLOR_RESET)"; \
+	fi
+
+# ============================================================
+# Submodule initialization
+# ============================================================
+
+submod-init:
+	@echo -e "$(COLOR_BLUE)▶ Initializing git submodules...$(COLOR_RESET)"
+	@git submodule update --init --recursive
+	@echo -e "$(COLOR_GREEN)✔ Submodules initialized$(COLOR_RESET)"
+
+# ============================================================
+# Init stuff
+# ============================================================
+
+init-dep-backtrace:
+	@echo -e "$(COLOR_BLUE)▶ Initializing libbacktrace...$(COLOR_RESET)"
+	@test -d $(BACKTRACE_DIR) || { \
+		echo -e "$(COLOR_RED)✗ libbacktrace submodule not found$(COLOR_RESET)"; \
+		echo -e "  Run: git submodule update --init --recursive"; \
+		exit 1; \
+	}
+	@mkdir -p $(BACKTRACE_BUILD_DIR)
+	@cd $(BACKTRACE_BUILD_DIR) && \
+		../configure --prefix=$(abspath $(BACKTRACE_PREFIX))
+	@$(MAKE) -C $(BACKTRACE_BUILD_DIR)
+	@$(MAKE) -C $(BACKTRACE_BUILD_DIR) install
+	@echo -e "$(COLOR_GREEN)✔ libbacktrace built and installed locally$(COLOR_RESET)"
+
+init: submod-init submod-check init-dep-backtrace
 
 # ============================================================
 # Build (Release)
@@ -138,29 +186,6 @@ clean:
 	@echo -e "$(COLOR_BLUE)▶ Cleaning build directories...$(COLOR_RESET)"
 	@rm -rf $(BUILD_DIR) $(BUILD_DBG_DIR)
 	@echo -e "$(COLOR_GREEN)✔ Clean complete$(COLOR_RESET)"
-
-# ============================================================
-# Submodule stuff
-# ============================================================
-
-submod-check:
-	@echo -e "$(COLOR_BLUE)▶ Checking git submodules...$(COLOR_RESET)"
-	@if git submodule status --recursive | grep -q '^-'; then \
-		echo -e "$(COLOR_RED)✗ Some submodules are NOT initialized$(COLOR_RESET)"; \
-		echo -e "  Run: $(COLOR_CYAN)git submodule update --init --recursive$(COLOR_RESET)"; \
-		exit 1; \
-	else \
-		echo -e "$(COLOR_GREEN)✔ All submodules are initialized$(COLOR_RESET)"; \
-	fi
-
-# ============================================================
-# Submodule initialization
-# ============================================================
-
-submod-init:
-	@echo "$(COLOR_BLUE)▶ Initializing git submodules...$(COLOR_RESET)"
-	@git submodule update --init --recursive
-	@echo "$(COLOR_GREEN)✔ Submodules initialized$(COLOR_RESET)"
 
 # ============================================================
 # Dependency stuff

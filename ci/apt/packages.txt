@@ -8,7 +8,6 @@ libasound2
 libasound2-dev
 libtag1v5
 libtag1-dev
-libbacktrace-dev
 pkg-config
 clang
 clang-format

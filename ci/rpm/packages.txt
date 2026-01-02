@@ -9,7 +9,6 @@ alsa-lib
 alsa-lib-devel
 taglib
 taglib-devel
-libbacktrace
 pkg-config
 clang
 clang-tools-extra
