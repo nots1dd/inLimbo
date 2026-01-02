@@ -5,6 +5,7 @@ libavcodec-dev
 libavutil-dev
 libswresample-dev
 libasound2
+libasound2t64
 libasound2-dev
 libtag1v5
 libtag1-dev

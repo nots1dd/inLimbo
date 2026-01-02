@@ -29,5 +29,5 @@ jobs:
 
     - name: Build Release Version of inLimbo (x86-64 arch) - GCC
       run: |
-        make init
+        make init-dep-backtrace
         make buildx
