@@ -57,9 +57,9 @@ build:
 buildx:
 	@echo -e "$(COLOR_BLUE)▶ Configuring build ($(BUILD_DIR))...$(COLOR_RESET)"
 	@$(CMAKE) -S . -B $(BUILD_DIR)
-	$(MAKE) buildx
+	$(MAKE) build
 
-rebuild: clean build
+rebuild: clean buildx
 
 # ============================================================
 # Build (Debug)
@@ -73,9 +73,9 @@ build-dbg:
 buildx-dbg:
 	@echo -e "$(COLOR_BLUE)▶ Configuring debug build ($(BUILD_DBG_DIR))...$(COLOR_RESET)"
 	@$(CMAKE) -S . -B $(BUILD_DBG_DIR) -D CMAKE_BUILD_TYPE=Debug
-	$(MAKE) buildx-dbg
+	$(MAKE) build-dbg
 
-rebuild-dbg: clean build-dbg
+rebuild-dbg: clean buildx-dbg
 
 # ============================================================
 # Tests (running them using ctest) - Release
