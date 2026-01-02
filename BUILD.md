@@ -1,263 +1,258 @@
 # inLimbo Build Guide
 
-This project uses a `Makefile` to automate the build process. The `Makefile` supports different build configurations to help with development, testing, and production. Below are the various types of builds you can perform and how to use them.
+This document explains how to build, test, format, and maintain the **inLimbo** project using the provided **Makefile**.
+The Makefile is a thin, explicit wrapper around **CMake**, intended to standardize common workflows.
 
-You can build the inLimbo in two ways:
+## Requirements
 
-1. Makefile (uses CMake)
-2. Manually building using CMake commands
-
-> [!NOTE]
-> 
-> If you want to use a custom compiler rather than the default compiler defined in:
-> `CMAKE_CXX_COMPILER` macro by CMake,
-> 
-> Append `CMAKE_EXTRA_FLAGS="-D CMAKE_CXX_COMPILER=/path/to/your/compiler"` to the make command like so:
-> 
-> ```bash 
-> # Let us say I want to compile using clang++:
-> make build CMAKE_EXTRA_FLAGS="-D CMAKE_CXX_COMPILER=clang++"
-> # To rebuild 
-> make rebuild 
-> ```
-> 
-> The CMAKE_EXTRA_FLAGS macro is passable to `build`, `build-all`, `asan`, `build-test`, `build-test-all`, `tsan`.
-> 
-> There is some issue where clang++ starts a scratch compilation even though the build files are present and only a few source files are changed.
-> 
-
-## Available Build Targets
-
-### 1. **all**
-This is the default target, and it will perform a full build of the project.
-
-- **Command**: 
-  ```sh
-  make all
-  ```
-- **Description**: 
-  This will run the `build-all` target, which first executes the initialization script (`init.sh`) and then proceeds with the build.
-
----
-
-### 2. **build**
-This target performs a clean build with the default `Release` configuration.
-
-- **Command**: 
-  ```sh
-  make build
-  ```
-- **Description**: 
-  - Builds the project using the default `Release` configuration.
-  - The build process uses the `CMake` tool and the `build` directory.
-  - It ensures that testing is disabled.
-
----
-
-### 3. **rebuild**
-This target will rebuild the project, even if it was previously built.
-
-- **Command**: 
-  ```sh
-  make rebuild
-  ```
-- **Description**: 
-  - Rebuilds the project by running the `CMake` build process again without needing to clean the build directory.
-  - It uses the existing build directory and rebuilds with the same configuration.
-
----
-
-### 4. **asan (AddressSanitizer)**
-This target builds the project with **AddressSanitizer**, which helps detect memory errors.
-
-- **Command**: 
-  ```sh
-  make asan
-  ```
-- **Description**: 
-  - Builds the project in debug mode with AddressSanitizer enabled.
-  - This helps identify memory-related issues such as buffer overflows and memory leaks.
-
----
-
-### 5. **asan_run**
-This target runs the AddressSanitizer build after it has been built.
-
-- **Command**: 
-  ```sh
-  make asan_run
-  ```
-- **Description**: 
-  - Runs the project with the AddressSanitizer build.
-  - Useful for detecting runtime memory issues.
-
----
-
-### 6. **tsan (ThreadSanitizer)**
-This target builds the project with **ThreadSanitizer**, which detects data races in multi-threaded code.
-
-- **Command**: 
-  ```sh
-  make tsan
-  ```
-- **Description**: 
-  - Builds the project in debug mode with ThreadSanitizer enabled.
-  - This helps detect race conditions and other threading issues in the code.
-
----
-
-### 7. **tsan_run**
-This target runs the ThreadSanitizer build after it has been built.
-
-- **Command**: 
-  ```sh
-  make tsan_run
-  ```
-- **Description**: 
-  - Runs the project with the ThreadSanitizer build.
-  - Useful for detecting threading issues during runtime.
-
----
-
-### 8. **build-test**
-This target builds the project with testing enabled. (Also useful for rebuilding tests)
-
-- **Command**: 
-  ```sh
-  make build-test
-  ```
-- **Description**: 
-  - Builds the project with Google Test (`GTest`) enabled.
-  - Useful for running unit tests and validating code functionality.
-  - Will **NOT** run the `./init.sh` script
-
----
-
-### 9. **build-test-all**
-This target runs the initialization script and builds the project with testing enabled.
-
-- **Command**: 
-  ```sh
-  make build-test-all
-  ```
-- **Description**: 
-  - Runs the `init.sh` script and then builds the project with testing enabled.
-  - The `build-test` target is triggered after the script execution.
-
----
-
-### 10. **clean**
-This target removes all build artifacts, effectively cleaning the project.
-
-- **Command**: 
-  ```sh
-  make clean
-  ```
-- **Description**: 
-  - Deletes the build directory and all associated files, allowing for a fresh build.
-
----
-
-### 11. **init**
-This target runs the initialization script (`init.sh`).
-
-- **Command**: 
-  ```sh
-  make init
-  ```
-- **Description**: 
-  - Executes the initialization script to set up any necessary environment or configuration before building.
-
----
-
-### 12. **build-global**
-This target builds and installs the project globally.
-
-- **Command**: 
-  ```sh
-  make build-global
-  ```
-- **Description**: 
-  - Just runs sudo make install after building for target local release (adds inLimbo.desktop and icon to system wide directories)
-
----
-
-### 12. **build-global-uninstall**
-This target uninstalls every system wide installed file of inLimbo using `install_manifests.txt` in build directory.
-
-- **Command**: 
-  ```sh
-  make build-global-uninstall
-  ```
+Before building, ensure the following tools are available:
 
 > [!NOTE]
 > 
-> If you remove `build/` directory, the `install_manifests.txt` will not exist so this wont work
+> Although my CMake build process allows version `3.5` onwards,
+> it is **NOT** tested and is recommended to have the latest
+> possible version as per your distro.
 > 
-> Will come with a workaround in the future
-> 
 
----
+* CMake (3.16 or newer recommended)
+* CTest (comes with CMake) [IGNORE]
+* A C++20-compatible compiler (clang or gcc)
+* make
+* clang-format (for formatting)
+* clang-tidy (for static analysis)
+* Git (for submodules)
 
-### 13. **verbose**
-This target enables verbose output during the build process.
-
-- **Command**: 
-  ```sh
-  make verbose
-  ```
-- **Description**: 
-  - Builds the project with verbose output to give more detailed information about the build process.
-  - This is helpful for debugging build issues.
-
----
-
-## **MANUAL BUILD**:
-
-> [!WARNING]
-> 
-> Proceed with manual build **ONLY** if you know what you are doing.
-> 
+You can verify required tools using:
 
 ```bash
-git clone https://github.com/nots1dd/inLimbo.git 
-cd inLimbo/
-./init.sh # to initialize the repository with some important headers
+make verify-deps
 ```
 
-Then building commands: (**WILL NOT COMPILE IF `init.sh` IS NOT RUN FIRST**)
+If dependencies are missing, the Makefile provides a helper to install them using your system package manager:
 
 ```bash
-cmake -S . -B build/
-cmake --build build/
-./build/inLimbo
+make install-deps
 ```
 
-To build inLimbo **GLOBALLY**:
+Supported distributions:
 
-```bash 
-cmake -S . -B build -DGLOBAL_BUILD=ON 
-cmake --build build/ 
-cd build 
-sudo make install # will put the binary in /usr/bin and respective inLimbo.desktop and logo in /usr/share
+* Arch Linux
+* Debian / Ubuntu
+* Fedora
+
+## Build Overview
+
+The project supports **Release** and **Debug** builds, each in its own build directory:
+
+* Release build: `build/`
+* Debug build: `build-dbg/`
+
+The Makefile separates **configuration** (CMake generation) from **building**.
+
+## Building the Project
+
+### Release build (recommended)
+
+#### First-time build (configure + build)
+
+```bash
+make buildx
 ```
 
-To build its web-assembly, you will need [emscripten](https://github.com/emscripten-core/emscripten)
+This runs:
 
-> [!IMPORTANT]
-> 
-> Building the web-assembly:
-> 
-> Currently I am not sure how to include and compile taglib
-> into wasm so currently the web build may compile but it will 
-> not work as I have dummy methods set up for EMSCRIPTEN build 
-> (else it wont even compile to wasm)
-> 
-
-```bash 
-mkdir build_emscripten && cd build_emscripten 
-emcmake cmake ..
-make -j
-./run_webassembly.py # assuming the compilation has no errors
-# This will run in port 8000
+```bash
+cmake -S . -B build
+cmake --build build
 ```
+
+#### Incremental build (after initial configuration)
+
+```bash
+make build
+```
+
+This only runs:
+
+```bash
+cmake --build build
+```
+
+### Debug build
+
+#### First-time debug build
+
+```bash
+make buildx-dbg
+```
+
+This runs:
+
+```bash
+cmake -S . -B build-dbg -D CMAKE_BUILD_TYPE=Debug
+cmake --build build-dbg
+```
+
+#### Incremental debug build
+
+```bash
+make build-dbg
+```
+
+### Rebuilding from scratch
+
+To remove all build artifacts and rebuild:
+
+```bash
+make rebuild
+```
+
+For debug builds:
+
+```bash
+make rebuild-dbg
+```
+
+## Running Tests
+
+Tests are built and executed using **GoogleTest** and **CTest**.
+
+### Run tests (Release build)
+
+```bash
+make test
+```
+
+Equivalent to:
+
+```bash
+ctest --test-dir build --output-on-failure
+```
+
+### Run tests (Debug build)
+
+```bash
+make test-dbg
+```
+
+Equivalent to:
+
+```bash
+ctest --test-dir build-dbg --output-on-failure
+```
+
+## Formatting and Static Analysis
+
+### Format all source files
+
+Applies `clang-format` in-place to all source and header files:
+
+```bash
+make fmt
+```
+
+### Check formatting without modifying files
+
+Useful for CI:
+
+```bash
+make fmt-check
+```
+
+### Run clang-tidy
+
+Requires `compile_commands.json` (generated by CMake):
+
+```bash
+make tidy
+```
+
+If the compilation database is missing, configure CMake with:
+
+```bash
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build
+```
+
+## Git Submodules
+
+### Check submodule status
+
+```bash
+make submod-check
+```
+
+### Initialize submodules
+
+```bash
+make submod-init
+```
+
+## Cleaning Build Artifacts
+
+To remove all build directories:
+
+```bash
+make clean
+```
+
+This deletes:
+
+* `build/`
+* `build-dbg/`
+
+## Project Statistics
+
+To display basic project metrics:
+
+```bash
+make stats
+```
+
+This prints the number of source files, header files, and total files.
+
+## Run All Checks
+
+For a full local verification (useful before pushing changes):
+
+```bash
+make all-checks
+```
+
+This runs:
+
+* dependency verification
+* formatting checks
+* clang-tidy analysis
+
+## Help
+
+To list all available Makefile targets:
+
+```bash
+make help
+```
+
+## Recommended Workflow
+
+For day-to-day development:
+
+```bash
+make buildx        # first time
+make build         # incremental builds
+make test          # run tests
+make fmt           # format code
+```
+
+For debugging:
+
+```bash
+make buildx-dbg
+make test-dbg
+```
+
+## Notes
+
+* The Makefile does not replace CMake; it standardizes common commands.
+* Build directories are kept out-of-tree to avoid polluting the source tree.
+* Release and Debug builds are completely isolated.
+* All targets are explicit; no implicit behavior is hidden.

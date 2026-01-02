@@ -77,9 +77,21 @@ buildx-dbg:
 
 rebuild-dbg: clean build-dbg
 
+# ============================================================
+# Tests (running them using ctest) - Release
+# ============================================================
+
 test:
 	@echo -e "$(COLOR_BLUE)▶ Running tests...$(COLOR_RESET)"
 	@ctest --test-dir $(BUILD_DIR) --output-on-failure
+
+# ============================================================
+# Tests (running them using ctest) - Debug
+# ============================================================
+
+test-dbg:
+	@echo -e "$(COLOR_BLUE)▶ Running debug tests...$(COLOR_RESET)"
+	@ctest --test-dir $(BUILD_DBG_DIR) --output-on-failure
 
 # ============================================================
 # Formatting
@@ -244,10 +256,24 @@ help:
 	@echo -e ""
 	@echo -e "$(COLOR_BOLD)$(COLOR_GREEN)$(PROJECT_NAME) Makefile — Available Targets$(COLOR_RESET)"
 	@echo -e ""
-	@echo -e "  $(COLOR_CYAN)fmt$(COLOR_RESET)            Format all C/C++ source files"
-	@echo -e "  $(COLOR_CYAN)tidy$(COLOR_RESET)           Run clang-tidy static analysis"
+	@echo -e "  $(COLOR_CYAN)build$(COLOR_RESET)          Build Release version of inLimbo with CMake (no init)"
+	@echo -e "  $(COLOR_CYAN)buildx$(COLOR_RESET)         Initialize CMake and build Release version of inLimbo"
+	@echo -e "  $(COLOR_CYAN)rebuild$(COLOR_RESET)        Rebuild Release version of inLimbo from scratch with CMake"
+	@echo -e "  $(COLOR_CYAN)build-dbg$(COLOR_RESET)      Build Debug version of inLimbo with CMake (no init)"
+	@echo -e "  $(COLOR_CYAN)buildx-dbg$(COLOR_RESET)     Initialize CMake and build Debug version of inLimbo"
+	@echo -e "  $(COLOR_CYAN)rebuild-dbg$(COLOR_RESET)    Rebuild Debug version of inLimbo from scratch with CMake"
 	@echo -e "  $(COLOR_CYAN)clean$(COLOR_RESET)          Remove build directories"
-	@echo -e "  $(COLOR_CYAN)check$(COLOR_RESET)          Verify git submodules"
+	@echo -e ""
+	@echo -e "  $(COLOR_CYAN)test$(COLOR_RESET)           Run all compiles tests in Release build (uses GTest and ctest)"
+	@echo -e "  $(COLOR_CYAN)test-dbg$(COLOR_RESET)       Run all compiles tests in Debug build(uses GTest and ctest)"
+	@echo -e ""
+	@echo -e "  $(COLOR_CYAN)submod-init$(COLOR_RESET)    Initialize git submodules"
+	@echo -e "  $(COLOR_CYAN)submod-check$(COLOR_RESET)   Verify git submodules"
+	@echo -e ""
+	@echo -e "  $(COLOR_CYAN)fmt$(COLOR_RESET)            Format all C/C++ source and header files"
+	@echo -e "  $(COLOR_CYAN)fmt-check$(COLOR_RESET)      Checks if all C/C++ source and header files are formatted (no edits)"
+	@echo -e "  $(COLOR_CYAN)tidy$(COLOR_RESET)           Run clang-tidy static analysis"
+	@echo -e ""
 	@echo -e "  $(COLOR_CYAN)verify-deps$(COLOR_RESET)    Check required tools are installed"
 	@echo -e "  $(COLOR_CYAN)install-deps$(COLOR_RESET)   Install system dependencies (uses sudo)"
 	@echo -e "  $(COLOR_CYAN)stats$(COLOR_RESET)          Show project statistics"

@@ -1,0 +1,32 @@
+name: "inLimbo CI / Arch Linux Build (x86-64 arch - GCC)"
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+
+    steps:
+    - name: Update Pacman
+      run: |
+        pacman -Syu --noconfirm
+        pacman -S --noconfirm sudo git
+
+    - name: Checkout repository with submodules
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Install dependencies
+      run: |
+        xargs -a ci/pacman/packages.txt pacman -S --noconfirm
+
+    - name: Build Release Version of inLimbo (x86-64 arch) - GCC
+      run: |
+        make build
