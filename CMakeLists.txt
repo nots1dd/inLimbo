@@ -86,7 +86,6 @@ target_link_libraries(inLimbo-core
     PUBLIC
         ${TAGLIB_LIBRARIES}
         spdlog::spdlog
-        backtrace
         avformat
         swresample
         avutil

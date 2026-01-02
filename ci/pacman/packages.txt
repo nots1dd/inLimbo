@@ -1,6 +1,7 @@
 base-devel
 ffmpeg
 taglib
+libpng
 alsa-lib
 pkgconf
 clang
