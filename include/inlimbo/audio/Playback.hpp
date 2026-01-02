@@ -129,8 +129,8 @@ public:
     return m_currentDevice;
   }
 
-  Sound& getSound(size_t index);
-  const Sound& getSound(size_t index) const;
+  auto getSound(size_t index) -> Sound&;
+  auto getSound(size_t index) const -> const Sound&;
 
   INLIMBO_API_CPP void unloadSound(size_t index)
   {

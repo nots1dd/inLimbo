@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.5...3.20)
 project(inLimbo LANGUAGES CXX)
 
 # -----------------------------------------------------------
@@ -67,6 +67,7 @@ set(INLIMBO_CORE_SOURCES
     src/core/taglib/Parser.cc
     src/core/DirectoryWalker.cc
     src/audio/Playback.cc
+    src/Context.cc
 )
 
 add_library(inLimbo-core SHARED ${INLIMBO_CORE_SOURCES})
@@ -114,6 +115,11 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME}
     PRIVATE
         include/inlimbo
+        ${CMAKE_SOURCE_DIR}
+        ${TAGLIB_INCLUDE_DIRS}
+        ${TOMLPLUSPLUS_INCLUDE_DIRS}
+        ${CXXOPTS_INCLUDE_DIRS}
+        ${CEREAL_INCLUDE_DIRS}
 )
 
 target_link_libraries(${PROJECT_NAME}
