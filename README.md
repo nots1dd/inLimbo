@@ -41,8 +41,10 @@
 > 
 > # or 
 > # clone repo with recursive SUBMODULES directly
-> git clone -b develop https://github.com/nots1dd/inlimbo --recursive
+> git clone -b develop https://github.com/nots1dd/inlimbo
 > 
+> cd inlimbo
+> make init
 > make buildx
 > ```
 > 

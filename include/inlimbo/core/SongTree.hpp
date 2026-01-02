@@ -111,10 +111,8 @@ inline auto byArtist(const Artist& a) -> SongPredicate
 
 inline auto byAlbum(const Album& a) -> SongPredicate
 {
-  return [a](auto, const Album& album, auto, auto, auto&) -> bool 
-  {
-    return utils::string::iequals_fast(album, a);
-  };
+  return [a](auto, const Album& album, auto, auto, auto&) -> bool
+  { return utils::string::iequals_fast(album, a); };
 }
 
 inline auto byArtistAlbum(const Artist& a, const Album& al) -> SongPredicate

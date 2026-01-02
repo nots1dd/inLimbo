@@ -22,15 +22,15 @@ namespace fs = std::filesystem;
  */
 struct Metadata
 {
-  Title                                        title       = "<Unknown Title>";
-  Artist                                       artist      = "<Unknown Artist>";
-  Album                                        album       = "<Unknown Album>";
-  Genre                                        genre       = "<Unknown Genre>";
-  std::string                                  comment     = "<No Comment>";
-  Year                                         year        = 0;
-  Track                                        track       = 0;
-  Disc                                         discNumber  = 0;
-  Lyrics                                       lyrics      = "No Lyrics";
+  Title                                        title      = "<Unknown Title>";
+  Artist                                       artist     = "<Unknown Artist>";
+  Album                                        album      = "<Unknown Album>";
+  Genre                                        genre      = "<Unknown Genre>";
+  std::string                                  comment    = "<No Comment>";
+  Year                                         year       = 0;
+  Track                                        track      = 0;
+  Disc                                         discNumber = 0;
+  Lyrics                                       lyrics     = "No Lyrics";
   std::unordered_map<std::string, std::string> additionalProperties;
   std::string                                  filePath;
   float                                        duration = 0.0f;

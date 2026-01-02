@@ -443,7 +443,7 @@ public:
   }
 
   auto returnRoot() const noexcept -> NodeT* { return m_root; }
-  auto returnNil()  const noexcept -> NodeT* { return m_NIL; }
+  auto returnNil() const noexcept -> NodeT* { return m_NIL; }
 
   [[nodiscard]] auto isEmpty() const noexcept -> bool { return m_root == m_NIL; }
   [[nodiscard]] auto size() const noexcept -> size_t { return m_size; }
