@@ -85,5 +85,3 @@ public:
 };
 
 } // namespace threads
-
-extern threads::SafeMap<core::SongMap> g_songMap;

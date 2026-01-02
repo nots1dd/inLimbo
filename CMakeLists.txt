@@ -68,7 +68,6 @@ set(INLIMBO_CORE_SOURCES
     src/core/DirectoryWalker.cc
     src/helpers/cmdline/Display.cc
     src/audio/Playback.cc
-    src/Context.cc
     src/CmdLine.cc
 )
 
@@ -109,6 +108,7 @@ set_target_properties(inLimbo-core PROPERTIES
 # Test Executable
 # -----------------------------------------------------------
 set(SOURCES     
+  src/Context.cc
   src/test.cpp
 )
 
@@ -133,6 +133,13 @@ target_compile_definitions(${PROJECT_NAME}
     PRIVATE
         $<$<CONFIG:Debug>:INLIMBO_DEBUG_BUILD>
 )
+
+# Enable testing
+include(CTest)
+enable_testing()
+
+# Add tests
+add_subdirectory(tests)
 
 # -----------------------------------------------------------
 # RPATH & Build Options

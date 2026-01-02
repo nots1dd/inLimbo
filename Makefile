@@ -13,6 +13,8 @@ HDR_FILES := $(shell find $(SRC_DIRS) -type f \( -name "*.h" -o -name "*.hpp" \)
 # Tools
 CLANG_FORMAT := clang-format
 CLANG_TIDY   := clang-tidy
+MAKE 	:= make
+CMAKE := cmake
 
 COMPILE_COMMANDS := $(BUILD_DIR)/compile_commands.json
 
@@ -36,7 +38,48 @@ COLOR_CYAN  := \033[36m
 # Phony targets
 # ============================================================
 
-.PHONY: fmt tidy clean check help
+.PHONY: \
+	fmt fmt-check tidy clean \
+	buildx build build-dbg rebuild rebuild-dbg \
+	test test-dbg \
+	verify-deps install-deps \
+	stats all-checks help
+
+# ============================================================
+# Build (Release)
+# ============================================================
+
+build:
+	@echo -e "$(COLOR_BLUE)▶ Building...$(COLOR_RESET)"
+	@$(CMAKE) --build $(BUILD_DIR)
+	@echo -e "$(COLOR_GREEN)✔ Build complete$(COLOR_RESET)"
+
+buildx:
+	@echo -e "$(COLOR_BLUE)▶ Configuring build ($(BUILD_DIR))...$(COLOR_RESET)"
+	@$(CMAKE) -S . -B $(BUILD_DIR)
+	$(MAKE) buildx
+
+rebuild: clean build
+
+# ============================================================
+# Build (Debug)
+# ============================================================
+
+build-dbg:
+	@echo -e "$(COLOR_BLUE)▶ Building debug...$(COLOR_RESET)"
+	@$(CMAKE) --build $(BUILD_DBG_DIR)
+	@echo -e "$(COLOR_GREEN)✔ Debug build complete$(COLOR_RESET)"
+
+buildx-dbg:
+	@echo -e "$(COLOR_BLUE)▶ Configuring debug build ($(BUILD_DBG_DIR))...$(COLOR_RESET)"
+	@$(CMAKE) -S . -B $(BUILD_DBG_DIR) -D CMAKE_BUILD_TYPE=Debug
+	$(MAKE) buildx-dbg
+
+rebuild-dbg: clean build-dbg
+
+test:
+	@echo -e "$(COLOR_BLUE)▶ Running tests...$(COLOR_RESET)"
+	@ctest --test-dir $(BUILD_DIR) --output-on-failure
 
 # ============================================================
 # Formatting

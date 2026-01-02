@@ -329,11 +329,9 @@ public:
   using kv_iterator  = iterator_base<rbt::KeyValueView<Key, Value>>;
 
   auto begin() -> key_iterator { return key_iterator(minimum(m_root), m_NIL); }
-
   auto end() -> key_iterator { return key_iterator(m_NIL, m_NIL); }
 
   auto begin_kv() -> kv_iterator { return kv_iterator(minimum(m_root), m_NIL); }
-
   auto end_kv() -> kv_iterator { return kv_iterator(m_NIL, m_NIL); }
 
   // ==========================================================
@@ -443,6 +441,9 @@ public:
 
     return true;
   }
+
+  auto returnRoot() const noexcept -> NodeT* { return m_root; }
+  auto returnNil()  const noexcept -> NodeT* { return m_NIL; }
 
   [[nodiscard]] auto isEmpty() const noexcept -> bool { return m_root == m_NIL; }
   [[nodiscard]] auto size() const noexcept -> size_t { return m_size; }

@@ -3,8 +3,11 @@
 #include "CmdLine.hpp"
 #include "core/SongTree.hpp"
 #include "core/taglib/Parser.hpp"
+#include "thread/Map.hpp"
 #include "utils/timer/Timer.hpp"
 #include <string>
+
+extern threads::SafeMap<core::SongMap> g_songMap;
 
 namespace inlimbo
 {
