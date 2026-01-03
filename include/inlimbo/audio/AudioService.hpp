@@ -12,16 +12,6 @@
 namespace audio
 {
 
-/*
-  AudioService
-  ------------
-  Thread-safe façade over a single-track AudioEngine.
-
-  Invariants:
-  - AudioEngine plays EXACTLY ONE track at a time
-  - Playlist stores ordering only (no audio objects)
-  - Tracks are loaded lazily on selection
-*/
 class AudioService final
 {
 public:
