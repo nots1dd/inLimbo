@@ -7,7 +7,7 @@
 namespace audio::service
 {
 
-using TrackTable = std::unordered_map<ui64, std::string>;
+using TrackTable    = std::unordered_map<ui64, std::string>;
 using MetadataTable = std::unordered_map<ui64, Metadata>;
 
 struct SoundHandle

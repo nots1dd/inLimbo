@@ -7,18 +7,18 @@
 #include <iostream>
 #include <mutex>
 #include <poll.h>
-#include <termios.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
+#include <termios.h>
 #include <thread>
 #include <unistd.h>
 
 #include "audio/AudioService.hpp"
-#include "utils/timer/Timer.hpp"
 #include "core/SongTree.hpp"
 #include "core/taglib/Parser.hpp"
 #include "helpers/query/SongMap.hpp"
 #include "thread/Map.hpp"
+#include "utils/timer/Timer.hpp"
 
 namespace frontend::cmdline
 {
@@ -44,14 +44,14 @@ public:
   void run(audio::AudioService& audio)
   {
 
-    helpers::query::songmap::read::forEachSong(
-    m_songMapTS,
-    [&](const Artist&, const Album&, const Disc, const Track, const ino_t,
-        const core::Song& song) -> void
-    {
-      auto h = audio.registerTrack(song);
-      audio.addToPlaylist(h);
-    });
+    helpers::query::songmap::read::forEachSong(m_songMapTS,
+                                               [&](const Artist&, const Album&, const Disc,
+                                                   const Track, const ino_t,
+                                                   const core::Song& song) -> void
+                                               {
+                                                 auto h = audio.registerTrack(song);
+                                                 audio.addToPlaylist(h);
+                                               });
 
     {
       std::lock_guard<std::mutex> lock(m_metaMutex);
@@ -106,8 +106,7 @@ private:
     if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1)
       return {};
 
-    return { .rows=static_cast<int>(ws.ws_row),
-             .cols=static_cast<int>(ws.ws_col) };
+    return {.rows = static_cast<int>(ws.ws_row), .cols = static_cast<int>(ws.ws_col)};
   }
 
   // ------------------------------------------------------------
@@ -178,12 +177,8 @@ private:
   {
     std::cout << UI_CLEAR << UI_TITLE << "\n\n";
     std::cout << " Terminal too small\n\n";
-    std::cout << " Required : "
-              << MIN_TERM_COLS << " cols × "
-              << MIN_TERM_ROWS << " rows\n";
-    std::cout << " Current  : "
-              << ts.cols << " cols × "
-              << ts.rows << " rows\n\n";
+    std::cout << " Required : " << MIN_TERM_COLS << " cols × " << MIN_TERM_ROWS << " rows\n";
+    std::cout << " Current  : " << ts.cols << " cols × " << ts.rows << " rows\n\n";
     std::cout << " Resize the terminal window.\n";
     std::cout.flush();
   }
@@ -203,27 +198,22 @@ private:
     if (!infoOpt)
       return;
 
-    const auto& info = *infoOpt;
-    const auto backend = audio.getBackendInfo();
+    const auto& info    = *infoOpt;
+    const auto  backend = audio.getBackendInfo();
 
     const size_t size    = audio.getPlaylistSize();
     const size_t current = audio.getCurrentIndex();
 
     auto curMeta  = audio.getMetadataAt(current);
-    auto prevMeta = size > 0
-                      ? audio.getMetadataAt((current + size - 1) % size)
-                      : std::nullopt;
-    auto nextMeta = size > 0
-                      ? audio.getMetadataAt((current + 1) % size)
-                      : std::nullopt;
+    auto prevMeta = size > 0 ? audio.getMetadataAt((current + size - 1) % size) : std::nullopt;
+    auto nextMeta = size > 0 ? audio.getMetadataAt((current + 1) % size) : std::nullopt;
 
     if (!curMeta)
       return;
 
     constexpr int BAR_W = 50;
-    int filled = info.lengthSec > 0.0
-      ? static_cast<int>((info.positionSec / info.lengthSec) * BAR_W)
-      : 0;
+    int           filled =
+      info.lengthSec > 0.0 ? static_cast<int>((info.positionSec / info.lengthSec) * BAR_W) : 0;
 
     std::cout << UI_CLEAR;
     std::cout << UI_TITLE << "\n";
@@ -232,7 +222,8 @@ private:
     // ───────────────── Playlist context ─────────────────
     std::cout << " Playlist\n";
     std::cout << "   Prev : " << (prevMeta ? prevMeta->title : "<none>") << "\n";
-    std::cout << " ▶ Now  : " << curMeta->title << " — " << curMeta->artist << "\n";
+    std::cout << " ▶ Now  : " << curMeta->title << " — " << curMeta->artist << " ("
+              << audio.getCurrentIndex() << "/" << audio.getPlaylistSize() << ")\n";
     std::cout << "   Next : " << (nextMeta ? nextMeta->title : "<none>") << "\n\n";
 
     // ───────────────── Track metadata ─────────────────
@@ -245,15 +236,9 @@ private:
     // ───────────────── Playback ─────────────────
     std::cout << " Playback\n";
     std::cout << "   State   : " << (info.playing ? "Playing" : "Paused") << "\n";
-    std::cout << "   Time    : "
-              << utils::fmtTime(info.positionSec)
-              << " / "
-              << utils::fmtTime(info.lengthSec)
-              << "\n";
-    std::cout << "   Volume  : "
-              << std::setw(3)
-              << int(audio.getVolume() * 100.0f)
-              << "%\n\n";
+    std::cout << "   Time    : " << utils::fmtTime(info.positionSec) << " / "
+              << utils::fmtTime(info.lengthSec) << "\n";
+    std::cout << "   Volume  : " << std::setw(3) << int(audio.getVolume() * 100.0f) << "%\n\n";
 
     // Progress bar
     std::cout << "   ";
@@ -267,9 +252,8 @@ private:
     std::cout << "   Format   : " << backend.pcmFormatName << "\n";
     std::cout << "   Rate     : " << backend.sampleRate << " Hz\n";
     std::cout << "   Channels : " << backend.channels << "\n";
-    std::cout << "   Buffer   : " << backend.bufferSize
-              << " frames (" << std::fixed << std::setprecision(1)
-              << backend.latencyMs << " ms)\n";
+    std::cout << "   Buffer   : " << backend.bufferSize << " frames (" << std::fixed
+              << std::setprecision(1) << backend.latencyMs << " ms)\n";
     std::cout << "   XRuns    : " << backend.xruns << "\n\n";
 
     // ───────────────── Controls ─────────────────

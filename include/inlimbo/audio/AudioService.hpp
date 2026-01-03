@@ -271,9 +271,9 @@ private:
   std::shared_ptr<AudioEngine> m_engine;
   service::Playlist            m_playlist;
 
-  service::TrackTable m_trackTable;
+  service::TrackTable    m_trackTable;
   service::MetadataTable m_metadataTable;
-  ui64                m_nextTrackId = 1;
+  ui64                   m_nextTrackId = 1;
 
   std::mutex m_mutex;
 

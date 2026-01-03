@@ -32,8 +32,7 @@ inline static auto fmtTime(double sec) -> std::string
   s %= 60;
 
   std::ostringstream oss;
-  oss << std::setw(2) << std::setfill('0') << m
-      << ":" << std::setw(2) << std::setfill('0') << s;
+  oss << std::setw(2) << std::setfill('0') << m << ":" << std::setw(2) << std::setfill('0') << s;
   return oss.str();
 }
 
