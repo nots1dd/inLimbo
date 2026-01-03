@@ -1,5 +1,5 @@
 @development-tools
-ffmpeg
+pkgconf
 ffmpeg-free-devel
 libavcodec-free-devel
 libavutil-free-devel

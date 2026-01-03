@@ -1,0 +1,35 @@
+name: "inLimbo CI / Ubuntu Run Test Suite (x86-64 arch - GCC)"
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+
+    steps:
+    - name: Checkout repository with submodules
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Install dependencies for inLimbo
+      run: |
+        sudo apt-get update
+        xargs -a ci/apt/packages.txt sudo apt-get install -y
+
+    - name: Build Release Version of inLimbo (x86-64 arch) - GCC (with GNU-ld)
+      run: |
+        make init-dep-backtrace
+        make buildx
+
+    - name: Run Test Suite of inLimbo (x86-64 arch) - CTest (with CMake)
+      run: |
+        make test
