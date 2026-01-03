@@ -21,12 +21,10 @@ class Logger
 public:
   static auto get() -> std::shared_ptr<spdlog::logger>&;
 
-  static void init(
-    const std::string& name = "core",
-    LogMode            mode = LogMode::ConsoleAndFile,
-    const std::string& file = "",
-    spdlog::level::level_enum level = spdlog::level::trace,
-    const std::string& pattern = "");
+  static void init(const std::string& name = "core", LogMode mode = LogMode::ConsoleAndFile,
+                   const std::string&        file    = "",
+                   spdlog::level::level_enum level   = spdlog::level::trace,
+                   const std::string&        pattern = "");
 
   static void set_level(spdlog::level::level_enum level);
 
@@ -37,10 +35,8 @@ public:
 private:
   static void init_from_env();
   static auto get_instance() -> std::shared_ptr<spdlog::logger>&;
-  static void print_banner(
-    const std::string& file,
-    spdlog::level::level_enum level,
-    const std::string& pattern);
+  static void print_banner(const std::string& file, spdlog::level::level_enum level,
+                           const std::string& pattern);
 };
 
 } // namespace inlimbo

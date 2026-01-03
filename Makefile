@@ -21,6 +21,11 @@ CLANG_TIDY   := clang-tidy
 MAKE 	:= make
 CMAKE := cmake
 
+# Default frontend = command line
+FRONTEND ?= cmdline
+CMAKE_FRONTEND_FLAG := -DINLIMBO_FRONTEND_TYPE=$(FRONTEND)
+
+# Path to compile_commands.json
 COMPILE_COMMANDS := $(BUILD_DIR)/compile_commands.json
 
 # Important files 
@@ -44,37 +49,16 @@ COLOR_CYAN  := \033[36m
 # ============================================================
 
 .PHONY: \
-	fmt fmt-check tidy clean init-dep-backtrace\
-	buildx build build-dbg rebuild rebuild-dbg \
+	fmt fmt-check tidy clean\
+	init submod-init submod-check init-dep-backtrace\
+	app app-dbg \
+	buildx build build-dbg rebuild rebuild-dbg\
 	test test-dbg \
 	verify-deps install-deps \
 	stats all-checks help
 
 # ============================================================
-# Submodule stuff
-# ============================================================
-
-submod-check:
-	@echo -e "$(COLOR_BLUE)▶ Checking git submodules...$(COLOR_RESET)"
-	@if git submodule status --recursive | grep -q '^-'; then \
-		echo -e "$(COLOR_RED)✗ Some submodules are NOT initialized$(COLOR_RESET)"; \
-		echo -e "  Run: $(COLOR_CYAN)git submodule update --init --recursive$(COLOR_RESET)"; \
-		exit 1; \
-	else \
-		echo -e "$(COLOR_GREEN)✔ All submodules are initialized$(COLOR_RESET)"; \
-	fi
-
-# ============================================================
-# Submodule initialization
-# ============================================================
-
-submod-init:
-	@echo -e "$(COLOR_BLUE)▶ Initializing git submodules...$(COLOR_RESET)"
-	@git submodule update --init --recursive
-	@echo -e "$(COLOR_GREEN)✔ Submodules initialized$(COLOR_RESET)"
-
-# ============================================================
-# Init stuff
+# Init stuff (explicit flags)
 # ============================================================
 
 init-dep-backtrace:
@@ -91,7 +75,57 @@ init-dep-backtrace:
 	@$(MAKE) -C $(BACKTRACE_BUILD_DIR) install
 	@echo -e "$(COLOR_GREEN)✔ libbacktrace built and installed locally$(COLOR_RESET)"
 
-init: submod-init submod-check init-dep-backtrace
+# ============================================================
+# Submodule initialization (explicit)
+# ============================================================
+
+submod-init:
+	@echo -e "$(COLOR_BLUE)▶ Initializing git submodules...$(COLOR_RESET)"
+	@git submodule update --init --recursive
+	@echo -e "$(COLOR_GREEN)✔ Submodules initialized$(COLOR_RESET)"
+
+submod-check:
+	@echo -e "$(COLOR_BLUE)▶ Checking git submodules...$(COLOR_RESET)"
+	@if git submodule status --recursive | grep -q '^-'; then \
+		echo -e "$(COLOR_RED)✗ Some submodules are NOT initialized$(COLOR_RESET)"; \
+		echo -e "  Run: $(COLOR_CYAN)git submodule update --init --recursive$(COLOR_RESET)"; \
+		exit 1; \
+	else \
+		echo -e "$(COLOR_GREEN)✔ All submodules are initialized$(COLOR_RESET)"; \
+	fi
+
+init: submod-init submod-check
+
+# ============================================================
+# Initialize app type (Release)
+# ============================================================
+
+app:
+	@if [ -z "$(name)" ]; then \
+		echo -e "$(COLOR_YELLOW)⚠ No frontend specified, defaulting to 'cmdline'$(COLOR_RESET)"; \
+		$(MAKE) init; \
+		$(MAKE) buildx FRONTEND=cmdline; \
+	else \
+		echo -e "$(COLOR_BLUE)▶ Building frontend: $(name)$(COLOR_RESET)"; \
+		$(MAKE) init; \
+		$(MAKE) buildx FRONTEND=$(name); \
+	fi
+
+# ============================================================
+# Initialize app type (Debug)
+# ============================================================
+
+app-dbg:
+	@if [ -z "$(name)" ]; then \
+		echo -e "$(COLOR_YELLOW)⚠ No frontend specified, defaulting to 'cmdline'$(COLOR_RESET)"; \
+		$(MAKE) init; \
+		$(MAKE) buildx-dbg FRONTEND=cmdline; \
+	else \
+		echo -e "$(COLOR_BLUE)▶ Building debug frontend: $(name)$(COLOR_RESET)"; \
+		$(MAKE) init; \
+		$(MAKE) init-dep-backtrace \
+		$(MAKE) buildx-dbg FRONTEND=$(name); \
+	fi
 
 # ============================================================
 # Build (Release)
@@ -100,11 +134,12 @@ init: submod-init submod-check init-dep-backtrace
 build:
 	@echo -e "$(COLOR_BLUE)▶ Building...$(COLOR_RESET)"
 	@$(CMAKE) --build $(BUILD_DIR)
-	@echo -e "$(COLOR_GREEN)✔ Build complete$(COLOR_RESET)"
+	@echo -e "$(COLOR_GREEN)✔ Build complete!$(COLOR_RESET)"
+	@echo -e ">> $(COLOR_CYAN)Frontend$(COLOR_RESET): $(FRONTEND)"
 
 buildx:
 	@echo -e "$(COLOR_BLUE)▶ Configuring build ($(BUILD_DIR))...$(COLOR_RESET)"
-	@$(CMAKE) -S . -B $(BUILD_DIR)
+	@$(CMAKE) -S . -B $(BUILD_DIR) -D CMAKE_BUILD_TYPE=Release $(CMAKE_FRONTEND_FLAG)
 	$(MAKE) build
 
 rebuild: clean buildx
@@ -120,7 +155,7 @@ build-dbg:
 
 buildx-dbg:
 	@echo -e "$(COLOR_BLUE)▶ Configuring debug build ($(BUILD_DBG_DIR))...$(COLOR_RESET)"
-	@$(CMAKE) -S . -B $(BUILD_DBG_DIR) -D CMAKE_BUILD_TYPE=Debug
+	@$(CMAKE) -S . -B $(BUILD_DBG_DIR) -D CMAKE_BUILD_TYPE=Debug $(CMAKE_FRONTEND_FLAG)
 	$(MAKE) build-dbg
 
 rebuild-dbg: clean buildx-dbg
@@ -281,6 +316,13 @@ help:
 	@echo -e ""
 	@echo -e "$(COLOR_BOLD)$(COLOR_GREEN)$(PROJECT_NAME) Makefile — Available Targets$(COLOR_RESET)"
 	@echo -e ""
+	@echo -e "  $(COLOR_CYAN)init$(COLOR_RESET)           Initialize project (git submodules, dependencies)"
+	@echo -e "  $(COLOR_CYAN)submod-init$(COLOR_RESET)    Initialize git submodules"
+	@echo -e "  $(COLOR_CYAN)submod-check$(COLOR_RESET)   Verify git submodules"
+	@echo -e ""
+	@echo -e "  $(COLOR_CYAN)app$(COLOR_RESET)            Build Release version of inLimbo with specified frontend"
+	@echo -e "  $(COLOR_CYAN)app-dbg$(COLOR_RESET)        Build Debug version of inLimbo with specified frontend"
+	@echo -e ""
 	@echo -e "  $(COLOR_CYAN)build$(COLOR_RESET)          Build Release version of inLimbo with CMake (no init)"
 	@echo -e "  $(COLOR_CYAN)buildx$(COLOR_RESET)         Initialize CMake and build Release version of inLimbo"
 	@echo -e "  $(COLOR_CYAN)rebuild$(COLOR_RESET)        Rebuild Release version of inLimbo from scratch with CMake"
@@ -291,9 +333,6 @@ help:
 	@echo -e ""
 	@echo -e "  $(COLOR_CYAN)test$(COLOR_RESET)           Run all compiles tests in Release build (uses GTest and ctest)"
 	@echo -e "  $(COLOR_CYAN)test-dbg$(COLOR_RESET)       Run all compiles tests in Debug build(uses GTest and ctest)"
-	@echo -e ""
-	@echo -e "  $(COLOR_CYAN)submod-init$(COLOR_RESET)    Initialize git submodules"
-	@echo -e "  $(COLOR_CYAN)submod-check$(COLOR_RESET)   Verify git submodules"
 	@echo -e ""
 	@echo -e "  $(COLOR_CYAN)fmt$(COLOR_RESET)            Format all C/C++ source and header files"
 	@echo -e "  $(COLOR_CYAN)fmt-check$(COLOR_RESET)      Checks if all C/C++ source and header files are formatted (no edits)"

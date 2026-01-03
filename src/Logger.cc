@@ -18,7 +18,7 @@
 #include <unistd.h>
 #endif
 
-#define __INLIMBO_DEFAULT_LOG_FILE__ "logs/core.log"
+#define __INLIMBO_DEFAULT_LOG_FILE__    "logs/core.log"
 #define __INLIMBO_DEFAULT_LOG_PATTERN__ "[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] %v"
 
 namespace inlimbo
@@ -29,12 +29,18 @@ auto parse_log_level(const std::string& level_str) -> spdlog::level::level_enum
   std::string s = level_str;
   std::ranges::transform(s, s.begin(), ::tolower);
 
-  if (s == "trace") return spdlog::level::trace;
-  if (s == "debug") return spdlog::level::debug;
-  if (s == "info") return spdlog::level::info;
-  if (s == "warn" || s == "warning") return spdlog::level::warn;
-  if (s == "error") return spdlog::level::err;
-  if (s == "critical" || s == "fatal") return spdlog::level::critical;
+  if (s == "trace")
+    return spdlog::level::trace;
+  if (s == "debug")
+    return spdlog::level::debug;
+  if (s == "info")
+    return spdlog::level::info;
+  if (s == "warn" || s == "warning")
+    return spdlog::level::warn;
+  if (s == "error")
+    return spdlog::level::err;
+  if (s == "critical" || s == "fatal")
+    return spdlog::level::critical;
 
   return spdlog::level::info;
 }
@@ -46,12 +52,8 @@ auto Logger::get() -> std::shared_ptr<spdlog::logger>&
   return get_instance();
 }
 
-void Logger::init(
-  const std::string& name,
-  LogMode            mode,
-  const std::string& file,
-  spdlog::level::level_enum level,
-  const std::string& pattern)
+void Logger::init(const std::string& name, LogMode mode, const std::string& file,
+                  spdlog::level::level_enum level, const std::string& pattern)
 {
   auto& instance = get_instance();
   if (instance)
@@ -59,8 +61,7 @@ void Logger::init(
 
   std::vector<spdlog::sink_ptr> sinks;
 
-  const std::string final_pattern =
-    pattern.empty() ? __INLIMBO_DEFAULT_LOG_PATTERN__ : pattern;
+  const std::string final_pattern = pattern.empty() ? __INLIMBO_DEFAULT_LOG_PATTERN__ : pattern;
 
   if (mode == LogMode::ConsoleOnly || mode == LogMode::ConsoleAndFile)
   {
@@ -92,10 +93,7 @@ void Logger::set_level(spdlog::level::level_enum level)
     inst->set_level(level);
 }
 
-auto Logger::is_initialized() noexcept -> bool
-{
-  return static_cast<bool>(get_instance());
-}
+auto Logger::is_initialized() noexcept -> bool { return static_cast<bool>(get_instance()); }
 
 void Logger::shutdown() noexcept
 {
@@ -114,10 +112,8 @@ void Logger::init_from_env()
 
   const std::string file =
     env_file ? env_file : (utils::getCachePath() + __INLIMBO_DEFAULT_LOG_FILE__);
-  const std::string pattern =
-    env_pattern ? env_pattern : __INLIMBO_DEFAULT_LOG_PATTERN__;
-  const auto level =
-    env_level ? parse_log_level(env_level) : spdlog::level::info;
+  const std::string pattern = env_pattern ? env_pattern : __INLIMBO_DEFAULT_LOG_PATTERN__;
+  const auto        level   = env_level ? parse_log_level(env_level) : spdlog::level::info;
 
   init("core", LogMode::ConsoleAndFile, file, level, pattern);
 }
@@ -128,10 +124,8 @@ auto Logger::get_instance() -> std::shared_ptr<spdlog::logger>&
   return instance;
 }
 
-void Logger::print_banner(
-  const std::string& file,
-  spdlog::level::level_enum level,
-  const std::string& pattern)
+void Logger::print_banner(const std::string& file, spdlog::level::level_enum level,
+                          const std::string& pattern)
 {
   auto& log = get_instance();
   if (!log)
@@ -140,28 +134,30 @@ void Logger::print_banner(
 #ifdef PLATFORM_WINDOWS
   SYSTEM_INFO sysinfo;
   GetSystemInfo(&sysinfo);
-  DWORD pid = GetCurrentProcessId();
+  DWORD       pid     = GetCurrentProcessId();
   std::string sysname = "Windows";
-  std::string arch = std::to_string(sysinfo.dwProcessorType);
+  std::string arch    = std::to_string(sysinfo.dwProcessorType);
 #else
   struct utsname uts{};
   uname(&uts);
-  pid_t pid = getpid();
+  pid_t       pid     = getpid();
   std::string sysname = uts.sysname;
-  std::string arch = uts.machine;
+  std::string arch    = uts.machine;
 #endif
 
   std::ostringstream tid;
   tid << std::this_thread::get_id();
 
-  log->info("┌────────────────────────────── InLimbo Logger Initialized ──────────────────────────────┐");
+  log->info(
+    "┌────────────────────────────── InLimbo Logger Initialized ──────────────────────────────┐");
   log->info("│  Log Level   : {}", spdlog::level::to_short_c_str(level));
   log->info("│  Pattern     : {}", pattern);
   log->info("│  Output File : {}", file);
   log->info("│  System      : {} ({})", sysname, arch);
   log->info("│  PID         : {}", pid);
   log->info("│  Thread ID   : {}", tid.str());
-  log->info("└────────────────────────────────────────────────────────────────────────────────────────┘");
+  log->info(
+    "└────────────────────────────────────────────────────────────────────────────────────────┘");
 }
 
 } // namespace inlimbo

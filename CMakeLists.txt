@@ -101,6 +101,7 @@ add_library(inLimbo-core SHARED ${INLIMBO_CORE_SOURCES})
 target_include_directories(inLimbo-core
     PUBLIC
         include/inlimbo
+        ${CMAKE_SOURCE_DIR}
         ${TAGLIB_INCLUDE_DIRS}
         ${TOMLPLUSPLUS_INCLUDE_DIRS}
         ${CXXOPTS_INCLUDE_DIRS}
@@ -136,6 +137,40 @@ set_target_properties(inLimbo-core PROPERTIES
 )
 
 # -----------------------------------------------------------
+# Frontend selection (makefile defaults it to cmdline!)
+# -----------------------------------------------------------
+if(INLIMBO_FRONTEND_TYPE STREQUAL "cmdline")
+
+    set(INLIMBO_FE_CMDLINE_SOURCES
+        src/frontend/cmdline/Interface.cc
+    )
+
+    add_library(inLimbo-fe-cmdline SHARED ${INLIMBO_FE_CMDLINE_SOURCES})
+
+    target_include_directories(inLimbo-fe-cmdline
+        PUBLIC
+            include/inlimbo
+            ${CMAKE_SOURCE_DIR}
+            $<$<CONFIG:Debug>:${BACKTRACE_INCLUDE_DIR}>
+    )
+
+    target_compile_definitions(inLimbo-fe-cmdline
+        PRIVATE
+            $<$<CONFIG:Debug>:INLIMBO_DEBUG_BUILD>
+            INLIMBO_FRONTEND_CMDLINE
+    )
+
+    target_link_libraries(inLimbo-fe-cmdline
+        PUBLIC
+            inLimbo-core
+    )
+
+    set(INLIMBO_FRONTEND_TARGET inLimbo-fe-cmdline)
+    set(INLIMBO_FRONTEND_NAME   "cmdline")
+
+endif()
+
+# -----------------------------------------------------------
 # Test Executable
 # -----------------------------------------------------------
 set(SOURCES     
@@ -149,15 +184,16 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE
         include/inlimbo
         ${CMAKE_SOURCE_DIR}
-        ${TAGLIB_INCLUDE_DIRS}
-        ${TOMLPLUSPLUS_INCLUDE_DIRS}
-        ${CXXOPTS_INCLUDE_DIRS}
-        ${CEREAL_INCLUDE_DIRS}
 )
+
+if(INLIMBO_FRONTEND_TYPE STREQUAL "none")
+  message(FATAL_ERROR "No frontend will be built.")
+endif()
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         inLimbo-core
+        ${INLIMBO_FRONTEND_TARGET}
 )
 
 target_compile_definitions(${PROJECT_NAME}
@@ -214,4 +250,8 @@ message(STATUS "${SEP}")
 message(STATUS "${SEP}  ── System Libraries ────────────────────────────────────")
 message(STATUS "${SEP}  • TagLib     : ${TAGLIB_INCLUDE_DIRS}")
 message(STATUS "${SEP}  • backtrace  : linked manually")
+message(STATUS "${SEP}")
+message(STATUS "${SEP}  ── Frontend ───────────────────────────────────────────")
+message(STATUS "${SEP}  • Type        : ${INLIMBO_FRONTEND_NAME}")
+message(STATUS "${SEP}  • Target      : ${INLIMBO_FRONTEND_TARGET}")
 message(STATUS "${LINE_BOTTOM}\n")
