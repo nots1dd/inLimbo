@@ -1,19 +1,11 @@
-#pragma once
-
-#include "Config.hpp"
+#include "utils/string/Equals.hpp"
 #include <cstddef>
 #include <string>
 
 namespace utils::string
 {
 
-inline INLIMBO_API_CPP constexpr auto fast_tolower_ascii(char c) noexcept -> char
-{
-  return (c >= 'A' && c <= 'Z') ? static_cast<char>(c + 32) : c;
-}
-
-inline INLIMBO_API_CPP auto iequals_fast(const std::string& a, const std::string& b) noexcept
-  -> bool
+auto isEquals(const std::string& a, const std::string& b) noexcept -> bool
 {
   if (a.size() != b.size())
     return false;
@@ -33,8 +25,7 @@ inline INLIMBO_API_CPP auto iequals_fast(const std::string& a, const std::string
 }
 
 // Optimized "contains-like" equality for situations where you already know one side is lowercase
-inline INLIMBO_API_CPP auto iequals_fast_prelowered(const std::string& lowerA,
-                                                    const std::string& b) noexcept -> bool
+auto isEqualsPrelowered(const std::string& lowerA, const std::string& b) noexcept -> bool
 {
   if (lowerA.size() != b.size())
     return false;

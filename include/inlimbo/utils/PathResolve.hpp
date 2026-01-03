@@ -2,7 +2,6 @@
 
 #include "Config.hpp"
 #include "Env-Vars.hpp"
-#include "Logger.hpp"
 #include <stdexcept>
 #include <string>
 

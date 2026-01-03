@@ -7,12 +7,12 @@
 #include <cstring>
 #include <string>
 
-namespace helpers
+namespace helpers::fs
 {
 
-inline void processDirectory(const std::string&                               directoryPath,
-                             utils::RedBlackTree<ino_t, utils::rbt::NilNode>& rbt,
-                             core::InodeFileMapper&                           mapper)
+inline void dirWalkAndUpdateRBT(const std::string&                               directoryPath,
+                                utils::RedBlackTree<ino_t, utils::rbt::NilNode>& rbt,
+                                core::InodeFileMapper&                           mapper)
 {
   RECORD_FUNC_TO_BACKTRACE("ProcessDirectory");
 
@@ -34,4 +34,4 @@ inline void processDirectory(const std::string&                               di
     });
 }
 
-} // namespace helpers
+} // namespace helpers::fs

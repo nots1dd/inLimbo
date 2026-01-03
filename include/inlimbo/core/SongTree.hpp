@@ -2,7 +2,7 @@
 
 #include "StackTrace.hpp"
 #include "taglib/Parser.hpp"
-#include "utils/String.hpp"
+#include "utils/string/Equals.hpp"
 
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/map.hpp>
@@ -95,7 +95,7 @@ namespace song::sort
 inline auto byTitle(const Title& t) -> SongPredicate
 {
   return [t](auto&, auto&, auto, auto, const Song& s) -> bool
-  { return utils::string::iequals_fast(s.metadata.title, t); };
+  { return utils::string::isEquals(s.metadata.title, t); };
 }
 
 inline auto byTrack(int track) -> SongPredicate
@@ -106,19 +106,19 @@ inline auto byTrack(int track) -> SongPredicate
 inline auto byArtist(const Artist& a) -> SongPredicate
 {
   return [a](const Artist& artist, auto&, auto, auto, auto&) -> bool
-  { return utils::string::iequals_fast(artist, a); };
+  { return utils::string::isEquals(artist, a); };
 }
 
 inline auto byAlbum(const Album& a) -> SongPredicate
 {
   return [a](auto, const Album& album, auto, auto, auto&) -> bool
-  { return utils::string::iequals_fast(album, a); };
+  { return utils::string::isEquals(album, a); };
 }
 
 inline auto byArtistAlbum(const Artist& a, const Album& al) -> SongPredicate
 {
   return [a, al](const Artist& artist, const Album& album, auto, auto, auto&) -> bool
-  { return utils::string::iequals_fast(artist, a) && utils::string::iequals_fast(album, al); };
+  { return utils::string::isEquals(artist, a) && utils::string::isEquals(album, al); };
 }
 
 inline auto byYear(uint year) -> SongPredicate
@@ -130,7 +130,7 @@ inline auto byYear(uint year) -> SongPredicate
 inline auto byGenre(const Genre& g) -> SongPredicate
 {
   return [g](auto&, auto&, auto, auto, const Song& s) -> bool
-  { return utils::string::iequals_fast(s.metadata.genre, g); };
+  { return utils::string::isEquals(s.metadata.genre, g); };
 }
 
 inline auto allOf(SongPredicate a, SongPredicate b) -> SongPredicate

@@ -1,7 +1,9 @@
 #include "CmdLine.hpp"
 #include "Context.hpp"
+#include "Logger.hpp"
 #include "thread/Map.hpp"
-#include "utils/signal/SignalHandler.hpp"
+#include "toml/Parser.hpp"
+#include "utils/signal/Handler.hpp"
 
 // this is optional to have, but useful for debugging
 #ifdef INLIMBO_DEBUG_BUILD
@@ -13,7 +15,8 @@ threads::SafeMap<core::SongMap> g_songMap;
 auto main(int argc, char* argv[]) -> int
 {
   RECORD_FUNC_TO_BACKTRACE("<MAIN>");
-  utils::SignalHandler::getInstance().setup();
+  tomlparser::Config::load();
+  utils::signal::Handler::getInstance().setup();
 
   try
   {

@@ -2,10 +2,11 @@
 #include "Logger.hpp"
 #include "core/InodeMapper.hpp"
 #include "frontend/cmd-line/CMD-LINE.hpp"
-#include "helpers/Directory.hpp"
 #include "helpers/cmdline/Display.hpp"
+#include "helpers/fs/Directory.hpp"
 #include "thread/Map.hpp"
 #include "toml/Parser.hpp"
+#include "utils/PathResolve.hpp"
 #include "utils/RBTree.hpp"
 
 #include <algorithm>
@@ -151,7 +152,7 @@ void setupArgs(cli::CmdLine& args)
 
 AppContext::AppContext(const std::string& program, const std::string& description)
     : m_cmdLine(program, description),
-      m_debugLogTagLibField(tomlparser::parseTOMLField("debug", "taglib_parser_log")),
+      m_debugLogTagLibField(tomlparser::Config::getString("debug", "taglib_parser_log")),
       m_tagLibParser(m_debugLogTagLibField)
 {
   setupArgs(m_cmdLine);
@@ -242,7 +243,7 @@ auto initializeContext(int argc, char** argv) -> AppContext
 
   ctx.m_volume      = std::clamp(vol / 100.0f, 0.0f, 1.5f);
   ctx.m_printAction = resolvePrintAction(ctx.m_cmdLine);
-  ctx.m_musicDir    = tomlparser::parseTOMLField("library", "directory");
+  ctx.m_musicDir    = tomlparser::Config::getString("library", "directory");
   ctx.m_binPath     = utils::getConfigPath(LIB_BIN_NAME);
 
   LOG_INFO("Configured directory: {}, song query: {}", ctx.m_musicDir, ctx.m_songName);
@@ -277,7 +278,7 @@ void buildOrLoadLibrary(AppContext& ctx)
   utils::RedBlackTree<ino_t, utils::rbt::NilNode> rbt;
   core::InodeFileMapper                           mapper;
 
-  helpers::processDirectory(ctx.m_musicDir, rbt, mapper);
+  helpers::fs::dirWalkAndUpdateRBT(ctx.m_musicDir, rbt, mapper);
 
   for (const auto [inode] : rbt)
   {
@@ -332,7 +333,7 @@ void runFrontend(AppContext& ctx)
   // ---------------------------------------------------------
   // Create AudioService (owns AudioEngine)
   // ---------------------------------------------------------
-  audio::AudioService audio;
+  audio::Service audio;
 
   // ---------------------------------------------------------
   // Enumerate playback devices (optional UI selection)

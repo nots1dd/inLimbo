@@ -86,8 +86,14 @@ set(INLIMBO_CORE_SOURCES
     src/core/taglib/Parser.cc
     src/core/DirectoryWalker.cc
     src/helpers/cmdline/Display.cc
+    src/helpers/query/SongMap.cc
+    src/utils/signal/Handler.cc
+    src/utils/string/Equals.cc
+    src/toml/Parser.cc
     src/audio/Engine.cc
+    src/audio/Service.cc
     src/CmdLine.cc
+    src/Logger.cc
 )
 
 add_library(inLimbo-core SHARED ${INLIMBO_CORE_SOURCES})
@@ -99,6 +105,11 @@ target_include_directories(inLimbo-core
         ${TOMLPLUSPLUS_INCLUDE_DIRS}
         ${CXXOPTS_INCLUDE_DIRS}
         ${CEREAL_INCLUDE_DIRS}
+        ${ALSA_INCLUDE_DIRS}
+        ${AVFORMAT_INCLUDE_DIRS}
+        ${AVCODEC_INCLUDE_DIRS}
+        ${AVUTIL_INCLUDE_DIRS}
+        ${SWRESAMPLE_INCLUDE_DIRS}
         $<$<CONFIG:Debug>:${BACKTRACE_INCLUDE_DIR}>
 )
 

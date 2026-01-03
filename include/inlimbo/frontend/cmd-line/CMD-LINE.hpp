@@ -13,7 +13,7 @@
 #include <thread>
 #include <unistd.h>
 
-#include "audio/AudioService.hpp"
+#include "audio/Service.hpp"
 #include "core/SongTree.hpp"
 #include "core/taglib/Parser.hpp"
 #include "helpers/query/SongMap.hpp"
@@ -41,7 +41,7 @@ public:
   // ------------------------------------------------------------
   // Main UI loop
   // ------------------------------------------------------------
-  void run(audio::AudioService& audio)
+  void run(audio::Service& audio)
   {
 
     helpers::query::songmap::read::forEachSong(m_songMapTS,
@@ -126,7 +126,7 @@ private:
   // ------------------------------------------------------------
   // Threads
   // ------------------------------------------------------------
-  void statusLoop(audio::AudioService& audio)
+  void statusLoop(audio::Service& audio)
   {
     while (m_isRunning.load())
     {
@@ -135,7 +135,7 @@ private:
     }
   }
 
-  void inputLoop(audio::AudioService& audio)
+  void inputLoop(audio::Service& audio)
   {
     pollfd pfd{.fd = STDIN_FILENO, .events = POLLIN, .revents = 0};
 
@@ -154,7 +154,7 @@ private:
     m_isRunning.store(false);
   }
 
-  void seekLoop(audio::AudioService& audio)
+  void seekLoop(audio::Service& audio)
   {
     while (m_isRunning.load())
     {
@@ -183,7 +183,7 @@ private:
     std::cout.flush();
   }
 
-  void draw(audio::AudioService& audio)
+  void draw(audio::Service& audio)
   {
 
     const auto ts = getTerminalSize();
@@ -268,7 +268,7 @@ private:
   // ------------------------------------------------------------
   // Input handling
   // ------------------------------------------------------------
-  auto handleKey(audio::AudioService& audio, char c) -> bool
+  auto handleKey(audio::Service& audio, char c) -> bool
   {
     switch (c)
     {
