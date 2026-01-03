@@ -1,11 +1,9 @@
 #include "Context.hpp"
 #include "Logger.hpp"
-#include "audio/Playback.hpp"
 #include "core/InodeMapper.hpp"
 #include "frontend/cmd-line/CMD-LINE.hpp"
 #include "helpers/Directory.hpp"
 #include "helpers/cmdline/Display.hpp"
-#include "helpers/query/SongMap.hpp"
 #include "thread/Map.hpp"
 #include "toml/Parser.hpp"
 #include "utils/RBTree.hpp"
@@ -197,8 +195,8 @@ void maybeHandlePrintActions(AppContext& ctx)
       helpers::cmdline::printArtists(ctx.m_songTree);
       break;
     case PrintAction::SongInfo:
-      helpers::cmdline::printSongInfo(
-        ctx.m_songTree, ctx.m_cmdLine.getOptional<Title>("print-song").value_or(""));
+      helpers::cmdline::printSongInfo(ctx.m_songTree,
+                                      ctx.m_cmdLine.getOptional<Title>("print-song").value_or(""));
       break;
     case PrintAction::Albums:
       helpers::cmdline::printAlbums(ctx.m_songTree);
@@ -237,15 +235,15 @@ auto initializeContext(int argc, char** argv) -> AppContext
   AppContext ctx("inLimbo", "inLimbo (CMD-LINE) music library tool");
 
   ctx.m_cmdLine.parse(argc, argv);
-  ctx.m_songName = ctx.m_cmdLine.getOptional<std::string>("song").value_or("");
+  ctx.m_songName     = ctx.m_cmdLine.getOptional<std::string>("song").value_or("");
   ctx.m_editMetadata = ctx.m_cmdLine.has("edit-metadata");
 
   const float vol = ctx.m_cmdLine.getOptional<float>("volume").value_or(75.0f);
 
-  ctx.m_volume = std::clamp(vol / 100.0f, 0.0f, 1.5f);
+  ctx.m_volume      = std::clamp(vol / 100.0f, 0.0f, 1.5f);
   ctx.m_printAction = resolvePrintAction(ctx.m_cmdLine);
-  ctx.m_musicDir = tomlparser::parseTOMLField("library", "directory");
-  ctx.m_binPath = utils::getConfigPath(LIB_BIN_NAME);
+  ctx.m_musicDir    = tomlparser::parseTOMLField("library", "directory");
+  ctx.m_binPath     = utils::getConfigPath(LIB_BIN_NAME);
 
   LOG_INFO("Configured directory: {}, song query: {}", ctx.m_musicDir, ctx.m_songName);
 
@@ -331,20 +329,47 @@ void runFrontend(AppContext& ctx)
 
   ASSERT_MSG(song, "Song not found");
 
-  audio::AudioEngine engine;
-  auto               devices = engine.enumeratePlaybackDevices();
+  // ---------------------------------------------------------
+  // Create AudioService (owns AudioEngine)
+  // ---------------------------------------------------------
+  audio::AudioService audio;
+
+  // ---------------------------------------------------------
+  // Enumerate playback devices (optional UI selection)
+  // ---------------------------------------------------------
+  auto devices = audio.enumeratePlaybackDevices();
 
   frontend::cmdline::Interface ui(g_songMap);
-  size_t                       devIdx = ui.selectAudioDevice(devices);
 
-  engine.initEngineForDevice(devices[devIdx].name);
-  engine.setVolume(ctx.m_volume);
+  // ---------------------------------------------------------
+  // Initialize backend
+  // ---------------------------------------------------------
+  audio.initDevice(); // default device
+  audio.setVolume(ctx.m_volume);
 
-  const auto idx = *engine.loadSound(song->metadata.filePath);
+  // ---------------------------------------------------------
+  // Register track + add to playlist (NO decoding here)
+  // ---------------------------------------------------------
+  audio::service::SoundHandle handle = audio.registerTrack(*song);
 
-  engine.restart();
-  ui.run(engine, song->metadata);
-  engine.stop();
+  ASSERT_MSG(handle, "Failed to register track");
+
+  audio.addToPlaylist(handle);
+
+  // ---------------------------------------------------------
+  // Start playback (lazy load happens here)
+  // ---------------------------------------------------------
+  audio.start();
+
+  // ---------------------------------------------------------
+  // Run UI loop
+  // ---------------------------------------------------------
+  ui.run(audio);
+
+  // ---------------------------------------------------------
+  // Clean shutdown
+  // ---------------------------------------------------------
+  audio.shutdown();
 }
 
 } // namespace inlimbo

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Config.hpp"
+#include "Logger.hpp"
 #include "core/SongTree.hpp" // core::Song, Artist, Album, etc.
 #include "core/taglib/Parser.hpp"
 #include "thread/Map.hpp" // threads::SafeMap

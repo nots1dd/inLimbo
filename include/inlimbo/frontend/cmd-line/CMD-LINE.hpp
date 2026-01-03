@@ -1,23 +1,30 @@
 #pragma once
 
 #include <atomic>
-#include <chrono>
 #include <cmath>
 #include <fcntl.h>
 #include <iomanip>
 #include <iostream>
+#include <mutex>
 #include <poll.h>
 #include <termios.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
 #include <thread>
 #include <unistd.h>
 
-#include "audio/Playback.hpp"
+#include "audio/AudioService.hpp"
+#include "utils/timer/Timer.hpp"
 #include "core/SongTree.hpp"
 #include "core/taglib/Parser.hpp"
+#include "helpers/query/SongMap.hpp"
 #include "thread/Map.hpp"
 
 namespace frontend::cmdline
 {
+
+static constexpr int MIN_TERM_COLS = 80;
+static constexpr int MIN_TERM_ROWS = 24;
 
 #define UI_CLEAR     "\033[H\033[J"
 #define UI_TITLE     "\033[1;36mInLimbo Player\033[0m"
@@ -31,14 +38,35 @@ class Interface
 public:
   explicit Interface(threads::SafeMap<core::SongMap>& songMap) : m_songMapTS(std::move(songMap)) {}
 
-  void run(audio::AudioEngine& eng, const Metadata& meta)
+  // ------------------------------------------------------------
+  // Main UI loop
+  // ------------------------------------------------------------
+  void run(audio::AudioService& audio)
   {
+
+    helpers::query::songmap::read::forEachSong(
+    m_songMapTS,
+    [&](const Artist&, const Album&, const Disc, const Track, const ino_t,
+        const core::Song& song) -> void
+    {
+      auto h = audio.registerTrack(song);
+      audio.addToPlaylist(h);
+    });
+
+    {
+      std::lock_guard<std::mutex> lock(m_metaMutex);
+      m_currentMeta = audio.getCurrentMetadata();
+    }
+
+    // ----------------------------------------------------------
+    // UI threads
+    // ----------------------------------------------------------
     enableRawMode();
     m_isRunning.store(true);
 
-    std::thread status([&]() -> void { statusLoop(eng, meta); });
-    std::thread input([&]() -> void { inputLoop(eng); });
-    std::thread seek([&]() -> void { seekLoop(eng); });
+    std::thread status([&]() -> void { statusLoop(audio); });
+    std::thread input([&]() -> void { inputLoop(audio); });
+    std::thread seek([&]() -> void { seekLoop(audio); });
 
     while (m_isRunning.load())
       std::this_thread::sleep_for(std::chrono::milliseconds(40));
@@ -54,31 +82,37 @@ public:
       seek.join();
   }
 
-  auto selectAudioDevice(const audio::Devices& devices) -> size_t
-  {
-    std::cout << "\nPlayback Devices:\n";
-    for (size_t i = 0; i < devices.size(); ++i)
-      std::cout << " [" << i << "] " << devices[i].description << "\n";
-
-    size_t idx = 0;
-    for (;;)
-    {
-      std::cout << "\nSelect device: ";
-      if (std::cin >> idx && idx < devices.size())
-        break;
-      std::cin.clear();
-      std::cin.ignore(1024, '\n');
-    }
-    std::cin.ignore(1024, '\n');
-    return idx;
-  }
-
 private:
+  // ------------------------------------------------------------
+  // State
+  // ------------------------------------------------------------
   threads::SafeMap<core::SongMap> m_songMapTS;
   std::atomic<bool>               m_isRunning{false};
   std::atomic<double>             m_pendingSeek{0.0};
   termios                         m_termOrig{};
 
+  std::mutex              m_metaMutex;
+  std::optional<Metadata> m_currentMeta;
+
+  struct TermSize
+  {
+    int rows = 0;
+    int cols = 0;
+  };
+
+  static auto getTerminalSize() -> TermSize
+  {
+    winsize ws{};
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1)
+      return {};
+
+    return { .rows=static_cast<int>(ws.ws_row),
+             .cols=static_cast<int>(ws.ws_col) };
+  }
+
+  // ------------------------------------------------------------
+  // Terminal control
+  // ------------------------------------------------------------
   void enableRawMode()
   {
     tcgetattr(STDIN_FILENO, &m_termOrig);
@@ -90,40 +124,22 @@ private:
 
   void disableRawMode() { tcsetattr(STDIN_FILENO, TCSAFLUSH, &m_termOrig); }
 
-  void statusLoop(audio::AudioEngine& eng, const Metadata& met)
+  // ------------------------------------------------------------
+  // Threads
+  // ------------------------------------------------------------
+  void statusLoop(audio::AudioService& audio)
   {
     while (m_isRunning.load())
     {
-      draw(eng, met);
+      draw(audio);
       std::this_thread::sleep_for(std::chrono::milliseconds(120));
     }
   }
 
-  void draw(const audio::AudioEngine& eng, const Metadata& met)
-  {
-    auto [pos, len]             = *eng.getPlaybackTime();
-    float               vol     = eng.getVolume() * 100.0f;
-    bool                play    = eng.isPlaying();
-    const audio::Sound& songObj = eng.getSound(0);
-
-    constexpr int W      = 50;
-    int           filled = len > 0.0 ? int((pos / len) * W) : 0;
-
-    showMetadataAndBackendInfo(met, songObj);
-
-    std::cout << (play ? UI_PLAY : UI_PAUSE) << "  " << std::fixed << std::setprecision(1) << pos
-              << " / " << len << " s   Vol " << std::setw(3) << int(vol) << "%\n\n";
-
-    for (int i = 0; i < W; ++i)
-      std::cout << (i < filled ? UI_BAR_FILL : UI_BAR_EMPTY);
-
-    std::cout << "\n\n[p] play  [s] stop  [r] restart  [b/f] seek  [+/-] vol  [q] quit\n";
-    std::cout.flush();
-  }
-
-  void inputLoop(audio::AudioEngine& eng)
+  void inputLoop(audio::AudioService& audio)
   {
     pollfd pfd{.fd = STDIN_FILENO, .events = POLLIN, .revents = 0};
+
     while (m_isRunning.load())
     {
       if (poll(&pfd, 1, 25) > 0)
@@ -131,7 +147,7 @@ private:
         char c;
         if (read(STDIN_FILENO, &c, 1) > 0)
         {
-          if (!handleKey(eng, c))
+          if (!handleKey(audio, c))
             break;
         }
       }
@@ -139,7 +155,7 @@ private:
     m_isRunning.store(false);
   }
 
-  void seekLoop(audio::AudioEngine& eng)
+  void seekLoop(audio::AudioService& audio)
   {
     while (m_isRunning.load())
     {
@@ -147,26 +163,145 @@ private:
       if (std::abs(d) > 0.01)
       {
         if (d > 0.0)
-          eng.seekForward(d);
+          audio.seekForward(d);
         else
-          eng.seekBackward(-d);
+          audio.seekBackward(-d);
       }
       std::this_thread::sleep_for(std::chrono::milliseconds(70));
     }
   }
 
-  auto handleKey(audio::AudioEngine& eng, char c) -> bool
+  // ------------------------------------------------------------
+  // Drawing
+  // ------------------------------------------------------------
+  void drawTooSmall(const TermSize& ts)
+  {
+    std::cout << UI_CLEAR << UI_TITLE << "\n\n";
+    std::cout << " Terminal too small\n\n";
+    std::cout << " Required : "
+              << MIN_TERM_COLS << " cols × "
+              << MIN_TERM_ROWS << " rows\n";
+    std::cout << " Current  : "
+              << ts.cols << " cols × "
+              << ts.rows << " rows\n\n";
+    std::cout << " Resize the terminal window.\n";
+    std::cout.flush();
+  }
+
+  void draw(audio::AudioService& audio)
+  {
+
+    const auto ts = getTerminalSize();
+
+    if (ts.cols < MIN_TERM_COLS || ts.rows < MIN_TERM_ROWS)
+    {
+      drawTooSmall(ts);
+      return;
+    }
+
+    auto infoOpt = audio.getCurrentTrackInfo();
+    if (!infoOpt)
+      return;
+
+    const auto& info = *infoOpt;
+    const auto backend = audio.getBackendInfo();
+
+    const size_t size    = audio.getPlaylistSize();
+    const size_t current = audio.getCurrentIndex();
+
+    auto curMeta  = audio.getMetadataAt(current);
+    auto prevMeta = size > 0
+                      ? audio.getMetadataAt((current + size - 1) % size)
+                      : std::nullopt;
+    auto nextMeta = size > 0
+                      ? audio.getMetadataAt((current + 1) % size)
+                      : std::nullopt;
+
+    if (!curMeta)
+      return;
+
+    constexpr int BAR_W = 50;
+    int filled = info.lengthSec > 0.0
+      ? static_cast<int>((info.positionSec / info.lengthSec) * BAR_W)
+      : 0;
+
+    std::cout << UI_CLEAR;
+    std::cout << UI_TITLE << "\n";
+    std::cout << "──────────────────────────────────────────────────────────\n\n";
+
+    // ───────────────── Playlist context ─────────────────
+    std::cout << " Playlist\n";
+    std::cout << "   Prev : " << (prevMeta ? prevMeta->title : "<none>") << "\n";
+    std::cout << " ▶ Now  : " << curMeta->title << " — " << curMeta->artist << "\n";
+    std::cout << "   Next : " << (nextMeta ? nextMeta->title : "<none>") << "\n\n";
+
+    // ───────────────── Track metadata ─────────────────
+    std::cout << " Track\n";
+    std::cout << "   Album   : " << curMeta->album << "\n";
+    std::cout << "   Genre   : " << curMeta->genre << "\n";
+    std::cout << "   Bitrate : " << curMeta->bitrate << " kbps\n";
+    std::cout << "   File    : " << curMeta->filePath << "\n\n";
+
+    // ───────────────── Playback ─────────────────
+    std::cout << " Playback\n";
+    std::cout << "   State   : " << (info.playing ? "Playing" : "Paused") << "\n";
+    std::cout << "   Time    : "
+              << utils::fmtTime(info.positionSec)
+              << " / "
+              << utils::fmtTime(info.lengthSec)
+              << "\n";
+    std::cout << "   Volume  : "
+              << std::setw(3)
+              << int(audio.getVolume() * 100.0f)
+              << "%\n\n";
+
+    // Progress bar
+    std::cout << "   ";
+    for (int i = 0; i < BAR_W; ++i)
+      std::cout << (i < filled ? UI_BAR_FILL : UI_BAR_EMPTY);
+    std::cout << "\n\n";
+
+    // ───────────────── Backend info ─────────────────
+    std::cout << " Backend\n";
+    std::cout << "   Device   : " << backend.dev.description << "\n";
+    std::cout << "   Format   : " << backend.pcmFormatName << "\n";
+    std::cout << "   Rate     : " << backend.sampleRate << " Hz\n";
+    std::cout << "   Channels : " << backend.channels << "\n";
+    std::cout << "   Buffer   : " << backend.bufferSize
+              << " frames (" << std::fixed << std::setprecision(1)
+              << backend.latencyMs << " ms)\n";
+    std::cout << "   XRuns    : " << backend.xruns << "\n\n";
+
+    // ───────────────── Controls ─────────────────
+    std::cout << " Controls\n";
+    std::cout << "   [p] play   [s] pause   [r] restart\n";
+    std::cout << "   [n] next   [P] prev    [b/f] seek\n";
+    std::cout << "   [+/-] vol  [q] quit\n";
+
+    std::cout.flush();
+  }
+
+  // ------------------------------------------------------------
+  // Input handling
+  // ------------------------------------------------------------
+  auto handleKey(audio::AudioService& audio, char c) -> bool
   {
     switch (c)
     {
       case 'p':
-        eng.play();
+        audio.playCurrent();
         break;
       case 's':
-        eng.pause();
+        audio.pauseCurrent();
+        break;
+      case 'n':
+        audio.nextTrack();
+        break;
+      case 'P':
+        audio.previousTrack();
         break;
       case 'r':
-        eng.restart();
+        audio.restartCurrent();
         break;
       case 'b':
         m_pendingSeek -= 2.0;
@@ -175,31 +310,30 @@ private:
         m_pendingSeek += 2.0;
         break;
       case '=':
-        eng.setVolume(std::min(1.5f, eng.getVolume() + 0.05f));
+        audio.setVolume(std::min(1.5f, audio.getVolume() + 0.05f));
         break;
       case '-':
-        eng.setVolume(std::max(0.0f, eng.getVolume() - 0.05f));
+        audio.setVolume(std::max(0.0f, audio.getVolume() - 0.05f));
         break;
       case 'q':
         return false;
+
       default:
         break;
     }
     return true;
   }
 
-  static void showMetadataAndBackendInfo(const Metadata& m, const audio::Sound& sound)
+  // ------------------------------------------------------------
+  // Metadata display
+  // ------------------------------------------------------------
+  static void showMetadata(const Metadata& m)
   {
     std::cout << UI_CLEAR << UI_TITLE << "\n\n"
               << "Song    : " << m.title << " by " << m.artist << "\n"
               << "Album   : " << m.album << " (" << m.genre << ")\n"
               << "Bitrate : " << m.bitrate << " kbps\n"
-              << "Path    : " << m.filePath << "\n\n"
-              << "Sample Rate : " << sound.source.sampleRate << " Hz\n"
-              << "Channels    : " << sound.source.channels << "\n"
-              << "Format      : " << sound.source.sampleFmtName << "\n\n"
-              << "Press any key...\n";
-    std::cout.flush();
+              << "Path    : " << m.filePath << "\n\n";
   }
 };
 

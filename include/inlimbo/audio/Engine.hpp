@@ -78,29 +78,28 @@ public:
   INLIMBO_API_CPP auto enumeratePlaybackDevices() -> Devices;
   INLIMBO_API_CPP void initEngineForDevice(const std::string& deviceName = "default");
 
-  INLIMBO_API_CPP auto loadSound(const std::string& path) -> std::optional<size_t>;
+  INLIMBO_API_CPP auto loadSound(const std::string& path) -> bool;
 
-  INLIMBO_API_CPP void play(size_t index = 0);
-  INLIMBO_API_CPP void pause(size_t index = 0);
-  INLIMBO_API_CPP void stop(size_t index = 0);
+  INLIMBO_API_CPP void play();
+  INLIMBO_API_CPP void pause();
+  INLIMBO_API_CPP void stop();
 
-  INLIMBO_API_CPP void restart(size_t i = 0)
+  INLIMBO_API_CPP void restart()
   {
-    seekTo(0.0, i);
-    play(i);
+    seekTo(0.0);
+    play();
   }
 
-  INLIMBO_API_CPP [[nodiscard]] auto isPlaying(size_t index = 0) const -> bool
+  INLIMBO_API_CPP [[nodiscard]] auto isPlaying() const -> bool
   {
-    return index < m_sounds.size() && m_playbackState == PlaybackState::Playing;
+    return m_playbackState == PlaybackState::Playing;
   }
 
-  INLIMBO_API_CPP auto getPlaybackTime(size_t i = 0) const
-    -> std::optional<std::pair<double, double>>;
+  INLIMBO_API_CPP auto getPlaybackTime() const -> std::optional<std::pair<double, double>>;
 
-  INLIMBO_API_CPP void seekTo(double seconds, size_t i = 0);
-  INLIMBO_API_CPP void seekForward(double seconds, size_t i = 0);
-  INLIMBO_API_CPP void seekBackward(double seconds, size_t i = 0);
+  INLIMBO_API_CPP void seekTo(double seconds);
+  INLIMBO_API_CPP void seekForward(double seconds);
+  INLIMBO_API_CPP void seekBackward(double seconds);
 
   INLIMBO_API_CPP void setVolume(float v) { m_volume.store(std::clamp(v, 0.0f, 1.5f)); }
 
@@ -110,18 +109,7 @@ public:
     return m_backendInfo;
   }
 
-  INLIMBO_API_CPP [[nodiscard]] auto getVolume(size_t index = 0) const -> float
-  {
-    if (index < m_sounds.size())
-      return m_volume.load();
-    return 0.0f;
-  }
-
-  INLIMBO_API_CPP [[nodiscard]] auto getSoundCount() const -> size_t
-  {
-    std::lock_guard<std::mutex> lock(m_mutex);
-    return m_sounds.size();
-  }
+  INLIMBO_API_CPP [[nodiscard]] auto getVolume() const -> float { return m_volume.load(); }
 
   INLIMBO_API_CPP [[nodiscard]] auto getCurrentDevice() const -> std::string
   {
@@ -129,29 +117,20 @@ public:
     return m_currentDevice;
   }
 
-  auto getSound(size_t index) -> Sound&;
-  auto getSound(size_t index) const -> const Sound&;
-
-  INLIMBO_API_CPP void unloadSound(size_t index)
-  {
-    std::lock_guard<std::mutex> lock(m_mutex);
-    if (index < m_sounds.size())
-    {
-      m_sounds.erase(m_sounds.begin() + index);
-    }
-  }
+  auto getSound() -> Sound&;
+  auto getSound() const -> const Sound&;
 
 private:
   snd_pcm_t*  m_pcmData = nullptr;
   BackendInfo m_backendInfo;
   std::string m_currentDevice = "default";
 
-  Sounds_ptr                 m_sounds;
-  std::atomic<float>         m_volume{1.0f};
-  std::atomic<bool>          m_isRunning{false};
-  std::atomic<PlaybackState> m_playbackState{PlaybackState::Stopped};
-  std::thread                m_audioThread;
-  mutable std::mutex         m_mutex;
+  std::unique_ptr<audio::Sound> m_sound;
+  std::atomic<float>            m_volume{1.0f};
+  std::atomic<bool>             m_isRunning{false};
+  std::atomic<PlaybackState>    m_playbackState{PlaybackState::Stopped};
+  std::thread                   m_audioThread;
+  mutable std::mutex            m_mutex;
 
   void startThread()
   {
@@ -181,7 +160,7 @@ private:
   void cleanup()
   {
     std::lock_guard<std::mutex> lock(m_mutex);
-    m_sounds.clear();
+    m_sound.reset();
   }
 };
 

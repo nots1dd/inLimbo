@@ -1,5 +1,4 @@
-#include "audio/Playback.hpp"
-#include "Logger.hpp"
+#include "audio/Engine.hpp"
 #include "StackTrace.hpp"
 
 namespace audio
@@ -117,7 +116,7 @@ void AudioEngine::initEngineForDevice(const std::string& deviceName)
   initAlsa(deviceName);
 }
 
-auto AudioEngine::loadSound(const std::string& path) -> std::optional<size_t>
+auto AudioEngine::loadSound(const std::string& path) -> bool
 {
   RECORD_FUNC_TO_BACKTRACE("AudioEngine::loadSound");
 
@@ -129,30 +128,30 @@ auto AudioEngine::loadSound(const std::string& path) -> std::optional<size_t>
 
     AVFormatContext* rawFmt = nullptr;
     if (avformat_open_input(&rawFmt, path.c_str(), nullptr, nullptr) < 0)
-      return std::nullopt;
+      return false;
     s->fmt.reset(rawFmt);
 
     if (avformat_find_stream_info(s->fmt.get(), nullptr) < 0)
-      return std::nullopt;
+      return false;
 
     s->streamIndex = av_find_best_stream(s->fmt.get(), AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
     if (s->streamIndex < 0)
-      return std::nullopt;
+      return false;
 
     s->stream = s->fmt->streams[s->streamIndex];
 
     const AVCodec* codec = avcodec_find_decoder(s->stream->codecpar->codec_id);
     if (!codec)
-      return std::nullopt;
+      return false;
 
     AVCodecContext* rawDec = avcodec_alloc_context3(codec);
     if (!rawDec)
-      return std::nullopt;
+      return false;
     s->dec.reset(rawDec);
 
     if (avcodec_parameters_to_context(s->dec.get(), s->stream->codecpar) < 0 ||
         avcodec_open2(s->dec.get(), codec, nullptr) < 0)
-      return std::nullopt;
+      return false;
 
     // -------------------------------------------------------
     // SOURCE FORMAT (immutable, from file)
@@ -196,12 +195,12 @@ auto AudioEngine::loadSound(const std::string& path) -> std::optional<size_t>
     if (swr_alloc_set_opts2(&rawSwr, &s->target.channelLayout, s->target.sampleFmt,
                             s->target.sampleRate, &s->source.channelLayout, s->source.sampleFmt,
                             s->source.sampleRate, 0, nullptr) < 0)
-      return std::nullopt;
+      return false;
 
     s->swr.reset(rawSwr);
 
     if (swr_init(s->swr.get()) < 0)
-      return std::nullopt;
+      return false;
 
     // -------------------------------------------------------
     // Buffers use TARGET format (what we actually play)
@@ -211,25 +210,21 @@ auto AudioEngine::loadSound(const std::string& path) -> std::optional<size_t>
 
     s->initializeBuffers();
 
-    size_t index = m_sounds.size();
-    m_sounds.push_back(std::move(s));
-    return index;
+    m_sound = std::move(s);
+    return true;
   }
   catch (...)
   {
-    return std::nullopt;
+    return false;
   }
 }
 
-auto AudioEngine::getSound(size_t index) -> Sound& { return *m_sounds.at(index); }
+auto AudioEngine::getSound() -> Sound& { return *m_sound; }
 
-auto AudioEngine::getSound(size_t index) const -> const Sound& { return *m_sounds.at(index); }
+auto AudioEngine::getSound() const -> const Sound& { return *m_sound; }
 
-void AudioEngine::play(size_t index)
+void AudioEngine::play()
 {
-  if (index >= m_sounds.size())
-    return;
-
   std::lock_guard<std::mutex> lock(m_mutex);
   if (m_playbackState == PlaybackState::Playing)
     return;
@@ -245,11 +240,8 @@ void AudioEngine::play(size_t index)
   startThread();
 }
 
-void AudioEngine::pause(size_t index)
+void AudioEngine::pause()
 {
-  if (index >= m_sounds.size())
-    return;
-
   std::lock_guard<std::mutex> lock(m_mutex);
   if (m_playbackState != PlaybackState::Playing)
     return;
@@ -265,7 +257,7 @@ void AudioEngine::pause(size_t index)
   }
 }
 
-void AudioEngine::stop(size_t)
+void AudioEngine::stop()
 {
   RECORD_FUNC_TO_BACKTRACE("AudioEngine::stop");
 
@@ -288,47 +280,41 @@ void AudioEngine::stop(size_t)
   }
 }
 
-auto AudioEngine::getPlaybackTime(size_t i) const -> std::optional<std::pair<double, double>>
+auto AudioEngine::getPlaybackTime() const -> std::optional<std::pair<double, double>>
 {
-  if (i >= m_sounds.size())
-    return std::nullopt;
-
-  auto& s = *m_sounds[i];
+  auto& s = *m_sound;
   return std::pair{double(s.cursorFrames.load()) / s.sampleRate,
                    double(s.durationFrames) / s.sampleRate};
 }
 
 // seek
 
-void AudioEngine::seekTo(double seconds, size_t i)
+void AudioEngine::seekTo(double seconds)
 {
-  if (i >= m_sounds.size())
-    return;
-
-  auto& s     = *m_sounds[i];
+  auto& s     = *m_sound;
   i64   frame = seconds * s.sampleRate + s.startSkip;
   s.seekTargetFrame.store(frame);
   s.seekPending.store(true);
 }
 
-void AudioEngine::seekForward(double sec, size_t i)
+void AudioEngine::seekForward(double sec)
 {
-  auto time = getPlaybackTime(i);
+  auto time = getPlaybackTime();
   if (!time)
     return;
 
   auto [p, l] = *time;
-  seekTo(std::min(p + sec, l), i);
+  seekTo(std::min(p + sec, l));
 }
 
-void AudioEngine::seekBackward(double sec, size_t i)
+void AudioEngine::seekBackward(double sec)
 {
-  auto time = getPlaybackTime(i);
+  auto time = getPlaybackTime();
   if (!time)
     return;
 
   auto [p, _] = *time;
-  seekTo(std::max(0.0, p - sec), i);
+  seekTo(std::max(0.0, p - sec));
 }
 
 // private methods
@@ -385,98 +371,95 @@ void AudioEngine::decodeAndPlay()
   static thread_local std::vector<i16>   playbackBuffer16(FRAMES_PER_BUFFER * MAX_CHANNELS);
   static thread_local std::vector<i32>   playbackBuffer32(FRAMES_PER_BUFFER * MAX_CHANNELS);
 
-  for (const auto& sp : m_sounds)
+  auto& s = *m_sound;
+
+  if (s.seekPending.exchange(false))
   {
-    auto& s = *sp;
+    i64 frame = s.seekTargetFrame.load();
+    av_seek_frame(s.fmt.get(), s.streamIndex,
+                  av_rescale_q(frame, {1, s.sampleRate}, s.stream->time_base),
+                  AVSEEK_FLAG_BACKWARD);
 
-    if (s.seekPending.exchange(false))
+    avcodec_flush_buffers(s.dec.get());
+    s.ring->clear();
+    s.cursorFrames.store(frame - s.startSkip);
+    s.eof = false;
+  }
+
+  if (s.eof)
+    return;
+
+  // Decode more data if ring buffer needs more
+  // Check for samples: 512 frames * channels
+  const size_t samplesNeeded = FRAMES_PER_BUFFER * s.channels;
+  while (s.ring->available() < samplesNeeded && s.ring->space() > 0 && !s.eof)
+  {
+    decodeStep(s);
+  }
+
+  if (s.ring->available() >= samplesNeeded)
+  {
+    // Read samples from ring buffer
+    size_t samplesRead = s.ring->read(playbackBuffer.data(), samplesNeeded);
+    size_t framesRead  = samplesRead / s.channels;
+
+    if (framesRead > 0)
     {
-      i64 frame = s.seekTargetFrame.load();
-      av_seek_frame(s.fmt.get(), s.streamIndex,
-                    av_rescale_q(frame, {1, s.sampleRate}, s.stream->time_base),
-                    AVSEEK_FLAG_BACKWARD);
+      float vol = m_volume.load();
 
-      avcodec_flush_buffers(s.dec.get());
-      s.ring->clear();
-      s.cursorFrames.store(frame - s.startSkip);
-      s.eof = false;
-    }
-
-    if (s.eof)
-      continue;
-
-    // Decode more data if ring buffer needs more
-    // Check for samples: 512 frames * channels
-    const size_t samplesNeeded = FRAMES_PER_BUFFER * s.channels;
-    while (s.ring->available() < samplesNeeded && s.ring->space() > 0 && !s.eof)
-    {
-      decodeStep(s);
-    }
-
-    if (s.ring->available() >= samplesNeeded)
-    {
-      // Read samples from ring buffer
-      size_t samplesRead = s.ring->read(playbackBuffer.data(), samplesNeeded);
-      size_t framesRead  = samplesRead / s.channels;
-
-      if (framesRead > 0)
+      if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_FLOAT_LE)
       {
-        float vol = m_volume.load();
+        for (size_t i = 0; i < samplesRead; ++i)
+          playbackBuffer[i] *= vol;
 
-        if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_FLOAT_LE)
+        int r = snd_pcm_writei(m_pcmData, playbackBuffer.data(), framesRead);
+        if (r == -EPIPE)
         {
-          for (size_t i = 0; i < samplesRead; ++i)
-            playbackBuffer[i] *= vol;
-
-          int r = snd_pcm_writei(m_pcmData, playbackBuffer.data(), framesRead);
-          if (r == -EPIPE)
-          {
-            snd_pcm_prepare(m_pcmData);
-          }
-          else if (r < 0)
-          {
-            snd_pcm_recover(m_pcmData, r, 0);
-          }
+          snd_pcm_prepare(m_pcmData);
         }
-        else if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_S16_LE)
+        else if (r < 0)
         {
-          for (size_t i = 0; i < samplesRead; ++i)
-          {
-            float sample        = std::clamp(playbackBuffer[i] * vol, -1.0f, 1.0f);
-            playbackBuffer16[i] = static_cast<i16>(sample * 32767.0f);
-          }
-
-          int r = snd_pcm_writei(m_pcmData, playbackBuffer16.data(), framesRead);
-          if (r == -EPIPE)
-          {
-            snd_pcm_prepare(m_pcmData);
-          }
-          else if (r < 0)
-          {
-            snd_pcm_recover(m_pcmData, r, 0);
-          }
+          snd_pcm_recover(m_pcmData, r, 0);
         }
-        else if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_S32_LE)
-        {
-          for (size_t i = 0; i < samplesRead; ++i)
-          {
-            float sample        = std::clamp(playbackBuffer[i] * vol, -1.0f, 1.0f);
-            playbackBuffer32[i] = static_cast<i32>(sample * 2147483647.0f);
-          }
-
-          int r = snd_pcm_writei(m_pcmData, playbackBuffer32.data(), framesRead);
-          if (r == -EPIPE)
-          {
-            snd_pcm_prepare(m_pcmData);
-          }
-          else if (r < 0)
-          {
-            snd_pcm_recover(m_pcmData, r, 0);
-          }
-        }
-
-        s.cursorFrames += framesRead;
       }
+      else if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_S16_LE)
+      {
+        for (size_t i = 0; i < samplesRead; ++i)
+        {
+          float sample        = std::clamp(playbackBuffer[i] * vol, -1.0f, 1.0f);
+          playbackBuffer16[i] = static_cast<i16>(sample * 32767.0f);
+        }
+
+        int r = snd_pcm_writei(m_pcmData, playbackBuffer16.data(), framesRead);
+        if (r == -EPIPE)
+        {
+          snd_pcm_prepare(m_pcmData);
+        }
+        else if (r < 0)
+        {
+          snd_pcm_recover(m_pcmData, r, 0);
+        }
+      }
+      else if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_S32_LE)
+      {
+        for (size_t i = 0; i < samplesRead; ++i)
+        {
+          float sample        = std::clamp(playbackBuffer[i] * vol, -1.0f, 1.0f);
+          playbackBuffer32[i] = static_cast<i32>(sample * 2147483647.0f);
+        }
+
+        int r = snd_pcm_writei(m_pcmData, playbackBuffer32.data(), framesRead);
+        if (r == -EPIPE)
+        {
+          snd_pcm_prepare(m_pcmData);
+        }
+        else if (r < 0)
+        {
+          snd_pcm_recover(m_pcmData, r, 0);
+        }
+      }
+
+      s.cursorFrames += framesRead;
     }
   }
 }

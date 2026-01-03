@@ -25,6 +25,18 @@ inline auto timestamp_now() -> std::string
   return oss.str();
 }
 
+inline static auto fmtTime(double sec) -> std::string
+{
+  int s = static_cast<int>(sec);
+  int m = s / 60;
+  s %= 60;
+
+  std::ostringstream oss;
+  oss << std::setw(2) << std::setfill('0') << m
+      << ":" << std::setw(2) << std::setfill('0') << s;
+  return oss.str();
+}
+
 /// High-resolution, type-safe timer for benchmarking or profiling.
 ///
 /// Usage examples:

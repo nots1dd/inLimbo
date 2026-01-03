@@ -19,6 +19,14 @@ set(CXXOPTS_INCLUDE_DIRS ${EXTERNAL_DIR}/cxxopts/include)
 set(TOMLPLUSPLUS_INCLUDE_DIRS ${EXTERNAL_DIR}/tomlplusplus)
 set(CEREAL_INCLUDE_DIRS ${EXTERNAL_DIR}/cereal/include)
 
+# -----------------------------------------------------------
+# Local libbacktrace (Debug only)
+# -----------------------------------------------------------
+set(BACKTRACE_PREFIX "${CMAKE_SOURCE_DIR}/external/libbacktrace/build/install")
+set(BACKTRACE_INCLUDE_DIR "${BACKTRACE_PREFIX}/include")
+set(BACKTRACE_LIBRARY_DIR "${BACKTRACE_PREFIX}/lib")
+set(BACKTRACE_LIBRARY "${BACKTRACE_LIBRARY_DIR}/libbacktrace.a")
+
 set(SPDLOG_GH_URL https://github.com/gabime/spdlog.git)
 
 # --- TOML++ (header-only)
@@ -44,6 +52,17 @@ if(NOT EXISTS ${SPDLOG_DIR}/CMakeLists.txt)
     )
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    if(NOT EXISTS "${BACKTRACE_LIBRARY}")
+        message(FATAL_ERROR
+            "libbacktrace not found at:\n"
+            "  ${BACKTRACE_LIBRARY}\n"
+            "Run:\n"
+            "  make init-dep-backtrace"
+        )
+    endif()
+endif()
+
 add_subdirectory(${SPDLOG_DIR} ${CMAKE_BINARY_DIR}/spdlog_build EXCLUDE_FROM_ALL)
 set_target_properties(spdlog PROPERTIES POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -67,7 +86,7 @@ set(INLIMBO_CORE_SOURCES
     src/core/taglib/Parser.cc
     src/core/DirectoryWalker.cc
     src/helpers/cmdline/Display.cc
-    src/audio/Playback.cc
+    src/audio/Engine.cc
     src/CmdLine.cc
 )
 
@@ -80,6 +99,7 @@ target_include_directories(inLimbo-core
         ${TOMLPLUSPLUS_INCLUDE_DIRS}
         ${CXXOPTS_INCLUDE_DIRS}
         ${CEREAL_INCLUDE_DIRS}
+        $<$<CONFIG:Debug>:${BACKTRACE_INCLUDE_DIR}>
 )
 
 target_link_libraries(inLimbo-core
@@ -91,6 +111,7 @@ target_link_libraries(inLimbo-core
         avutil
         avcodec
         asound
+        $<$<CONFIG:Debug>:${BACKTRACE_LIBRARY}>
 )
 
 target_compile_definitions(inLimbo-core
