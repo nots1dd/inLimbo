@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utils/Env-Vars.hpp"
+#include "utils/string/Transforms.hpp"
 #include <sstream>
 #include <string>
 #include <unistd.h>
@@ -28,9 +29,7 @@ inline auto is_stack_trace_enabled() -> bool
   {
     if (const char* v = std::getenv(INLIMBO_STACK_TRACE_DUMP_ENV))
     {
-      std::string s(v);
-      for (auto& c : s)
-        c = static_cast<char>(std::tolower(c));
+      const auto s = utils::string::transform::tolower_ascii(v);
       return s == "1" || s == "true" || s == "yes" || s == "on";
     }
     return false;
@@ -242,20 +241,17 @@ private:
   std::string m_func;
 };
 
-#else
-
-class TraceScope
-{
-public:
-  TraceScope(...) {}
-};
-
 #endif
 
 } // namespace core
 
 #if defined(__GNUC__) || defined(__clang__)
+#ifdef INLIMBO_DEBUG_BUILD
 #define RECORD_FUNC_TO_BACKTRACE(cat) core::TraceScope trace_scope(cat, __PRETTY_FUNCTION__)
+#else
+// No-op in release builds
+#define RECORD_FUNC_TO_BACKTRACE(cat) (void(0))
+#endif
 #elif defined(_MSC_VER)
 #define RECORD_FUNC_TO_BACKTRACE(cat) core::TraceScope trace_scope(cat, __FUNCSIG__)
 #else

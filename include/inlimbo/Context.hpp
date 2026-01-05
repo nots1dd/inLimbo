@@ -7,7 +7,7 @@
 #include "utils/timer/Timer.hpp"
 #include <string>
 
-extern threads::SafeMap<core::SongMap> g_songMap;
+extern threads::SafeMap<SongMap> g_songMap;
 
 namespace inlimbo
 {
@@ -37,21 +37,21 @@ struct AppContext
   cli::CmdLine m_cmdLine;
 
   // CLI
-  std::string m_songName            = {};
-  std::string m_debugLogTagLibField = {};
-  bool        m_editMetadata        = false;
-  float       m_volume              = {};
+  std::string                m_songName            = {};
+  utils::string::SmallString m_debugLogTagLibField = {};
+  bool                       m_editMetadata        = false;
+  float                      m_volume              = {};
 
   PrintAction m_printAction = PrintAction::None;
 
   // Paths
-  std::string m_musicDir = {};
-  std::string m_binPath  = {};
+  Directory m_musicDir = {};
+  Path      m_binPath  = {};
 
   // Core objects
-  TagLibParser   m_tagLibParser;
-  core::SongTree m_songTree = {};
-  utils::Timer<> m_timer    = {};
+  core::TagLibParser m_tagLibParser;
+  core::SongTree     m_songTree = {};
+  utils::Timer<>     m_timer    = {};
 };
 
 auto resolvePrintAction(const cli::CmdLine& args) -> PrintAction;

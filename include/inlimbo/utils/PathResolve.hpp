@@ -2,64 +2,62 @@
 
 #include "Config.hpp"
 #include "Env-Vars.hpp"
+#include "InLimbo-Types.hpp"
+#include "utils/string/SmallString.hpp"
 #include <stdexcept>
-#include <string>
 
 namespace utils
 {
 
-FORCE_INLINE auto getHomeDir() -> const std::string
+FORCE_INLINE auto getHomeDir() -> const utils::string::SmallString
 {
-  const char* homeDir = getenv("HOME");
+  cstr homeDir = getenv("HOME");
   if (!homeDir)
   {
     throw std::runtime_error("HOME environment variable not found! Exiting program...");
   }
 
-  return std::string(homeDir);
+  return utils::string::SmallString(homeDir);
 }
 
-/**
- * @brief Retrieves the path to the configuration directory.
- *
- * By default, this function uses the HOME environment variable to determine the user's home
- * directory. However, it checks for the presence of a `INLIMBO_CONFIG_HOME` environment variable
- * first, which can override the default location. This allows for custom configuration paths during
- * testing.
- *
- * @return A string representing the base path to the configuration directory.
- * @throws std::runtime_error If the HOME environment variable is not found and no custom path is
- *         provided.
- */
-FORCE_INLINE auto getBaseConfigPath() -> std::string
+FORCE_INLINE auto getBaseConfigPath() -> utils::string::SmallString
 {
-  const char* customConfigHome = getenv(INLIMBO_CUSTOM_CONFIG_ENV);
+  cstr customConfigHome = getenv(INLIMBO_CUSTOM_CONFIG_ENV);
   if (customConfigHome)
   {
     return {customConfigHome};
   }
 
-  return getHomeDir() + "/.config/inLimbo/";
+  utils::string::SmallString fin = getHomeDir();
+  fin += "/.config/inLimbo/";
+
+  return fin;
 }
 
-/**
- * @brief Retrieves the full path to the configuration file.
- *
- * This constructs the full path to a specific configuration file.
- *
- * @param fileName The name of the configuration file (e.g., "config.toml").
- * @return A string representing the full path to the configuration file.
- */
-FORCE_INLINE auto getConfigPath(std::string fileName) -> std::string
+FORCE_INLINE auto getConfigPathWithFile(utils::string::SmallString fileName)
+  -> utils::string::SmallString
 {
-  return getBaseConfigPath() + fileName;
+  utils::string::SmallString baseConfigPath = getBaseConfigPath();
+  baseConfigPath += fileName;
+
+  return baseConfigPath;
 }
 
-FORCE_INLINE auto getCachePath() -> const std::string
+FORCE_INLINE auto getCachePath() -> const utils::string::SmallString
 {
-  const std::string cacheFilePath = getHomeDir() + "/.cache/inLimbo/";
+  utils::string::SmallString cacheFilePath = getHomeDir();
+  cacheFilePath += "/.cache/inLimbo/";
 
   return cacheFilePath;
+}
+
+FORCE_INLINE auto getCachePathWithFile(utils::string::SmallString fileName)
+  -> utils::string::SmallString
+{
+  utils::string::SmallString baseCachePath = getCachePath();
+  baseCachePath += fileName;
+
+  return baseCachePath;
 }
 
 } // namespace utils

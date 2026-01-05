@@ -84,9 +84,10 @@ pkg_check_modules(ALSA REQUIRED alsa)
 set(INLIMBO_CORE_SOURCES
     src/core/SongTree.cc
     src/core/taglib/Parser.cc
-    src/core/DirectoryWalker.cc
+    src/query/SongMap.cc
     src/helpers/cmdline/Display.cc
-    src/helpers/query/SongMap.cc
+    src/helpers/fs/Directory.cc
+    src/utils/DirectoryWalker.cc
     src/utils/signal/Handler.cc
     src/utils/string/Equals.cc
     src/toml/Parser.cc
@@ -249,7 +250,7 @@ message(STATUS "${SEP}  • ALSA         : ${ALSA_VERSION} (${ALSA_LIBRARIES})")
 message(STATUS "${SEP}")
 message(STATUS "${SEP}  ── System Libraries ────────────────────────────────────")
 message(STATUS "${SEP}  • TagLib     : ${TAGLIB_INCLUDE_DIRS}")
-message(STATUS "${SEP}  • backtrace  : linked manually")
+message(STATUS "${SEP}  • backtrace  : ${BACKTRACE_LIBRARY} (Debug builds only)}")
 message(STATUS "${SEP}")
 message(STATUS "${SEP}  ── Frontend ───────────────────────────────────────────")
 message(STATUS "${SEP}  • Type        : ${INLIMBO_FRONTEND_NAME}")

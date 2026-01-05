@@ -1,0 +1,30 @@
+name: "inLimbo CI / Clang-Format Check [UBUNTU] (x86-64 arch - GCC)"
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+
+    steps:
+    - name: Checkout repository with submodules
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Install dependencies for inLimbo
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang-format
+
+    - name: Build Release Version of inLimbo (x86-64 arch) - GCC (with GNU-ld)
+      run: |
+        make fmt-check

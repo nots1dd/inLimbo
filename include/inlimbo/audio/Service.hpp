@@ -2,12 +2,10 @@
 
 #include "Engine.hpp"
 #include "Playlist.hpp"
-#include "core/SongTree.hpp"
 
 #include <memory>
 #include <mutex>
 #include <optional>
-#include <string>
 
 namespace audio
 {
@@ -24,10 +22,10 @@ public:
   auto operator=(Service&&) -> Service&      = delete;
 
   auto enumeratePlaybackDevices() -> Devices;
-  void initDevice(const std::string& deviceName = "default");
+  void initDevice(const DeviceName& deviceName = "default");
   auto getBackendInfo() -> BackendInfo;
 
-  auto registerTrack(const core::Song& song) -> service::SoundHandle;
+  auto registerTrack(const Song& song) -> service::SoundHandle;
 
   void addToPlaylist(service::SoundHandle h);
   void clearPlaylist();

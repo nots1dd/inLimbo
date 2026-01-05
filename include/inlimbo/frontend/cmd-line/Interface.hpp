@@ -17,14 +17,14 @@ namespace frontend::cmdline
 class Interface
 {
 public:
-  explicit Interface(threads::SafeMap<core::SongMap>& songMap);
+  explicit Interface(threads::SafeMap<SongMap>& songMap);
 
   void run(audio::Service& audio);
 
 private:
-  threads::SafeMap<core::SongMap> m_songMapTS;
-  std::atomic<bool>               m_isRunning{false};
-  std::atomic<double>             m_pendingSeek{0.0};
+  threads::SafeMap<SongMap> m_songMapTS;
+  std::atomic<bool>         m_isRunning{false};
+  std::atomic<double>       m_pendingSeek{0.0};
 
   termios m_termOrig{};
 

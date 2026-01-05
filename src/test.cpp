@@ -10,7 +10,7 @@
 #warning "INLIMBO_DEBUG_BUILD is enabled!"
 #endif
 
-threads::SafeMap<core::SongMap> g_songMap;
+threads::SafeMap<SongMap> g_songMap;
 
 auto main(int argc, char* argv[]) -> int
 {

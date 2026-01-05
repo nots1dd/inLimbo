@@ -4,7 +4,7 @@
 #include "frontend/cmd-line/Interface.hpp"
 #include "helpers/cmdline/Display.hpp"
 #include "helpers/fs/Directory.hpp"
-#include "helpers/query/SongMap.hpp"
+#include "query/SongMap.hpp"
 #include "thread/Map.hpp"
 #include "toml/Parser.hpp"
 #include "utils/PathResolve.hpp"
@@ -154,7 +154,7 @@ void setupArgs(cli::CmdLine& args)
 AppContext::AppContext(const std::string& program, const std::string& description)
     : m_cmdLine(program, description),
       m_debugLogTagLibField(tomlparser::Config::getString("debug", "taglib_parser_log")),
-      m_tagLibParser(m_debugLogTagLibField)
+      m_tagLibParser({.debugLog = m_debugLogTagLibField == "true"})
 {
   setupArgs(m_cmdLine);
 }
@@ -245,7 +245,7 @@ auto initializeContext(int argc, char** argv) -> AppContext
   ctx.m_volume      = std::clamp(vol / 100.0f, 0.0f, 1.5f);
   ctx.m_printAction = resolvePrintAction(ctx.m_cmdLine);
   ctx.m_musicDir    = tomlparser::Config::getString("library", "directory");
-  ctx.m_binPath     = utils::getConfigPath(LIB_BIN_NAME);
+  ctx.m_binPath     = utils::getConfigPathWithFile(LIB_BIN_NAME);
 
   LOG_INFO("Configured directory: {}, song query: {}", ctx.m_musicDir, ctx.m_songName);
 
@@ -279,15 +279,7 @@ void buildOrLoadLibrary(AppContext& ctx)
   utils::RedBlackTree<ino_t, utils::rbt::NilNode> rbt;
   core::InodeFileMapper                           mapper;
 
-  helpers::fs::dirWalkAndUpdateRBT(ctx.m_musicDir, rbt, mapper);
-
-  for (const auto [inode] : rbt)
-  {
-    for (auto& [_, md] : ctx.m_tagLibParser.parseFromInode(inode, ctx.m_musicDir))
-    {
-      ctx.m_songTree.addSong(core::Song{inode, md});
-    }
-  }
+  helpers::fs::dirWalkProcessAll(ctx.m_musicDir, rbt, mapper, ctx.m_tagLibParser, ctx.m_songTree);
 
   ctx.m_songTree.setMusicPath(ctx.m_musicDir);
   ctx.m_songTree.saveToFile(ctx.m_binPath);
@@ -301,7 +293,7 @@ void maybeEditMetadata(AppContext& ctx)
   if (!ctx.m_editMetadata)
     return;
 
-  auto song = helpers::query::songmap::read::findSongByName(g_songMap, ctx.m_songName);
+  auto song = query::songmap::read::findSongByName(g_songMap, ctx.m_songName);
 
   ASSERT_MSG(song, "Song not found");
 
@@ -313,10 +305,11 @@ void maybeEditMetadata(AppContext& ctx)
   auto edited           = *song;
   edited.metadata.title = *newTitleOpt;
 
-  const bool replaced = helpers::query::songmap::mut::replaceSongObjAndUpdateMetadata(
+  const bool replaced = query::songmap::mut::replaceSongObjAndUpdateMetadata(
     g_songMap, *song, edited, ctx.m_tagLibParser);
 
-  ASSERT_MSG(replaced, "Metadata update failed");
+  if (!replaced)
+    LOG_CRITICAL("Failed to update metadata for song: {}", song->metadata.title);
 
   ctx.m_songTree.clear();
   ctx.m_songTree.newSongMap(g_songMap.snapshot());
@@ -327,7 +320,7 @@ void maybeEditMetadata(AppContext& ctx)
 
 void runFrontend(AppContext& ctx)
 {
-  auto song = helpers::query::songmap::read::findSongByName(g_songMap, ctx.m_songName);
+  auto song = query::songmap::read::findSongByName(g_songMap, ctx.m_songName);
 
   ASSERT_MSG(song, "Song not found");
 

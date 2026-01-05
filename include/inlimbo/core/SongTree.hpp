@@ -1,8 +1,13 @@
 #pragma once
 
+#include "InLimbo-Types.hpp"
 #include "StackTrace.hpp"
-#include "taglib/Parser.hpp"
 #include "utils/string/Equals.hpp"
+#include "utils/string/SmallString.hpp"
+
+// Include cereal support for SmallString (required for cereal ADL serialization)
+// NOLINTNEXTLINE(build/include)
+#include "utils/string/SmallStringCereal.hpp"
 
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/map.hpp>
@@ -10,57 +15,10 @@
 #include <cereal/types/vector.hpp>
 
 #include <map>
-#include <string>
 #include <sys/stat.h> // for inode/stat lookup
-#include <vector>
 
 namespace core
 {
-
-// ============================================================
-// Display Mode
-// ============================================================
-enum class DisplayMode
-{
-  Summary,
-  FullTree
-};
-
-// ============================================================
-// Song Structure
-// ============================================================
-struct Song
-{
-  ino_t    inode;    /**< The inode of the file representing the song */
-  Metadata metadata; /**< Metadata information for the song */
-
-  Song(ino_t inode, Metadata metadata);
-  Song();
-  explicit Song(ino_t inode) : inode(inode) {}
-
-  template <class Archive> void serialize(Archive& ar) { ar(inode, metadata); }
-};
-
-//
-// NOTE:
-//
-// If you have the entire song map, use the inode map (that is NOT in the Song structure)
-//
-// If you only have the Song struct at your disposal (say for printing, etc.) just Song.inode
-// instead.
-//
-// Theoretically there should be no difference between the two but this can be a bit confusing.
-//
-// This was initially done to account for duplicated metadata files.
-//
-using SongMap =
-  std::map<Artist, std::map<Album, std::map<Disc, std::map<Track, std::map<ino_t, Song>>>>>;
-using Songs = std::vector<Song>;
-
-using InodeMap = std::map<ino_t, Song>;
-using TrackMap = std::map<Track, InodeMap>;
-using DiscMap  = std::map<Disc, TrackMap>;
-using AlbumMap = std::map<Album, DiscMap>;
 
 enum class VisitResult
 {
@@ -164,18 +122,14 @@ class SongTreeRange;
 class SongTree
 {
 private:
-  SongMap     m_songMap;
-  std::string m_musicPath;
+  SongMap m_songMap;
+  Path    m_musicPath;
 
 public:
   // Core methods
   void               addSong(const Song& song);
-  void               traverse(const SongTreeCallbacks& cb) const;
-  auto               findSong(const std::function<bool(const Song&)>& predicate,
-                              const std::function<void(const Song&)>& onFound) const -> bool;
-  void               forEach(const SongPredicate& pred, const SongTreeVisitor& visitor) const;
   [[nodiscard]] auto range(SongPredicate pred) const -> SongTreeRange;
-  void               setMusicPath(const std::string& path) { m_musicPath = path; }
+  void               setMusicPath(const Path& path) { m_musicPath = path; }
 
   void clear()
   {
@@ -197,8 +151,8 @@ public:
   // Persistence
   template <class Archive> void serialize(Archive& ar) { ar(m_songMap, m_musicPath); }
 
-  void saveToFile(const std::string& filename) const;
-  void loadFromFile(const std::string& filename);
+  void saveToFile(const utils::string::SmallString& filename) const;
+  void loadFromFile(const utils::string::SmallString& filename);
 };
 
 } // namespace core

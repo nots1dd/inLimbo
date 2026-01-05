@@ -1,8 +1,8 @@
 #include "Logger.hpp"
 #include "utils/Env-Vars.hpp"
 #include "utils/PathResolve.hpp"
+#include "utils/string/Transforms.hpp"
 
-#include <algorithm>
 #include <cstdlib>
 #include <sstream>
 #include <thread>
@@ -24,10 +24,9 @@
 namespace inlimbo
 {
 
-auto parse_log_level(const std::string& level_str) -> spdlog::level::level_enum
+auto parse_log_level(const utils::string::SmallString& level_str) -> spdlog::level::level_enum
 {
-  std::string s = level_str;
-  std::ranges::transform(s, s.begin(), ::tolower);
+  const auto s = utils::string::transform::tolower_ascii(level_str.c_str());
 
   if (s == "trace")
     return spdlog::level::trace;
@@ -52,8 +51,9 @@ auto Logger::get() -> std::shared_ptr<spdlog::logger>&
   return get_instance();
 }
 
-void Logger::init(const std::string& name, LogMode mode, const std::string& file,
-                  spdlog::level::level_enum level, const std::string& pattern)
+void Logger::init(const utils::string::SmallString& name, LogMode mode,
+                  const utils::string::SmallString& file, spdlog::level::level_enum level,
+                  const utils::string::SmallString& pattern)
 {
   auto& instance = get_instance();
   if (instance)
@@ -61,23 +61,24 @@ void Logger::init(const std::string& name, LogMode mode, const std::string& file
 
   std::vector<spdlog::sink_ptr> sinks;
 
-  const std::string final_pattern = pattern.empty() ? __INLIMBO_DEFAULT_LOG_PATTERN__ : pattern;
+  const utils::string::SmallString final_pattern =
+    pattern.empty() ? __INLIMBO_DEFAULT_LOG_PATTERN__ : pattern;
 
   if (mode == LogMode::ConsoleOnly || mode == LogMode::ConsoleAndFile)
   {
     auto sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    sink->set_pattern(final_pattern);
+    sink->set_pattern(final_pattern.c_str());
     sinks.push_back(sink);
   }
 
   if (mode == LogMode::FileOnly || mode == LogMode::ConsoleAndFile)
   {
-    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(file, true);
-    sink->set_pattern(final_pattern);
+    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(file.c_str(), true);
+    sink->set_pattern(final_pattern.c_str());
     sinks.push_back(sink);
   }
 
-  auto logger = std::make_shared<spdlog::logger>(name, sinks.begin(), sinks.end());
+  auto logger = std::make_shared<spdlog::logger>(name.c_str(), sinks.begin(), sinks.end());
   spdlog::register_logger(logger);
   logger->set_level(level);
   logger->flush_on(spdlog::level::trace);
@@ -106,16 +107,16 @@ void Logger::shutdown() noexcept
 
 void Logger::init_from_env()
 {
-  const char* env_file    = std::getenv(INLIMBO_LOG_FILE_ENV);
-  const char* env_level   = std::getenv(INLIMBO_LOG_LEVEL_ENV);
-  const char* env_pattern = std::getenv(INLIMBO_LOG_PATTERN_ENV);
+  utils::string::SmallString env_file    = std::getenv(INLIMBO_LOG_FILE_ENV);
+  utils::string::SmallString env_level   = std::getenv(INLIMBO_LOG_LEVEL_ENV);
+  utils::string::SmallString env_pattern = std::getenv(INLIMBO_LOG_PATTERN_ENV);
 
-  const std::string file =
-    env_file ? env_file : (utils::getCachePath() + __INLIMBO_DEFAULT_LOG_FILE__);
-  const std::string pattern = env_pattern ? env_pattern : __INLIMBO_DEFAULT_LOG_PATTERN__;
-  const auto        level   = env_level ? parse_log_level(env_level) : spdlog::level::info;
+  const auto file =
+    !env_file.empty() ? env_file : utils::getCachePathWithFile(__INLIMBO_DEFAULT_LOG_FILE__);
+  const auto pattern = !env_pattern.empty() ? env_pattern : __INLIMBO_DEFAULT_LOG_PATTERN__;
+  const auto level   = !env_level.empty() ? parse_log_level(env_level) : spdlog::level::info;
 
-  init("core", LogMode::ConsoleAndFile, file, level, pattern);
+  init("core", LogMode::ConsoleAndFile, file.c_str(), level, pattern.c_str());
 }
 
 auto Logger::get_instance() -> std::shared_ptr<spdlog::logger>&
@@ -124,8 +125,8 @@ auto Logger::get_instance() -> std::shared_ptr<spdlog::logger>&
   return instance;
 }
 
-void Logger::print_banner(const std::string& file, spdlog::level::level_enum level,
-                          const std::string& pattern)
+void Logger::print_banner(const utils::string::SmallString& file, spdlog::level::level_enum level,
+                          const utils::string::SmallString& pattern)
 {
   auto& log = get_instance();
   if (!log)
@@ -151,8 +152,8 @@ void Logger::print_banner(const std::string& file, spdlog::level::level_enum lev
   log->info(
     "┌────────────────────────────── InLimbo Logger Initialized ──────────────────────────────┐");
   log->info("│  Log Level   : {}", spdlog::level::to_short_c_str(level));
-  log->info("│  Pattern     : {}", pattern);
-  log->info("│  Output File : {}", file);
+  log->info("│  Pattern     : {}", pattern.c_str());
+  log->info("│  Output File : {}", file.c_str());
   log->info("│  System      : {} ({})", sysname, arch);
   log->info("│  PID         : {}", pid);
   log->info("│  Thread ID   : {}", tid.str());

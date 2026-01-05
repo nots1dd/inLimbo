@@ -1,4 +1,5 @@
 #include "utils/string/Equals.hpp"
+#include "utils/string/Transforms.hpp"
 #include <cstddef>
 #include <string>
 
@@ -16,8 +17,8 @@ auto isEquals(const std::string& a, const std::string& b) noexcept -> bool
 
   for (size_t i = 0; i < n; ++i)
   {
-    char ca = fast_tolower_ascii(pa[i]);
-    char cb = fast_tolower_ascii(pb[i]);
+    char ca = transform::fast_tolower_ascii(pa[i]);
+    char cb = transform::fast_tolower_ascii(pb[i]);
     if (ca != cb)
       return false;
   }
@@ -36,7 +37,7 @@ auto isEqualsPrelowered(const std::string& lowerA, const std::string& b) noexcep
 
   for (size_t i = 0; i < n; ++i)
   {
-    char cb = fast_tolower_ascii(pb[i]);
+    char cb = transform::fast_tolower_ascii(pb[i]);
     if (pa[i] != cb)
       return false;
   }

@@ -10,9 +10,9 @@ std::optional<toml::parse_result> Config::s_config;
 
 void Config::load()
 {
-  const std::string path = utils::getConfigPath("config.toml");
+  const auto path = utils::getConfigPathWithFile("config.toml");
 
-  if (!std::filesystem::exists(path))
+  if (!std::filesystem::exists(path.c_str()))
   {
     LOG_ERROR("config.toml not found at '{}'", path);
     throw std::runtime_error("Missing config.toml");

@@ -22,7 +22,7 @@ auto Service::enumeratePlaybackDevices() -> Devices
   return m_engine->enumeratePlaybackDevices();
 }
 
-void Service::initDevice(const std::string& deviceName)
+void Service::initDevice(const DeviceName& deviceName)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   ensureEngine();
@@ -36,7 +36,7 @@ auto Service::getBackendInfo() -> BackendInfo
   return m_engine->getBackendInfo();
 }
 
-auto Service::registerTrack(const core::Song& song) -> service::SoundHandle
+auto Service::registerTrack(const Song& song) -> service::SoundHandle
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 

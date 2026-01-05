@@ -7,7 +7,7 @@
 #include <poll.h>
 #include <unistd.h>
 
-#include "helpers/query/SongMap.hpp"
+#include "query/SongMap.hpp"
 #include "utils/timer/Timer.hpp"
 
 namespace frontend::cmdline
@@ -21,18 +21,17 @@ static constexpr int MIN_TERM_ROWS = 24;
 #define UI_BAR_FILL  "█"
 #define UI_BAR_EMPTY "░"
 
-Interface::Interface(threads::SafeMap<core::SongMap>& songMap) : m_songMapTS(std::move(songMap)) {}
+Interface::Interface(threads::SafeMap<SongMap>& songMap) : m_songMapTS(std::move(songMap)) {}
 
 void Interface::run(audio::Service& audio)
 {
-  helpers::query::songmap::read::forEachSong(m_songMapTS,
-                                             [&](const Artist&, const Album&, const Disc,
-                                                 const Track, const ino_t,
-                                                 const core::Song& song) -> void
-                                             {
-                                               auto h = audio.registerTrack(song);
-                                               audio.addToPlaylist(h);
-                                             });
+  query::songmap::read::forEachSong(
+    m_songMapTS,
+    [&](const Artist&, const Album&, const Disc, const Track, const ino_t, const Song& song) -> void
+    {
+      auto h = audio.registerTrack(song);
+      audio.addToPlaylist(h);
+    });
 
   {
     std::lock_guard<std::mutex> lock(m_metaMutex);
@@ -189,7 +188,7 @@ void Interface::draw(audio::Service& audio)
   std::cout << "\n\n";
 
   std::cout << " Backend\n";
-  std::cout << "   Device   : " << backend.dev.description << "\n";
+  std::cout << "   Device   : " << backend.dev.description.c_str() << "\n";
   std::cout << "   Format   : " << backend.pcmFormatName << "\n";
   std::cout << "   Rate     : " << backend.sampleRate << " Hz\n";
   std::cout << "   Channels : " << backend.channels << "\n";

@@ -1,10 +1,7 @@
 #pragma once
 
-#include "../MetadataTypes.hpp"
-#include <filesystem>
-#include <string>
+#include "InLimbo-Types.hpp"
 #include <sys/stat.h>
-#include <unordered_map>
 
 #include <png.h>
 #include <taglib/attachedpictureframe.h>
@@ -15,32 +12,12 @@
 #include <taglib/tag.h>
 #include <taglib/tpropertymap.h>
 
-namespace fs = std::filesystem;
-
-/**
- * @brief A structure to hold metadata information for a song.
- */
-struct Metadata
+namespace core
 {
-  Title                                        title      = "<Unknown Title>";
-  Artist                                       artist     = "<Unknown Artist>";
-  Album                                        album      = "<Unknown Album>";
-  Genre                                        genre      = "<Unknown Genre>";
-  std::string                                  comment    = "<No Comment>";
-  Year                                         year       = 0;
-  Track                                        track      = 0;
-  Disc                                         discNumber = 0;
-  Lyrics                                       lyrics     = "No Lyrics";
-  std::unordered_map<std::string, std::string> additionalProperties;
-  std::string                                  filePath;
-  float                                        duration = 0.0f;
-  int                                          bitrate  = 0;
 
-  template <class Archive> void serialize(Archive& ar)
-  {
-    ar(title, artist, album, genre, comment, year, track, discNumber, lyrics, additionalProperties,
-       filePath, duration, bitrate);
-  }
+struct TagLibConfig
+{
+  bool debugLog = false;
 };
 
 /**
@@ -49,21 +26,20 @@ struct Metadata
 class TagLibParser
 {
 public:
-  explicit TagLibParser(const std::string& debugString);
+  explicit TagLibParser(TagLibConfig config);
 
-  auto parseFile(const std::string& filePath, Metadata& metadata) -> bool;
-  auto parseFromInode(ino_t inode, const std::string& directory)
-    -> std::unordered_map<std::string, Metadata>;
+  auto parseFile(const Path& filePath, Metadata& metadata) -> bool;
 
-  auto modifyMetadata(const std::string& filePath, const Metadata& newData) -> bool;
+  auto modifyMetadata(const Path& filePath, const Metadata& newData) -> bool;
 
 private:
-  void sendErrMsg(const std::string& errMsg);
-  bool debugLogBool = false;
+  TagLibConfig m_config;
 };
 
 /**
  * @brief Extracts album art (thumbnail) from audio files (MP3, FLAC).
  * @return true on success.
  */
-auto extractThumbnail(const std::string& audioFilePath, const std::string& outputImagePath) -> bool;
+auto extractThumbnail(const Path& audioFilePath, const Path& outputImagePath) -> bool;
+
+} // namespace core

@@ -1,5 +1,6 @@
 #include "audio/Engine.hpp"
 #include "StackTrace.hpp"
+#include "utils/string/SmallString.hpp"
 
 namespace audio
 {
@@ -26,10 +27,9 @@ auto AudioEngine::enumeratePlaybackDevices() -> Devices
 
     snd_ctl_t* ctl = nullptr;
 
-    // Avoid std::format — cheaper and no locale overhead
-    std::string ctlName;
-    ctlName.reserve(8);
-    ctlName.append("hw:").append(std::to_string(cardIdx));
+    utils::string::SmallString ctlName;
+    ctlName += "hw:";
+    ctlName += cardIdx;
 
     if (snd_ctl_open(&ctl, ctlName.c_str(), 0) == 0)
     {
@@ -47,41 +47,47 @@ auto AudioEngine::enumeratePlaybackDevices() -> Devices
           continue;
 
         // Build deviceName once
-        std::string deviceName;
-        deviceName.reserve(12);
-        deviceName.append("hw:")
-          .append(std::to_string(cardIdx))
-          .append(",")
-          .append(std::to_string(devIdx));
+        DeviceName deviceName("hw:");
+        deviceName += cardIdx + ',' + devIdx;
 
         cstr pcmName = snd_pcm_info_get_name(pcmInfo);
         cstr pcmId   = snd_pcm_info_get_id(pcmInfo);
 
         // Build description efficiently
-        std::string desc;
-        desc.reserve(128);
+        utils::string::SmallString desc;
 
         if (cardLongName && pcmName)
         {
-          desc.append(cardLongName).append(" - ").append(pcmName);
+          desc += cardLongName;
+          desc += " - ";
+          desc += pcmName;
 
           if (pcmId && *pcmId)
           {
-            desc.append(" (").append(pcmId).append(")");
+            desc += " (";
+            desc += pcmId;
+            desc += ")";
           }
         }
         else if (pcmName)
         {
-          desc.append(cardName).append(" - ").append(pcmName);
+          desc += cardName;
+          desc += " - ";
+          desc += pcmName;
         }
         else
         {
-          desc.append(cardName).append(" Device ").append(std::to_string(devIdx));
+          desc += cardName;
+          desc += " Device ";
+          desc += devIdx;
         }
 
-        desc.append(" [").append(deviceName).append("]");
+        desc += " [";
+        desc += deviceName;
+        desc += "]";
 
-        devices.push_back({std::move(deviceName), std::move(desc), cardIdx, devIdx, false});
+        devices.push_back(
+          {std::move(deviceName.c_str()), std::move(desc.c_str()), cardIdx, devIdx, false});
       }
 
       snd_ctl_close(ctl);
@@ -94,7 +100,7 @@ auto AudioEngine::enumeratePlaybackDevices() -> Devices
   return devices;
 }
 
-void AudioEngine::initEngineForDevice(const std::string& deviceName)
+void AudioEngine::initEngineForDevice(const DeviceName& deviceName)
 {
   RECORD_FUNC_TO_BACKTRACE("AudioEngine::initEngineForDevice");
 
@@ -116,7 +122,7 @@ void AudioEngine::initEngineForDevice(const std::string& deviceName)
   initAlsa(deviceName);
 }
 
-auto AudioEngine::loadSound(const std::string& path) -> bool
+auto AudioEngine::loadSound(const Path& path) -> bool
 {
   RECORD_FUNC_TO_BACKTRACE("AudioEngine::loadSound");
 
@@ -319,7 +325,7 @@ void AudioEngine::seekBackward(double sec)
 
 // private methods
 
-void AudioEngine::initAlsa(const std::string& deviceName)
+void AudioEngine::initAlsa(const DeviceName& deviceName)
 {
   int err;
   if ((err = snd_pcm_open(&m_pcmData, deviceName.c_str(), SND_PCM_STREAM_PLAYBACK, 0)) < 0)

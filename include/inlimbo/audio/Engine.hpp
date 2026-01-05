@@ -2,6 +2,7 @@
 
 #include "Config.hpp"
 #include "Sound.hpp"
+#include "utils/string/SmallString.hpp"
 
 #include <algorithm>
 #include <chrono>
@@ -19,13 +20,15 @@ extern "C"
 namespace audio
 {
 
+using DeviceName = utils::string::SmallString;
+
 struct Device
 {
-  std::string name;
-  std::string description;
-  int         cardIndex   = -1;
-  int         deviceIndex = -1;
-  bool        isDefault   = false;
+  DeviceName                 name;
+  utils::string::SmallString description;
+  int                        cardIndex   = -1;
+  int                        deviceIndex = -1;
+  bool                       isDefault   = false;
 };
 
 struct BackendInfo
@@ -76,9 +79,10 @@ public:
 
   // Properly enumerate ALSA devices
   INLIMBO_API_CPP auto enumeratePlaybackDevices() -> Devices;
-  INLIMBO_API_CPP void initEngineForDevice(const std::string& deviceName = "default");
+  INLIMBO_API_CPP void
+  initEngineForDevice(const utils::string::SmallString& deviceName = "default");
 
-  INLIMBO_API_CPP auto loadSound(const std::string& path) -> bool;
+  INLIMBO_API_CPP auto loadSound(const Path& path) -> bool;
 
   INLIMBO_API_CPP void play();
   INLIMBO_API_CPP void pause();
@@ -111,7 +115,7 @@ public:
 
   INLIMBO_API_CPP [[nodiscard]] auto getVolume() const -> float { return m_volume.load(); }
 
-  INLIMBO_API_CPP [[nodiscard]] auto getCurrentDevice() const -> std::string
+  INLIMBO_API_CPP [[nodiscard]] auto getCurrentDevice() const -> DeviceName
   {
     std::lock_guard<std::mutex> lock(m_mutex);
     return m_currentDevice;
@@ -123,7 +127,7 @@ public:
 private:
   snd_pcm_t*  m_pcmData = nullptr;
   BackendInfo m_backendInfo;
-  std::string m_currentDevice = "default";
+  DeviceName  m_currentDevice = "default";
 
   std::unique_ptr<audio::Sound> m_sound;
   std::atomic<float>            m_volume{1.0f};
@@ -140,7 +144,7 @@ private:
     m_audioThread = std::thread(&AudioEngine::audioLoop, this);
   }
 
-  void initAlsa(const std::string& deviceName = "default");
+  void initAlsa(const DeviceName& deviceName = "default");
   void shutdownAlsa();
 
   void audioLoop()

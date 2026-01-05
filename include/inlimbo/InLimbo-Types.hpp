@@ -1,7 +1,10 @@
 #pragma once
 
+#include "utils/string/SmallString.hpp"
 #include <cstdint>
+#include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 using i8  = std::int8_t;
@@ -18,3 +21,83 @@ using cstr = const char*;
 using vptr = void*;
 
 using strvec = std::vector<std::string>;
+
+using Path      = utils::string::SmallString;
+using Directory = utils::string::SmallString;
+
+using Title  = std::string;
+using Album  = std::string;
+using Artist = std::string;
+using Genre  = std::string;
+using Lyrics = std::string;
+using Year   = uint;
+using Disc   = uint;
+using Track  = uint;
+
+using Artists = std::vector<Artist>;
+using Albums  = std::vector<Album>;
+using Genres  = std::vector<Genre>;
+
+template <typename T, typename S> using BucketedMap = std::map<T, std::vector<S>>;
+
+/**
+ * @brief A structure to hold metadata information for a song.
+ */
+struct Metadata
+{
+  Title                                        title      = "<Unknown Title>";
+  Artist                                       artist     = "<Unknown Artist>";
+  Album                                        album      = "<Unknown Album>";
+  Genre                                        genre      = "<Unknown Genre>";
+  std::string                                  comment    = "<No Comment>";
+  Year                                         year       = 0;
+  Track                                        track      = 0;
+  Disc                                         discNumber = 0;
+  Lyrics                                       lyrics     = "No Lyrics";
+  std::unordered_map<std::string, std::string> additionalProperties;
+  std::string                                  filePath;
+  float                                        duration = 0.0f;
+  int                                          bitrate  = 0;
+
+  template <class Archive> void serialize(Archive& ar)
+  {
+    ar(title, artist, album, genre, comment, year, track, discNumber, lyrics, additionalProperties,
+       filePath, duration, bitrate);
+  }
+};
+
+// ============================================================
+// Song Structure
+// ============================================================
+struct Song
+{
+  ino_t    inode;    /**< The inode of the file representing the song */
+  Metadata metadata; /**< Metadata information for the song */
+
+  Song(ino_t inode, Metadata metadata) : inode(inode), metadata(std::move(metadata)) {};
+  Song() : inode(0), metadata() {};
+  explicit Song(ino_t inode) : inode(inode) {}
+
+  template <class Archive> void serialize(Archive& ar) { ar(inode, metadata); }
+};
+
+//
+// NOTE:
+//
+// If you have the entire song map, use the inode map (that is NOT in the Song structure)
+//
+// If you only have the Song struct at your disposal (say for printing, etc.) just Song.inode
+// instead.
+//
+// Theoretically there should be no difference between the two but this can be a bit confusing.
+//
+// This was initially done to account for duplicated metadata files.
+//
+using SongMap =
+  std::map<Artist, std::map<Album, std::map<Disc, std::map<Track, std::map<ino_t, Song>>>>>;
+using Songs = std::vector<Song>;
+
+using InodeMap = std::map<ino_t, Song>;
+using TrackMap = std::map<Track, InodeMap>;
+using DiscMap  = std::map<Disc, TrackMap>;
+using AlbumMap = std::map<Album, DiscMap>;

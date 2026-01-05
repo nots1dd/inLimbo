@@ -3,44 +3,35 @@
 #include <fstream>
 #include <iostream>
 
+namespace core
+{
+
 static int unknownArtistTracks = 0;
 
-TagLibParser::TagLibParser(const std::string& debugString)
-{
-  debugLogBool = (debugString == "true");
-}
+TagLibParser::TagLibParser(TagLibConfig config) { m_config = std::move(config); }
 
-void TagLibParser::sendErrMsg(const std::string& errMsg)
+auto TagLibParser::parseFile(const Path& filePath, Metadata& metadata) -> bool
 {
-  if (debugLogBool)
-  {
-    LOG_ERROR(errMsg);
-  }
-}
-
-auto TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) -> bool
-{
-  if (debugLogBool)
+  if (m_config.debugLog)
     LOG_DEBUG("Parsing file: {}", filePath);
 
   TagLib::FileRef file(filePath.c_str());
   if (file.isNull())
   {
-    LOG_WARN("Failed to open file: {}", filePath);
-    metadata.title = fs::path(filePath).filename().string();
+    LOG_ERROR("Failed to open file: {}", filePath);
+    metadata.title = filePath.filename();
     return false;
   }
 
   if (!file.tag())
   {
     LOG_WARN("No tag information found in file: {}", filePath);
-    metadata.title = fs::path(filePath).filename().string();
+    metadata.title = filePath.filename();
     return true;
   }
 
   TagLib::Tag* tag = file.tag();
-  metadata.title =
-    tag->title().isEmpty() ? fs::path(filePath).filename().string() : tag->title().to8Bit(true);
+  metadata.title = tag->title().isEmpty() ? filePath.filename().c_str() : tag->title().to8Bit(true);
   metadata.artist  = tag->artist().isEmpty() ? "<Unknown Artist>" : tag->artist().to8Bit(true);
   metadata.album   = tag->album().isEmpty() ? "<Unknown Album>" : tag->album().to8Bit(true);
   metadata.genre   = tag->genre().isEmpty() ? "<Unknown Genre>" : tag->genre().to8Bit(true);
@@ -92,30 +83,10 @@ auto TagLibParser::parseFile(const std::string& filePath, Metadata& metadata) ->
   return true;
 }
 
-auto TagLibParser::parseFromInode(ino_t inode, const std::string& directory)
-  -> std::unordered_map<std::string, Metadata>
+auto TagLibParser::modifyMetadata(const Path& filePath, const Metadata& newData) -> bool
 {
-  std::unordered_map<std::string, Metadata> result;
-
-  for (const auto& entry : fs::recursive_directory_iterator(directory))
-  {
-    struct stat fileStat{};
-    if (stat(entry.path().c_str(), &fileStat) == 0 && fileStat.st_ino == inode)
-    {
-      Metadata m;
-      if (parseFile(entry.path().string(), m))
-        result[entry.path().string()] = m;
-      else
-        LOG_WARN("Unable to parse: {}", entry.path().string());
-    }
-  }
-  return result;
-}
-
-auto TagLibParser::modifyMetadata(const std::string& filePath, const Metadata& newData) -> bool
-{
-  std::string ext     = fs::path(filePath).extension().string();
-  bool        success = false;
+  const auto ext     = filePath.extension();
+  bool       success = false;
 
   try
   {
@@ -124,7 +95,7 @@ auto TagLibParser::modifyMetadata(const std::string& filePath, const Metadata& n
       TagLib::MPEG::File file(filePath.c_str());
       if (!file.isValid())
       {
-        sendErrMsg("Invalid MP3 file: " + filePath);
+        LOG_ERROR("Invalid MP3 file: {}", filePath);
         return false;
       }
 
@@ -193,7 +164,7 @@ auto TagLibParser::modifyMetadata(const std::string& filePath, const Metadata& n
       return false;
     }
 
-    if (debugLogBool && success)
+    if (m_config.debugLog && success)
       LOG_INFO("Metadata updated successfully for: {}", filePath);
   }
   catch (const std::exception& e)
@@ -205,9 +176,9 @@ auto TagLibParser::modifyMetadata(const std::string& filePath, const Metadata& n
   return success;
 }
 
-auto extractThumbnail(const std::string& audioFilePath, const std::string& outputImagePath) -> bool
+auto extractThumbnail(const Path& audioFilePath, const Path& outputImagePath) -> bool
 {
-  std::string ext = fs::path(audioFilePath).extension().string();
+  const utils::string::SmallString ext = audioFilePath.extension();
 
   if (ext == ".mp3")
   {
@@ -226,8 +197,8 @@ auto extractThumbnail(const std::string& audioFilePath, const std::string& outpu
     if (!pic)
       return false;
 
-    std::ofstream out(outputImagePath, std::ios::binary);
-    out.write(reinterpret_cast<const char*>(pic->picture().data()), pic->picture().size());
+    std::ofstream out(outputImagePath.c_str(), std::ios::binary);
+    out.write(reinterpret_cast<cstr>(pic->picture().data()), pic->picture().size());
     return true;
   }
   else if (ext == ".flac")
@@ -239,11 +210,12 @@ auto extractThumbnail(const std::string& audioFilePath, const std::string& outpu
     if (pics.isEmpty())
       return false;
 
-    std::ofstream out(outputImagePath, std::ios::binary);
-    out.write(reinterpret_cast<const char*>(pics.front()->data().data()),
-              pics.front()->data().size());
+    std::ofstream out(outputImagePath.c_str(), std::ios::binary);
+    out.write(reinterpret_cast<cstr>(pics.front()->data().data()), pics.front()->data().size());
     return true;
   }
 
   return false;
 }
+
+} // namespace core

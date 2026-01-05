@@ -4,6 +4,12 @@ set(BENCHES
   rbt_insert
   rbt_iterate
   rbt_erase
+  smallstring_ctor
+  smallstring_append_small
+  smallstring_append_large
+  smallstring_append_int
+  smallstring_compare
+  smallstring_path
 )
 
 foreach(bench ${BENCHES})
