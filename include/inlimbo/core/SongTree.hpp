@@ -73,6 +73,23 @@ inline auto byAlbum(const Album& a) -> SongPredicate
   { return utils::string::isEquals(album, a); };
 }
 
+inline auto byArtistDisc(const Artist& a, Disc d) -> SongPredicate
+{
+  return [a, d](const Artist& artist, auto&, Disc disc, auto, auto&) -> bool
+  { return utils::string::isEquals(artist, a) && disc == d; };
+}
+
+inline auto byAlbumDisc(const Album& al, Disc d) -> SongPredicate
+{
+  return [al, d](auto, const Album& album, auto disc, auto, auto&) -> bool
+  { return utils::string::isEquals(album, al) && disc == d; };
+}
+
+inline auto byDisc(Disc d) -> SongPredicate
+{
+  return [d](auto&, auto&, Disc disc, auto, auto&) -> bool { return disc == d; };
+}
+
 inline auto byArtistAlbum(const Artist& a, const Album& al) -> SongPredicate
 {
   return [a, al](const Artist& artist, const Album& album, auto, auto, auto&) -> bool

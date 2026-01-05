@@ -1,5 +1,6 @@
 #include "helpers/cmdline/Display.hpp"
 #include "core/SongTreeIter.hpp"
+#include "query/SongMap.hpp"
 
 #include <iomanip>
 #include <iostream>
@@ -60,8 +61,14 @@ void printSongInfo(const SongTree& tree, const std::optional<Title>& songName)
     if (s.metadata.track > 0)
       std::cout << "Track       : " << s.metadata.track << "\n";
 
+    if (s.metadata.trackTotal > 0)
+      std::cout << "Track Total : " << s.metadata.trackTotal << "\n";
+
     if (s.metadata.discNumber > 0)
       std::cout << "Disc        : " << s.metadata.discNumber << "\n";
+
+    if (s.metadata.discTotal > 0)
+      std::cout << "Disc Total  : " << s.metadata.discTotal << "\n";
 
     if (s.metadata.year > 0)
       std::cout << "Year        : " << s.metadata.year << "\n";
@@ -104,6 +111,29 @@ void printAlbums(const SongTree& tree, const std::optional<Artist>& artist)
     std::cout << a << "\n";
     for (const auto& al : als)
       std::cout << "  └─ " << al << "\n";
+  }
+}
+
+void printDiscsInAlbum(const SongTree& tree, const Album& album)
+{
+  std::cout << "\nDiscs in album '" << album << "':\n";
+  std::cout << "────────────────────────────\n";
+
+  auto pred = song::sort::byAlbum(album);
+
+  Disc currentDisc = -1;
+
+  for (const Song& s : tree.range(pred))
+  {
+    Disc disc = s.metadata.discNumber > 0 ? s.metadata.discNumber : 1;
+
+    if (disc != currentDisc)
+    {
+      currentDisc = disc;
+      std::cout << "Disc " << currentDisc << ":\n";
+    }
+
+    std::cout << "  └─ " << s.metadata.track << ". " << s.metadata.title << "\n";
   }
 }
 

@@ -52,7 +52,9 @@ struct Metadata
   std::string                                  comment    = "<No Comment>";
   Year                                         year       = 0;
   Track                                        track      = 0;
+  uint                                         trackTotal = 0;
   Disc                                         discNumber = 0;
+  uint                                         discTotal  = 0;
   Lyrics                                       lyrics     = "No Lyrics";
   std::unordered_map<std::string, std::string> additionalProperties;
   std::string                                  filePath;
@@ -61,8 +63,8 @@ struct Metadata
 
   template <class Archive> void serialize(Archive& ar)
   {
-    ar(title, artist, album, genre, comment, year, track, discNumber, lyrics, additionalProperties,
-       filePath, duration, bitrate);
+    ar(title, artist, album, genre, comment, year, track, trackTotal, discNumber, discTotal, lyrics,
+       additionalProperties, filePath, duration, bitrate);
   }
 };
 

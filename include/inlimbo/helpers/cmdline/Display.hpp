@@ -22,6 +22,11 @@ void printSongInfo(const core::SongTree& tree, const std::optional<std::string>&
 void printAlbums(const core::SongTree& tree, const std::optional<Artist>& artist = std::nullopt);
 
 // ------------------------------------------------------------
+// Print discs in album
+// ------------------------------------------------------------
+void printDiscsInAlbum(const core::SongTree& tree, const Album& album);
+
+// ------------------------------------------------------------
 // Print genres
 // ------------------------------------------------------------
 void printGenres(const core::SongTree& tree);

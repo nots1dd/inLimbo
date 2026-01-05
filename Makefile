@@ -68,8 +68,11 @@ init-dep-backtrace:
 		echo -e "  Run: git submodule update --init --recursive"; \
 		exit 1; \
 	}
+	@rm -rf $(BACKTRACE_BUILD_DIR)
 	@mkdir -p $(BACKTRACE_BUILD_DIR)
 	@cd $(BACKTRACE_BUILD_DIR) && \
+		CFLAGS="-fPIC" \
+		CXXFLAGS="-fPIC" \
 		../configure --prefix=$(abspath $(BACKTRACE_PREFIX))
 	@$(MAKE) -C $(BACKTRACE_BUILD_DIR)
 	@$(MAKE) -C $(BACKTRACE_BUILD_DIR) install

@@ -6,6 +6,74 @@
 namespace core
 {
 
+static void extractTrackAndTotal(TagLib::FileRef& file, Metadata& metadata)
+{
+  TagLib::PropertyMap props = file.file()->properties();
+
+  metadata.track      = 0;
+  metadata.trackTotal = 0;
+
+  // -------------------------
+  // TRACKNUMBER: "X" or "X/Y"
+  // -------------------------
+  if (props.contains("TRACKNUMBER"))
+  {
+    TagLib::String text  = props["TRACKNUMBER"].toString(); // e.g. "3/9"
+    auto           parts = text.split('/');
+
+    if (!parts.isEmpty())
+      metadata.track = parts[0].toInt();
+
+    if (parts.size() > 1)
+      metadata.trackTotal = parts[1].toInt();
+  }
+
+  // -------------------------
+  // Fallback: TRACKTOTAL / TOTALTRACKS
+  // -------------------------
+  if (metadata.trackTotal == 0)
+  {
+    if (props.contains("TRACKTOTAL"))
+      metadata.trackTotal = props["TRACKTOTAL"].toString().toInt();
+    else if (props.contains("TOTALTRACKS"))
+      metadata.trackTotal = props["TOTALTRACKS"].toString().toInt();
+  }
+}
+
+static void extractDiscAndTotal(TagLib::FileRef& file, Metadata& metadata)
+{
+  TagLib::PropertyMap props = file.file()->properties();
+
+  metadata.discNumber = 0;
+  metadata.discTotal  = 0;
+
+  // -------------------------
+  // DISCNUMBER: "X" or "X/Y"
+  // -------------------------
+  if (props.contains("DISCNUMBER"))
+  {
+    TagLib::String text  = props["DISCNUMBER"].toString(); // e.g. "1/2"
+    auto           parts = text.split('/');
+
+    if (!parts.isEmpty())
+      metadata.discNumber = parts[0].toInt();
+
+    if (parts.size() > 1)
+      metadata.discTotal = parts[1].toInt();
+  }
+
+  // -------------------------
+  // Fallback: DISCTOTAL / TOTALDISCS
+  // -------------------------
+  if (metadata.discTotal == 0)
+  {
+    if (props.contains("DISCTOTAL"))
+      metadata.discTotal = props["DISCTOTAL"].toString().toInt();
+    else if (props.contains("TOTALDISCS"))
+      metadata.discTotal = props["TOTALDISCS"].toString().toInt();
+  }
+}
+
 static int unknownArtistTracks = 0;
 
 TagLibParser::TagLibParser(TagLibConfig config) { m_config = std::move(config); }
@@ -32,12 +100,16 @@ auto TagLibParser::parseFile(const Path& filePath, Metadata& metadata) -> bool
 
   TagLib::Tag* tag = file.tag();
   metadata.title = tag->title().isEmpty() ? filePath.filename().c_str() : tag->title().to8Bit(true);
-  metadata.artist  = tag->artist().isEmpty() ? "<Unknown Artist>" : tag->artist().to8Bit(true);
-  metadata.album   = tag->album().isEmpty() ? "<Unknown Album>" : tag->album().to8Bit(true);
-  metadata.genre   = tag->genre().isEmpty() ? "<Unknown Genre>" : tag->genre().to8Bit(true);
-  metadata.comment = tag->comment().isEmpty() ? "<No Comment>" : tag->comment().to8Bit(true);
-  metadata.year    = tag->year();
-  metadata.track   = tag->track();
+  metadata.artist     = tag->artist().isEmpty() ? "<Unknown Artist>" : tag->artist().to8Bit(true);
+  metadata.album      = tag->album().isEmpty() ? "<Unknown Album>" : tag->album().to8Bit(true);
+  metadata.genre      = tag->genre().isEmpty() ? "<Unknown Genre>" : tag->genre().to8Bit(true);
+  metadata.comment    = tag->comment().isEmpty() ? "<No Comment>" : tag->comment().to8Bit(true);
+  metadata.year       = tag->year();
+  metadata.track      = tag->track();
+  metadata.trackTotal = 0;
+
+  extractDiscAndTotal(file, metadata);
+  extractTrackAndTotal(file, metadata);
 
   TagLib::AudioProperties* audioProps = file.audioProperties();
   if (audioProps)
@@ -49,8 +121,6 @@ auto TagLibParser::parseFile(const Path& filePath, Metadata& metadata) -> bool
   metadata.filePath = filePath;
 
   TagLib::PropertyMap props = file.file()->properties();
-  if (props.contains("DISCNUMBER"))
-    metadata.discNumber = props["DISCNUMBER"].toString().toInt();
 
   // this is required to sort features in a song properly.
   //

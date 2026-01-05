@@ -25,6 +25,7 @@ enum class PrintAction
   SongsByArtist,
   SongsByAlbum,
   SongsByGenre,
+  DiscsInAlbum,
   Summary
 };
 

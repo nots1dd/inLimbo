@@ -12,18 +12,17 @@ auto findSongByName(const threads::SafeMap<SongMap>& safeMap, const std::string&
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongByName");
 
-  return safeMap.withReadLock(
-    [&](const auto& map) -> const Song*
+  const Song* result = nullptr;
+
+  forEachSong(
+    safeMap,
+    [&](const Artist&, const Album&, const Disc, const Track, const ino_t, const Song& song) -> void
     {
-      for (const auto& [artist, albums] : map)
-        for (const auto& [album, discs] : albums)
-          for (const auto& [disc, tracks] : discs)
-            for (const auto& [track, inodeMap] : tracks)
-              for (const auto& [inode, song] : inodeMap)
-                if (strhelp::isEquals(song.metadata.title, songName))
-                  return &song;
-      return nullptr;
+      if (!result && strhelp::isEquals(song.metadata.title, songName))
+        result = &song;
     });
+
+  return result;
 }
 
 auto findSongByNameAndArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
@@ -31,23 +30,20 @@ auto findSongByNameAndArtist(const threads::SafeMap<SongMap>& safeMap, const Art
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongByNameAndArtist");
 
-  return safeMap.withReadLock(
-    [&](const auto& map) -> const Song*
-    {
-      for (const auto& [artist, albums] : map)
-      {
-        if (!strhelp::isEquals(artist, artistName))
-          continue;
+  const Song* result = nullptr;
 
-        for (const auto& [album, discs] : albums)
-          for (const auto& [disc, tracks] : discs)
-            for (const auto& [track, inodeMap] : tracks)
-              for (const auto& [inode, song] : inodeMap)
-                if (strhelp::isEquals(song.metadata.title, songName))
-                  return &song;
-      }
-      return nullptr;
-    });
+  forEachSong(safeMap,
+              [&](const Artist& artist, const Album&, const Disc, const Track, const ino_t,
+                  const Song&   song) -> void
+              {
+                if (!result && strhelp::isEquals(artist, artistName) &&
+                    strhelp::isEquals(song.metadata.title, songName))
+                {
+                  result = &song;
+                }
+              });
+
+  return result;
 }
 
 auto getSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Artist& artist,
@@ -55,48 +51,32 @@ auto getSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Artist& art
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::getSongsByAlbum");
 
-  return safeMap.withReadLock(
-    [&](const auto& map) -> const Songs
-    {
-      Songs songs;
+  Songs songs;
 
-      for (const auto& [a, albums] : map)
-      {
-        if (!strhelp::isEquals(a, artist))
-          continue;
+  forEachSong(safeMap,
+              [&](const Artist& a, const Album& al, const Disc, const Track, const ino_t,
+                  const Song& song) -> void
+              {
+                if (strhelp::isEquals(a, artist) && strhelp::isEquals(al, album))
+                {
+                  songs.push_back(song);
+                }
+              });
 
-        for (const auto& [alb, discs] : albums)
-        {
-          if (!strhelp::isEquals(alb, album))
-            continue;
-
-          for (const auto& [disc, tracks] : discs)
-            for (const auto& [track, inodeMap] : tracks)
-              for (const auto& [inode, song] : inodeMap)
-                songs.push_back(song);
-
-          return songs;
-        }
-      }
-      return songs;
-    });
+  return songs;
 }
 
 auto countTracks(const threads::SafeMap<SongMap>& safeMap) -> size_t
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countTracks");
 
-  return safeMap.withReadLock(
-    [](const auto& map) -> size_t
-    {
-      size_t total = 0;
-      for (const auto& [artist, albums] : map)
-        for (const auto& [album, discs] : albums)
-          for (const auto& [disc, tracks] : discs)
-            for (const auto& [track, inodeMap] : tracks)
-              total += inodeMap.size();
-      return total;
-    });
+  size_t total = 0;
+
+  forEachSong(safeMap,
+              [&](const Artist&, const Album&, const Disc, const Track, const ino_t,
+                  const Song&) -> void { ++total; });
+
+  return total;
 }
 
 void forEachArtist(const threads::SafeMap<SongMap>&                           safeMap,

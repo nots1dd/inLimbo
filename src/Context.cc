@@ -105,7 +105,7 @@ void setupArgs(cli::CmdLine& args)
     'E',
     "Print song info and exit",
     std::nullopt,
-    [](const std::string& s) -> bool {
+    [](const Title& s) -> bool {
       return !s.empty();
     },
     "Song name defaults to null."
@@ -117,7 +117,7 @@ void setupArgs(cli::CmdLine& args)
     'a',
     "Print all songs by artist name",
     std::nullopt,
-    [](const std::string& s) -> bool {
+    [](const Artist& s) -> bool {
       return !s.empty();
     },
     "Artist name defaults to null."
@@ -129,7 +129,7 @@ void setupArgs(cli::CmdLine& args)
     'l',
     "Print all songs by album name",
     std::nullopt,
-    [](const std::string& s) -> bool {
+    [](const Album& s) -> bool {
       return !s.empty();
     },
     "Album name defaults to null."
@@ -141,10 +141,22 @@ void setupArgs(cli::CmdLine& args)
     'g',
     "Print all songs by genre name",
     std::nullopt,
-    [](const std::string& s) -> bool {
+    [](const Genre& s) -> bool {
       return !s.empty();
     },
     "Genre name defaults to null."
+  );
+
+  args.add<Album>(
+    "Query",
+    "discs-album",
+    'd',
+    "Print all discs in an album and exit",
+    std::nullopt,
+    [](const Album& s) -> bool {
+      return !s.empty();
+    },
+    "Album name defaults to null."
   );
 }
 // clang-format on
@@ -171,6 +183,8 @@ auto resolvePrintAction(const cli::CmdLine& args) -> PrintAction
     return PrintAction::Albums;
   if (args.has("print-genre"))
     return PrintAction::Genres;
+  if (args.has("discs-album"))
+    return PrintAction::DiscsInAlbum;
   if (args.has("print-summary"))
     return PrintAction::Summary;
   if (args.has("songs-paths"))
@@ -223,6 +237,10 @@ void maybeHandlePrintActions(AppContext& ctx)
     case PrintAction::SongsByGenre:
       helpers::cmdline::printSongsByGenre(
         ctx.m_songTree, ctx.m_cmdLine.getOptional<Genre>("songs-genre").value_or(""));
+      break;
+    case PrintAction::DiscsInAlbum:
+      helpers::cmdline::printDiscsInAlbum(
+        ctx.m_songTree, ctx.m_cmdLine.getOptional<Album>("discs-album").value_or(""));
       break;
     default:
       break;
