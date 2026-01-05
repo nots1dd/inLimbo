@@ -1,7 +1,7 @@
 #pragma once
 
 #include "utils/string/SmallString.hpp"
-#include <fmt/core.h>
+#include <spdlog/fmt/fmt.h>
 
 template <> struct fmt::formatter<utils::string::SmallString>
 {
