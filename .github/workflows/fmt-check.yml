@@ -23,9 +23,9 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Install dependencies
+    - name: Install Clang Tools
       run: |
-        pacman -S --noconfirm clang-format
+        pacman -S --noconfirm clang-tools-extra
 
     - name: Run Clang Format Check on inLimbo (clang-format)
       run: |

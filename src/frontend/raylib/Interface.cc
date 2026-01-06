@@ -15,44 +15,86 @@ namespace frontend::raylib
 static constexpr int WIN_W = 1100;
 static constexpr int WIN_H = 650;
 
-static constexpr int LEFT_W  = 260;
-static constexpr int RIGHT_X = LEFT_W + 10;
+static constexpr int HEADER_H = 50;
+static constexpr int LEFT_W   = 260;
+static constexpr int RIGHT_X  = LEFT_W + 10;
+static constexpr int STATUS_H = 48;
+
+static auto smooth(float current, float target, float speed) -> float
+{
+  return current + (target - current) * speed;
+}
 
 Interface::Interface(threads::SafeMap<SongMap>& songMap, mpris::Service* mprisService)
     : m_songMapTS(songMap), m_mprisService(mprisService)
 {
 }
 
+auto Interface::truncateText(const char* text, float maxWidth, float fontSize) -> std::string
+{
+  std::string str(text);
+  Vector2     size = MeasureTextEx(m_fontRegular, text, fontSize, 1);
+
+  if (size.x <= maxWidth)
+    return str;
+
+  std::string result = str;
+  while (result.length() > 0)
+  {
+    result                   = str.substr(0, result.length() - 1);
+    std::string withEllipsis = result + "...";
+    size                     = MeasureTextEx(m_fontRegular, withEllipsis.c_str(), fontSize, 1);
+    if (size.x <= maxWidth)
+      return withEllipsis;
+  }
+
+  return "...";
+}
+
+void Interface::drawTextTruncated(Font font, const char* text, Vector2 pos, float fontSize,
+                                  float spacing, Color color, float maxWidth)
+{
+  std::string truncated = truncateText(text, maxWidth, fontSize);
+  DrawTextEx(font, truncated.c_str(), pos, fontSize, spacing, color);
+}
+
 void Interface::run(audio::Service& audio)
 {
-
   InitWindow(WIN_W, WIN_H, "InLimbo Player");
-  SetTargetFPS(60);
+  SetTargetFPS(30);
+
+  m_fontRegular = LoadFontEx("assets/fonts/SpaceMonoNerdFont-Regular.ttf", 32, nullptr, 250);
+  m_fontBold    = LoadFontEx("assets/fonts/SpaceMonoNerdFont-Bold.ttf", 34, nullptr, 250);
+
+  SetTextureFilter(m_fontRegular.texture, TEXTURE_FILTER_BILINEAR);
+  SetTextureFilter(m_fontBold.texture, TEXTURE_FILTER_BILINEAR);
 
   rebuildArtists();
   rebuildAlbums();
 
-  m_mprisService->updateMetadata();
+  if (m_mprisService)
+    m_mprisService->updateMetadata();
 
   m_isRunning.store(true);
+  m_screen = Screen::Library;
 
   while (m_isRunning.load() && !WindowShouldClose())
   {
     handleInput(audio);
 
     BeginDrawing();
-    ClearBackground({20, 20, 20, 255});
-
+    ClearBackground(BG_MAIN);
     draw(audio);
-
     EndDrawing();
 
-    if (m_mprisService)
-      m_mprisService->poll();
+    m_mprisService->poll();
   }
 
   if (m_artLoaded)
     UnloadTexture(m_artTex);
+
+  UnloadFont(m_fontRegular);
+  UnloadFont(m_fontBold);
 
   CloseWindow();
 }
@@ -71,7 +113,6 @@ void Interface::rebuildArtists()
 void Interface::rebuildAlbums()
 {
   m_albums.clear();
-
   if (m_artists.empty())
     return;
 
@@ -90,139 +131,216 @@ void Interface::rebuildAlbums()
 
 void Interface::handleInput(audio::Service& audio)
 {
-  bool trackChanged = false;
+  bool trackChange = false;
 
   if (IsKeyPressed(KEY_Q))
     m_isRunning.store(false);
 
   if (IsKeyPressed(KEY_I))
-    m_showArt = !m_showArt;
+    m_screen = (m_screen == Screen::Library) ? Screen::NowPlaying : Screen::Library;
+
+  if (IsKeyPressed(KEY_EQUAL))
+    audio.setVolume(std::min(1.5f, audio.getVolume() + 0.05f));
+
+  if (IsKeyPressed(KEY_MINUS))
+    audio.setVolume(std::max(0.0f, audio.getVolume() - 0.05f));
 
   if (IsKeyPressed(KEY_P))
-  {
     audio.playCurrent();
-    m_dirty = true;
-  }
+
   if (IsKeyPressed(KEY_S))
-  {
     audio.pauseCurrent();
-    m_dirty = true;
-  }
 
   if (IsKeyPressed(KEY_N))
   {
+    trackChange = true;
     audio.nextTrack();
-    trackChanged = true;
   }
+
   if (IsKeyPressed(KEY_B))
   {
+    trackChange = true;
     audio.previousTrack();
-    trackChanged = true;
   }
 
-  if (IsKeyPressed(KEY_UP))
+  if (m_screen == Screen::Library)
   {
-    m_selArtist = std::max(0, m_selArtist - 1);
-    rebuildAlbums();
+    if (IsKeyPressed(KEY_UP))
+    {
+      m_selArtist = std::max(0, m_selArtist - 1);
+      rebuildAlbums();
+    }
+    if (IsKeyPressed(KEY_DOWN))
+    {
+      m_selArtist = std::min(int(m_artists.size()) - 1, m_selArtist + 1);
+      rebuildAlbums();
+    }
   }
+  if (trackChange && m_mprisService)
+    m_mprisService->updateMetadata();
 
-  if (IsKeyPressed(KEY_DOWN))
-  {
-    m_selArtist = std::min(int(m_artists.size()) - 1, m_selArtist + 1);
-    rebuildAlbums();
-  }
-
-  if (IsKeyPressed(KEY_RIGHT))
-    audio.seekForward(2.0);
-
-  if (IsKeyPressed(KEY_LEFT))
-    audio.seekBackward(2.0);
-
-  if (m_mprisService && (trackChanged || m_dirty))
-  {
-    if (trackChanged)
-      m_mprisService->updateMetadata();
-
-    m_mprisService->notify();
-    m_dirty = false;
-  }
+  m_mprisService->notify();
 }
+
+/* -------------------------------------------------- */
+/* Draw dispatcher                                     */
+/* -------------------------------------------------- */
 
 void Interface::draw(audio::Service& audio)
 {
-  drawArtistsPane();
-  drawAlbumsPane(audio);
-  drawStatusBar(audio);
+  if (m_screen == Screen::Library)
+  {
+    drawHeader("Library");
+    drawArtistsPane(audio);
+    drawAlbumsPane(audio);
+    drawStatusBar(audio);
+  }
+  else
+  {
+    drawHeader("Now Playing");
+    drawNowPlaying(audio);
+  }
+
+  /* Fade overlay */
+  if (m_screenBlend > 0.01f)
+  {
+    DrawRectangle(0, 0, WIN_W, WIN_H, {0, 0, 0, (unsigned char)(m_screenBlend * 160)});
+  }
 }
 
-void Interface::drawArtistsPane()
-{
-  DrawRectangle(0, 0, LEFT_W, WIN_H, {30, 30, 30, 255});
+/* -------------------------------------------------- */
+/* Header Bar                                          */
+/* -------------------------------------------------- */
 
-  int y = 20;
+void Interface::drawHeader(const char* title)
+{
+  DrawRectangle(0, 0, WIN_W, HEADER_H, BG_PANEL);
+  DrawLine(0, HEADER_H, WIN_W, HEADER_H, {60, 60, 60, 255});
+
+  // App title on left
+  DrawTextEx(m_fontBold, "♪ InLimbo Player", {16, 14}, 22, 1, ACCENT);
+
+  // Screen title on right
+  int tw = MeasureTextEx(m_fontRegular, title, 18, 1).x;
+  DrawTextEx(m_fontRegular, title, {(float)(WIN_W - tw - 16), 16}, 18, 1, TEXT_DIM);
+}
+
+/* -------------------------------------------------- */
+/* Library UI                                          */
+/* -------------------------------------------------- */
+
+void Interface::drawArtistsPane(audio::Service& audio)
+{
+  Rectangle pane = {0, HEADER_H, LEFT_W, WIN_H - STATUS_H - HEADER_H};
+  DrawRectangleRec(pane, BG_PANEL);
+
+  // Panel title
+  DrawTextEx(m_fontBold, "Artists", {12, HEADER_H + 12}, 18, 1, TEXT_MAIN);
+  DrawLine(8, HEADER_H + 38, LEFT_W - 8, HEADER_H + 38, {50, 50, 50, 255});
+
+  Vector2 mouse = GetMousePosition();
+
+  if (CheckCollisionPointRec(mouse, pane))
+    m_artistScrollY += GetMouseWheelMove() * 30;
+
+  m_artistScrollY = std::min(0.0f, m_artistScrollY);
+
+  int y = HEADER_H + 48 + m_artistScrollY;
+
   for (size_t i = 0; i < m_artists.size(); ++i)
   {
-    Color c = (int(i) == m_selArtist) ? SKYBLUE : RAYWHITE;
-    DrawText(m_artists[i].c_str(), 10, y, 18, c);
-    y += 22;
+    Rectangle r = {8, (float)y, LEFT_W - 16, 22};
+
+    bool  hover = CheckCollisionPointRec(mouse, r);
+    Color c     = (int)i == m_selArtist ? ACCENT : TEXT_MAIN;
+
+    if (hover && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+      m_selArtist = (int)i;
+      rebuildAlbums();
+      m_albumScrollY = 0;
+    }
+
+    // Truncate artist names
+    drawTextTruncated(m_fontRegular, m_artists[i].c_str(), {r.x, r.y}, 18, 1, hover ? ACCENT : c,
+                      LEFT_W - 24);
+    y += 24;
   }
 }
 
 void Interface::drawAlbumsPane(audio::Service& audio)
 {
-  if (m_artists.empty() || m_albums.empty())
+  if (m_artists.empty())
     return;
+
+  Rectangle pane  = {RIGHT_X, HEADER_H, WIN_W - RIGHT_X, WIN_H - STATUS_H - HEADER_H};
+  Vector2   mouse = GetMousePosition();
+
+  if (CheckCollisionPointRec(mouse, pane))
+    m_albumScrollY += GetMouseWheelMove() * 30;
+
+  m_albumScrollY = std::min(0.0f, m_albumScrollY);
+
+  int x = RIGHT_X + 12;
+  int y = HEADER_H + 12 + m_albumScrollY;
 
   const Artist& artist = m_artists[m_selArtist];
-  const Album&  album  = m_albums[m_selAlbum];
 
-  int x = RIGHT_X;
-  int y = 20;
-
-  DrawText(album.c_str(), x, y, 22, GOLD);
-  y += 30;
-
-  query::songmap::read::forEachDisc(
+  query::songmap::read::forEachAlbum(
     m_songMapTS,
-    [&](const Artist& a, const Album& al, Disc disc, const TrackMap& tracks) -> void
+    [&](const Artist& a, const Album& album, const DiscMap& discs) -> void
     {
-      if (!utils::string::isEquals(a, artist) || !utils::string::isEquals(al, album))
+      if (!utils::string::isEquals(a, artist))
         return;
 
-      DrawText(TextFormat("Disc %d", disc), x, y, 16, LIGHTGRAY);
-      y += 20;
+      // Truncate album titles
+      drawTextTruncated(m_fontBold, album.c_str(), {(float)x, (float)y}, 22, 1, ACCENT,
+                        WIN_W - RIGHT_X - 24);
+      y += 30;
 
-      for (const auto& [trackNo, inodeMap] : tracks)
+      for (const auto& [disc, tracks] : discs)
       {
-        for (const auto& [_, song] : inodeMap)
+        DrawTextEx(m_fontRegular, TextFormat("Disc %d", disc), {(float)x + 10, (float)y}, 16, 1,
+                   TEXT_DIM);
+        y += 20;
+
+        for (const auto& [trackNo, inodeMap] : tracks)
         {
-          DrawText(TextFormat("%02d. %s", trackNo, song.metadata.title.c_str()), x + 20, y, 16,
-                   RAYWHITE);
-          y += 18;
+          for (const auto& [_, song] : inodeMap)
+          {
+            Rectangle r     = {(float)x + 28, (float)y, WIN_W - RIGHT_X - 56, 18};
+            bool      hover = CheckCollisionPointRec(mouse, r);
+
+            if (hover && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            {
+              auto h = audio.registerTrack(song);
+              audio.addToPlaylist(h);
+              audio.nextTrack();
+              if (m_mprisService)
+              {
+                m_mprisService->updateMetadata();
+                m_mprisService->notify();
+              }
+            }
+
+            // Truncate track titles
+            std::string trackText = TextFormat("%02d. %s", trackNo, song.metadata.title.c_str());
+            drawTextTruncated(m_fontRegular, trackText.c_str(), {r.x, r.y}, 16, 1,
+                              hover ? ACCENT : TEXT_MAIN, WIN_W - RIGHT_X - 70);
+            y += 18;
+          }
         }
+        y += 8;
       }
-
-      y += 10;
+      y += 16;
     });
-
-  if (m_showArt)
-  {
-    auto meta = audio.getCurrentMetadata();
-    if (meta)
-      drawArt(*meta);
-  }
 }
 
-void Interface::drawArt(const Metadata& meta)
+void Interface::drawCenteredArt(const Metadata& meta)
 {
-  if (meta.artUrl.empty())
-    return;
-
-  if (!m_artLoaded)
+  if (!m_artLoaded && !meta.artUrl.empty())
   {
-    // file://
-    const std::string filterPath = meta.artUrl.substr(7);
-    Image             img        = LoadImage(filterPath.c_str());
+    Image img = LoadImage(meta.artUrl.substr(7).c_str());
     if (img.data)
     {
       m_artTex = LoadTextureFromImage(img);
@@ -231,22 +349,135 @@ void Interface::drawArt(const Metadata& meta)
     }
   }
 
-  if (m_artLoaded)
-    DrawTextureEx(m_artTex, {750, 60}, 0.0f, 0.4f, WHITE);
+  if (!m_artLoaded)
+  {
+    // Draw placeholder
+    int size = 300;
+    int px   = WIN_W / 2 - size / 2;
+    int py   = HEADER_H + 40;
+    DrawRectangle(px, py, size, size, BG_PANEL);
+    DrawRectangleLines(px, py, size, size, {60, 60, 60, 255});
+    DrawTextEx(m_fontRegular, "No Album Art", {(float)(px + 80), (float)(py + 140)}, 20, 1,
+               TEXT_DIM);
+    return;
+  }
+
+  float scale = 300.0f / std::max(m_artTex.width, m_artTex.height);
+  int   w     = m_artTex.width * scale;
+  int   h     = m_artTex.height * scale;
+
+  DrawTextureEx(m_artTex, {(float)(WIN_W / 2 - w / 2), (float)(HEADER_H + 40)}, 0.0f, scale, WHITE);
+}
+
+void Interface::drawNowPlaying(audio::Service& audio)
+{
+  auto meta = audio.getCurrentMetadata();
+  auto info = audio.getCurrentTrackInfo();
+  if (!meta || !info)
+  {
+    DrawTextEx(m_fontRegular, "No track playing", {WIN_W / 2.0f - 100, WIN_H / 2.0f}, 20, 1,
+               TEXT_DIM);
+    return;
+  }
+
+  drawCenteredArt(*meta);
+
+  int contentY = HEADER_H + 360;
+
+  drawTextTruncated(m_fontBold, meta->title.c_str(), {WIN_W / 2.0f - 300, (float)contentY}, 28, 1,
+                    TEXT_MAIN, 600);
+
+  std::string artistAlbum = meta->artist + " • " + meta->album;
+  drawTextTruncated(m_fontRegular, artistAlbum.c_str(),
+                    {WIN_W / 2.0f - 300, (float)(contentY + 40)}, 18, 1, TEXT_DIM, 600);
+
+  // Additional metadata
+  int metaY = contentY + 70;
+
+  if (!meta->genre.empty())
+  {
+    std::string genreText = "Genre: " + meta->genre;
+    drawTextTruncated(m_fontRegular, genreText.c_str(), {WIN_W / 2.0f - 300, (float)metaY}, 16, 1,
+                      TEXT_DIM, 600);
+    metaY += 24;
+  }
+
+  if (meta->year > 0)
+  {
+    DrawTextEx(m_fontRegular, TextFormat("Year: %d", meta->year),
+               {WIN_W / 2.0f - 300, (float)metaY}, 16, 1, TEXT_DIM);
+    metaY += 24;
+  }
+
+  if (meta->track > 0)
+  {
+    DrawTextEx(m_fontRegular, TextFormat("Track: %d", meta->track),
+               {WIN_W / 2.0f - 300, (float)metaY}, 16, 1, TEXT_DIM);
+  }
+
+  // Progress bar with time display
+  drawProgressBar(*info, audio);
+}
+
+void Interface::drawProgressBar(const audio::service::TrackInfo& info, audio::Service& audio)
+{
+  float barX = 200;
+  float barY = WIN_H - 100;
+  float barW = WIN_W - 400;
+
+  static float knob  = barX;
+  float        ratio = info.lengthSec > 0 ? info.positionSec / info.lengthSec : 0.0f;
+
+  knob = smooth(knob, barX + ratio * barW, 0.15f);
+
+  std::string posTime = utils::fmtTime(info.positionSec);
+  std::string lenTime = utils::fmtTime(info.lengthSec);
+
+  DrawTextEx(m_fontRegular, posTime.c_str(), {barX - 50, barY - 2}, 14, 1, TEXT_DIM);
+  int lenW = MeasureTextEx(m_fontRegular, lenTime.c_str(), 14, 1).x;
+  DrawTextEx(m_fontRegular, lenTime.c_str(), {barX + barW + 10, barY - 2}, 14, 1, TEXT_DIM);
+
+  DrawRectangle(barX, barY, barW, 6, BG_PANEL);
+  DrawRectangle(barX, barY, knob - barX, 6, ACCENT);
+  DrawCircle(knob, barY + 3, 8, ACCENT);
+
+  Rectangle r = {barX, barY - 8, barW, 22};
+  if (CheckCollisionPointRec(GetMousePosition(), r) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+  {
+    float t = std::clamp((GetMouseX() - barX) / barW, 0.0f, 1.0f);
+    audio.seekAbsolute(t * info.lengthSec);
+    if (m_mprisService)
+      m_mprisService->notify();
+  }
 }
 
 void Interface::drawStatusBar(audio::Service& audio)
 {
-  DrawRectangle(0, WIN_H - 40, WIN_W, 40, {25, 25, 25, 255});
-
+  const int h = STATUS_H;
+  DrawRectangle(0, WIN_H - h, WIN_W, h, BG_PANEL);
   auto info = audio.getCurrentTrackInfo();
-  if (!info)
+  auto meta = audio.getCurrentMetadata();
+  if (!info || !meta)
     return;
 
-  DrawText(TextFormat("Time %s / %s | Volume %d%% | [I] Art",
-                      utils::fmtTime(info->positionSec).c_str(),
-                      utils::fmtTime(info->lengthSec).c_str(), int(audio.getVolume() * 100)),
-           10, WIN_H - 28, 18, RAYWHITE);
+  DrawLine(0, WIN_H - h, WIN_W, WIN_H - h, {60, 60, 60, 255});
+
+  drawTextTruncated(m_fontBold, meta->title.c_str(), {12, (float)WIN_H - h + 6}, 18, 1, TEXT_MAIN,
+                    300);
+
+  drawTextTruncated(m_fontRegular, meta->artist.c_str(), {12, (float)WIN_H - h + 26}, 14, 1,
+                    TEXT_DIM, 300);
+
+  std::string time = utils::fmtTime(info->positionSec) + " / " + utils::fmtTime(info->lengthSec);
+  int         tw   = MeasureTextEx(m_fontRegular, time.c_str(), 16, 1).x;
+  DrawTextEx(m_fontRegular, time.c_str(), {(float)(WIN_W / 2 - tw / 2), (float)WIN_H - h + 16}, 16,
+             1, TEXT_DIM);
+
+  std::string right =
+    TextFormat("VOL %d%% %s", int(audio.getVolume() * 100), audio.isPlaying() ? "▶" : "⏸");
+  int rw = MeasureTextEx(m_fontRegular, right.c_str(), 16, 1).x;
+  DrawTextEx(m_fontRegular, right.c_str(), {(float)(WIN_W - rw - 12), (float)WIN_H - h + 16}, 16, 1,
+             TEXT_DIM);
 }
 
 } // namespace frontend::raylib
