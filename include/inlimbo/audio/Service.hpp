@@ -26,9 +26,11 @@ public:
   auto getBackendInfo() -> BackendInfo;
 
   auto registerTrack(const Song& song) -> service::SoundHandle;
+  auto isPlaying() -> bool;
 
   void addToPlaylist(service::SoundHandle h);
   void clearPlaylist();
+  auto getPlaybackTime() -> std::optional<std::pair<double, double>>;
   auto getCurrentTrack() -> service::SoundHandle;
   auto getCurrentIndex() -> size_t;
   auto getPlaylistSize() -> size_t;
@@ -40,6 +42,8 @@ public:
   auto previousTrack() -> service::SoundHandle;
   void restartCurrent();
 
+  void seekAbsolute(double seconds);
+  void seekTo(double seconds);
   void seekForward(double seconds);
   void seekBackward(double seconds);
 

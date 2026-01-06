@@ -7,6 +7,7 @@
 #include <poll.h>
 #include <unistd.h>
 
+#include "mpris/Service.hpp"
 #include "query/SongMap.hpp"
 #include "utils/timer/Timer.hpp"
 
@@ -21,10 +22,9 @@ static constexpr int MIN_TERM_ROWS = 24;
 #define UI_BAR_FILL  "█"
 #define UI_BAR_EMPTY "░"
 
-Interface::Interface(threads::SafeMap<SongMap>& songMap) : m_songMapTS(std::move(songMap)) {}
-
 void Interface::run(audio::Service& audio)
 {
+
   query::songmap::read::forEachSong(
     m_songMapTS,
     [&](const Artist&, const Album&, const Disc, const Track, const ino_t, const Song& song) -> void
@@ -38,6 +38,8 @@ void Interface::run(audio::Service& audio)
     m_currentMeta = audio.getCurrentMetadata();
   }
 
+  m_mprisService->updateMetadata();
+
   enableRawMode();
   m_isRunning.store(true);
 
@@ -46,7 +48,10 @@ void Interface::run(audio::Service& audio)
   std::thread seek([&]() -> void { seekLoop(audio); });
 
   while (m_isRunning.load())
-    std::this_thread::sleep_for(std::chrono::milliseconds(40));
+  {
+    m_mprisService->poll();
+    std::this_thread::sleep_for(std::chrono::milliseconds(30));
+  }
 
   m_isRunning.store(false);
   disableRawMode();
@@ -118,6 +123,7 @@ void Interface::seekLoop(audio::Service& audio)
       else
         audio.seekBackward(-d);
     }
+    m_mprisService->notify();
     std::this_thread::sleep_for(std::chrono::milliseconds(70));
   }
 }
@@ -174,7 +180,7 @@ void Interface::draw(audio::Service& audio)
   std::cout << "   Album   : " << curMeta->album << "\n";
   std::cout << "   Genre   : " << curMeta->genre << "\n";
   std::cout << "   Bitrate : " << curMeta->bitrate << " kbps\n";
-  std::cout << "   File    : " << curMeta->filePath << "\n\n";
+  std::cout << "   File    : " << curMeta->filePath.c_str() << "\n\n";
 
   std::cout << " Playback\n";
   std::cout << "   State   : " << (info.playing ? "Playing" : "Paused") << "\n";
@@ -206,6 +212,8 @@ void Interface::draw(audio::Service& audio)
 
 auto Interface::handleKey(audio::Service& audio, char c) -> bool
 {
+  bool trackChanged = false;
+
   switch (c)
   {
     case 'p':
@@ -216,30 +224,35 @@ auto Interface::handleKey(audio::Service& audio, char c) -> bool
       break;
     case 'n':
       audio.nextTrack();
+      trackChanged = true;
       break;
     case 'P':
       audio.previousTrack();
+      trackChanged = true;
       break;
     case 'r':
       audio.restartCurrent();
       break;
     case 'b':
       m_pendingSeek -= 2.0;
-      break;
+      return true; // no notify yet
     case 'f':
       m_pendingSeek += 2.0;
-      break;
+      return true;
     case '=':
       audio.setVolume(std::min(1.5f, audio.getVolume() + 0.05f));
-      break;
+      return true;
     case '-':
       audio.setVolume(std::max(0.0f, audio.getVolume() - 0.05f));
-      break;
+      return true;
     case 'q':
       return false;
-    default:
-      break;
   }
+
+  if (trackChanged)
+    m_mprisService->updateMetadata();
+
+  m_mprisService->notify();
   return true;
 }
 
@@ -249,7 +262,7 @@ void Interface::showMetadata(const Metadata& m)
             << "Song    : " << m.title << " by " << m.artist << "\n"
             << "Album   : " << m.album << " (" << m.genre << ")\n"
             << "Bitrate : " << m.bitrate << " kbps\n"
-            << "Path    : " << m.filePath << "\n\n";
+            << "Path    : " << m.filePath.c_str() << "\n\n";
 }
 
 } // namespace frontend::cmdline

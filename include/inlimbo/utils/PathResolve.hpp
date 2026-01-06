@@ -3,61 +3,50 @@
 #include "Config.hpp"
 #include "Env-Vars.hpp"
 #include "InLimbo-Types.hpp"
-#include "utils/string/SmallString.hpp"
+#include <cstdlib>
+#include <filesystem>
 #include <stdexcept>
 
 namespace utils
 {
 
-FORCE_INLINE auto getHomeDir() -> const utils::string::SmallString
+namespace fs = std::filesystem;
+
+FORCE_INLINE auto getHomePath() -> fs::path
 {
-  cstr homeDir = getenv("HOME");
+  const char* homeDir = std::getenv("HOME");
   if (!homeDir)
-  {
-    throw std::runtime_error("HOME environment variable not found! Exiting program...");
-  }
+    throw std::runtime_error("HOME environment variable not found!");
 
-  return utils::string::SmallString(homeDir);
+  return fs::path{homeDir};
 }
 
-FORCE_INLINE auto getBaseConfigPath() -> utils::string::SmallString
+FORCE_INLINE auto getBaseConfigPath() -> fs::path
 {
-  cstr customConfigHome = getenv(INLIMBO_CUSTOM_CONFIG_ENV);
+  const char* customConfigHome = std::getenv(INLIMBO_CUSTOM_CONFIG_ENV);
   if (customConfigHome)
-  {
-    return {customConfigHome};
-  }
+    return fs::path{customConfigHome};
 
-  utils::string::SmallString fin = getHomeDir();
-  fin += "/.config/inLimbo/";
-
-  return fin;
+  return getHomePath() / ".config" / "inLimbo";
 }
 
-FORCE_INLINE auto getConfigPathWithFile(utils::string::SmallString fileName)
-  -> utils::string::SmallString
+FORCE_INLINE auto getConfigPathWithFile(const fs::path& fileName) -> fs::path
 {
-  utils::string::SmallString baseConfigPath = getBaseConfigPath();
-  baseConfigPath += fileName;
-
-  return baseConfigPath;
+  return getBaseConfigPath() / fileName;
 }
 
-FORCE_INLINE auto getCachePath() -> const utils::string::SmallString
-{
-  utils::string::SmallString cacheFilePath = getHomeDir();
-  cacheFilePath += "/.cache/inLimbo/";
+FORCE_INLINE auto getCachePath() -> fs::path { return getHomePath() / ".cache" / "inLimbo"; }
 
-  return cacheFilePath;
+FORCE_INLINE auto getCachePathWithFile(const fs::path& fileName) -> fs::path
+{
+  return getCachePath() / fileName;
 }
 
-FORCE_INLINE auto getCachePathWithFile(utils::string::SmallString fileName)
-  -> utils::string::SmallString
-{
-  utils::string::SmallString baseCachePath = getCachePath();
-  baseCachePath += fileName;
+FORCE_INLINE auto getCacheArtPath() -> fs::path { return getCachePath() / "art"; }
 
-  return baseCachePath;
+FORCE_INLINE auto getCacheArtPathWithFile(const fs::path& fileName) -> fs::path
+{
+  return getCacheArtPath() / fileName;
 }
 
 } // namespace utils

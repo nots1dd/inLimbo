@@ -111,8 +111,9 @@ void Logger::init_from_env()
   utils::string::SmallString env_level   = std::getenv(INLIMBO_LOG_LEVEL_ENV);
   utils::string::SmallString env_pattern = std::getenv(INLIMBO_LOG_PATTERN_ENV);
 
-  const auto file =
-    !env_file.empty() ? env_file : utils::getCachePathWithFile(__INLIMBO_DEFAULT_LOG_FILE__);
+  const auto file    = !env_file.empty()
+                         ? env_file
+                         : utils::getCachePathWithFile(__INLIMBO_DEFAULT_LOG_FILE__).c_str();
   const auto pattern = !env_pattern.empty() ? env_pattern : __INLIMBO_DEFAULT_LOG_PATTERN__;
   const auto level   = !env_level.empty() ? parse_log_level(env_level) : spdlog::level::info;
 

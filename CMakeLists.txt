@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5...3.20)
-project(inLimbo LANGUAGES CXX)
+project(inLimbo LANGUAGES C CXX)
 
 # -----------------------------------------------------------
 # Build configuration
@@ -77,6 +77,37 @@ pkg_check_modules(AVCODEC  REQUIRED libavcodec)
 pkg_check_modules(AVUTIL   REQUIRED libavutil)
 pkg_check_modules(SWRESAMPLE REQUIRED libswresample)
 pkg_check_modules(ALSA REQUIRED alsa)
+pkg_check_modules(DBUS REQUIRED dbus-1)
+
+# -----------------------------------------------------------
+# Pure C MPRIS (libdbus)
+# -----------------------------------------------------------
+set(INLIMBO_MPRIS_C_SOURCES
+    src/c/mpris.c
+)
+
+add_library(inLimbo-mpris-c STATIC ${INLIMBO_MPRIS_C_SOURCES})
+
+set_target_properties(inLimbo-mpris-c PROPERTIES
+    LINKER_LANGUAGE C
+)
+
+target_include_directories(inLimbo-mpris-c
+    PUBLIC
+        include
+        include/inlimbo
+        ${DBUS_INCLUDE_DIRS}
+)
+
+target_compile_options(inLimbo-mpris-c
+    PRIVATE
+        ${DBUS_CFLAGS_OTHER}
+)
+
+target_link_libraries(inLimbo-mpris-c
+    PUBLIC
+        ${DBUS_LIBRARIES}
+)
 
 # -----------------------------------------------------------
 # Backend Shared Library
@@ -84,6 +115,7 @@ pkg_check_modules(ALSA REQUIRED alsa)
 set(INLIMBO_CORE_SOURCES
     src/core/SongTree.cc
     src/core/taglib/Parser.cc
+    src/mpris/Service.cc
     src/query/SongMap.cc
     src/helpers/cmdline/Display.cc
     src/helpers/fs/Directory.cc
@@ -117,6 +149,7 @@ target_include_directories(inLimbo-core
 
 target_link_libraries(inLimbo-core
     PUBLIC
+        inLimbo-mpris-c
         ${TAGLIB_LIBRARIES}
         spdlog::spdlog
         avformat
@@ -251,6 +284,7 @@ message(STATUS "${SEP}")
 message(STATUS "${SEP}  ── System Libraries ────────────────────────────────────")
 message(STATUS "${SEP}  • TagLib     : ${TAGLIB_INCLUDE_DIRS}")
 message(STATUS "${SEP}  • backtrace  : ${BACKTRACE_LIBRARY} (Debug builds only)")
+message(STATUS "${SEP}  • DBUS-1     : ${DBUS_INCLUDE_DIRS}")
 message(STATUS "${SEP}")
 message(STATUS "${SEP}  ── Frontend ───────────────────────────────────────────")
 message(STATUS "${SEP}  • Type        : ${INLIMBO_FRONTEND_NAME}")

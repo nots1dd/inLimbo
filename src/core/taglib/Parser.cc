@@ -1,5 +1,7 @@
 #include "core/taglib/Parser.hpp"
 #include "Logger.hpp"
+#include "utils/PathResolve.hpp"
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 
@@ -150,6 +152,14 @@ auto TagLibParser::parseFile(const Path& filePath, Metadata& metadata) -> bool
     metadata.additionalProperties[key.to8Bit(true)] = val.toString().to8Bit(true);
   }
 
+  // Art URL
+
+  if (!fillArtUrl(metadata))
+  {
+    LOG_WARN("No embedded art found for file: {}", filePath);
+    metadata.artUrl = "";
+  }
+
   return true;
 }
 
@@ -246,9 +256,18 @@ auto TagLibParser::modifyMetadata(const Path& filePath, const Metadata& newData)
   return success;
 }
 
-auto extractThumbnail(const Path& audioFilePath, const Path& outputImagePath) -> bool
+static auto toFileUri(const std::filesystem::path& p) -> const Path
 {
-  const utils::string::SmallString ext = audioFilePath.extension();
+  utils::string::SmallString uri("file://");
+
+  uri += std::filesystem::absolute(p.c_str()).string();
+
+  return uri;
+}
+
+auto extractThumbnail(const std::string& audioFilePath, const std::string& outputImagePath) -> bool
+{
+  const std::string ext = std::filesystem::path(audioFilePath).extension().string();
 
   if (ext == ".mp3")
   {
@@ -285,6 +304,26 @@ auto extractThumbnail(const Path& audioFilePath, const Path& outputImagePath) ->
     return true;
   }
 
+  return false;
+}
+
+auto TagLibParser::fillArtUrl(Metadata& meta) -> bool
+{
+  namespace fs = std::filesystem;
+
+  const auto cacheDir = utils::getCacheArtPath();
+  fs::create_directories(cacheDir.c_str());
+
+  const std::string hash   = std::to_string(std::hash<std::string>{}(meta.filePath.c_str()));
+  fs::path          outImg = cacheDir / (hash + ".jpg");
+
+  if (fs::exists(outImg.c_str()) || extractThumbnail(meta.filePath, outImg))
+  {
+    meta.artUrl = toFileUri(outImg);
+    return true;
+  }
+
+  meta.artUrl.clear();
   return false;
 }
 

@@ -288,12 +288,44 @@ void AudioEngine::stop()
 
 auto AudioEngine::getPlaybackTime() const -> std::optional<std::pair<double, double>>
 {
+  if (!m_sound)
+    return std::nullopt;
+
   auto& s = *m_sound;
+
   return std::pair{double(s.cursorFrames.load()) / s.sampleRate,
                    double(s.durationFrames) / s.sampleRate};
 }
 
 // seek
+
+void AudioEngine::seekAbsolute(double seconds)
+{
+  RECORD_FUNC_TO_BACKTRACE("AudioEngine::seekAbsolute");
+
+  if (!m_sound)
+    return;
+
+  auto& s = *m_sound;
+
+  if (s.sampleRate <= 0)
+    return;
+
+  // Clamp time
+  double durationSec = double(s.durationFrames) / double(s.sampleRate);
+
+  seconds = std::clamp(seconds, 0.0, durationSec);
+
+  // Convert to frame index (including encoder delay)
+  i64 targetFrame = static_cast<i64>(seconds * s.sampleRate) + s.startSkip;
+
+  // Clamp frame bounds
+  targetFrame = std::clamp(targetFrame, i64(s.startSkip), i64(s.startSkip + s.durationFrames));
+
+  // Signal decode thread
+  s.seekTargetFrame.store(targetFrame, std::memory_order_release);
+  s.seekPending.store(true, std::memory_order_release);
+}
 
 void AudioEngine::seekTo(double seconds)
 {

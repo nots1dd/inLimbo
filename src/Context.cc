@@ -4,6 +4,7 @@
 #include "frontend/cmd-line/Interface.hpp"
 #include "helpers/cmdline/Display.hpp"
 #include "helpers/fs/Directory.hpp"
+#include "mpris/backends/CmdLine.hpp"
 #include "query/SongMap.hpp"
 #include "thread/Map.hpp"
 #include "toml/Parser.hpp"
@@ -263,7 +264,7 @@ auto initializeContext(int argc, char** argv) -> AppContext
   ctx.m_volume      = std::clamp(vol / 100.0f, 0.0f, 1.5f);
   ctx.m_printAction = resolvePrintAction(ctx.m_cmdLine);
   ctx.m_musicDir    = tomlparser::Config::getString("library", "directory");
-  ctx.m_binPath     = utils::getConfigPathWithFile(LIB_BIN_NAME);
+  ctx.m_binPath     = utils::getConfigPathWithFile(LIB_BIN_NAME).c_str();
 
   LOG_INFO("Configured directory: {}, song query: {}", ctx.m_musicDir, ctx.m_songName);
 
@@ -347,12 +348,15 @@ void runFrontend(AppContext& ctx)
   // ---------------------------------------------------------
   audio::Service audio;
 
+  mpris::cmdline::Backend mprisBackend(audio);
+  mpris::Service          mprisService(mprisBackend, "inLimbo-cmdline");
+
   // ---------------------------------------------------------
   // Enumerate playback devices (optional UI selection)
   // ---------------------------------------------------------
   auto devices = audio.enumeratePlaybackDevices();
 
-  frontend::cmdline::Interface ui(g_songMap);
+  frontend::cmdline::Interface ui(g_songMap, &mprisService);
 
   // ---------------------------------------------------------
   // Initialize backend

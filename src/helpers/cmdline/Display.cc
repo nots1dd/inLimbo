@@ -1,6 +1,5 @@
 #include "helpers/cmdline/Display.hpp"
 #include "core/SongTreeIter.hpp"
-#include "query/SongMap.hpp"
 
 #include <iomanip>
 #include <iostream>
@@ -74,7 +73,7 @@ void printSongInfo(const SongTree& tree, const std::optional<Title>& songName)
       std::cout << "Year        : " << s.metadata.year << "\n";
 
     if (!s.metadata.filePath.empty())
-      std::cout << "File Path   : " << s.metadata.filePath << "\n";
+      std::cout << "File Path   : " << s.metadata.filePath.c_str() << "\n";
 
     if (!s.metadata.comment.empty())
       std::cout << "Comment     : " << s.metadata.comment << "\n";
@@ -219,7 +218,7 @@ void printSongPaths(const SongTree& tree, SongPredicate pred)
   for (const Song& s : tree.range(pred))
   {
     std::cout << "• " << s.metadata.title << " — " << s.metadata.artist << "\n"
-              << "    " << s.metadata.filePath << "\n";
+              << "    " << s.metadata.filePath.c_str() << "\n";
   }
 }
 

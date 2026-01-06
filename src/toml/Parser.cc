@@ -14,12 +14,12 @@ void Config::load()
 
   if (!std::filesystem::exists(path.c_str()))
   {
-    LOG_ERROR("config.toml not found at '{}'", path);
+    LOG_ERROR("config.toml not found at '{}'", path.c_str());
     throw std::runtime_error("Missing config.toml");
   }
 
-  LOG_DEBUG("Loading config.toml: {}", path);
-  s_config = toml::parse_file(path);
+  LOG_DEBUG("Loading config.toml: {}", path.c_str());
+  s_config = toml::parse_file(path.c_str());
 }
 
 void Config::loadFrom(const std::string& path)

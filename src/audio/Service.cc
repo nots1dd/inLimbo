@@ -29,6 +29,13 @@ void Service::initDevice(const DeviceName& deviceName)
   m_engine->initEngineForDevice(deviceName);
 }
 
+auto Service::isPlaying() -> bool
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  ensureEngine();
+  return m_engine->isPlaying();
+}
+
 auto Service::getBackendInfo() -> BackendInfo
 {
   std::lock_guard<std::mutex> lock(m_mutex);
@@ -60,6 +67,13 @@ void Service::clearPlaylist()
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   m_playlist.clear();
+}
+
+auto Service::getPlaybackTime() -> std::optional<std::pair<double, double>>
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  ensureEngine();
+  return m_engine->getPlaybackTime();
 }
 
 auto Service::getCurrentTrack() -> service::SoundHandle
@@ -135,6 +149,18 @@ void Service::restartCurrent()
   std::lock_guard<std::mutex> lock(m_mutex);
   ensureEngine();
   m_engine->restart();
+}
+
+void Service::seekAbsolute(double seconds)
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  m_engine->seekAbsolute(seconds);
+}
+
+void Service::seekTo(double seconds)
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  m_engine->seekTo(seconds);
 }
 
 void Service::seekForward(double seconds)

@@ -101,6 +101,7 @@ public:
 
   INLIMBO_API_CPP auto getPlaybackTime() const -> std::optional<std::pair<double, double>>;
 
+  INLIMBO_API_CPP void seekAbsolute(double seconds);
   INLIMBO_API_CPP void seekTo(double seconds);
   INLIMBO_API_CPP void seekForward(double seconds);
   INLIMBO_API_CPP void seekBackward(double seconds);

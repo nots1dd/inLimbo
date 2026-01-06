@@ -8,7 +8,7 @@
 #include <termios.h>
 
 #include "audio/Service.hpp"
-#include "core/SongTree.hpp"
+#include "mpris/Service.hpp"
 #include "thread/Map.hpp"
 
 namespace frontend::cmdline
@@ -17,12 +17,14 @@ namespace frontend::cmdline
 class Interface
 {
 public:
-  explicit Interface(threads::SafeMap<SongMap>& songMap);
+  explicit Interface(threads::SafeMap<SongMap>& songMap, mpris::Service* mprisService = nullptr)
+      : m_songMapTS(std::move(songMap)), m_mprisService(mprisService) {};
 
   void run(audio::Service& audio);
 
 private:
   threads::SafeMap<SongMap> m_songMapTS;
+  mpris::Service*           m_mprisService{nullptr};
   std::atomic<bool>         m_isRunning{false};
   std::atomic<double>       m_pendingSeek{0.0};
 

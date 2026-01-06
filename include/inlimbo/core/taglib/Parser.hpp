@@ -32,6 +32,8 @@ public:
 
   auto modifyMetadata(const Path& filePath, const Metadata& newData) -> bool;
 
+  static auto fillArtUrl(Metadata& meta) -> bool;
+
 private:
   TagLibConfig m_config;
 };
