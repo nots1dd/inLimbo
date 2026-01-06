@@ -16,7 +16,7 @@ jobs:
     - name: Update Pacman
       run: |
         pacman -Syu --noconfirm
-        pacman -S --noconfirm sudo git
+        pacman -S --noconfirm sudo git make
 
     - name: Checkout repository with submodules
       uses: actions/checkout@v3
