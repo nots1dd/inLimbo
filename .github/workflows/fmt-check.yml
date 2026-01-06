@@ -1,4 +1,4 @@
-name: "inLimbo CI / Clang-Format Check [UBUNTU] (x86-64 arch - GCC)"
+name: "inLimbo CI / Clang Format Check (ARCH LINUX) (x86-64 arch)"
 
 on:
   push:
@@ -9,22 +9,24 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    strategy:
-      fail-fast: false
+    container:
+      image: archlinux:latest
 
     steps:
+    - name: Update Pacman
+      run: |
+        pacman -Syu --noconfirm
+        pacman -S --noconfirm sudo git
+
     - name: Checkout repository with submodules
       uses: actions/checkout@v3
       with:
         submodules: recursive
 
-    - name: Install dependencies for inLimbo
+    - name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y clang-format
+        pacman -S --noconfirm clang-format
 
-    - name: Build Release Version of inLimbo (x86-64 arch) - GCC (with GNU-ld)
+    - name: Run Clang Format Check on inLimbo (clang-format)
       run: |
         make fmt-check

@@ -32,7 +32,7 @@ void printArtists(const SongTree& tree)
 // ------------------------------------------------------------
 void printSongInfo(const SongTree& tree, const std::optional<Title>& songName)
 {
-  SongPredicate pred = songName ? song::sort::byTitle(*songName) : SongPredicate{};
+  const auto pred = songName ? query::song::sort::byTitle(*songName) : query::song::SongPredicate{};
 
   bool printedHeader = false;
   bool found         = false;
@@ -56,6 +56,7 @@ void printSongInfo(const SongTree& tree, const std::optional<Title>& songName)
     std::cout << "Duration    : " << s.metadata.duration << "s\n";
     std::cout << "Bitrate     : " << s.metadata.bitrate << "kbps\n";
     std::cout << "HasLyrics   : " << (s.metadata.lyrics.empty() ? "NO" : "YES") << "\n";
+    std::cout << "HasArt      : " << (s.metadata.artUrl.empty() ? "NO" : "YES") << "\n";
 
     if (s.metadata.track > 0)
       std::cout << "Track       : " << s.metadata.track << "\n";
@@ -97,7 +98,7 @@ void printAlbums(const SongTree& tree, const std::optional<Artist>& artist)
 {
   std::map<Artist, std::set<Album>> albums;
 
-  SongPredicate pred = artist ? song::sort::byArtist(*artist) : SongPredicate{};
+  const auto pred = artist ? query::song::sort::byArtist(*artist) : query::song::SongPredicate{};
 
   for (const Song& s : tree.range(pred))
     albums[s.metadata.artist].insert(s.metadata.album);
@@ -110,29 +111,6 @@ void printAlbums(const SongTree& tree, const std::optional<Artist>& artist)
     std::cout << a << "\n";
     for (const auto& al : als)
       std::cout << "  └─ " << al << "\n";
-  }
-}
-
-void printDiscsInAlbum(const SongTree& tree, const Album& album)
-{
-  std::cout << "\nDiscs in album '" << album << "':\n";
-  std::cout << "────────────────────────────\n";
-
-  auto pred = song::sort::byAlbum(album);
-
-  Disc currentDisc = -1;
-
-  for (const Song& s : tree.range(pred))
-  {
-    Disc disc = s.metadata.discNumber > 0 ? s.metadata.discNumber : 1;
-
-    if (disc != currentDisc)
-    {
-      currentDisc = disc;
-      std::cout << "Disc " << currentDisc << ":\n";
-    }
-
-    std::cout << "  └─ " << s.metadata.track << ". " << s.metadata.title << "\n";
   }
 }
 
@@ -155,7 +133,7 @@ void printGenres(const SongTree& tree)
 // ------------------------------------------------------------
 // Print songs (optionally filtered)
 // ------------------------------------------------------------
-void printSongs(const SongTree& tree, SongPredicate pred)
+void printSongs(const SongTree& tree, query::song::SongPredicate pred)
 {
   std::cout << "\nSongs:\n";
   std::cout << "────────────────────────────\n";
@@ -169,7 +147,7 @@ void printSongs(const SongTree& tree, SongPredicate pred)
 
 void printSongsByArtist(const SongTree& tree, const Artist& artist)
 {
-  auto pred = song::sort::byArtist(artist);
+  const auto pred = query::song::sort::byArtist(artist);
 
   std::cout << "\nSongs by " << artist << ":\n";
   std::cout << "────────────────────────────\n";
@@ -182,20 +160,30 @@ void printSongsByArtist(const SongTree& tree, const Artist& artist)
 
 void printSongsByAlbum(const SongTree& tree, const Album& album)
 {
-  std::cout << "\nSongs in album '" << album << "':\n";
+  std::cout << "\nAlbum '" << album << "':\n";
   std::cout << "────────────────────────────\n";
 
-  auto pred = song::sort::byAlbum(album);
+  const auto pred = query::song::sort::byAlbum(album);
+
+  Disc currentDisc = -1;
 
   for (const Song& s : tree.range(pred))
   {
-    std::cout << "• " << s.metadata.title << " — " << s.metadata.artist << "\n";
+    Disc disc = s.metadata.discNumber > 0 ? s.metadata.discNumber : 1;
+
+    if (disc != currentDisc)
+    {
+      currentDisc = disc;
+      std::cout << "Disc " << currentDisc << ":\n";
+    }
+
+    std::cout << "  └─ " << s.metadata.track << ". " << s.metadata.title << "\n";
   }
 }
 
 void printSongsByGenre(const SongTree& tree, const Genre& genre)
 {
-  auto pred = song::sort::byGenre(genre);
+  const auto pred = query::song::sort::byGenre(genre);
 
   std::cout << "\nSongs in genre '" << genre << "':\n";
   std::cout << "────────────────────────────\n";
@@ -210,7 +198,7 @@ void printSongsByGenre(const SongTree& tree, const Genre& genre)
 // ------------------------------------------------------------
 // Print song paths (title, artist, absolute path)
 // ------------------------------------------------------------
-void printSongPaths(const SongTree& tree, SongPredicate pred)
+void printSongPaths(const SongTree& tree, query::song::SongPredicate pred)
 {
   std::cout << "\nSong Paths:\n";
   std::cout << "────────────────────────────\n";
@@ -253,7 +241,7 @@ void printSummary(const SongTree& tree)
 // ------------------------------------------------------------
 void printArtistAlbum(const SongTree& tree, const Artist& artist, const Album& album)
 {
-  auto pred = song::sort::byArtistAlbum(artist, album);
+  const auto pred = query::song::sort::byArtistAlbum(artist, album);
 
   std::cout << "\n" << artist << " — " << album << "\n";
   std::cout << "────────────────────────────\n";

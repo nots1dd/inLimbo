@@ -34,7 +34,7 @@ void printGenres(const core::SongTree& tree);
 // ------------------------------------------------------------
 // Print songs (optionally filtered)
 // ------------------------------------------------------------
-void printSongs(const core::SongTree& tree, core::SongPredicate pred = {});
+void printSongs(const core::SongTree& tree, query::song::SongPredicate pred = {});
 
 void printSongsByArtist(const core::SongTree& tree, const Artist& artist);
 void printSongsByAlbum(const core::SongTree& tree, const Album& album);
@@ -43,7 +43,7 @@ void printSongsByGenre(const core::SongTree& tree, const Genre& genre);
 // ------------------------------------------------------------
 // Print song paths (title, artist, absolute path)
 // ------------------------------------------------------------
-void printSongPaths(const core::SongTree& tree, core::SongPredicate pred = {});
+void printSongPaths(const core::SongTree& tree, query::song::SongPredicate pred = {});
 
 // ------------------------------------------------------------
 // Print library summary

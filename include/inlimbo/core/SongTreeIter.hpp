@@ -12,7 +12,7 @@ public:
 
   SongTreeIterator() = default;
 
-  SongTreeIterator(const SongTree* tree, SongPredicate pred)
+  SongTreeIterator(const SongTree* tree, query::song::SongPredicate pred)
       : m_tree(tree), m_songMap(m_tree->returnSongMap()), m_pred(std::move(pred))
   {
     if (m_tree)
@@ -34,10 +34,10 @@ public:
   auto operator==(std::default_sentinel_t) const -> bool { return m_current == nullptr; }
 
 private:
-  const SongTree* m_tree = nullptr;
-  const SongMap   m_songMap;
-  SongPredicate   m_pred;
-  const Song*     m_current = nullptr;
+  const SongTree*            m_tree = nullptr;
+  const SongMap              m_songMap;
+  query::song::SongPredicate m_pred;
+  const Song*                m_current = nullptr;
 
   // Iterators at each level
   SongMap::const_iterator  itArtist;
@@ -103,7 +103,8 @@ private:
 class SongTreeRange
 {
 public:
-  SongTreeRange(const SongTree& tree, SongPredicate pred) : m_tree(&tree), m_pred(std::move(pred))
+  SongTreeRange(const SongTree& tree, query::song::SongPredicate pred)
+      : m_tree(&tree), m_pred(std::move(pred))
   {
   }
 
@@ -112,11 +113,11 @@ public:
   [[nodiscard]] auto end() const -> std::default_sentinel_t { return {}; }
 
 private:
-  const SongTree* m_tree;
-  SongPredicate   m_pred;
+  const SongTree*            m_tree;
+  query::song::SongPredicate m_pred;
 };
 
-inline auto SongTree::range(SongPredicate pred) const -> SongTreeRange
+inline auto SongTree::range(query::song::SongPredicate pred) const -> SongTreeRange
 {
   return {*this, std::move(pred)};
 }

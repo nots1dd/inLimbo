@@ -1,9 +1,10 @@
 #include "Context.hpp"
 #include "Logger.hpp"
 #include "core/InodeMapper.hpp"
-#include "frontend/cmd-line/Interface.hpp"
+#include "frontend/Interface.hpp"
 #include "helpers/cmdline/Display.hpp"
 #include "helpers/fs/Directory.hpp"
+#include "mpris/Service.hpp"
 #include "mpris/backends/CmdLine.hpp"
 #include "query/SongMap.hpp"
 #include "thread/Map.hpp"
@@ -147,18 +148,6 @@ void setupArgs(cli::CmdLine& args)
     },
     "Genre name defaults to null."
   );
-
-  args.add<Album>(
-    "Query",
-    "discs-album",
-    'd',
-    "Print all discs in an album and exit",
-    std::nullopt,
-    [](const Album& s) -> bool {
-      return !s.empty();
-    },
-    "Album name defaults to null."
-  );
 }
 // clang-format on
 
@@ -184,8 +173,6 @@ auto resolvePrintAction(const cli::CmdLine& args) -> PrintAction
     return PrintAction::Albums;
   if (args.has("print-genre"))
     return PrintAction::Genres;
-  if (args.has("discs-album"))
-    return PrintAction::DiscsInAlbum;
   if (args.has("print-summary"))
     return PrintAction::Summary;
   if (args.has("songs-paths"))
@@ -238,10 +225,6 @@ void maybeHandlePrintActions(AppContext& ctx)
     case PrintAction::SongsByGenre:
       helpers::cmdline::printSongsByGenre(
         ctx.m_songTree, ctx.m_cmdLine.getOptional<Genre>("songs-genre").value_or(""));
-      break;
-    case PrintAction::DiscsInAlbum:
-      helpers::cmdline::printDiscsInAlbum(
-        ctx.m_songTree, ctx.m_cmdLine.getOptional<Album>("discs-album").value_or(""));
       break;
     default:
       break;
@@ -349,14 +332,12 @@ void runFrontend(AppContext& ctx)
   audio::Service audio;
 
   mpris::cmdline::Backend mprisBackend(audio);
-  mpris::Service          mprisService(mprisBackend, "inLimbo-cmdline");
+  mpris::Service          mprisService(mprisBackend, "inLimbo");
 
   // ---------------------------------------------------------
-  // Enumerate playback devices (optional UI selection)
+  // Initialize abstract frontend interface
   // ---------------------------------------------------------
-  auto devices = audio.enumeratePlaybackDevices();
-
-  frontend::cmdline::Interface ui(g_songMap, &mprisService);
+  frontend::Interface ui(g_songMap, &mprisService);
 
   // ---------------------------------------------------------
   // Initialize backend

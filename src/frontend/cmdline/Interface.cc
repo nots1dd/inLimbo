@@ -1,3 +1,4 @@
+#include "frontend/Interface.hpp"
 #include "frontend/cmd-line/Interface.hpp"
 
 #include <cmath>
@@ -10,6 +11,8 @@
 #include "mpris/Service.hpp"
 #include "query/SongMap.hpp"
 #include "utils/timer/Timer.hpp"
+
+INLIMBO_DEFINE_FRONTEND_INTERFACE(cmdline)
 
 namespace frontend::cmdline
 {

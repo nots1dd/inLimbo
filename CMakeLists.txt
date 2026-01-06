@@ -11,6 +11,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_compile_options(-Wall -Wextra -Wpedantic -g)
 
+if(NOT DEFINED INLIMBO_FRONTEND_TYPE)
+    set(INLIMBO_FRONTEND_TYPE "cmdline" CACHE STRING "Frontend type")
+endif()
+
 # -----------------------------------------------------------
 # External Dependencies
 # -----------------------------------------------------------
@@ -79,35 +83,7 @@ pkg_check_modules(SWRESAMPLE REQUIRED libswresample)
 pkg_check_modules(ALSA REQUIRED alsa)
 pkg_check_modules(DBUS REQUIRED dbus-1)
 
-# -----------------------------------------------------------
-# Pure C MPRIS (libdbus)
-# -----------------------------------------------------------
-set(INLIMBO_MPRIS_C_SOURCES
-    src/c/mpris.c
-)
-
-add_library(inLimbo-mpris-c STATIC ${INLIMBO_MPRIS_C_SOURCES})
-
-set_target_properties(inLimbo-mpris-c PROPERTIES
-    LINKER_LANGUAGE C
-)
-
-target_include_directories(inLimbo-mpris-c
-    PUBLIC
-        include
-        include/inlimbo
-        ${DBUS_INCLUDE_DIRS}
-)
-
-target_compile_options(inLimbo-mpris-c
-    PRIVATE
-        ${DBUS_CFLAGS_OTHER}
-)
-
-target_link_libraries(inLimbo-mpris-c
-    PUBLIC
-        ${DBUS_LIBRARIES}
-)
+include(${CMAKE_SOURCE_DIR}/cmake/mpris/mpris-c.cmake)
 
 # -----------------------------------------------------------
 # Backend Shared Library
@@ -171,37 +147,12 @@ set_target_properties(inLimbo-core PROPERTIES
 )
 
 # -----------------------------------------------------------
-# Frontend selection (makefile defaults it to cmdline!)
+# Frontend selection
 # -----------------------------------------------------------
 if(INLIMBO_FRONTEND_TYPE STREQUAL "cmdline")
-
-    set(INLIMBO_FE_CMDLINE_SOURCES
-        src/frontend/cmdline/Interface.cc
-    )
-
-    add_library(inLimbo-fe-cmdline SHARED ${INLIMBO_FE_CMDLINE_SOURCES})
-
-    target_include_directories(inLimbo-fe-cmdline
-        PUBLIC
-            include/inlimbo
-            ${CMAKE_SOURCE_DIR}
-            $<$<CONFIG:Debug>:${BACKTRACE_INCLUDE_DIR}>
-    )
-
-    target_compile_definitions(inLimbo-fe-cmdline
-        PRIVATE
-            $<$<CONFIG:Debug>:INLIMBO_DEBUG_BUILD>
-            INLIMBO_FRONTEND_CMDLINE
-    )
-
-    target_link_libraries(inLimbo-fe-cmdline
-        PUBLIC
-            inLimbo-core
-    )
-
-    set(INLIMBO_FRONTEND_TARGET inLimbo-fe-cmdline)
-    set(INLIMBO_FRONTEND_NAME   "cmdline")
-
+    include(${CMAKE_SOURCE_DIR}/cmake/frontends/cmdline.cmake)
+elseif(INLIMBO_FRONTEND_TYPE STREQUAL "raylib")
+    include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
 endif()
 
 # -----------------------------------------------------------
@@ -219,10 +170,6 @@ target_include_directories(${PROJECT_NAME}
         include/inlimbo
         ${CMAKE_SOURCE_DIR}
 )
-
-if(INLIMBO_FRONTEND_TYPE STREQUAL "none")
-  message(FATAL_ERROR "No frontend will be built.")
-endif()
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
