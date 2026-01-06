@@ -9,6 +9,7 @@ libasound2-dev
 libtag1v5
 libtag1-dev
 libpng-dev
+libdbus-1-dev
 pkg-config
 clang
 clang-format

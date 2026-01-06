@@ -44,7 +44,7 @@ void DirectoryWalker::walkFd(int dirFd, const EntryCallback& cb)
         (ent->d_name[1] == '\0' || (ent->d_name[1] == '.' && ent->d_name[2] == '\0')))
       continue;
 
-    struct stat st{};
+    struct stat st = {};
     if (fstatat(dirFd, ent->d_name, &st, AT_SYMLINK_NOFOLLOW) != 0)
       continue;
 
@@ -73,7 +73,7 @@ void DirectoryWalker::walkFd(int dirFd, const EntryCallback& cb)
 
       if (m_symlinkPolicy == SymlinkPolicy::Follow)
       {
-        struct stat target{};
+        struct stat target = {};
         if (fstatat(dirFd, ent->d_name, &target, 0) != 0)
           continue;
 
