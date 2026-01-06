@@ -38,8 +38,8 @@ auto Handler::shutdownRequested() -> bool
 
 void Handler::installFatal(int sig)
 {
-  struct sigaction sa{};
-  sa.sa_sigaction = handleFatal;
+  struct sigaction sa = {};
+  sa.sa_sigaction     = handleFatal;
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = SA_SIGINFO;
   sigaction(sig, &sa, nullptr);
@@ -47,8 +47,8 @@ void Handler::installFatal(int sig)
 
 void Handler::installGraceful(int sig)
 {
-  struct sigaction sa{};
-  sa.sa_handler = handleGraceful;
+  struct sigaction sa = {};
+  sa.sa_handler       = handleGraceful;
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
   sigaction(sig, &sa, nullptr);

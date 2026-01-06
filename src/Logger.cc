@@ -140,7 +140,7 @@ void Logger::print_banner(const utils::string::SmallString& file, spdlog::level:
   std::string sysname = "Windows";
   std::string arch    = std::to_string(sysinfo.dwProcessorType);
 #else
-  struct utsname uts{};
+  struct utsname uts = {};
   uname(&uts);
   pid_t       pid     = getpid();
   std::string sysname = uts.sysname;

@@ -5,7 +5,7 @@ add_executable(smallstring_tests
   SmallStringAssign.test.cc
   SmallStringCompare.test.cc
   SmallStringCTOR.test.cc
-  SmallStringPath.test.cc
+  SmallStringExtensionPath.test.cc
   SmallStringStrView.test.cc
   SmallStringSSO.test.cc
   SmallStringClear.test.cc

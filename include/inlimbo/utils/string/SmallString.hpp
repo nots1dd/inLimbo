@@ -260,28 +260,22 @@ public:
   //   "C:\\a\\b\\x"  -> "x"
   [[nodiscard]] auto filename() const -> SmallString
   {
-    SmallString out;
+      SmallString out;
 
-    if (m_size == 0)
+      if (empty())
+          return out;
+
+      // IMPORTANT: directory path == no filename
+      if (m_data[m_size - 1] == '/' || m_data[m_size - 1] == '\\')
+          return out;
+
+      // Find last path separator
+      int pos = static_cast<int>(m_size);
+      while (pos > 0 && m_data[pos - 1] != '/' && m_data[pos - 1] != '\\')
+          --pos;
+
+      out.append({m_data + pos, static_cast<size_t>(m_size - pos)});
       return out;
-
-    // Skip trailing separators
-    int end = static_cast<int>(m_size) - 1;
-    while (end >= 0 && (m_data[end] == '/' || m_data[end] == '\\'))
-      --end;
-
-    if (end < 0)
-      return out;
-
-    // Find last separator before end
-    int start = end;
-    while (start >= 0 && m_data[start] != '/' && m_data[start] != '\\')
-      --start;
-
-    // start + 1 .. end inclusive
-    const auto len = static_cast<uint32_t>(end - start);
-    out.append({m_data + start + 1, len});
-    return out;
   }
 
 private:
