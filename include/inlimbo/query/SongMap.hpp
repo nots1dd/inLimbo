@@ -14,11 +14,11 @@ namespace strhelp = utils::string;
 namespace read
 {
 
-INLIMBO_API_CPP auto findSongByName(const threads::SafeMap<SongMap>& safeMap,
-                                    const std::string&               songName) -> const Song*;
+INLIMBO_API_CPP auto findSongByTitle(const threads::SafeMap<SongMap>& safeMap,
+                                     const Title&                     songTitle) -> const Song*;
 
-INLIMBO_API_CPP auto findSongByNameAndArtist(const threads::SafeMap<SongMap>& safeMap,
-                                             const Artist& artistName, const std::string& songName)
+INLIMBO_API_CPP auto findSongByTitleAndArtist(const threads::SafeMap<SongMap>& safeMap,
+                                              const Artist& artistName, const Title& songTitle)
   -> const Song*;
 
 INLIMBO_API_CPP auto getSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Artist& artist,
@@ -29,13 +29,26 @@ INLIMBO_API_CPP auto countTracks(const threads::SafeMap<SongMap>& safeMap) -> si
 INLIMBO_API_CPP void forEachArtist(const threads::SafeMap<SongMap>& safeMap,
                                    const std::function<void(const Artist&, const AlbumMap&)>& fn);
 
+INLIMBO_API_CPP void forEachSongInArtist(
+  const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
+  const std::function<void(const Album&, const Disc, const Track, const ino_t, const Song&)>& fn);
+
 INLIMBO_API_CPP void
 forEachAlbum(const threads::SafeMap<SongMap>&                                        safeMap,
              const std::function<void(const Artist&, const Album&, const DiscMap&)>& fn);
 
+INLIMBO_API_CPP void forEachSongInAlbum(
+  const threads::SafeMap<SongMap>& safeMap, const Artist& artistName, const Album& albumName,
+  const std::function<void(const Disc, const Track, const ino_t, const Song&)>& fn);
+
 INLIMBO_API_CPP void forEachDisc(
   const threads::SafeMap<SongMap>&                                                     safeMap,
   const std::function<void(const Artist&, const Album&, const Disc, const TrackMap&)>& fn);
+
+INLIMBO_API_CPP void
+forEachSongInDisc(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
+                  const Album& albumName, Disc discNumber,
+                  const std::function<void(const Track, const ino_t, const Song&)>& fn);
 
 INLIMBO_API_CPP void
 forEachSong(const threads::SafeMap<SongMap>&                     safeMap,

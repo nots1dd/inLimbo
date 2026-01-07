@@ -15,15 +15,15 @@ threads::SafeMap<SongMap> g_songMap;
 auto main(int argc, char* argv[]) -> int
 {
   RECORD_FUNC_TO_BACKTRACE("<MAIN>");
-  tomlparser::Config::load();
   utils::signal::Handler::getInstance().setup();
 
   try
   {
+    tomlparser::Config::load();
     auto ctx = inlimbo::initializeContext(argc, argv);
     inlimbo::buildOrLoadLibrary(ctx);
     inlimbo::maybeHandlePrintActions(ctx);
-    inlimbo::maybeEditMetadata(ctx);
+    inlimbo::maybeHandleEditActions(ctx);
     inlimbo::runFrontend(ctx);
 
     return EXIT_SUCCESS;

@@ -1,6 +1,7 @@
 #include "core/taglib/Parser.hpp"
 #include "Logger.hpp"
 #include "utils/PathResolve.hpp"
+#include <taglib/id3v2.h>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -163,6 +164,17 @@ auto TagLibParser::parseFile(const Path& filePath, Metadata& metadata) -> bool
   return true;
 }
 
+// NOTE: This function currently supports only MP3 and FLAC files.
+//
+// Currently modifies the following fields:
+// - Title
+// - Artist
+// - Album
+// - Genre
+// - Comment
+// - Year
+// - Track
+// - Lyrics
 auto TagLibParser::modifyMetadata(const Path& filePath, const Metadata& newData) -> bool
 {
   const auto ext     = filePath.extension();
@@ -201,6 +213,14 @@ auto TagLibParser::modifyMetadata(const Path& filePath, const Metadata& newData)
       if (newData.track != 0)
         tag->setTrack(newData.track);
 
+      if (!newData.lyrics.empty())
+      {
+        TagLib::PropertyMap props = file.properties();
+        props.replace("LYRICS",
+          TagLib::StringList(TagLib::String(newData.lyrics, TagLib::String::UTF8)));
+        file.setProperties(props);
+      }
+
       file.save();
       success = true;
     }
@@ -234,6 +254,14 @@ auto TagLibParser::modifyMetadata(const Path& filePath, const Metadata& newData)
         tag->setYear(newData.year);
       if (newData.track != 0)
         tag->setTrack(newData.track);
+
+      if (!newData.lyrics.empty())
+      {
+        TagLib::PropertyMap props = file.properties();
+        props.replace("LYRICS",
+          TagLib::StringList(TagLib::String(newData.lyrics, TagLib::String::UTF8)));
+        file.setProperties(props);
+      }
 
       file.save();
       success = true;

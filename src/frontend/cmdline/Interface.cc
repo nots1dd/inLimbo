@@ -28,10 +28,13 @@ static constexpr int MIN_TERM_ROWS = 24;
 void Interface::run(audio::Service& audio)
 {
 
-  query::songmap::read::forEachSong(
-    m_songMapTS,
-    [&](const Artist&, const Album&, const Disc, const Track, const ino_t, const Song& song) -> void
+  query::songmap::read::forEachSongInAlbum(
+    m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
+    [&](const Disc&, const Track&, const ino_t, const Song& song) -> void
     {
+      if (song.metadata.filePath == audio.getCurrentMetadata()->filePath)
+        return;
+
       auto h = audio.registerTrack(song);
       audio.addToPlaylist(h);
     });

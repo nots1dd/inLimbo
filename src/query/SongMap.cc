@@ -7,7 +7,7 @@ namespace query::songmap
 namespace read
 {
 
-auto findSongByName(const threads::SafeMap<SongMap>& safeMap, const std::string& songName)
+auto findSongByTitle(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle)
   -> const Song*
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongByName");
@@ -18,7 +18,7 @@ auto findSongByName(const threads::SafeMap<SongMap>& safeMap, const std::string&
     safeMap,
     [&](const Artist&, const Album&, const Disc, const Track, const ino_t, const Song& song) -> void
     {
-      if (!result && strhelp::isEquals(song.metadata.title, songName))
+      if (!result && strhelp::isEquals(song.metadata.title, songTitle))
         result = &song;
     });
 
@@ -26,7 +26,7 @@ auto findSongByName(const threads::SafeMap<SongMap>& safeMap, const std::string&
 }
 
 auto findSongByNameAndArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
-                             const std::string& songName) -> const Song*
+                             const Title& songTitle) -> const Song*
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongByNameAndArtist");
 
@@ -37,7 +37,7 @@ auto findSongByNameAndArtist(const threads::SafeMap<SongMap>& safeMap, const Art
                   const Song&   song) -> void
               {
                 if (!result && strhelp::isEquals(artist, artistName) &&
-                    strhelp::isEquals(song.metadata.title, songName))
+                    strhelp::isEquals(song.metadata.title, songTitle))
                 {
                   result = &song;
                 }
@@ -90,6 +90,25 @@ void forEachArtist(const threads::SafeMap<SongMap>&                           sa
     });
 }
 
+void forEachSongInArtist(
+  const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
+  const std::function<void(const Album&, const Disc, const Track, const ino_t, const Song&)>& fn)
+{
+  safeMap.withReadLock(
+    [&](const auto& map) -> void
+    {
+      auto itArtist = map.find(artistName);
+      if (itArtist == map.end())
+        return;
+
+      for (const auto& [album, discs] : itArtist->second)
+        for (const auto& [disc, tracks] : discs)
+          for (const auto& [track, inodeMap] : tracks)
+            for (const auto& [inode, song] : inodeMap)
+              fn(album, disc, track, inode, song);
+    });
+}
+
 void forEachAlbum(const threads::SafeMap<SongMap>&                                        safeMap,
                   const std::function<void(const Artist&, const Album&, const DiscMap&)>& fn)
 {
@@ -99,6 +118,28 @@ void forEachAlbum(const threads::SafeMap<SongMap>&                              
       for (const auto& [artist, albums] : map)
         for (const auto& [album, discs] : albums)
           fn(artist, album, discs);
+    });
+}
+
+void forEachSongInAlbum(
+  const threads::SafeMap<SongMap>& safeMap, const Artist& artistName, const Album& albumName,
+  const std::function<void(const Disc, const Track, const ino_t, const Song&)>& fn)
+{
+  safeMap.withReadLock(
+    [&](const auto& map) -> void
+    {
+      auto itArtist = map.find(artistName);
+      if (itArtist == map.end())
+        return;
+
+      auto itAlbum = itArtist->second.find(albumName);
+      if (itAlbum == itArtist->second.end())
+        return;
+
+      for (const auto& [disc, tracks] : itAlbum->second)
+        for (const auto& [track, inodeMap] : tracks)
+          for (const auto& [inode, song] : inodeMap)
+            fn(disc, track, inode, song);
     });
 }
 
@@ -113,6 +154,31 @@ void forEachDisc(
         for (const auto& [album, discs] : albums)
           for (const auto& [disc, tracks] : discs)
             fn(artist, album, disc, tracks);
+    });
+}
+
+void forEachSongInDisc(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
+                       const Album& albumName, Disc discNumber,
+                       const std::function<void(const Track, const ino_t, const Song&)>& fn)
+{
+  safeMap.withReadLock(
+    [&](const auto& map) -> void
+    {
+      auto itArtist = map.find(artistName);
+      if (itArtist == map.end())
+        return;
+
+      auto itAlbum = itArtist->second.find(albumName);
+      if (itAlbum == itArtist->second.end())
+        return;
+
+      auto itDisc = itAlbum->second.find(discNumber);
+      if (itDisc == itAlbum->second.end())
+        return;
+
+      for (const auto& [track, inodeMap] : itDisc->second)
+        for (const auto& [inode, song] : inodeMap)
+          fn(track, inode, song);
     });
 }
 
@@ -143,7 +209,6 @@ auto replaceSongObjAndUpdateMetadata(threads::SafeMap<SongMap>& safeMap, const S
   RECORD_FUNC_TO_BACKTRACE("query::songmap::mut::replaceSongObjByInode");
 
   ASSERT_MSG(oldSong.inode == newSong.inode, "Inode details changed! Will not be writing...");
-  LOG_INFO("Song map size: {}", safeMap.snapshot().size());
 
   return safeMap.withWriteLock(
     [&](auto& map) -> bool
@@ -155,8 +220,9 @@ auto replaceSongObjAndUpdateMetadata(threads::SafeMap<SongMap>& safeMap, const S
               for (auto& [inodeKey, song] : inodeMap)
                 if (inodeKey == oldSong.inode)
                 {
-                  LOG_INFO("Match found → Artist='{}', Album='{}', Disc={}, Track={}, Inode={}",
-                           artist, album, disc, track, inodeKey);
+                  LOG_INFO("Match found → Artist='{}', Title='{}', Album='{}', Disc={}, Track={}, "
+                           "Inode={}",
+                           artist, song.metadata.title, album, disc, track, inodeKey);
 
                   song = newSong;
 

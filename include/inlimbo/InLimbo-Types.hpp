@@ -55,7 +55,7 @@ struct Metadata
   uint                                         trackTotal = 0;
   Disc                                         discNumber = 0;
   uint                                         discTotal  = 0;
-  Lyrics                                       lyrics     = "No Lyrics";
+  Lyrics                                       lyrics     = "<No Lyrics>";
   std::unordered_map<std::string, std::string> additionalProperties;
   std::string                                  filePath = "";
   float                                        duration = 0.0f;

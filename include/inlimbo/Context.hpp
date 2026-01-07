@@ -18,14 +18,25 @@ enum class PrintAction
 {
   None,
   Artists,
-  SongInfo,
   Albums,
   Genres,
+  Summary,
+  SongInfo,
+  Lyrics,
   SongPaths,
   SongsByArtist,
   SongsByAlbum,
   SongsByGenre,
-  Summary
+};
+
+enum class EditAction
+{
+  None,
+  Title,
+  Artist,
+  Album,
+  Genre,
+  Lyrics
 };
 
 struct AppContext
@@ -37,12 +48,12 @@ struct AppContext
   cli::CmdLine m_cmdLine;
 
   // CLI
-  std::string                m_songName            = {};
+  Title                      m_songTitle           = {};
   utils::string::SmallString m_debugLogTagLibField = {};
-  bool                       m_editMetadata        = false;
   float                      m_volume              = {};
 
   PrintAction m_printAction = PrintAction::None;
+  EditAction  m_editAction  = EditAction::None;
 
   // Paths
   Directory m_musicDir = {};
@@ -56,9 +67,9 @@ struct AppContext
 
 auto resolvePrintAction(const cli::CmdLine& args) -> PrintAction;
 void maybeHandlePrintActions(AppContext& ctx);
+void maybeHandleEditActions(AppContext& ctx);
 auto initializeContext(int argc, char** argv) -> AppContext;
 void buildOrLoadLibrary(AppContext& ctx);
-void maybeEditMetadata(AppContext& ctx);
 void runFrontend(AppContext& ctx);
 
 } // namespace inlimbo

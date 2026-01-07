@@ -17,6 +17,11 @@ void printArtists(const core::SongTree& tree);
 void printSongInfo(const core::SongTree& tree, const std::optional<std::string>& songName);
 
 // ------------------------------------------------------------
+// Print song lyrics
+// ------------------------------------------------------------
+void printSongLyrics(const core::SongTree& tree, const Title& songTitle);
+
+// ------------------------------------------------------------
 // Print albums (optionally filtered by artist)
 // ------------------------------------------------------------
 void printAlbums(const core::SongTree& tree, const std::optional<Artist>& artist = std::nullopt);

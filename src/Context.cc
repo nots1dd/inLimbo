@@ -11,6 +11,7 @@
 #include "toml/Parser.hpp"
 #include "utils/PathResolve.hpp"
 #include "utils/RBTree.hpp"
+#include "utils/unix/Lockfile.hpp"
 
 #include <algorithm>
 #include <cstdlib>
@@ -29,7 +30,7 @@ void setupArgs(cli::CmdLine& args)
     's',
     "Play song name",
     std::nullopt,
-    [](const std::string& s) -> bool {
+    [](const Title& s) -> bool {
       return !s.empty();
     },
     "song name cannot be empty, if not provided defaults to null!"
@@ -47,16 +48,64 @@ void setupArgs(cli::CmdLine& args)
     "Volume must be between 0.0 and 100.0"
   );
 
-  args.add<std::string>(
-    "Modify",
-    "edit-metadata",
-    'e',
-    "Edit metadata (title only for now) before playback",
+  args.add<Title>(
+    "Edit",
+    "edit-title",
+    'i',
+    "Edit title in metadata",
     std::nullopt,
-    [](const std::string& s) -> bool {
+    [](const Title& s) -> bool {
       return !s.empty();
     },
     "Metadata edit requires a non-empty song name, will default to null"
+  );
+
+  args.add<Artist>(
+    "Edit",
+    "edit-artist",
+    'j',
+    "Edit artist in metadata",
+    std::nullopt,
+    [](const Artist& s) -> bool {
+      return !s.empty();
+    },
+    "Metadata edit requires a non-empty artist name, will default to null"
+  );
+
+  args.add<Album>(
+    "Edit",
+    "edit-album",
+    'k',
+    "Edit album in metadata",
+    std::nullopt,
+    [](const Album& s) -> bool {
+      return !s.empty();
+    },
+    "Metadata edit requires a non-empty album name, will default to null"
+  );
+
+  args.add<Genre>(
+    "Edit",
+    "edit-genre",
+    'l',
+    "Edit genre in metadata",
+    std::nullopt,
+    [](const Genre& s) -> bool {
+      return !s.empty();
+    },
+    "Metadata edit requires a non-empty genre name, will default to null"
+  );
+
+  args.add<Lyrics>(
+    "Edit",
+    "edit-lyrics",
+    'm',
+    "Edit lyrics in metadata",
+    std::nullopt,
+    [](const Lyrics& s) -> bool {
+      return !s.empty();
+    },
+    "Metadata edit requires non-empty lyrics, will default to null"
   );
 
   args.addFlag(
@@ -76,36 +125,48 @@ void setupArgs(cli::CmdLine& args)
   args.addFlag(
     "Query",
     "print-albums",
-    'L',
+    'B',
     "Print all albums and exit"
   );
 
   args.addFlag(
     "Query",
     "print-genre",
-    'G',
+    'C',
     "Print all genres and exit"
   );
 
   args.addFlag(
     "Query",
     "print-summary",
-    'S',
+    'D',
     "Print library summary and exit"
   );
 
   args.addFlag(
     "Query",
     "songs-paths",
-    'P',
+    'E',
     "Print all song paths and exit"
   );
 
   args.add<Title>(
     "Query",
     "print-song",
-    'E',
+    'F',
     "Print song info and exit",
+    std::nullopt,
+    [](const Title& s) -> bool {
+      return !s.empty();
+    },
+    "Song name defaults to null."
+  );
+
+  args.add<Title>(
+    "Query",
+    "print-lyrics",
+    'G',
+    "Print song lyrics and exit",
     std::nullopt,
     [](const Title& s) -> bool {
       return !s.empty();
@@ -116,7 +177,7 @@ void setupArgs(cli::CmdLine& args)
   args.add<Artist>(
     "Query",
     "songs-artist",
-    'a',
+    'H',
     "Print all songs by artist name",
     std::nullopt,
     [](const Artist& s) -> bool {
@@ -128,7 +189,7 @@ void setupArgs(cli::CmdLine& args)
   args.add<Album>(
     "Query",
     "songs-album",
-    'l',
+    'I',
     "Print all songs by album name",
     std::nullopt,
     [](const Album& s) -> bool {
@@ -140,7 +201,7 @@ void setupArgs(cli::CmdLine& args)
   args.add<Genre>(
     "Query",
     "songs-genre",
-    'g',
+    'J',
     "Print all songs by genre name",
     std::nullopt,
     [](const Genre& s) -> bool {
@@ -169,6 +230,8 @@ auto resolvePrintAction(const cli::CmdLine& args) -> PrintAction
     return PrintAction::Artists;
   if (args.has("print-song"))
     return PrintAction::SongInfo;
+  if (args.has("print-lyrics"))
+    return PrintAction::Lyrics;
   if (args.has("print-albums"))
     return PrintAction::Albums;
   if (args.has("print-genre"))
@@ -186,6 +249,21 @@ auto resolvePrintAction(const cli::CmdLine& args) -> PrintAction
   return PrintAction::None;
 }
 
+auto resolveEditAction(const cli::CmdLine& args) -> EditAction
+{
+  if (args.has("edit-title"))
+    return EditAction::Title;
+  if (args.has("edit-artist"))
+    return EditAction::Artist;
+  if (args.has("edit-album"))
+    return EditAction::Album;
+  if (args.has("edit-genre"))
+    return EditAction::Genre;
+  if (args.has("edit-lyrics"))
+    return EditAction::Lyrics;
+  return EditAction::None;
+}
+
 // ------------------------------------------------------------
 
 void maybeHandlePrintActions(AppContext& ctx)
@@ -201,6 +279,10 @@ void maybeHandlePrintActions(AppContext& ctx)
     case PrintAction::SongInfo:
       helpers::cmdline::printSongInfo(ctx.m_songTree,
                                       ctx.m_cmdLine.getOptional<Title>("print-song").value_or(""));
+      break;
+    case PrintAction::Lyrics:
+      helpers::cmdline::printSongLyrics(
+        ctx.m_songTree, ctx.m_cmdLine.getOptional<Title>("print-lyrics").value_or(""));
       break;
     case PrintAction::Albums:
       helpers::cmdline::printAlbums(ctx.m_songTree);
@@ -234,22 +316,78 @@ void maybeHandlePrintActions(AppContext& ctx)
   std::exit(EXIT_SUCCESS);
 }
 
+void maybeHandleEditActions(AppContext& ctx)
+{
+  if (ctx.m_songTitle.empty())
+  {
+    LOG_ERROR("No song title provided. Exiting...");
+    std::exit(EXIT_FAILURE);
+  }
+
+  if (ctx.m_editAction == EditAction::None)
+    return;
+
+  const Song* song =
+    query::songmap::read::findSongByTitle(g_songMap, ctx.m_songTitle);
+  ASSERT_MSG(song, "Song not found");
+
+  Song edited = *song;
+  bool touched = false;
+
+  auto apply = [&](const char* opt,
+                   auto Metadata::*field) -> void
+  {
+    const auto v = ctx.m_cmdLine.getOptional<std::string>(opt);
+    if (v && !v->empty())
+    {
+      edited.metadata.*field = *v;
+      touched = true;
+    }
+  };
+
+  apply("edit-title",  &Metadata::title);
+  apply("edit-artist", &Metadata::artist);
+  apply("edit-album",  &Metadata::album);
+  apply("edit-genre",  &Metadata::genre);
+  apply("edit-lyrics", &Metadata::lyrics);
+
+  if (!touched)
+  {
+    LOG_WARN("No edit options provided. Nothing to update.");
+    std::exit(EXIT_SUCCESS);
+  }
+
+  if (!query::songmap::mut::replaceSongObjAndUpdateMetadata(
+        g_songMap, *song, edited, ctx.m_tagLibParser))
+  {
+    LOG_CRITICAL("Failed to update metadata for song: {}", song->metadata.title);
+    return;
+  }
+
+  ctx.m_songTree.clear();
+  ctx.m_songTree.newSongMap(g_songMap.snapshot());
+  ctx.m_songTree.saveToFile(ctx.m_binPath);
+
+  LOG_INFO("Metadata updated successfully. Exiting.");
+  std::exit(EXIT_SUCCESS);
+}
+
 auto initializeContext(int argc, char** argv) -> AppContext
 {
-  AppContext ctx("inLimbo", "inLimbo (CMD-LINE) music library tool");
+  AppContext ctx("inLimbo", "inLimbo music library tool");
 
   ctx.m_cmdLine.parse(argc, argv);
-  ctx.m_songName     = ctx.m_cmdLine.getOptional<std::string>("song").value_or("");
-  ctx.m_editMetadata = ctx.m_cmdLine.has("edit-metadata");
+  ctx.m_songTitle = ctx.m_cmdLine.getOptional<std::string>("song").value_or("");
 
   const float vol = ctx.m_cmdLine.getOptional<float>("volume").value_or(75.0f);
 
   ctx.m_volume      = std::clamp(vol / 100.0f, 0.0f, 1.5f);
   ctx.m_printAction = resolvePrintAction(ctx.m_cmdLine);
+  ctx.m_editAction  = resolveEditAction(ctx.m_cmdLine);
   ctx.m_musicDir    = tomlparser::Config::getString("library", "directory");
   ctx.m_binPath     = utils::getConfigPathWithFile(LIB_BIN_NAME).c_str();
 
-  LOG_INFO("Configured directory: {}, song query: {}", ctx.m_musicDir, ctx.m_songName);
+  LOG_INFO("Configured directory: {}, song query: {}", ctx.m_musicDir, ctx.m_songTitle);
 
   return ctx;
 }
@@ -290,84 +428,76 @@ void buildOrLoadLibrary(AppContext& ctx)
   LOG_INFO("Library rebuilt in {:.3f} ms", ctx.m_timer.elapsed_ms());
 }
 
-void maybeEditMetadata(AppContext& ctx)
-{
-  if (!ctx.m_editMetadata)
-    return;
-
-  auto song = query::songmap::read::findSongByName(g_songMap, ctx.m_songName);
-
-  ASSERT_MSG(song, "Song not found");
-
-  const auto newTitleOpt = ctx.m_cmdLine.getOptional<std::string>("edit-metadata");
-
-  if (!newTitleOpt || newTitleOpt->empty())
-    return;
-
-  auto edited           = *song;
-  edited.metadata.title = *newTitleOpt;
-
-  const bool replaced = query::songmap::mut::replaceSongObjAndUpdateMetadata(
-    g_songMap, *song, edited, ctx.m_tagLibParser);
-
-  if (!replaced)
-    LOG_CRITICAL("Failed to update metadata for song: {}", song->metadata.title);
-
-  ctx.m_songTree.clear();
-  ctx.m_songTree.newSongMap(g_songMap.snapshot());
-  ctx.m_songTree.saveToFile(ctx.m_binPath);
-
-  std::exit(EXIT_SUCCESS);
-}
-
 void runFrontend(AppContext& ctx)
 {
-  auto song = query::songmap::read::findSongByName(g_songMap, ctx.m_songName);
+  // in the frontend only we care about locking the application so we run lock here, not in main
+  // file.
 
-  ASSERT_MSG(song, "Song not found");
+  try
+  {
+    utils::unix::LockFile appLock("/tmp/inLimbo.lock");
+    auto                  song = query::songmap::read::findSongByTitle(g_songMap, ctx.m_songTitle);
 
-  // ---------------------------------------------------------
-  // Create AudioService (owns AudioEngine)
-  // ---------------------------------------------------------
-  audio::Service audio;
+    ASSERT_MSG(song, "Song not found");
 
-  mpris::cmdline::Backend mprisBackend(audio);
-  mpris::Service          mprisService(mprisBackend, "inLimbo");
+    // ---------------------------------------------------------
+    // Create AudioService (owns AudioEngine)
+    // ---------------------------------------------------------
+    audio::Service audio;
 
-  // ---------------------------------------------------------
-  // Initialize abstract frontend interface
-  // ---------------------------------------------------------
-  frontend::Interface ui(g_songMap, &mprisService);
+    mpris::cmdline::Backend mprisBackend(audio);
+    mpris::Service          mprisService(mprisBackend, "inLimbo");
 
-  // ---------------------------------------------------------
-  // Initialize backend
-  // ---------------------------------------------------------
-  audio.initDevice(); // default device
-  audio.setVolume(ctx.m_volume);
+    // ---------------------------------------------------------
+    // Initialize abstract frontend interface
+    // ---------------------------------------------------------
+    frontend::Interface ui(g_songMap, &mprisService);
 
-  // ---------------------------------------------------------
-  // Register track + add to playlist (NO decoding here)
-  // ---------------------------------------------------------
-  audio::service::SoundHandle handle = audio.registerTrack(*song);
+    // ---------------------------------------------------------
+    // Initialize backend
+    // ---------------------------------------------------------
+    audio.initDevice(); // default device
+    audio.setVolume(ctx.m_volume);
 
-  ASSERT_MSG(handle, "Failed to register track");
+    // ---------------------------------------------------------
+    // Register track + add to playlist (NO decoding here)
+    // ---------------------------------------------------------
+    audio::service::SoundHandle handle = audio.registerTrack(*song);
 
-  audio.addToPlaylist(handle);
+    ASSERT_MSG(handle, "Failed to register track");
 
-  // ---------------------------------------------------------
-  // Start playback (lazy load happens here)
-  // ---------------------------------------------------------
-  audio.start();
+    audio.addToPlaylist(handle);
 
-  // ---------------------------------------------------------
-  // Run UI loop
-  // ---------------------------------------------------------
-  ui.run(audio);
+    // ---------------------------------------------------------
+    // Start playback (lazy load happens here)
+    // ---------------------------------------------------------
+    audio.start();
 
-  // ---------------------------------------------------------
-  // Clean shutdown
-  // ---------------------------------------------------------
-  audio.shutdown();
+    // ---------------------------------------------------------
+    // Run UI loop
+    // ---------------------------------------------------------
+    ui.run(audio);
+
+    // ---------------------------------------------------------
+    // Clean shutdown
+    // ---------------------------------------------------------
+    audio.shutdown();
+  }
+  catch (const utils::unix::LockFileAlreadyLocked&)
+  {
+    LOG_ERROR("Another instance of inLimbo is already running.");
+    return;
+  }
+  catch (const utils::unix::LockFileOpenError& e)
+  {
+    LOG_ERROR("LockFileOpenError: {}", e.what());
+    return;
+  }
+  catch (const utils::unix::LockFileError& e)
+  {
+    LOG_ERROR("LockFileError: {}", e.what());
+    return;
+  }
 }
 
 } // namespace inlimbo

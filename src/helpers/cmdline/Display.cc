@@ -55,7 +55,7 @@ void printSongInfo(const SongTree& tree, const std::optional<Title>& songName)
     std::cout << "Genre       : " << s.metadata.genre << "\n";
     std::cout << "Duration    : " << s.metadata.duration << "s\n";
     std::cout << "Bitrate     : " << s.metadata.bitrate << "kbps\n";
-    std::cout << "HasLyrics   : " << (s.metadata.lyrics.empty() ? "NO" : "YES") << "\n";
+    std::cout << "HasLyrics   : " << (s.metadata.lyrics == "<No Lyrics>" ? "NO" : "YES") << "\n";
     std::cout << "HasArt      : " << (s.metadata.artUrl.empty() ? "NO" : "YES") << "\n";
 
     if (s.metadata.track > 0)
@@ -88,6 +88,27 @@ void printSongInfo(const SongTree& tree, const std::optional<Title>& songName)
     if (songName)
       std::cout << ": " << *songName;
     std::cout << "\n";
+  }
+}
+
+void printSongLyrics(const SongTree& tree, const Title& songTitle)
+{
+  const auto pred = query::song::sort::byTitle(songTitle);
+
+  bool found = false;
+
+  for (const Song& s : tree.range(pred))
+  {
+    found = true;
+
+    std::cout << "\nLyrics for '" << s.metadata.title << "' by " << s.metadata.artist << ":\n";
+    std::cout << "────────────────────────────\n";
+    std::cout << s.metadata.lyrics << "\n";
+  }
+
+  if (!found)
+  {
+    std::cout << "\nSong not found: " << songTitle << "\n";
   }
 }
 

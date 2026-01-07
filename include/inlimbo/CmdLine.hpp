@@ -136,6 +136,10 @@ template <typename T> auto CmdLine::get(const std::string& longName) const -> T
 template <typename T>
 auto CmdLine::getOptional(const std::string& longName) const -> std::optional<T>
 {
+  static_assert(std::is_same_v<T, std::string> || std::is_same_v<T, bool> ||
+                  std::is_arithmetic_v<T>,
+                "CmdLine::getOptional<T>: unsupported type for CLI parsing");
+
   ensureParsed();
   if (!has(longName))
     return std::nullopt;
