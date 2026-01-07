@@ -327,28 +327,26 @@ void maybeHandleEditActions(AppContext& ctx)
   if (ctx.m_editAction == EditAction::None)
     return;
 
-  const Song* song =
-    query::songmap::read::findSongByTitle(g_songMap, ctx.m_songTitle);
+  const Song* song = query::songmap::read::findSongByTitle(g_songMap, ctx.m_songTitle);
   ASSERT_MSG(song, "Song not found");
 
-  Song edited = *song;
+  Song edited  = *song;
   bool touched = false;
 
-  auto apply = [&](const char* opt,
-                   auto Metadata::*field) -> void
+  auto apply = [&](const char* opt, auto Metadata::* field) -> void
   {
     const auto v = ctx.m_cmdLine.getOptional<std::string>(opt);
     if (v && !v->empty())
     {
       edited.metadata.*field = *v;
-      touched = true;
+      touched                = true;
     }
   };
 
-  apply("edit-title",  &Metadata::title);
+  apply("edit-title", &Metadata::title);
   apply("edit-artist", &Metadata::artist);
-  apply("edit-album",  &Metadata::album);
-  apply("edit-genre",  &Metadata::genre);
+  apply("edit-album", &Metadata::album);
+  apply("edit-genre", &Metadata::genre);
   apply("edit-lyrics", &Metadata::lyrics);
 
   if (!touched)
@@ -357,8 +355,8 @@ void maybeHandleEditActions(AppContext& ctx)
     std::exit(EXIT_SUCCESS);
   }
 
-  if (!query::songmap::mut::replaceSongObjAndUpdateMetadata(
-        g_songMap, *song, edited, ctx.m_tagLibParser))
+  if (!query::songmap::mut::replaceSongObjAndUpdateMetadata(g_songMap, *song, edited,
+                                                            ctx.m_tagLibParser))
   {
     LOG_CRITICAL("Failed to update metadata for song: {}", song->metadata.title);
     return;

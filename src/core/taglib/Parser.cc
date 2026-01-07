@@ -1,10 +1,10 @@
 #include "core/taglib/Parser.hpp"
 #include "Logger.hpp"
 #include "utils/PathResolve.hpp"
-#include <taglib/id3v2.h>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <taglib/id3v2.h>
 
 namespace core
 {
@@ -217,7 +217,7 @@ auto TagLibParser::modifyMetadata(const Path& filePath, const Metadata& newData)
       {
         TagLib::PropertyMap props = file.properties();
         props.replace("LYRICS",
-          TagLib::StringList(TagLib::String(newData.lyrics, TagLib::String::UTF8)));
+                      TagLib::StringList(TagLib::String(newData.lyrics, TagLib::String::UTF8)));
         file.setProperties(props);
       }
 
@@ -259,7 +259,7 @@ auto TagLibParser::modifyMetadata(const Path& filePath, const Metadata& newData)
       {
         TagLib::PropertyMap props = file.properties();
         props.replace("LYRICS",
-          TagLib::StringList(TagLib::String(newData.lyrics, TagLib::String::UTF8)));
+                      TagLib::StringList(TagLib::String(newData.lyrics, TagLib::String::UTF8)));
         file.setProperties(props);
       }
 
