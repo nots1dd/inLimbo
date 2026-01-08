@@ -2,32 +2,54 @@
 # Raylib frontend
 # ===========================================================
 
+set(INLIMBO_FRONTEND_TARGET inLimbo-fe-raylib)
+set(INLIMBO_FRONTEND_NAME "raylib")
+
 find_package(raylib REQUIRED)
 
 set(INLIMBO_FE_RAYLIB_SOURCES
     ${CMAKE_SOURCE_DIR}/src/frontend/raylib/Interface.cc
+    ${CMAKE_SOURCE_DIR}/src/frontend/raylib/PluginShim.cc
 )
 
-add_library(inLimbo-fe-raylib SHARED
+add_library(${INLIMBO_FRONTEND_TARGET} SHARED
     ${INLIMBO_FE_RAYLIB_SOURCES}
 )
 
-target_include_directories(inLimbo-fe-raylib
+set_target_properties(${INLIMBO_FRONTEND_TARGET} PROPERTIES
+    OUTPUT_NAME "inlimbo-frontend-raylib"
+    PREFIX "lib"
+    POSITION_INDEPENDENT_CODE ON
+)
+
+target_include_directories(${INLIMBO_FRONTEND_TARGET}
     PUBLIC
         ${CMAKE_SOURCE_DIR}/include/inlimbo
         ${CMAKE_SOURCE_DIR}
 )
 
-target_compile_definitions(inLimbo-fe-raylib
+target_compile_definitions(${INLIMBO_FRONTEND_TARGET}
     PRIVATE
         INLIMBO_FRONTEND_RAYLIB
 )
 
-target_link_libraries(inLimbo-fe-raylib
+target_link_libraries(${INLIMBO_FRONTEND_TARGET}
     PUBLIC
         inLimbo-core
         raylib
 )
 
-set(INLIMBO_FRONTEND_TARGET inLimbo-fe-raylib)
-set(INLIMBO_FRONTEND_NAME "raylib")
+include(GNUInstallDirs)
+
+add_custom_command(
+    TARGET ${INLIMBO_FRONTEND_TARGET}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+            "${INLIMBO_USER_FRONTEND_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_FILE:${INLIMBO_FRONTEND_TARGET}>
+            "${INLIMBO_USER_FRONTEND_DIR}/$<TARGET_FILE_NAME:${INLIMBO_FRONTEND_TARGET}>"
+    COMMENT ">> Deploying frontend plugin to ${INLIMBO_USER_FRONTEND_DIR}"
+)
+
+list(APPEND INLIMBO_FRONTEND_NAMES "${INLIMBO_FRONTEND_NAME}")

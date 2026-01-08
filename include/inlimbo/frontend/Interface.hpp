@@ -1,6 +1,7 @@
 #pragma once
 
 #include "InLimbo-Types.hpp"
+#include "frontend/Plugin.hpp"
 #include "thread/Map.hpp"
 
 namespace audio
@@ -18,34 +19,21 @@ namespace frontend
 class Interface
 {
 public:
-  explicit Interface(threads::SafeMap<SongMap>& songMap, mpris::Service* mprisService = nullptr);
+  Interface(Plugin& plugin, threads::SafeMap<SongMap>& map, mpris::Service* mpris)
+      : m_fePlugin(plugin)
+  {
+    m_instanceVPtr = m_fePlugin.create(&map, mpris);
+    if (!m_instanceVPtr)
+      throw std::runtime_error("Failed to create frontend");
+  }
 
-  void run(audio::Service& audio);
+  ~Interface() { m_fePlugin.destroy(m_instanceVPtr); }
+
+  void run(audio::Service& audio) { m_fePlugin.run(m_instanceVPtr, &audio); }
 
 private:
-  struct Impl; // opaque
-  Impl* impl_; // type-erased, defined in .cc
+  Plugin& m_fePlugin;
+  void*   m_instanceVPtr;
 };
 
 } // namespace frontend
-
-#define INLIMBO_DEFINE_FRONTEND_INTERFACE(frontend_ns)                                   \
-  namespace frontend                                                                     \
-  {                                                                                      \
-  struct Interface::Impl                                                                 \
-  {                                                                                      \
-    frontend_ns::Interface impl;                                                         \
-                                                                                         \
-    Impl(threads::SafeMap<SongMap>& songMap, mpris::Service* mprisService)               \
-        : impl(songMap, mprisService)                                                    \
-    {                                                                                    \
-    }                                                                                    \
-  };                                                                                     \
-                                                                                         \
-  Interface::Interface(threads::SafeMap<SongMap>& songMap, mpris::Service* mprisService) \
-      : impl_(new Impl(songMap, mprisService))                                           \
-  {                                                                                      \
-  }                                                                                      \
-                                                                                         \
-  void Interface::run(audio::Service& audio) { impl_->impl.run(audio); }                 \
-  }

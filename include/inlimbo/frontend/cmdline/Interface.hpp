@@ -17,16 +17,23 @@ namespace frontend::cmdline
 class Interface
 {
 public:
-  explicit Interface(threads::SafeMap<SongMap>& songMap, mpris::Service* mprisService = nullptr)
-      : m_songMapTS(std::move(songMap)), m_mprisService(mprisService) {};
+  // NOTE: pointers because this is created via C ABI
+  explicit Interface(threads::SafeMap<SongMap>* songMap, mpris::Service* mprisService)
+      : m_songMapTS(songMap), m_mprisService(mprisService)
+  {
+  }
+
+  Interface(const Interface&)                    = delete;
+  auto operator=(const Interface&) -> Interface& = delete;
 
   void run(audio::Service& audio);
 
 private:
-  threads::SafeMap<SongMap> m_songMapTS;
-  mpris::Service*           m_mprisService{nullptr};
-  std::atomic<bool>         m_isRunning{false};
-  std::atomic<double>       m_pendingSeek{0.0};
+  threads::SafeMap<SongMap>* m_songMapTS{nullptr};
+  mpris::Service*            m_mprisService{nullptr};
+
+  std::atomic<bool>   m_isRunning{false};
+  std::atomic<double> m_pendingSeek{0.0};
 
   termios m_termOrig{};
 

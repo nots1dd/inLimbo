@@ -3,6 +3,7 @@
 #include "CmdLine.hpp"
 #include "core/SongTree.hpp"
 #include "core/taglib/Parser.hpp"
+#include "frontend/Plugin.hpp"
 #include "thread/Map.hpp"
 #include "utils/timer/Timer.hpp"
 #include <string>
@@ -12,11 +13,10 @@ extern threads::SafeMap<SongMap> g_songMap;
 namespace inlimbo
 {
 
-void setupArgs(cli::CmdLine& args);
-
 enum class PrintAction
 {
   None,
+  Frontends,
   Artists,
   Albums,
   Genres,
@@ -39,6 +39,8 @@ enum class EditAction
   Lyrics
 };
 
+void setupArgs(cli::CmdLine& args);
+
 struct AppContext
 {
   explicit AppContext() = delete;
@@ -58,6 +60,9 @@ struct AppContext
   // Paths
   Directory m_musicDir = {};
   Path      m_binPath  = {};
+
+  // Frontend plugin
+  frontend::PluginName m_fePluginName = {};
 
   // Core objects
   core::TagLibParser m_tagLibParser;

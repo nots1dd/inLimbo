@@ -36,6 +36,25 @@ void setupArgs(cli::CmdLine& args)
     "song name cannot be empty, if not provided defaults to null!"
   );
 
+  args.add<frontend::PluginNameStr>(
+    "General",
+    "frontend",
+    'f',
+    "Frontend name to plugin and play",
+    std::nullopt,
+    [](const frontend::PluginNameStr& s) -> bool {
+      return !s.empty();
+    },
+    "frontend name cannot be empty, defaults to null and exits."
+  );
+
+  args.addFlag(
+    "General",
+    "list-frontend",
+    'd',
+    "List all built frontend plugin names"
+  );
+
   args.add<float>(
     "General",
     "volume",
@@ -226,6 +245,8 @@ AppContext::AppContext(const std::string& program, const std::string& descriptio
 
 auto resolvePrintAction(const cli::CmdLine& args) -> PrintAction
 {
+  if (args.has("list-frontend"))
+    return PrintAction::Frontends;
   if (args.has("print-artists"))
     return PrintAction::Artists;
   if (args.has("print-song"))
@@ -273,6 +294,9 @@ void maybeHandlePrintActions(AppContext& ctx)
 
   switch (ctx.m_printAction)
   {
+    case PrintAction::Frontends:
+      helpers::cmdline::printFrontendPlugins();
+      break;
     case PrintAction::Artists:
       helpers::cmdline::printArtists(ctx.m_songTree);
       break;
@@ -375,7 +399,9 @@ auto initializeContext(int argc, char** argv) -> AppContext
   AppContext ctx("inLimbo", "inLimbo music library tool");
 
   ctx.m_cmdLine.parse(argc, argv);
-  ctx.m_songTitle = ctx.m_cmdLine.getOptional<std::string>("song").value_or("");
+  ctx.m_songTitle    = ctx.m_cmdLine.getOptional<Title>("song").value_or("");
+  ctx.m_fePluginName = frontend::PluginName{
+    ctx.m_cmdLine.getOptional<frontend::PluginNameStr>("frontend").value_or("")};
 
   const float vol = ctx.m_cmdLine.getOptional<float>("volume").value_or(75.0f);
 
@@ -383,7 +409,7 @@ auto initializeContext(int argc, char** argv) -> AppContext
   ctx.m_printAction = resolvePrintAction(ctx.m_cmdLine);
   ctx.m_editAction  = resolveEditAction(ctx.m_cmdLine);
   ctx.m_musicDir    = tomlparser::Config::getString("library", "directory");
-  ctx.m_binPath     = utils::getConfigPathWithFile(LIB_BIN_NAME).c_str();
+  ctx.m_binPath     = utils::getAppConfigPathWithFile(LIB_BIN_NAME).c_str();
 
   LOG_INFO("Configured directory: {}, song query: {}", ctx.m_musicDir, ctx.m_songTitle);
 
@@ -449,7 +475,8 @@ void runFrontend(AppContext& ctx)
     // ---------------------------------------------------------
     // Initialize abstract frontend interface
     // ---------------------------------------------------------
-    frontend::Interface ui(g_songMap, &mprisService);
+    frontend::Plugin    fePlugin(ctx.m_fePluginName);
+    frontend::Interface ui(fePlugin, g_songMap, &mprisService);
 
     // ---------------------------------------------------------
     // Initialize backend
@@ -486,15 +513,18 @@ void runFrontend(AppContext& ctx)
     LOG_ERROR("Another instance of inLimbo is already running.");
     return;
   }
-  catch (const utils::unix::LockFileOpenError& e)
-  {
-    LOG_ERROR("LockFileOpenError: {}", e.what());
-    return;
-  }
   catch (const utils::unix::LockFileError& e)
   {
     LOG_ERROR("LockFileError: {}", e.what());
     return;
+  }
+  catch (const frontend::PluginError& e)
+  {
+    LOG_ERROR("Frontend error: {}", e.what());
+  }
+  catch (...)
+  {
+    LOG_ERROR("Something bad happened!");
   }
 }
 

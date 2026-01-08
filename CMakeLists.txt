@@ -11,9 +11,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_compile_options(-Wall -Wextra -Wpedantic -g)
 
-if(NOT DEFINED INLIMBO_FRONTEND_TYPE)
-    set(INLIMBO_FRONTEND_TYPE "cmdline" CACHE STRING "Frontend type")
-endif()
+set(INLIMBO_USER_FRONTEND_DIR
+    "$ENV{HOME}/.local/share/inLimbo/frontends"
+)
 
 # -----------------------------------------------------------
 # External Dependencies
@@ -147,13 +147,16 @@ set_target_properties(inLimbo-core PROPERTIES
 )
 
 # -----------------------------------------------------------
-# Frontend selection
+# Frontend registry (global)
 # -----------------------------------------------------------
-if(INLIMBO_FRONTEND_TYPE STREQUAL "cmdline")
-    include(${CMAKE_SOURCE_DIR}/cmake/frontends/cmdline.cmake)
-elseif(INLIMBO_FRONTEND_TYPE STREQUAL "raylib")
-    include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
-endif()
+set(INLIMBO_FRONTEND_NAMES "")
+
+# ===================== FRONTENDS ============================
+include(${CMAKE_SOURCE_DIR}/cmake/frontends/cmdline.cmake)
+# include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
+# ===================== FRONTENDS ============================
+
+include(${CMAKE_SOURCE_DIR}/cmake/FrontendPluginList.cmake)
 
 # -----------------------------------------------------------
 # Test Executable
@@ -169,12 +172,12 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE
         include/inlimbo
         ${CMAKE_SOURCE_DIR}
+        ${CMAKE_BINARY_DIR}/generated
 )
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         inLimbo-core
-        ${INLIMBO_FRONTEND_TARGET}
 )
 
 target_compile_definitions(${PROJECT_NAME}
@@ -233,7 +236,4 @@ message(STATUS "${SEP}  • TagLib     : ${TAGLIB_INCLUDE_DIRS}")
 message(STATUS "${SEP}  • backtrace  : ${BACKTRACE_LIBRARY} (Debug builds only)")
 message(STATUS "${SEP}  • DBUS-1     : ${DBUS_INCLUDE_DIRS}")
 message(STATUS "${SEP}")
-message(STATUS "${SEP}  ── Frontend ───────────────────────────────────────────")
-message(STATUS "${SEP}  • Type        : ${INLIMBO_FRONTEND_NAME}")
-message(STATUS "${SEP}  • Target      : ${INLIMBO_FRONTEND_TARGET}")
 message(STATUS "${LINE_BOTTOM}\n")

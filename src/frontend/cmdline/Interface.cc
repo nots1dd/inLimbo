@@ -1,5 +1,4 @@
-#include "frontend/Interface.hpp"
-#include "frontend/cmd-line/Interface.hpp"
+#include "frontend/cmdline/Interface.hpp"
 
 #include <cmath>
 #include <fcntl.h>
@@ -11,8 +10,6 @@
 #include "mpris/Service.hpp"
 #include "query/SongMap.hpp"
 #include "utils/timer/Timer.hpp"
-
-INLIMBO_DEFINE_FRONTEND_INTERFACE(cmdline)
 
 namespace frontend::cmdline
 {
@@ -29,7 +26,7 @@ void Interface::run(audio::Service& audio)
 {
 
   query::songmap::read::forEachSongInAlbum(
-    m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
+    *m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
     [&](const Disc&, const Track&, const ino_t, const Song& song) -> void
     {
       if (song.metadata.filePath == audio.getCurrentMetadata()->filePath)

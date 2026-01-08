@@ -7,6 +7,11 @@ namespace helpers::cmdline
 {
 
 // ------------------------------------------------------------
+// Print all frontend plugins built
+// ------------------------------------------------------------
+void printFrontendPlugins();
+
+// ------------------------------------------------------------
 // Print all artists
 // ------------------------------------------------------------
 void printArtists(const core::SongTree& tree);
@@ -25,11 +30,6 @@ void printSongLyrics(const core::SongTree& tree, const Title& songTitle);
 // Print albums (optionally filtered by artist)
 // ------------------------------------------------------------
 void printAlbums(const core::SongTree& tree, const std::optional<Artist>& artist = std::nullopt);
-
-// ------------------------------------------------------------
-// Print discs in album
-// ------------------------------------------------------------
-void printDiscsInAlbum(const core::SongTree& tree, const Album& album);
 
 // ------------------------------------------------------------
 // Print genres

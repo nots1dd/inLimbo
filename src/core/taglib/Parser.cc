@@ -339,7 +339,7 @@ auto TagLibParser::fillArtUrl(Metadata& meta) -> bool
 {
   namespace fs = std::filesystem;
 
-  const auto cacheDir = utils::getCacheArtPath();
+  const auto cacheDir = utils::getAppCacheArtPath();
   fs::create_directories(cacheDir.c_str());
 
   const std::string hash   = std::to_string(std::hash<std::string>{}(meta.filePath.c_str()));

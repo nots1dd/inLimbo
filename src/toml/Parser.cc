@@ -10,7 +10,7 @@ std::optional<toml::parse_result> Config::s_config;
 
 void Config::load()
 {
-  const auto path = utils::getConfigPathWithFile("config.toml");
+  const auto path = utils::getAppConfigPathWithFile("config.toml");
 
   if (!std::filesystem::exists(path.c_str()))
   {

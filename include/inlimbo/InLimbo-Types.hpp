@@ -22,8 +22,19 @@ using vptr = void*;
 
 using strvec = std::vector<std::string>;
 
+// By default, Path and Directory alias to custom SmallString interface.
+//
+// To use the standard string, use PathStr / DirectoryStr.
 using Path      = utils::string::SmallString;
 using Directory = utils::string::SmallString;
+
+using Paths = std::vector<Path>;
+
+using PathStr      = std::string;
+using DirectoryStr = std::string;
+
+using PathCStr      = const char*;
+using DirectoryCStr = const char*;
 
 using Title  = std::string;
 using Album  = std::string;
@@ -33,6 +44,12 @@ using Lyrics = std::string;
 using Year   = uint;
 using Disc   = uint;
 using Track  = uint;
+
+using TitleCStr  = const char*;
+using AlbumCStr  = const char*;
+using ArtistCStr = const char*;
+using GenreCStr  = const char*;
+using LyricsCStr = const char*;
 
 using Artists = std::vector<Artist>;
 using Albums  = std::vector<Album>;

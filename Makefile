@@ -21,10 +21,6 @@ CLANG_TIDY   := clang-tidy
 MAKE 	:= make
 CMAKE := cmake
 
-# Default frontend = command line
-FRONTEND ?= cmdline
-CMAKE_FRONTEND_FLAG := -DINLIMBO_FRONTEND_TYPE=$(FRONTEND)
-
 # Path to compile_commands.json
 COMPILE_COMMANDS := $(BUILD_DIR)/compile_commands.json
 
@@ -104,31 +100,19 @@ init: submod-init submod-check
 # ============================================================
 
 app:
-	@if [ -z "$(name)" ]; then \
-		echo -e "$(COLOR_YELLOW)⚠ No frontend specified, defaulting to 'cmdline'$(COLOR_RESET)"; \
-		$(MAKE) init; \
-		$(MAKE) buildx FRONTEND=cmdline; \
-	else \
-		echo -e "$(COLOR_BLUE)▶ Building frontend: $(name)$(COLOR_RESET)"; \
-		$(MAKE) init; \
-		$(MAKE) buildx FRONTEND=$(name); \
-	fi
+	echo -e "$(COLOR_BLUE)▶ Building frontend: $(name)$(COLOR_RESET)"; \
+	$(MAKE) init; \
+	$(MAKE) buildx
 
 # ============================================================
 # Initialize app type (Debug)
 # ============================================================
 
 app-dbg:
-	@if [ -z "$(name)" ]; then \
-		echo -e "$(COLOR_YELLOW)⚠ No frontend specified, defaulting to 'cmdline'$(COLOR_RESET)"; \
-		$(MAKE) init; \
-		$(MAKE) buildx-dbg FRONTEND=cmdline; \
-	else \
-		echo -e "$(COLOR_BLUE)▶ Building debug frontend: $(name)$(COLOR_RESET)"; \
-		$(MAKE) init; \
-		$(MAKE) init-dep-backtrace \
-		$(MAKE) buildx-dbg FRONTEND=$(name); \
-	fi
+	echo -e "$(COLOR_BLUE)▶ Building debug frontend: $(name)$(COLOR_RESET)"; \
+	$(MAKE) init; \
+	$(MAKE) init-dep-backtrace \
+	$(MAKE) buildx-dbg
 
 # ============================================================
 # Build (Release)
@@ -142,7 +126,7 @@ build:
 
 buildx:
 	@echo -e "$(COLOR_BLUE)▶ Configuring build ($(BUILD_DIR))...$(COLOR_RESET)"
-	@$(CMAKE) -S . -B $(BUILD_DIR) -D CMAKE_BUILD_TYPE=Release $(CMAKE_FRONTEND_FLAG)
+	@$(CMAKE) -S . -B $(BUILD_DIR) -D CMAKE_BUILD_TYPE=Release
 	$(MAKE) build
 
 rebuild: clean buildx
@@ -158,7 +142,7 @@ build-dbg:
 
 buildx-dbg:
 	@echo -e "$(COLOR_BLUE)▶ Configuring debug build ($(BUILD_DBG_DIR))...$(COLOR_RESET)"
-	@$(CMAKE) -S . -B $(BUILD_DBG_DIR) -D CMAKE_BUILD_TYPE=Debug $(CMAKE_FRONTEND_FLAG)
+	@$(CMAKE) -S . -B $(BUILD_DBG_DIR) -D CMAKE_BUILD_TYPE=Debug
 	$(MAKE) build-dbg
 
 rebuild-dbg: clean buildx-dbg

@@ -2,10 +2,16 @@
 
 #include "Config.hpp"
 #include "Env-Vars.hpp"
-#include "InLimbo-Types.hpp"
 #include <cstdlib>
 #include <filesystem>
 #include <stdexcept>
+
+// NOTE:
+//
+// getApp<> -> Path will resolve to PATH/inLimbo
+// get<>    -> Path will resolve to PATH only.
+//
+// ALL RETURN TYPES ARE std::filesystem::path for convenience
 
 namespace utils
 {
@@ -21,7 +27,7 @@ FORCE_INLINE auto getHomePath() -> fs::path
   return fs::path{homeDir};
 }
 
-FORCE_INLINE auto getBaseConfigPath() -> fs::path
+FORCE_INLINE auto getAppConfigPath() -> fs::path
 {
   const char* customConfigHome = std::getenv(INLIMBO_CUSTOM_CONFIG_ENV);
   if (customConfigHome)
@@ -30,23 +36,36 @@ FORCE_INLINE auto getBaseConfigPath() -> fs::path
   return getHomePath() / ".config" / "inLimbo";
 }
 
-FORCE_INLINE auto getConfigPathWithFile(const fs::path& fileName) -> fs::path
+FORCE_INLINE auto getAppConfigPathWithFile(const fs::path& fileName) -> fs::path
 {
-  return getBaseConfigPath() / fileName;
+  return getAppConfigPath() / fileName;
 }
 
-FORCE_INLINE auto getCachePath() -> fs::path { return getHomePath() / ".cache" / "inLimbo"; }
-
-FORCE_INLINE auto getCachePathWithFile(const fs::path& fileName) -> fs::path
+FORCE_INLINE auto getAppDataPath() -> fs::path
 {
-  return getCachePath() / fileName;
+  if (const char* dataDir = std::getenv("XDG_DATA_HOME"))
+    return fs::path{dataDir} / "inLimbo";
+
+  return getHomePath() / ".local" / "share" / "inLimbo";
 }
 
-FORCE_INLINE auto getCacheArtPath() -> fs::path { return getCachePath() / "art"; }
-
-FORCE_INLINE auto getCacheArtPathWithFile(const fs::path& fileName) -> fs::path
+FORCE_INLINE auto getAppDataPathWithFile(const fs::path& fileName) -> fs::path
 {
-  return getCacheArtPath() / fileName;
+  return getAppDataPath() / fileName;
+}
+
+FORCE_INLINE auto getAppCachePath() -> fs::path { return getHomePath() / ".cache" / "inLimbo"; }
+
+FORCE_INLINE auto getAppCachePathWithFile(const fs::path& fileName) -> fs::path
+{
+  return getAppCachePath() / fileName;
+}
+
+FORCE_INLINE auto getAppCacheArtPath() -> fs::path { return getAppCachePath() / "art"; }
+
+FORCE_INLINE auto getAppCacheArtPathWithFile(const fs::path& fileName) -> fs::path
+{
+  return getAppCacheArtPath() / fileName;
 }
 
 } // namespace utils

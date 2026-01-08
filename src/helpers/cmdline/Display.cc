@@ -1,4 +1,5 @@
 #include "helpers/cmdline/Display.hpp"
+#include "build/generated/PluginList.ipp"
 #include "core/SongTreeIter.hpp"
 
 #include <iomanip>
@@ -10,6 +11,19 @@ using namespace core;
 
 namespace helpers::cmdline
 {
+
+// ------------------------------------------------------------
+// Print all frontend plugins built
+// ------------------------------------------------------------
+void printFrontendPlugins()
+{
+  std::cout << "\nAvailable frontends:\n";
+  std::cout << "────────────────────────────\n";
+  for (auto i : INLIMBO_FRONTEND_NAMES)
+  {
+    std::cout << ">> " << i << "\n";
+  }
+}
 
 // ------------------------------------------------------------
 // Print all artists
