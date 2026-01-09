@@ -9,6 +9,17 @@ find_package(raylib REQUIRED)
 
 set(INLIMBO_FE_RAYLIB_SOURCES
     ${CMAKE_SOURCE_DIR}/src/frontend/raylib/Interface.cc
+    ${CMAKE_SOURCE_DIR}/src/frontend/raylib/input/Handler.cc
+    ${CMAKE_SOURCE_DIR}/src/frontend/raylib/media/AlbumArtCache.cc
+    ${CMAKE_SOURCE_DIR}/src/frontend/raylib/ui/Fonts.cc
+    ${CMAKE_SOURCE_DIR}/src/frontend/raylib/ui/TextUtils.cc
+    ${CMAKE_SOURCE_DIR}/src/frontend/raylib/util/Scroll.cc
+    ${CMAKE_SOURCE_DIR}/src/frontend/raylib/view/Header.cc
+    ${CMAKE_SOURCE_DIR}/src/frontend/raylib/view/NowPlaying.cc
+    ${CMAKE_SOURCE_DIR}/src/frontend/raylib/view/AlbumsView.cc
+    ${CMAKE_SOURCE_DIR}/src/frontend/raylib/view/ArtistsView.cc
+    ${CMAKE_SOURCE_DIR}/src/frontend/raylib/view/MetadataOverlay.cc
+    ${CMAKE_SOURCE_DIR}/src/frontend/raylib/view/StatusBar.cc
     ${CMAKE_SOURCE_DIR}/src/frontend/raylib/PluginShim.cc
 )
 

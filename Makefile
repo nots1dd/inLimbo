@@ -111,7 +111,7 @@ app:
 app-dbg:
 	echo -e "$(COLOR_BLUE)▶ Building debug frontend: $(name)$(COLOR_RESET)"; \
 	$(MAKE) init; \
-	$(MAKE) init-dep-backtrace \
+	$(MAKE) init-dep-backtrace; \
 	$(MAKE) buildx-dbg
 
 # ============================================================
