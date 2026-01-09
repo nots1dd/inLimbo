@@ -34,26 +34,22 @@ void drawTruncated(Font font, const char* text, Vector2 pos, float fs, float spa
   DrawTextEx(font, s.c_str(), pos, fs, spacing, col);
 }
 
-void drawWrappedText(Font font,
-                            const std::string& text,
-                            Rectangle bounds,
-                            float fontSize,
-                            float spacing,
-                            Color color)
+void drawWrappedText(Font font, const std::string& text, Rectangle bounds, float fontSize,
+                     float spacing, Color color)
 {
   std::string line;
-  float y = bounds.y;
+  float       y = bounds.y;
 
   size_t start = 0;
   while (start < text.size())
   {
-    size_t end = start;
-    float width = 0.0f;
+    size_t end   = start;
+    float  width = 0.0f;
 
     while (end < text.size())
     {
       std::string test = text.substr(start, end - start + 1);
-      width = MeasureTextEx(font, test.c_str(), fontSize, spacing).x;
+      width            = MeasureTextEx(font, test.c_str(), fontSize, spacing).x;
 
       if (width > bounds.width)
         break;

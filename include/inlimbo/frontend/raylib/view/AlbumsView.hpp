@@ -14,7 +14,6 @@ class AlbumsView
 public:
   void draw(const ui::Fonts& fonts, state::Library& lib, audio::Service& audio,
             threads::SafeMap<SongMap>& songs, mpris::Service& mpris);
-
 };
 
 } // namespace frontend::raylib::view

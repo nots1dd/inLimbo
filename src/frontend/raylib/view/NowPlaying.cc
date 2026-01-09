@@ -9,29 +9,18 @@
 namespace frontend::raylib::view
 {
 
-static void drawWaveformBackground(Rectangle area,
-                                   float phase,
-                                   float intensity,
-                                   Color color)
+static void drawWaveformBackground(Rectangle area, float phase, float intensity, Color color)
 {
   constexpr int BARS = 48;
-  float barW = area.width / BARS;
+  float         barW = area.width / BARS;
 
   for (int i = 0; i < BARS; ++i)
   {
     float t = phase + i * 0.35f;
 
-    float h =
-      (0.4f + 0.6f * sinf(t)) *
-      intensity *
-      area.height;
+    float h = (0.4f + 0.6f * sinf(t)) * intensity * area.height;
 
-    Rectangle bar = {
-      area.x + i * barW,
-      area.y + area.height * 0.5f - h * 0.5f,
-      barW * 0.6f,
-      h
-    };
+    Rectangle bar = {area.x + i * barW, area.y + area.height * 0.5f - h * 0.5f, barW * 0.6f, h};
 
     DrawRectangleRounded(bar, 0.4f, 4, color);
   }
@@ -48,21 +37,10 @@ void NowPlaying::draw(const ui::Fonts& fonts, audio::Service& audio, mpris::Serv
 
   float cx = WIN_W * 0.5f;
 
-  ui::text::drawCentered(
-    fonts.bold,
-    meta->title.c_str(),
-    {cx, HEADER_H + 370},
-    30,
-    TEXT_MAIN
-  );
+  ui::text::drawCentered(fonts.bold, meta->title.c_str(), {cx, HEADER_H + 370}, 30, TEXT_MAIN);
 
-  ui::text::drawCentered(
-    fonts.regular,
-    (meta->artist + " • " + meta->album).c_str(),
-    {cx, HEADER_H + 410},
-    18,
-    TEXT_DIM
-  );
+  ui::text::drawCentered(fonts.regular, (meta->artist + " • " + meta->album).c_str(),
+                         {cx, HEADER_H + 410}, 18, TEXT_DIM);
 
   drawProgress(*info, audio, fonts);
   drawControls(audio, fonts, mpris);
@@ -83,31 +61,24 @@ void NowPlaying::drawArt(const Metadata& meta)
   float x = WIN_W * 0.5f - w * 0.5f;
   float y = HEADER_H + 40;
 
-  DrawRectangleRounded(
-    {x - 8, y - 8, w + 16, h + 16},
-    0.08f, 12, {0, 0, 0, 140});
+  DrawRectangleRounded({x - 8, y - 8, w + 16, h + 16}, 0.08f, 12, {0, 0, 0, 140});
 
-  DrawRectangleRounded(
-    {x - 4, y - 4, w + 8, h + 8},
-    0.08f, 12, BG_PANEL);
+  DrawRectangleRounded({x - 4, y - 4, w + 8, h + 8}, 0.08f, 12, BG_PANEL);
 
   DrawTextureEx(*tex, {x, y}, 0.0f, scale, WHITE);
 }
 
-void NowPlaying::drawProgress(const audio::service::TrackInfo& info,
-                              audio::Service& audio,
+void NowPlaying::drawProgress(const audio::service::TrackInfo& info, audio::Service& audio,
                               const ui::Fonts& fonts)
 {
   float barX = 260;
   float barW = WIN_W - 520;
   float barY = WIN_H - 120;
 
-  static float knob      = barX;
+  static float knob       = barX;
   static float knobTarget = barX;
 
-  float ratio = info.lengthSec > 0
-                  ? info.positionSec / info.lengthSec
-                  : 0.f;
+  float ratio = info.lengthSec > 0 ? info.positionSec / info.lengthSec : 0.f;
 
   knobTarget = barX + ratio * barW;
 
@@ -116,45 +87,30 @@ void NowPlaying::drawProgress(const audio::service::TrackInfo& info,
   const std::string cur = utils::fmtTime(info.positionSec);
   const std::string len = utils::fmtTime(info.lengthSec);
 
-  DrawTextEx(
-    fonts.regular,
-    cur.c_str(),
-    {barX - 60, barY - 6},
-    14, 1, TEXT_DIM
-  );
+  DrawTextEx(fonts.regular, cur.c_str(), {barX - 60, barY - 6}, 14, 1, TEXT_DIM);
 
-  DrawTextEx(
-    fonts.regular,
-    len.c_str(),
-    {barX + barW + 12, barY - 6},
-    14, 1, TEXT_DIM
-  );
+  DrawTextEx(fonts.regular, len.c_str(), {barX + barW + 12, barY - 6}, 14, 1, TEXT_DIM);
 
-  Rectangle hit = {barX, barY - 10, barW, 26};
-  bool hover = CheckCollisionPointRec(GetMousePosition(), hit);
+  Rectangle hit   = {barX, barY - 10, barW, 26};
+  bool      hover = CheckCollisionPointRec(GetMousePosition(), hit);
 
   // ---- Waveform background ----
   static float wavePhase = 0.0f;
   if (audio.isPlaying())
     wavePhase += GetFrameTime() * 6.0f;
 
-  drawWaveformBackground(
-    hit,
-    wavePhase,
-    audio.isPlaying() ? 1.0f : 0.25f,
-    {ACCENT.r, ACCENT.g, ACCENT.b, 40}
-  );
+  drawWaveformBackground(hit, wavePhase, audio.isPlaying() ? 1.0f : 0.25f,
+                         {ACCENT.r, ACCENT.g, ACCENT.b, 40});
 
   DrawRectangle(barX, barY, barW, 6, BG_PANEL);
   DrawRectangle(barX, barY, knob - barX, 6, ACCENT);
 
-  DrawCircle(knob, barY + 3, hover ? 10 : 8,
-             {ACCENT.r, ACCENT.g, ACCENT.b, 120});
+  DrawCircle(knob, barY + 3, hover ? 10 : 8, {ACCENT.r, ACCENT.g, ACCENT.b, 120});
   DrawCircle(knob, barY + 3, 6, ACCENT);
 
   if (hover && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
   {
-    float t = std::clamp((GetMouseX() - barX) / barW, 0.0f, 1.0f);
+    float t    = std::clamp((GetMouseX() - barX) / barW, 0.0f, 1.0f);
     knobTarget = barX + t * barW;
     audio.seekAbsolute(t * info.lengthSec);
   }
@@ -169,21 +125,16 @@ void NowPlaying::drawControls(audio::Service& audio, const ui::Fonts& fonts, mpr
 
   auto drawBtn = [&](Rectangle r, const char* icon, bool active) -> bool
   {
-    bool hover = CheckCollisionPointRec(mouse, r);
+    bool  hover = CheckCollisionPointRec(mouse, r);
     float scale = hover ? 1.1f : 1.0f;
 
-    float radius = (r.width * 0.5f) * scale;
-    Vector2 c = {r.x + r.width * 0.5f, r.y + r.height * 0.5f};
+    float   radius = (r.width * 0.5f) * scale;
+    Vector2 c      = {r.x + r.width * 0.5f, r.y + r.height * 0.5f};
 
     DrawCircle(c.x, c.y, radius, active ? ACCENT : BG_PANEL);
 
-    ui::text::drawCentered(
-      active ? fonts.bold : fonts.regular,
-      icon,
-      c,
-      active ? 26 : 22,
-      active ? WHITE : TEXT_MAIN
-    );
+    ui::text::drawCentered(active ? fonts.bold : fonts.regular, icon, c, active ? 26 : 22,
+                           active ? WHITE : TEXT_MAIN);
 
     return hover && IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
   };

@@ -7,7 +7,8 @@
 namespace frontend::raylib::view
 {
 
-static void playSongWithAlbumQueue(audio::Service& audio, threads::SafeMap<SongMap>& songs, const Song& song, mpris::Service& mpris)
+static void playSongWithAlbumQueue(audio::Service& audio, threads::SafeMap<SongMap>& songs,
+                                   const Song& song, mpris::Service& mpris)
 {
   audio.clearPlaylist();
 
@@ -34,11 +35,8 @@ static void drawHoverRow(const Rectangle& r, bool hover)
   if (!hover)
     return;
 
-  DrawRectangleRounded(
-    {r.x - 6, r.y - 2, r.width + 12, r.height + 4},
-    0.2f, 6,
-    {255, 255, 255, 20}
-  );
+  DrawRectangleRounded({r.x - 6, r.y - 2, r.width + 12, r.height + 4}, 0.2f, 6,
+                       {255, 255, 255, 20});
 }
 
 static auto getContentHeight(threads::SafeMap<SongMap>& songs, const Artist& artist) -> float
@@ -74,11 +72,8 @@ static auto getContentHeight(threads::SafeMap<SongMap>& songs, const Artist& art
 
 static constexpr int RIGHT_X = LEFT_W + 10;
 
-void AlbumsView::draw(const ui::Fonts& fonts,
-                      state::Library& lib,
-                      audio::Service& audio,
-                      threads::SafeMap<SongMap>& songs,
-                      mpris::Service& mpris)
+void AlbumsView::draw(const ui::Fonts& fonts, state::Library& lib, audio::Service& audio,
+                      threads::SafeMap<SongMap>& songs, mpris::Service& mpris)
 {
   if (lib.artists.empty())
     return;
@@ -88,7 +83,7 @@ void AlbumsView::draw(const ui::Fonts& fonts,
 
   const Artist& artist = lib.artists[lib.selectedArtist];
 
-  const auto contentHeight    = getContentHeight(songs, artist);
+  const auto contentHeight = getContentHeight(songs, artist);
 
   if (CheckCollisionPointRec(mouse, pane))
   {
@@ -113,13 +108,8 @@ void AlbumsView::draw(const ui::Fonts& fonts,
         return;
 
       /* ---------------- Album header ---------------- */
-      ui::text::drawTruncated(
-        fonts.bold,
-        album.c_str(),
-        {(float)x, (float)y},
-        22, 1, TEXT_MAIN,
-        1200 - RIGHT_X - 40
-      );
+      ui::text::drawTruncated(fonts.bold, album.c_str(), {(float)x, (float)y}, 22, 1, TEXT_MAIN,
+                              1200 - RIGHT_X - 40);
 
       // Accent underline
       DrawRectangle(x, y + 26, 48, 2, ACCENT);
@@ -129,12 +119,8 @@ void AlbumsView::draw(const ui::Fonts& fonts,
       /* ---------------- Discs ---------------- */
       for (auto& [disc, tracks] : discs)
       {
-        DrawTextEx(
-          fonts.regular,
-          TextFormat("Disc %d", disc),
-          {(float)x + 4, (float)y},
-          14, 1, TEXT_DIM
-        );
+        DrawTextEx(fonts.regular, TextFormat("Disc %d", disc), {(float)x + 4, (float)y}, 14, 1,
+                   TEXT_DIM);
 
         y += 18;
 
@@ -143,12 +129,7 @@ void AlbumsView::draw(const ui::Fonts& fonts,
         {
           for (auto& [__, song] : inodeMap)
           {
-            Rectangle row = {
-              (float)x,
-              (float)y,
-              pane.width - 40,
-              20
-            };
+            Rectangle row = {(float)x, (float)y, pane.width - 40, 20};
 
             bool hover = CheckCollisionPointRec(mouse, row);
             drawHoverRow(row, hover);
@@ -158,35 +139,18 @@ void AlbumsView::draw(const ui::Fonts& fonts,
 
             // Track title (left)
             std::string title =
-              TextFormat("%02d  %s",
-                         song.metadata.track,
-                         song.metadata.title.c_str());
+              TextFormat("%02d  %s", song.metadata.track, song.metadata.title.c_str());
 
-            ui::text::drawTruncated(
-              fonts.regular,
-              title.c_str(),
-              {row.x + 8, row.y + 2},
-              16, 1,
-              hover ? ACCENT : TEXT_MAIN,
-              row.width - 80
-            );
+            ui::text::drawTruncated(fonts.regular, title.c_str(), {row.x + 8, row.y + 2}, 16, 1,
+                                    hover ? ACCENT : TEXT_MAIN, row.width - 80);
 
             // Duration (right)
             std::string dur = utils::fmtTime(song.metadata.duration);
 
-            int dw = MeasureTextEx(
-              fonts.regular,
-              dur.c_str(),
-              14, 1
-            ).x;
+            int dw = MeasureTextEx(fonts.regular, dur.c_str(), 14, 1).x;
 
-            DrawTextEx(
-              fonts.regular,
-              dur.c_str(),
-              {row.x + row.width - dw - 8, row.y + 2},
-              14, 1,
-              TEXT_DIM
-            );
+            DrawTextEx(fonts.regular, dur.c_str(), {row.x + row.width - dw - 8, row.y + 2}, 14, 1,
+                       TEXT_DIM);
 
             y += 22;
           }

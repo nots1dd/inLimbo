@@ -34,7 +34,7 @@ void Handler::handle(audio::Service& audio, state::UI& ui, state::Library& lib,
     else
     {
       ui.screen = (ui.screen == state::UI::Screen::Library) ? state::UI::Screen::NowPlaying
-                                                          : state::UI::Screen::Library;
+                                                            : state::UI::Screen::Library;
     }
   }
 

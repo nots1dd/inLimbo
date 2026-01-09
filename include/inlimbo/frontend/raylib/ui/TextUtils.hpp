@@ -14,11 +14,7 @@ void drawCentered(Font font, const char* text, Vector2 center, float fontSize, C
 void drawTruncated(Font font, const char* text, Vector2 pos, float fontSize, float spacing,
                    Color color, float maxWidth);
 
-void drawWrappedText(Font font,
-                            const std::string& text,
-                            Rectangle bounds,
-                            float fontSize,
-                            float spacing,
-                            Color color);
+void drawWrappedText(Font font, const std::string& text, Rectangle bounds, float fontSize,
+                     float spacing, Color color);
 
 } // namespace frontend::raylib::ui::text
