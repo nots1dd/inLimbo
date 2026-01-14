@@ -9,20 +9,21 @@ A **ring buffer** (also called a circular buffer) is a fixed-capacity data struc
 * Supports efficient FIFO (first-in, first-out) access
 * Avoids reallocations and data movement once created
 
-The implementation is *supposed* a **thread-safe, fixed-capacity FIFO ring buffer**.
+The implementation is a **single-producer single-consumer (SPSC), lock-free, fixed-capacity FIFO ring buffer** optimized for high-frequency streaming use cases (audio).
 
 ## 2. Data Members and Their Roles
 
 ```cpp
-std::vector<T>     m_buffer;
-size_t             m_capacity;
-size_t             m_readPos{0};
-size_t             m_writePos{};
-size_t             m_size{0};
-mutable std::mutex m_mutex;
+std::unique_ptr<T[]> m_data;
+
+size_t m_capacity{};
+size_t m_mask{};
+
+std::atomic<size_t> m_read{0};
+std::atomic<size_t> m_write{0};
 ```
 
-### `m_buffer`
+### `m_data`
 
 * Backing storage of fixed size
 * Allocated once during construction
@@ -31,117 +32,144 @@ mutable std::mutex m_mutex;
 ### `m_capacity`
 
 * Maximum number of elements the buffer can hold
-* Equal to `m_buffer.size()`
+* Rounded up to the next power of two for fast wrap-around
 
-### `m_readPos`
+### `m_mask`
 
-* Index of the next element to be read
-* Advances on reads
-* Wraps around using modulo arithmetic
+* Equals `m_capacity - 1`
+* Used for wrap-around via bitwise masking:
 
-### `m_writePos`
+  ```cpp
+  index = counter & m_mask;
+  ```
 
-* Index of the next element to be written
-* Advances on writes
-* Wraps around using modulo arithmetic
+### `m_read`
 
-### `m_size`
+* Monotonic read counter (not a direct index)
+* Owned primarily by the consumer thread
+* Converted to a physical index using `& m_mask`
 
-* Number of valid elements currently in the buffer
-* Prevents ambiguity between empty and full states
+### `m_write`
 
-### `m_mutex`
-
-* Protects all shared state
-* Ensures thread safety for concurrent reads/writes
+* Monotonic write counter (not a direct index)
+* Owned primarily by the producer thread
+* Converted to a physical index using `& m_mask`
 
 ## 3. Construction
 
 ```cpp
-explicit RingBuffer(size_t capacity)
-  : m_buffer(capacity), m_capacity(capacity) {}
+explicit RingBufferSPSC(size_t capacity)
+{
+  m_capacity = next_pow2(capacity);
+  m_mask     = m_capacity - 1;
+  m_data     = std::make_unique<T[]>(m_capacity);
+}
 ```
 
-* Allocates fixed storage upfront
-* No further memory allocations occur during use
+* Rounds capacity up to a power of two
+* Allocates storage upfront
 * Capacity cannot change after construction
+* No further allocations occur during use
 
 ## 4. Write Operation
 
 ```cpp
-auto write(const T* data, size_t count) -> size_t
+auto write(const T* src, size_t count) noexcept -> size_t
 ```
 
 ### Purpose
 
-Attempts to write up to `count` elements into the buffer.
+Attempts to write up to `count` elements into the buffer without overwriting unread data.
 
 ### Steps
 
-1. Acquire mutex lock
-2. Compute available free space:
+1. Load current read counter (`acquire`) and write counter (`relaxed`)
+2. Compute free space:
 
    ```cpp
-   space = m_capacity - m_size;
+   freeSpace = m_capacity - (w - r);
    ```
 3. Clamp write size:
 
    ```cpp
-   toWrite = min(count, space);
+   toWrite = min(count, freeSpace);
    ```
-4. Copy elements sequentially into the buffer
-5. Advance `m_writePos` with wrap-around
-6. Increase `m_size`
-7. Return number of elements written
+4. Compute physical write position:
+
+   ```cpp
+   wpos = w & m_mask;
+   ```
+5. Perform at most two contiguous memory copies (wrap-aware)
+
+   * First chunk: from `wpos` to end of storage
+   * Second chunk: from beginning of storage if wrap is needed
+6. Publish updated write counter (`release`)
 
 ### Important Properties
 
 * Never overwrites unread data
 * Partial writes are allowed
-* Zero allocation
-* Time complexity: **O(n)** where `n = toWrite`
+* Lock-free: no mutex, no blocking
+* Uses block copy (`memcpy`) instead of element-by-element writes
+* Time complexity: **O(n)** where `n = toWrite`, with constant-time wrap math
 
 ## 5. Read Operation
 
 ```cpp
-auto read(T* data, size_t count) -> size_t
+auto read(T* dst, size_t count) noexcept -> size_t
 ```
 
 ### Purpose
 
-Attempts to read up to `count` elements from the buffer.
+Attempts to read up to `count` elements from the buffer in FIFO order.
 
 ### Steps
 
-1. Acquire mutex lock
-2. Clamp read size:
+1. Load current read counter (`relaxed`) and write counter (`acquire`)
+2. Compute available elements:
 
    ```cpp
-   toRead = min(count, m_size);
+   avail = w - r;
    ```
-3. Copy elements sequentially from the buffer
-4. Advance `m_readPos` with wrap-around
-5. Decrease `m_size`
-6. Return number of elements read
+3. Clamp read size:
+
+   ```cpp
+   toRead = min(count, avail);
+   ```
+4. Compute physical read position:
+
+   ```cpp
+   rpos = r & m_mask;
+   ```
+5. Perform at most two contiguous memory copies (wrap-aware)
+
+   * First chunk: from `rpos` to end of storage
+   * Second chunk: from beginning of storage if wrap is needed
+6. Publish updated read counter (`release`)
 
 ### Important Properties
 
 * Never reads invalid data
 * Partial reads are allowed
 * FIFO ordering preserved
-* Time complexity: **O(n)** where `n = toRead`
+* Lock-free: no mutex, no blocking
+* Uses block copy (`memcpy`) instead of element-by-element reads
+* Time complexity: **O(n)** where `n = toRead`, with constant-time wrap math
 
 ## 6. Index Wrap-Around Logic
 
+Wrap-around is done using bitwise masking rather than modulo:
+
 ```cpp
-pos = (pos + 1) % m_capacity;
+pos = counter & (capacity - 1);
 ```
 
-This is the core ring buffer mechanism:
+This requires:
 
-* When the index reaches the end of the array
-* It wraps back to index `0`
-* No shifting or reallocation occurs
+* `capacity` must be a power of two
+* `mask = capacity - 1`
+
+This avoids modulo operations in hot paths and enables fast wrap-around.
 
 ## 7. Capacity and State Queries
 
@@ -151,32 +179,40 @@ Returns total capacity of the buffer.
 
 ### `available()`
 
-Returns number of elements currently stored.
+Returns number of elements currently stored:
+
+```cpp
+available = write - read
+```
 
 ### `space()`
 
 Returns remaining free space:
 
 ```cpp
-capacity - available
+space = capacity - available
 ```
 
 All of these:
 
-* Acquire the mutex
-* Are thread-safe
+* Are lock-free
 * Run in **O(1)** time
+* Use atomic loads (`acquire`) to avoid stale counters across threads
 
 ## 8. Clear Operation
 
 ```cpp
-void clear()
+auto clear() noexcept -> void
+{
+  m_read.store(0, std::memory_order_release);
+  m_write.store(0, std::memory_order_release);
+}
 ```
 
 ### Effect
 
-* Resets read and write positions
-* Sets size to zero
+* Resets producer and consumer counters
+* Effectively discards all buffered data
 * Does not deallocate memory
 
 ### Use Cases
@@ -187,13 +223,17 @@ void clear()
 
 ## 9. Thread Safety Model
 
-* All public operations are mutex-protected
-* Safe for:
-  * Single producer + single consumer
-  * Multiple producers + multiple consumers
-* Lock granularity is coarse but safe
+* Designed strictly for:
 
-This prioritizes **correctness and simplicity** over lock-free complexity.
+  * One producer thread calling `write()`
+  * One consumer thread calling `read()`
+* Thread safety is achieved through:
+
+  * Atomic monotonic counters
+  * Acquire/release ordering for cross-thread visibility
+  * Ownership discipline (producer advances `m_write`, consumer advances `m_read`)
+
+This design prioritizes **low latency, deterministic throughput, and no lock contention**.
 
 ## 10. What This Ring Buffer Guarantees
 
@@ -201,16 +241,15 @@ This prioritizes **correctness and simplicity** over lock-free complexity.
 * FIFO ordering
 * No data overwrites
 * No invalid reads
-* Deterministic behavior (hopefully)
-* Thread safety
 * No dynamic allocations after construction
+* Very low overhead per call (no mutex, no per-element loops)
+* Correct cross-thread visibility under the SPSC usage model
 
 ## 11. What This Ring Buffer Does Not Do
 
+* Not safe for multiple producers or multiple consumers
 * No blocking or waiting semantics
 * No condition variables
 * No overwrite-on-full behavior
-* No lock-free optimizations
+* No support for non-trivially-copyable element types (by design)
 * No iterator access
-
-Most of it are deliberate design choices, tho some can be thanks to my idiocy

@@ -78,6 +78,11 @@ struct AudioFormat
 
 struct Sound
 {
+  // Sound struct is NOT trivially copyable
+  Sound(const Sound&) = delete;
+  auto operator=(const Sound&) -> Sound& = delete;
+  Sound(Sound&&) noexcept = delete;
+  auto operator=(Sound&&) noexcept -> Sound& = delete;
 
   AudioFormat source; // exact file properties
   AudioFormat target; // engine output format (matches backend)
@@ -126,6 +131,7 @@ struct Sound
     size_t decodeBufferFrames  = std::max(static_cast<size_t>(DECODE_BUFFER_SECONDS * sampleRate),
                                           static_cast<size_t>(MIN_DECODE_BUFFER_FRAMES));
     size_t decodeBufferSamples = decodeBufferFrames * channels;
+    decodeBuffer.reserve(decodeBufferSamples);
     decodeBuffer.resize(decodeBufferSamples);
   }
 
@@ -149,6 +155,5 @@ struct Sound
 };
 
 using Sounds_ptr = std::vector<std::unique_ptr<Sound>>;
-using Sounds     = std::vector<Sound>;
 
 } // namespace audio

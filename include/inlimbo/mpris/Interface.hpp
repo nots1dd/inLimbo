@@ -6,13 +6,6 @@
 namespace mpris
 {
 
-enum class LoopMode
-{
-  None,
-  Track,
-  Playlist
-};
-
 class IMprisBackend
 {
 public:

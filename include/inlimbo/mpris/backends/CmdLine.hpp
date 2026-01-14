@@ -9,43 +9,43 @@ namespace mpris::cmdline
 class Backend final : public mpris::IMprisBackend
 {
 public:
-  explicit Backend(audio::Service& audio) : audio_(audio) {}
+  explicit Backend(audio::Service& audio) : m_audioService(audio) {}
 
   /* Playback */
-  void play() override { audio_.playCurrent(); }
-  void pause() override { audio_.pauseCurrent(); }
+  void play() override { m_audioService.playCurrent(); }
+  void pause() override { m_audioService.pauseCurrent(); }
 
   void stop() override
   {
-    audio_.pauseCurrent();
-    audio_.seekAbsolute(0.0);
+    m_audioService.pauseCurrent();
+    m_audioService.seekAbsolute(0.0);
   }
 
-  void next() override { audio_.nextTrack(); }
-  void previous() override { audio_.previousTrack(); }
+  void next() override { m_audioService.nextTrack(); }
+  void previous() override { m_audioService.previousTrack(); }
 
   /* Seek */
   void seekSeconds(double s) override
   {
     if (s > 0)
-      audio_.seekForward(s);
+      m_audioService.seekForward(s);
     else
-      audio_.seekBackward(-s);
+      m_audioService.seekBackward(-s);
   }
 
-  void setPositionSeconds(double s) override { audio_.seekAbsolute(s); }
+  void setPositionSeconds(double s) override { m_audioService.seekAbsolute(s); }
 
   /* State */
-  [[nodiscard]] auto isPlaying() const -> bool override { return audio_.isPlaying(); }
+  [[nodiscard]] auto isPlaying() const -> bool override { return m_audioService.isPlaying(); }
 
   [[nodiscard]] auto positionSeconds() const -> double override
   {
-    return audio_.getPlaybackTime().value_or(std::make_pair(0.0, 0.0)).first;
+    return m_audioService.getPlaybackTime().value_or(std::make_pair(0.0, 0.0)).first;
   }
 
   [[nodiscard]] auto durationSeconds() const -> double override
   {
-    if (auto info = audio_.getCurrentTrackInfo())
+    if (auto info = m_audioService.getCurrentTrackInfo())
       return info->lengthSec;
     return 0.0;
   }
@@ -53,34 +53,34 @@ public:
   /* Metadata */
   [[nodiscard]] auto title() const -> Title override
   {
-    auto m = audio_.getCurrentMetadata();
+    auto m = m_audioService.getCurrentMetadata();
     return m ? m->title : "";
   }
 
   [[nodiscard]] auto artist() const -> Artist override
   {
-    auto m = audio_.getCurrentMetadata();
+    auto m = m_audioService.getCurrentMetadata();
     return m ? m->artist : "";
   }
 
   [[nodiscard]] auto album() const -> Album override
   {
-    auto m = audio_.getCurrentMetadata();
+    auto m = m_audioService.getCurrentMetadata();
     return m ? m->album : "";
   }
 
   [[nodiscard]] auto artUrl() const -> std::string override
   {
-    auto m = audio_.getCurrentMetadata();
+    auto m = m_audioService.getCurrentMetadata();
     return m ? m->artUrl : "";
   }
 
   /* Volume */
-  [[nodiscard]] auto volume() const -> double override { return audio_.getVolume(); }
-  void               setVolume(double v) override { audio_.setVolume(v); }
+  [[nodiscard]] auto volume() const -> double override { return m_audioService.getVolume(); }
+  void               setVolume(double v) override { m_audioService.setVolume(v); }
 
 private:
-  audio::Service& audio_;
+  audio::Service& m_audioService;
 };
 
 } // namespace mpris::cmdline

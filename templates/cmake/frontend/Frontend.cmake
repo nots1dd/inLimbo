@@ -5,8 +5,9 @@
 # These values have to be changed according to your plugin name.
 # Ex: If my plugin name was cmdline, I would write:
 # 
-# set(INLIMBO_FRONTEND_TARGET inLimbo-fe-cmdline)
-# set(INLIMBO_FRONTEND_NAME   "cmdline")
+# set(INLIMBO_FRONTEND_TARGET      inLimbo-fe-cmdline)
+# set(INLIMBO_FRONTEND_NAME        "cmdline")
+# set(INLIMBO_FRONTEND_OUTPUT_NAME "inlimbo-frontend-dummy")
 set(INLIMBO_FRONTEND_TARGET      inLimbo-fe-dummy)
 set(INLIMBO_FRONTEND_NAME        "dummy")
 set(INLIMBO_FRONTEND_OUTPUT_NAME "inlimbo-frontend-cmdline")
