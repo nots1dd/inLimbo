@@ -42,8 +42,7 @@ public:
   auto previousTrack() -> service::SoundHandle;
   void restartCurrent();
 
-  void seekAbsolute(double seconds);
-  void seekTo(double seconds);
+  void seekToAbsolute(double seconds);
   void seekForward(double seconds);
   void seekBackward(double seconds);
 

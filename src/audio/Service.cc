@@ -151,16 +151,10 @@ void Service::restartCurrent()
   m_engine->restart();
 }
 
-void Service::seekAbsolute(double seconds)
+void Service::seekToAbsolute(double seconds)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
-  m_engine->seekAbsolute(seconds);
-}
-
-void Service::seekTo(double seconds)
-{
-  std::lock_guard<std::mutex> lock(m_mutex);
-  m_engine->seekTo(seconds);
+  m_engine->seekToAbsolute(seconds);
 }
 
 void Service::seekForward(double seconds)

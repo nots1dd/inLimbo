@@ -1,6 +1,5 @@
 #include "CmdLine.hpp"
 #include "Context.hpp"
-#include "Logger.hpp"
 #include "thread/Map.hpp"
 #include "toml/Parser.hpp"
 #include "utils/signal/Handler.hpp"

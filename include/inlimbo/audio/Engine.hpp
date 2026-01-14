@@ -90,7 +90,7 @@ public:
 
   INLIMBO_API_CPP void restart()
   {
-    seekTo(0.0);
+    seekToAbsolute(0.0);
     play();
   }
 
@@ -101,8 +101,7 @@ public:
 
   INLIMBO_API_CPP auto getPlaybackTime() const -> std::optional<std::pair<double, double>>;
 
-  INLIMBO_API_CPP void seekAbsolute(double seconds);
-  INLIMBO_API_CPP void seekTo(double seconds);
+  INLIMBO_API_CPP void seekToAbsolute(double seconds);
   INLIMBO_API_CPP void seekForward(double seconds);
   INLIMBO_API_CPP void seekBackward(double seconds);
 

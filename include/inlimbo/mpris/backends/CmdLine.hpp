@@ -18,7 +18,7 @@ public:
   void stop() override
   {
     m_audioService.pauseCurrent();
-    m_audioService.seekAbsolute(0.0);
+    m_audioService.seekToAbsolute(0.0);
   }
 
   void next() override { m_audioService.nextTrack(); }
@@ -33,7 +33,7 @@ public:
       m_audioService.seekBackward(-s);
   }
 
-  void setPositionSeconds(double s) override { m_audioService.seekAbsolute(s); }
+  void setPositionSeconds(double s) override { m_audioService.seekToAbsolute(s); }
 
   /* State */
   [[nodiscard]] auto isPlaying() const -> bool override { return m_audioService.isPlaying(); }

@@ -299,7 +299,7 @@ auto AudioEngine::getPlaybackTime() const -> std::optional<std::pair<double, dou
 
 // seek
 
-void AudioEngine::seekAbsolute(double seconds)
+void AudioEngine::seekToAbsolute(double seconds)
 {
   RECORD_FUNC_TO_BACKTRACE("AudioEngine::seekAbsolute");
 
@@ -327,14 +327,6 @@ void AudioEngine::seekAbsolute(double seconds)
   s.seekPending.store(true, std::memory_order_release);
 }
 
-void AudioEngine::seekTo(double seconds)
-{
-  auto& s     = *m_sound;
-  i64   frame = seconds * s.sampleRate + s.startSkip;
-  s.seekTargetFrame.store(frame);
-  s.seekPending.store(true);
-}
-
 void AudioEngine::seekForward(double sec)
 {
   auto time = getPlaybackTime();
@@ -342,7 +334,7 @@ void AudioEngine::seekForward(double sec)
     return;
 
   auto [p, l] = *time;
-  seekTo(std::min(p + sec, l));
+  seekToAbsolute(std::min(p + sec, l));
 }
 
 void AudioEngine::seekBackward(double sec)
@@ -352,7 +344,7 @@ void AudioEngine::seekBackward(double sec)
     return;
 
   auto [p, _] = *time;
-  seekTo(std::max(0.0, p - sec));
+  seekToAbsolute(std::max(0.0, p - sec));
 }
 
 // private methods
@@ -368,7 +360,7 @@ void AudioEngine::initAlsa(const DeviceName& deviceName)
 
   for (auto f : formats)
   {
-    err = snd_pcm_set_params(m_pcmData, f, SND_PCM_ACCESS_RW_INTERLEAVED, 2,
+    err = snd_pcm_set_params(m_pcmData, f, SND_PCM_ACCESS_RW_INTERLEAVED, m_backendInfo.channels,
                              m_backendInfo.sampleRate, 1, 50000);
     if (err >= 0)
     {
@@ -497,64 +489,89 @@ void AudioEngine::decodeAndPlay()
         }
       }
 
-      s.cursorFrames += framesRead;
+      s.cursorFrames.fetch_add((i64)framesRead, std::memory_order_relaxed);
     }
   }
 }
 
 void AudioEngine::decodeStep(Sound& s)
 {
-  AVPacket   pkt;
-  AVFramePtr frame(av_frame_alloc());
-
-  if (!frame)
+  if (!s.frame)
   {
     s.eof = true;
     return;
   }
 
-  if (av_read_frame(s.fmt.get(), &pkt) < 0)
+  // Read one packet
+  const int rr = av_read_frame(s.fmt.get(), &s.pkt);
+  if (rr < 0)
   {
     s.eof = true;
     return;
   }
 
-  if (pkt.stream_index == s.streamIndex)
+  // Not our stream -> ignore quickly
+  if (s.pkt.stream_index != s.streamIndex)
   {
-    if (avcodec_send_packet(s.dec.get(), &pkt) >= 0)
+    av_packet_unref(&s.pkt);
+    return;
+  }
+
+  // Send packet to decoder
+  int r = avcodec_send_packet(s.dec.get(), &s.pkt);
+  av_packet_unref(&s.pkt);
+
+  if (r < 0)
+    return;
+
+  while (true)
+  {
+    r = avcodec_receive_frame(s.dec.get(), s.frame.get());
+    if (r == AVERROR(EAGAIN) || r == AVERROR_EOF)
+      break;
+
+    if (r < 0)
+      break;
+
+    // Compute required output frames
+    const int64_t delay     = swr_get_delay(s.swr.get(), s.source.sampleRate);
+    const int     outFrames = (int)av_rescale_rnd(delay + s.frame->nb_samples, s.target.sampleRate,
+                                                  s.source.sampleRate, AV_ROUND_UP);
+
+    if (outFrames <= 0)
     {
-      while (avcodec_receive_frame(s.dec.get(), frame.get()) == 0)
-      {
-        int outFrames = swr_get_out_samples(s.swr.get(), frame->nb_samples);
-
-        if (outFrames > 0)
-        {
-          size_t totalSamples = static_cast<size_t>(outFrames) * s.target.channels;
-
-          if (s.ring->space() < totalSamples)
-            break;
-
-          if (s.decodeBuffer.size() < totalSamples)
-            s.decodeBuffer.resize(totalSamples);
-
-          std::array<uint8_t*, 1> outPtrs = {reinterpret_cast<uint8_t*>(s.decodeBuffer.data())};
-
-          int framesConverted =
-            swr_convert(s.swr.get(), outPtrs.data(), outFrames,
-                        const_cast<const uint8_t**>(frame->data), frame->nb_samples);
-
-          if (framesConverted > 0)
-          {
-            size_t samplesToWrite = static_cast<size_t>(framesConverted) * s.target.channels;
-
-            s.ring->write(s.decodeBuffer.data(), samplesToWrite);
-          }
-        }
-      }
+      av_frame_unref(s.frame.get());
+      continue;
     }
-  }
 
-  av_packet_unref(&pkt);
+    const size_t totalSamples = (size_t)outFrames * (size_t)s.target.channels;
+
+    // Not enough ring space -> stop decoding now (try later)
+    if (s.ring->space() < totalSamples)
+    {
+      av_frame_unref(s.frame.get());
+      break;
+    }
+
+    if (s.decodeBuffer.size() < totalSamples)
+      s.decodeBuffer.resize(totalSamples);
+
+    uint8_t* outData[1] = {reinterpret_cast<uint8_t*>(s.decodeBuffer.data())};
+
+    const int framesConverted = swr_convert(s.swr.get(), outData, outFrames,
+                                            (const uint8_t**)s.frame->data, s.frame->nb_samples);
+
+    av_frame_unref(s.frame.get());
+
+    if (framesConverted <= 0)
+      continue;
+
+    const size_t samplesToWrite = (size_t)framesConverted * (size_t)s.target.channels;
+
+    // Safety: ring space was checked against totalSamples,
+    // but samplesToWrite is usually <= totalSamples.
+    s.ring->write(s.decodeBuffer.data(), samplesToWrite);
+  }
 }
 
 } // namespace audio

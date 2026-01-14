@@ -2,11 +2,11 @@
 
 #include "config/Colors.hpp"
 #include "config/Keybinds.hpp"
-#include "utils/Snapshot.hpp"
 #include "utils/string/SmallString.hpp"
 
 namespace frontend::cmdline
 {
+
 struct Keybinds
 {
   char playPause{'p'};

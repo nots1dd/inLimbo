@@ -112,7 +112,7 @@ void NowPlaying::drawProgress(const audio::service::TrackInfo& info, audio::Serv
   {
     float t    = std::clamp((GetMouseX() - barX) / barW, 0.0f, 1.0f);
     knobTarget = barX + t * barW;
-    audio.seekAbsolute(t * info.lengthSec);
+    audio.seekToAbsolute(t * info.lengthSec);
   }
 }
 

@@ -17,7 +17,7 @@ extern "C"
 #define SOUND_BUFFER_SIZE_FRAMES  (1 << 16)
 
 // Configuration for buffer sizing
-#define RING_BUFFER_SECONDS      5.0  // Ring buffer holds N seconds of audio
+#define RING_BUFFER_SECONDS      2.0  // Ring buffer holds N seconds of audio
 #define DECODE_BUFFER_SECONDS    0.5  // Decode buffer holds N seconds of audio
 #define MIN_DECODE_BUFFER_FRAMES 4096 // Minimum decode buffer size in frames
 
@@ -90,6 +90,8 @@ struct Sound
   AVFormatContextPtr fmt;
   AVCodecContextPtr  dec;
   SwrContextPtr      swr;
+  AVPacket           pkt{};
+  AVFramePtr         frame{AVFramePtr(av_frame_alloc())};
   AVStream*          stream = nullptr;
 
   int streamIndex = -1;
