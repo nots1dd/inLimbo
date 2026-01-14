@@ -1,0 +1,30 @@
+#
+# Example config.toml for the inLimbo project.
+# 
+# URL: https://github.com/nots1dd/inLimbo (develop branch) 
+# Author: Siddharth Karanam (nots1dd)
+# 
+
+[library]
+name = "Songs"
+directory = "/home/s1dd/Downloads/Songs/" # just an example
+
+# NOTE: Only `Tab`, `Escape`, `Enter/Return` and `Space` are accepted as special chars aside from:
+[keybinds.cmdline]
+play_pause = "p"
+next = "n"
+prev = "b"
+restart = "r"
+seek_back = "b"
+seek_fwd = "f"
+vol_up = "="
+vol_down = "-"
+quit = "q"
+
+[colors.cmdline]
+bg = "#0B0F14"
+fg = "#FFD9E5"
+accent = "#B17384"
+warning = "#FFC800"
+error = "#FF3C3C"
+success = "#6C948B"

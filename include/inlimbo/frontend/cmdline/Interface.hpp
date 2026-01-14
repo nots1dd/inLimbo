@@ -8,8 +8,14 @@
 #include <termios.h>
 
 #include "audio/Service.hpp"
+#include "config/Watcher.hpp"
+#include "frontend/cmdline/Structs.hpp"
 #include "mpris/Service.hpp"
 #include "thread/Map.hpp"
+#include "utils/PathResolve.hpp"
+#include "utils/Snapshot.hpp"
+
+static constexpr cstr FRONTEND_NAME = "cmdline";
 
 namespace frontend::cmdline
 {
@@ -19,7 +25,8 @@ class Interface
 public:
   // NOTE: pointers because this is created via C ABI
   explicit Interface(threads::SafeMap<SongMap>* songMap, mpris::Service* mprisService)
-      : m_songMapTS(songMap), m_mprisService(mprisService)
+      : m_cfgWatcher(utils::getAppConfigPathWithFile("config.toml")), m_songMapTS(songMap),
+        m_mprisService(mprisService)
   {
   }
 
@@ -29,8 +36,13 @@ public:
   void run(audio::Service& audio);
 
 private:
+  config::Watcher            m_cfgWatcher;
   threads::SafeMap<SongMap>* m_songMapTS{nullptr};
   mpris::Service*            m_mprisService{nullptr};
+
+  // config
+  std::mutex                     m_cfgMutex;
+  utils::Snapshot<CmdlineConfig> m_cfg{};
 
   std::atomic<bool>   m_isRunning{false};
   std::atomic<double> m_pendingSeek{0.0};
@@ -47,6 +59,8 @@ private:
   };
 
   static auto getTerminalSize() -> TermSize;
+
+  void loadConfig();
 
   void enableRawMode();
   void disableRawMode();

@@ -40,9 +40,14 @@ public:
   {
     init_sso();
     if (s)
-    {
       append(std::string_view{s});
-    }
+  }
+
+  constexpr SmallString(char c) noexcept
+  {
+    init_sso();
+    if (c)
+      append_char(c);
   }
 
   SmallString(std::string_view sv)

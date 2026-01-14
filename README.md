@@ -94,7 +94,65 @@ Sometimes it feels good to be stuck in a weird place in your life, and it feels 
 
 Check out [BUILD.md](https://github.com/nots1dd/inLimbo/blob/develop/BUILD.md) for more options to build targets
 
-## CREDITS
+## **RUNNING**
+
+Just run:
+
+```bash 
+./build/inLimbo -h                           # for help
+
+# A few examples
+./build/inLimbo -D                           # to print the summary of the chosen song directory
+./build/inLimbo -r -F "Heir Apparent"        # -r will forcibly re-cache the entire song directory
+                                             # -F will print the song info about the song string query `Heir Apparent`
+                                             # NOTE: If multiple songs exist with same song name, ALL matched inodes will be printed.
+
+./build/inLimbo -A                           # Print ALL artists found
+./build/inLimbo -G "Just"                    # Print the lyrics of the song string query `Just`
+./build/inLimbo -I "Crack the Skye"          # Print ALL found songs under the album string query `Crack the Skye`
+
+./build/inLimbo -s "Jesus" -i "Satan"        # Edit the title metadata of the song string query `Jesus` (So song name Jesus -> Satan)
+./build/inLimbo -s "Test"  -j "Ok"           # Edit the artist metadata of the song string query `Test` (So album name <Album> -> Ok)
+
+./build/inLimbo -s "Windowpane" -f "cmdline" # Play the song matching string query `Windowpane` and load the frontend plugin `cmdline`
+```
+
+A LOT of things are possible with your song library with inLimbo. Lots of read only queries at your fingertips, and it unleashes the potential of having locally downloaded music.
+
+> [!IMPORTANT]
+> 
+> Some arguments mentioned maybe outdated so always run `--help` or `-h`
+> before running the above!!
+> 
+
+## **CONFIG**
+
+The configuration aspect of the inLimbo project comprises of the following fields:
+
+1. Keybinds
+2. Colors (Theme)
+
+Something that is quite cool and almost standardised nowadays that inLimbo has is **hot-reloading** of the config file.
+
+> [!NOTE]
+> 
+> **What is hot-reloading of config file?**
+> 
+> If you edit the config file (`~/.config/inLimbo/config.toml`) (without killing inLimbo process), 
+> it will immediately show up on the frontend! This allows you to make themes and vibe to your music :)
+> 
+> Note that this is **only** available for `keybinds` and `colors` fields only!!
+> 
+
+Although more is to come for this, the architecture is made in such a way that the colors and keybinds config and watcher are created by
+`inLimbo-core`, but the frontend takes the onus of actually finding the required fields, validation, reloading of config and whatnot.
+
+So currently for example, the `cmdline` frontend is super dynamic and can be hot-reloaded meanwhile, `raylib` is just a proof of concept.
+The config and the app itself is just to show how multiple frontends can exist for inLimbo. (config is statically compiled)
+
+Check out [example config file](https://github.com/nots1dd/inLimbo/blob/develop/examples/config/config.toml)
+
+## **CREDITS**
 
 **LOGO**:
 

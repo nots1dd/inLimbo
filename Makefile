@@ -122,7 +122,6 @@ build:
 	@echo -e "$(COLOR_BLUE)▶ Building...$(COLOR_RESET)"
 	@$(CMAKE) --build $(BUILD_DIR)
 	@echo -e "$(COLOR_GREEN)✔ Build complete!$(COLOR_RESET)"
-	@echo -e ">> $(COLOR_CYAN)Frontend$(COLOR_RESET): $(FRONTEND)"
 
 buildx:
 	@echo -e "$(COLOR_BLUE)▶ Configuring build ($(BUILD_DIR))...$(COLOR_RESET)"

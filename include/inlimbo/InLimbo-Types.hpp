@@ -36,14 +36,15 @@ using DirectoryStr = std::string;
 using PathCStr      = const char*;
 using DirectoryCStr = const char*;
 
-using Title  = std::string;
-using Album  = std::string;
-using Artist = std::string;
-using Genre  = std::string;
-using Lyrics = std::string;
-using Year   = uint;
-using Disc   = uint;
-using Track  = uint;
+using Title      = std::string;
+using Album      = std::string;
+using Artist     = std::string;
+using Genre      = std::string;
+using Lyrics     = std::string;
+using Year       = uint;
+using Disc       = uint;
+using Track      = uint;
+using Properties = std::unordered_map<std::string, std::string>;
 
 using TitleCStr  = const char*;
 using AlbumCStr  = const char*;
@@ -62,21 +63,21 @@ template <typename T, typename S> using BucketedMap = std::map<T, std::vector<S>
  */
 struct Metadata
 {
-  Title                                        title      = "<Unknown Title>";
-  Artist                                       artist     = "<Unknown Artist>";
-  Album                                        album      = "<Unknown Album>";
-  Genre                                        genre      = "<Unknown Genre>";
-  std::string                                  comment    = "<No Comment>";
-  Year                                         year       = 0;
-  Track                                        track      = 0;
-  uint                                         trackTotal = 0;
-  Disc                                         discNumber = 0;
-  uint                                         discTotal  = 0;
-  Lyrics                                       lyrics     = "<No Lyrics>";
-  std::unordered_map<std::string, std::string> additionalProperties;
-  std::string                                  filePath = "";
-  float                                        duration = 0.0f;
-  int                                          bitrate  = 0;
+  Title       title                = "<Unknown Title>";
+  Artist      artist               = "<Unknown Artist>";
+  Album       album                = "<Unknown Album>";
+  Genre       genre                = "<Unknown Genre>";
+  std::string comment              = "<No Comment>";
+  Year        year                 = 0;
+  Track       track                = 0;
+  uint        trackTotal           = 0;
+  Disc        discNumber           = 0;
+  uint        discTotal            = 0;
+  Lyrics      lyrics               = "<No Lyrics>";
+  Properties  additionalProperties = {};
+  PathStr     filePath             = "";
+  float       duration             = 0.0f;
+  int         bitrate              = 0;
 
   std::string artUrl = "";
 
@@ -114,11 +115,12 @@ struct Song
 //
 // This was initially done to account for duplicated metadata files.
 //
-using SongMap =
-  std::map<Artist, std::map<Album, std::map<Disc, std::map<Track, std::map<ino_t, Song>>>>>;
 using Songs = std::vector<Song>;
 
 using InodeMap = std::map<ino_t, Song>;
 using TrackMap = std::map<Track, InodeMap>;
 using DiscMap  = std::map<Disc, TrackMap>;
 using AlbumMap = std::map<Album, DiscMap>;
+
+// this corresponds to Artist -> Album -> Disc -> Track -> Inode -> Song
+using SongMap = std::map<Artist, AlbumMap>;

@@ -454,6 +454,14 @@ void buildOrLoadLibrary(AppContext& ctx)
 
 void runFrontend(AppContext& ctx)
 {
+  // preliminary check for frontend plugin name
+  if (ctx.m_fePluginName.empty())
+  {
+    LOG_ERROR("Plugin name found to be empty!!");
+    helpers::cmdline::printFrontendPlugins();
+    return;
+  }
+
   // in the frontend only we care about locking the application so we run lock here, not in main
   // file.
 
@@ -462,7 +470,11 @@ void runFrontend(AppContext& ctx)
     utils::unix::LockFile appLock("/tmp/inLimbo.lock");
     auto                  song = query::songmap::read::findSongByTitle(g_songMap, ctx.m_songTitle);
 
-    ASSERT_MSG(song, "Song not found");
+    if (!song)
+    {
+      LOG_ERROR("Song not found: '{}'", ctx.m_songTitle);
+      return;
+    }
 
     // ---------------------------------------------------------
     // Create AudioService (owns AudioEngine)

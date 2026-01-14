@@ -22,9 +22,9 @@ void Config::load()
   s_config = toml::parse_file(path.c_str());
 }
 
-void Config::loadFrom(const std::string& path)
+void Config::loadFrom(const Path& path)
 {
-  if (!std::filesystem::exists(path))
+  if (!std::filesystem::exists(path.c_str()))
   {
     LOG_ERROR("Custom config not found at '{}'", path);
     throw std::runtime_error("Missing custom config");
@@ -40,20 +40,20 @@ auto Config::isLoaded() noexcept -> bool { return s_config.has_value(); }
 // Optional accessors
 // ------------------------------------------------------------
 
-auto Config::getString(std::string_view section, std::string_view key, std::string_view fallback)
+auto Config::getString(SectionView section, KeyView key, std::string_view fallback)
   -> std::string_view
 {
   ensureLoaded();
   return (*s_config)[section][key].value_or(fallback);
 }
 
-auto Config::getInt(std::string_view section, std::string_view key, int64_t fallback) -> int64_t
+auto Config::getInt(SectionView section, KeyView key, int64_t fallback) -> int64_t
 {
   ensureLoaded();
   return (*s_config)[section][key].value_or(fallback);
 }
 
-auto Config::getBool(std::string_view section, std::string_view key, bool fallback) -> bool
+auto Config::getBool(SectionView section, KeyView key, bool fallback) -> bool
 {
   ensureLoaded();
 
@@ -67,7 +67,7 @@ auto Config::getBool(std::string_view section, std::string_view key, bool fallba
 // Required accessors
 // ------------------------------------------------------------
 
-auto Config::requireString(std::string_view section, std::string_view key) -> std::string
+auto Config::requireString(SectionView section, KeyView key) -> std::string
 {
   ensureLoaded();
 
@@ -79,7 +79,7 @@ auto Config::requireString(std::string_view section, std::string_view key) -> st
   return "";
 }
 
-auto Config::requireInt(std::string_view section, std::string_view key) -> int64_t
+auto Config::requireInt(SectionView section, KeyView key) -> int64_t
 {
   ensureLoaded();
 
@@ -91,7 +91,7 @@ auto Config::requireInt(std::string_view section, std::string_view key) -> int64
   return false;
 }
 
-auto Config::requireBool(std::string_view section, std::string_view key) -> bool
+auto Config::requireBool(SectionView section, KeyView key) -> bool
 {
   ensureLoaded();
 
@@ -107,7 +107,7 @@ auto Config::requireBool(std::string_view section, std::string_view key) -> bool
 // Table access
 // ------------------------------------------------------------
 
-auto Config::table(std::string_view section) -> const toml::table&
+auto Config::table(SectionView section) -> const toml::table&
 {
   ensureLoaded();
 
@@ -128,7 +128,7 @@ void Config::ensureLoaded()
     throw std::runtime_error("Config accessed before load()");
 }
 
-void Config::throwMissing(std::string_view section, std::string_view key)
+void Config::throwMissing(SectionView section, KeyView key)
 {
   LOG_ERROR("Missing or invalid config value: [{}].{}", section, key);
   throw std::runtime_error("Invalid configuration");

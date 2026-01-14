@@ -6,10 +6,8 @@
 namespace frontend::raylib::view
 {
 
-static constexpr int   HEADER_H = 50;
-static constexpr int   LEFT_W   = 260;
-static constexpr float ITEM_H   = 24.f;
-static constexpr float VIEW_H   = 700 - 50 - 48 - 48;
+static constexpr float ITEM_H = 24.f;
+static constexpr float VIEW_H = 700 - 50 - 48 - 48;
 
 void ArtistsView::draw(const ui::Fonts& fonts, state::Library& lib, audio::Service&)
 {

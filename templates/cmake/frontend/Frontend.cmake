@@ -1,15 +1,36 @@
 # ===========================================================
-# Cmdline frontend
+# Dummy frontend
 # ===========================================================
 
-set(INLIMBO_FRONTEND_TARGET      inLimbo-fe-cmdline)
-set(INLIMBO_FRONTEND_NAME        "cmdline")
+# These values have to be changed according to your plugin name.
+# Ex: If my plugin name was cmdline, I would write:
+# 
+# set(INLIMBO_FRONTEND_TARGET inLimbo-fe-cmdline)
+# set(INLIMBO_FRONTEND_NAME   "cmdline")
+set(INLIMBO_FRONTEND_TARGET      inLimbo-fe-dummy)
+set(INLIMBO_FRONTEND_NAME        "dummy")
 set(INLIMBO_FRONTEND_OUTPUT_NAME "inlimbo-frontend-cmdline")
 
+# Typically the file structure of a frontend would be like so:
+#
+# include/inlimbo/frontend/dummy/  --> Headers
+# src/frontend/dummy/              --> Source files
+# 
+# The files that HAVE to be present at all costs are:
+#   1. include/inlimbo/dummy/Interface.hpp (registering the plugin with the generic interface)
+#   2. src/frontend/dummy/Interface.cc  (main entry point of the frontend plugin logic)
+#   3. src/frontend/dummy/PluginShim.cc (to generate the frontend plugin)
+# 
+# Failing to abide by the above will most def cause compilation and frontend plugin errors as the 
+# ABI is meant to be quite strict but powerful.
 set(INLIMBO_FE_CMDLINE_SOURCES
-  ${CMAKE_SOURCE_DIR}/src/frontend/cmdline/Interface.cc
-  ${CMAKE_SOURCE_DIR}/src/frontend/cmdline/PluginShim.cc
+  ${CMAKE_SOURCE_DIR}/src/frontend/dummy/Interface.cc
+  ${CMAKE_SOURCE_DIR}/src/frontend/dummy/PluginShim.cc
 )
+
+# -------------------- NOTE ----------------------
+# NOW THE REST OF THE FILE CAN BE IGNORED... (except for line 59)
+# -------------------- NOTE ----------------------
 
 add_library(${INLIMBO_FRONTEND_TARGET} SHARED
     ${INLIMBO_FE_CMDLINE_SOURCES}
@@ -35,7 +56,7 @@ endif()
 
 target_compile_definitions(${INLIMBO_FRONTEND_TARGET}
     PRIVATE
-        INLIMBO_FRONTEND_CMDLINE
+    INLIMBO_FRONTEND_DUMMY # replace with INLIMBO_FRONTEND_<NAME> (ex: INLIMBO_FRONTEND_CMDLINE if frontend is cmdline)
         $<$<CONFIG:Debug>:INLIMBO_DEBUG_BUILD>
 )
 

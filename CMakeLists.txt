@@ -98,6 +98,10 @@ set(INLIMBO_CORE_SOURCES
     src/utils/DirectoryWalker.cc
     src/utils/signal/Handler.cc
     src/utils/string/Equals.cc
+    src/utils/string/Transforms.cc
+    src/config/colors/ConfigLoader.cc
+    src/config/keybinds/ConfigLoader.cc
+    src/config/Watcher.cc
     src/toml/Parser.cc
     src/audio/Engine.cc
     src/audio/Service.cc
@@ -153,7 +157,7 @@ set(INLIMBO_FRONTEND_NAMES "")
 
 # ===================== FRONTENDS ============================
 include(${CMAKE_SOURCE_DIR}/cmake/frontends/cmdline.cmake)
-# include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
 # ===================== FRONTENDS ============================
 
 include(${CMAKE_SOURCE_DIR}/cmake/FrontendPluginList.cmake)

@@ -7,6 +7,13 @@
 #include <poll.h>
 #include <unistd.h>
 
+#include "Logger.hpp"
+#include "config/Colors.hpp"
+#include "config/colors/ConfigLoader.hpp"
+#include "toml/Parser.hpp"
+
+#include "config/keybinds/ConfigLoader.hpp"
+
 #include "mpris/Service.hpp"
 #include "query/SongMap.hpp"
 #include "utils/timer/Timer.hpp"
@@ -17,19 +24,68 @@ namespace frontend::cmdline
 static constexpr int MIN_TERM_COLS = 80;
 static constexpr int MIN_TERM_ROWS = 24;
 
-#define UI_CLEAR     "\033[H\033[J"
-#define UI_TITLE     "\033[1;36mInLimbo Player\033[0m"
 #define UI_BAR_FILL  "█"
 #define UI_BAR_EMPTY "░"
 
+static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris) -> void
+{
+  auto infoOpt = audio.getCurrentTrackInfo();
+  if (!infoOpt)
+    return;
+
+  const auto& info = *infoOpt;
+
+  if (!info.playing)
+    return;
+
+  if (info.lengthSec <= 0.0)
+    return;
+
+  constexpr double EPS = 0.10;
+
+  if (info.positionSec + EPS < info.lengthSec)
+    return;
+
+  audio.nextTrack();
+  mpris.updateMetadata();
+  mpris.notify();
+}
+
+void Interface::loadConfig()
+{
+  try
+  {
+    tomlparser::Config::load();
+
+    config::colors::ConfigLoader colorsCfg(FRONTEND_NAME);
+    colorsCfg.loadIntoRegistry(true);
+
+    config::keybinds::ConfigLoader keysCfg(FRONTEND_NAME);
+    keysCfg.loadIntoRegistry(true);
+
+    CmdlineConfig next;
+    next.kb     = Keybinds::load(FRONTEND_NAME);
+    next.colors = UiColors::load(FRONTEND_NAME);
+
+    m_cfg.set(std::move(next));
+
+    LOG_INFO("Configuration loaded.");
+  }
+  catch (const std::exception& e)
+  {
+    LOG_ERROR("loadConfig failed: {}", e.what());
+  }
+}
+
 void Interface::run(audio::Service& audio)
 {
+  loadConfig();
 
   query::songmap::read::forEachSongInAlbum(
     *m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
     [&](const Disc&, const Track&, const ino_t, const Song& song) -> void
     {
-      if (song.metadata.filePath == audio.getCurrentMetadata()->filePath)
+      if (song.metadata.track <= audio.getCurrentMetadata()->track)
         return;
 
       auto h = audio.registerTrack(song);
@@ -90,6 +146,14 @@ void Interface::statusLoop(audio::Service& audio)
 {
   while (m_isRunning.load())
   {
+
+    if (m_cfgWatcher.pollChanged())
+    {
+      LOG_DEBUG("Configuration file changed, reloading...");
+      loadConfig();
+    }
+
+    autoNextIfFinished(audio, *m_mprisService);
     draw(audio);
     std::this_thread::sleep_for(std::chrono::milliseconds(120));
   }
@@ -133,11 +197,23 @@ void Interface::seekLoop(audio::Service& audio)
 
 void Interface::drawTooSmall(const TermSize& ts)
 {
-  std::cout << UI_CLEAR << UI_TITLE << "\n\n";
-  std::cout << " Terminal too small\n\n";
-  std::cout << " Required : " << MIN_TERM_COLS << " cols × " << MIN_TERM_ROWS << " rows\n";
-  std::cout << " Current  : " << ts.cols << " cols × " << ts.rows << " rows\n\n";
-  std::cout << " Resize the terminal window.\n";
+  auto        cfg    = m_cfg.get();
+  const auto& colors = cfg->colors;
+
+  std::cout << config::colors::Ansi::Clear;
+
+  std::cout << config::colors::Ansi::Bold << colors.accent << "InLimbo Player"
+            << config::colors::Ansi::Reset << "\n\n";
+
+  std::cout << config::colors::Ansi::Bold << colors.warning << " Terminal too small"
+            << config::colors::Ansi::Reset << "\n\n";
+
+  std::cout << " Current  : " << config::colors::Ansi::Bold << colors.error << ts.cols << " cols × "
+            << ts.rows << " rows" << config::colors::Ansi::Reset << "\n\n";
+
+  std::cout << config::colors::Ansi::Dim << colors.fg << " Resize the terminal window."
+            << config::colors::Ansi::Reset << "\n";
+
   std::cout.flush();
 }
 
@@ -170,22 +246,61 @@ void Interface::draw(audio::Service& audio)
   constexpr int BAR_W = 50;
   int filled          = info.lengthSec > 0.0 ? int((info.positionSec / info.lengthSec) * BAR_W) : 0;
 
-  std::cout << UI_CLEAR << UI_TITLE << "\n";
-  std::cout << "──────────────────────────────────────────────────────────\n\n";
+  auto cfg = m_cfg.get();
 
-  std::cout << " Playlist\n";
+  const auto& kb     = cfg->kb;
+  const auto& colors = cfg->colors;
+
+  const char* kPlayPauseName = kb.playPauseName.c_str();
+  const char* kNextName      = kb.nextName.c_str();
+  const char* kPrevName      = kb.prevName.c_str();
+  const char* kRestartName   = kb.restartName.c_str();
+  const char* kSeekBackName  = kb.seekBackName.c_str();
+  const char* kSeekFwdName   = kb.seekFwdName.c_str();
+  const char* kVolUpName     = kb.volUpName.c_str();
+  const char* kVolDownName   = kb.volDownName.c_str();
+  const char* kQuitName      = kb.quitName.c_str();
+
+  const auto& accent  = colors.accent;
+  const auto& FG      = colors.fg;
+  const auto& BG      = colors.bg;
+  const auto& success = colors.success;
+
+  std::cout << config::colors::Ansi::Clear;
+
+  // base theme
+  std::cout << BG << FG;
+
+  std::cout << config::colors::Ansi::Bold << accent << "InLimbo Player"
+            << config::colors::Ansi::Reset << "\n";
+
+  std::cout << config::colors::Ansi::Dim << FG
+            << "──────────────────────────────────────────────────────────"
+            << config::colors::Ansi::Reset << "\n\n";
+
+  std::cout << config::colors::Ansi::Bold << accent << " Playlist" << config::colors::Ansi::Reset
+            << "\n";
+
   std::cout << "   Prev : " << (prevMeta ? prevMeta->title : "<none>") << "\n";
-  std::cout << " ▶ Now  : " << curMeta->title << " — " << curMeta->artist << " (" << current + 1
-            << "/" << size << ")\n";
+
+  std::cout << " " << accent << "▶" << config::colors::Ansi::Reset
+            << " Now  : " << config::colors::Ansi::Bold << FG << curMeta->title
+            << config::colors::Ansi::Reset << " — " << curMeta->artist << " (" << current + 1 << "/"
+            << size << ")\n";
+
   std::cout << "   Next : " << (nextMeta ? nextMeta->title : "<none>") << "\n\n";
 
-  std::cout << " Track\n";
+  std::cout << config::colors::Ansi::Bold << accent << " Track" << config::colors::Ansi::Reset
+            << "\n";
+
   std::cout << "   Album   : " << curMeta->album << "\n";
   std::cout << "   Genre   : " << curMeta->genre << "\n";
   std::cout << "   Bitrate : " << curMeta->bitrate << " kbps\n";
   std::cout << "   File    : " << curMeta->filePath.c_str() << "\n\n";
 
-  std::cout << " Playback\n";
+  std::cout << config::colors::Ansi::Bold << accent << " Playback" << config::colors::Ansi::Reset
+            << "\n";
+
   std::cout << "   State   : " << (info.playing ? "Playing" : "Paused") << "\n";
   std::cout << "   Time    : " << utils::fmtTime(info.positionSec) << " / "
             << utils::fmtTime(info.lengthSec) << "\n";
@@ -193,10 +308,17 @@ void Interface::draw(audio::Service& audio)
 
   std::cout << "   ";
   for (int i = 0; i < BAR_W; ++i)
-    std::cout << (i < filled ? UI_BAR_FILL : UI_BAR_EMPTY);
-  std::cout << "\n\n";
+  {
+    if (i < filled)
+      std::cout << success << UI_BAR_FILL;
+    else
+      std::cout << FG << UI_BAR_EMPTY;
+  }
+  std::cout << config::colors::Ansi::Reset << "\n\n";
 
-  std::cout << " Backend\n";
+  std::cout << config::colors::Ansi::Bold << accent << " Backend" << config::colors::Ansi::Reset
+            << "\n";
+
   std::cout << "   Device   : " << backend.dev.description.c_str() << "\n";
   std::cout << "   Format   : " << backend.pcmFormatName << "\n";
   std::cout << "   Rate     : " << backend.sampleRate << " Hz\n";
@@ -205,11 +327,23 @@ void Interface::draw(audio::Service& audio)
             << std::setprecision(1) << backend.latencyMs << " ms)\n";
   std::cout << "   XRuns    : " << backend.xruns << "\n\n";
 
-  std::cout << " Controls\n";
-  std::cout << "   [p] play   [s] pause   [r] restart\n";
-  std::cout << "   [n] next   [P] prev    [b/f] seek\n";
-  std::cout << "   [+/-] vol  [q] quit\n";
+  std::cout << config::colors::Ansi::Bold << accent << " Controls" << config::colors::Ansi::Reset
+            << "\n";
 
+  std::cout << "   " << accent << "[" << kPlayPauseName << "]" << config::colors::Ansi::Reset
+            << " play/pause   " << accent << "[" << kRestartName << "]"
+            << config::colors::Ansi::Reset << " restart\n";
+
+  std::cout << "   " << accent << "[" << kNextName << "]" << config::colors::Ansi::Reset
+            << " next   " << accent << "[" << kPrevName << "]" << config::colors::Ansi::Reset
+            << " prev    " << accent << "[" << kSeekBackName << "/" << kSeekFwdName << "]"
+            << config::colors::Ansi::Reset << " seek\n";
+
+  std::cout << "   " << accent << "[" << kVolUpName << "/" << kVolDownName << "]"
+            << config::colors::Ansi::Reset << " vol  " << accent << "[" << kQuitName << "]"
+            << config::colors::Ansi::Reset << " quit\n";
+
+  std::cout << config::colors::Ansi::Reset;
   std::cout.flush();
 }
 
@@ -217,39 +351,60 @@ auto Interface::handleKey(audio::Service& audio, char c) -> bool
 {
   bool trackChanged = false;
 
-  switch (c)
+  auto        cfg = m_cfg.get();
+  const auto& kb  = cfg->kb;
+
+  const char kPlayPause = kb.playPause;
+  const char kNext      = kb.next;
+  const char kPrev      = kb.prev;
+  const char kRestart   = kb.restart;
+  const char kSeekBack  = kb.seekBack;
+  const char kSeekFwd   = kb.seekFwd;
+  const char kVolUp     = kb.volUp;
+  const char kVolDown   = kb.volDown;
+  const char kQuit      = kb.quit;
+
+  if (c == kPlayPause)
   {
-    case 'p':
-      audio.playCurrent();
-      break;
-    case 's':
-      audio.pauseCurrent();
-      break;
-    case 'n':
-      audio.nextTrack();
-      trackChanged = true;
-      break;
-    case 'P':
-      audio.previousTrack();
-      trackChanged = true;
-      break;
-    case 'r':
-      audio.restartCurrent();
-      break;
-    case 'b':
-      m_pendingSeek -= 2.0;
-      return true; // no notify yet
-    case 'f':
-      m_pendingSeek += 2.0;
-      return true;
-    case '=':
-      audio.setVolume(std::min(1.5f, audio.getVolume() + 0.05f));
-      return true;
-    case '-':
-      audio.setVolume(std::max(0.0f, audio.getVolume() - 0.05f));
-      return true;
-    case 'q':
-      return false;
+    audio.isPlaying() ? audio.pauseCurrent() : audio.playCurrent();
+  }
+  else if (c == kNext)
+  {
+    audio.nextTrack();
+    trackChanged = true;
+  }
+  else if (c == kPrev)
+  {
+    audio.previousTrack();
+    trackChanged = true;
+  }
+  else if (c == kRestart)
+  {
+    audio.restartCurrent();
+  }
+  else if (c == kSeekBack)
+  {
+    m_pendingSeek -= 2.0;
+    return true;
+  }
+  else if (c == kSeekFwd)
+  {
+    m_pendingSeek += 2.0;
+    return true;
+  }
+  else if (c == kVolUp)
+  {
+    audio.setVolume(std::min(1.5f, audio.getVolume() + 0.05f));
+    return true;
+  }
+  else if (c == kVolDown)
+  {
+    audio.setVolume(std::max(0.0f, audio.getVolume() - 0.05f));
+    return true;
+  }
+  else if (c == kQuit)
+  {
+    return false;
   }
 
   if (trackChanged)
@@ -257,15 +412,6 @@ auto Interface::handleKey(audio::Service& audio, char c) -> bool
 
   m_mprisService->notify();
   return true;
-}
-
-void Interface::showMetadata(const Metadata& m)
-{
-  std::cout << UI_CLEAR << UI_TITLE << "\n\n"
-            << "Song    : " << m.title << " by " << m.artist << "\n"
-            << "Album   : " << m.album << " (" << m.genre << ")\n"
-            << "Bitrate : " << m.bitrate << " kbps\n"
-            << "Path    : " << m.filePath.c_str() << "\n\n";
 }
 
 } // namespace frontend::cmdline

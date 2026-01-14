@@ -2,8 +2,9 @@
 # Raylib frontend
 # ===========================================================
 
-set(INLIMBO_FRONTEND_TARGET inLimbo-fe-raylib)
-set(INLIMBO_FRONTEND_NAME "raylib")
+set(INLIMBO_FRONTEND_TARGET      inLimbo-fe-raylib)
+set(INLIMBO_FRONTEND_NAME        "raylib")
+set(INLIMBO_FRONTEND_OUTPUT_NAME "inlimbo-frontend-raylib")
 
 find_package(raylib REQUIRED)
 
@@ -28,7 +29,7 @@ add_library(${INLIMBO_FRONTEND_TARGET} SHARED
 )
 
 set_target_properties(${INLIMBO_FRONTEND_TARGET} PROPERTIES
-    OUTPUT_NAME "inlimbo-frontend-raylib"
+  OUTPUT_NAME ${INLIMBO_FRONTEND_OUTPUT_NAME}
     PREFIX "lib"
     POSITION_INDEPENDENT_CODE ON
 )
@@ -60,7 +61,7 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
             $<TARGET_FILE:${INLIMBO_FRONTEND_TARGET}>
             "${INLIMBO_USER_FRONTEND_DIR}/$<TARGET_FILE_NAME:${INLIMBO_FRONTEND_TARGET}>"
-    COMMENT ">> Deploying frontend plugin to ${INLIMBO_USER_FRONTEND_DIR}"
+    COMMENT ">> Deploying '${INLIMBO_FRONTEND_NAME}' frontend plugin to ${INLIMBO_USER_FRONTEND_DIR}"
 )
 
 list(APPEND INLIMBO_FRONTEND_NAMES "${INLIMBO_FRONTEND_NAME}")
