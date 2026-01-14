@@ -79,9 +79,9 @@ struct AudioFormat
 struct Sound
 {
   // Sound struct is NOT trivially copyable
-  Sound(const Sound&) = delete;
-  auto operator=(const Sound&) -> Sound& = delete;
-  Sound(Sound&&) noexcept = delete;
+  Sound(const Sound&)                        = delete;
+  auto operator=(const Sound&) -> Sound&     = delete;
+  Sound(Sound&&) noexcept                    = delete;
   auto operator=(Sound&&) noexcept -> Sound& = delete;
 
   AudioFormat source; // exact file properties

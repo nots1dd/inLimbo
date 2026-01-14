@@ -11,7 +11,8 @@ namespace utils
 
 static inline auto next_pow2(size_t x) -> size_t
 {
-  if (x <= 1) return 1;
+  if (x <= 1)
+    return 1;
   --x;
   x |= x >> 1;
   x |= x >> 2;
@@ -26,8 +27,7 @@ static inline auto next_pow2(size_t x) -> size_t
 // A Single producer, Single consumer generic ring buffer
 //
 // It decides the capacity on the next_pow2 rule.
-template <typename T>
-class RingBuffer
+template <typename T> class RingBuffer
 {
   // although we will never hit this (as RingBuffer will be mostly containing primitive dtypes)
   // This may come in handy?
@@ -53,10 +53,7 @@ public:
   }
 
   // how many elements can be written
-  [[nodiscard]] auto space() const noexcept -> size_t
-  {
-    return m_capacity - available();
-  }
+  [[nodiscard]] auto space() const noexcept -> size_t { return m_capacity - available(); }
 
   auto clear() noexcept -> void
   {
@@ -81,7 +78,7 @@ public:
     size_t wpos = w & m_mask;
 
     // first chunk up to end
-    size_t first = toWrite;
+    size_t first   = toWrite;
     size_t tillEnd = m_capacity - wpos;
     if (first > tillEnd)
       first = tillEnd;
@@ -114,7 +111,7 @@ public:
 
     size_t rpos = r & m_mask;
 
-    size_t first = toRead;
+    size_t first   = toRead;
     size_t tillEnd = m_capacity - rpos;
     if (first > tillEnd)
       first = tillEnd;
