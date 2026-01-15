@@ -164,7 +164,7 @@ set(INLIMBO_FRONTEND_NAMES "")
 
 # ===================== FRONTENDS ============================
 include(${CMAKE_SOURCE_DIR}/cmake/frontends/cmdline.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
+# include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
 # ===================== FRONTENDS ============================
 
 include(${CMAKE_SOURCE_DIR}/cmake/FrontendPluginList.cmake)
@@ -172,7 +172,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/FrontendPluginList.cmake)
 # -----------------------------------------------------------
 # Test Executable
 # -----------------------------------------------------------
-set(SOURCES     
+set(SOURCES
   src/Context.cc
   src/test.cpp
 )

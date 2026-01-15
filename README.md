@@ -22,33 +22,33 @@
 **MOST OF THIS README IS OUTDATED OR IRRELEVANT TO THIS BRANCH.**
 
 > [!CAUTION]
-> 
-> This is the develop branch! 
-> 
+>
+> This is the develop branch!
+>
 > Firstly ensure that you have **ALL** the dependencies resolved.
 > (**spdlog**, **toml++**, **miniaudio** and **cereal** should all be resolved by git and cmake itself!)
-> 
+>
 > You will have to install **CMake**, **Git**, **C++20 Compiler (GCC/Clang/MSVC)**, **libbacktrace**!!
-> 
+>
 > Have the repo cloned **WITH THE SUBMODULES**:
-> 
-> ```bash 
+>
+> ```bash
 > # clone repo (develop branch)
 > git clone -b develop https://github.com/nots1dd/inlimbo
-> 
+>
 > cd inlimbo
 > make init
 > make buildx
 > ```
-> 
+>
 
 > [!WARNING]
-> 
+>
 > inLimbo is a WIP
-> 
+>
 > Most aspects of the project are under heavy development
 > and no stable release is present as of yet.
-> 
+>
 
 The inLimbo project aims to be a new upcoming TUI music player for UNIX based systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.
 
@@ -60,37 +60,48 @@ Why would you want to stay in Limbo?
 
 Sometimes it feels good to be stuck in a weird place in your life, and it feels even better to be stuck in Limbo with music :)
 
-## **DEPENDENCIES** 
+## **DEPENDENCIES**
 
-> [!IMPORTANT]
-> 
-> It is **HIGHLY** recommended to have FFmpeg installed in your system 
-> 
-> This is required for testing purposes (`./tests/`), and in the future, inLimbo may have features to embed your desired metadata to an audio file. 
-> 
+You can check the deps in `ci/<distro-pkg-manager>/` (ex: If you are on Arch Linux, check out `ci/pacman/packages.txt`)
 
-| Dependency      | Ubuntu                    | Fedora                        | Arch Linux                   |
-|-----------------|---------------------------|-------------------------------|------------------------------|
-| **TagLib**      | `libtag1-dev`             | `taglib-devel`                | `taglib`                     |
-| **Gio**         | `libgio-2.0-dev`          | `glib2-devel`                 | `glib2`                      |
-| **GLib**        | `libglib-2.0-dev`         | `glib2-devel`                 | `glib2`                      |
-| **pkg-config**  | `pkg-config`              | `pkgconf`                     | `pkgconf`                    |
-| **ImageMagick** | `imagemagick`             | `ImageMagick`                 | `imagemagick`                |
-| **X11**         | `libx11-dev`              | `libX11-devel`                | `libx11`                     |
-| **PNG**         | `libpng-dev`              | `libpng-devel`                | `libpng`                     |
+To install these deps you *could* run:
+
+> [!CAUTION]
+>
+> Although the Makefile will also give a similar prompt,
+> do your due diligence in understanding what the `install-deps`
+> command is going to execute!
+>
+> This project is not responsible for what happens to
+> your system should any problems arise.
+>
+
+```bash
+# first verify if you have all the deps (SAFE - NO CHANGES TO SYSTEM)
+make verify-deps
+
+# install deps (!! RUN IT AT YOUR OWN DISCRETION !!)
+make install-deps
+```
+
+Note that `install-deps` will only work for:
+
+1. Arch Linux
+2. Fedora
+3. Ubuntu/Debian
 
 ## **BUILDING**
 
 > [!IMPORTANT]
-> 
+>
 > inLimbo has been **TRIED AND TESTED** in the following GNU/Linux distros:
-> 
+>
 > 1. Arch Linux (x86-64 arch)
 > 2. Ubuntu (x86-64 arch)
 > 3. Fedora/Nobara Linux (x86-64 arch)
-> 
+>
 > As long as your distribution can install & build the requirements, there should *NOT* be any issue
-> 
+>
 
 Check out [BUILD.md](https://github.com/nots1dd/inLimbo/blob/develop/BUILD.md) for more options to build targets
 
@@ -98,7 +109,7 @@ Check out [BUILD.md](https://github.com/nots1dd/inLimbo/blob/develop/BUILD.md) f
 
 Just run:
 
-```bash 
+```bash
 ./build/inLimbo -h                           # for help
 
 # A few examples
@@ -120,10 +131,10 @@ Just run:
 A LOT of things are possible with your song library with inLimbo. Lots of read only queries at your fingertips, and it unleashes the potential of having locally downloaded music.
 
 > [!IMPORTANT]
-> 
+>
 > Some arguments mentioned maybe outdated so always run `--help` or `-h`
 > before running the above!!
-> 
+>
 
 ## **CONFIG**
 
@@ -135,14 +146,14 @@ The configuration aspect of the inLimbo project comprises of the following field
 Something that is quite cool and almost standardised nowadays that inLimbo has is **hot-reloading** of the config file.
 
 > [!NOTE]
-> 
+>
 > **What is hot-reloading of config file?**
-> 
-> If you edit the config file (`~/.config/inLimbo/config.toml`) (without killing inLimbo process), 
+>
+> If you edit the config file (`~/.config/inLimbo/config.toml`) (without killing inLimbo process),
 > it will immediately show up on the frontend! This allows you to make themes and vibe to your music :)
-> 
+>
 > Note that this is **only** available for `keybinds` and `colors` fields only!!
-> 
+>
 
 Although more is to come for this, the architecture is made in such a way that the colors and keybinds config and watcher are created by
 `inLimbo-core`, but the frontend takes the onus of actually finding the required fields, validation, reloading of config and whatnot.
