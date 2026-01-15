@@ -9,20 +9,20 @@ namespace utils::ascii
 // Control characters (0..31) + DEL(127)
 // ------------------------------------------------------------
 
-static constexpr ui8 NUL = 0;   // '\0'
+static constexpr ui8 NUL = 0; // '\0'
 static constexpr ui8 SOH = 1;
 static constexpr ui8 STX = 2;
 static constexpr ui8 ETX = 3;
 static constexpr ui8 EOT = 4;
 static constexpr ui8 ENQ = 5;
 static constexpr ui8 ACK = 6;
-static constexpr ui8 BEL = 7;   // '\a'
-static constexpr ui8 BS  = 8;   // backspace  '\b'
-static constexpr ui8 TAB = 9;   // '\t'
-static constexpr ui8 LF  = 10;  // line feed  '\n'
-static constexpr ui8 VT  = 11;  // vertical tab '\v'
-static constexpr ui8 FF  = 12;  // form feed '\f'
-static constexpr ui8 CR  = 13;  // carriage return '\r'
+static constexpr ui8 BEL = 7;  // '\a'
+static constexpr ui8 BS  = 8;  // backspace  '\b'
+static constexpr ui8 TAB = 9;  // '\t'
+static constexpr ui8 LF  = 10; // line feed  '\n'
+static constexpr ui8 VT  = 11; // vertical tab '\v'
+static constexpr ui8 FF  = 12; // form feed '\f'
+static constexpr ui8 CR  = 13; // carriage return '\r'
 static constexpr ui8 SO  = 14;
 static constexpr ui8 SI  = 15;
 
@@ -38,7 +38,7 @@ static constexpr ui8 CAN = 24;
 static constexpr ui8 EM  = 25;
 static constexpr ui8 SUB = 26;
 
-static constexpr ui8 ESC = 27;  // escape
+static constexpr ui8 ESC = 27; // escape
 static constexpr ui8 FS  = 28;
 static constexpr ui8 GS  = 29;
 static constexpr ui8 RS  = 30;
@@ -52,21 +52,21 @@ static constexpr ui8 DEL = 127;
 
 static constexpr ui8 SPACE = 32;
 
-static constexpr ui8 EXCLAMATION  = 33;  // !
-static constexpr ui8 DOUBLE_QUOTE = 34;  // "
-static constexpr ui8 HASH         = 35;  // #
-static constexpr ui8 DOLLAR       = 36;  // $
-static constexpr ui8 PERCENT      = 37;  // %
-static constexpr ui8 AMPERSAND    = 38;  // &
-static constexpr ui8 SINGLE_QUOTE = 39;  // '
-static constexpr ui8 LPAREN       = 40;  // (
-static constexpr ui8 RPAREN       = 41;  // )
-static constexpr ui8 ASTERISK     = 42;  // *
-static constexpr ui8 PLUS         = 43;  // +
-static constexpr ui8 COMMA        = 44;  // ,
-static constexpr ui8 MINUS        = 45;  // -
-static constexpr ui8 DOT          = 46;  // .
-static constexpr ui8 SLASH        = 47;  // /
+static constexpr ui8 EXCLAMATION  = 33; // !
+static constexpr ui8 DOUBLE_QUOTE = 34; // "
+static constexpr ui8 HASH         = 35; // #
+static constexpr ui8 DOLLAR       = 36; // $
+static constexpr ui8 PERCENT      = 37; // %
+static constexpr ui8 AMPERSAND    = 38; // &
+static constexpr ui8 SINGLE_QUOTE = 39; // '
+static constexpr ui8 LPAREN       = 40; // (
+static constexpr ui8 RPAREN       = 41; // )
+static constexpr ui8 ASTERISK     = 42; // *
+static constexpr ui8 PLUS         = 43; // +
+static constexpr ui8 COMMA        = 44; // ,
+static constexpr ui8 MINUS        = 45; // -
+static constexpr ui8 DOT          = 46; // .
+static constexpr ui8 SLASH        = 47; // /
 
 static constexpr ui8 ZERO  = 48; // 0
 static constexpr ui8 ONE   = 49; // 1
@@ -115,12 +115,12 @@ static constexpr ui8 X = 88;
 static constexpr ui8 Y = 89;
 static constexpr ui8 Z = 90;
 
-static constexpr ui8 LBRACKET  = 91; // [
-static constexpr ui8 BACKSLASH = 92; // '\'
-static constexpr ui8 RBRACKET  = 93; // ]
-static constexpr ui8 CARET     = 94; // ^
-static constexpr ui8 UNDERSCORE= 95; // _
-static constexpr ui8 BACKTICK  = 96; // `
+static constexpr ui8 LBRACKET   = 91; // [
+static constexpr ui8 BACKSLASH  = 92; // '\'
+static constexpr ui8 RBRACKET   = 93; // ]
+static constexpr ui8 CARET      = 94; // ^
+static constexpr ui8 UNDERSCORE = 95; // _
+static constexpr ui8 BACKTICK   = 96; // `
 
 // a..z
 static constexpr ui8 a = 97;
@@ -159,10 +159,7 @@ static constexpr ui8 TILDE  = 126; // ~
 // Helpers
 // ------------------------------------------------------------
 
-[[nodiscard]] constexpr auto is_ascii(int v) noexcept -> bool
-{
-  return v >= 0 && v <= 127;
-}
+[[nodiscard]] constexpr auto is_ascii(int v) noexcept -> bool { return v >= 0 && v <= 127; }
 
 [[nodiscard]] constexpr auto is_control(int v) noexcept -> bool
 {
@@ -180,40 +177,19 @@ static constexpr ui8 TILDE  = 126; // ~
   return v == SPACE || v == TAB || v == LF || v == VT || v == FF || v == CR;
 }
 
-[[nodiscard]] constexpr auto isSpace(int v) noexcept -> bool
-{
-  return v == SPACE;
-}
+[[nodiscard]] constexpr auto isSpace(int v) noexcept -> bool { return v == SPACE; }
 
-[[nodiscard]] constexpr auto isEnter(int v) noexcept -> bool
-{
-  return v == LF || v == CR;
-}
+[[nodiscard]] constexpr auto isEnter(int v) noexcept -> bool { return v == LF || v == CR; }
 
-[[nodiscard]] constexpr auto isDigit(int v) noexcept -> bool
-{
-  return v >= ZERO && v <= NINE;
-}
+[[nodiscard]] constexpr auto isDigit(int v) noexcept -> bool { return v >= ZERO && v <= NINE; }
 
-[[nodiscard]] constexpr auto isUpper(int v) noexcept -> bool
-{
-  return v >= A && v <= Z;
-}
+[[nodiscard]] constexpr auto isUpper(int v) noexcept -> bool { return v >= A && v <= Z; }
 
-[[nodiscard]] constexpr auto isLower(int v) noexcept -> bool
-{
-  return v >= a && v <= z;
-}
+[[nodiscard]] constexpr auto isLower(int v) noexcept -> bool { return v >= a && v <= z; }
 
-[[nodiscard]] constexpr auto isAlpha(int v) noexcept -> bool
-{
-  return isUpper(v) || isLower(v);
-}
+[[nodiscard]] constexpr auto isAlpha(int v) noexcept -> bool { return isUpper(v) || isLower(v); }
 
-[[nodiscard]] constexpr auto isAlnum(int v) noexcept -> bool
-{
-  return isAlpha(v) || isDigit(v);
-}
+[[nodiscard]] constexpr auto isAlnum(int v) noexcept -> bool { return isAlpha(v) || isDigit(v); }
 
 [[nodiscard]] constexpr auto toLower(int v) noexcept -> int
 {
