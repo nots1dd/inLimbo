@@ -58,7 +58,7 @@ void setupArgs(cli::CmdLine& args)
   args.add<float>(
     "General",
     "volume",
-    'v',
+    'V',
     "Initial playback volume (0-100)",
     75.0f,
     [](float vol) -> bool {

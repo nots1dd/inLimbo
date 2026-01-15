@@ -1,4 +1,5 @@
 #include "CmdLine.hpp"
+#include "Config.hpp"
 #include <sstream>
 
 namespace cli
@@ -8,6 +9,7 @@ CmdLine::CmdLine(const std::string& program, const std::string& description)
     : m_program(program), m_options(program, description)
 {
   addFlag("General", "help", 'h', "Show help");
+  addFlag("General", "version", 'v', "Show version information");
 }
 
 void CmdLine::addFlag(const std::string& group, const std::string& longName, char shortName,
@@ -31,6 +33,17 @@ void CmdLine::parse(int argc, char** argv)
   catch (const std::exception& ex)
   {
     throw CliError{formatError("Invalid command line", "argument parsing", ex.what())};
+  }
+
+  if (has("version"))
+  {
+    std::ostringstream out;
+    out << "Version : " << INLIMBO_VERSION_STR << "\n";
+    out << "Commit  : " << INLIMBO_GIT_COMMIT_HASH << "\n";
+    out << "Build ID: " << INLIMBO_BUILD_ID << "\n";
+    out << "Branch  : " << INLIMBO_GIT_BRANCH << "\n";
+    out << "Dirty   : " << (INLIMBO_GIT_DIRTY ? "yes" : "no") << "\n";
+    throw VersionRequested{out.str()};
   }
 
   if (has("help"))

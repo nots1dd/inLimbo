@@ -83,7 +83,13 @@ pkg_check_modules(SWRESAMPLE REQUIRED libswresample)
 pkg_check_modules(ALSA REQUIRED alsa)
 pkg_check_modules(DBUS REQUIRED dbus-1)
 
+# Make MPRIS C bindings
 include(${CMAKE_SOURCE_DIR}/cmake/mpris/mpris-c.cmake)
+
+# -----------------------------------------------------------
+# Version Information
+# -----------------------------------------------------------
+include(${CMAKE_SOURCE_DIR}/cmake/Version.cmake)
 
 # -----------------------------------------------------------
 # Backend Shared Library
@@ -158,7 +164,7 @@ set(INLIMBO_FRONTEND_NAMES "")
 
 # ===================== FRONTENDS ============================
 include(${CMAKE_SOURCE_DIR}/cmake/frontends/cmdline.cmake)
-# include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
 # ===================== FRONTENDS ============================
 
 include(${CMAKE_SOURCE_DIR}/cmake/FrontendPluginList.cmake)

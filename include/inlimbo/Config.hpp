@@ -15,6 +15,28 @@
   INLIMBO_VERSION_ENCODE(INLIMBO_VERSION_MAJOR, INLIMBO_VERSION_MINOR, INLIMBO_VERSION_PATCH)
 
 // ============================================================
+// Git Commit Info (provided by cmake)
+// ============================================================
+
+#ifndef INLIMBO_GIT_COMMIT_HASH
+#define INLIMBO_GIT_COMMIT_HASH "unknown"
+#endif
+
+#ifndef INLIMBO_GIT_COMMIT_SHORT
+#define INLIMBO_GIT_COMMIT_SHORT "unknown"
+#endif
+
+#ifndef INLIMBO_GIT_BRANCH
+#define INLIMBO_GIT_BRANCH "unknown"
+#endif
+
+#ifndef INLIMBO_GIT_DIRTY
+#define INLIMBO_GIT_DIRTY 0
+#endif
+
+#define INLIMBO_BUILD_ID INLIMBO_VERSION_STR "-" INLIMBO_GIT_COMMIT_SHORT
+
+// ============================================================
 // Compiler / Standard / Platform Detection
 // ============================================================
 #if defined(_MSVC_LANG)

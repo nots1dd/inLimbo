@@ -28,6 +28,11 @@ public:
     std::string text;
   };
 
+  struct VersionRequested
+  {
+    std::string text;
+  };
+
   struct CliError
   {
     std::string message;

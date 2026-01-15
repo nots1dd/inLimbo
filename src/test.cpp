@@ -32,6 +32,11 @@ auto main(int argc, char* argv[]) -> int
     std::cout << h.text << '\n';
     return EXIT_SUCCESS;
   }
+  catch (const cli::CmdLine::VersionRequested& v)
+  {
+    std::cout << v.text << '\n';
+    return EXIT_SUCCESS;
+  }
   catch (const cli::CmdLine::CliError& e)
   {
     LOG_ERROR("CliError: {}", e.message);
