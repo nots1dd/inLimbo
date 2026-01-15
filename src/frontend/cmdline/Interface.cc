@@ -322,13 +322,14 @@ void Interface::draw(audio::Service& audio)
 
   auto l_Title = [&](std::string_view s) -> void
   {
-    std::cout << config::colors::Ansi::Bold << colors.accent << s << config::colors::Ansi::Reset << "\n";
+    std::cout << config::colors::Ansi::Bold << colors.accent << s << config::colors::Ansi::Reset
+              << "\n";
   };
 
   auto l_Section = [&](std::string_view s) -> void
   {
-    std::cout << config::colors::Ansi::Bold << colors.accent << " " << s << config::colors::Ansi::Reset
-              << "\n";
+    std::cout << config::colors::Ansi::Bold << colors.accent << " " << s
+              << config::colors::Ansi::Reset << "\n";
   };
 
   auto l_Sep = [&]() -> void
@@ -401,8 +402,8 @@ void Interface::draw(audio::Service& audio)
 
   l_Section("Backend");
   std::cout << "   Device   : " << backend.dev.name.c_str() << "\n";
-  std::cout << "   Codec    : " << backend.codecLongName.c_str() << " - (" << backend.codecName.c_str()
-            << ")\n";
+  std::cout << "   Codec    : " << backend.codecLongName.c_str() << " - ("
+            << backend.codecName.c_str() << ")\n";
   std::cout << "   Format   : " << backend.pcmFormatName.c_str() << "\n";
   std::cout << "   Rate     : " << backend.sampleRate << " Hz\n";
   std::cout << "   Channels : " << backend.channels << "\n";
