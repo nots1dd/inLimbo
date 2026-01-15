@@ -479,7 +479,7 @@ void runFrontend(AppContext& ctx)
     // ---------------------------------------------------------
     // Create AudioService (owns AudioEngine)
     // ---------------------------------------------------------
-    audio::Service audio;
+    audio::Service audio(g_songMap);
 
     mpris::cmdline::Backend mprisBackend(audio);
     mpris::Service          mprisService(mprisBackend, "inLimbo");
@@ -523,20 +523,18 @@ void runFrontend(AppContext& ctx)
   catch (const utils::unix::LockFileAlreadyLocked&)
   {
     LOG_ERROR("Another instance of inLimbo is already running.");
-    return;
   }
   catch (const utils::unix::LockFileError& e)
   {
     LOG_ERROR("LockFileError: {}", e.what());
-    return;
   }
   catch (const frontend::PluginError& e)
   {
     LOG_ERROR("Frontend error: {}", e.what());
   }
-  catch (...)
+  catch (std::exception& e)
   {
-    LOG_ERROR("Something bad happened!");
+    LOG_ERROR("Something bad happened: {}", e.what());
   }
 }
 

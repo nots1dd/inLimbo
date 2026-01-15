@@ -1,5 +1,6 @@
 #include "audio/Engine.hpp"
 #include "StackTrace.hpp"
+#include "audio/Constants.hpp"
 #include "utils/string/SmallString.hpp"
 
 namespace audio
@@ -149,6 +150,9 @@ auto AudioEngine::loadSound(const Path& path) -> bool
     const AVCodec* codec = avcodec_find_decoder(s->stream->codecpar->codec_id);
     if (!codec)
       return false;
+
+    m_backendInfo.codecName     = codec->name ? codec->name : "<unknown-codec-name>";
+    m_backendInfo.codecLongName = codec->long_name ? codec->long_name : "<unknown-codec-longName>";
 
     AVCodecContext* rawDec = avcodec_alloc_context3(codec);
     if (!rawDec)
@@ -395,11 +399,11 @@ void AudioEngine::shutdownAlsa()
 void AudioEngine::decodeAndPlay()
 {
 
-  constexpr size_t                       FRAMES_PER_BUFFER = 512;
-  constexpr size_t                       MAX_CHANNELS      = 8; // Support up to 7.1 audio
-  static thread_local std::vector<float> playbackBuffer(FRAMES_PER_BUFFER * MAX_CHANNELS);
-  static thread_local std::vector<i16>   playbackBuffer16(FRAMES_PER_BUFFER * MAX_CHANNELS);
-  static thread_local std::vector<i32>   playbackBuffer32(FRAMES_PER_BUFFER * MAX_CHANNELS);
+  const auto BufSize = constants::FramesPerBuffer * constants::MaxChannels;
+
+  static thread_local std::vector<float> playbackBuffer(BufSize);
+  static thread_local std::vector<i16>   playbackBuffer16(BufSize);
+  static thread_local std::vector<i32>   playbackBuffer32(BufSize);
 
   auto& s = *m_sound;
 
@@ -421,7 +425,7 @@ void AudioEngine::decodeAndPlay()
 
   // Decode more data if ring buffer needs more
   // Check for samples: 512 frames * channels
-  const size_t samplesNeeded = FRAMES_PER_BUFFER * s.channels;
+  const size_t samplesNeeded = constants::FramesPerBuffer * s.channels;
   while (s.ring->available() < samplesNeeded && s.ring->space() > 0 && !s.eof)
   {
     decodeStep(s);
@@ -456,8 +460,9 @@ void AudioEngine::decodeAndPlay()
       {
         for (size_t i = 0; i < samplesRead; ++i)
         {
-          float sample        = std::clamp(playbackBuffer[i] * vol, -1.0f, 1.0f);
-          playbackBuffer16[i] = static_cast<i16>(sample * 32767.0f);
+          float sample =
+            std::clamp(playbackBuffer[i] * vol, constants::FloatMin, constants::FloatMax);
+          playbackBuffer16[i] = static_cast<i16>(sample * constants::S16MaxFloat);
         }
 
         int r = snd_pcm_writei(m_pcmData, playbackBuffer16.data(), framesRead);
@@ -474,8 +479,9 @@ void AudioEngine::decodeAndPlay()
       {
         for (size_t i = 0; i < samplesRead; ++i)
         {
-          float sample        = std::clamp(playbackBuffer[i] * vol, -1.0f, 1.0f);
-          playbackBuffer32[i] = static_cast<i32>(sample * 2147483647.0f);
+          float sample =
+            std::clamp(playbackBuffer[i] * vol, constants::FloatMin, constants::FloatMax);
+          playbackBuffer32[i] = static_cast<i32>(sample * constants::S32MaxFloat);
         }
 
         int r = snd_pcm_writei(m_pcmData, playbackBuffer32.data(), framesRead);
@@ -534,9 +540,9 @@ void AudioEngine::decodeStep(Sound& s)
       break;
 
     // Compute required output frames
-    const int64_t delay     = swr_get_delay(s.swr.get(), s.source.sampleRate);
-    const int     outFrames = (int)av_rescale_rnd(delay + s.frame->nb_samples, s.target.sampleRate,
-                                                  s.source.sampleRate, AV_ROUND_UP);
+    const i64 delay     = swr_get_delay(s.swr.get(), s.source.sampleRate);
+    const int outFrames = (int)av_rescale_rnd(delay + s.frame->nb_samples, s.target.sampleRate,
+                                              s.source.sampleRate, AV_ROUND_UP);
 
     if (outFrames <= 0)
     {
@@ -556,10 +562,10 @@ void AudioEngine::decodeStep(Sound& s)
     if (s.decodeBuffer.size() < totalSamples)
       s.decodeBuffer.resize(totalSamples);
 
-    uint8_t* outData[1] = {reinterpret_cast<uint8_t*>(s.decodeBuffer.data())};
+    ui8* outData[1] = {reinterpret_cast<ui8*>(s.decodeBuffer.data())};
 
-    const int framesConverted = swr_convert(s.swr.get(), outData, outFrames,
-                                            (const uint8_t**)s.frame->data, s.frame->nb_samples);
+    const int framesConverted =
+      swr_convert(s.swr.get(), outData, outFrames, (const ui8**)s.frame->data, s.frame->nb_samples);
 
     av_frame_unref(s.frame.get());
 

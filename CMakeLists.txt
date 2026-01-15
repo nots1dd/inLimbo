@@ -105,6 +105,7 @@ set(INLIMBO_CORE_SOURCES
     src/toml/Parser.cc
     src/audio/Engine.cc
     src/audio/Service.cc
+    src/audio/Playlist.cc
     src/CmdLine.cc
     src/Logger.cc
 )

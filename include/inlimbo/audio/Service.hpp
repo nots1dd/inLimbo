@@ -2,10 +2,17 @@
 
 #include "Engine.hpp"
 #include "Playlist.hpp"
+#include "thread/Map.hpp"
 
 #include <memory>
 #include <mutex>
 #include <optional>
+
+// Audio Service is intended as a high-level interface for the
+// not thread-safe AudioEngine, while managing a playlist and track registry.
+//
+// It provides thread-safe access to playback controls, track management,
+// and device enumeration/initialization.
 
 namespace audio
 {
@@ -13,7 +20,7 @@ namespace audio
 class Service final
 {
 public:
-  Service();
+  Service(threads::SafeMap<SongMap>& songMap);
   ~Service();
 
   Service(const Service&)                    = delete;
@@ -30,17 +37,22 @@ public:
 
   void addToPlaylist(service::SoundHandle h);
   void clearPlaylist();
+
   auto getPlaybackTime() -> std::optional<std::pair<double, double>>;
-  auto getCurrentTrack() -> service::SoundHandle;
+  auto getCurrentTrack() -> std::optional<service::SoundHandle>;
   auto getCurrentIndex() -> size_t;
   auto getPlaylistSize() -> size_t;
 
   void start();
   void playCurrent();
   void pauseCurrent();
-  auto nextTrack() -> service::SoundHandle;
-  auto previousTrack() -> service::SoundHandle;
+  auto nextTrack() -> std::optional<service::SoundHandle>;
+  auto previousTrack() -> std::optional<service::SoundHandle>;
   void restartCurrent();
+
+  // playlist stuff
+  auto randomTrack() -> std::optional<service::SoundHandle>;
+  auto randomIndex() -> std::optional<size_t>;
 
   void seekToAbsolute(double seconds);
   void seekForward(double seconds);
@@ -58,10 +70,10 @@ public:
 private:
   std::shared_ptr<AudioEngine> m_engine;
   service::Playlist            m_playlist;
+  threads::SafeMap<SongMap>&   m_songMapTS;
 
-  service::TrackTable    m_trackTable;
-  service::MetadataTable m_metadataTable;
-  ui64                   m_nextTrackId = 1;
+  service::TrackTable m_trackTable;
+  ui64                m_nextTrackId = 1;
 
   std::mutex m_mutex;
 

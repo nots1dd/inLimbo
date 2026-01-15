@@ -12,6 +12,8 @@ struct Keybinds
   char playPause{'p'};
   char next{'n'};
   char prev{'P'};
+  char random{'x'};
+  char searchSong{'/'};
   char restart{'r'};
   char seekBack{'b'};
   char seekFwd{'f'};
@@ -22,6 +24,8 @@ struct Keybinds
   utils::string::SmallString playPauseName{"p"};
   utils::string::SmallString nextName{"n"};
   utils::string::SmallString prevName{"P"};
+  utils::string::SmallString searchSongName{"/"};
+  utils::string::SmallString randomName{"x"};
   utils::string::SmallString restartName{"r"};
   utils::string::SmallString seekBackName{"b"};
   utils::string::SmallString seekFwdName{"f"};
@@ -35,25 +39,29 @@ struct Keybinds
 
     auto& kb = config::keybinds::Registry::theme(frontend);
 
-    out.playPause = kb.getChar("play_pause", out.playPause);
-    out.next      = kb.getChar("next", out.next);
-    out.prev      = kb.getChar("prev", out.prev);
-    out.restart   = kb.getChar("restart", out.restart);
-    out.seekBack  = kb.getChar("seek_back", out.seekBack);
-    out.seekFwd   = kb.getChar("seek_fwd", out.seekFwd);
-    out.volUp     = kb.getChar("vol_up", out.volUp);
-    out.volDown   = kb.getChar("vol_down", out.volDown);
-    out.quit      = kb.getChar("quit", out.quit);
+    out.playPause  = kb.getChar("play_pause", out.playPause);
+    out.next       = kb.getChar("next", out.next);
+    out.prev       = kb.getChar("prev", out.prev);
+    out.searchSong = kb.getChar("search_song", out.searchSong);
+    out.random     = kb.getChar("random", out.random);
+    out.restart    = kb.getChar("restart", out.restart);
+    out.seekBack   = kb.getChar("seek_back", out.seekBack);
+    out.seekFwd    = kb.getChar("seek_fwd", out.seekFwd);
+    out.volUp      = kb.getChar("vol_up", out.volUp);
+    out.volDown    = kb.getChar("vol_down", out.volDown);
+    out.quit       = kb.getChar("quit", out.quit);
 
-    out.playPauseName = kb.getKeyName("play_pause", "p");
-    out.nextName      = kb.getKeyName("next", "n");
-    out.prevName      = kb.getKeyName("prev", "P");
-    out.restartName   = kb.getKeyName("restart", "r");
-    out.seekBackName  = kb.getKeyName("seek_back", "b");
-    out.seekFwdName   = kb.getKeyName("seek_fwd", "f");
-    out.volUpName     = kb.getKeyName("vol_up", "=");
-    out.volDownName   = kb.getKeyName("vol_down", "-");
-    out.quitName      = kb.getKeyName("quit", "q");
+    out.playPauseName  = kb.getKeyName("play_pause", "p");
+    out.nextName       = kb.getKeyName("next", "n");
+    out.prevName       = kb.getKeyName("prev", "P");
+    out.searchSongName = kb.getKeyName("search_song", "/");
+    out.randomName     = kb.getKeyName("random", "x");
+    out.restartName    = kb.getKeyName("restart", "r");
+    out.seekBackName   = kb.getKeyName("seek_back", "b");
+    out.seekFwdName    = kb.getKeyName("seek_fwd", "f");
+    out.volUpName      = kb.getKeyName("vol_up", "=");
+    out.volDownName    = kb.getKeyName("vol_down", "-");
+    out.quitName       = kb.getKeyName("quit", "q");
 
     return out;
   }

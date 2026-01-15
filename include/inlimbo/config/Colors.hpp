@@ -118,6 +118,7 @@ struct Ansi
   // Basic ANSI "controls"
   static constexpr std::string_view Esc       = "\x1b[";
   static constexpr std::string_view Clear     = "\x1b[2J\x1b[H";
+  static constexpr std::string_view ClearLine = "\x1b[2K";
   static constexpr std::string_view Reset     = "\x1b[0m";
   static constexpr std::string_view Bold      = "\x1b[1m";
   static constexpr std::string_view Dim       = "\x1b[2m";
@@ -167,6 +168,12 @@ struct Ansi
     if (base < 8)
       return "\x1b[" + std::to_string(40 + base) + "m";
     return "\x1b[" + std::to_string(100 + (base - 8)) + "m";
+  }
+
+  static inline auto MoveCursor(int row, int col) -> std::string
+  {
+    // 1-based rows/cols
+    return "\x1b[" + std::to_string(row) + ";" + std::to_string(col) + "H";
   }
 };
 

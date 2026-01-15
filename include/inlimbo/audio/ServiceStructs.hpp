@@ -1,14 +1,16 @@
 #pragma once
 
 #include "InLimbo-Types.hpp"
-#include "core/taglib/Parser.hpp"
 #include <unordered_map>
 
 namespace audio::service
 {
 
-using TrackTable    = std::unordered_map<ui64, utils::string::SmallString>;
-using MetadataTable = std::unordered_map<ui64, Metadata>;
+// we store mapping of SoundHandle ID to Song file path stored in metadata (verified metadata)
+//
+// This is unique to each song (almost as unique as the inode itself) and more importantly,
+// makes it easy to immediately load the song file without calling song map queries.
+using TrackTable = std::unordered_map<ui64, Path>;
 
 struct SoundHandle
 {

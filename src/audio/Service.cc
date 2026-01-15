@@ -1,9 +1,11 @@
 #include "audio/Service.hpp"
+#include "Logger.hpp"
+#include "query/SongMap.hpp"
 
 namespace audio
 {
 
-Service::Service()
+Service::Service(threads::SafeMap<SongMap>& songMapTS) : m_songMapTS(songMapTS)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   m_engine = std::make_shared<AudioEngine>();
@@ -49,7 +51,6 @@ auto Service::registerTrack(const Song& song) -> service::SoundHandle
 
   service::SoundHandle h{m_nextTrackId++};
   m_trackTable.emplace(h.id, song.metadata.filePath);
-  m_metadataTable.emplace(h.id, song.metadata);
 
   return h;
 }
@@ -76,7 +77,7 @@ auto Service::getPlaybackTime() -> std::optional<std::pair<double, double>>
   return m_engine->getPlaybackTime();
 }
 
-auto Service::getCurrentTrack() -> service::SoundHandle
+auto Service::getCurrentTrack() -> std::optional<service::SoundHandle>
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   return m_playlist.currentTrack();
@@ -116,28 +117,28 @@ void Service::pauseCurrent()
   m_engine->pause();
 }
 
-auto Service::nextTrack() -> service::SoundHandle
+auto Service::nextTrack() -> std::optional<service::SoundHandle>
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   ensureEngine();
 
   auto h = m_playlist.next();
   if (!h)
-    return {};
+    return std::nullopt;
 
   loadSound();
   m_engine->play();
   return h;
 }
 
-auto Service::previousTrack() -> service::SoundHandle
+auto Service::previousTrack() -> std::optional<service::SoundHandle>
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   ensureEngine();
 
   auto h = m_playlist.previous();
   if (!h)
-    return {};
+    return std::nullopt;
 
   loadSound();
   m_engine->play();
@@ -149,6 +150,28 @@ void Service::restartCurrent()
   std::lock_guard<std::mutex> lock(m_mutex);
   ensureEngine();
   m_engine->restart();
+}
+
+auto Service::randomIndex() -> std::optional<size_t>
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  return m_playlist.randomIndex();
+}
+
+auto Service::randomTrack() -> std::optional<service::SoundHandle>
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  ensureEngine();
+
+  auto h = m_playlist.jumpToRandom();
+  if (!h)
+    return std::nullopt;
+
+  LOG_TRACE("audio::Service: random track selected id={}", h->id);
+
+  loadSound();
+  m_engine->play();
+  return h;
 }
 
 void Service::seekToAbsolute(double seconds)
@@ -213,11 +236,23 @@ auto Service::getCurrentMetadata() -> std::optional<Metadata>
   if (!h)
     return std::nullopt;
 
-  auto it = m_metadataTable.find(h.id);
-  if (it == m_metadataTable.end())
+  Metadata meta = {};
+
+  query::songmap::read::forEachSong(
+    m_songMapTS,
+    [&](const Artist&, const Album&, const Disc, const Track, const ino_t, const Song& song) -> void
+    {
+      if (song.metadata.filePath == m_trackTable[h->id])
+        meta = song.metadata;
+    });
+
+  // every metadata must have a valid file path
+  //
+  // if it is not set, something went wrong with query.
+  if (meta.filePath.empty())
     return std::nullopt;
 
-  return it->second;
+  return meta;
 }
 
 auto Service::getMetadataAt(size_t index) -> std::optional<Metadata>
@@ -227,12 +262,30 @@ auto Service::getMetadataAt(size_t index) -> std::optional<Metadata>
   if (index >= m_playlist.tracks.size())
     return std::nullopt;
 
-  const auto h  = m_playlist.tracks[index];
-  auto       it = m_metadataTable.find(h.id);
-  if (it == m_metadataTable.end())
+  const auto h = m_playlist.tracks[index];
+  if (!h)
     return std::nullopt;
 
-  return it->second;
+  auto it = m_trackTable.find(h.id);
+  if (it == m_trackTable.end())
+    return std::nullopt;
+
+  const auto filePath = it->second;
+
+  Metadata meta = {};
+
+  query::songmap::read::forEachSong(
+    m_songMapTS,
+    [&](const Artist&, const Album&, const Disc, const Track, const ino_t, const Song& song) -> void
+    {
+      if (song.metadata.filePath == filePath)
+        meta = song.metadata;
+    });
+
+  if (meta.filePath.empty())
+    return std::nullopt;
+
+  return meta;
 }
 
 void Service::shutdown()
@@ -253,14 +306,14 @@ void Service::loadSound()
     return;
 
   const auto h  = m_playlist.currentTrack();
-  auto       it = m_trackTable.find(h.id);
+  auto       it = m_trackTable.find(h->id);
   if (it == m_trackTable.end())
-    throw std::runtime_error("Service: invalid track handle");
+    throw std::runtime_error("audio::Service: invalid track handle");
 
   m_engine->stop();
 
   if (!m_engine->loadSound(it->second))
-    throw std::runtime_error("Service: failed to load sound");
+    throw std::runtime_error("audio::Service: failed to load sound");
 }
 
 void Service::shutdownLocked()

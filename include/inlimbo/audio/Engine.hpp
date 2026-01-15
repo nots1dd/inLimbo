@@ -8,7 +8,6 @@
 #include <chrono>
 #include <mutex>
 #include <optional>
-#include <string>
 #include <thread>
 #include <vector>
 
@@ -38,10 +37,13 @@ struct BackendInfo
   // ---------------------------------------------------------
   // Audio format (NEGOTIATED, not requested)
   // ---------------------------------------------------------
-  uint             sampleRate = DEFAULT_SOUND_SAMPLE_RATE;
-  uint             channels   = DEFAULT_SOUND_CHANNELS;
-  snd_pcm_format_t pcmFormat  = SND_PCM_FORMAT_UNKNOWN;
-  std::string      pcmFormatName;
+  uint                       sampleRate = DEFAULT_SOUND_SAMPLE_RATE;
+  uint                       channels   = DEFAULT_SOUND_CHANNELS;
+  snd_pcm_format_t           pcmFormat  = SND_PCM_FORMAT_UNKNOWN;
+  utils::string::SmallString pcmFormatName;
+
+  utils::string::SmallString codecName;     // "flac", "mp3", "aac", ...
+  utils::string::SmallString codecLongName; // "FLAC (Free Lossless Audio Codec)", etc.
 
   snd_pcm_uframes_t periodSize = 0; // frames
   snd_pcm_uframes_t bufferSize = 0; // frames

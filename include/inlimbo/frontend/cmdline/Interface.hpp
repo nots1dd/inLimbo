@@ -20,6 +20,12 @@ static constexpr cstr FRONTEND_NAME = "cmdline";
 namespace frontend::cmdline
 {
 
+enum class UiMode : ui8
+{
+  Normal,
+  SearchSong,
+};
+
 class Interface
 {
 public:
@@ -36,6 +42,9 @@ public:
   void run(audio::Service& audio);
 
 private:
+  UiMode                     m_mode{UiMode::Normal};
+  std::string                m_searchBuf;
+  bool                       m_searchDirty{true}; // optional, if you want
   config::Watcher            m_cfgWatcher;
   threads::SafeMap<SongMap>* m_songMapTS{nullptr};
   mpris::Service*            m_mprisService{nullptr};
@@ -69,7 +78,11 @@ private:
   void inputLoop(audio::Service& audio);
   void seekLoop(audio::Service& audio);
 
+  auto handleSearchSongMode(audio::Service& audio, char c) -> bool;
+
   void draw(audio::Service& audio);
+  void drawBottomPrompt(const TermSize& ts, const UiColors& colors, std::string_view label,
+                        std::string_view text);
   void drawTooSmall(const TermSize& ts);
 
   auto handleKey(audio::Service& audio, char c) -> bool;

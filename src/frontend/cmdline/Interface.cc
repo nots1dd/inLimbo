@@ -16,6 +16,8 @@
 
 #include "mpris/Service.hpp"
 #include "query/SongMap.hpp"
+#include "utils/ASCII.hpp"
+#include "utils/Index.hpp"
 #include "utils/timer/Timer.hpp"
 
 namespace frontend::cmdline
@@ -81,11 +83,38 @@ void Interface::run(audio::Service& audio)
 {
   loadConfig();
 
-  query::songmap::read::forEachSongInAlbum(
-    *m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
-    [&](const Disc&, const Track&, const ino_t, const Song& song) -> void
+  // Query is very nice and easy to add. Take this for example:
+  //
+  // We can add every song after the current one's track no of an
+  // album.
+
+  // query::songmap::read::forEachSongInAlbum(
+  //   *m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
+  //   [&](const Disc&, const Track&, const ino_t, const Song& song) -> void
+  //   {
+  //     if (song.metadata.track <= audio.getCurrentMetadata()->track)
+  //       return;
+  //
+  //     auto h = audio.registerTrack(song);
+  //     audio.addToPlaylist(h);
+  //   });
+
+  const auto audioMetaOpt = audio.getCurrentMetadata();
+
+  if (!audioMetaOpt)
+    LOG_ERROR("No current metadata available in audio service!");
+
+  // Or we can just add every song that is not the current one.
+  //
+  // Note that the songmap is stored in such a way:
+  //
+  // Artist -> Album -> Disc -> Track -> Song
+
+  query::songmap::read::forEachSong(
+    *m_songMapTS,
+    [&](const Artist&, const Album&, Disc, Track, ino_t, const Song& song) -> void
     {
-      if (song.metadata.track <= audio.getCurrentMetadata()->track)
+      if (song.metadata.title == audioMetaOpt->title)
         return;
 
       auto h = audio.registerTrack(song);
@@ -217,6 +246,17 @@ void Interface::drawTooSmall(const TermSize& ts)
   std::cout.flush();
 }
 
+void Interface::drawBottomPrompt(const TermSize& ts, const UiColors& colors, std::string_view label,
+                                 std::string_view text)
+{
+  std::cout << config::colors::Ansi::MoveCursor(ts.rows, 1) << config::colors::Ansi::ClearLine;
+
+  std::cout << config::colors::Ansi::Bold << colors.accent << label << config::colors::Ansi::Reset
+            << colors.fg << text << config::colors::Ansi::Reset;
+
+  std::cout.flush();
+}
+
 void Interface::draw(audio::Service& audio)
 {
   const auto ts = getTerminalSize();
@@ -236,9 +276,12 @@ void Interface::draw(audio::Service& audio)
   const size_t size    = audio.getPlaylistSize();
   const size_t current = audio.getCurrentIndex();
 
-  auto curMeta  = audio.getMetadataAt(current);
-  auto prevMeta = size ? audio.getMetadataAt((current + size - 1) % size) : std::nullopt;
-  auto nextMeta = size ? audio.getMetadataAt((current + 1) % size) : std::nullopt;
+  const auto curMeta = audio.getMetadataAt(current);
+  const auto pi      = utils::index::prevWrap(current, size);
+  const auto ni      = utils::index::nextWrap(current, size);
+
+  const auto prevMeta = pi ? audio.getMetadataAt(*pi) : std::nullopt;
+  const auto nextMeta = ni ? audio.getMetadataAt(*ni) : std::nullopt;
 
   if (!curMeta)
     return;
@@ -251,56 +294,96 @@ void Interface::draw(audio::Service& audio)
   const auto& kb     = cfg->kb;
   const auto& colors = cfg->colors;
 
-  const char* kPlayPauseName = kb.playPauseName.c_str();
-  const char* kNextName      = kb.nextName.c_str();
-  const char* kPrevName      = kb.prevName.c_str();
-  const char* kRestartName   = kb.restartName.c_str();
-  const char* kSeekBackName  = kb.seekBackName.c_str();
-  const char* kSeekFwdName   = kb.seekFwdName.c_str();
-  const char* kVolUpName     = kb.volUpName.c_str();
-  const char* kVolDownName   = kb.volDownName.c_str();
-  const char* kQuitName      = kb.quitName.c_str();
+  const char* kPlayPauseName  = kb.playPauseName.c_str();
+  const char* kNextName       = kb.nextName.c_str();
+  const char* kPrevName       = kb.prevName.c_str();
+  const char* kRestartName    = kb.restartName.c_str();
+  const char* kSeekBackName   = kb.seekBackName.c_str();
+  const char* kSeekFwdName    = kb.seekFwdName.c_str();
+  const char* kVolUpName      = kb.volUpName.c_str();
+  const char* kVolDownName    = kb.volDownName.c_str();
+  const char* kQuitName       = kb.quitName.c_str();
+  const char* kRandomName     = kb.randomName.c_str();
+  const char* kSearchSongName = kb.searchSongName.c_str();
 
-  const auto& accent  = colors.accent;
-  const auto& FG      = colors.fg;
-  const auto& BG      = colors.bg;
-  const auto& success = colors.success;
+  utils::string::SmallString seekKeys;
+  seekKeys += kSeekBackName;
+  seekKeys += "/";
+  seekKeys += kSeekFwdName;
+
+  utils::string::SmallString volKeys;
+  volKeys += kVolUpName;
+  volKeys += "/";
+  volKeys += kVolDownName;
+
+  // ------------------------------------------------------------
+  // UI print helpers
+  // ------------------------------------------------------------
+
+  auto l_Title = [&](std::string_view s) -> void
+  {
+    std::cout << config::colors::Ansi::Bold << colors.accent << s << config::colors::Ansi::Reset << "\n";
+  };
+
+  auto l_Section = [&](std::string_view s) -> void
+  {
+    std::cout << config::colors::Ansi::Bold << colors.accent << " " << s << config::colors::Ansi::Reset
+              << "\n";
+  };
+
+  auto l_Sep = [&]() -> void
+  {
+    std::cout << config::colors::Ansi::Dim << colors.fg
+              << "──────────────────────────────────────────────────────────"
+              << config::colors::Ansi::Reset << "\n\n";
+  };
+
+  auto l_KvValue = [&](std::string_view k) -> void
+  { std::cout << config::colors::Ansi::Bold << colors.fg << k << config::colors::Ansi::Reset; };
+
+  auto l_KeyTag = [&](std::string_view keyName) -> void
+  { std::cout << colors.accent << "[" << keyName << "]" << config::colors::Ansi::Reset; };
+
+  auto l_Control3 = [&](std::string_view k1, std::string_view l1, std::string_view k2,
+                        std::string_view l2, std::string_view k3, std::string_view l3) -> void
+  {
+    std::cout << "   ";
+    l_KeyTag(k1);
+    std::cout << " " << l1 << "   ";
+    l_KeyTag(k2);
+    std::cout << " " << l2 << "   ";
+    l_KeyTag(k3);
+    std::cout << " " << l3 << "\n";
+  };
 
   std::cout << config::colors::Ansi::Clear;
 
   // base theme
-  std::cout << BG << FG;
+  std::cout << colors.bg << colors.fg;
 
-  std::cout << config::colors::Ansi::Bold << accent << "InLimbo Player"
-            << config::colors::Ansi::Reset << "\n";
+  l_Title("InLimbo Player");
+  l_Sep();
 
-  std::cout << config::colors::Ansi::Dim << FG
-            << "──────────────────────────────────────────────────────────"
-            << config::colors::Ansi::Reset << "\n\n";
-
-  std::cout << config::colors::Ansi::Bold << accent << " Playlist" << config::colors::Ansi::Reset
-            << "\n";
-
+  l_Section("Playlist");
   std::cout << "   Prev : " << (prevMeta ? prevMeta->title : "<none>") << "\n";
 
-  std::cout << " " << accent << "▶" << config::colors::Ansi::Reset
-            << " Now  : " << config::colors::Ansi::Bold << FG << curMeta->title
-            << config::colors::Ansi::Reset << " — " << curMeta->artist << " (" << current + 1 << "/"
+  std::cout << " " << colors.accent << "▶" << config::colors::Ansi::Reset << " Now  : ";
+  l_KvValue(curMeta->title);
+  std::cout << config::colors::Ansi::Reset << " — " << curMeta->artist << " (" << current + 1 << "/"
             << size << ")\n";
 
   std::cout << "   Next : " << (nextMeta ? nextMeta->title : "<none>") << "\n\n";
 
-  std::cout << config::colors::Ansi::Bold << accent << " Track" << config::colors::Ansi::Reset
-            << "\n";
-
+  l_Section("Track");
   std::cout << "   Album   : " << curMeta->album << "\n";
+  std::cout << "   Artist  : " << curMeta->artist << "\n";
+  std::cout << "   Year    : " << curMeta->year << "\n";
+  std::cout << "   Track   : " << curMeta->track << " / " << curMeta->trackTotal << "\n";
   std::cout << "   Genre   : " << curMeta->genre << "\n";
   std::cout << "   Bitrate : " << curMeta->bitrate << " kbps\n";
   std::cout << "   File    : " << curMeta->filePath.c_str() << "\n\n";
 
-  std::cout << config::colors::Ansi::Bold << accent << " Playback" << config::colors::Ansi::Reset
-            << "\n";
-
+  l_Section("Playback");
   std::cout << "   State   : " << (info.playing ? "Playing" : "Paused") << "\n";
   std::cout << "   Time    : " << utils::fmtTime(info.positionSec) << " / "
             << utils::fmtTime(info.lengthSec) << "\n";
@@ -310,45 +393,111 @@ void Interface::draw(audio::Service& audio)
   for (int i = 0; i < BAR_W; ++i)
   {
     if (i < filled)
-      std::cout << success << UI_BAR_FILL;
+      std::cout << colors.success << UI_BAR_FILL;
     else
-      std::cout << FG << UI_BAR_EMPTY;
+      std::cout << colors.fg << UI_BAR_EMPTY;
   }
   std::cout << config::colors::Ansi::Reset << "\n\n";
 
-  std::cout << config::colors::Ansi::Bold << accent << " Backend" << config::colors::Ansi::Reset
-            << "\n";
-
-  std::cout << "   Device   : " << backend.dev.description.c_str() << "\n";
-  std::cout << "   Format   : " << backend.pcmFormatName << "\n";
+  l_Section("Backend");
+  std::cout << "   Device   : " << backend.dev.name.c_str() << "\n";
+  std::cout << "   Codec    : " << backend.codecLongName.c_str() << " - (" << backend.codecName.c_str()
+            << ")\n";
+  std::cout << "   Format   : " << backend.pcmFormatName.c_str() << "\n";
   std::cout << "   Rate     : " << backend.sampleRate << " Hz\n";
   std::cout << "   Channels : " << backend.channels << "\n";
   std::cout << "   Buffer   : " << backend.bufferSize << " frames (" << std::fixed
             << std::setprecision(1) << backend.latencyMs << " ms)\n";
   std::cout << "   XRuns    : " << backend.xruns << "\n\n";
 
-  std::cout << config::colors::Ansi::Bold << accent << " Controls" << config::colors::Ansi::Reset
-            << "\n";
+  l_Section("Controls");
+  l_Control3(kPlayPauseName, "play/pause", kRestartName, "restart", kRandomName, "random");
+  l_Control3(kNextName, "next", kPrevName, "prev", seekKeys.c_str(), "seek");
+  l_Control3(volKeys.c_str(), "vol", kSearchSongName, "searchSong", kQuitName, "quit");
 
-  std::cout << "   " << accent << "[" << kPlayPauseName << "]" << config::colors::Ansi::Reset
-            << " play/pause   " << accent << "[" << kRestartName << "]"
-            << config::colors::Ansi::Reset << " restart\n";
-
-  std::cout << "   " << accent << "[" << kNextName << "]" << config::colors::Ansi::Reset
-            << " next   " << accent << "[" << kPrevName << "]" << config::colors::Ansi::Reset
-            << " prev    " << accent << "[" << kSeekBackName << "/" << kSeekFwdName << "]"
-            << config::colors::Ansi::Reset << " seek\n";
-
-  std::cout << "   " << accent << "[" << kVolUpName << "/" << kVolDownName << "]"
-            << config::colors::Ansi::Reset << " vol  " << accent << "[" << kQuitName << "]"
-            << config::colors::Ansi::Reset << " quit\n";
+  if (m_mode == UiMode::SearchSong)
+  {
+    drawBottomPrompt(ts, colors, "Search: ", m_searchBuf.c_str());
+    return;
+  }
 
   std::cout << config::colors::Ansi::Reset;
   std::cout.flush();
 }
 
+auto Interface::handleSearchSongMode(audio::Service& audio, char c) -> bool
+{
+  // ESC exits search
+  if (c == utils::ascii::ESC)
+  {
+    m_mode = UiMode::Normal;
+    return true;
+  }
+
+  // ENTER submits
+  if (utils::ascii::isEnter(c))
+  {
+    bool found = false;
+    query::songmap::read::forEachSong(
+      *m_songMapTS,
+      [&](const Artist&, const Album&, Disc, Track, ino_t, const Song& song) -> void
+      {
+        if (!utils::string::isEquals(song.metadata.title, m_searchBuf))
+          return;
+
+        audio.clearPlaylist();
+        found  = true;
+        auto h = audio.registerTrack(song);
+        audio.addToPlaylist(h);
+      });
+
+    if (found)
+    {
+      audio.nextTrack();
+      m_mprisService->updateMetadata();
+      m_mprisService->notify();
+
+      query::songmap::read::forEachSongInAlbum(
+        *m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
+        [&](const Disc&, const Track&, const ino_t, const Song& song) -> void
+        {
+          if (song.metadata.track <= audio.getCurrentMetadata()->track)
+            return;
+
+          auto h = audio.registerTrack(song);
+          audio.addToPlaylist(h);
+        });
+    }
+
+    m_mode = UiMode::Normal;
+    return true;
+  }
+
+  // Backspace
+  if (c == utils::ascii::DEL || c == utils::ascii::BS)
+  {
+    if (!m_searchBuf.empty())
+      m_searchBuf.pop_back();
+    return true;
+  }
+
+  // Printable ASCII
+  if (utils::ascii::isPrintable(c))
+  {
+    if (m_searchBuf.size() < 128)
+      m_searchBuf.push_back(c);
+    return true;
+  }
+
+  return true;
+}
+
 auto Interface::handleKey(audio::Service& audio, char c) -> bool
 {
+
+  if (m_mode == UiMode::SearchSong)
+    return handleSearchSongMode(audio, c);
+
   bool trackChanged = false;
 
   auto        cfg = m_cfg.get();
@@ -363,6 +512,8 @@ auto Interface::handleKey(audio::Service& audio, char c) -> bool
   const char kVolUp     = kb.volUp;
   const char kVolDown   = kb.volDown;
   const char kQuit      = kb.quit;
+  const char kRandom    = kb.random;
+  const char kSearch    = kb.searchSong;
 
   if (c == kPlayPause)
   {
@@ -378,6 +529,11 @@ auto Interface::handleKey(audio::Service& audio, char c) -> bool
     audio.previousTrack();
     trackChanged = true;
   }
+  else if (c == kRandom)
+  {
+    audio.randomTrack();
+    trackChanged = true;
+  }
   else if (c == kRestart)
   {
     audio.restartCurrent();
@@ -385,6 +541,12 @@ auto Interface::handleKey(audio::Service& audio, char c) -> bool
   else if (c == kSeekBack)
   {
     m_pendingSeek -= 2.0;
+    return true;
+  }
+  else if (c == kSearch)
+  {
+    m_mode = UiMode::SearchSong;
+    m_searchBuf.clear();
     return true;
   }
   else if (c == kSeekFwd)
