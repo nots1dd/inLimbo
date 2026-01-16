@@ -39,6 +39,8 @@ auto findSongByTitleFuzzy(const threads::SafeMap<SongMap>& safeMap, const Title&
   if (songTitle.empty())
     return nullptr;
 
+  const auto qLower = utils::string::transform::tolower_ascii(songTitle.c_str());
+
   const Song* bestSong  = nullptr;
   size_t      bestScore = SIZE_MAX;
 
@@ -49,8 +51,10 @@ auto findSongByTitleFuzzy(const threads::SafeMap<SongMap>& safeMap, const Title&
       if (song.metadata.title.empty())
         return;
 
+      const auto tLower = utils::string::transform::tolower_ascii(song.metadata.title.c_str());
+
       const size_t d = utils::algorithm::StringDistance::levenshteinDistance(
-        song.metadata.title, songTitle, maxDistance);
+        tLower.c_str(), qLower.c_str(), maxDistance);
 
       if (d <= maxDistance && d < bestScore)
       {
@@ -59,7 +63,7 @@ auto findSongByTitleFuzzy(const threads::SafeMap<SongMap>& safeMap, const Title&
       }
     });
 
-  return bestSong; // nullptr if nothing close enough
+  return bestSong;
 }
 
 auto findArtistFuzzy(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
@@ -70,6 +74,8 @@ auto findArtistFuzzy(const threads::SafeMap<SongMap>& safeMap, const Artist& art
   if (artistName.empty())
     return {};
 
+  const auto qLower = utils::string::transform::tolower_ascii(artistName.c_str());
+
   Artist bestArtist;
   size_t bestScore = SIZE_MAX;
 
@@ -79,8 +85,10 @@ auto findArtistFuzzy(const threads::SafeMap<SongMap>& safeMap, const Artist& art
                   if (artist.empty())
                     return;
 
+                  const auto aLower = utils::string::transform::tolower_ascii(artist.c_str());
+
                   const size_t d = utils::algorithm::StringDistance::levenshteinDistance(
-                    artist, artistName, maxDistance);
+                    aLower.c_str(), qLower.c_str(), maxDistance);
 
                   if (d <= maxDistance && d < bestScore)
                   {
@@ -89,7 +97,7 @@ auto findArtistFuzzy(const threads::SafeMap<SongMap>& safeMap, const Artist& art
                   }
                 });
 
-  return bestArtist; // empty if nothing close enough
+  return bestArtist;
 }
 
 auto findAlbumFuzzy(const threads::SafeMap<SongMap>& safeMap, const Album& albumName,
@@ -100,6 +108,8 @@ auto findAlbumFuzzy(const threads::SafeMap<SongMap>& safeMap, const Album& album
   if (albumName.empty())
     return {};
 
+  const auto qLower = utils::string::transform::tolower_ascii(albumName.c_str());
+
   Album  bestAlbum;
   size_t bestScore = SIZE_MAX;
 
@@ -109,8 +119,10 @@ auto findAlbumFuzzy(const threads::SafeMap<SongMap>& safeMap, const Album& album
                  if (album.empty())
                    return;
 
+                 const auto alLower = utils::string::transform::tolower_ascii(album.c_str());
+
                  const size_t d = utils::algorithm::StringDistance::levenshteinDistance(
-                   album, albumName, maxDistance);
+                   alLower.c_str(), qLower.c_str(), maxDistance);
 
                  if (d <= maxDistance && d < bestScore)
                  {
@@ -119,7 +131,7 @@ auto findAlbumFuzzy(const threads::SafeMap<SongMap>& safeMap, const Album& album
                  }
                });
 
-  return bestAlbum; // empty if nothing close enough
+  return bestAlbum;
 }
 
 auto findGenreFuzzy(const threads::SafeMap<SongMap>& safeMap, const Genre& genreName,
@@ -129,6 +141,8 @@ auto findGenreFuzzy(const threads::SafeMap<SongMap>& safeMap, const Genre& genre
 
   if (genreName.empty())
     return {};
+
+  const auto qLower = utils::string::transform::tolower_ascii(genreName.c_str());
 
   Genre  bestGenre;
   size_t bestScore = SIZE_MAX;
@@ -141,8 +155,10 @@ auto findGenreFuzzy(const threads::SafeMap<SongMap>& safeMap, const Genre& genre
       if (g.empty())
         return;
 
-      const size_t d =
-        utils::algorithm::StringDistance::levenshteinDistance(g, genreName, maxDistance);
+      const auto gLower = utils::string::transform::tolower_ascii(g.c_str());
+
+      const size_t d = utils::algorithm::StringDistance::levenshteinDistance(
+        gLower.c_str(), qLower.c_str(), maxDistance);
 
       if (d <= maxDistance && d < bestScore)
       {
@@ -151,7 +167,7 @@ auto findGenreFuzzy(const threads::SafeMap<SongMap>& safeMap, const Genre& genre
       }
     });
 
-  return bestGenre; // empty if nothing close enough
+  return bestGenre;
 }
 
 auto findSongByTitleAndArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,

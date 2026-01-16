@@ -429,7 +429,8 @@ auto initializeContext(int argc, char** argv) -> AppContext
   ctx.m_musicDir    = tomlparser::Config::getString("library", "directory");
   ctx.m_binPath     = utils::getAppConfigPathWithFile(LIB_BIN_NAME).c_str();
 
-  LOG_INFO("Configured directory: {}, song query: {}", ctx.m_musicDir, ctx.m_songTitle);
+  LOG_INFO("Configured directory: {}, Song title query given: '{}'", ctx.m_musicDir,
+           ctx.m_songTitle);
 
   return ctx;
 }
@@ -487,15 +488,16 @@ void runFrontend(AppContext& ctx)
 
   try
   {
-    utils::unix::LockFile appLock("/tmp/inLimbo.lock");
-    auto                  song =
-      query::songmap::read::findSongByTitleFuzzy(g_songMap, ctx.m_songTitle, ctx.m_fuzzyMaxDist);
+    utils::unix::LockFile appLock(INLIMBO_DEFAULT_LOCKFILE_PATH);
+    auto song = query::songmap::read::findSongByTitleFuzzy(g_songMap, ctx.m_songTitle);
 
     if (!song)
     {
       LOG_ERROR("Song not found: '{}'", ctx.m_songTitle);
       return;
     }
+
+    LOG_INFO("Fuzzy search song title query returned: '{}'", song->metadata.title);
 
     // ---------------------------------------------------------
     // Create AudioService (owns AudioEngine)
