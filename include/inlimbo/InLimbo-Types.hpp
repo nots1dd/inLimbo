@@ -41,6 +41,7 @@ using Album      = std::string;
 using Artist     = std::string;
 using Genre      = std::string;
 using Lyrics     = std::string;
+using Comment    = std::string;
 using Year       = uint;
 using Disc       = uint;
 using Track      = uint;
@@ -63,23 +64,23 @@ template <typename T, typename S> using BucketedMap = std::map<T, std::vector<S>
  */
 struct Metadata
 {
-  Title       title                = "<Unknown Title>";
-  Artist      artist               = "<Unknown Artist>";
-  Album       album                = "<Unknown Album>";
-  Genre       genre                = "<Unknown Genre>";
-  std::string comment              = "<No Comment>";
-  Year        year                 = 0;
-  Track       track                = 0;
-  uint        trackTotal           = 0;
-  Disc        discNumber           = 0;
-  uint        discTotal            = 0;
-  Lyrics      lyrics               = "<No Lyrics>";
-  Properties  additionalProperties = {};
-  PathStr     filePath             = "";
-  float       duration             = 0.0f;
-  int         bitrate              = 0;
+  Title      title;
+  Artist     artist;
+  Album      album;
+  Genre      genre;
+  Comment    comment;
+  Year       year       = 0;
+  Track      track      = 0;
+  uint       trackTotal = 0;
+  Disc       discNumber = 0;
+  uint       discTotal  = 0;
+  Lyrics     lyrics;
+  Properties additionalProperties;
+  PathStr    filePath;
+  float      duration = 0.0f;
+  int        bitrate  = 0;
 
-  std::string artUrl = "";
+  PathStr artUrl;
 
   template <class Archive> void serialize(Archive& ar)
   {
@@ -96,8 +97,8 @@ struct Song
   ino_t    inode;    /**< The inode of the file representing the song */
   Metadata metadata; /**< Metadata information for the song */
 
-  Song(ino_t inode, Metadata metadata) : inode(inode), metadata(std::move(metadata)) {};
-  Song() : inode(0), metadata() {};
+  Song(ino_t inode, Metadata metadata) : inode(inode), metadata(std::move(metadata)){};
+  Song() : inode(0), metadata(){};
   explicit Song(ino_t inode) : inode(inode) {}
 
   template <class Archive> void serialize(Archive& ar) { ar(inode, metadata); }

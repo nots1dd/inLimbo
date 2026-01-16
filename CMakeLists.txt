@@ -19,7 +19,7 @@ set(INLIMBO_USER_FRONTEND_DIR
 # External Dependencies
 # -----------------------------------------------------------
 set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/external)
-set(CXXOPTS_INCLUDE_DIRS ${EXTERNAL_DIR}/cxxopts/include)
+set(CLI11_INCLUDE_DIRS ${EXTERNAL_DIR}/CLI11/include)
 set(TOMLPLUSPLUS_INCLUDE_DIRS ${EXTERNAL_DIR}/tomlplusplus)
 set(CEREAL_INCLUDE_DIRS ${EXTERNAL_DIR}/cereal/include)
 
@@ -41,9 +41,9 @@ target_include_directories(tomlplusplus INTERFACE ${TOMLPLUSPLUS_INCLUDE_DIRS})
 add_library(cereal INTERFACE)
 target_include_directories(cereal INTERFACE ${CEREAL_INCLUDE_DIRS})
 
-# --- cxxopts (header-only)
-add_library(cxxopts INTERFACE)
-target_include_directories(cxxopts INTERFACE ${CXXOPTS_INCLUDE_DIRS})
+# --- CLI11 (header-only)
+add_library(cli11 INTERFACE)
+target_include_directories(cli11 INTERFACE ${CLI11_INCLUDE_DIRS})
 
 # --- spdlog (compiled)
 set(SPDLOG_DIR ${EXTERNAL_DIR}/spdlog)
@@ -112,7 +112,6 @@ set(INLIMBO_CORE_SOURCES
     src/audio/Engine.cc
     src/audio/Service.cc
     src/audio/Playlist.cc
-    src/CmdLine.cc
     src/Logger.cc
 )
 
@@ -124,7 +123,7 @@ target_include_directories(inLimbo-core
         ${CMAKE_SOURCE_DIR}
         ${TAGLIB_INCLUDE_DIRS}
         ${TOMLPLUSPLUS_INCLUDE_DIRS}
-        ${CXXOPTS_INCLUDE_DIRS}
+        ${CLI11_INCLUDE_DIRS}
         ${CEREAL_INCLUDE_DIRS}
         ${ALSA_INCLUDE_DIRS}
         ${AVFORMAT_INCLUDE_DIRS}
@@ -232,7 +231,7 @@ message(STATUS "${SEP}")
 message(STATUS "${SEP}  ── External Dependencies ───────────────────────────────")
 message(STATUS "${SEP}  • TOML++     : ${TOMLPLUSPLUS_INCLUDE_DIRS}")
 message(STATUS "${SEP}  • cereal     : ${CEREAL_INCLUDE_DIRS}")
-message(STATUS "${SEP}  • cxxopts    : ${CXXOPTS_INCLUDE_DIRS}")
+message(STATUS "${SEP}  • CLI11      : ${CLI11_INCLUDE_DIRS}")
 message(STATUS "${SEP}  • spdlog     : ${SPDLOG_DIR}")
 message(STATUS "${SEP}")
 message(STATUS "${SEP}  ── Multimedia / Audio ───────────────────────────────")

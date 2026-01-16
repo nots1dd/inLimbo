@@ -2,10 +2,8 @@
 
 #include "InLimbo-Types.hpp"
 #include "StackTrace.hpp"
-#include "query/Predicates.hpp"
 #include "utils/string/SmallString.hpp"
 
-// Include cereal support for SmallString (required for cereal ADL serialization)
 // NOLINTNEXTLINE(build/include)
 #include "utils/string/SmallStringCereal.hpp"
 
@@ -14,36 +12,10 @@
 #include <cereal/types/string.hpp>
 #include <cereal/types/vector.hpp>
 
-#include <map>
 #include <sys/stat.h> // for inode/stat lookup
 
 namespace core
 {
-
-enum class VisitResult
-{
-  Continue,
-  Stop
-};
-
-using SongTreeVisitor =
-  std::function<VisitResult(const Artist&, const Album&, Disc, Track, const Song&)>;
-
-using ArtistVisitor = std::function<VisitResult(const Artist&)>;
-using AlbumVisitor  = std::function<VisitResult(const Artist&, const Album&)>;
-using DiscVisitor   = std::function<VisitResult(const Artist&, const Album&, Disc)>;
-
-struct SongTreeCallbacks
-{
-  std::function<void()> onBegin  = {};
-  ArtistVisitor         onArtist = {};
-  AlbumVisitor          onAlbum  = {};
-  DiscVisitor           onDisc   = {};
-  SongTreeVisitor       onSong   = {};
-  std::function<void(int artists, int albums, int discs, int songs, int uniqueGenres)> onSummary =
-    {};
-  std::function<void()> onEnd = {};
-};
 
 // ============================================================
 // SongTree Declaration (NOT THREAD SAFE)
@@ -52,9 +24,6 @@ struct SongTreeCallbacks
 // Note that this structure is used ONLY for serialization and deserialization.
 // The in-memory representation used during runtime is a threads::SafeMap<SongMap>.
 //
-// This is majorly also used for cmdline querying and printing the song library.
-
-class SongTreeRange;
 
 class SongTree
 {
@@ -64,9 +33,10 @@ private:
 
 public:
   // Core methods
-  void               addSong(const Song& song);
-  [[nodiscard]] auto range(query::song::SongPredicate pred) const -> SongTreeRange;
-  void               setMusicPath(const Path& path) { m_musicPath = path; }
+  void addSong(const Song& song);
+  void setMusicPath(const Path& path) { m_musicPath = path; }
+
+  ~SongTree() { clear(); }
 
   void clear()
   {
@@ -76,14 +46,23 @@ public:
   }
 
   // Query methods
-  [[nodiscard]] auto returnSongMap() const { return m_songMap; }
+  [[nodiscard]] auto returnSongMap() const -> const SongMap&
+  {
+    RECORD_FUNC_TO_BACKTRACE("SongTree::returnSongMap");
+    return m_songMap;
+  }
+  [[nodiscard]] auto moveSongMap() noexcept -> SongMap
+  {
+    RECORD_FUNC_TO_BACKTRACE("SongTree::moveSongMap");
+    return std::move(m_songMap);
+  }
   // note that this replaces the entire song map and newMap is no longer valid after this call
-  [[nodiscard]] auto newSongMap(const SongMap& newMap)
+  void newSongMap(const SongMap& newMap)
   {
     RECORD_FUNC_TO_BACKTRACE("SongTree::replaceSongMap");
     m_songMap = std::move(newMap);
   }
-  [[nodiscard]] auto returnMusicPath() const { return m_musicPath; }
+  [[nodiscard]] auto returnMusicPath() const -> const Path { return m_musicPath; }
 
   // Persistence
   template <class Archive> void serialize(Archive& ar) { ar(m_songMap, m_musicPath); }

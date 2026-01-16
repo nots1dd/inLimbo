@@ -132,8 +132,7 @@ struct Sound
     // larger This ensures we can handle large codec frames
     size_t decodeBufferFrames  = std::max(static_cast<size_t>(DECODE_BUFFER_SECONDS * sampleRate),
                                           static_cast<size_t>(MIN_DECODE_BUFFER_FRAMES));
-    size_t decodeBufferSamples = decodeBufferFrames * channels;
-    decodeBuffer.reserve(decodeBufferSamples);
+    size_t decodeBufferSamples = decodeBufferFrames * target.channels;
     decodeBuffer.resize(decodeBufferSamples);
   }
 

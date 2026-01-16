@@ -18,7 +18,7 @@
 #include <unistd.h>
 #endif
 
-#define __INLIMBO_DEFAULT_LOG_FILE__    "logs/core.log"
+#define __INLIMBO_DEFAULT_LOG_FILE__    "logs/default.log"
 #define __INLIMBO_DEFAULT_LOG_PATTERN__ "[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] %v"
 
 namespace inlimbo
@@ -150,15 +150,15 @@ void Logger::print_banner(const utils::string::SmallString& file, spdlog::level:
   std::ostringstream tid;
   tid << std::this_thread::get_id();
 
-  log->info(
+  log->trace(
     "┌────────────────────────────── InLimbo Logger Initialized ──────────────────────────────┐");
-  log->info("│  Log Level   : {}", spdlog::level::to_short_c_str(level));
-  log->info("│  Pattern     : {}", pattern.c_str());
-  log->info("│  Output File : {}", file.c_str());
-  log->info("│  System      : {} ({})", sysname, arch);
-  log->info("│  PID         : {}", pid);
-  log->info("│  Thread ID   : {}", tid.str());
-  log->info(
+  log->trace("│  Log Level   : {}", spdlog::level::to_short_c_str(level));
+  log->trace("│  Pattern     : {}", pattern.c_str());
+  log->trace("│  Output File : {}", file.c_str());
+  log->trace("│  System      : {} ({})", sysname, arch);
+  log->trace("│  PID         : {}", pid);
+  log->trace("│  Thread ID   : {}", tid.str());
+  log->trace(
     "└────────────────────────────────────────────────────────────────────────────────────────┘");
 }
 

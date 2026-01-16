@@ -1,4 +1,3 @@
-#include "CmdLine.hpp"
 #include "Context.hpp"
 #include "thread/Map.hpp"
 #include "toml/Parser.hpp"
@@ -11,7 +10,7 @@
 
 threads::SafeMap<SongMap> g_songMap;
 
-auto main(int argc, char* argv[]) -> int
+auto main(int argc, char** argv) -> int
 {
   RECORD_FUNC_TO_BACKTRACE("<MAIN>");
   utils::signal::Handler::getInstance().setup();
@@ -21,25 +20,17 @@ auto main(int argc, char* argv[]) -> int
     tomlparser::Config::load();
     auto ctx = inlimbo::initializeContext(argc, argv);
     inlimbo::buildOrLoadLibrary(ctx);
-    inlimbo::maybeHandlePrintActions(ctx);
-    inlimbo::maybeHandleEditActions(ctx);
+    if (inlimbo::maybeHandlePrintActions(ctx))
+      return EXIT_SUCCESS;
+    if (inlimbo::maybeHandleEditActions(ctx))
+      return EXIT_SUCCESS;
     inlimbo::runFrontend(ctx);
 
     return EXIT_SUCCESS;
   }
-  catch (const cli::CmdLine::HelpRequested& h)
+  catch (std::exception& e)
   {
-    std::cout << h.text << '\n';
-    return EXIT_SUCCESS;
-  }
-  catch (const cli::CmdLine::VersionRequested& v)
-  {
-    std::cout << v.text << '\n';
-    return EXIT_SUCCESS;
-  }
-  catch (const cli::CmdLine::CliError& e)
-  {
-    LOG_ERROR("CliError: {}", e.message);
+    LOG_ERROR("inLimbo error thrown: {}", e.what());
     return EXIT_FAILURE;
   }
 }

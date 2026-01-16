@@ -1,8 +1,14 @@
 #include "query/SongMap.hpp"
+#include "InLimbo-Types.hpp"
 #include "Logger.hpp"
+#include "utils/algorithm/Levenshtein.hpp"
+#include "utils/string/Equals.hpp"
+#include <set>
 
 namespace query::songmap
 {
+
+namespace strhelp = utils::string;
 
 namespace read
 {
@@ -25,8 +31,131 @@ auto findSongByTitle(const threads::SafeMap<SongMap>& safeMap, const Title& song
   return result;
 }
 
-auto findSongByNameAndArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
-                             const Title& songTitle) -> const Song*
+auto findSongByTitleFuzzy(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle,
+                          size_t maxDistance) -> const Song*
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongByTitleFuzzy");
+
+  if (songTitle.empty())
+    return nullptr;
+
+  const Song* bestSong  = nullptr;
+  size_t      bestScore = SIZE_MAX;
+
+  forEachSong(
+    safeMap,
+    [&](const Artist&, const Album&, const Disc, const Track, const ino_t, const Song& song) -> void
+    {
+      if (song.metadata.title.empty())
+        return;
+
+      const size_t d = utils::algorithm::StringDistance::levenshteinDistance(
+        song.metadata.title, songTitle, maxDistance);
+
+      if (d <= maxDistance && d < bestScore)
+      {
+        bestScore = d;
+        bestSong  = &song;
+      }
+    });
+
+  return bestSong; // nullptr if nothing close enough
+}
+
+auto findArtistFuzzy(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
+                     size_t maxDistance) -> Artist
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findArtistFuzzy");
+
+  if (artistName.empty())
+    return {};
+
+  Artist bestArtist;
+  size_t bestScore = SIZE_MAX;
+
+  forEachArtist(safeMap,
+                [&](const Artist& artist, const AlbumMap&) -> void
+                {
+                  if (artist.empty())
+                    return;
+
+                  const size_t d = utils::algorithm::StringDistance::levenshteinDistance(
+                    artist, artistName, maxDistance);
+
+                  if (d <= maxDistance && d < bestScore)
+                  {
+                    bestScore  = d;
+                    bestArtist = artist;
+                  }
+                });
+
+  return bestArtist; // empty if nothing close enough
+}
+
+auto findAlbumFuzzy(const threads::SafeMap<SongMap>& safeMap, const Album& albumName,
+                    size_t maxDistance) -> Album
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findAlbumFuzzy");
+
+  if (albumName.empty())
+    return {};
+
+  Album  bestAlbum;
+  size_t bestScore = SIZE_MAX;
+
+  forEachAlbum(safeMap,
+               [&](const Artist&, const Album& album, const DiscMap&) -> void
+               {
+                 if (album.empty())
+                   return;
+
+                 const size_t d = utils::algorithm::StringDistance::levenshteinDistance(
+                   album, albumName, maxDistance);
+
+                 if (d <= maxDistance && d < bestScore)
+                 {
+                   bestScore = d;
+                   bestAlbum = album;
+                 }
+               });
+
+  return bestAlbum; // empty if nothing close enough
+}
+
+auto findGenreFuzzy(const threads::SafeMap<SongMap>& safeMap, const Genre& genreName,
+                    size_t maxDistance) -> Genre
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findGenreFuzzy");
+
+  if (genreName.empty())
+    return {};
+
+  Genre  bestGenre;
+  size_t bestScore = SIZE_MAX;
+
+  forEachSong(
+    safeMap,
+    [&](const Artist&, const Album&, const Disc, const Track, const ino_t, const Song& song) -> void
+    {
+      const auto& g = song.metadata.genre;
+      if (g.empty())
+        return;
+
+      const size_t d =
+        utils::algorithm::StringDistance::levenshteinDistance(g, genreName, maxDistance);
+
+      if (d <= maxDistance && d < bestScore)
+      {
+        bestScore = d;
+        bestGenre = g;
+      }
+    });
+
+  return bestGenre; // empty if nothing close enough
+}
+
+auto findSongByTitleAndArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
+                              const Title& songTitle) -> const Song*
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongByNameAndArtist");
 
@@ -44,6 +173,43 @@ auto findSongByNameAndArtist(const threads::SafeMap<SongMap>& safeMap, const Art
               });
 
   return result;
+}
+
+auto findSongByTitleAndArtistFuzzy(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle,
+                                   const Artist& songArtist, size_t maxDistance) -> const Song*
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongByTitleAndArtistFuzzy");
+
+  if (songTitle.empty() || songArtist.empty())
+    return nullptr;
+
+  const Song* bestSong        = nullptr;
+  size_t      bestScoreSong   = SIZE_MAX;
+  size_t      bestScoreArtist = SIZE_MAX;
+
+  forEachSong(
+    safeMap,
+    [&](const Artist& artist, const Album&, const Disc, const Track, const ino_t,
+        const Song&   song) -> void
+    {
+      if (song.metadata.title.empty() || song.metadata.artist.empty())
+        return;
+
+      const size_t sd = utils::algorithm::StringDistance::levenshteinDistance(
+        song.metadata.title, songTitle, maxDistance);
+
+      const size_t ad =
+        utils::algorithm::StringDistance::levenshteinDistance(artist, songArtist, maxDistance);
+
+      if (sd <= maxDistance && sd < bestScoreSong && ad <= maxDistance && ad <= bestScoreSong)
+      {
+        bestScoreSong   = sd;
+        bestScoreArtist = ad;
+        bestSong        = &song;
+      }
+    });
+
+  return bestSong; // nullptr if nothing close enough
 }
 
 auto getSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Artist& artist,
@@ -179,6 +345,43 @@ void forEachSongInDisc(const threads::SafeMap<SongMap>& safeMap, const Artist& a
       for (const auto& [track, inodeMap] : itDisc->second)
         for (const auto& [inode, song] : inodeMap)
           fn(track, inode, song);
+    });
+}
+
+void forEachGenre(const threads::SafeMap<SongMap>&         safeMap,
+                  const std::function<void(const Genre&)>& fn)
+{
+  std::set<Genre> genres;
+
+  safeMap.withReadLock(
+    [&](const auto& map) -> void
+    {
+      for (const auto& [artist, albums] : map)
+        for (const auto& [album, discs] : albums)
+          for (const auto& [disc, tracks] : discs)
+            for (const auto& [track, inodeMap] : tracks)
+              for (const auto& [inode, song] : inodeMap)
+                genres.insert(song.metadata.genre);
+    });
+
+  for (const auto& genre : genres)
+    fn(genre);
+}
+
+void forEachSongInGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& genreName,
+                        const std::function<void(const Artist&, const Album&, const Disc,
+                                                 const Track, const ino_t, const Song&)>& fn)
+{
+  safeMap.withReadLock(
+    [&](const auto& map) -> void
+    {
+      for (const auto& [artist, albums] : map)
+        for (const auto& [album, discs] : albums)
+          for (const auto& [disc, tracks] : discs)
+            for (const auto& [track, inodeMap] : tracks)
+              for (const auto& [inode, song] : inodeMap)
+                if (strhelp::isEquals(song.metadata.genre, genreName))
+                  fn(artist, album, disc, track, inode, song);
     });
 }
 

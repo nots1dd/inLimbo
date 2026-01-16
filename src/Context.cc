@@ -14,400 +14,418 @@
 #include "utils/unix/Lockfile.hpp"
 
 #include <algorithm>
-#include <cstdlib>
 
 using namespace core;
 
 namespace inlimbo
 {
 
-// clang-format off
-void setupArgs(cli::CmdLine& args)
+static void addHelpAndVersion(CLI::App& app)
 {
-  args.add<Title>(
-    "General",
-    "song",
-    's',
-    "Play song name",
-    std::nullopt,
-    [](const Title& s) -> bool {
-      return !s.empty();
-    },
-    "song name cannot be empty, if not provided defaults to null!"
-  );
+  app.set_help_flag("-h,--help", "Show help");
 
-  args.add<frontend::PluginNameStr>(
-    "General",
-    "frontend",
-    'f',
-    "Frontend name to plugin and play",
-    std::nullopt,
-    [](const frontend::PluginNameStr& s) -> bool {
-      return !s.empty();
-    },
-    "frontend name cannot be empty, defaults to null and exits."
-  );
+  app.set_version_flag("-v,--version",
+                       std::string("Version : ") + INLIMBO_VERSION_STR + "\n" + "Commit  : " +
+                         INLIMBO_GIT_COMMIT_HASH + "\n" + "Build ID: " + INLIMBO_BUILD_ID + "\n" +
+                         "Branch  : " + INLIMBO_GIT_BRANCH + "\n" + "Dirty   : " +
+                         (INLIMBO_GIT_DIRTY ? std::string("yes") : std::string("no")) + "\n",
+                       "Show version information");
+}
 
-  args.addFlag(
-    "General",
-    "list-frontend",
-    'd',
-    "List all built frontend plugin names"
-  );
+// clang-format off
+void setupArgs(CLI::App& app, Args& args)
+{
+  addHelpAndVersion(app);
 
-  args.add<float>(
-    "General",
-    "volume",
-    'V',
-    "Initial playback volume (0-100)",
-    75.0f,
-    [](float vol) -> bool {
-      return vol >= 0.0f && vol <= 100.0f;
-    },
-    "Volume must be between 0.0 and 100.0"
-  );
+  app.add_option("-s,--song", args.song, "Play song name (fuzzy search)")
+    ->check([](const Title& s) -> Title {
+      if (s.empty()) return "Song name cannot be empty!";
+      return {};
+    });
 
-  args.add<Title>(
-    "Edit",
-    "edit-title",
-    'i',
-    "Edit title in metadata",
-    std::nullopt,
-    [](const Title& s) -> bool {
-      return !s.empty();
-    },
-    "Metadata edit requires a non-empty song name, will default to null"
-  );
+  app.add_option("-f,--frontend", args.frontend, "Frontend name to plugin and play")
+    ->check([](const frontend::PluginNameStr& s) -> frontend::PluginNameStr {
+      if (s.empty()) return "Frontend plugin name cannot be empty";
+      return {};
+    });
 
-  args.add<Artist>(
-    "Edit",
-    "edit-artist",
-    'j',
-    "Edit artist in metadata",
-    std::nullopt,
-    [](const Artist& s) -> bool {
-      return !s.empty();
-    },
-    "Metadata edit requires a non-empty artist name, will default to null"
-  );
+  app.add_flag("-l,--list-frontend", args.listFrontend,
+                    "List all built frontend plugin names");
 
-  args.add<Album>(
-    "Edit",
-    "edit-album",
-    'k',
-    "Edit album in metadata",
-    std::nullopt,
-    [](const Album& s) -> bool {
-      return !s.empty();
-    },
-    "Metadata edit requires a non-empty album name, will default to null"
-  );
+  app.add_option("-V,--volume", args.volume, "Initial playback volume (0-100)")
+    ->check(CLI::Range(0.0f, 100.0f))
+    ->default_val("75");
 
-  args.add<Genre>(
-    "Edit",
-    "edit-genre",
-    'l',
-    "Edit genre in metadata",
-    std::nullopt,
-    [](const Genre& s) -> bool {
-      return !s.empty();
-    },
-    "Metadata edit requires a non-empty genre name, will default to null"
-  );
+  auto* edit = app.add_subcommand("edit", "Edit metadata");
+  edit->add_option("-t,--edit-title", args.editTitle, "Edit title in metadata")
+    ->check([](const Title& s) -> Title {
+      if (s.empty()) return "Metadata edit requires a non-empty title";
+      return {};
+    });
 
-  args.add<Lyrics>(
-    "Edit",
-    "edit-lyrics",
-    'm',
-    "Edit lyrics in metadata",
-    std::nullopt,
-    [](const Lyrics& s) -> bool {
-      return !s.empty();
-    },
-    "Metadata edit requires non-empty lyrics, will default to null"
-  );
+  edit->add_option("-a,--edit-artist", args.editArtist, "Edit artist in metadata")
+    ->check([](const Artist& s) -> Artist {
+      if (s.empty()) return "Metadata edit requires a non-empty artist";
+      return {};
+    });
 
-  args.addFlag(
-    "Modify",
-    "rebuild-library",
-    'r',
-    "Force rebuild of the music library cache"
-  );
+  edit->add_option("-b,--edit-album", args.editAlbum, "Edit album in metadata")
+    ->check([](const Album& s) -> Album {
+      if (s.empty()) return "Metadata edit requires a non-empty album";
+      return {};
+    });
 
-  args.addFlag(
-    "Query",
-    "print-artists",
-    'A',
-    "Print all artists and exit"
-  );
+  edit->add_option("-g,--edit-genre", args.editGenre, "Edit genre in metadata")
+    ->check([](const Genre& s) -> Genre {
+      if (s.empty()) return "Metadata edit requires a non-empty genre";
+      return {};
+    });
 
-  args.addFlag(
-    "Query",
-    "print-albums",
-    'B',
-    "Print all albums and exit"
-  );
+  edit->add_option("-y,--edit-lyrics", args.editLyrics, "Edit lyrics in metadata")
+    ->check([](const Lyrics& s) -> Lyrics {
+      if (s.empty()) return "Metadata edit requires non-empty lyrics";
+      return {};
+    });
 
-  args.addFlag(
-    "Query",
-    "print-genre",
-    'C',
-    "Print all genres and exit"
-  );
+  auto* modify = app.add_subcommand("modify", "Modify library");
+  modify->add_flag("-r,--rebuild-library", args.rebuildLibrary,
+                   "Force rebuild of the music library cache");
 
-  args.addFlag(
-    "Query",
-    "print-summary",
-    'D',
-    "Print library summary and exit"
-  );
+  auto* query = app.add_subcommand("query", "Query and print library information");
 
-  args.addFlag(
-    "Query",
-    "songs-paths",
-    'E',
-    "Print all song paths and exit"
-  );
+  query->add_flag("-z,--fuzzy-search", args.fuzzySearch,
+                    "Enable fuzzy search on song queries");
+  query->add_flag("-a,--print-artists", args.printArtists, "Print all artists and exit");
+  query->add_flag("-b,--print-albums",  args.printAlbums,  "Print all albums and exit");
+  query->add_flag("-g,--print-genre",   args.printGenre,   "Print all genres and exit");
+  query->add_flag("-s,--print-summary", args.printSummary, "Print library summary and exit");
+  query->add_flag("-p,--print-song-paths",   args.songsPaths,   "Print all song paths and exit");
 
-  args.add<Title>(
-    "Query",
-    "print-song",
-    'F',
-    "Print song info and exit",
-    std::nullopt,
-    [](const Title& s) -> bool {
-      return !s.empty();
-    },
-    "Song name defaults to null."
-  );
+  query->add_option("-i,--print-song-info", args.printSong, "Print song info and exit")
+    ->check([](const Title& s) -> Title {
+      if (s.empty()) return "Song name cannot be empty";
+      return {};
+    });
 
-  args.add<Title>(
-    "Query",
-    "print-lyrics",
-    'G',
-    "Print song lyrics and exit",
-    std::nullopt,
-    [](const Title& s) -> bool {
-      return !s.empty();
-    },
-    "Song name defaults to null."
-  );
+  query->add_option("-L,--print-song-lyrics", args.printLyrics, "Print song lyrics and exit")
+    ->check([](const Title& s) -> Title {
+      if (s.empty()) return "Song name cannot be empty";
+      return {};
+    });
 
-  args.add<Artist>(
-    "Query",
-    "songs-artist",
-    'H',
-    "Print all songs by artist name",
-    std::nullopt,
-    [](const Artist& s) -> bool {
-      return !s.empty();
-    },
-    "Artist name defaults to null."
-  );
+  query->add_option("-A,--print-songs-by-artist", args.songsArtist, "Print all songs by artist name")
+    ->check([](const Artist& s) -> Artist {
+      if (s.empty()) return "Artist name cannot be empty";
+      return {};
+    });
 
-  args.add<Album>(
-    "Query",
-    "songs-album",
-    'I',
-    "Print all songs by album name",
-    std::nullopt,
-    [](const Album& s) -> bool {
-      return !s.empty();
-    },
-    "Album name defaults to null."
-  );
+  query->add_option("-B,--print-songs-by-album", args.songsAlbum, "Print all songs by album name")
+    ->check([](const Album& s) -> Album {
+      if (s.empty()) return "Album name cannot be empty";
+      return {};
+    });
 
-  args.add<Genre>(
-    "Query",
-    "songs-genre",
-    'J',
-    "Print all songs by genre name",
-    std::nullopt,
-    [](const Genre& s) -> bool {
-      return !s.empty();
-    },
-    "Genre name defaults to null."
-  );
+  query->add_option("-G,--print-songs-by-genre", args.songsGenre, "Print all songs by genre name")
+    ->check([](const Genre& s) -> Genre {
+      if (s.empty()) return "Genre name cannot be empty";
+      return {};
+    });
 }
 // clang-format on
 
 // ------------------------------------------------------------
 
-AppContext::AppContext(const std::string& program, const std::string& description)
-    : m_cmdLine(program, description),
-      m_debugLogTagLibField(tomlparser::Config::getString("debug", "taglib_parser_log")),
-      m_tagLibParser({.debugLog = m_debugLogTagLibField == "true"})
+AppContext::AppContext(CLI::App& cliApp)
+    : m_taglibDbgLog(tomlparser::Config::getBool("debug", "taglib_parser_log")),
+      m_tagLibParser({.debugLog = m_taglibDbgLog})
 {
-  setupArgs(m_cmdLine);
+  setupArgs(cliApp, args);
 }
 
 // ------------------------------------------------------------
 
-auto resolvePrintAction(const cli::CmdLine& args) -> PrintAction
+auto resolvePrintAction(const Args& args) -> PrintAction
 {
-  if (args.has("list-frontend"))
+  if (args.listFrontend)
     return PrintAction::Frontends;
-  if (args.has("print-artists"))
+
+  if (args.printArtists)
     return PrintAction::Artists;
-  if (args.has("print-song"))
-    return PrintAction::SongInfo;
-  if (args.has("print-lyrics"))
+
+  // "print-song" is an option, so check string non-empty
+  if (!args.printSong.empty())
+    return PrintAction::SongInfoByTitle;
+
+  if (!args.printLyrics.empty())
     return PrintAction::Lyrics;
-  if (args.has("print-albums"))
+
+  if (args.printAlbums)
     return PrintAction::Albums;
-  if (args.has("print-genre"))
+
+  if (args.printGenre)
     return PrintAction::Genres;
-  if (args.has("print-summary"))
+
+  if (args.printSummary)
     return PrintAction::Summary;
-  if (args.has("songs-paths"))
+
+  if (args.songsPaths)
     return PrintAction::SongPaths;
-  if (args.has("songs-artist"))
+
+  if (!args.songsArtist.empty())
     return PrintAction::SongsByArtist;
-  if (args.has("songs-album"))
+
+  if (!args.songsAlbum.empty())
     return PrintAction::SongsByAlbum;
-  if (args.has("songs-genre"))
+
+  if (!args.songsGenre.empty())
     return PrintAction::SongsByGenre;
+
   return PrintAction::None;
 }
 
-auto resolveEditAction(const cli::CmdLine& args) -> EditAction
+auto resolveEditAction(const Args& args) -> EditAction
 {
-  if (args.has("edit-title"))
+  if (!args.editTitle.empty())
     return EditAction::Title;
-  if (args.has("edit-artist"))
+
+  if (!args.editArtist.empty())
     return EditAction::Artist;
-  if (args.has("edit-album"))
+
+  if (!args.editAlbum.empty())
     return EditAction::Album;
-  if (args.has("edit-genre"))
+
+  if (!args.editGenre.empty())
     return EditAction::Genre;
-  if (args.has("edit-lyrics"))
+
+  if (!args.editLyrics.empty())
     return EditAction::Lyrics;
+
   return EditAction::None;
 }
 
 // ------------------------------------------------------------
 
-void maybeHandlePrintActions(AppContext& ctx)
+auto maybeHandlePrintActions(AppContext& ctx) -> bool
 {
   if (ctx.m_printAction == PrintAction::None)
-    return;
+    return false;
+
+  const bool useFuzzySearch = ctx.args.fuzzySearch;
+
+  LOG_DEBUG("Using fuzzy max distance as: {}", ctx.m_fuzzyMaxDist);
+
+  auto logFuzzyFallback = [&](std::string_view type, const std::string& input,
+                              const std::string& best) -> void
+  {
+    if (!input.empty() && !best.empty() && input != best)
+    {
+      LOG_WARN("No exact {} match for '{}' -> using fuzzy match '{}'", type, input, best);
+    }
+  };
+
+  auto bestForSongTitle = [&](const Title& query) -> Title
+  {
+    if (!useFuzzySearch)
+      return query;
+
+    const Song* song =
+      query::songmap::read::findSongByTitleFuzzy(g_songMap, query, ctx.m_fuzzyMaxDist);
+    if (!song)
+      return {};
+
+    const auto best = song->metadata.title;
+    logFuzzyFallback("song", query, best);
+    return best;
+  };
+
+  auto bestForArtist = [&](const Artist& query) -> Artist
+  {
+    if (!useFuzzySearch)
+      return query;
+
+    const auto best = query::songmap::read::findArtistFuzzy(g_songMap, query, ctx.m_fuzzyMaxDist);
+    logFuzzyFallback("artist", query, best);
+    return best;
+  };
+
+  auto bestForAlbum = [&](const Album& query) -> Album
+  {
+    if (!useFuzzySearch)
+      return query;
+
+    const auto best = query::songmap::read::findAlbumFuzzy(g_songMap, query, ctx.m_fuzzyMaxDist);
+    logFuzzyFallback("album", query, best);
+    return best;
+  };
+
+  auto bestForGenre = [&](const Genre& query) -> Genre
+  {
+    if (!useFuzzySearch)
+      return query;
+
+    const auto best = query::songmap::read::findGenreFuzzy(g_songMap, query, ctx.m_fuzzyMaxDist);
+    logFuzzyFallback("genre", query, best);
+    return best;
+  };
 
   switch (ctx.m_printAction)
   {
     case PrintAction::Frontends:
       helpers::cmdline::printFrontendPlugins();
       break;
+
     case PrintAction::Artists:
-      helpers::cmdline::printArtists(ctx.m_songTree);
+      helpers::cmdline::printArtists(g_songMap);
       break;
-    case PrintAction::SongInfo:
-      helpers::cmdline::printSongInfo(ctx.m_songTree,
-                                      ctx.m_cmdLine.getOptional<Title>("print-song").value_or(""));
+
+    case PrintAction::SongInfoByTitle:
+    {
+      const auto input = ctx.args.printSong;
+      const auto best  = bestForSongTitle(input);
+      helpers::cmdline::printSongInfoByTitle(g_songMap, best);
       break;
+    }
+
     case PrintAction::Lyrics:
-      helpers::cmdline::printSongLyrics(
-        ctx.m_songTree, ctx.m_cmdLine.getOptional<Title>("print-lyrics").value_or(""));
+    {
+      const auto input = ctx.args.printLyrics;
+      const auto best  = bestForSongTitle(input);
+      helpers::cmdline::printSongLyrics(g_songMap, best);
       break;
+    }
+
     case PrintAction::Albums:
-      helpers::cmdline::printAlbums(ctx.m_songTree);
+      helpers::cmdline::printAlbums(g_songMap);
       break;
+
     case PrintAction::Genres:
-      helpers::cmdline::printGenres(ctx.m_songTree);
+      helpers::cmdline::printGenres(g_songMap);
       break;
+
     case PrintAction::Summary:
-      helpers::cmdline::printSummary(ctx.m_songTree);
+      helpers::cmdline::printSummary(g_songMap);
       break;
+
     case PrintAction::SongPaths:
-      helpers::cmdline::printSongPaths(ctx.m_songTree);
+      helpers::cmdline::printSongPaths(g_songMap);
       break;
+
     case PrintAction::SongsByArtist:
-      helpers::cmdline::printSongsByArtist(
-        ctx.m_songTree, ctx.m_cmdLine.getOptional<Artist>("songs-artist").value_or(""));
+    {
+      const auto input = ctx.args.songsArtist;
+      const auto best  = bestForArtist(input);
+      helpers::cmdline::printSongsByArtist(g_songMap, best);
       break;
+    }
+
     case PrintAction::SongsByAlbum:
-      helpers::cmdline::printSongsByAlbum(
-        ctx.m_songTree, ctx.m_cmdLine.getOptional<Album>("songs-album").value_or(""));
+    {
+      const auto input = ctx.args.songsAlbum;
+      const auto best  = bestForAlbum(input);
+      helpers::cmdline::printSongsByAlbum(g_songMap, best);
       break;
+    }
+
     case PrintAction::SongsByGenre:
-      helpers::cmdline::printSongsByGenre(
-        ctx.m_songTree, ctx.m_cmdLine.getOptional<Genre>("songs-genre").value_or(""));
+    {
+      const auto input = ctx.args.songsGenre;
+      const auto best  = bestForGenre(input);
+      helpers::cmdline::printSongsByGenre(g_songMap, best);
       break;
+    }
+
     default:
       break;
   }
 
   LOG_INFO("Print action completed. Exiting.");
-  std::exit(EXIT_SUCCESS);
+  return true;
 }
 
-void maybeHandleEditActions(AppContext& ctx)
+// true to exit app, false to continue
+auto maybeHandleEditActions(AppContext& ctx) -> bool
 {
+  if (ctx.m_editAction == EditAction::None)
+    return false;
+
   if (ctx.m_songTitle.empty())
   {
     LOG_ERROR("No song title provided. Exiting...");
-    std::exit(EXIT_FAILURE);
+    return true;
   }
 
-  if (ctx.m_editAction == EditAction::None)
-    return;
-
   const Song* song = query::songmap::read::findSongByTitle(g_songMap, ctx.m_songTitle);
-  ASSERT_MSG(song, "Song not found");
+  if (!song)
+  {
+    LOG_ERROR("Song not found: '{}'", ctx.m_songTitle);
+    return true;
+  }
 
   Song edited  = *song;
   bool touched = false;
 
-  auto apply = [&](const char* opt, auto Metadata::* field) -> void
+  auto apply = [&](const std::string& value, auto Metadata::*field) -> void
   {
-    const auto v = ctx.m_cmdLine.getOptional<std::string>(opt);
-    if (v && !v->empty())
+    if (!value.empty())
     {
-      edited.metadata.*field = *v;
+      edited.metadata.*field = value;
       touched                = true;
     }
   };
 
-  apply("edit-title", &Metadata::title);
-  apply("edit-artist", &Metadata::artist);
-  apply("edit-album", &Metadata::album);
-  apply("edit-genre", &Metadata::genre);
-  apply("edit-lyrics", &Metadata::lyrics);
+  // chain edits (multiple at once)
+  apply(ctx.args.editTitle, &Metadata::title);
+  apply(ctx.args.editArtist, &Metadata::artist);
+  apply(ctx.args.editAlbum, &Metadata::album);
+  apply(ctx.args.editGenre, &Metadata::genre);
+  apply(ctx.args.editLyrics, &Metadata::lyrics);
 
   if (!touched)
   {
     LOG_WARN("No edit options provided. Nothing to update.");
-    std::exit(EXIT_SUCCESS);
+    return true;
   }
 
   if (!query::songmap::mut::replaceSongObjAndUpdateMetadata(g_songMap, *song, edited,
                                                             ctx.m_tagLibParser))
   {
     LOG_CRITICAL("Failed to update metadata for song: {}", song->metadata.title);
-    return;
+    return true;
   }
 
-  ctx.m_songTree.clear();
-  ctx.m_songTree.newSongMap(g_songMap.snapshot());
-  ctx.m_songTree.saveToFile(ctx.m_binPath);
+  // Persist updated SongMap to disk
+  SongTree tempSongTree;
+  tempSongTree.clear();
+  tempSongTree.newSongMap(g_songMap.snapshot());
+  tempSongTree.saveToFile(ctx.m_binPath);
 
   LOG_INFO("Metadata updated successfully. Exiting.");
-  std::exit(EXIT_SUCCESS);
+  return true;
 }
 
 auto initializeContext(int argc, char** argv) -> AppContext
 {
-  AppContext ctx("inLimbo", "inLimbo music library tool");
+  CLI::App   cliApp{"inLimbo: Music Player tool", "inLimbo"};
+  AppContext ctx(cliApp);
 
-  ctx.m_cmdLine.parse(argc, argv);
-  ctx.m_songTitle    = ctx.m_cmdLine.getOptional<Title>("song").value_or("");
-  ctx.m_fePluginName = frontend::PluginName{
-    ctx.m_cmdLine.getOptional<frontend::PluginNameStr>("frontend").value_or("")};
+  try
+  {
+    cliApp.parse(argc, argv);
+  }
+  catch (const CLI::ParseError& e)
+  {
+    std::exit(cliApp.exit(e));
+  }
 
-  const float vol = ctx.m_cmdLine.getOptional<float>("volume").value_or(75.0f);
+  ctx.m_songTitle    = ctx.args.song;
+  ctx.m_fuzzyMaxDist = tomlparser::Config::getInt("fuzzy", "max_dist");
+  ctx.m_fePluginName = frontend::PluginName{ctx.args.frontend};
+
+  const float vol = ctx.args.volume;
 
   ctx.m_volume      = std::clamp(vol / 100.0f, 0.0f, 1.5f);
-  ctx.m_printAction = resolvePrintAction(ctx.m_cmdLine);
-  ctx.m_editAction  = resolveEditAction(ctx.m_cmdLine);
+  ctx.m_printAction = resolvePrintAction(ctx.args);
+  ctx.m_editAction  = resolveEditAction(ctx.args);
   ctx.m_musicDir    = tomlparser::Config::getString("library", "directory");
   ctx.m_binPath     = utils::getAppConfigPathWithFile(LIB_BIN_NAME).c_str();
 
@@ -418,12 +436,13 @@ auto initializeContext(int argc, char** argv) -> AppContext
 
 void buildOrLoadLibrary(AppContext& ctx)
 {
-  bool rebuild = ctx.m_cmdLine.has("rebuild-library");
+  SongTree tempSongTree;
+  bool     rebuild = ctx.args.rebuildLibrary;
 
   try
   {
-    ctx.m_songTree.loadFromFile(ctx.m_binPath);
-    if (ctx.m_songTree.returnMusicPath() != ctx.m_musicDir)
+    tempSongTree.loadFromFile(ctx.m_binPath);
+    if (tempSongTree.returnMusicPath() != ctx.m_musicDir)
       rebuild = true;
   }
   catch (...)
@@ -433,22 +452,23 @@ void buildOrLoadLibrary(AppContext& ctx)
 
   if (!rebuild)
   {
-    g_songMap.replace(ctx.m_songTree.returnSongMap());
+    g_songMap.replace(tempSongTree.moveSongMap());
     return;
   }
 
   ctx.m_timer.restart();
-  ctx.m_songTree.clear();
+  tempSongTree.clear();
 
   utils::RedBlackTree<ino_t, utils::rbt::NilNode> rbt;
   core::InodeFileMapper                           mapper;
 
-  helpers::fs::dirWalkProcessAll(ctx.m_musicDir, rbt, mapper, ctx.m_tagLibParser, ctx.m_songTree);
+  helpers::fs::dirWalkProcessAll(ctx.m_musicDir, rbt, mapper, ctx.m_tagLibParser, tempSongTree);
 
-  ctx.m_songTree.setMusicPath(ctx.m_musicDir);
-  ctx.m_songTree.saveToFile(ctx.m_binPath);
-  g_songMap.replace(ctx.m_songTree.returnSongMap());
+  tempSongTree.setMusicPath(ctx.m_musicDir);
+  tempSongTree.saveToFile(ctx.m_binPath);
+  g_songMap.replace(tempSongTree.moveSongMap());
 
+  // SongTree has destructor so mem shud clear here
   LOG_INFO("Library rebuilt in {:.3f} ms", ctx.m_timer.elapsed_ms());
 }
 
@@ -468,7 +488,8 @@ void runFrontend(AppContext& ctx)
   try
   {
     utils::unix::LockFile appLock("/tmp/inLimbo.lock");
-    auto                  song = query::songmap::read::findSongByTitle(g_songMap, ctx.m_songTitle);
+    auto                  song =
+      query::songmap::read::findSongByTitleFuzzy(g_songMap, ctx.m_songTitle, ctx.m_fuzzyMaxDist);
 
     if (!song)
     {

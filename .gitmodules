@@ -13,9 +13,9 @@
 	url = https://github.com/USCiLab/cereal.git
   branch = master
 
-[submodule "external/cxxopts"]
-	path = external/cxxopts
-	url = https://github.com/jarro2783/cxxopts.git
+[submodule "external/CLI11"]
+	path = external/CLI11
+	url = https://github.com/CLIUtils/CLI11.git
     branch = master
 
 [submodule "external/libbacktrace"]

@@ -113,19 +113,11 @@ Just run:
 ./build/inLimbo -h                           # for help
 
 # A few examples
-./build/inLimbo -D                           # to print the summary of the chosen song directory
-./build/inLimbo -r -F "Heir Apparent"        # -r will forcibly re-cache the entire song directory
-                                             # -F will print the song info about the song string query `Heir Apparent`
-                                             # NOTE: If multiple songs exist with same song name, ALL matched inodes will be printed.
+./build/inLimbo query -h                     # to show help for query options
+./build/inLimbo query -s                     # to show summary of the library
+./build/inLimbo modify -r query -a           # rebuild the library then query library to show all artists
 
-./build/inLimbo -A                           # Print ALL artists found
-./build/inLimbo -G "Just"                    # Print the lyrics of the song string query `Just`
-./build/inLimbo -I "Crack the Skye"          # Print ALL found songs under the album string query `Crack the Skye`
-
-./build/inLimbo -s "Jesus" -i "Satan"        # Edit the title metadata of the song string query `Jesus` (So song name Jesus -> Satan)
-./build/inLimbo -s "Test"  -j "Ok"           # Edit the artist metadata of the song string query `Test` (So album name <Album> -> Ok)
-
-./build/inLimbo -s "Windowpane" -f "cmdline" # Play the song matching string query `Windowpane` and load the frontend plugin `cmdline`
+./build/inLimbo -s "Song A" edit -t "Song B" # Give title 'Song A' and edit the title to 'Song B'
 ```
 
 A LOT of things are possible with your song library with inLimbo. Lots of read only queries at your fingertips, and it unleashes the potential of having locally downloaded music.
@@ -175,9 +167,9 @@ It is a basic stock image found online. I got it from [here](https://unsplash.co
 
 To parse the [config.toml](https://github.com/nots1dd/inlimbo/blob/main/src/parser/examples/config.toml) is thanks to [TOML++](https://github.com/marzer/tomlplusplus)
 
-**Command Line Parsing (Arguments): CXXOPTS**:
+**Command Line Parsing (Arguments): CLI11**:
 
-To parse the command line arguments (and sparing me time to work on the actual project) is thanks to [cxxopts](https://github.com/jarro2783/cxxopts)
+To parse the command line arguments (and sparing me time to work on the actual project) is thanks to [CLI11](https://github.com/CLIUtils/CLI11)
 
 **Serialization: Cereal**:
 

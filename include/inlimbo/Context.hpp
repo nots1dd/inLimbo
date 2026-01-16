@@ -1,12 +1,11 @@
 #pragma once
 
-#include "CmdLine.hpp"
-#include "core/SongTree.hpp"
+#include "Args.hpp"
+#include "CLI/CLI.hpp"
 #include "core/taglib/Parser.hpp"
 #include "frontend/Plugin.hpp"
 #include "thread/Map.hpp"
 #include "utils/timer/Timer.hpp"
-#include <string>
 
 extern threads::SafeMap<SongMap> g_songMap;
 
@@ -21,7 +20,7 @@ enum class PrintAction
   Albums,
   Genres,
   Summary,
-  SongInfo,
+  SongInfoByTitle,
   Lyrics,
   SongPaths,
   SongsByArtist,
@@ -39,40 +38,41 @@ enum class EditAction
   Lyrics
 };
 
-void setupArgs(cli::CmdLine& args);
+void setupArgs(CLI::App& app, Args& args);
 
 struct AppContext
 {
   explicit AppContext() = delete;
-  AppContext(const std::string& program, const std::string& description);
+  AppContext(CLI::App& cliApp);
 
-  // cmdline parser
-  cli::CmdLine m_cmdLine;
+  inlimbo::Args args;
 
   // CLI
-  Title                      m_songTitle           = {};
-  utils::string::SmallString m_debugLogTagLibField = {};
-  float                      m_volume              = {};
+  Title m_songTitle;
+  bool  m_taglibDbgLog;
+  float m_volume;
 
   PrintAction m_printAction = PrintAction::None;
   EditAction  m_editAction  = EditAction::None;
 
+  int m_fuzzyMaxDist = 2;
+
   // Paths
-  Directory m_musicDir = {};
-  Path      m_binPath  = {};
+  Directory m_musicDir;
+  Path      m_binPath;
 
   // Frontend plugin
-  frontend::PluginName m_fePluginName = {};
+  frontend::PluginName m_fePluginName;
 
   // Core objects
   core::TagLibParser m_tagLibParser;
-  core::SongTree     m_songTree = {};
-  utils::Timer<>     m_timer    = {};
+  utils::Timer<>     m_timer;
 };
 
-auto resolvePrintAction(const cli::CmdLine& args) -> PrintAction;
-void maybeHandlePrintActions(AppContext& ctx);
-void maybeHandleEditActions(AppContext& ctx);
+auto resolvePrintAction(const Args& args) -> PrintAction;
+auto resolveEditAction(const Args& args) -> EditAction;
+auto maybeHandlePrintActions(AppContext& ctx) -> bool;
+auto maybeHandleEditActions(AppContext& ctx) -> bool;
 auto initializeContext(int argc, char** argv) -> AppContext;
 void buildOrLoadLibrary(AppContext& ctx);
 void runFrontend(AppContext& ctx);

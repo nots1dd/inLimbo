@@ -398,14 +398,15 @@ void AudioEngine::shutdownAlsa()
 
 void AudioEngine::decodeAndPlay()
 {
+  const size_t samplesNeeded = constants::FramesPerBuffer * (*m_sound).channels;
 
-  const auto BufSize = constants::FramesPerBuffer * constants::MaxChannels;
-
-  static thread_local std::vector<float> playbackBuffer(BufSize);
-  static thread_local std::vector<i16>   playbackBuffer16(BufSize);
-  static thread_local std::vector<i32>   playbackBuffer32(BufSize);
+  static thread_local std::vector<float>     playbackBuffer;
+  static thread_local std::vector<std::byte> scratchBuffer;
 
   auto& s = *m_sound;
+
+  if (playbackBuffer.size() < samplesNeeded)
+    playbackBuffer.resize(samplesNeeded);
 
   if (s.seekPending.exchange(false))
   {
@@ -423,107 +424,101 @@ void AudioEngine::decodeAndPlay()
   if (s.eof)
     return;
 
-  // Decode more data if ring buffer needs more
-  // Check for samples: 512 frames * channels
-  const size_t samplesNeeded = constants::FramesPerBuffer * s.channels;
   while (s.ring->available() < samplesNeeded && s.ring->space() > 0 && !s.eof)
-  {
     decodeStep(s);
-  }
 
-  if (s.ring->available() >= samplesNeeded)
+  if (s.ring->available() < samplesNeeded)
+    return;
+
+  size_t samplesRead = s.ring->read(playbackBuffer.data(), samplesNeeded);
+  size_t framesRead  = samplesRead / s.channels;
+
+  if (framesRead == 0)
+    return;
+
+  float vol = m_volume.load();
+
+  if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_FLOAT_LE)
   {
-    // Read samples from ring buffer
-    size_t samplesRead = s.ring->read(playbackBuffer.data(), samplesNeeded);
-    size_t framesRead  = samplesRead / s.channels;
+    for (size_t i = 0; i < samplesRead; ++i)
+      playbackBuffer[i] *= vol;
 
-    if (framesRead > 0)
-    {
-      float vol = m_volume.load();
-
-      if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_FLOAT_LE)
-      {
-        for (size_t i = 0; i < samplesRead; ++i)
-          playbackBuffer[i] *= vol;
-
-        int r = snd_pcm_writei(m_pcmData, playbackBuffer.data(), framesRead);
-        if (r == -EPIPE)
-        {
-          snd_pcm_prepare(m_pcmData);
-        }
-        else if (r < 0)
-        {
-          snd_pcm_recover(m_pcmData, r, 0);
-        }
-      }
-      else if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_S16_LE)
-      {
-        for (size_t i = 0; i < samplesRead; ++i)
-        {
-          float sample =
-            std::clamp(playbackBuffer[i] * vol, constants::FloatMin, constants::FloatMax);
-          playbackBuffer16[i] = static_cast<i16>(sample * constants::S16MaxFloat);
-        }
-
-        int r = snd_pcm_writei(m_pcmData, playbackBuffer16.data(), framesRead);
-        if (r == -EPIPE)
-        {
-          snd_pcm_prepare(m_pcmData);
-        }
-        else if (r < 0)
-        {
-          snd_pcm_recover(m_pcmData, r, 0);
-        }
-      }
-      else if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_S32_LE)
-      {
-        for (size_t i = 0; i < samplesRead; ++i)
-        {
-          float sample =
-            std::clamp(playbackBuffer[i] * vol, constants::FloatMin, constants::FloatMax);
-          playbackBuffer32[i] = static_cast<i32>(sample * constants::S32MaxFloat);
-        }
-
-        int r = snd_pcm_writei(m_pcmData, playbackBuffer32.data(), framesRead);
-        if (r == -EPIPE)
-        {
-          snd_pcm_prepare(m_pcmData);
-        }
-        else if (r < 0)
-        {
-          snd_pcm_recover(m_pcmData, r, 0);
-        }
-      }
-
-      s.cursorFrames.fetch_add((i64)framesRead, std::memory_order_relaxed);
-    }
+    int r = snd_pcm_writei(m_pcmData, playbackBuffer.data(), framesRead);
+    if (r == -EPIPE)
+      snd_pcm_prepare(m_pcmData);
+    else if (r < 0)
+      snd_pcm_recover(m_pcmData, r, 0);
   }
+  else if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_S16_LE)
+  {
+    const size_t bytes = samplesRead * sizeof(i16);
+    if (scratchBuffer.size() < bytes)
+      scratchBuffer.resize(bytes);
+
+    auto* out = reinterpret_cast<i16*>(scratchBuffer.data());
+
+    for (size_t i = 0; i < samplesRead; ++i)
+    {
+      float sample = std::clamp(playbackBuffer[i] * vol, constants::FloatMin, constants::FloatMax);
+      out[i]       = static_cast<i16>(sample * constants::S16MaxFloat);
+    }
+
+    int r = snd_pcm_writei(m_pcmData, out, framesRead);
+    if (r == -EPIPE)
+      snd_pcm_prepare(m_pcmData);
+    else if (r < 0)
+      snd_pcm_recover(m_pcmData, r, 0);
+  }
+  else if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_S32_LE)
+  {
+    const size_t bytes = samplesRead * sizeof(i32);
+    if (scratchBuffer.size() < bytes)
+      scratchBuffer.resize(bytes);
+
+    auto* out = reinterpret_cast<i32*>(scratchBuffer.data());
+
+    for (size_t i = 0; i < samplesRead; ++i)
+    {
+      float sample = std::clamp(playbackBuffer[i] * vol, constants::FloatMin, constants::FloatMax);
+      out[i]       = static_cast<i32>(sample * constants::S32MaxFloat);
+    }
+
+    int r = snd_pcm_writei(m_pcmData, out, framesRead);
+    if (r == -EPIPE)
+      snd_pcm_prepare(m_pcmData);
+    else if (r < 0)
+      snd_pcm_recover(m_pcmData, r, 0);
+  }
+
+  s.cursorFrames.fetch_add((i64)framesRead, std::memory_order_relaxed);
 }
 
 void AudioEngine::decodeStep(Sound& s)
 {
   if (!s.frame)
   {
-    s.eof = true;
-    return;
+    s.frame.reset(av_frame_alloc());
+    if (!s.frame)
+      throw std::runtime_error("av_frame_alloc failed");
   }
 
-  // Read one packet
   const int rr = av_read_frame(s.fmt.get(), &s.pkt);
-  if (rr < 0)
+  if (rr == AVERROR_EOF)
   {
     s.eof = true;
     return;
   }
+  if (rr < 0)
+  {
+    return;
+  }
 
-  // Not our stream -> ignore quickly
   if (s.pkt.stream_index != s.streamIndex)
   {
     av_packet_unref(&s.pkt);
     return;
   }
 
-  // Send packet to decoder
   int r = avcodec_send_packet(s.dec.get(), &s.pkt);
   av_packet_unref(&s.pkt);
 
@@ -533,13 +528,16 @@ void AudioEngine::decodeStep(Sound& s)
   while (true)
   {
     r = avcodec_receive_frame(s.dec.get(), s.frame.get());
-    if (r == AVERROR(EAGAIN) || r == AVERROR_EOF)
+    if (r == AVERROR(EAGAIN))
       break;
-
+    if (r == AVERROR_EOF)
+    {
+      s.eof = true;
+      break;
+    }
     if (r < 0)
       break;
 
-    // Compute required output frames
     const i64 delay     = swr_get_delay(s.swr.get(), s.source.sampleRate);
     const int outFrames = (int)av_rescale_rnd(delay + s.frame->nb_samples, s.target.sampleRate,
                                               s.source.sampleRate, AV_ROUND_UP);
@@ -552,7 +550,6 @@ void AudioEngine::decodeStep(Sound& s)
 
     const size_t totalSamples = (size_t)outFrames * (size_t)s.target.channels;
 
-    // Not enough ring space -> stop decoding now (try later)
     if (s.ring->space() < totalSamples)
     {
       av_frame_unref(s.frame.get());
@@ -562,10 +559,10 @@ void AudioEngine::decodeStep(Sound& s)
     if (s.decodeBuffer.size() < totalSamples)
       s.decodeBuffer.resize(totalSamples);
 
-    ui8* outData[1] = {reinterpret_cast<ui8*>(s.decodeBuffer.data())};
+    std::array<ui8*, 1> outData = {reinterpret_cast<ui8*>(s.decodeBuffer.data())};
 
-    const int framesConverted =
-      swr_convert(s.swr.get(), outData, outFrames, (const ui8**)s.frame->data, s.frame->nb_samples);
+    const int framesConverted = swr_convert(s.swr.get(), outData.data(), outFrames,
+                                            (const ui8**)s.frame->data, s.frame->nb_samples);
 
     av_frame_unref(s.frame.get());
 
@@ -573,9 +570,6 @@ void AudioEngine::decodeStep(Sound& s)
       continue;
 
     const size_t samplesToWrite = (size_t)framesConverted * (size_t)s.target.channels;
-
-    // Safety: ring space was checked against totalSamples,
-    // but samplesToWrite is usually <= totalSamples.
     s.ring->write(s.decodeBuffer.data(), samplesToWrite);
   }
 }

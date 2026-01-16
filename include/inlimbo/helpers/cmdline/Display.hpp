@@ -1,63 +1,37 @@
 #pragma once
 
-#include "core/SongTree.hpp"
+#include "thread/Map.hpp"
 #include <optional>
 
 namespace helpers::cmdline
 {
 
-// ------------------------------------------------------------
-// Print all frontend plugins built
-// ------------------------------------------------------------
 void printFrontendPlugins();
 
-// ------------------------------------------------------------
-// Print all artists
-// ------------------------------------------------------------
-void printArtists(const core::SongTree& tree);
+void printArtists(const threads::SafeMap<SongMap>& safeMap);
 
-// ------------------------------------------------------------
-// Print song info
-// ------------------------------------------------------------
-void printSongInfo(const core::SongTree& tree, const std::optional<std::string>& songName);
+void printSongInfoByTitle(const threads::SafeMap<SongMap>& safeMap,
+                          const std::optional<Title>&      songName);
 
-// ------------------------------------------------------------
-// Print song lyrics
-// ------------------------------------------------------------
-void printSongLyrics(const core::SongTree& tree, const Title& songTitle);
+void printSongInfoByTitleAndArtist(const threads::SafeMap<SongMap>& safeMap,
+                                   const std::optional<Title>&      songName,
+                                   const std::optional<Artist>&     artistName);
 
-// ------------------------------------------------------------
-// Print albums (optionally filtered by artist)
-// ------------------------------------------------------------
-void printAlbums(const core::SongTree& tree, const std::optional<Artist>& artist = std::nullopt);
+void printSongLyrics(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle);
 
-// ------------------------------------------------------------
-// Print genres
-// ------------------------------------------------------------
-void printGenres(const core::SongTree& tree);
+void printAlbums(const threads::SafeMap<SongMap>& safeMap,
+                 const std::optional<Artist>&     artist = std::nullopt);
 
-// ------------------------------------------------------------
-// Print songs (optionally filtered)
-// ------------------------------------------------------------
-void printSongs(const core::SongTree& tree, query::song::SongPredicate pred = {});
+void printGenres(const threads::SafeMap<SongMap>& safeMap);
 
-void printSongsByArtist(const core::SongTree& tree, const Artist& artist);
-void printSongsByAlbum(const core::SongTree& tree, const Album& album);
-void printSongsByGenre(const core::SongTree& tree, const Genre& genre);
+void printSongsByArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artist);
 
-// ------------------------------------------------------------
-// Print song paths (title, artist, absolute path)
-// ------------------------------------------------------------
-void printSongPaths(const core::SongTree& tree, query::song::SongPredicate pred = {});
+void printSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Album& album);
 
-// ------------------------------------------------------------
-// Print library summary
-// ------------------------------------------------------------
-void printSummary(const core::SongTree& tree);
+void printSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& genre);
 
-// ------------------------------------------------------------
-// Print songs by artist + album
-// ------------------------------------------------------------
-void printAlbum(const core::SongTree& tree, const Artist& artist, const Album& album);
+void printSongPaths(const threads::SafeMap<SongMap>& safeMap);
+
+void printSummary(const threads::SafeMap<SongMap>& safeMap);
 
 } // namespace helpers::cmdline

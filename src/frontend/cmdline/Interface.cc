@@ -20,6 +20,8 @@
 #include "utils/Index.hpp"
 #include "utils/timer/Timer.hpp"
 
+namespace colors = config::colors;
+
 namespace frontend::cmdline
 {
 
@@ -59,7 +61,7 @@ void Interface::loadConfig()
   {
     tomlparser::Config::load();
 
-    config::colors::ConfigLoader colorsCfg(FRONTEND_NAME);
+    colors::ConfigLoader colorsCfg(FRONTEND_NAME);
     colorsCfg.loadIntoRegistry(true);
 
     config::keybinds::ConfigLoader keysCfg(FRONTEND_NAME);
@@ -229,19 +231,19 @@ void Interface::drawTooSmall(const TermSize& ts)
   auto        cfg    = m_cfg.get();
   const auto& colors = cfg->colors;
 
-  std::cout << config::colors::Ansi::Clear;
+  std::cout << colors::Ansi::Clear;
 
-  std::cout << config::colors::Ansi::Bold << colors.accent << "InLimbo Player"
-            << config::colors::Ansi::Reset << "\n\n";
+  std::cout << colors::Ansi::Bold << colors.accent << "InLimbo Player" << colors::Ansi::Reset
+            << "\n\n";
 
-  std::cout << config::colors::Ansi::Bold << colors.warning << " Terminal too small"
-            << config::colors::Ansi::Reset << "\n\n";
+  std::cout << colors::Ansi::Bold << colors.warning << " Terminal too small" << colors::Ansi::Reset
+            << "\n\n";
 
-  std::cout << " Current  : " << config::colors::Ansi::Bold << colors.error << ts.cols << " cols × "
-            << ts.rows << " rows" << config::colors::Ansi::Reset << "\n\n";
+  std::cout << " Current  : " << colors::Ansi::Bold << colors.error << ts.cols << " cols × "
+            << ts.rows << " rows" << colors::Ansi::Reset << "\n\n";
 
-  std::cout << config::colors::Ansi::Dim << colors.fg << " Resize the terminal window."
-            << config::colors::Ansi::Reset << "\n";
+  std::cout << colors::Ansi::Dim << colors.fg << " Resize the terminal window."
+            << colors::Ansi::Reset << "\n";
 
   std::cout.flush();
 }
@@ -249,10 +251,10 @@ void Interface::drawTooSmall(const TermSize& ts)
 void Interface::drawBottomPrompt(const TermSize& ts, const UiColors& colors, std::string_view label,
                                  std::string_view text)
 {
-  std::cout << config::colors::Ansi::MoveCursor(ts.rows, 1) << config::colors::Ansi::ClearLine;
+  std::cout << colors::Ansi::MoveCursor(ts.rows, 1) << colors::Ansi::ClearLine;
 
-  std::cout << config::colors::Ansi::Bold << colors.accent << label << config::colors::Ansi::Reset
-            << colors.fg << text << config::colors::Ansi::Reset;
+  std::cout << colors::Ansi::Bold << colors.accent << label << colors::Ansi::Reset << colors.fg
+            << text << colors::Ansi::Reset;
 
   std::cout.flush();
 }
@@ -321,29 +323,23 @@ void Interface::draw(audio::Service& audio)
   // ------------------------------------------------------------
 
   auto l_Title = [&](std::string_view s) -> void
-  {
-    std::cout << config::colors::Ansi::Bold << colors.accent << s << config::colors::Ansi::Reset
-              << "\n";
-  };
+  { std::cout << colors::Ansi::Bold << colors.accent << s << colors::Ansi::Reset << "\n"; };
 
   auto l_Section = [&](std::string_view s) -> void
-  {
-    std::cout << config::colors::Ansi::Bold << colors.accent << " " << s
-              << config::colors::Ansi::Reset << "\n";
-  };
+  { std::cout << colors::Ansi::Bold << colors.accent << " " << s << colors::Ansi::Reset << "\n"; };
 
   auto l_Sep = [&]() -> void
   {
-    std::cout << config::colors::Ansi::Dim << colors.fg
-              << "──────────────────────────────────────────────────────────"
-              << config::colors::Ansi::Reset << "\n\n";
+    std::cout << colors::Ansi::Dim << colors.fg
+              << "──────────────────────────────────────────────────────────" << colors::Ansi::Reset
+              << "\n\n";
   };
 
   auto l_KvValue = [&](std::string_view k) -> void
-  { std::cout << config::colors::Ansi::Bold << colors.fg << k << config::colors::Ansi::Reset; };
+  { std::cout << colors::Ansi::Bold << colors.fg << k << colors::Ansi::Reset; };
 
   auto l_KeyTag = [&](std::string_view keyName) -> void
-  { std::cout << colors.accent << "[" << keyName << "]" << config::colors::Ansi::Reset; };
+  { std::cout << colors.accent << "[" << keyName << "]" << colors::Ansi::Reset; };
 
   auto l_Control3 = [&](std::string_view k1, std::string_view l1, std::string_view k2,
                         std::string_view l2, std::string_view k3, std::string_view l3) -> void
@@ -357,7 +353,7 @@ void Interface::draw(audio::Service& audio)
     std::cout << " " << l3 << "\n";
   };
 
-  std::cout << config::colors::Ansi::Clear;
+  std::cout << colors::Ansi::Clear;
 
   // base theme
   std::cout << colors.bg << colors.fg;
@@ -368,10 +364,10 @@ void Interface::draw(audio::Service& audio)
   l_Section("Playlist");
   std::cout << "   Prev : " << (prevMeta ? prevMeta->title : "<none>") << "\n";
 
-  std::cout << " " << colors.accent << "▶" << config::colors::Ansi::Reset << " Now  : ";
+  std::cout << " " << colors.accent << "▶" << colors::Ansi::Reset << " Now  : ";
   l_KvValue(curMeta->title);
-  std::cout << config::colors::Ansi::Reset << " — " << curMeta->artist << " (" << current + 1 << "/"
-            << size << ")\n";
+  std::cout << colors::Ansi::Reset << " — " << curMeta->artist << " (" << current + 1 << "/" << size
+            << ")\n";
 
   std::cout << "   Next : " << (nextMeta ? nextMeta->title : "<none>") << "\n\n";
 
@@ -398,7 +394,7 @@ void Interface::draw(audio::Service& audio)
     else
       std::cout << colors.fg << UI_BAR_EMPTY;
   }
-  std::cout << config::colors::Ansi::Reset << "\n\n";
+  std::cout << colors::Ansi::Reset << "\n\n";
 
   l_Section("Backend");
   std::cout << "   Device   : " << backend.dev.name.c_str() << "\n";
@@ -422,7 +418,7 @@ void Interface::draw(audio::Service& audio)
     return;
   }
 
-  std::cout << config::colors::Ansi::Reset;
+  std::cout << colors::Ansi::Reset;
   std::cout.flush();
 }
 
@@ -438,37 +434,31 @@ auto Interface::handleSearchSongMode(audio::Service& audio, char c) -> bool
   // ENTER submits
   if (utils::ascii::isEnter(c))
   {
-    bool found = false;
-    query::songmap::read::forEachSong(
-      *m_songMapTS,
-      [&](const Artist&, const Album&, Disc, Track, ino_t, const Song& song) -> void
+    auto song = query::songmap::read::findSongByTitle(*m_songMapTS, m_searchBuf);
+
+    if (!song)
+    {
+      m_mode = UiMode::Normal;
+      return true;
+    }
+    audio.clearPlaylist();
+    auto h = audio.registerTrack(*song);
+    audio.addToPlaylist(h);
+
+    audio.nextTrack();
+    m_mprisService->updateMetadata();
+    m_mprisService->notify();
+
+    query::songmap::read::forEachSongInAlbum(
+      *m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
+      [&](const Disc&, const Track&, const ino_t, const Song& song) -> void
       {
-        if (!utils::string::isEquals(song.metadata.title, m_searchBuf))
+        if (song.metadata.track <= audio.getCurrentMetadata()->track)
           return;
 
-        audio.clearPlaylist();
-        found  = true;
         auto h = audio.registerTrack(song);
         audio.addToPlaylist(h);
       });
-
-    if (found)
-    {
-      audio.nextTrack();
-      m_mprisService->updateMetadata();
-      m_mprisService->notify();
-
-      query::songmap::read::forEachSongInAlbum(
-        *m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
-        [&](const Disc&, const Track&, const ino_t, const Song& song) -> void
-        {
-          if (song.metadata.track <= audio.getCurrentMetadata()->track)
-            return;
-
-          auto h = audio.registerTrack(song);
-          audio.addToPlaylist(h);
-        });
-    }
 
     m_mode = UiMode::Normal;
     return true;
