@@ -97,8 +97,8 @@ struct Song
   ino_t    inode;    /**< The inode of the file representing the song */
   Metadata metadata; /**< Metadata information for the song */
 
-  Song(ino_t inode, Metadata metadata) : inode(inode), metadata(std::move(metadata)){};
-  Song() : inode(0), metadata(){};
+  Song(ino_t inode, Metadata metadata) : inode(inode), metadata(std::move(metadata)) {};
+  Song() : inode(0), metadata() {};
   explicit Song(ino_t inode) : inode(inode) {}
 
   template <class Archive> void serialize(Archive& ar) { ar(inode, metadata); }

@@ -30,8 +30,7 @@ void printArtists(const threads::SafeMap<SongMap>& safeMap)
   std::cout << "\nArtists:\n";
   std::cout << "────────────────────────────\n";
 
-  query::songmap::read::forEachArtist(safeMap,
-                                      [&](const Artist& artist, const AlbumMap&) -> void
+  query::songmap::read::forEachArtist(safeMap, [&](const Artist& artist, const AlbumMap&) -> void
                                       { std::cout << "• " << artist << "\n"; });
 }
 
@@ -228,12 +227,11 @@ void printSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& ge
   std::cout << "\nSongs in genre '" << genre << "':\n";
   std::cout << "────────────────────────────\n";
 
-  query::songmap::read::forEachSongInGenre(safeMap, genre,
-                                           [&](const Artist& artist, const Album& album, const Disc,
-                                               const Track, const ino_t, const Song& song) -> void {
-                                             std::cout << "• " << song.metadata.title << " — "
-                                                       << artist << " [" << album << "]\n";
-                                           });
+  query::songmap::read::forEachSongInGenre(
+    safeMap, genre,
+    [&](const Artist& artist, const Album& album, const Disc, const Track, const ino_t,
+        const Song& song) -> void
+    { std::cout << "• " << song.metadata.title << " — " << artist << " [" << album << "]\n"; });
 }
 
 // ------------------------------------------------------------

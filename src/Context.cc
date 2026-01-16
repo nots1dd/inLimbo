@@ -364,7 +364,7 @@ auto maybeHandleEditActions(AppContext& ctx) -> bool
   Song edited  = *song;
   bool touched = false;
 
-  auto apply = [&](const std::string& value, auto Metadata::*field) -> void
+  auto apply = [&](const std::string& value, auto Metadata::* field) -> void
   {
     if (!value.empty())
     {
