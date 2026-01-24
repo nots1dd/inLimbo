@@ -2,36 +2,37 @@
 
 #include "config/Colors.hpp"
 #include "config/Keybinds.hpp"
-#include "utils/string/SmallString.hpp"
 
 namespace frontend::cmdline
 {
 
+using CmdlineKey = char;
+
 struct Keybinds
 {
-  char playPause;
-  char next;
-  char prev;
-  char random;
-  char searchSong;
-  char restart;
-  char seekBack;
-  char seekFwd;
-  char volUp;
-  char volDown;
-  char quit;
+  CmdlineKey playPause;
+  CmdlineKey next;
+  CmdlineKey prev;
+  CmdlineKey random;
+  CmdlineKey searchSong;
+  CmdlineKey restart;
+  CmdlineKey seekBack;
+  CmdlineKey seekFwd;
+  CmdlineKey volUp;
+  CmdlineKey volDown;
+  CmdlineKey quit;
 
-  utils::string::SmallString playPauseName;
-  utils::string::SmallString nextName;
-  utils::string::SmallString prevName;
-  utils::string::SmallString searchSongName;
-  utils::string::SmallString randomName;
-  utils::string::SmallString restartName;
-  utils::string::SmallString seekBackName;
-  utils::string::SmallString seekFwdName;
-  utils::string::SmallString volUpName;
-  utils::string::SmallString volDownName;
-  utils::string::SmallString quitName;
+  KeyName playPauseName;
+  KeyName nextName;
+  KeyName prevName;
+  KeyName searchSongName;
+  KeyName randomName;
+  KeyName restartName;
+  KeyName seekBackName;
+  KeyName seekFwdName;
+  KeyName volUpName;
+  KeyName volDownName;
+  KeyName quitName;
 
   static auto load(std::string_view frontend) -> Keybinds
   {
@@ -39,17 +40,17 @@ struct Keybinds
 
     auto& kb = config::keybinds::Registry::theme(frontend);
 
-    out.playPause  = kb.getChar("play_pause", 'p');
-    out.next       = kb.getChar("next", 'n');
-    out.prev       = kb.getChar("prev", 'b');
-    out.searchSong = kb.getChar("search_song", '/');
-    out.random     = kb.getChar("random", 'x');
-    out.restart    = kb.getChar("restart", 'r');
-    out.seekBack   = kb.getChar("seek_back", 'j');
-    out.seekFwd    = kb.getChar("seek_fwd", 'k');
-    out.volUp      = kb.getChar("vol_up", '=');
-    out.volDown    = kb.getChar("vol_down", '-');
-    out.quit       = kb.getChar("quit", 'q');
+    out.playPause  = kb.getAs<CmdlineKey>("play_pause", 'p');
+    out.next       = kb.getAs<CmdlineKey>("next", 'n');
+    out.prev       = kb.getAs<CmdlineKey>("prev", 'b');
+    out.searchSong = kb.getAs<CmdlineKey>("search_song", '/');
+    out.random     = kb.getAs<CmdlineKey>("random", 'x');
+    out.restart    = kb.getAs<CmdlineKey>("restart", 'r');
+    out.seekBack   = kb.getAs<CmdlineKey>("seek_back", 'j');
+    out.seekFwd    = kb.getAs<CmdlineKey>("seek_fwd", 'k');
+    out.volUp      = kb.getAs<CmdlineKey>("vol_up", '=');
+    out.volDown    = kb.getAs<CmdlineKey>("vol_down", '-');
+    out.quit       = kb.getAs<CmdlineKey>("quit", 'q');
 
     out.playPauseName  = kb.getKeyName("play_pause", "p");
     out.nextName       = kb.getKeyName("next", "n");

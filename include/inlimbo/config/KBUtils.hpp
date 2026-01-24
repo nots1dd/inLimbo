@@ -5,6 +5,8 @@
 #include "utils/string/Transforms.hpp"
 #include <optional>
 
+using KeyName = utils::string::SmallString;
+
 namespace config::keybinds
 {
 
@@ -26,7 +28,7 @@ enum class Policy : ui8
   Forced    // use config-defined keys absolutely
 };
 
-static inline auto parseKeyName(KeyChar c) -> utils::string::SmallString
+static inline auto parseKeyName(KeyChar c) -> KeyName
 {
   switch ((unsigned char)c)
   {

@@ -2,110 +2,39 @@
 
 #include "config/Colors.hpp"
 #include "config/Keybinds.hpp"
-#include "utils/string/SmallString.hpp"
 #include <raylib.h>
 #include <string_view>
 
 namespace frontend::raylib
 {
 
-inline auto keyFromString(std::string_view sv) -> int
-{
-  if (sv.empty())
-    return 0;
-
-  auto s = utils::string::transform::tolower_ascii(sv.data());
-
-  // Common named keys
-  if (s == "space")
-    return KEY_SPACE;
-  if (s == "enter")
-    return KEY_ENTER;
-  if (s == "esc" || s == "escape")
-    return KEY_ESCAPE;
-  if (s == "tab")
-    return KEY_TAB;
-  if (s == "backspace")
-    return KEY_BACKSPACE;
-
-  if (s == "up")
-    return KEY_UP;
-  if (s == "down")
-    return KEY_DOWN;
-  if (s == "left")
-    return KEY_LEFT;
-  if (s == "right")
-    return KEY_RIGHT;
-
-  if (s.size() == 1)
-  {
-    char c = s.c_str()[0];
-
-    if (c >= 'a' && c <= 'z')
-      return KEY_A + (c - 'a');
-
-    if (c >= '0' && c <= '9')
-      return KEY_ZERO + (c - '0');
-
-    switch (c)
-    {
-      case ' ':
-        return KEY_SPACE;
-      case '=':
-        return KEY_EQUAL;
-      case '-':
-        return KEY_MINUS;
-      case '/':
-        return KEY_SLASH;
-      case '.':
-        return KEY_PERIOD;
-      case ',':
-        return KEY_COMMA;
-      case ';':
-        return KEY_SEMICOLON;
-      case '\'':
-        return KEY_APOSTROPHE;
-      case '[':
-        return KEY_LEFT_BRACKET;
-      case ']':
-        return KEY_RIGHT_BRACKET;
-      case '\\':
-        return KEY_BACKSLASH;
-      case '`':
-        return KEY_GRAVE;
-      default:
-        break;
-    }
-  }
-
-  return 0;
-}
+using RaylibKey = int;
 
 struct Keybinds
 {
-  int playPause{KEY_P};
-  int next{KEY_N};
-  int prev{KEY_B};
-  int random{KEY_X};
-  int songInfo{KEY_I};
-  int restart{KEY_R};
-  int seekBack{KEY_J};
-  int seekFwd{KEY_K};
-  int volUp{KEY_EQUAL};
-  int volDown{KEY_MINUS};
-  int quit{KEY_Q};
+  RaylibKey playPause;
+  RaylibKey next;
+  RaylibKey prev;
+  RaylibKey random;
+  RaylibKey songInfo;
+  RaylibKey restart;
+  RaylibKey seekBack;
+  RaylibKey seekFwd;
+  RaylibKey volUp;
+  RaylibKey volDown;
+  RaylibKey quit;
 
-  utils::string::SmallString playPauseName{"p"};
-  utils::string::SmallString nextName{"n"};
-  utils::string::SmallString prevName{"b"};
-  utils::string::SmallString songInfoName{"i"};
-  utils::string::SmallString randomName{"x"};
-  utils::string::SmallString restartName{"r"};
-  utils::string::SmallString seekBackName{"j"};
-  utils::string::SmallString seekFwdName{"k"};
-  utils::string::SmallString volUpName{"="};
-  utils::string::SmallString volDownName{"-"};
-  utils::string::SmallString quitName{"q"};
+  KeyName playPauseName;
+  KeyName nextName;
+  KeyName prevName;
+  KeyName songInfoName;
+  KeyName randomName;
+  KeyName restartName;
+  KeyName seekBackName;
+  KeyName seekFwdName;
+  KeyName volUpName;
+  KeyName volDownName;
+  KeyName quitName;
 
   static auto load(std::string_view frontend) -> Keybinds
   {
@@ -113,28 +42,29 @@ struct Keybinds
 
     auto& kb = config::keybinds::Registry::theme(frontend);
 
-    auto readKey = [&](const char* keyName, std::string_view fallbackStr, int fallbackKey,
-                       int& outKey, utils::string::SmallString& outName) -> void
-    {
-      auto nameStr = kb.getKeyName(keyName, fallbackStr);
+    out.playPause = kb.getAs<RaylibKey>("play_pause", KEY_P);
+    out.next      = kb.getAs<RaylibKey>("next", KEY_N);
+    out.prev      = kb.getAs<RaylibKey>("prev", KEY_B);
+    out.songInfo  = kb.getAs<RaylibKey>("song_info", KEY_I);
+    out.random    = kb.getAs<RaylibKey>("random", KEY_X);
+    out.restart   = kb.getAs<RaylibKey>("restart", KEY_R);
+    out.seekBack  = kb.getAs<RaylibKey>("seek_back", KEY_J);
+    out.seekFwd   = kb.getAs<RaylibKey>("seek_fwd", KEY_K);
+    out.volUp     = kb.getAs<RaylibKey>("vol_up", KEY_EQUAL);
+    out.volDown   = kb.getAs<RaylibKey>("vol_down", KEY_MINUS);
+    out.quit      = kb.getAs<RaylibKey>("quit", KEY_Q);
 
-      outName = nameStr;
-
-      int k  = keyFromString(nameStr);
-      outKey = (k != 0) ? k : fallbackKey;
-    };
-
-    readKey("play_pause", "p", out.playPause, out.playPause, out.playPauseName);
-    readKey("next", "n", out.next, out.next, out.nextName);
-    readKey("prev", "b", out.prev, out.prev, out.prevName);
-    readKey("song_info", "/", out.songInfo, out.songInfo, out.songInfoName);
-    readKey("random", "x", out.random, out.random, out.randomName);
-    readKey("restart", "r", out.restart, out.restart, out.restartName);
-    readKey("seek_back", "j", out.seekBack, out.seekBack, out.seekBackName);
-    readKey("seek_fwd", "k", out.seekFwd, out.seekFwd, out.seekFwdName);
-    readKey("vol_up", "=", out.volUp, out.volUp, out.volUpName);
-    readKey("vol_down", "-", out.volDown, out.volDown, out.volDownName);
-    readKey("quit", "q", out.quit, out.quit, out.quitName);
+    out.playPauseName = kb.getKeyName("play_pause", "p");
+    out.nextName      = kb.getKeyName("next", "n");
+    out.prevName      = kb.getKeyName("prev", "b");
+    out.songInfoName  = kb.getKeyName("song_info", "i");
+    out.randomName    = kb.getKeyName("random", "x");
+    out.restartName   = kb.getKeyName("restart", "r");
+    out.seekBackName  = kb.getKeyName("seek_back", "j");
+    out.seekFwdName   = kb.getKeyName("seek_fwd", "k");
+    out.volUpName     = kb.getKeyName("vol_up", "=");
+    out.volDownName   = kb.getKeyName("vol_down", "-");
+    out.quitName      = kb.getKeyName("quit", "q");
 
     return out;
   }

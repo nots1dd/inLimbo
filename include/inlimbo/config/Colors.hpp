@@ -1,6 +1,7 @@
 #pragma once
 
 #include "InLimbo-Types.hpp"
+#include "utils/map/AllocOptimization.hpp"
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -255,14 +256,11 @@ public:
     return *this;
   }
 
-  auto has(std::string_view key) const -> bool
-  {
-    return m_colors.find(std::string(key)) != m_colors.end();
-  }
+  auto has(std::string_view key) const -> bool { return m_colors.find(key) != m_colors.end(); }
 
   auto get(std::string_view key, RGBA fallback = RGBA{}) const -> RGBA
   {
-    auto it = m_colors.find(std::string(key));
+    auto it = m_colors.find(key);
     if (it == m_colors.end())
       return fallback;
     return it->second.rgba;
@@ -270,7 +268,7 @@ public:
 
   auto get256(std::string_view key, ui8 fallback = 15) const -> ui8
   {
-    auto it = m_colors.find(std::string(key));
+    auto it = m_colors.find(key);
     if (it == m_colors.end())
       return fallback;
     return it->second.ansi256;
@@ -280,7 +278,7 @@ public:
   auto ansi(std::string_view key, Layer layer = Layer::Foreground,
             Mode mode = Mode::TrueColor24) const -> std::string
   {
-    auto it = m_colors.find(std::string(key));
+    auto it = m_colors.find(key);
     if (it == m_colors.end())
       return std::string(Ansi::Reset);
 
@@ -296,8 +294,10 @@ public:
   }
 
 private:
-  std::string                                 m_name{"default"};
-  std::unordered_map<std::string, ColorValue> m_colors;
+  std::string m_name{"default"};
+  std::unordered_map<std::string, ColorValue, utils::map::TransparentHash,
+                     utils::map::TransparentEq>
+    m_colors;
 };
 
 class Registry

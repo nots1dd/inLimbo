@@ -2,18 +2,18 @@
 
 #include "KBUtils.hpp"
 
+#include "utils/map/AllocOptimization.hpp"
+#include "utils/string/SmallString.hpp"
+
+#include <string>
+#include <string_view>
+#include <unordered_map>
+#include <utility>
+
 namespace config::keybinds
 {
 
 using Member = utils::string::SmallString;
-
-struct KeybindValue
-{
-  Keybind bind{};
-
-  constexpr KeybindValue() = default;
-  constexpr explicit KeybindValue(Keybind b) : bind(b) {}
-};
 
 class Theme
 {
@@ -21,48 +21,57 @@ public:
   Theme() = default;
   explicit Theme(std::string name) : m_name(std::move(name)) {}
 
-  auto name() const noexcept -> const std::string& { return m_name; }
+  [[nodiscard]] auto name() const noexcept -> const std::string& { return m_name; }
 
   auto set(std::string action, Keybind bind) -> Theme&
   {
-    m_binds[std::move(action)] = KeybindValue{bind};
+    m_binds[std::move(action)] = bind;
     return *this;
   }
 
-  auto has(std::string_view action) const -> bool
+  [[nodiscard]] auto has(std::string_view action) const -> bool
   {
-    return m_binds.find(std::string(action)) != m_binds.end();
+    return m_binds.find(action) != m_binds.end();
   }
 
-  auto get(std::string_view action, Keybind fallback = {}) const -> Keybind
+  [[nodiscard]] auto get(std::string_view action, Keybind fallback = {}) const -> Keybind
   {
-    auto it = m_binds.find(std::string(action));
+    auto it = m_binds.find(action);
     if (it == m_binds.end())
       return fallback;
-    return it->second.bind;
+    return it->second;
   }
 
-  auto getChar(std::string_view action, KeyChar fallback = 0) const -> KeyChar
+  // Generic typed getter
+  //
+  // Examples:
+  //   int  k = theme.getAs<int>("play_pause", KEY_SPACE);      // for raylib
+  //   auto e = theme.getAs<MyEnum>("play_pause", MyEnum::X);
+  //
+  template <typename T> auto getAs(std::string_view action, T fallback = {}) const -> T
   {
-    auto it = m_binds.find(std::string(action));
+    auto it = m_binds.find(action);
     if (it == m_binds.end())
       return fallback;
-    return it->second.bind.key;
+
+    return static_cast<T>(it->second.key);
   }
 
-  auto getKeyName(std::string_view action, std::string_view fallback = "<none>") const
+  [[nodiscard]] auto getKeyName(std::string_view action, std::string_view fallback = "<none>") const
     -> utils::string::SmallString
   {
-    auto it = m_binds.find(std::string(action));
+    auto it = m_binds.find(action);
     if (it == m_binds.end())
       return {fallback};
 
-    return parseKeyName(it->second.bind.key);
+    return parseKeyName(it->second.key);
   }
 
 private:
-  std::string                                   m_name{"default"};
-  std::unordered_map<std::string, KeybindValue> m_binds;
+  std::string m_name{"default"};
+
+  std::unordered_map<std::string, Keybind, utils::map::TransparentHash, utils::map::TransparentEq>
+    m_binds;
 };
 
 class Registry
@@ -77,7 +86,6 @@ public:
 
   static auto active() -> Theme& { return s_themes[s_active]; }
 
-  // global toggle: whether we enforce configured keys or allow defaults
   static auto setForced(bool enabled) -> void { s_forceKeybinds = enabled; }
   static auto forced() noexcept -> bool { return s_forceKeybinds; }
 
