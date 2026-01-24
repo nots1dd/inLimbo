@@ -1,11 +1,12 @@
 #include "frontend/raylib/input/Handler.hpp"
+#include "frontend/raylib/Structs.hpp"
 #include <algorithm>
 #include <raylib.h>
 
 namespace frontend::raylib::input
 {
 
-void Handler::handle(audio::Service& audio, state::UI& ui, state::Library& lib,
+void Handler::handle(audio::Service& audio, state::UI& ui, const RaylibConfig& cfg,
                      mpris::Service* mpris)
 {
   auto info = audio.getCurrentTrackInfo();
@@ -14,7 +15,7 @@ void Handler::handle(audio::Service& audio, state::UI& ui, state::Library& lib,
   {
     if (info->lengthSec > 0 && info->positionSec > info->lengthSec)
     {
-      audio.nextTrack();
+      audio.nextTrackGapless();
       if (mpris)
         mpris->updateMetadata();
     }
@@ -22,10 +23,10 @@ void Handler::handle(audio::Service& audio, state::UI& ui, state::Library& lib,
 
   bool trackChanged = false;
 
-  if (IsKeyPressed(KEY_Q))
+  if (IsKeyPressed(cfg.kb.quit))
     ui.running = false;
 
-  if (IsKeyPressed(KEY_I))
+  if (IsKeyPressed(cfg.kb.songInfo))
   {
     if (ui.showMetaInfo)
     {
@@ -38,26 +39,46 @@ void Handler::handle(audio::Service& audio, state::UI& ui, state::Library& lib,
     }
   }
 
-  if (IsKeyPressed(KEY_P))
+  if (IsKeyPressed(cfg.kb.playPause))
     audio.isPlaying() ? audio.pauseCurrent() : audio.playCurrent();
 
-  if (IsKeyPressed(KEY_N))
+  if (IsKeyPressed(cfg.kb.next))
   {
     audio.nextTrack();
     trackChanged = true;
   }
 
-  if (IsKeyPressed(KEY_B))
+  if (IsKeyPressed(cfg.kb.random))
+  {
+    audio.randomTrack();
+    trackChanged = true;
+  }
+
+  if (IsKeyPressed(cfg.kb.prev))
   {
     audio.previousTrack();
     trackChanged = true;
   }
 
-  if (IsKeyPressed(KEY_EQUAL))
+  if (IsKeyPressed(cfg.kb.restart))
+    audio.restartCurrent();
+
+  if (IsKeyPressed(cfg.kb.volUp))
     audio.setVolume(std::min(1.5f, audio.getVolume() + 0.05f));
 
-  if (IsKeyPressed(KEY_MINUS))
+  if (IsKeyPressed(cfg.kb.volDown))
     audio.setVolume(std::max(0.0f, audio.getVolume() - 0.05f));
+
+  if (IsKeyPressed(cfg.kb.seekFwd))
+  {
+    audio.seekForward(3);
+    mpris->notify();
+  }
+  if (IsKeyPressed(cfg.kb.seekBack))
+  {
+    audio.seekBackward(3);
+    mpris->notify();
+  }
 
   if (trackChanged && mpris)
     mpris->updateMetadata();

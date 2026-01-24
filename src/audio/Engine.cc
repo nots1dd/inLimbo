@@ -123,115 +123,129 @@ void AudioEngine::initEngineForDevice(const DeviceName& deviceName)
   initAlsa(deviceName);
 }
 
+auto AudioEngine::prepareSound(const Path& path) -> std::unique_ptr<Sound>
+{
+  auto s = std::make_unique<Sound>();
+
+  AVFormatContext* rawFmt = nullptr;
+  if (avformat_open_input(&rawFmt, path.c_str(), nullptr, nullptr) < 0)
+    return nullptr;
+  s->fmt.reset(rawFmt);
+
+  if (avformat_find_stream_info(s->fmt.get(), nullptr) < 0)
+    return nullptr;
+
+  s->streamIndex = av_find_best_stream(s->fmt.get(), AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
+  if (s->streamIndex < 0)
+    return nullptr;
+
+  s->stream = s->fmt->streams[s->streamIndex];
+
+  const AVCodec* codec = avcodec_find_decoder(s->stream->codecpar->codec_id);
+  if (!codec)
+    return nullptr;
+
+  m_backendInfo.codecName     = codec->name ? codec->name : "<unknown-codec-name>";
+  m_backendInfo.codecLongName = codec->long_name ? codec->long_name : "<unknown-codec-longName>";
+
+  AVCodecContext* rawDec = avcodec_alloc_context3(codec);
+  if (!rawDec)
+    return nullptr;
+  s->dec.reset(rawDec);
+
+  if (avcodec_parameters_to_context(s->dec.get(), s->stream->codecpar) < 0 ||
+      avcodec_open2(s->dec.get(), codec, nullptr) < 0)
+    return nullptr;
+
+  // SOURCE format
+  s->source.sampleRate    = s->dec->sample_rate;
+  s->source.channels      = s->dec->ch_layout.nb_channels;
+  s->source.sampleFmt     = s->dec->sample_fmt;
+  s->source.sampleFmtName = av_get_sample_fmt_name(s->dec->sample_fmt)
+                              ? av_get_sample_fmt_name(s->dec->sample_fmt)
+                              : "unknown";
+
+  av_channel_layout_copy(&s->source.channelLayout, &s->dec->ch_layout);
+
+  // TARGET format (engine output)
+  s->target.sampleRate    = m_backendInfo.sampleRate;
+  s->target.channels      = m_backendInfo.channels;
+  s->target.sampleFmt     = AV_SAMPLE_FMT_FLT;
+  s->target.sampleFmtName = "float";
+
+  av_channel_layout_default(&s->target.channelLayout, s->target.channels);
+
+  // encoder delay/padding (gapless metadata)
+  if (auto* e = av_dict_get(s->fmt->metadata, "encoder_delay", nullptr, 0))
+    s->startSkip = std::stoll(e->value);
+  if (auto* e = av_dict_get(s->fmt->metadata, "encoder_padding", nullptr, 0))
+    s->endSkip = std::stoll(e->value);
+
+  s->durationFrames = (s->stream->duration * s->source.sampleRate * s->stream->time_base.num) /
+                        s->stream->time_base.den -
+                      s->startSkip - s->endSkip;
+
+  // Resampler
+  SwrContext* rawSwr = nullptr;
+  if (swr_alloc_set_opts2(&rawSwr, &s->target.channelLayout, s->target.sampleFmt,
+                          s->target.sampleRate, &s->source.channelLayout, s->source.sampleFmt,
+                          s->source.sampleRate, 0, nullptr) < 0)
+    return nullptr;
+
+  s->swr.reset(rawSwr);
+  if (swr_init(s->swr.get()) < 0)
+    return nullptr;
+
+  // Playback format
+  s->sampleRate = s->target.sampleRate;
+  s->channels   = s->target.channels;
+
+  s->initializeBuffers();
+
+  return s;
+}
+
 auto AudioEngine::loadSound(const Path& path) -> bool
 {
   RECORD_FUNC_TO_BACKTRACE("AudioEngine::loadSound");
 
   std::lock_guard<std::mutex> lock(m_mutex);
 
-  try
-  {
-    auto s = std::make_unique<Sound>();
-
-    AVFormatContext* rawFmt = nullptr;
-    if (avformat_open_input(&rawFmt, path.c_str(), nullptr, nullptr) < 0)
-      return false;
-    s->fmt.reset(rawFmt);
-
-    if (avformat_find_stream_info(s->fmt.get(), nullptr) < 0)
-      return false;
-
-    s->streamIndex = av_find_best_stream(s->fmt.get(), AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
-    if (s->streamIndex < 0)
-      return false;
-
-    s->stream = s->fmt->streams[s->streamIndex];
-
-    const AVCodec* codec = avcodec_find_decoder(s->stream->codecpar->codec_id);
-    if (!codec)
-      return false;
-
-    m_backendInfo.codecName     = codec->name ? codec->name : "<unknown-codec-name>";
-    m_backendInfo.codecLongName = codec->long_name ? codec->long_name : "<unknown-codec-longName>";
-
-    AVCodecContext* rawDec = avcodec_alloc_context3(codec);
-    if (!rawDec)
-      return false;
-    s->dec.reset(rawDec);
-
-    if (avcodec_parameters_to_context(s->dec.get(), s->stream->codecpar) < 0 ||
-        avcodec_open2(s->dec.get(), codec, nullptr) < 0)
-      return false;
-
-    // -------------------------------------------------------
-    // SOURCE FORMAT (immutable, from file)
-    // -------------------------------------------------------
-    s->source.sampleRate    = s->dec->sample_rate;
-    s->source.channels      = s->dec->ch_layout.nb_channels;
-    s->source.sampleFmt     = s->dec->sample_fmt;
-    s->source.sampleFmtName = av_get_sample_fmt_name(s->dec->sample_fmt)
-                                ? av_get_sample_fmt_name(s->dec->sample_fmt)
-                                : "unknown";
-
-    av_channel_layout_copy(&s->source.channelLayout, &s->dec->ch_layout);
-
-    // -------------------------------------------------------
-    // TARGET FORMAT (engine / backend)
-    // -------------------------------------------------------
-    s->target.sampleRate    = m_backendInfo.sampleRate;
-    s->target.channels      = m_backendInfo.channels;
-    s->target.sampleFmt     = AV_SAMPLE_FMT_FLT;
-    s->target.sampleFmtName = "float";
-
-    av_channel_layout_default(&s->target.channelLayout, s->target.channels);
-
-    // -------------------------------------------------------
-    // Duration + encoder padding
-    // -------------------------------------------------------
-    if (auto* e = av_dict_get(s->fmt->metadata, "encoder_delay", nullptr, 0))
-      s->startSkip = std::stoll(e->value);
-
-    if (auto* e = av_dict_get(s->fmt->metadata, "encoder_padding", nullptr, 0))
-      s->endSkip = std::stoll(e->value);
-
-    s->durationFrames = (s->stream->duration * s->source.sampleRate * s->stream->time_base.num) /
-                          s->stream->time_base.den -
-                        s->startSkip - s->endSkip;
-
-    // -------------------------------------------------------
-    // Resampler: SOURCE → TARGET
-    // -------------------------------------------------------
-    SwrContext* rawSwr = nullptr;
-    if (swr_alloc_set_opts2(&rawSwr, &s->target.channelLayout, s->target.sampleFmt,
-                            s->target.sampleRate, &s->source.channelLayout, s->source.sampleFmt,
-                            s->source.sampleRate, 0, nullptr) < 0)
-      return false;
-
-    s->swr.reset(rawSwr);
-
-    if (swr_init(s->swr.get()) < 0)
-      return false;
-
-    // -------------------------------------------------------
-    // Buffers use TARGET format (what we actually play)
-    // -------------------------------------------------------
-    s->sampleRate = s->target.sampleRate;
-    s->channels   = s->target.channels;
-
-    s->initializeBuffers();
-
-    m_sound = std::move(s);
-    return true;
-  }
-  catch (...)
-  {
+  auto s = prepareSound(path);
+  if (!s)
     return false;
-  }
+
+  m_sound = std::move(s);
+  return true;
 }
 
 auto AudioEngine::getSound() -> Sound& { return *m_sound; }
 
 auto AudioEngine::getSound() const -> const Sound& { return *m_sound; }
+
+auto AudioEngine::queueNextSound(const Path& path) -> bool
+{
+  RECORD_FUNC_TO_BACKTRACE("AudioEngine::queueNextSound");
+
+  std::lock_guard<std::mutex> lock(m_mutex);
+
+  auto s = prepareSound(path);
+  if (!s)
+    return false;
+
+  m_nextSound = std::move(s);
+  return true;
+}
+
+void AudioEngine::switchToNextSoundIfQueued()
+{
+  RECORD_FUNC_TO_BACKTRACE("AudioEngine::switchToNextSoundIfQueued");
+
+  if (!m_nextSound)
+    return;
+
+  m_sound = std::move(m_nextSound);
+}
 
 void AudioEngine::play()
 {
@@ -374,6 +388,12 @@ void AudioEngine::initAlsa(const DeviceName& deviceName)
     }
   }
 
+  const size_t maxSamples = constants::FramesPerBuffer * m_backendInfo.channels;
+  m_playbackBuffer.resize(maxSamples);
+
+  // worst-case scratch size (S32 is largest)
+  m_scratchBuffer.resize(maxSamples * sizeof(i32));
+
   snd_pcm_hw_params_t* hw;
   snd_pcm_hw_params_alloca(&hw);
   snd_pcm_hw_params_current(m_pcmData, hw);
@@ -400,13 +420,10 @@ void AudioEngine::decodeAndPlay()
 {
   const size_t samplesNeeded = constants::FramesPerBuffer * (*m_sound).channels;
 
-  static thread_local std::vector<float>     playbackBuffer;
-  static thread_local std::vector<std::byte> scratchBuffer;
-
   auto& s = *m_sound;
 
-  if (playbackBuffer.size() < samplesNeeded)
-    playbackBuffer.resize(samplesNeeded);
+  if (m_playbackBuffer.size() < samplesNeeded)
+    m_playbackBuffer.resize(samplesNeeded);
 
   if (s.seekPending.exchange(false))
   {
@@ -422,15 +439,44 @@ void AudioEngine::decodeAndPlay()
   }
 
   if (s.eof)
+  {
+    // If current sound ended but ring still has samples, keep draining it.
+    // If ring is empty and we have a queued sound -> switch immediately.
+    if (s.ring->available() == 0)
+    {
+      std::lock_guard<std::mutex> lock(m_mutex);
+      switchToNextSoundIfQueued();
+
+      if (!m_sound)
+        return;
+
+      // m_sound changed
+      auto& ns = *m_sound;
+
+      // reset playback state for new sound
+      ns.cursorFrames.store(0);
+      ns.seekPending.store(false);
+      ns.eof = false;
+    }
     return;
+  }
 
   while (s.ring->available() < samplesNeeded && s.ring->space() > 0 && !s.eof)
     decodeStep(s);
 
   if (s.ring->available() < samplesNeeded)
+  {
+    // If current song ended and we don't have enough audio left,
+    // try switching to next sound instead of returning silence.
+    if (s.eof)
+    {
+      std::lock_guard<std::mutex> lock(m_mutex);
+      switchToNextSoundIfQueued();
+    }
     return;
+  }
 
-  size_t samplesRead = s.ring->read(playbackBuffer.data(), samplesNeeded);
+  size_t samplesRead = s.ring->read(m_playbackBuffer.data(), samplesNeeded);
   size_t framesRead  = samplesRead / s.channels;
 
   if (framesRead == 0)
@@ -441,9 +487,9 @@ void AudioEngine::decodeAndPlay()
   if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_FLOAT_LE)
   {
     for (size_t i = 0; i < samplesRead; ++i)
-      playbackBuffer[i] *= vol;
+      m_playbackBuffer[i] *= vol;
 
-    int r = snd_pcm_writei(m_pcmData, playbackBuffer.data(), framesRead);
+    int r = snd_pcm_writei(m_pcmData, m_playbackBuffer.data(), framesRead);
     if (r == -EPIPE)
       snd_pcm_prepare(m_pcmData);
     else if (r < 0)
@@ -452,15 +498,16 @@ void AudioEngine::decodeAndPlay()
   else if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_S16_LE)
   {
     const size_t bytes = samplesRead * sizeof(i16);
-    if (scratchBuffer.size() < bytes)
-      scratchBuffer.resize(bytes);
+    if (m_scratchBuffer.size() < bytes)
+      m_scratchBuffer.resize(bytes);
 
-    auto* out = reinterpret_cast<i16*>(scratchBuffer.data());
+    auto* out = reinterpret_cast<i16*>(m_scratchBuffer.data());
 
     for (size_t i = 0; i < samplesRead; ++i)
     {
-      float sample = std::clamp(playbackBuffer[i] * vol, constants::FloatMin, constants::FloatMax);
-      out[i]       = static_cast<i16>(sample * constants::S16MaxFloat);
+      float sample =
+        std::clamp(m_playbackBuffer[i] * vol, constants::FloatMin, constants::FloatMax);
+      out[i] = static_cast<i16>(sample * constants::S16MaxFloat);
     }
 
     int r = snd_pcm_writei(m_pcmData, out, framesRead);
@@ -472,15 +519,16 @@ void AudioEngine::decodeAndPlay()
   else if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_S32_LE)
   {
     const size_t bytes = samplesRead * sizeof(i32);
-    if (scratchBuffer.size() < bytes)
-      scratchBuffer.resize(bytes);
+    if (m_scratchBuffer.size() < bytes)
+      m_scratchBuffer.resize(bytes);
 
-    auto* out = reinterpret_cast<i32*>(scratchBuffer.data());
+    auto* out = reinterpret_cast<i32*>(m_scratchBuffer.data());
 
     for (size_t i = 0; i < samplesRead; ++i)
     {
-      float sample = std::clamp(playbackBuffer[i] * vol, constants::FloatMin, constants::FloatMax);
-      out[i]       = static_cast<i32>(sample * constants::S32MaxFloat);
+      float sample =
+        std::clamp(m_playbackBuffer[i] * vol, constants::FloatMin, constants::FloatMax);
+      out[i] = static_cast<i32>(sample * constants::S32MaxFloat);
     }
 
     int r = snd_pcm_writei(m_pcmData, out, framesRead);
@@ -503,13 +551,17 @@ void AudioEngine::decodeStep(Sound& s)
   }
 
   const int rr = av_read_frame(s.fmt.get(), &s.pkt);
+
   if (rr == AVERROR_EOF)
   {
+    av_packet_unref(&s.pkt);
     s.eof = true;
     return;
   }
+
   if (rr < 0)
   {
+    av_packet_unref(&s.pkt);
     return;
   }
 
@@ -520,6 +572,7 @@ void AudioEngine::decodeStep(Sound& s)
   }
 
   int r = avcodec_send_packet(s.dec.get(), &s.pkt);
+
   av_packet_unref(&s.pkt);
 
   if (r < 0)
@@ -530,11 +583,13 @@ void AudioEngine::decodeStep(Sound& s)
     r = avcodec_receive_frame(s.dec.get(), s.frame.get());
     if (r == AVERROR(EAGAIN))
       break;
+
     if (r == AVERROR_EOF)
     {
       s.eof = true;
       break;
     }
+
     if (r < 0)
       break;
 

@@ -48,6 +48,8 @@ public:
   void pauseCurrent();
   auto nextTrack() -> std::optional<service::SoundHandle>;
   auto previousTrack() -> std::optional<service::SoundHandle>;
+  auto nextTrackGapless() -> std::optional<service::SoundHandle>;
+  auto previousTrackGapless() -> std::optional<service::SoundHandle>;
   void restartCurrent();
 
   // playlist stuff

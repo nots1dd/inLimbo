@@ -70,22 +70,22 @@ public:
   /// Start or restart the timer
   void start() noexcept
   {
-    start_time_ = clock::now();
-    running_    = true;
+    m_startTime = clock::now();
+    m_isRunning = true;
   }
 
   /// Stop the timer
   void stop() noexcept
   {
-    end_time_ = clock::now();
-    running_  = false;
+    m_endTime   = clock::now();
+    m_isRunning = false;
   }
 
   /// Reset the timer and start again
   void reset() noexcept
   {
-    running_    = true;
-    start_time_ = clock::now();
+    m_isRunning = true;
+    m_startTime = clock::now();
   }
 
   void restart() noexcept
@@ -97,10 +97,10 @@ public:
   /// Elapsed duration since start, or until stopped
   [[nodiscard]] auto elapsed() const noexcept
   {
-    if (running_)
-      return std::chrono::duration_cast<duration>(clock::now() - start_time_);
+    if (m_isRunning)
+      return std::chrono::duration_cast<duration>(clock::now() - m_startTime);
     else
-      return std::chrono::duration_cast<duration>(end_time_ - start_time_);
+      return std::chrono::duration_cast<duration>(m_endTime - m_startTime);
   }
 
   [[nodiscard]] auto elapsed_ms() const noexcept -> double { return elapsed().count(); }
@@ -120,9 +120,9 @@ public:
   }
 
 private:
-  time_point start_time_{};
-  time_point end_time_{};
-  bool       running_{false};
+  time_point m_startTime{};
+  time_point m_endTime{};
+  bool       m_isRunning{false};
 };
 
 /// RAII timer that automatically prints the elapsed time when destroyed.
@@ -139,15 +139,16 @@ class ScopedTimer
 {
 public:
   explicit ScopedTimer(std::string_view label = "", std::ostream& os = std::cout)
-      : label_(label), os_(os)
+      : m_label(label), m_ostream(os)
   {
-    timer_.start();
+    m_timer.start();
   }
 
   ~ScopedTimer() noexcept
   {
-    timer_.stop();
-    os_ << "[" << label_ << "] took " << timer_.elapsed().count() << " " << duration_unit() << '\n';
+    m_timer.stop();
+    m_ostream << "[" << m_label << "] took " << m_timer.elapsed().count() << " " << duration_unit()
+              << '\n';
   }
 
   ScopedTimer(const ScopedTimer&)                    = delete;
@@ -168,9 +169,9 @@ private:
       return "unknown units";
   }
 
-  std::string_view         label_;
-  std::ostream&            os_;
-  Timer<ClockT, DurationT> timer_;
+  std::string_view         m_label;
+  std::ostream&            m_ostream;
+  Timer<ClockT, DurationT> m_timer;
 };
 
 } // namespace utils

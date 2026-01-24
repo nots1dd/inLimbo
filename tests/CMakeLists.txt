@@ -23,6 +23,5 @@ set(GTEST_LIBS
 )
 
 # Add each test subject
-add_subdirectory(rbt)
 add_subdirectory(smallstring)
 add_subdirectory(bench)

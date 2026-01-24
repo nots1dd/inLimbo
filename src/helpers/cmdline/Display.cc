@@ -46,7 +46,7 @@ void printSongInfoByTitle(const threads::SafeMap<SongMap>& safeMap,
     return;
   }
 
-  const Song* song = query::songmap::read::findSongByTitle(safeMap, *songName);
+  auto song = query::songmap::read::findSongObjByTitle(safeMap, *songName);
 
   if (!song)
   {
@@ -102,7 +102,7 @@ void printSongLyrics(const threads::SafeMap<SongMap>& safeMap, const Title& song
     return;
   }
 
-  const Song* song = query::songmap::read::findSongByTitle(safeMap, songTitle);
+  auto song = query::songmap::read::findSongObjByTitle(safeMap, songTitle);
 
   if (!song)
   {

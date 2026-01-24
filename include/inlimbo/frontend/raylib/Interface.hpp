@@ -1,6 +1,8 @@
 #pragma once
 
 #include "audio/Service.hpp"
+#include "config/Watcher.hpp"
+#include "frontend/raylib/Structs.hpp"
 #include "frontend/raylib/input/Handler.hpp"
 #include "frontend/raylib/ui/Fonts.hpp"
 #include "frontend/raylib/view/AlbumsView.hpp"
@@ -11,6 +13,10 @@
 #include "frontend/raylib/view/StatusBar.hpp"
 #include "mpris/Service.hpp"
 #include "thread/Map.hpp"
+#include "utils/PathResolve.hpp"
+#include "utils/Snapshot.hpp"
+
+static constexpr cstr FRONTEND_NAME = "raylib";
 
 namespace frontend::raylib
 {
@@ -19,15 +25,22 @@ class Interface
 {
 public:
   explicit Interface(threads::SafeMap<SongMap>* songMap, mpris::Service* mprisService)
-      : m_songMap(songMap), m_mpris(mprisService)
+      : m_cfgWatcher(utils::getAppConfigPathWithFile(INLIMBO_DEFAULT_CONFIG_FILE_NAME)),
+        m_songMap(songMap), m_mpris(mprisService)
   {
   }
 
   void run(audio::Service& audio);
 
 private:
+  config::Watcher            m_cfgWatcher;
   threads::SafeMap<SongMap>* m_songMap{nullptr};
   mpris::Service*            m_mpris{nullptr};
+
+  // config stuff
+  utils::Snapshot<RaylibConfig> m_cfg{};
+
+  void loadConfig();
 
   state::UI      m_ui;
   state::Library m_library;

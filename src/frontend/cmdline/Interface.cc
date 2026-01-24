@@ -50,7 +50,7 @@ static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris) -> 
   if (info.positionSec + EPS < info.lengthSec)
     return;
 
-  audio.nextTrack();
+  audio.nextTrackGapless();
   mpris.updateMetadata();
   mpris.notify();
 }
@@ -434,7 +434,8 @@ auto Interface::handleSearchSongMode(audio::Service& audio, char c) -> bool
   // ENTER submits
   if (utils::ascii::isEnter(c))
   {
-    auto song = query::songmap::read::findSongByTitle(*m_songMapTS, m_searchBuf);
+    // fuzzy search it
+    auto song = query::songmap::read::findSongObjByTitleFuzzy(*m_songMapTS, m_searchBuf);
 
     if (!song)
     {

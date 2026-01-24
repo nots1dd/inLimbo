@@ -2,6 +2,7 @@
 #include "frontend/raylib/Constants.hpp"
 #include "frontend/raylib/ui/TextUtils.hpp"
 #include "query/SongMap.hpp"
+#include "utils/string/Equals.hpp"
 #include "utils/timer/Timer.hpp"
 
 namespace frontend::raylib::view

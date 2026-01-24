@@ -10,7 +10,7 @@ namespace audio::service
 //
 // This is unique to each song (almost as unique as the inode itself) and more importantly,
 // makes it easy to immediately load the song file without calling song map queries.
-using TrackTable = std::unordered_map<ui64, Path>;
+using TrackTable = std::unordered_map<ui64, const Song*>;
 
 struct SoundHandle
 {

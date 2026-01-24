@@ -2,10 +2,11 @@
 
 #include "Args.hpp"
 #include "CLI/CLI.hpp"
-#include "core/taglib/Parser.hpp"
 #include "frontend/Plugin.hpp"
+#include "taglib/Parser.hpp"
 #include "thread/Map.hpp"
-#include "utils/timer/Timer.hpp"
+
+#define APP_NAME "inLimbo"
 
 extern threads::SafeMap<SongMap> g_songMap;
 
@@ -65,8 +66,7 @@ struct AppContext
   frontend::PluginName m_fePluginName;
 
   // Core objects
-  core::TagLibParser m_tagLibParser;
-  utils::Timer<>     m_timer;
+  taglib::Parser m_tagLibParser;
 };
 
 auto resolvePrintAction(const Args& args) -> PrintAction;

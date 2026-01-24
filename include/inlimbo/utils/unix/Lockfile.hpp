@@ -7,8 +7,6 @@
 #include <stdexcept>
 #include <string>
 
-#define INLIMBO_DEFAULT_LOCKFILE_PATH "/tmp/inLimbo.lock"
-
 namespace utils::unix
 {
 

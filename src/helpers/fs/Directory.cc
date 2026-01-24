@@ -5,10 +5,7 @@
 namespace helpers::fs
 {
 
-void dirWalkProcessAll(const Directory&                                 directory,
-                       utils::RedBlackTree<ino_t, utils::rbt::NilNode>& rbt,
-                       core::InodeFileMapper& mapper, core::TagLibParser& parser,
-                       core::SongTree& songTree)
+void dirWalkProcessAll(const Directory& directory, taglib::Parser& parser, core::SongTree& songTree)
 {
   RECORD_FUNC_TO_BACKTRACE("helpers::fs::dirWalkProcessAll");
 
@@ -31,13 +28,6 @@ void dirWalkProcessAll(const Directory&                                 director
         return;
       }
 
-      // 1. Track inode
-      rbt.insert(st.st_ino, utils::rbt::NilNode{});
-
-      // 2. Map inode -> path
-      mapper.addMapping(st.st_ino, path.c_str(), true);
-
-      // 3. Parse metadata
       Metadata md;
       if (!parser.parseFile(path, md))
       {
@@ -45,8 +35,8 @@ void dirWalkProcessAll(const Directory&                                 director
         return;
       }
 
-      // 4. Add song directly
-      songTree.addSong(Song{st.st_ino, md});
+      Song song{st.st_ino, md};
+      songTree.addSong(song);
     });
 }
 

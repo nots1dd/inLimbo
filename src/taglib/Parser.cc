@@ -1,4 +1,4 @@
-#include "core/taglib/Parser.hpp"
+#include "taglib/Parser.hpp"
 #include "Logger.hpp"
 #include "utils/PathResolve.hpp"
 #include <filesystem>
@@ -6,7 +6,7 @@
 #include <iostream>
 #include <taglib/id3v2.h>
 
-namespace core
+namespace taglib
 {
 
 static void extractTrackAndTotal(TagLib::FileRef& file, Metadata& metadata)
@@ -79,9 +79,9 @@ static void extractDiscAndTotal(TagLib::FileRef& file, Metadata& metadata)
 
 static int unknownArtistTracks = 0;
 
-TagLibParser::TagLibParser(TagLibConfig config) { m_config = std::move(config); }
+Parser::Parser(TagLibConfig config) { m_config = std::move(config); }
 
-auto TagLibParser::parseFile(const Path& filePath, Metadata& metadata) -> bool
+auto Parser::parseFile(const Path& filePath, Metadata& metadata) -> bool
 {
   if (m_config.debugLog)
     LOG_DEBUG("Parsing file: {}", filePath);
@@ -175,7 +175,7 @@ auto TagLibParser::parseFile(const Path& filePath, Metadata& metadata) -> bool
 // - Year
 // - Track
 // - Lyrics
-auto TagLibParser::modifyMetadata(const Path& filePath, const Metadata& newData) -> bool
+auto Parser::modifyMetadata(const Path& filePath, const Metadata& newData) -> bool
 {
   const auto ext     = filePath.extension();
   bool       success = false;
@@ -335,7 +335,7 @@ auto extractThumbnail(const std::string& audioFilePath, const std::string& outpu
   return false;
 }
 
-auto TagLibParser::fillArtUrl(Metadata& meta) -> bool
+auto Parser::fillArtUrl(Metadata& meta) -> bool
 {
   namespace fs = std::filesystem;
 
@@ -355,4 +355,4 @@ auto TagLibParser::fillArtUrl(Metadata& meta) -> bool
   return false;
 }
 
-} // namespace core
+} // namespace taglib

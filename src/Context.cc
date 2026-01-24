@@ -1,21 +1,22 @@
 #include "Context.hpp"
 #include "Logger.hpp"
-#include "core/InodeMapper.hpp"
 #include "frontend/Interface.hpp"
 #include "helpers/cmdline/Display.hpp"
 #include "helpers/fs/Directory.hpp"
+#include "helpers/fuzzy/Search.hpp"
 #include "mpris/Service.hpp"
 #include "mpris/backends/CmdLine.hpp"
 #include "query/SongMap.hpp"
 #include "thread/Map.hpp"
 #include "toml/Parser.hpp"
 #include "utils/PathResolve.hpp"
-#include "utils/RBTree.hpp"
+#include "utils/timer/Timer.hpp"
 #include "utils/unix/Lockfile.hpp"
 
 #include <algorithm>
 
 using namespace core;
+namespace fuzzy = helpers::fuzzy;
 
 namespace inlimbo
 {
@@ -214,60 +215,6 @@ auto maybeHandlePrintActions(AppContext& ctx) -> bool
 
   LOG_DEBUG("Using fuzzy max distance as: {}", ctx.m_fuzzyMaxDist);
 
-  auto logFuzzyFallback = [&](std::string_view type, const std::string& input,
-                              const std::string& best) -> void
-  {
-    if (!input.empty() && !best.empty() && input != best)
-    {
-      LOG_WARN("No exact {} match for '{}' -> using fuzzy match '{}'", type, input, best);
-    }
-  };
-
-  auto bestForSongTitle = [&](const Title& query) -> Title
-  {
-    if (!useFuzzySearch)
-      return query;
-
-    const Song* song =
-      query::songmap::read::findSongByTitleFuzzy(g_songMap, query, ctx.m_fuzzyMaxDist);
-    if (!song)
-      return {};
-
-    const auto best = song->metadata.title;
-    logFuzzyFallback("song", query, best);
-    return best;
-  };
-
-  auto bestForArtist = [&](const Artist& query) -> Artist
-  {
-    if (!useFuzzySearch)
-      return query;
-
-    const auto best = query::songmap::read::findArtistFuzzy(g_songMap, query, ctx.m_fuzzyMaxDist);
-    logFuzzyFallback("artist", query, best);
-    return best;
-  };
-
-  auto bestForAlbum = [&](const Album& query) -> Album
-  {
-    if (!useFuzzySearch)
-      return query;
-
-    const auto best = query::songmap::read::findAlbumFuzzy(g_songMap, query, ctx.m_fuzzyMaxDist);
-    logFuzzyFallback("album", query, best);
-    return best;
-  };
-
-  auto bestForGenre = [&](const Genre& query) -> Genre
-  {
-    if (!useFuzzySearch)
-      return query;
-
-    const auto best = query::songmap::read::findGenreFuzzy(g_songMap, query, ctx.m_fuzzyMaxDist);
-    logFuzzyFallback("genre", query, best);
-    return best;
-  };
-
   switch (ctx.m_printAction)
   {
     case PrintAction::Frontends:
@@ -281,7 +228,8 @@ auto maybeHandlePrintActions(AppContext& ctx) -> bool
     case PrintAction::SongInfoByTitle:
     {
       const auto input = ctx.args.printSong;
-      const auto best  = bestForSongTitle(input);
+      const auto best  = fuzzy::bestCandidate<fuzzy::FuzzyKind::Title>(
+        g_songMap, input, ctx.m_fuzzyMaxDist, useFuzzySearch);
       helpers::cmdline::printSongInfoByTitle(g_songMap, best);
       break;
     }
@@ -289,7 +237,8 @@ auto maybeHandlePrintActions(AppContext& ctx) -> bool
     case PrintAction::Lyrics:
     {
       const auto input = ctx.args.printLyrics;
-      const auto best  = bestForSongTitle(input);
+      const auto best  = fuzzy::bestCandidate<fuzzy::FuzzyKind::Title>(
+        g_songMap, input, ctx.m_fuzzyMaxDist, useFuzzySearch);
       helpers::cmdline::printSongLyrics(g_songMap, best);
       break;
     }
@@ -313,7 +262,8 @@ auto maybeHandlePrintActions(AppContext& ctx) -> bool
     case PrintAction::SongsByArtist:
     {
       const auto input = ctx.args.songsArtist;
-      const auto best  = bestForArtist(input);
+      const auto best  = fuzzy::bestCandidate<fuzzy::FuzzyKind::Artist>(
+        g_songMap, input, ctx.m_fuzzyMaxDist, useFuzzySearch);
       helpers::cmdline::printSongsByArtist(g_songMap, best);
       break;
     }
@@ -321,7 +271,8 @@ auto maybeHandlePrintActions(AppContext& ctx) -> bool
     case PrintAction::SongsByAlbum:
     {
       const auto input = ctx.args.songsAlbum;
-      const auto best  = bestForAlbum(input);
+      const auto best  = fuzzy::bestCandidate<fuzzy::FuzzyKind::Album>(
+        g_songMap, input, ctx.m_fuzzyMaxDist, useFuzzySearch);
       helpers::cmdline::printSongsByAlbum(g_songMap, best);
       break;
     }
@@ -329,7 +280,8 @@ auto maybeHandlePrintActions(AppContext& ctx) -> bool
     case PrintAction::SongsByGenre:
     {
       const auto input = ctx.args.songsGenre;
-      const auto best  = bestForGenre(input);
+      const auto best  = fuzzy::bestCandidate<fuzzy::FuzzyKind::Genre>(
+        g_songMap, input, ctx.m_fuzzyMaxDist, useFuzzySearch);
       helpers::cmdline::printSongsByGenre(g_songMap, best);
       break;
     }
@@ -354,7 +306,7 @@ auto maybeHandleEditActions(AppContext& ctx) -> bool
     return true;
   }
 
-  const Song* song = query::songmap::read::findSongByTitle(g_songMap, ctx.m_songTitle);
+  auto song = query::songmap::read::findSongObjByTitle(g_songMap, ctx.m_songTitle);
   if (!song)
   {
     LOG_ERROR("Song not found: '{}'", ctx.m_songTitle);
@@ -427,9 +379,9 @@ auto initializeContext(int argc, char** argv) -> AppContext
   ctx.m_printAction = resolvePrintAction(ctx.args);
   ctx.m_editAction  = resolveEditAction(ctx.args);
   ctx.m_musicDir    = tomlparser::Config::getString("library", "directory");
-  ctx.m_binPath     = utils::getAppConfigPathWithFile(LIB_BIN_NAME).c_str();
+  ctx.m_binPath     = utils::getAppConfigPathWithFile(INLIMBO_DEFAULT_CACHE_BIN_NAME).c_str();
 
-  LOG_INFO("Configured directory: {}, Song title query given: '{}'", ctx.m_musicDir,
+  LOG_INFO("Configured directory: {}, Playback song title query provided: '{}'", ctx.m_musicDir,
            ctx.m_songTitle);
 
   return ctx;
@@ -457,20 +409,18 @@ void buildOrLoadLibrary(AppContext& ctx)
     return;
   }
 
-  ctx.m_timer.restart();
+  utils::Timer<> timer;
+  timer.start();
   tempSongTree.clear();
 
-  utils::RedBlackTree<ino_t, utils::rbt::NilNode> rbt;
-  core::InodeFileMapper                           mapper;
-
-  helpers::fs::dirWalkProcessAll(ctx.m_musicDir, rbt, mapper, ctx.m_tagLibParser, tempSongTree);
+  helpers::fs::dirWalkProcessAll(ctx.m_musicDir, ctx.m_tagLibParser, tempSongTree);
 
   tempSongTree.setMusicPath(ctx.m_musicDir);
   tempSongTree.saveToFile(ctx.m_binPath);
   g_songMap.replace(tempSongTree.moveSongMap());
 
   // SongTree has destructor so mem shud clear here
-  LOG_INFO("Library rebuilt in {:.3f} ms", ctx.m_timer.elapsed_ms());
+  LOG_INFO("Library rebuilt in {:.3f} ms", timer.elapsed_ms());
 }
 
 void runFrontend(AppContext& ctx)
@@ -489,7 +439,7 @@ void runFrontend(AppContext& ctx)
   try
   {
     utils::unix::LockFile appLock(INLIMBO_DEFAULT_LOCKFILE_PATH);
-    auto song = query::songmap::read::findSongByTitleFuzzy(g_songMap, ctx.m_songTitle);
+    auto song = query::songmap::read::findSongObjByTitleFuzzy(g_songMap, ctx.m_songTitle);
 
     if (!song)
     {
@@ -505,7 +455,7 @@ void runFrontend(AppContext& ctx)
     audio::Service audio(g_songMap);
 
     mpris::cmdline::Backend mprisBackend(audio);
-    mpris::Service          mprisService(mprisBackend, "inLimbo");
+    mpris::Service          mprisService(mprisBackend, APP_NAME);
 
     // ---------------------------------------------------------
     // Initialize abstract frontend interface

@@ -31,8 +31,8 @@ class Interface
 public:
   // NOTE: pointers because this is created via C ABI
   explicit Interface(threads::SafeMap<SongMap>* songMap, mpris::Service* mprisService)
-      : m_cfgWatcher(utils::getAppConfigPathWithFile("config.toml")), m_songMapTS(songMap),
-        m_mprisService(mprisService)
+      : m_cfgWatcher(utils::getAppConfigPathWithFile(INLIMBO_DEFAULT_CONFIG_FILE_NAME)),
+        m_songMapTS(songMap), m_mprisService(mprisService)
   {
   }
 
@@ -44,13 +44,11 @@ public:
 private:
   UiMode                     m_mode{UiMode::Normal};
   std::string                m_searchBuf;
-  bool                       m_searchDirty{true}; // optional, if you want
   config::Watcher            m_cfgWatcher;
   threads::SafeMap<SongMap>* m_songMapTS{nullptr};
   mpris::Service*            m_mprisService{nullptr};
 
   // config
-  std::mutex                     m_cfgMutex;
   utils::Snapshot<CmdlineConfig> m_cfg{};
 
   std::atomic<bool>   m_isRunning{false};

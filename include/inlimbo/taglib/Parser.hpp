@@ -12,7 +12,7 @@
 #include <taglib/tag.h>
 #include <taglib/tpropertymap.h>
 
-namespace core
+namespace taglib
 {
 
 struct TagLibConfig
@@ -23,10 +23,10 @@ struct TagLibConfig
 /**
  * @brief A class for parsing metadata from audio files using TagLib.
  */
-class TagLibParser
+class Parser
 {
 public:
-  explicit TagLibParser(TagLibConfig config);
+  explicit Parser(TagLibConfig config);
 
   auto parseFile(const Path& filePath, Metadata& metadata) -> bool;
 
@@ -44,4 +44,4 @@ private:
  */
 auto extractThumbnail(const Path& audioFilePath, const Path& outputImagePath) -> bool;
 
-} // namespace core
+} // namespace taglib

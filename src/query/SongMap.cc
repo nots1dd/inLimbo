@@ -4,6 +4,7 @@
 #include "utils/algorithm/Levenshtein.hpp"
 #include "utils/string/Equals.hpp"
 #include <set>
+#include <sys/types.h>
 
 namespace query::songmap
 {
@@ -13,7 +14,25 @@ namespace strhelp = utils::string;
 namespace read
 {
 
-auto findSongByTitle(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle)
+auto findSongPathByInode(const threads::SafeMap<SongMap>& safeMap, const ino_t givenInode)
+  -> PathStr
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongPathByInode");
+
+  PathStr path = "";
+
+  forEachSong(safeMap,
+              [&](const Artist&, const Album&, const Disc, const Track, const ino_t inode,
+                  const Song& song) -> void
+              {
+                if (inode == givenInode)
+                  path = song.metadata.filePath;
+              });
+
+  return path;
+}
+
+auto findSongObjByTitle(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle)
   -> const Song*
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongByName");
@@ -31,8 +50,8 @@ auto findSongByTitle(const threads::SafeMap<SongMap>& safeMap, const Title& song
   return result;
 }
 
-auto findSongByTitleFuzzy(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle,
-                          size_t maxDistance) -> const Song*
+auto findSongObjByTitleFuzzy(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle,
+                             size_t maxDistance) -> const Song*
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongByTitleFuzzy");
 
@@ -423,7 +442,7 @@ namespace mut
 {
 
 auto replaceSongObjAndUpdateMetadata(threads::SafeMap<SongMap>& safeMap, const Song& oldSong,
-                                     const Song& newSong, core::TagLibParser& parser) -> bool
+                                     const Song& newSong, taglib::Parser& parser) -> bool
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::mut::replaceSongObjByInode");
 

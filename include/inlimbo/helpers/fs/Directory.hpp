@@ -1,17 +1,13 @@
 #pragma once
 
 #include "InLimbo-Types.hpp"
-#include "core/InodeMapper.hpp"
 #include "core/SongTree.hpp"
-#include "core/taglib/Parser.hpp"
-#include "utils/RBTree.hpp"
+#include "taglib/Parser.hpp"
 
 namespace helpers::fs
 {
 
-void dirWalkProcessAll(const Directory&                                 directory,
-                       utils::RedBlackTree<ino_t, utils::rbt::NilNode>& rbt,
-                       core::InodeFileMapper& mapper, core::TagLibParser& parser,
+void dirWalkProcessAll(const Directory& directory, taglib::Parser& parser,
                        core::SongTree& songTree);
 
 }

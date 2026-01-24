@@ -96,7 +96,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/Version.cmake)
 # -----------------------------------------------------------
 set(INLIMBO_CORE_SOURCES
     src/core/SongTree.cc
-    src/core/taglib/Parser.cc
+    src/taglib/Parser.cc
     src/mpris/Service.cc
     src/query/SongMap.cc
     src/helpers/cmdline/Display.cc

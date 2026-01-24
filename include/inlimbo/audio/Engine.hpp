@@ -84,7 +84,10 @@ public:
   INLIMBO_API_CPP void
   initEngineForDevice(const utils::string::SmallString& deviceName = "default");
 
+  INLIMBO_API_CPP auto prepareSound(const Path& path) -> std::unique_ptr<Sound>;
   INLIMBO_API_CPP auto loadSound(const Path& path) -> bool;
+
+  INLIMBO_API_CPP auto queueNextSound(const Path& path) -> bool;
 
   INLIMBO_API_CPP void play();
   INLIMBO_API_CPP void pause();
@@ -127,11 +130,14 @@ public:
   auto getSound() const -> const Sound&;
 
 private:
-  snd_pcm_t*  m_pcmData = nullptr;
-  BackendInfo m_backendInfo;
-  DeviceName  m_currentDevice = "default";
+  snd_pcm_t*             m_pcmData = nullptr;
+  std::vector<float>     m_playbackBuffer;
+  std::vector<std::byte> m_scratchBuffer;
+  BackendInfo            m_backendInfo;
+  DeviceName             m_currentDevice = "default";
 
   std::unique_ptr<audio::Sound> m_sound;
+  std::unique_ptr<audio::Sound> m_nextSound;
   std::atomic<float>            m_volume{1.0f};
   std::atomic<bool>             m_isRunning{false};
   std::atomic<PlaybackState>    m_playbackState{PlaybackState::Stopped};
@@ -160,6 +166,7 @@ private:
     }
   }
 
+  void switchToNextSoundIfQueued();
   void decodeAndPlay();
   void decodeStep(Sound& s);
 

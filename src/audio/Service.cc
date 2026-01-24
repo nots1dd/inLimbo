@@ -1,6 +1,5 @@
 #include "audio/Service.hpp"
 #include "Logger.hpp"
-#include "query/SongMap.hpp"
 
 namespace audio
 {
@@ -50,7 +49,7 @@ auto Service::registerTrack(const Song& song) -> service::SoundHandle
   std::lock_guard<std::mutex> lock(m_mutex);
 
   service::SoundHandle h{m_nextTrackId++};
-  m_trackTable.emplace(h.id, song.metadata.filePath);
+  m_trackTable.emplace(h.id, &song);
 
   return h;
 }
@@ -131,6 +130,27 @@ auto Service::nextTrack() -> std::optional<service::SoundHandle>
   return h;
 }
 
+auto Service::nextTrackGapless() -> std::optional<service::SoundHandle>
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  ensureEngine();
+
+  auto h = m_playlist.next();
+  if (!h)
+    return std::nullopt;
+
+  auto it = m_trackTable.find(h->id);
+  if (it == m_trackTable.end() || it->second == nullptr)
+    throw std::runtime_error("audio::Service: invalid track handle (nextTrackGapless)");
+
+  const auto& path = it->second->metadata.filePath;
+
+  if (!m_engine->queueNextSound(path.c_str()))
+    throw std::runtime_error("audio::Service: failed to queue next sound (gapless)");
+
+  return h;
+}
+
 auto Service::previousTrack() -> std::optional<service::SoundHandle>
 {
   std::lock_guard<std::mutex> lock(m_mutex);
@@ -142,6 +162,27 @@ auto Service::previousTrack() -> std::optional<service::SoundHandle>
 
   loadSound();
   m_engine->play();
+  return h;
+}
+
+auto Service::previousTrackGapless() -> std::optional<service::SoundHandle>
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  ensureEngine();
+
+  auto h = m_playlist.previous();
+  if (!h)
+    return std::nullopt;
+
+  auto it = m_trackTable.find(h->id);
+  if (it == m_trackTable.end() || it->second == nullptr)
+    throw std::runtime_error("audio::Service: invalid track handle (prevTrackGapless)");
+
+  const auto& path = it->second->metadata.filePath;
+
+  if (!m_engine->queueNextSound(path.c_str()))
+    throw std::runtime_error("audio::Service: failed to queue next sound (gapless)");
+
   return h;
 }
 
@@ -236,23 +277,11 @@ auto Service::getCurrentMetadata() -> std::optional<Metadata>
   if (!h)
     return std::nullopt;
 
-  Metadata meta = {};
-
-  query::songmap::read::forEachSong(
-    m_songMapTS,
-    [&](const Artist&, const Album&, const Disc, const Track, const ino_t, const Song& song) -> void
-    {
-      if (song.metadata.filePath == m_trackTable[h->id])
-        meta = song.metadata;
-    });
-
-  // every metadata must have a valid file path
-  //
-  // if it is not set, something went wrong with query.
-  if (meta.filePath.empty())
+  auto it = m_trackTable.find(h->id);
+  if (it == m_trackTable.end() || it->second == nullptr)
     return std::nullopt;
 
-  return meta;
+  return it->second->metadata;
 }
 
 auto Service::getMetadataAt(size_t index) -> std::optional<Metadata>
@@ -267,25 +296,10 @@ auto Service::getMetadataAt(size_t index) -> std::optional<Metadata>
     return std::nullopt;
 
   auto it = m_trackTable.find(h.id);
-  if (it == m_trackTable.end())
+  if (it == m_trackTable.end() || it->second == nullptr)
     return std::nullopt;
 
-  const auto filePath = it->second;
-
-  Metadata meta = {};
-
-  query::songmap::read::forEachSong(
-    m_songMapTS,
-    [&](const Artist&, const Album&, const Disc, const Track, const ino_t, const Song& song) -> void
-    {
-      if (song.metadata.filePath == filePath)
-        meta = song.metadata;
-    });
-
-  if (meta.filePath.empty())
-    return std::nullopt;
-
-  return meta;
+  return it->second->metadata;
 }
 
 void Service::shutdown()
@@ -305,15 +319,20 @@ void Service::loadSound()
   if (m_playlist.empty())
     return;
 
-  const auto h  = m_playlist.currentTrack();
-  auto       it = m_trackTable.find(h->id);
-  if (it == m_trackTable.end())
+  const auto h = m_playlist.currentTrack();
+  if (!h)
+    return;
+
+  auto it = m_trackTable.find(h->id);
+  if (it == m_trackTable.end() || it->second == nullptr)
     throw std::runtime_error("audio::Service: invalid track handle");
+
+  const auto& path = it->second->metadata.filePath;
 
   m_engine->stop();
 
-  if (!m_engine->loadSound(it->second))
-    throw std::runtime_error("audio::Service: failed to load sound");
+  if (!m_engine->loadSound(path.c_str()))
+    throw std::runtime_error("audio::Service: failed to load sound!");
 }
 
 void Service::shutdownLocked()

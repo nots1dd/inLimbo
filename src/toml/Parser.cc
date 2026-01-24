@@ -10,7 +10,7 @@ std::optional<toml::parse_result> Config::s_config;
 
 void Config::load()
 {
-  const auto path = utils::getAppConfigPathWithFile("config.toml");
+  const auto path = utils::getAppConfigPathWithFile(INLIMBO_DEFAULT_CONFIG_FILE_NAME);
 
   if (!std::filesystem::exists(path.c_str()))
   {
