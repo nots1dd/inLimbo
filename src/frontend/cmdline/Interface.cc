@@ -16,9 +16,9 @@
 
 #include "mpris/Service.hpp"
 #include "query/SongMap.hpp"
-#include "utils/ASCII.hpp"
 #include "utils/Index.hpp"
 #include "utils/timer/Timer.hpp"
+
 
 namespace colors = config::colors;
 
@@ -27,6 +27,8 @@ namespace frontend::cmdline
 
 static constexpr int MIN_TERM_COLS = 80;
 static constexpr int MIN_TERM_ROWS = 24;
+
+#define APP_TITLE "inLimbo - CLI Player"
 
 #define UI_BAR_FILL  "█"
 #define UI_BAR_EMPTY "░"
@@ -77,7 +79,7 @@ void Interface::loadConfig()
   }
   catch (const std::exception& e)
   {
-    LOG_ERROR("loadConfig failed: {}", e.what());
+    LOG_ERROR("Interface::loadConfig failed: {}", e.what());
   }
 }
 
@@ -122,11 +124,6 @@ void Interface::run(audio::Service& audio)
       auto h = audio.registerTrack(song);
       audio.addToPlaylist(h);
     });
-
-  {
-    std::lock_guard<std::mutex> lock(m_metaMutex);
-    m_currentMeta = audio.getCurrentMetadata();
-  }
 
   m_mprisService->updateMetadata();
 
@@ -233,8 +230,7 @@ void Interface::drawTooSmall(const TermSize& ts)
 
   std::cout << colors::Ansi::Clear;
 
-  std::cout << colors::Ansi::Bold << colors.accent << "InLimbo Player" << colors::Ansi::Reset
-            << "\n\n";
+  std::cout << colors::Ansi::Bold << colors.accent << APP_TITLE << colors::Ansi::Reset << "\n\n";
 
   std::cout << colors::Ansi::Bold << colors.warning << " Terminal too small" << colors::Ansi::Reset
             << "\n\n";
@@ -261,12 +257,21 @@ void Interface::drawBottomPrompt(const TermSize& ts, const UiColors& colors, std
 
 void Interface::draw(audio::Service& audio)
 {
+  std::lock_guard<std::mutex> lock(m_renderMutex);
+
   const auto ts = getTerminalSize();
   if (ts.cols < MIN_TERM_COLS || ts.rows < MIN_TERM_ROWS)
   {
     drawTooSmall(ts);
     return;
   }
+
+  // if (m_mode == UiMode::AV)
+  // {
+  //   const int height = std::max(8, ts.rows - 4);
+  //   drawAVBars(audio, size_t(ts.cols), height);
+  //   return;
+  // }
 
   auto infoOpt = audio.getCurrentTrackInfo();
   if (!infoOpt)
@@ -279,11 +284,27 @@ void Interface::draw(audio::Service& audio)
   const size_t current = audio.getCurrentIndex();
 
   const auto curMeta = audio.getMetadataAt(current);
-  const auto pi      = utils::index::prevWrap(current, size);
-  const auto ni      = utils::index::nextWrap(current, size);
+  if (!curMeta)
+    return;
 
-  const auto prevMeta = pi ? audio.getMetadataAt(*pi) : std::nullopt;
-  const auto nextMeta = ni ? audio.getMetadataAt(*ni) : std::nullopt;
+  const auto pi = utils::index::prevWrap(current, size);
+  const auto ni = utils::index::nextWrap(current, size);
+
+  // Only store titles for prev/next
+  Title prevTitle = "<none>";
+  Title nextTitle = "<none>";
+
+  if (pi)
+  {
+    if (const auto pm = audio.getMetadataAt(*pi))
+      prevTitle = pm->title;
+  }
+
+  if (ni)
+  {
+    if (const auto nm = audio.getMetadataAt(*ni))
+      nextTitle = nm->title;
+  }
 
   if (!curMeta)
     return;
@@ -296,27 +317,15 @@ void Interface::draw(audio::Service& audio)
   const auto& kb     = cfg->kb;
   const auto& colors = cfg->colors;
 
-  const char* kPlayPauseName  = kb.playPauseName.c_str();
-  const char* kNextName       = kb.nextName.c_str();
-  const char* kPrevName       = kb.prevName.c_str();
-  const char* kRestartName    = kb.restartName.c_str();
-  const char* kSeekBackName   = kb.seekBackName.c_str();
-  const char* kSeekFwdName    = kb.seekFwdName.c_str();
-  const char* kVolUpName      = kb.volUpName.c_str();
-  const char* kVolDownName    = kb.volDownName.c_str();
-  const char* kQuitName       = kb.quitName.c_str();
-  const char* kRandomName     = kb.randomName.c_str();
-  const char* kSearchSongName = kb.searchSongName.c_str();
-
   utils::string::SmallString seekKeys;
-  seekKeys += kSeekBackName;
+  seekKeys += kb.seekBackName;
   seekKeys += "/";
-  seekKeys += kSeekFwdName;
+  seekKeys += kb.seekFwdName;
 
   utils::string::SmallString volKeys;
-  volKeys += kVolUpName;
+  volKeys += kb.volUpName;
   volKeys += "/";
-  volKeys += kVolDownName;
+  volKeys += kb.volDownName;
 
   // ------------------------------------------------------------
   // UI print helpers
@@ -358,18 +367,17 @@ void Interface::draw(audio::Service& audio)
   // base theme
   std::cout << colors.bg << colors.fg;
 
-  l_Title("InLimbo Player");
+  l_Title(APP_TITLE);
   l_Sep();
 
   l_Section("Playlist");
-  std::cout << "   Prev : " << (prevMeta ? prevMeta->title : "<none>") << "\n";
-
+  std::cout << "   Prev : " << prevTitle << "\n";
   std::cout << " " << colors.accent << "▶" << colors::Ansi::Reset << " Now  : ";
   l_KvValue(curMeta->title);
   std::cout << colors::Ansi::Reset << " — " << curMeta->artist << " (" << current + 1 << "/" << size
             << ")\n";
 
-  std::cout << "   Next : " << (nextMeta ? nextMeta->title : "<none>") << "\n\n";
+  std::cout << "   Next : " << nextTitle << "\n\n";
 
   l_Section("Track");
   std::cout << "   Album   : " << curMeta->album << "\n";
@@ -405,14 +413,16 @@ void Interface::draw(audio::Service& audio)
   std::cout << "   Channels : " << backend.channels << "\n";
   std::cout << "   Buffer   : " << backend.bufferSize << " frames (" << std::fixed
             << std::setprecision(1) << backend.latencyMs << " ms)\n";
-  std::cout << "   XRuns    : " << backend.xruns << "\n\n";
+  std::cout << "   XRuns    : " << backend.xruns << "\n";
+  std::cout << "   Latency  : " << backend.latencyMs << "ms\n\n";
 
   l_Section("Controls");
-  l_Control3(kPlayPauseName, "play/pause", kRestartName, "restart", kRandomName, "random");
-  l_Control3(kNextName, "next", kPrevName, "prev", seekKeys.c_str(), "seek");
-  l_Control3(volKeys.c_str(), "vol", kSearchSongName, "searchSong", kQuitName, "quit");
+  l_Control3(kb.playPauseName, "play/pause", kb.restartTrackName, "restart", kb.randomTrackName,
+             "random");
+  l_Control3(kb.nextTrackName, "next", kb.prevTrackName, "prev", seekKeys.c_str(), "seek");
+  l_Control3(volKeys.c_str(), "vol", kb.searchTitleName, "search title", kb.quitName, "quit");
 
-  if (m_mode == UiMode::SearchSong)
+  if (m_mode == UiMode::SearchTitle || m_mode == UiMode::SearchArtist)
   {
     drawBottomPrompt(ts, colors, "Search: ", m_searchBuf.c_str());
     return;
@@ -422,141 +432,293 @@ void Interface::draw(audio::Service& audio)
   std::cout.flush();
 }
 
-auto Interface::handleSearchSongMode(audio::Service& audio, char c) -> bool
+// void Interface::drawAVBars(audio::Service& audio, size_t width, int height)
+// {
+//   static fft::AudioVisualizer viz{audio, {}};
+//
+//   static std::vector<float> smooth;
+//   static std::vector<float> peaks;
+//
+//   static bool cursorHidden = false;
+//   if (!cursorHidden)
+//   {
+//     std::cout << colors::Ansi::HideCursor();
+//     cursorHidden = true;
+//   }
+//
+//   const size_t usableWidth = (width > 2) ? (width - 2) : 1;
+//   height                  = std::max(4, height);
+//
+//   (void)viz.update();
+//   auto bars = viz.bars(usableWidth);
+//
+//   if (smooth.size() != usableWidth)
+//   {
+//     smooth.assign(usableWidth, 0.0f);
+//     peaks.assign(usableWidth, 0.0f);
+//   }
+//
+//   for (auto& v : bars)
+//   {
+//     if (!std::isfinite(v)) v = 0.0f;
+//     v *= 2.5f;
+//     if (!std::isfinite(v)) v = 0.0f;
+//     v = std::clamp(v, 0.0f, 1.0f);
+//   }
+//
+//   constexpr float ATTACK    = 0.65f;
+//   constexpr float RELEASE   = 0.10f;
+//   constexpr float PEAK_FALL = 0.03f;
+//
+//   for (size_t i = 0; i < usableWidth; ++i)
+//   {
+//     const float target = bars[i];
+//     const float cur    = smooth[i];
+//
+//     const float a = (target > cur) ? ATTACK : RELEASE;
+//     smooth[i] = cur + a * (target - cur);
+//
+//     peaks[i] = std::max(peaks[i] - PEAK_FALL, smooth[i]);
+//   }
+//
+//   auto cfg = m_cfg.get();
+//   const auto& colors = cfg->colors;
+//
+//   std::string frame;
+//   frame.reserve((usableWidth + 8) * (height + 8));
+//
+//   frame += "\x1b[H"; // home
+//   frame += "\x1b[J"; // clear to end
+//
+//   frame += colors::Ansi::Reset;
+//   frame += colors.bg;
+//   frame += colors.fg;
+//
+//   frame += colors::Ansi::Bold;
+//   frame += colors.accent;
+//   frame += APP_TITLE;
+//   frame += "  [AV]";
+//   frame += colors::Ansi::Reset;
+//   frame += "\n\n";
+//
+//   const int barAreaHeight = std::max(1, height - 3);
+//
+//   for (int row = barAreaHeight; row >= 1; --row)
+//   {
+//     frame += " ";
+//
+//     for (size_t i = 0; i < usableWidth; ++i)
+//     {
+//       int h  = int(smooth[i] * float(barAreaHeight));
+//       h      = std::clamp(h, 0, barAreaHeight);
+//
+//       int ph = int(peaks[i] * float(barAreaHeight));
+//       ph     = std::clamp(ph, 0, barAreaHeight);
+//
+//       if (h == 0 && smooth[i] > 0.02f)
+//         h = 1;
+//
+//       if (ph == row && ph > 0)
+//       {
+//         frame += colors.warning;
+//         frame += "▔";
+//       }
+//       else if (h >= row)
+//       {
+//         frame += colors.success;
+//         frame += UI_BAR_FILL;
+//       }
+//       else
+//       {
+//         frame += " ";
+//       }
+//     }
+//
+//     frame += colors::Ansi::Reset;
+//     frame += "\n";
+//   }
+//
+//   frame += " ";
+//   frame += colors::Ansi::Dim;
+//   frame += colors.fg;
+//
+//   for (size_t i = 0; i < usableWidth; ++i)
+//     frame += "─";
+//
+//   frame += colors::Ansi::Reset;
+//   frame += "\n";
+//
+//   frame += colors::Ansi::Reset;
+//
+//   (void)::write(STDIN_FILENO, frame.data(), frame.size());
+// }
+
+auto Interface::handleSearchTitleMode(audio::Service& audio, char c) -> bool
 {
-  // ESC exits search
-  if (c == utils::ascii::ESC)
-  {
-    m_mode = UiMode::Normal;
-    return true;
-  }
-
-  // ENTER submits
-  if (utils::ascii::isEnter(c))
-  {
-    // fuzzy search it
-    auto song = query::songmap::read::findSongObjByTitleFuzzy(*m_songMapTS, m_searchBuf);
-
-    if (!song)
+  return handleSearchCommon(
+    c,
+    [&]() -> bool
     {
+      auto song = query::songmap::read::findSongObjByTitleFuzzy(*m_songMapTS, m_searchBuf);
+
+      if (!song)
+      {
+        m_mode = UiMode::Normal;
+        return true;
+      }
+
+      audio.clearPlaylist();
+      auto h = audio.registerTrack(*song);
+      audio.addToPlaylist(h);
+
+      audio.nextTrack();
+      m_mprisService->updateMetadata();
+      m_mprisService->notify();
+
+      query::songmap::read::forEachSongInAlbum(
+        *m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
+        [&](const Disc&, const Track&, const ino_t, const Song& song) -> void
+        {
+          if (song.metadata.track <= audio.getCurrentMetadata()->track)
+            return;
+
+          auto h = audio.registerTrack(song);
+          audio.addToPlaylist(h);
+        });
+
       m_mode = UiMode::Normal;
       return true;
-    }
-    audio.clearPlaylist();
-    auto h = audio.registerTrack(*song);
-    audio.addToPlaylist(h);
+    });
+}
 
-    audio.nextTrack();
-    m_mprisService->updateMetadata();
-    m_mprisService->notify();
-
-    query::songmap::read::forEachSongInAlbum(
-      *m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
-      [&](const Disc&, const Track&, const ino_t, const Song& song) -> void
+auto Interface::handleSearchArtistMode(audio::Service& audio, char c) -> bool
+{
+  return handleSearchCommon(
+    c,
+    [&]() -> bool
+    {
+      if (m_searchBuf.empty())
       {
-        if (song.metadata.track <= audio.getCurrentMetadata()->track)
-          return;
+        m_mode = UiMode::Normal;
+        return true;
+      }
 
-        auto h = audio.registerTrack(song);
-        audio.addToPlaylist(h);
-      });
+      constexpr size_t MAX_DIST = 3;
+      const Artist     bestArtist =
+        query::songmap::read::findArtistFuzzy(*m_songMapTS, Artist{m_searchBuf}, MAX_DIST);
 
-    m_mode = UiMode::Normal;
-    return true;
-  }
+      if (bestArtist.empty())
+      {
+        m_mode = UiMode::Normal;
+        return true;
+      }
 
-  // Backspace
-  if (c == utils::ascii::DEL || c == utils::ascii::BS)
-  {
-    if (!m_searchBuf.empty())
-      m_searchBuf.pop_back();
-    return true;
-  }
+      audio.clearPlaylist();
 
-  // Printable ASCII
-  if (utils::ascii::isPrintable(c))
-  {
-    if (m_searchBuf.size() < 128)
-      m_searchBuf.push_back(c);
-    return true;
-  }
+      bool queuedAny = false;
 
-  return true;
+      query::songmap::read::forEachSong(
+        *m_songMapTS,
+        [&](const Artist& artist, const Album&, Disc, Track, ino_t, const Song& song) -> void
+        {
+          if (artist != bestArtist)
+            return;
+
+          auto h = audio.registerTrack(song);
+          audio.addToPlaylist(h);
+          queuedAny = true;
+        });
+
+      if (!queuedAny)
+      {
+        m_mode = UiMode::Normal;
+        return true;
+      }
+
+      audio.restart();
+      m_mprisService->updateMetadata();
+      m_mprisService->notify();
+
+      m_mode = UiMode::Normal;
+      return true;
+    });
 }
 
 auto Interface::handleKey(audio::Service& audio, char c) -> bool
 {
 
-  if (m_mode == UiMode::SearchSong)
-    return handleSearchSongMode(audio, c);
+  if (m_mode == UiMode::SearchTitle)
+    return handleSearchTitleMode(audio, c);
+
+  if (m_mode == UiMode::SearchArtist)
+    return handleSearchArtistMode(audio, c);
 
   bool trackChanged = false;
 
   auto        cfg = m_cfg.get();
   const auto& kb  = cfg->kb;
 
-  const char kPlayPause = kb.playPause;
-  const char kNext      = kb.next;
-  const char kPrev      = kb.prev;
-  const char kRestart   = kb.restart;
-  const char kSeekBack  = kb.seekBack;
-  const char kSeekFwd   = kb.seekFwd;
-  const char kVolUp     = kb.volUp;
-  const char kVolDown   = kb.volDown;
-  const char kQuit      = kb.quit;
-  const char kRandom    = kb.random;
-  const char kSearch    = kb.searchSong;
-
-  if (c == kPlayPause)
+  if (c == kb.playPause)
   {
     audio.isPlaying() ? audio.pauseCurrent() : audio.playCurrent();
   }
-  else if (c == kNext)
+  else if (c == kb.nextTrack)
   {
     audio.nextTrack();
     trackChanged = true;
   }
-  else if (c == kPrev)
+  else if (c == kb.prevTrack)
   {
     audio.previousTrack();
     trackChanged = true;
   }
-  else if (c == kRandom)
+  else if (c == kb.randomTrack)
   {
     audio.randomTrack();
     trackChanged = true;
   }
-  else if (c == kRestart)
+  else if (c == kb.restartTrack)
   {
     audio.restartCurrent();
   }
-  else if (c == kSeekBack)
-  {
-    m_pendingSeek -= 2.0;
-    return true;
-  }
-  else if (c == kSearch)
-  {
-    m_mode = UiMode::SearchSong;
-    m_searchBuf.clear();
-    return true;
-  }
-  else if (c == kSeekFwd)
+  else if (c == kb.seekFwd)
   {
     m_pendingSeek += 2.0;
     return true;
   }
-  else if (c == kVolUp)
+  else if (c == kb.seekBack)
+  {
+    m_pendingSeek -= 2.0;
+    return true;
+  }
+  // else if (c == kb.toggleAVBars)
+  // {
+  //   m_mode = (m_mode == UiMode::AV) ? UiMode::Normal : UiMode::AV;
+  //   return true;
+  // }
+  else if (c == kb.searchTitle)
+  {
+    m_mode = UiMode::SearchTitle;
+    m_searchBuf.clear();
+    return true;
+  }
+  else if (c == kb.searchArtist)
+  {
+    m_mode = UiMode::SearchArtist;
+    m_searchBuf.clear();
+    return true;
+  }
+  else if (c == kb.volUp)
   {
     audio.setVolume(std::min(1.5f, audio.getVolume() + 0.05f));
     return true;
   }
-  else if (c == kVolDown)
+  else if (c == kb.volDown)
   {
     audio.setVolume(std::max(0.0f, audio.getVolume() - 0.05f));
     return true;
   }
-  else if (c == kQuit)
+  else if (c == kb.quit)
   {
     return false;
   }

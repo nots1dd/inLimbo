@@ -1,15 +1,11 @@
 #pragma once
 
-#include "Config.hpp"
 #include "Sound.hpp"
 #include "utils/string/SmallString.hpp"
-
 #include <algorithm>
-#include <chrono>
-#include <mutex>
 #include <optional>
+#include <span>
 #include <thread>
-#include <vector>
 
 extern "C"
 {
@@ -20,6 +16,7 @@ namespace audio
 {
 
 using DeviceName = utils::string::SmallString;
+using CodecName  = utils::string::SmallString;
 
 struct Device
 {
@@ -42,8 +39,8 @@ struct BackendInfo
   snd_pcm_format_t           pcmFormat  = SND_PCM_FORMAT_UNKNOWN;
   utils::string::SmallString pcmFormatName;
 
-  utils::string::SmallString codecName;     // "flac", "mp3", "aac", ...
-  utils::string::SmallString codecLongName; // "FLAC (Free Lossless Audio Codec)", etc.
+  CodecName codecName;     // "flac", "mp3", "aac", ...
+  CodecName codecLongName; // "FLAC (Free Lossless Audio Codec)", etc.
 
   snd_pcm_uframes_t periodSize = 0; // frames
   snd_pcm_uframes_t bufferSize = 0; // frames
@@ -67,7 +64,7 @@ enum class PlaybackState : ui8
   Paused
 };
 
-class AudioEngine
+class AudioEngine final
 {
 public:
   AudioEngine() { av_log_set_level(AV_LOG_ERROR); }
@@ -80,47 +77,41 @@ public:
   }
 
   // Properly enumerate ALSA devices
-  INLIMBO_API_CPP auto enumeratePlaybackDevices() -> Devices;
-  INLIMBO_API_CPP void
-  initEngineForDevice(const utils::string::SmallString& deviceName = "default");
+  auto enumeratePlaybackDevices() -> Devices;
+  void initEngineForDevice(const utils::string::SmallString& deviceName = "default");
 
-  INLIMBO_API_CPP auto prepareSound(const Path& path) -> std::unique_ptr<Sound>;
-  INLIMBO_API_CPP auto loadSound(const Path& path) -> bool;
+  auto loadSound(const Path& path) -> bool;
+  auto queueNextSound(const Path& path) -> bool;
 
-  INLIMBO_API_CPP auto queueNextSound(const Path& path) -> bool;
+  void play();
+  void pause();
+  void stop();
 
-  INLIMBO_API_CPP void play();
-  INLIMBO_API_CPP void pause();
-  INLIMBO_API_CPP void stop();
-
-  INLIMBO_API_CPP void restart()
+  void restart()
   {
     seekToAbsolute(0.0);
     play();
   }
 
-  INLIMBO_API_CPP [[nodiscard]] auto isPlaying() const -> bool
-  {
-    return m_playbackState == PlaybackState::Playing;
-  }
+  [[nodiscard]] auto isPlaying() const -> bool { return m_playbackState == PlaybackState::Playing; }
 
-  INLIMBO_API_CPP auto getPlaybackTime() const -> std::optional<std::pair<double, double>>;
+  auto getPlaybackTime() const -> std::optional<std::pair<double, double>>;
 
-  INLIMBO_API_CPP void seekToAbsolute(double seconds);
-  INLIMBO_API_CPP void seekForward(double seconds);
-  INLIMBO_API_CPP void seekBackward(double seconds);
+  void seekToAbsolute(double seconds);
+  void seekForward(double seconds);
+  void seekBackward(double seconds);
 
-  INLIMBO_API_CPP void setVolume(float v) { m_volume.store(std::clamp(v, 0.0f, 1.5f)); }
+  void setVolume(float v) { m_volume.store(std::clamp(v, 0.0f, 1.5f)); }
 
-  INLIMBO_API_CPP auto getBackendInfo() const -> BackendInfo
+  auto getBackendInfo() const -> BackendInfo
   {
     std::lock_guard<std::mutex> lock(m_mutex);
     return m_backendInfo;
   }
 
-  INLIMBO_API_CPP [[nodiscard]] auto getVolume() const -> float { return m_volume.load(); }
+  [[nodiscard]] auto getVolume() const -> float { return m_volume.load(); }
 
-  INLIMBO_API_CPP [[nodiscard]] auto getCurrentDevice() const -> DeviceName
+  [[nodiscard]] auto getCurrentDevice() const -> DeviceName
   {
     std::lock_guard<std::mutex> lock(m_mutex);
     return m_currentDevice;
@@ -128,6 +119,10 @@ public:
 
   auto getSound() -> Sound&;
   auto getSound() const -> const Sound&;
+
+  template <typename Fn> auto returnAudioBuffersView(Fn&& fn) const -> void;
+  auto                        getVisSeq() const noexcept -> ui64;
+  auto                        getVisBufferSize() const noexcept -> size_t;
 
 private:
   snd_pcm_t*             m_pcmData = nullptr;
@@ -143,6 +138,12 @@ private:
   std::atomic<PlaybackState>    m_playbackState{PlaybackState::Stopped};
   std::thread                   m_audioThread;
   mutable std::mutex            m_mutex;
+
+  // this is to visit audio buffers and returnAudioBuffersView().
+  mutable std::mutex    m_visMutex;
+  std::vector<float>    m_visBuffer;
+  std::atomic<uint64_t> m_visSeq{0};
+  size_t                m_visSamples = 0;
 
   void startThread()
   {
@@ -166,6 +167,7 @@ private:
     }
   }
 
+  auto prepareSound(const Path& path) -> std::unique_ptr<Sound>;
   void switchToNextSoundIfQueued();
   void decodeAndPlay();
   void decodeStep(Sound& s);
@@ -176,5 +178,18 @@ private:
     m_sound.reset();
   }
 };
+
+template <typename Fn> auto AudioEngine::returnAudioBuffersView(Fn&& fn) const -> void
+{
+  std::lock_guard<std::mutex> visLock(m_visMutex);
+
+  if (m_visBuffer.empty())
+  {
+    fn(std::span<const float>{});
+    return;
+  }
+
+  fn(std::span<const float>{m_visBuffer.data(), m_visBuffer.size()});
+}
 
 } // namespace audio

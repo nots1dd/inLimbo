@@ -1,5 +1,5 @@
 #include "Context.hpp"
-#include "thread/Map.hpp"
+#include "StackTrace.hpp"
 #include "toml/Parser.hpp"
 #include "utils/signal/Handler.hpp"
 
@@ -7,8 +7,6 @@
 #ifdef INLIMBO_DEBUG_BUILD
 #warning "INLIMBO_DEBUG_BUILD is enabled!"
 #endif
-
-threads::SafeMap<SongMap> g_songMap;
 
 auto main(int argc, char** argv) -> int
 {
@@ -30,7 +28,7 @@ auto main(int argc, char** argv) -> int
   }
   catch (std::exception& e)
   {
-    LOG_ERROR("inLimbo error thrown: {}", e.what());
+    LOG_ERROR("inLimbo main thread threw error: {}", e.what());
     return EXIT_FAILURE;
   }
 }

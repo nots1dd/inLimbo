@@ -10,3 +10,4 @@ cmake
 make
 git
 dbus
+fftw

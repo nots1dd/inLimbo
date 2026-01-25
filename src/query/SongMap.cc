@@ -1,6 +1,7 @@
 #include "query/SongMap.hpp"
 #include "InLimbo-Types.hpp"
 #include "Logger.hpp"
+#include "StackTrace.hpp"
 #include "utils/algorithm/Levenshtein.hpp"
 #include "utils/string/Equals.hpp"
 #include <set>

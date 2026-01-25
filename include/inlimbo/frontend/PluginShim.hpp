@@ -2,6 +2,9 @@
 
 #include "c/frontend_api.h"
 
+// just needs the frontend namespace it is residing in
+//
+// ex: INLIMBO_DEFINE_FRONTEND_PLUGIN_SHIM(frontend::cmdline)
 #define INLIMBO_DEFINE_FRONTEND_PLUGIN_SHIM(FRONTEND_NS)                                         \
   extern "C"                                                                                     \
   {                                                                                              \

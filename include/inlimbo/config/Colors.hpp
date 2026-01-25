@@ -176,6 +176,10 @@ struct Ansi
     // 1-based rows/cols
     return "\x1b[" + std::to_string(row) + ";" + std::to_string(col) + "H";
   }
+
+  static inline auto HideCursor() -> std::string { return "\x1b[?25l"; }
+
+  static inline auto ShowCursor() -> std::string { return "\x1b[?25h"; }
 };
 
 // ============================================================

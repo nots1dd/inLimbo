@@ -15,6 +15,9 @@ public:
   void poll();
   void notify();
 
+  // this is for the inLimbo client to update metadata forcibly.
+  //
+  // DBus emit and interactions will automatically refresh as well.
   void updateMetadata();
 
 private:

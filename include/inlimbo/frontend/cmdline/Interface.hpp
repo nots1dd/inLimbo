@@ -1,8 +1,6 @@
 #pragma once
 
 #include <atomic>
-#include <mutex>
-#include <optional>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <termios.h>
@@ -12,6 +10,7 @@
 #include "frontend/cmdline/Structs.hpp"
 #include "mpris/Service.hpp"
 #include "thread/Map.hpp"
+#include "utils/ASCII.hpp"
 #include "utils/PathResolve.hpp"
 #include "utils/Snapshot.hpp"
 
@@ -23,7 +22,9 @@ namespace frontend::cmdline
 enum class UiMode : ui8
 {
   Normal,
-  SearchSong,
+  AV,
+  SearchTitle,
+  SearchArtist
 };
 
 class Interface
@@ -39,7 +40,8 @@ public:
   Interface(const Interface&)                    = delete;
   auto operator=(const Interface&) -> Interface& = delete;
 
-  void run(audio::Service& audio);
+  [[nodiscard]] auto ready() -> bool;
+  void               run(audio::Service& audio);
 
 private:
   UiMode                     m_mode{UiMode::Normal};
@@ -47,6 +49,7 @@ private:
   config::Watcher            m_cfgWatcher;
   threads::SafeMap<SongMap>* m_songMapTS{nullptr};
   mpris::Service*            m_mprisService{nullptr};
+  mutable std::mutex         m_renderMutex;
 
   // config
   utils::Snapshot<CmdlineConfig> m_cfg{};
@@ -55,9 +58,6 @@ private:
   std::atomic<double> m_pendingSeek{0.0};
 
   termios m_termOrig{};
-
-  std::mutex              m_metaMutex;
-  std::optional<Metadata> m_currentMeta;
 
   struct TermSize
   {
@@ -76,16 +76,51 @@ private:
   void inputLoop(audio::Service& audio);
   void seekLoop(audio::Service& audio);
 
-  auto handleSearchSongMode(audio::Service& audio, char c) -> bool;
+  template <typename OnSubmit> auto handleSearchCommon(char c, OnSubmit&& onSubmit) -> bool;
+  auto                              handleSearchTitleMode(audio::Service& audio, char c) -> bool;
+  auto                              handleSearchArtistMode(audio::Service& audio, char c) -> bool;
 
   void draw(audio::Service& audio);
   void drawBottomPrompt(const TermSize& ts, const UiColors& colors, std::string_view label,
                         std::string_view text);
   void drawTooSmall(const TermSize& ts);
+  void drawAVBars(audio::Service& audio, size_t count, int height);
 
   auto handleKey(audio::Service& audio, char c) -> bool;
 
   static void showMetadata(const Metadata& m);
 };
+
+template <typename OnSubmit> auto Interface::handleSearchCommon(char c, OnSubmit&& onSubmit) -> bool
+{
+  // ESC exits search
+  if (c == utils::ascii::ESC)
+  {
+    m_mode = UiMode::Normal;
+    return true;
+  }
+
+  // ENTER submits
+  if (utils::ascii::isEnter(c))
+    return onSubmit();
+
+  // Backspace
+  if (c == utils::ascii::DEL || c == utils::ascii::BS)
+  {
+    if (!m_searchBuf.empty())
+      m_searchBuf.pop_back();
+    return true;
+  }
+
+  // Printable ASCII
+  if (utils::ascii::isPrintable(c))
+  {
+    if (m_searchBuf.size() < 128)
+      m_searchBuf.push_back(c);
+    return true;
+  }
+
+  return true;
+}
 
 } // namespace frontend::cmdline

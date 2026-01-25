@@ -82,6 +82,7 @@ pkg_check_modules(AVUTIL   REQUIRED libavutil)
 pkg_check_modules(SWRESAMPLE REQUIRED libswresample)
 pkg_check_modules(ALSA REQUIRED alsa)
 pkg_check_modules(DBUS REQUIRED dbus-1)
+pkg_check_modules(FFTW3F REQUIRED fftw3f)
 
 # Make MPRIS C bindings
 include(${CMAKE_SOURCE_DIR}/cmake/mpris/mpris-c.cmake)
@@ -112,7 +113,9 @@ set(INLIMBO_CORE_SOURCES
     src/audio/Engine.cc
     src/audio/Service.cc
     src/audio/Playlist.cc
+    # src/fft/AudioVisualizer.cc
     src/Logger.cc
+    src/Context.cc
 )
 
 add_library(inLimbo-core SHARED ${INLIMBO_CORE_SOURCES})
@@ -130,6 +133,7 @@ target_include_directories(inLimbo-core
         ${AVCODEC_INCLUDE_DIRS}
         ${AVUTIL_INCLUDE_DIRS}
         ${SWRESAMPLE_INCLUDE_DIRS}
+        ${FFTW3F_INCLUDE_DIRS}
         $<$<CONFIG:Debug>:${BACKTRACE_INCLUDE_DIR}>
 )
 
@@ -138,11 +142,12 @@ target_link_libraries(inLimbo-core
         inLimbo-mpris-c
         ${TAGLIB_LIBRARIES}
         spdlog::spdlog
-        avformat
-        swresample
-        avutil
-        avcodec
-        asound
+        ${AVFORMAT_LIBRARIES}
+        ${AVCODEC_LIBRARIES}
+        ${AVUTIL_LIBRARIES}
+        ${SWRESAMPLE_LIBRARIES}
+        ${ALSA_LIBRARIES}
+        ${FFTW3F_LIBRARIES}
         $<$<CONFIG:Debug>:${BACKTRACE_LIBRARY}>
 )
 
@@ -172,8 +177,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/FrontendPluginList.cmake)
 # Test Executable
 # -----------------------------------------------------------
 set(SOURCES
-  src/Context.cc
-  src/test.cpp
+  src/inLimbo.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
@@ -240,6 +244,7 @@ message(STATUS "${SEP}  • libavcodec   : ${AVCODEC_VERSION} (${AVCODEC_LIBRARI
 message(STATUS "${SEP}  • libavutil    : ${AVUTIL_VERSION} (${AVUTIL_LIBRARIES})")
 message(STATUS "${SEP}  • libswresample: ${SWRESAMPLE_VERSION} (${SWRESAMPLE_LIBRARIES})")
 message(STATUS "${SEP}  • ALSA         : ${ALSA_VERSION} (${ALSA_LIBRARIES})")
+message(STATUS "${SEP}  • FFTW         : ${FFTW3F_VERSION} (${FFTW3F_LIBRARIES})")
 message(STATUS "${SEP}")
 message(STATUS "${SEP}  ── System Libraries ────────────────────────────────────")
 message(STATUS "${SEP}  • TagLib     : ${TAGLIB_INCLUDE_DIRS}")

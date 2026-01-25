@@ -1,4 +1,5 @@
 #pragma once
+
 #include "InLimbo-Types.hpp"
 #include "utils/RingBuffer.hpp"
 #include <atomic>

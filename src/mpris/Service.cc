@@ -29,6 +29,14 @@ Service::Service(IMprisBackend& b, const std::string& name) : m_IBackend(b)
 
   be.duration = [](void* u) -> double { return static_cast<IMprisBackend*>(u)->durationSeconds(); };
 
+  be.refresh_metadata = [](void* u, mpris_service* svc) -> void
+  {
+    auto* b = static_cast<IMprisBackend*>(u);
+
+    mpris_update_metadata(svc, b->title().c_str(), b->artist().c_str(), b->album().c_str(),
+                          b->artUrl().c_str());
+  };
+
   m_C_svc = mpris_create(name.c_str(), be);
 
   /* Push initial metadata once */

@@ -186,6 +186,15 @@ auto Service::previousTrackGapless() -> std::optional<service::SoundHandle>
   return h;
 }
 
+void Service::restart()
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  ensureEngine();
+
+  loadSound();
+  m_engine->restart();
+}
+
 void Service::restartCurrent()
 {
   std::lock_guard<std::mutex> lock(m_mutex);
@@ -342,6 +351,22 @@ void Service::shutdownLocked()
 
   m_engine->stop();
   m_engine.reset();
+}
+
+auto Service::getVisSeq() -> ui64
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  ensureEngine();
+
+  return m_engine->getVisSeq();
+}
+
+auto Service::getVisBufferSize() -> size_t
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  ensureEngine();
+
+  return m_engine->getVisBufferSize();
 }
 
 } // namespace audio

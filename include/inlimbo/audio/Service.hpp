@@ -51,10 +51,16 @@ public:
   auto nextTrackGapless() -> std::optional<service::SoundHandle>;
   auto previousTrackGapless() -> std::optional<service::SoundHandle>;
   void restartCurrent();
+  void restart();
 
   // playlist stuff
   auto randomTrack() -> std::optional<service::SoundHandle>;
   auto randomIndex() -> std::optional<size_t>;
+
+  // AV stuff
+  template <typename Fn> auto returnAudioBuffersView(Fn&& fn) -> void;
+  auto                        getVisSeq() -> ui64;
+  auto                        getVisBufferSize() -> size_t;
 
   void seekToAbsolute(double seconds);
   void seekForward(double seconds);
@@ -83,5 +89,13 @@ private:
   void loadSound();
   void shutdownLocked();
 };
+
+template <typename Fn> auto Service::returnAudioBuffersView(Fn&& fn) -> void
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  ensureEngine();
+
+  m_engine->returnAudioBuffersView(fn);
+}
 
 } // namespace audio

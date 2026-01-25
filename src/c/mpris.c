@@ -13,6 +13,7 @@ struct mpris_service {
     char artist[256];
     char album[256];
     char art_url[512];
+    char track_id[128];
 };
 
 void mpris_update_metadata(
@@ -28,6 +29,9 @@ void mpris_update_metadata(
     snprintf(s->artist, sizeof(s->artist), "%s", artist ? artist : "");
     snprintf(s->album, sizeof(s->album), "%s", album ? album : "");
     snprintf(s->art_url, sizeof(s->art_url), "%s", art_url ? art_url : "");
+    static uint64_t counter = 1;
+    snprintf(s->track_id, sizeof(s->track_id),
+    "/org/mpris/MediaPlayer2/track/%lu", counter++);
 }
 
 static DBusHandlerResult
@@ -40,38 +44,65 @@ on_message(DBusConnection* conn, DBusMessage* msg, void* data)
     /* Player methods */
     if (iface && !strcmp(iface, "org.mpris.MediaPlayer2.Player")) {
 
-        if (!strcmp(member, "Play"))       s->backend.play(s->backend.userdata);
-        else if (!strcmp(member, "Pause")) s->backend.pause(s->backend.userdata);
-        else if (!strcmp(member, "Stop"))  s->backend.stop(s->backend.userdata);
-        else if (!strcmp(member, "Next"))  s->backend.next(s->backend.userdata);
-        else if (!strcmp(member, "Previous"))
-            s->backend.previous(s->backend.userdata);
+        int should_emit = 0;
 
+        if (!strcmp(member, "Play")) {
+            s->backend.play(s->backend.userdata);
+            should_emit = 1;
+        }
+        else if (!strcmp(member, "Pause")) {
+            s->backend.pause(s->backend.userdata);
+            should_emit = 1;
+        }
+        else if (!strcmp(member, "Stop")) {
+            s->backend.stop(s->backend.userdata);
+            should_emit = 1;
+        }
+        else if (!strcmp(member, "Next")) {
+            s->backend.next(s->backend.userdata);
+            should_emit = 1;
+            s->backend.refresh_metadata(s->backend.userdata, s);
+        }
+        else if (!strcmp(member, "Previous")) {
+            s->backend.previous(s->backend.userdata);
+            should_emit = 1;
+
+            if (s->backend.refresh_metadata)
+                s->backend.refresh_metadata(s->backend.userdata, s);
+        }
         else if (!strcmp(member, "Seek")) {
-            int64_t off;
+            int64_t off = 0;
             dbus_message_get_args(msg, NULL,
                 DBUS_TYPE_INT64, &off,
                 DBUS_TYPE_INVALID);
-            s->backend.seek(s->backend.userdata, off / 1e6);
-        }
 
+            s->backend.seek(s->backend.userdata, off / 1e6);
+            should_emit = 1;
+        }
         else if (!strcmp(member, "SetPosition")) {
-            const char* path;
-            int64_t pos;
+            const char* path = NULL;
+            int64_t pos = 0;
+
             dbus_message_get_args(msg, NULL,
                 DBUS_TYPE_OBJECT_PATH, &path,
                 DBUS_TYPE_INT64, &pos,
                 DBUS_TYPE_INVALID);
+
+            (void)path; /* we ignore trackid path for now */
             s->backend.set_position(s->backend.userdata, pos / 1e6);
+            should_emit = 1;
         }
+
+        if (should_emit)
+            mpris_emit(s);
 
         DBusMessage* reply = dbus_message_new_method_return(msg);
         dbus_connection_send(conn, reply, NULL);
         dbus_message_unref(reply);
+
         return DBUS_HANDLER_RESULT_HANDLED;
     }
 
-    /* Properties.GetAll */
     if (dbus_message_is_method_call(
             msg, "org.freedesktop.DBus.Properties", "GetAll")) {
 
@@ -85,7 +116,6 @@ on_message(DBusConnection* conn, DBusMessage* msg, void* data)
         dbus_message_iter_init_append(reply, &it);
         dbus_message_iter_open_container(&it, DBUS_TYPE_ARRAY, "{sv}", &props_dict);
 
-        /* org.mpris.MediaPlayer2.Player */
         if (!strcmp(iface_name, "org.mpris.MediaPlayer2.Player")) {
 
             /* Capability flags */
@@ -151,6 +181,20 @@ on_message(DBusConnection* conn, DBusMessage* msg, void* data)
                 dbus_message_iter_open_container(&meta_entry, DBUS_TYPE_VARIANT, "a{sv}", &meta_var);
                 dbus_message_iter_open_container(&meta_var, DBUS_TYPE_ARRAY, "{sv}", &meta_array);
 
+                /* mpris:trackid */
+                {
+                    DBusMessageIter e, v;
+                    const char* k = "mpris:trackid";
+                    const char* val = s->track_id;
+
+                    dbus_message_iter_open_container(&meta_array, DBUS_TYPE_DICT_ENTRY, NULL, &e);
+                    dbus_message_iter_append_basic(&e, DBUS_TYPE_STRING, &k);
+                    dbus_message_iter_open_container(&e, DBUS_TYPE_VARIANT, "o", &v);
+                    dbus_message_iter_append_basic(&v, DBUS_TYPE_OBJECT_PATH, &val);
+                    dbus_message_iter_close_container(&e, &v);
+                    dbus_message_iter_close_container(&meta_array, &e);
+                }
+
                 /* xesam:title */
                 {
                     DBusMessageIter e, v;
@@ -204,7 +248,7 @@ on_message(DBusConnection* conn, DBusMessage* msg, void* data)
                     dbus_message_iter_close_container(&e, &v);
                     dbus_message_iter_close_container(&meta_array, &e);
                 }
-                
+
                 /* mpris:artUrl */
                 {
                     DBusMessageIter e, v;
@@ -244,6 +288,9 @@ mpris_service* mpris_create(const char* name, mpris_backend backend)
 
     snprintf(s->bus_name, sizeof(s->bus_name),
              "org.mpris.MediaPlayer2.%s", name);
+    
+    snprintf(s->track_id, sizeof(s->track_id),
+         "/org/mpris/MediaPlayer2/track/0");
 
     s->conn = dbus_bus_get(DBUS_BUS_SESSION, &err);
     if (!s->conn) {
@@ -338,6 +385,20 @@ void mpris_emit(mpris_service* s)
         dbus_message_iter_append_basic(&e, DBUS_TYPE_STRING, &key);
         dbus_message_iter_open_container(&e, DBUS_TYPE_VARIANT, "a{sv}", &v);
         dbus_message_iter_open_container(&v, DBUS_TYPE_ARRAY, "{sv}", &dict);
+
+        /* mpris:trackid */
+        {
+            DBusMessageIter e, v;
+            const char* k = "mpris:trackid";
+            const char* val = s->track_id;
+
+            dbus_message_iter_open_container(&dict, DBUS_TYPE_DICT_ENTRY, NULL, &e);
+            dbus_message_iter_append_basic(&e, DBUS_TYPE_STRING, &k);
+            dbus_message_iter_open_container(&e, DBUS_TYPE_VARIANT, "o", &v);
+            dbus_message_iter_append_basic(&v, DBUS_TYPE_OBJECT_PATH, &val);
+            dbus_message_iter_close_container(&e, &v);
+            dbus_message_iter_close_container(&dict, &e);
+        }
 
         /* xesam:title */
         {

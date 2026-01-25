@@ -11,11 +11,13 @@ using CmdlineKey = char;
 struct Keybinds
 {
   CmdlineKey playPause;
-  CmdlineKey next;
-  CmdlineKey prev;
-  CmdlineKey random;
-  CmdlineKey searchSong;
-  CmdlineKey restart;
+  CmdlineKey nextTrack;
+  CmdlineKey prevTrack;
+  CmdlineKey randomTrack;
+  CmdlineKey searchTitle;
+  CmdlineKey searchArtist;
+  CmdlineKey toggleAVBars;
+  CmdlineKey restartTrack;
   CmdlineKey seekBack;
   CmdlineKey seekFwd;
   CmdlineKey volUp;
@@ -23,11 +25,13 @@ struct Keybinds
   CmdlineKey quit;
 
   KeyName playPauseName;
-  KeyName nextName;
-  KeyName prevName;
-  KeyName searchSongName;
-  KeyName randomName;
-  KeyName restartName;
+  KeyName nextTrackName;
+  KeyName prevTrackName;
+  KeyName searchTitleName;
+  KeyName searchArtistName;
+  KeyName toggleAVBarsName;
+  KeyName randomTrackName;
+  KeyName restartTrackName;
   KeyName seekBackName;
   KeyName seekFwdName;
   KeyName volUpName;
@@ -40,29 +44,33 @@ struct Keybinds
 
     auto& kb = config::keybinds::Registry::theme(frontend);
 
-    out.playPause  = kb.getAs<CmdlineKey>("play_pause", 'p');
-    out.next       = kb.getAs<CmdlineKey>("next", 'n');
-    out.prev       = kb.getAs<CmdlineKey>("prev", 'b');
-    out.searchSong = kb.getAs<CmdlineKey>("search_song", '/');
-    out.random     = kb.getAs<CmdlineKey>("random", 'x');
-    out.restart    = kb.getAs<CmdlineKey>("restart", 'r');
-    out.seekBack   = kb.getAs<CmdlineKey>("seek_back", 'j');
-    out.seekFwd    = kb.getAs<CmdlineKey>("seek_fwd", 'k');
-    out.volUp      = kb.getAs<CmdlineKey>("vol_up", '=');
-    out.volDown    = kb.getAs<CmdlineKey>("vol_down", '-');
-    out.quit       = kb.getAs<CmdlineKey>("quit", 'q');
+    out.playPause    = kb.getAs<CmdlineKey>("play_pause", 'p');
+    out.nextTrack    = kb.getAs<CmdlineKey>("next_track", 'n');
+    out.prevTrack    = kb.getAs<CmdlineKey>("prev_track", 'b');
+    out.searchTitle  = kb.getAs<CmdlineKey>("search_title", '/');
+    out.searchArtist = kb.getAs<CmdlineKey>("search_artist", 'a');
+    out.toggleAVBars = kb.getAs<CmdlineKey>("toggle_av_bars", 'v');
+    out.randomTrack  = kb.getAs<CmdlineKey>("random_track", 'x');
+    out.restartTrack = kb.getAs<CmdlineKey>("restart_track", 'r');
+    out.seekBack     = kb.getAs<CmdlineKey>("seek_back", 'j');
+    out.seekFwd      = kb.getAs<CmdlineKey>("seek_fwd", 'k');
+    out.volUp        = kb.getAs<CmdlineKey>("vol_up", '=');
+    out.volDown      = kb.getAs<CmdlineKey>("vol_down", '-');
+    out.quit         = kb.getAs<CmdlineKey>("quit", 'q');
 
-    out.playPauseName  = kb.getKeyName("play_pause", "p");
-    out.nextName       = kb.getKeyName("next", "n");
-    out.prevName       = kb.getKeyName("prev", "b");
-    out.searchSongName = kb.getKeyName("search_song", "/");
-    out.randomName     = kb.getKeyName("random", "x");
-    out.restartName    = kb.getKeyName("restart", "r");
-    out.seekBackName   = kb.getKeyName("seek_back", "j");
-    out.seekFwdName    = kb.getKeyName("seek_fwd", "k");
-    out.volUpName      = kb.getKeyName("vol_up", "=");
-    out.volDownName    = kb.getKeyName("vol_down", "-");
-    out.quitName       = kb.getKeyName("quit", "q");
+    out.playPauseName    = kb.getKeyName("play_pause", "p");
+    out.nextTrackName    = kb.getKeyName("next_track", "n");
+    out.prevTrackName    = kb.getKeyName("prev_track", "b");
+    out.searchTitleName  = kb.getKeyName("search_title", "/");
+    out.searchArtistName = kb.getKeyName("search_artist", "a");
+    out.toggleAVBarsName = kb.getKeyName("toggle_av_bars", "v");
+    out.randomTrackName  = kb.getKeyName("random_track", "x");
+    out.restartTrackName = kb.getKeyName("restart_track", "r");
+    out.seekBackName     = kb.getKeyName("seek_back", "j");
+    out.seekFwdName      = kb.getKeyName("seek_fwd", "k");
+    out.volUpName        = kb.getKeyName("vol_up", "=");
+    out.volDownName      = kb.getKeyName("vol_down", "-");
+    out.quitName         = kb.getKeyName("quit", "q");
 
     return out;
   }

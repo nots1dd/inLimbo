@@ -7,6 +7,7 @@
 #include "thread/Map.hpp"
 
 #define APP_NAME "inLimbo"
+#define APP_DESC "inLimbo: Advanced Song Management and Playback Tool"
 
 extern threads::SafeMap<SongMap> g_songMap;
 

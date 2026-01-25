@@ -15,6 +15,8 @@
 
 #include <algorithm>
 
+threads::SafeMap<SongMap> g_songMap;
+
 using namespace core;
 namespace fuzzy = helpers::fuzzy;
 
@@ -134,16 +136,12 @@ void setupArgs(CLI::App& app, Args& args)
 }
 // clang-format on
 
-// ------------------------------------------------------------
-
 AppContext::AppContext(CLI::App& cliApp)
     : m_taglibDbgLog(tomlparser::Config::getBool("debug", "taglib_parser_log")),
       m_tagLibParser({.debugLog = m_taglibDbgLog})
 {
   setupArgs(cliApp, args);
 }
-
-// ------------------------------------------------------------
 
 auto resolvePrintAction(const Args& args) -> PrintAction
 {
@@ -203,8 +201,6 @@ auto resolveEditAction(const Args& args) -> EditAction
 
   return EditAction::None;
 }
-
-// ------------------------------------------------------------
 
 auto maybeHandlePrintActions(AppContext& ctx) -> bool
 {
@@ -357,7 +353,7 @@ auto maybeHandleEditActions(AppContext& ctx) -> bool
 
 auto initializeContext(int argc, char** argv) -> AppContext
 {
-  CLI::App   cliApp{"inLimbo: Music Player tool", "inLimbo"};
+  CLI::App   cliApp{APP_DESC, APP_NAME};
   AppContext ctx(cliApp);
 
   try
@@ -462,6 +458,9 @@ void runFrontend(AppContext& ctx)
     // ---------------------------------------------------------
     frontend::Plugin    fePlugin(ctx.m_fePluginName);
     frontend::Interface ui(fePlugin, g_songMap, &mprisService);
+
+    if (ui.ready())
+      LOG_INFO("Frontend plugin '{}' seems to be ready. Loading frontend...", ctx.m_fePluginName);
 
     // ---------------------------------------------------------
     // Initialize backend

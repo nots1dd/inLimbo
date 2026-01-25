@@ -2,6 +2,7 @@
 #include "StackTrace.hpp"
 #include "audio/Constants.hpp"
 #include "utils/string/SmallString.hpp"
+#include <mutex>
 
 namespace audio
 {
@@ -239,8 +240,6 @@ auto AudioEngine::queueNextSound(const Path& path) -> bool
 
 void AudioEngine::switchToNextSoundIfQueued()
 {
-  RECORD_FUNC_TO_BACKTRACE("AudioEngine::switchToNextSoundIfQueued");
-
   if (!m_nextSound)
     return;
 
@@ -477,7 +476,23 @@ void AudioEngine::decodeAndPlay()
   }
 
   size_t samplesRead = s.ring->read(m_playbackBuffer.data(), samplesNeeded);
-  size_t framesRead  = samplesRead / s.channels;
+
+  if (samplesRead == 0)
+    return;
+
+  {
+    std::lock_guard<std::mutex> visLock(m_visMutex);
+
+    const size_t want = (m_visSamples > 0) ? m_visSamples : samplesRead;
+    const size_t n    = std::min(want, samplesRead);
+
+    m_visBuffer.resize(n);
+    std::memcpy(m_visBuffer.data(), m_playbackBuffer.data(), n * sizeof(float));
+
+    m_visSeq.fetch_add(1, std::memory_order_release);
+  }
+
+  size_t framesRead = samplesRead / s.channels;
 
   if (framesRead == 0)
     return;
@@ -627,6 +642,17 @@ void AudioEngine::decodeStep(Sound& s)
     const size_t samplesToWrite = (size_t)framesConverted * (size_t)s.target.channels;
     s.ring->write(s.decodeBuffer.data(), samplesToWrite);
   }
+}
+
+auto AudioEngine::getVisSeq() const noexcept -> ui64
+{
+  return m_visSeq.load(std::memory_order_acquire);
+}
+
+auto AudioEngine::getVisBufferSize() const noexcept -> size_t
+{
+  std::lock_guard<std::mutex> lock(m_visMutex);
+  return m_visBuffer.size();
 }
 
 } // namespace audio

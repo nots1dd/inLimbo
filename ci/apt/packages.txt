@@ -10,6 +10,7 @@ libtag1v5
 libtag1-dev
 libpng-dev
 libdbus-1-dev
+libfftw3-dev
 pkg-config
 clang
 clang-format

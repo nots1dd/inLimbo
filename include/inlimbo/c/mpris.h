@@ -15,6 +15,9 @@ extern "C"
     MPRIS_LOOP_PLAYLIST
   } mpris_loop_mode;
 
+  /* Opaque handle */
+  typedef struct mpris_service mpris_service;
+
   /* Backend vtable */
   typedef struct
   {
@@ -44,10 +47,9 @@ extern "C"
     const char* (*album)(void*);
     const char* (*art_url)(void*);
 
-  } mpris_backend;
+    void (*refresh_metadata)(void* userdata, struct mpris_service* svc);
 
-  /* Opaque handle */
-  typedef struct mpris_service mpris_service;
+  } mpris_backend;
 
   /* API */
   void           mpris_update_metadata(mpris_service* s, const char* title, const char* artist,

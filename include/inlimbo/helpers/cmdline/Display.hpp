@@ -1,5 +1,6 @@
 #pragma once
 
+#include "InLimbo-Types.hpp"
 #include "thread/Map.hpp"
 #include <optional>
 

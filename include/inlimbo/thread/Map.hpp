@@ -1,6 +1,5 @@
 #pragma once
 
-#include "core/SongTree.hpp"
 #include <mutex>
 #include <optional>
 #include <shared_mutex>
