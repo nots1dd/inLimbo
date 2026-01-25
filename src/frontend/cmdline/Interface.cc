@@ -19,7 +19,6 @@
 #include "utils/Index.hpp"
 #include "utils/timer/Timer.hpp"
 
-
 namespace colors = config::colors;
 
 namespace frontend::cmdline
