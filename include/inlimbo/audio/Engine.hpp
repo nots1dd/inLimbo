@@ -78,7 +78,7 @@ public:
 
   // Properly enumerate ALSA devices
   auto enumeratePlaybackDevices() -> Devices;
-  void initEngineForDevice(const utils::string::SmallString& deviceName = "default");
+  void initEngineForDevice(const DeviceName& deviceName = "default");
 
   auto loadSound(const Path& path) -> bool;
   auto queueNextSound(const Path& path) -> bool;
@@ -117,33 +117,34 @@ public:
     return m_currentDevice;
   }
 
-  auto getSound() -> Sound&;
-  auto getSound() const -> const Sound&;
+  auto getSoundPtrMut() const -> std::shared_ptr<Sound>;
+  auto getSoundPtr() const -> std::shared_ptr<const Sound>;
 
   template <typename Fn> auto returnAudioBuffersView(Fn&& fn) const -> void;
-  auto                        getVisSeq() const noexcept -> ui64;
-  auto                        getVisBufferSize() const noexcept -> size_t;
+  auto                        getCopySeq() const noexcept -> ui64;
+  auto                        getCopyBufferSize() const noexcept -> size_t;
 
 private:
-  snd_pcm_t*             m_pcmData = nullptr;
-  std::vector<float>     m_playbackBuffer;
-  std::vector<std::byte> m_scratchBuffer;
-  BackendInfo            m_backendInfo;
-  DeviceName             m_currentDevice = "default";
+  snd_pcm_t*  m_pcmData = nullptr;
+  Floats      m_playbackBuffer;
+  Bytes       m_scratchBuffer;
+  BackendInfo m_backendInfo;
+  DeviceName  m_currentDevice = "default";
 
-  std::unique_ptr<audio::Sound> m_sound;
-  std::unique_ptr<audio::Sound> m_nextSound;
+  std::shared_ptr<audio::Sound> m_sound;
+  std::shared_ptr<audio::Sound> m_nextSound;
   std::atomic<float>            m_volume{1.0f};
   std::atomic<bool>             m_isRunning{false};
   std::atomic<PlaybackState>    m_playbackState{PlaybackState::Stopped};
   std::thread                   m_audioThread;
   mutable std::mutex            m_mutex;
 
-  // this is to visit audio buffers and returnAudioBuffersView().
-  mutable std::mutex    m_visMutex;
-  std::vector<float>    m_visBuffer;
-  std::atomic<uint64_t> m_visSeq{0};
-  size_t                m_visSamples = 0;
+  // this is to visit and copy audio buffers and returnAudioBuffersView().
+  // useful for audio visualization
+  mutable std::mutex m_copyMutex;
+  Floats             m_copyBuffer;
+  std::atomic<ui64>  m_copySeq{0};
+  size_t             m_copySamples = 0;
 
   void startThread()
   {
@@ -167,8 +168,8 @@ private:
     }
   }
 
-  auto prepareSound(const Path& path) -> std::unique_ptr<Sound>;
-  void switchToNextSoundIfQueued();
+  auto prepareSound(const Path& path) -> std::shared_ptr<Sound>;
+  auto returnNextSoundIfQueued() -> std::shared_ptr<Sound>;
   void decodeAndPlay();
   void decodeStep(Sound& s);
 
@@ -181,15 +182,15 @@ private:
 
 template <typename Fn> auto AudioEngine::returnAudioBuffersView(Fn&& fn) const -> void
 {
-  std::lock_guard<std::mutex> visLock(m_visMutex);
+  std::lock_guard<std::mutex> copyLock(m_copyMutex);
 
-  if (m_visBuffer.empty())
+  if (m_copyBuffer.empty())
   {
     fn(std::span<const float>{});
     return;
   }
 
-  fn(std::span<const float>{m_visBuffer.data(), m_visBuffer.size()});
+  fn(std::span<const float>{m_copyBuffer.data(), m_copyBuffer.size()});
 }
 
 } // namespace audio

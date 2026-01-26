@@ -96,8 +96,8 @@ struct Sound
   AVStream*          stream = nullptr;
 
   int streamIndex = -1;
-  int sampleRate  = 0;
-  int channels    = 2;
+  int sampleRate  = DEFAULT_SOUND_SAMPLE_RATE;
+  int channels    = DEFAULT_SOUND_CHANNELS;
 
   i64 startSkip      = 0;
   i64 endSkip        = 0;
@@ -126,8 +126,8 @@ struct Sound
 
     // Ring buffer: RING_BUFFER_SECONDS of audio at current sample rate
     // Size in samples = seconds * sampleRate * channels
-    auto ringBufferSamples = static_cast<size_t>(RING_BUFFER_SECONDS * sampleRate * channels);
-    ring                   = std::make_unique<utils::RingBuffer<float>>(ringBufferSamples);
+    const auto ringBufferSamples = static_cast<size_t>(RING_BUFFER_SECONDS * sampleRate * channels);
+    ring                         = std::make_unique<utils::RingBuffer<float>>(ringBufferSamples);
 
     // Decode buffer: DECODE_BUFFER_SECONDS of audio or MIN_DECODE_BUFFER_FRAMES, whichever is
     // larger This ensures we can handle large codec frames
@@ -155,7 +155,5 @@ struct Sound
     return ring ? ring->space() / channels : 0;
   }
 };
-
-using Sounds_ptr = std::vector<std::unique_ptr<Sound>>;
 
 } // namespace audio

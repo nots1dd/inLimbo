@@ -113,7 +113,7 @@ set(INLIMBO_CORE_SOURCES
     src/audio/Engine.cc
     src/audio/Service.cc
     src/audio/Playlist.cc
-    # src/fft/AudioVisualizer.cc
+    # src/fft/Analyzer.cc
     src/Logger.cc
     src/Context.cc
 )

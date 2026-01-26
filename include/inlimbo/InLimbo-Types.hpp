@@ -20,7 +20,11 @@ using ui64 = std::uint64_t;
 using cstr = const char*;
 using vptr = void*;
 
-using strvec = std::vector<std::string>;
+using strvec  = std::vector<std::string>;
+using Floats  = std::vector<float>;
+using Doubles = std::vector<double>;
+using Ints    = std::vector<int>;
+using Bytes   = std::vector<std::byte>;
 
 // By default, Path and Directory alias to custom SmallString interface.
 //

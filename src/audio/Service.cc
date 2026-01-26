@@ -353,20 +353,20 @@ void Service::shutdownLocked()
   m_engine.reset();
 }
 
-auto Service::getVisSeq() -> ui64
+auto Service::getCopySeq() -> ui64
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   ensureEngine();
 
-  return m_engine->getVisSeq();
+  return m_engine->getCopySeq();
 }
 
-auto Service::getVisBufferSize() -> size_t
+auto Service::getCopyBufferSize() -> size_t
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   ensureEngine();
 
-  return m_engine->getVisBufferSize();
+  return m_engine->getCopyBufferSize();
 }
 
 } // namespace audio

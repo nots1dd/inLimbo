@@ -59,8 +59,8 @@ public:
 
   // AV stuff
   template <typename Fn> auto returnAudioBuffersView(Fn&& fn) -> void;
-  auto                        getVisSeq() -> ui64;
-  auto                        getVisBufferSize() -> size_t;
+  auto                        getCopySeq() -> ui64;
+  auto                        getCopyBufferSize() -> size_t;
 
   void seekToAbsolute(double seconds);
   void seekForward(double seconds);

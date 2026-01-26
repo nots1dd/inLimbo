@@ -55,7 +55,6 @@ auto AudioEngine::enumeratePlaybackDevices() -> Devices
         cstr pcmName = snd_pcm_info_get_name(pcmInfo);
         cstr pcmId   = snd_pcm_info_get_id(pcmInfo);
 
-        // Build description efficiently
         utils::string::SmallString desc;
 
         if (cardLongName && pcmName)
@@ -124,9 +123,9 @@ void AudioEngine::initEngineForDevice(const DeviceName& deviceName)
   initAlsa(deviceName);
 }
 
-auto AudioEngine::prepareSound(const Path& path) -> std::unique_ptr<Sound>
+auto AudioEngine::prepareSound(const Path& path) -> std::shared_ptr<Sound>
 {
-  auto s = std::make_unique<Sound>();
+  auto s = std::make_shared<Sound>();
 
   AVFormatContext* rawFmt = nullptr;
   if (avformat_open_input(&rawFmt, path.c_str(), nullptr, nullptr) < 0)
@@ -164,7 +163,7 @@ auto AudioEngine::prepareSound(const Path& path) -> std::unique_ptr<Sound>
   s->source.sampleFmt     = s->dec->sample_fmt;
   s->source.sampleFmtName = av_get_sample_fmt_name(s->dec->sample_fmt)
                               ? av_get_sample_fmt_name(s->dec->sample_fmt)
-                              : "unknown";
+                              : "<unknown-format-name>";
 
   av_channel_layout_copy(&s->source.channelLayout, &s->dec->ch_layout);
 
@@ -212,18 +211,28 @@ auto AudioEngine::loadSound(const Path& path) -> bool
 
   std::lock_guard<std::mutex> lock(m_mutex);
 
-  auto s = prepareSound(path);
-  if (!s)
+  auto soundSharedPtr = prepareSound(path);
+  if (!soundSharedPtr)
     return false;
 
-  m_sound = std::move(s);
+  m_sound = std::move(soundSharedPtr);
   return true;
 }
 
-auto AudioEngine::getSound() -> Sound& { return *m_sound; }
+auto AudioEngine::getSoundPtr() const -> std::shared_ptr<const Sound>
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  return m_sound;
+}
 
-auto AudioEngine::getSound() const -> const Sound& { return *m_sound; }
+auto AudioEngine::getSoundPtrMut() const -> std::shared_ptr<Sound>
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  return m_sound;
+}
 
+// logic is identical to loadSound; just that nextSound is loaded into memory
+// for gapless playback
 auto AudioEngine::queueNextSound(const Path& path) -> bool
 {
   RECORD_FUNC_TO_BACKTRACE("AudioEngine::queueNextSound");
@@ -238,17 +247,20 @@ auto AudioEngine::queueNextSound(const Path& path) -> bool
   return true;
 }
 
-void AudioEngine::switchToNextSoundIfQueued()
+auto AudioEngine::returnNextSoundIfQueued() -> std::shared_ptr<Sound>
 {
-  if (!m_nextSound)
-    return;
+  std::lock_guard<std::mutex> lock(m_mutex);
 
-  m_sound = std::move(m_nextSound);
+  if (m_nextSound)
+    m_sound = std::move(m_nextSound);
+
+  return m_sound;
 }
 
 void AudioEngine::play()
 {
   std::lock_guard<std::mutex> lock(m_mutex);
+
   if (m_playbackState == PlaybackState::Playing)
     return;
 
@@ -266,6 +278,7 @@ void AudioEngine::play()
 void AudioEngine::pause()
 {
   std::lock_guard<std::mutex> lock(m_mutex);
+
   if (m_playbackState != PlaybackState::Playing)
     return;
 
@@ -285,6 +298,7 @@ void AudioEngine::stop()
   RECORD_FUNC_TO_BACKTRACE("AudioEngine::stop");
 
   std::unique_lock<std::mutex> lock(m_mutex);
+
   m_playbackState         = PlaybackState::Stopped;
   m_backendInfo.isActive  = false;
   m_backendInfo.isPlaying = false;
@@ -305,10 +319,10 @@ void AudioEngine::stop()
 
 auto AudioEngine::getPlaybackTime() const -> std::optional<std::pair<double, double>>
 {
-  if (!m_sound)
+  auto sound = getSoundPtr();
+  if (!sound)
     return std::nullopt;
-
-  auto& s = *m_sound;
+  auto& s = *sound;
 
   return std::pair{double(s.cursorFrames.load()) / s.sampleRate,
                    double(s.durationFrames) / s.sampleRate};
@@ -320,10 +334,10 @@ void AudioEngine::seekToAbsolute(double seconds)
 {
   RECORD_FUNC_TO_BACKTRACE("AudioEngine::seekAbsolute");
 
-  if (!m_sound)
+  auto sound = getSoundPtrMut();
+  if (!sound)
     return;
-
-  auto& s = *m_sound;
+  auto& s = *sound;
 
   if (s.sampleRate <= 0)
     return;
@@ -417,9 +431,12 @@ void AudioEngine::shutdownAlsa()
 
 void AudioEngine::decodeAndPlay()
 {
-  const size_t samplesNeeded = constants::FramesPerBuffer * (*m_sound).channels;
+  auto sound = getSoundPtrMut();
+  if (!sound)
+    return;
+  auto& s = *sound;
 
-  auto& s = *m_sound;
+  const size_t samplesNeeded = constants::FramesPerBuffer * s.channels;
 
   if (m_playbackBuffer.size() < samplesNeeded)
     m_playbackBuffer.resize(samplesNeeded);
@@ -443,14 +460,10 @@ void AudioEngine::decodeAndPlay()
     // If ring is empty and we have a queued sound -> switch immediately.
     if (s.ring->available() == 0)
     {
-      std::lock_guard<std::mutex> lock(m_mutex);
-      switchToNextSoundIfQueued();
-
-      if (!m_sound)
+      auto sound = returnNextSoundIfQueued();
+      if (!sound)
         return;
-
-      // m_sound changed
-      auto& ns = *m_sound;
+      auto& ns = *sound;
 
       // reset playback state for new sound
       ns.cursorFrames.store(0);
@@ -469,8 +482,8 @@ void AudioEngine::decodeAndPlay()
     // try switching to next sound instead of returning silence.
     if (s.eof)
     {
-      std::lock_guard<std::mutex> lock(m_mutex);
-      switchToNextSoundIfQueued();
+      // we dont need to track the ptr returned by this
+      returnNextSoundIfQueued();
     }
     return;
   }
@@ -481,15 +494,15 @@ void AudioEngine::decodeAndPlay()
     return;
 
   {
-    std::lock_guard<std::mutex> visLock(m_visMutex);
+    std::lock_guard<std::mutex> copyLock(m_copyMutex);
 
-    const size_t want = (m_visSamples > 0) ? m_visSamples : samplesRead;
+    const size_t want = (m_copySamples > 0) ? m_copySamples : samplesRead;
     const size_t n    = std::min(want, samplesRead);
 
-    m_visBuffer.resize(n);
-    std::memcpy(m_visBuffer.data(), m_playbackBuffer.data(), n * sizeof(float));
+    m_copyBuffer.resize(n);
+    std::memcpy(m_copyBuffer.data(), m_playbackBuffer.data(), n * sizeof(float));
 
-    m_visSeq.fetch_add(1, std::memory_order_release);
+    m_copySeq.fetch_add(1, std::memory_order_release);
   }
 
   size_t framesRead = samplesRead / s.channels;
@@ -644,15 +657,15 @@ void AudioEngine::decodeStep(Sound& s)
   }
 }
 
-auto AudioEngine::getVisSeq() const noexcept -> ui64
+auto AudioEngine::getCopySeq() const noexcept -> ui64
 {
-  return m_visSeq.load(std::memory_order_acquire);
+  return m_copySeq.load(std::memory_order_acquire);
 }
 
-auto AudioEngine::getVisBufferSize() const noexcept -> size_t
+auto AudioEngine::getCopyBufferSize() const noexcept -> size_t
 {
-  std::lock_guard<std::mutex> lock(m_visMutex);
-  return m_visBuffer.size();
+  std::lock_guard<std::mutex> copyLock(m_copyMutex);
+  return m_copyBuffer.size();
 }
 
 } // namespace audio
