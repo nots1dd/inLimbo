@@ -1,5 +1,6 @@
 #include "audio/Service.hpp"
 #include "Logger.hpp"
+#include <random>
 
 namespace audio
 {
@@ -275,6 +276,12 @@ auto Service::getCurrentTrackInfo() -> std::optional<service::TrackInfo>
   info.channels       = backend.channels;
   info.format         = backend.pcmFormatName;
 
+  static std::atomic<ui8> tidCounter{
+    static_cast<ui8>(std::random_device{}())
+  };
+
+  info.tid = tidCounter.fetch_add(1, std::memory_order_relaxed);
+
   return info;
 }
 
@@ -320,7 +327,7 @@ void Service::shutdown()
 void Service::ensureEngine()
 {
   if (!m_engine)
-    throw std::runtime_error("Service: engine not initialized");
+    throw std::runtime_error("audio::Service: engine not initialized");
 }
 
 void Service::loadSound()

@@ -44,6 +44,7 @@ void Interface::draw(audio::Service& audio)
 
 static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris) -> void
 {
+  static ui8 lastTid;
   auto infoOpt = audio.getCurrentTrackInfo();
   if (!infoOpt)
     return;
@@ -56,11 +57,18 @@ static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris) -> 
   if (info.lengthSec <= 0.0)
     return;
 
+  // we are already in the new song
+  if (info.tid == lastTid)
+    return;
+
   constexpr double EPS = 0.10;
 
+  // the next song might have already played but thread didnt catch in time
+  // so we just check if position is valid
   if (info.positionSec + EPS < info.lengthSec)
     return;
 
+  lastTid = info.tid;
   audio.nextTrackGapless();
   mpris.updateMetadata();
   mpris.notify();
@@ -81,7 +89,7 @@ void Interface::statusLoop(audio::Service& audio)
       loadConfig();
     }
     autoNextIfFinished(audio, *m_mpris);
-    std::this_thread::sleep_for(std::chrono::milliseconds(120));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 }
 

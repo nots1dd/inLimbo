@@ -34,6 +34,7 @@ static constexpr int MIN_TERM_ROWS = 24;
 
 static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris) -> void
 {
+  static ui8 lastTid;
   auto infoOpt = audio.getCurrentTrackInfo();
   if (!infoOpt)
     return;
@@ -46,11 +47,15 @@ static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris) -> 
   if (info.lengthSec <= 0.0)
     return;
 
+  if (info.tid == lastTid)
+    return;
+
   constexpr double EPS = 0.10;
 
   if (info.positionSec + EPS < info.lengthSec)
     return;
 
+  lastTid = info.tid;
   audio.nextTrackGapless();
   mpris.updateMetadata();
   mpris.notify();

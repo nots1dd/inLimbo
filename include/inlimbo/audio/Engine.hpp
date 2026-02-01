@@ -51,8 +51,8 @@ struct BackendInfo
   bool isPaused   = false;
   bool isDraining = false;
 
-  uint64_t xruns  = 0; // underrun count
-  uint64_t writes = 0; // snd_pcm_writei calls
+  ui64 xruns  = 0; // underrun count
+  ui64 writes = 0; // snd_pcm_writei calls
 };
 
 using Devices = std::vector<Device>;
