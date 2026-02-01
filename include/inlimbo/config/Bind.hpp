@@ -27,7 +27,7 @@ namespace colors
 
 template <typename T> struct Binding
 {
-  std::string_view key; // toml key
+  std::string_view key;
   T*               target;
 
   std::function<void(const utils::colors::RGBA&, T&)> apply;

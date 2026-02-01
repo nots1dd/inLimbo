@@ -12,14 +12,15 @@ directory = "/home/s1dd/Downloads/Songs/" # just an example
 [fuzzy]
 max_dist = 3
 
-# NOTE: Only `Tab`, `Escape`, `Enter/Return` and `Space` are accepted as special chars for now!
+# NOTE: Only `Tab`, `Escape`, `Enter/Return` and `Space` are accepted as special chars
 [keybinds.cmdline]
 play_pause = "p"
-search_song = "/"
-next = "n"
-prev = "b"
-random = "x"
-restart = "r"
+search_title = "/"
+search_artist = "a"
+next_track = "n"
+prev_track = "b"
+random_track = "x"
+restart_track = "r"
 seek_back = "j"
 seek_fwd = "k"
 vol_up = "="
@@ -34,12 +35,14 @@ warning = "#FFC800"
 error = "#FF3C3C"
 success = "#6C948B"
 
+[misc.cmdline]
+seek_duration = 5
+
 [keybinds.raylib]
 play_pause = "p"
-song_info = "i"
-next = "n"
-prev = "b"
-random = "x"
+next_track = "n"
+prev_track = "b"
+random_track = "x"
 restart = "r"
 seek_back = "j"
 seek_fwd = "k"

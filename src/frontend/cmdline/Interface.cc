@@ -101,16 +101,16 @@ void Interface::run(audio::Service& audio)
   // We can add every song after the current one's track no of an
   // album.
 
-  // query::songmap::read::forEachSongInAlbum(
-  //   *m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
-  //   [&](const Disc&, const Track&, const ino_t, const Song& song) -> void
-  //   {
-  //     if (song.metadata.track <= audio.getCurrentMetadata()->track)
-  //       return;
-  //
-  //     auto h = audio.registerTrack(song);
-  //     audio.addToPlaylist(h);
-  //   });
+  query::songmap::read::forEachSongInAlbum(
+    *m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
+    [&](const Disc&, const Track&, const ino_t, const Song& song) -> void
+    {
+      if (song.metadata.track <= audio.getCurrentMetadata()->track)
+        return;
+
+      auto h = audio.registerTrack(song);
+      audio.addToPlaylist(h);
+    });
 
   const auto audioMetaOpt = audio.getCurrentMetadata();
 
@@ -123,16 +123,16 @@ void Interface::run(audio::Service& audio)
   //
   // Artist -> Album -> Disc -> Track -> Song
 
-  query::songmap::read::forEachSong(
-    *m_songMapTS,
-    [&](const Artist&, const Album&, Disc, Track, ino_t, const Song& song) -> void
-    {
-      if (song.metadata.title == audioMetaOpt->title)
-        return;
-
-      auto h = audio.registerTrack(song);
-      audio.addToPlaylist(h);
-    });
+  // query::songmap::read::forEachSong(
+  //   *m_songMapTS,
+  //   [&](const Artist&, const Album&, Disc, Track, ino_t, const Song& song) -> void
+  //   {
+  //     if (song.metadata.title == audioMetaOpt->title)
+  //       return;
+  //
+  //     auto h = audio.registerTrack(song);
+  //     audio.addToPlaylist(h);
+  //   });
 
   m_mprisService->updateMetadata();
 

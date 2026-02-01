@@ -29,13 +29,11 @@ public:
     if (!tbl)
       return;
 
-    // Build dispatch table
     using Node    = toml::node;
     using Handler = std::function<void(const Node&)>;
 
     std::unordered_map<std::string_view, Handler> handlers;
 
-    // Register bindings
     (registerBinding(handlers, std::forward<Bindings>(bindings)), ...);
 
     // Dispatch
@@ -53,9 +51,6 @@ public:
 private:
   std::string m_frontend;
 
-  // ------------------------------------------------------------
-  // Type-safe binding registration
-  // ------------------------------------------------------------
   template <typename T>
   static auto registerBinding(
     std::unordered_map<std::string_view, std::function<void(const toml::node&)>>& handlers,
