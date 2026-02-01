@@ -2,6 +2,7 @@
 
 #include "config/Colors.hpp"
 #include "config/Keybinds.hpp"
+#include "frontend/KV.hpp"
 #include <raylib.h>
 #include <string_view>
 
@@ -10,31 +11,79 @@ namespace frontend::raylib
 
 using RaylibKey = int;
 
+using RaylibKV = KeyValueBase<RaylibKey, KeyName>;
+
+[[nodiscard]]
+constexpr auto asciiToRaylib(int ascii, RaylibKey fallback = KEY_NULL) noexcept -> RaylibKey
+{
+  // a-z
+  if (ascii >= 'a' && ascii <= 'z')
+    return KEY_A + (ascii - 'a');
+
+  // A-Z
+  if (ascii >= 'A' && ascii <= 'Z')
+    return KEY_A + (ascii - 'A');
+
+  // 0-9
+  if (ascii >= '0' && ascii <= '9')
+    return KEY_ZERO + (ascii - '0');
+
+  // Common symbols (minimal table)
+  //
+  // Note that raylib seems to be weird with
+  // certain shifted numeric keys like [!@..*]
+  //
+  // Example: `+` (Plus on keypad works with KEY_KP_ADD)
+  // however, the simple plus key we get with SHIFT+EQUAL
+  // is not present in their enum.
+  //
+  // Any keybind issue is considered a sole frontend issue,
+  // and solely depends on the framework being used along with
+  // how it was implemented.
+  switch (ascii)
+  {
+    case ' ':
+      return KEY_SPACE;
+    case '-':
+      return KEY_MINUS;
+    case '=':
+      return KEY_EQUAL;
+    case '[':
+      return KEY_LEFT_BRACKET;
+    case ']':
+      return KEY_RIGHT_BRACKET;
+    case ';':
+      return KEY_SEMICOLON;
+    case '\'':
+      return KEY_APOSTROPHE;
+    case ',':
+      return KEY_COMMA;
+    case '.':
+      return KEY_PERIOD;
+    case '/':
+      return KEY_SLASH;
+    case '\\':
+      return KEY_BACKSLASH;
+    case '`':
+      return KEY_GRAVE;
+    default:
+      return fallback;
+  }
+}
+
 struct Keybinds
 {
-  RaylibKey playPause;
-  RaylibKey next;
-  RaylibKey prev;
-  RaylibKey random;
-  RaylibKey songInfo;
-  RaylibKey restart;
-  RaylibKey seekBack;
-  RaylibKey seekFwd;
-  RaylibKey volUp;
-  RaylibKey volDown;
-  RaylibKey quit;
-
-  KeyName playPauseName;
-  KeyName nextName;
-  KeyName prevName;
-  KeyName songInfoName;
-  KeyName randomName;
-  KeyName restartName;
-  KeyName seekBackName;
-  KeyName seekFwdName;
-  KeyName volUpName;
-  KeyName volDownName;
-  KeyName quitName;
+  RaylibKV playPause;
+  RaylibKV nextTrack;
+  RaylibKV prevTrack;
+  RaylibKV randomTrack;
+  RaylibKV songInfo;
+  RaylibKV restart;
+  RaylibKV seekBack;
+  RaylibKV seekFwd;
+  RaylibKV volUp;
+  RaylibKV volDown;
+  RaylibKV quit;
 
   static auto load(std::string_view frontend) -> Keybinds
   {
@@ -42,29 +91,28 @@ struct Keybinds
 
     auto& kb = config::keybinds::Registry::theme(frontend);
 
-    out.playPause = kb.getAs<RaylibKey>("play_pause", KEY_P);
-    out.next      = kb.getAs<RaylibKey>("next", KEY_N);
-    out.prev      = kb.getAs<RaylibKey>("prev", KEY_B);
-    out.songInfo  = kb.getAs<RaylibKey>("song_info", KEY_I);
-    out.random    = kb.getAs<RaylibKey>("random", KEY_X);
-    out.restart   = kb.getAs<RaylibKey>("restart", KEY_R);
-    out.seekBack  = kb.getAs<RaylibKey>("seek_back", KEY_J);
-    out.seekFwd   = kb.getAs<RaylibKey>("seek_fwd", KEY_K);
-    out.volUp     = kb.getAs<RaylibKey>("vol_up", KEY_EQUAL);
-    out.volDown   = kb.getAs<RaylibKey>("vol_down", KEY_MINUS);
-    out.quit      = kb.getAs<RaylibKey>("quit", KEY_Q);
+    // raylib maps keys in a different enum so simply giving the handler ascii
+    // will NOT work! (as it uses GetKeyPressed() which is a raylib func)
+    //
+    // So we need a constexpr func to map ascii -> raylib key codes
+    auto l_loadKeyAndName = [&](RaylibKV& k, std::string_view id, RaylibKey fallback,
+                                std::string_view nameFallback) -> void
+    {
+      k.key  = asciiToRaylib(kb.getAs<RaylibKey>(id, fallback));
+      k.name = kb.getKeyName(id, nameFallback);
+    };
 
-    out.playPauseName = kb.getKeyName("play_pause", "p");
-    out.nextName      = kb.getKeyName("next", "n");
-    out.prevName      = kb.getKeyName("prev", "b");
-    out.songInfoName  = kb.getKeyName("song_info", "i");
-    out.randomName    = kb.getKeyName("random", "x");
-    out.restartName   = kb.getKeyName("restart", "r");
-    out.seekBackName  = kb.getKeyName("seek_back", "j");
-    out.seekFwdName   = kb.getKeyName("seek_fwd", "k");
-    out.volUpName     = kb.getKeyName("vol_up", "=");
-    out.volDownName   = kb.getKeyName("vol_down", "-");
-    out.quitName      = kb.getKeyName("quit", "q");
+    l_loadKeyAndName(out.playPause, "play_pause", 'p', "p");
+    l_loadKeyAndName(out.nextTrack, "next_track", 'n', "n");
+    l_loadKeyAndName(out.prevTrack, "prev_track", 'b', "b");
+    l_loadKeyAndName(out.songInfo, "song_info", 'i', "i");
+    l_loadKeyAndName(out.randomTrack, "random_track", 'x', "x");
+    l_loadKeyAndName(out.restart, "restart", 'r', "r");
+    l_loadKeyAndName(out.seekBack, "seek_back", 'j', "j");
+    l_loadKeyAndName(out.seekFwd, "seek_fwd", 'k', "k");
+    l_loadKeyAndName(out.volUp, "vol_up", '=', "=");
+    l_loadKeyAndName(out.volDown, "vol_down", '-', "-");
+    l_loadKeyAndName(out.quit, "quit", 'q', "q");
 
     return out;
   }

@@ -23,10 +23,10 @@ void Handler::handle(audio::Service& audio, state::UI& ui, const RaylibConfig& c
 
   bool trackChanged = false;
 
-  if (IsKeyPressed(cfg.kb.quit))
+  if (IsKeyPressed(cfg.kb.quit()))
     ui.running = false;
 
-  if (IsKeyPressed(cfg.kb.songInfo))
+  if (IsKeyPressed(cfg.kb.songInfo()))
   {
     if (ui.showMetaInfo)
     {
@@ -39,42 +39,42 @@ void Handler::handle(audio::Service& audio, state::UI& ui, const RaylibConfig& c
     }
   }
 
-  if (IsKeyPressed(cfg.kb.playPause))
+  if (IsKeyPressed(cfg.kb.playPause()))
     audio.isPlaying() ? audio.pauseCurrent() : audio.playCurrent();
 
-  if (IsKeyPressed(cfg.kb.next))
+  if (IsKeyPressed(cfg.kb.nextTrack()))
   {
     audio.nextTrack();
     trackChanged = true;
   }
 
-  if (IsKeyPressed(cfg.kb.random))
+  if (IsKeyPressed(cfg.kb.randomTrack()))
   {
     audio.randomTrack();
     trackChanged = true;
   }
 
-  if (IsKeyPressed(cfg.kb.prev))
+  if (IsKeyPressed(cfg.kb.prevTrack()))
   {
     audio.previousTrack();
     trackChanged = true;
   }
 
-  if (IsKeyPressed(cfg.kb.restart))
+  if (IsKeyPressed(cfg.kb.restart()))
     audio.restartCurrent();
 
-  if (IsKeyPressed(cfg.kb.volUp))
+  if (IsKeyPressed(cfg.kb.volUp()))
     audio.setVolume(std::min(1.5f, audio.getVolume() + 0.05f));
 
-  if (IsKeyPressed(cfg.kb.volDown))
+  if (IsKeyPressed(cfg.kb.volDown()))
     audio.setVolume(std::max(0.0f, audio.getVolume() - 0.05f));
 
-  if (IsKeyPressed(cfg.kb.seekFwd))
+  if (IsKeyPressed(cfg.kb.seekFwd()))
   {
     audio.seekForward(3);
     mpris->notify();
   }
-  if (IsKeyPressed(cfg.kb.seekBack))
+  if (IsKeyPressed(cfg.kb.seekBack()))
   {
     audio.seekBackward(3);
     mpris->notify();

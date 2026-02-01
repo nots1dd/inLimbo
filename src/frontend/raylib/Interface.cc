@@ -32,7 +32,7 @@ void Interface::loadConfig()
 
     m_cfg.set(std::move(next));
 
-    LOG_INFO("Configuration loaded.");
+    LOG_INFO("Configuration loaded for {}'s keybinds and colors.", FRONTEND_NAME);
   }
   catch (const std::exception& e)
   {

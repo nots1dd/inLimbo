@@ -10,6 +10,13 @@
 #include <unordered_map>
 #include <utility>
 
+template <typename T>
+concept KeyValueType =
+  std::is_same_v<T, std::string> ||
+  std::is_same_v<T, char> ||
+  std::is_same_v<T, int> ||
+  std::is_same_v<T, float>;
+
 namespace config::keybinds
 {
 
@@ -45,10 +52,12 @@ public:
   // Generic typed getter
   //
   // Examples:
-  //   int  k = theme.getAs<int>("play_pause", KEY_SPACE);      // for raylib
-  //   auto e = theme.getAs<MyEnum>("play_pause", MyEnum::X);
+  //   int  k = theme.getAs<int>("play_pause", KEY_SPACE);      // for raylib (example)
+  //   auto e = theme.getAs<float>("vol", 100.0);               // explicit dtype conv
+  //   auto v = theme.getAs<char>("quit", 'q');                 // general use case
   //
-  template <typename T> auto getAs(std::string_view action, T fallback = {}) const -> T
+  template <KeyValueType T>
+  auto getAs(std::string_view action, T fallback = {}) const -> T
   {
     auto it = m_binds.find(action);
     if (it == m_binds.end())

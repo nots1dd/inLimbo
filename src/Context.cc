@@ -5,7 +5,7 @@
 #include "helpers/fs/Directory.hpp"
 #include "helpers/fuzzy/Search.hpp"
 #include "mpris/Service.hpp"
-#include "mpris/backends/CmdLine.hpp"
+#include "mpris/backends/Common.hpp"
 #include "query/SongMap.hpp"
 #include "thread/Map.hpp"
 #include "toml/Parser.hpp"
@@ -450,8 +450,8 @@ void runFrontend(AppContext& ctx)
     // ---------------------------------------------------------
     audio::Service audio(g_songMap);
 
-    mpris::cmdline::Backend mprisBackend(audio);
-    mpris::Service          mprisService(mprisBackend, APP_NAME);
+    mpris::backend::Common mprisBackend(audio);
+    mpris::Service         mprisService(mprisBackend, APP_NAME);
 
     // ---------------------------------------------------------
     // Initialize abstract frontend interface
@@ -498,15 +498,15 @@ void runFrontend(AppContext& ctx)
   }
   catch (const utils::unix::LockFileError& e)
   {
-    LOG_ERROR("LockFileError: {}", e.what());
+    LOG_ERROR("Context threw LockFileError: {}", e.what());
   }
   catch (const frontend::PluginError& e)
   {
-    LOG_ERROR("Frontend error: {}", e.what());
+    LOG_ERROR("Context threw Frontend error: {}", e.what());
   }
   catch (std::exception& e)
   {
-    LOG_ERROR("Something bad happened: {}", e.what());
+    LOG_ERROR("Context threw generic std::exception: '{}'", e.what());
   }
 }
 

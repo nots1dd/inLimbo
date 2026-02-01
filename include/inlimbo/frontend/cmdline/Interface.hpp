@@ -22,7 +22,6 @@ namespace frontend::cmdline
 enum class UiMode : ui8
 {
   Normal,
-  AV,
   SearchTitle,
   SearchArtist
 };
@@ -84,7 +83,6 @@ private:
   void drawBottomPrompt(const TermSize& ts, const UiColors& colors, std::string_view label,
                         std::string_view text);
   void drawTooSmall(const TermSize& ts);
-  void drawAVBars(audio::Service& audio, size_t count, int height);
 
   auto handleKey(audio::Service& audio, char c) -> bool;
 

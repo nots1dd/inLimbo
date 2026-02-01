@@ -12,6 +12,12 @@
 #include <taglib/tag.h>
 #include <taglib/tpropertymap.h>
 
+#define INLIMBO_TITLE_NAME_FALLBACK  "<Unknown-Title>"
+#define INLIMBO_ARTIST_NAME_FALLBACK "<Unknown-Artist>"
+#define INLIMBO_ALBUM_NAME_FALLBACK  "<Unknown-Album>"
+#define INLIMBO_GENRE_NAME_FALLBACK  "<Unknown-Genre>"
+#define INLIMBO_COMMENT_FALLBACK     "<No-Comment>"
+
 namespace taglib
 {
 

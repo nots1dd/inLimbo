@@ -5,6 +5,33 @@
 namespace helpers::fs
 {
 
+auto toAbsFilePathUri(const std::filesystem::path& p) -> const Path
+{
+  Path uri("file://");
+
+  uri += std::filesystem::absolute(p.c_str()).string();
+
+  return uri;
+}
+
+auto fromAbsFilePathUri(const std::string uriPath) -> const Path
+{
+  Path path;
+
+  if (uriPath.starts_with("file://"))
+  {
+    path += uriPath.substr(7);
+  }
+
+  return path;
+}
+
+// does a singular pass over the given directory, parses any plausible audio files (mp3, flac, wav,
+// ...) then creates a Song obj (with inode and song file metadata) and stores in songTree
+// datastructure.
+//
+// Note that we arent immediately populating the SongMap as we are still yet to serialize to the
+// cache file via cereal.
 void dirWalkProcessAll(const Directory& directory, taglib::Parser& parser, core::SongTree& songTree)
 {
   RECORD_FUNC_TO_BACKTRACE("helpers::fs::dirWalkProcessAll");
@@ -31,7 +58,7 @@ void dirWalkProcessAll(const Directory& directory, taglib::Parser& parser, core:
       Metadata md;
       if (!parser.parseFile(path, md))
       {
-        LOG_WARN("Unable to parse: {}", path);
+        LOG_WARN("Unable to parse metadata for path: '{}'", path);
         return;
       }
 

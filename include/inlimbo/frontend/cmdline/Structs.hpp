@@ -2,75 +2,56 @@
 
 #include "config/Colors.hpp"
 #include "config/Keybinds.hpp"
+#include "frontend/KV.hpp"
 
 namespace frontend::cmdline
 {
 
 using CmdlineKey = char;
 
+using CmdlineKV = KeyValueBase<CmdlineKey, KeyName>;
+
 struct Keybinds
 {
-  CmdlineKey playPause;
-  CmdlineKey nextTrack;
-  CmdlineKey prevTrack;
-  CmdlineKey randomTrack;
-  CmdlineKey searchTitle;
-  CmdlineKey searchArtist;
-  CmdlineKey toggleAVBars;
-  CmdlineKey restartTrack;
-  CmdlineKey seekBack;
-  CmdlineKey seekFwd;
-  CmdlineKey volUp;
-  CmdlineKey volDown;
-  CmdlineKey quit;
-
-  KeyName playPauseName;
-  KeyName nextTrackName;
-  KeyName prevTrackName;
-  KeyName searchTitleName;
-  KeyName searchArtistName;
-  KeyName toggleAVBarsName;
-  KeyName randomTrackName;
-  KeyName restartTrackName;
-  KeyName seekBackName;
-  KeyName seekFwdName;
-  KeyName volUpName;
-  KeyName volDownName;
-  KeyName quitName;
+  CmdlineKV playPause;
+  CmdlineKV nextTrack;
+  CmdlineKV prevTrack;
+  CmdlineKV randomTrack;
+  CmdlineKV searchTitle;
+  CmdlineKV searchArtist;
+  CmdlineKV toggleAVBars;
+  CmdlineKV restartTrack;
+  CmdlineKV seekBack;
+  CmdlineKV seekFwd;
+  CmdlineKV volUp;
+  CmdlineKV volDown;
+  CmdlineKV quit;
 
   static auto load(std::string_view frontend) -> Keybinds
   {
     Keybinds out{};
+    auto&    kb = config::keybinds::Registry::theme(frontend);
 
-    auto& kb = config::keybinds::Registry::theme(frontend);
+    auto l_loadKeyAndName = [&](CmdlineKV& k, std::string_view id, CmdlineKey fallback,
+                                std::string_view nameFallback) -> void
+    {
+      k.key  = kb.getAs<CmdlineKey>(id, fallback);
+      k.name = kb.getKeyName(id, nameFallback);
+    };
 
-    out.playPause    = kb.getAs<CmdlineKey>("play_pause", 'p');
-    out.nextTrack    = kb.getAs<CmdlineKey>("next_track", 'n');
-    out.prevTrack    = kb.getAs<CmdlineKey>("prev_track", 'b');
-    out.searchTitle  = kb.getAs<CmdlineKey>("search_title", '/');
-    out.searchArtist = kb.getAs<CmdlineKey>("search_artist", 'a');
-    out.toggleAVBars = kb.getAs<CmdlineKey>("toggle_av_bars", 'v');
-    out.randomTrack  = kb.getAs<CmdlineKey>("random_track", 'x');
-    out.restartTrack = kb.getAs<CmdlineKey>("restart_track", 'r');
-    out.seekBack     = kb.getAs<CmdlineKey>("seek_back", 'j');
-    out.seekFwd      = kb.getAs<CmdlineKey>("seek_fwd", 'k');
-    out.volUp        = kb.getAs<CmdlineKey>("vol_up", '=');
-    out.volDown      = kb.getAs<CmdlineKey>("vol_down", '-');
-    out.quit         = kb.getAs<CmdlineKey>("quit", 'q');
-
-    out.playPauseName    = kb.getKeyName("play_pause", "p");
-    out.nextTrackName    = kb.getKeyName("next_track", "n");
-    out.prevTrackName    = kb.getKeyName("prev_track", "b");
-    out.searchTitleName  = kb.getKeyName("search_title", "/");
-    out.searchArtistName = kb.getKeyName("search_artist", "a");
-    out.toggleAVBarsName = kb.getKeyName("toggle_av_bars", "v");
-    out.randomTrackName  = kb.getKeyName("random_track", "x");
-    out.restartTrackName = kb.getKeyName("restart_track", "r");
-    out.seekBackName     = kb.getKeyName("seek_back", "j");
-    out.seekFwdName      = kb.getKeyName("seek_fwd", "k");
-    out.volUpName        = kb.getKeyName("vol_up", "=");
-    out.volDownName      = kb.getKeyName("vol_down", "-");
-    out.quitName         = kb.getKeyName("quit", "q");
+    l_loadKeyAndName(out.playPause, "play_pause", 'p', "p");
+    l_loadKeyAndName(out.nextTrack, "next_track", 'n', "n");
+    l_loadKeyAndName(out.prevTrack, "prev_track", 'b', "b");
+    l_loadKeyAndName(out.searchTitle, "search_title", '/', "/");
+    l_loadKeyAndName(out.searchArtist, "search_artist", 'a', "a");
+    l_loadKeyAndName(out.toggleAVBars, "toggle_av_bars", 'v', "v");
+    l_loadKeyAndName(out.randomTrack, "random_track", 'x', "x");
+    l_loadKeyAndName(out.restartTrack, "restart_track", 'r', "r");
+    l_loadKeyAndName(out.seekBack, "seek_back", 'j', "j");
+    l_loadKeyAndName(out.seekFwd, "seek_fwd", 'k', "k");
+    l_loadKeyAndName(out.volUp, "vol_up", '=', "=");
+    l_loadKeyAndName(out.volDown, "vol_down", '-', "-");
+    l_loadKeyAndName(out.quit, "quit", 'q', "q");
 
     return out;
   }

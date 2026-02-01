@@ -1,4 +1,5 @@
 #include "frontend/raylib/media/AlbumArtCache.hpp"
+#include "helpers/fs/Directory.hpp"
 
 namespace frontend::raylib::media
 {
@@ -28,10 +29,9 @@ auto AlbumArtCache::get(const Metadata& meta) -> Texture2D*
   if (meta.artUrl.empty())
     return nullptr;
 
-  const char* path =
-    meta.artUrl.starts_with("file://") ? meta.artUrl.c_str() + 7 : meta.artUrl.c_str();
+  const auto truePath = helpers::fs::fromAbsFilePathUri(meta.artUrl);
 
-  Image img = LoadImage(path);
+  Image img = LoadImage(truePath.c_str());
   if (!img.data)
     return nullptr;
 

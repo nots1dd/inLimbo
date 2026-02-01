@@ -1,5 +1,6 @@
 #include "taglib/Parser.hpp"
 #include "Logger.hpp"
+#include "helpers/fs/Directory.hpp"
 #include "utils/PathResolve.hpp"
 #include <filesystem>
 #include <fstream>
@@ -103,10 +104,12 @@ auto Parser::parseFile(const Path& filePath, Metadata& metadata) -> bool
 
   TagLib::Tag* tag = file.tag();
   metadata.title = tag->title().isEmpty() ? filePath.filename().c_str() : tag->title().to8Bit(true);
-  metadata.artist     = tag->artist().isEmpty() ? "<Unknown Artist>" : tag->artist().to8Bit(true);
-  metadata.album      = tag->album().isEmpty() ? "<Unknown Album>" : tag->album().to8Bit(true);
-  metadata.genre      = tag->genre().isEmpty() ? "<Unknown Genre>" : tag->genre().to8Bit(true);
-  metadata.comment    = tag->comment().isEmpty() ? "<No Comment>" : tag->comment().to8Bit(true);
+  metadata.artist =
+    tag->artist().isEmpty() ? INLIMBO_ARTIST_NAME_FALLBACK : tag->artist().to8Bit(true);
+  metadata.album = tag->album().isEmpty() ? INLIMBO_ALBUM_NAME_FALLBACK : tag->album().to8Bit(true);
+  metadata.genre = tag->genre().isEmpty() ? INLIMBO_GENRE_NAME_FALLBACK : tag->genre().to8Bit(true);
+  metadata.comment =
+    tag->comment().isEmpty() ? INLIMBO_COMMENT_FALLBACK : tag->comment().to8Bit(true);
   metadata.year       = tag->year();
   metadata.track      = tag->track();
   metadata.trackTotal = 0;
@@ -142,7 +145,7 @@ auto Parser::parseFile(const Path& filePath, Metadata& metadata) -> bool
   if (props.contains("ALBUMARTIST"))
     metadata.artist = props["ALBUMARTIST"].toString().to8Bit(true);
 
-  if (metadata.track == 0 && metadata.artist == "<Unknown Artist>")
+  if (metadata.track == 0 && metadata.artist == INLIMBO_ARTIST_NAME_FALLBACK)
     metadata.track = ++unknownArtistTracks;
 
   if (props.contains("LYRICS"))
@@ -284,15 +287,6 @@ auto Parser::modifyMetadata(const Path& filePath, const Metadata& newData) -> bo
   return success;
 }
 
-static auto toFileUri(const std::filesystem::path& p) -> const Path
-{
-  utils::string::SmallString uri("file://");
-
-  uri += std::filesystem::absolute(p.c_str()).string();
-
-  return uri;
-}
-
 auto extractThumbnail(const std::string& audioFilePath, const std::string& outputImagePath) -> bool
 {
   const std::string ext = std::filesystem::path(audioFilePath).extension().string();
@@ -337,17 +331,15 @@ auto extractThumbnail(const std::string& audioFilePath, const std::string& outpu
 
 auto Parser::fillArtUrl(Metadata& meta) -> bool
 {
-  namespace fs = std::filesystem;
-
   const auto cacheDir = utils::getAppCacheArtPath();
-  fs::create_directories(cacheDir.c_str());
+  std::filesystem::create_directories(cacheDir.c_str());
 
-  const std::string hash   = std::to_string(std::hash<std::string>{}(meta.filePath.c_str()));
-  fs::path          outImg = cacheDir / (hash + ".jpg");
+  const std::string     hash   = std::to_string(std::hash<std::string>{}(meta.filePath.c_str()));
+  std::filesystem::path outImg = cacheDir / (hash + ".jpg");
 
-  if (fs::exists(outImg.c_str()) || extractThumbnail(meta.filePath, outImg))
+  if (std::filesystem::exists(outImg.c_str()) || extractThumbnail(meta.filePath, outImg))
   {
-    meta.artUrl = toFileUri(outImg);
+    meta.artUrl = helpers::fs::toAbsFilePathUri(outImg);
     return true;
   }
 

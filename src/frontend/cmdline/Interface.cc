@@ -74,7 +74,7 @@ void Interface::loadConfig()
 
     m_cfg.set(std::move(next));
 
-    LOG_INFO("Configuration loaded.");
+    LOG_INFO("Configuration loaded for {}'s keybinds and colors.", FRONTEND_NAME);
   }
   catch (const std::exception& e)
   {
@@ -265,13 +265,6 @@ void Interface::draw(audio::Service& audio)
     return;
   }
 
-  // if (m_mode == UiMode::AV)
-  // {
-  //   const int height = std::max(8, ts.rows - 4);
-  //   drawAVBars(audio, size_t(ts.cols), height);
-  //   return;
-  // }
-
   auto infoOpt = audio.getCurrentTrackInfo();
   if (!infoOpt)
     return;
@@ -317,14 +310,14 @@ void Interface::draw(audio::Service& audio)
   const auto& colors = cfg->colors;
 
   utils::string::SmallString seekKeys;
-  seekKeys += kb.seekBackName;
+  seekKeys += kb.seekBack->c_str();
   seekKeys += "/";
-  seekKeys += kb.seekFwdName;
+  seekKeys += kb.seekFwd->c_str();
 
   utils::string::SmallString volKeys;
-  volKeys += kb.volUpName;
+  volKeys += kb.volUp->c_str();
   volKeys += "/";
-  volKeys += kb.volDownName;
+  volKeys += kb.volDown->c_str();
 
   // ------------------------------------------------------------
   // UI print helpers
@@ -412,14 +405,15 @@ void Interface::draw(audio::Service& audio)
   std::cout << "   Channels : " << backend.channels << "\n";
   std::cout << "   Buffer   : " << backend.bufferSize << " frames (" << std::fixed
             << std::setprecision(1) << backend.latencyMs << " ms)\n";
-  std::cout << "   XRuns    : " << backend.xruns << "\n";
-  std::cout << "   Latency  : " << backend.latencyMs << "ms\n\n";
+  std::cout << "   XRuns    : " << backend.xruns << "\n\n";
 
   l_Section("Controls");
-  l_Control3(kb.playPauseName, "play/pause", kb.restartTrackName, "restart", kb.randomTrackName,
-             "random");
-  l_Control3(kb.nextTrackName, "next", kb.prevTrackName, "prev", seekKeys.c_str(), "seek");
-  l_Control3(volKeys.c_str(), "vol", kb.searchTitleName, "search title", kb.quitName, "quit");
+  l_Control3(kb.playPause->c_str(), "play/pause", kb.restartTrack->c_str(), "restart",
+             kb.randomTrack->c_str(), "random");
+  l_Control3(kb.nextTrack->c_str(), "next", kb.prevTrack->c_str(), "prev", seekKeys.c_str(),
+             "seek");
+  l_Control3(volKeys.c_str(), "vol", kb.searchTitle->c_str(), "search title", kb.quit->c_str(),
+             "quit");
 
   if (m_mode == UiMode::SearchTitle || m_mode == UiMode::SearchArtist)
   {
@@ -430,127 +424,6 @@ void Interface::draw(audio::Service& audio)
   std::cout << colors::Ansi::Reset;
   std::cout.flush();
 }
-
-// void Interface::drawAVBars(audio::Service& audio, size_t width, int height)
-// {
-//   static fft::AudioVisualizer viz{audio, {}};
-//
-//   static std::vector<float> smooth;
-//   static std::vector<float> peaks;
-//
-//   static bool cursorHidden = false;
-//   if (!cursorHidden)
-//   {
-//     std::cout << colors::Ansi::HideCursor();
-//     cursorHidden = true;
-//   }
-//
-//   const size_t usableWidth = (width > 2) ? (width - 2) : 1;
-//   height                  = std::max(4, height);
-//
-//   (void)viz.update();
-//   auto bars = viz.bars(usableWidth);
-//
-//   if (smooth.size() != usableWidth)
-//   {
-//     smooth.assign(usableWidth, 0.0f);
-//     peaks.assign(usableWidth, 0.0f);
-//   }
-//
-//   for (auto& v : bars)
-//   {
-//     if (!std::isfinite(v)) v = 0.0f;
-//     v *= 2.5f;
-//     if (!std::isfinite(v)) v = 0.0f;
-//     v = std::clamp(v, 0.0f, 1.0f);
-//   }
-//
-//   constexpr float ATTACK    = 0.65f;
-//   constexpr float RELEASE   = 0.10f;
-//   constexpr float PEAK_FALL = 0.03f;
-//
-//   for (size_t i = 0; i < usableWidth; ++i)
-//   {
-//     const float target = bars[i];
-//     const float cur    = smooth[i];
-//
-//     const float a = (target > cur) ? ATTACK : RELEASE;
-//     smooth[i] = cur + a * (target - cur);
-//
-//     peaks[i] = std::max(peaks[i] - PEAK_FALL, smooth[i]);
-//   }
-//
-//   auto cfg = m_cfg.get();
-//   const auto& colors = cfg->colors;
-//
-//   std::string frame;
-//   frame.reserve((usableWidth + 8) * (height + 8));
-//
-//   frame += "\x1b[H"; // home
-//   frame += "\x1b[J"; // clear to end
-//
-//   frame += colors::Ansi::Reset;
-//   frame += colors.bg;
-//   frame += colors.fg;
-//
-//   frame += colors::Ansi::Bold;
-//   frame += colors.accent;
-//   frame += APP_TITLE;
-//   frame += "  [AV]";
-//   frame += colors::Ansi::Reset;
-//   frame += "\n\n";
-//
-//   const int barAreaHeight = std::max(1, height - 3);
-//
-//   for (int row = barAreaHeight; row >= 1; --row)
-//   {
-//     frame += " ";
-//
-//     for (size_t i = 0; i < usableWidth; ++i)
-//     {
-//       int h  = int(smooth[i] * float(barAreaHeight));
-//       h      = std::clamp(h, 0, barAreaHeight);
-//
-//       int ph = int(peaks[i] * float(barAreaHeight));
-//       ph     = std::clamp(ph, 0, barAreaHeight);
-//
-//       if (h == 0 && smooth[i] > 0.02f)
-//         h = 1;
-//
-//       if (ph == row && ph > 0)
-//       {
-//         frame += colors.warning;
-//         frame += "▔";
-//       }
-//       else if (h >= row)
-//       {
-//         frame += colors.success;
-//         frame += UI_BAR_FILL;
-//       }
-//       else
-//       {
-//         frame += " ";
-//       }
-//     }
-//
-//     frame += colors::Ansi::Reset;
-//     frame += "\n";
-//   }
-//
-//   frame += " ";
-//   frame += colors::Ansi::Dim;
-//   frame += colors.fg;
-//
-//   for (size_t i = 0; i < usableWidth; ++i)
-//     frame += "─";
-//
-//   frame += colors::Ansi::Reset;
-//   frame += "\n";
-//
-//   frame += colors::Ansi::Reset;
-//
-//   (void)::write(STDIN_FILENO, frame.data(), frame.size());
-// }
 
 auto Interface::handleSearchTitleMode(audio::Service& audio, char c) -> bool
 {
@@ -690,11 +563,6 @@ auto Interface::handleKey(audio::Service& audio, char c) -> bool
     m_pendingSeek -= 2.0;
     return true;
   }
-  // else if (c == kb.toggleAVBars)
-  // {
-  //   m_mode = (m_mode == UiMode::AV) ? UiMode::Normal : UiMode::AV;
-  //   return true;
-  // }
   else if (c == kb.searchTitle)
   {
     m_mode = UiMode::SearchTitle;

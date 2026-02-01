@@ -3,13 +3,13 @@
 #include "audio/Service.hpp"
 #include "mpris/Interface.hpp"
 
-namespace mpris::cmdline
+namespace mpris::backend
 {
 
-class Backend final : public mpris::IMprisBackend
+class Common final : public mpris::IMprisBackend
 {
 public:
-  explicit Backend(audio::Service& audio) : m_audioService(audio) {}
+  explicit Common(audio::Service& audio) : m_audioService(audio) {}
 
   /* Playback */
   void play() override { m_audioService.playCurrent(); }
@@ -83,4 +83,4 @@ private:
   audio::Service& m_audioService;
 };
 
-} // namespace mpris::cmdline
+} // namespace mpris::backend
