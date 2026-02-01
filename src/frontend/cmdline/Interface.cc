@@ -174,6 +174,10 @@ void Interface::enableRawMode()
 
 void Interface::disableRawMode() { tcsetattr(STDIN_FILENO, TCSAFLUSH, &m_termOrig); }
 
+// increasing the sleep duration for more than 10 (it was 120 in prev commits)
+//
+// causes it to lag behind seek and main thread causing a weird bug where
+// the autoNextIfFinished func would keep loading next track forever.
 void Interface::statusLoop(audio::Service& audio)
 {
   while (m_isRunning.load())
@@ -187,7 +191,7 @@ void Interface::statusLoop(audio::Service& audio)
 
     autoNextIfFinished(audio, *m_mprisService);
     draw(audio);
-    std::this_thread::sleep_for(std::chrono::milliseconds(120));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
 }
 
