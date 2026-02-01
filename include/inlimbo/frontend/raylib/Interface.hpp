@@ -41,6 +41,8 @@ private:
   utils::Snapshot<RaylibConfig> m_cfg{};
 
   void loadConfig();
+  void draw(audio::Service& audio);
+  void statusLoop(audio::Service& audio);
 
   state::UI      m_ui;
   state::Library m_library;

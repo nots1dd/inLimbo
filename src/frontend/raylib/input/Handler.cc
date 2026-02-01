@@ -9,18 +9,6 @@ namespace frontend::raylib::input
 void Handler::handle(audio::Service& audio, state::UI& ui, const RaylibConfig& cfg,
                      mpris::Service* mpris)
 {
-  auto info = audio.getCurrentTrackInfo();
-
-  if (info)
-  {
-    if (info->lengthSec > 0 && info->positionSec > info->lengthSec)
-    {
-      audio.nextTrackGapless();
-      if (mpris)
-        mpris->updateMetadata();
-    }
-  }
-
   bool trackChanged = false;
 
   if (IsKeyPressed(cfg.kb.quit()))

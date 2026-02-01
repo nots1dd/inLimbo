@@ -11,11 +11,8 @@
 #include <utility>
 
 template <typename T>
-concept KeyValueType =
-  std::is_same_v<T, std::string> ||
-  std::is_same_v<T, char> ||
-  std::is_same_v<T, int> ||
-  std::is_same_v<T, float>;
+concept KeyValueType = std::is_same_v<T, std::string> || std::is_same_v<T, char> ||
+                       std::is_same_v<T, int> || std::is_same_v<T, float>;
 
 namespace config::keybinds
 {
@@ -56,8 +53,7 @@ public:
   //   auto e = theme.getAs<float>("vol", 100.0);               // explicit dtype conv
   //   auto v = theme.getAs<char>("quit", 'q');                 // general use case
   //
-  template <KeyValueType T>
-  auto getAs(std::string_view action, T fallback = {}) const -> T
+  template <KeyValueType T> auto getAs(std::string_view action, T fallback = {}) const -> T
   {
     auto it = m_binds.find(action);
     if (it == m_binds.end())
