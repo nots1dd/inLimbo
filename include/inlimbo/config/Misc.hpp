@@ -2,26 +2,24 @@
 
 #include "Logger.hpp"
 #include "config/Bind.hpp"
-#include "config/KBUtils.hpp"
 #include "toml/Parser.hpp"
 #include <functional>
 #include <string>
-#include <string_view>
 
-namespace config::keybinds
+namespace config::misc
 {
 
 class ConfigLoader
 {
 public:
-  explicit ConfigLoader(std::string_view frontend) : m_frontend(std::move(frontend)) {}
+  explicit ConfigLoader(std::string frontend) : m_frontend(std::move(frontend)) {}
 
   template <typename... Bindings> auto load(Bindings&&... bindings) const -> void
   {
     if (!tomlparser::Config::isLoaded())
-      throw std::runtime_error("Keybinds::ConfigLoader: toml not loaded");
+      throw std::runtime_error("Misc::ConfigLoader: toml not loaded");
 
-    const auto& rootTbl = tomlparser::Config::table("keybinds");
+    const auto& rootTbl = tomlparser::Config::table("misc");
 
     const auto* frontendNode = rootTbl.get(m_frontend);
     if (!frontendNode)
@@ -31,12 +29,16 @@ public:
     if (!tbl)
       return;
 
+    // Build dispatch table
     using Node    = toml::node;
     using Handler = std::function<void(const Node&)>;
 
     std::unordered_map<std::string_view, Handler> handlers;
+
+    // Register bindings
     (registerBinding(handlers, std::forward<Bindings>(bindings)), ...);
 
+    // Dispatch
     for (const auto& [k, node] : *tbl)
     {
       const std::string_view key = k.str();
@@ -44,46 +46,29 @@ public:
       if (auto it = handlers.find(key); it != handlers.end())
         it->second(node);
       else
-        LOG_WARN("Unknown keybind: keybinds.{}.{}", m_frontend, key);
+        LOG_WARN("Unknown misc config key: misc.{}.{}", m_frontend, key);
     }
   }
 
 private:
   std::string m_frontend;
 
+  // ------------------------------------------------------------
+  // Type-safe binding registration
+  // ------------------------------------------------------------
   template <typename T>
   static auto registerBinding(
     std::unordered_map<std::string_view, std::function<void(const toml::node&)>>& handlers,
     const keybinds::Binding<T>&                                                   b) -> void
   {
-    handlers[b.key] = [ptr = b.target, nameKey = b.key,
-                       apply = b.apply](const toml::node& n) -> auto
+    handlers[b.key] = [ptr = b.target, key = b.key](const toml::node& n) -> auto
     {
-      if (auto v = n.value<std::string>())
-      {
-        auto ch = parseSingleChar(*v);
-        if (!ch)
-        {
-          LOG_WARN("Invalid keybind '{}'", nameKey);
-          return;
-        }
-
-        // custom apply func for key and target
-        if (apply)
-          apply(*ch, *ptr);
-        else
-        {
-          // default behavior
-          ptr->key  = *ch;
-          ptr->name = parseKeyName(*ch);
-        }
-      }
+      if (auto v = n.value<T>())
+        *ptr = *v;
       else
-      {
-        LOG_WARN("Keybind '{}' must be string", nameKey);
-      }
+        LOG_WARN("misc key '{}' has wrong type", key);
     };
   }
 };
 
-} // namespace config::keybinds
+} // namespace config::misc

@@ -71,6 +71,17 @@ constexpr auto asciiToRaylib(int ascii, RaylibKey fallback = KEY_NULL) noexcept 
   }
 }
 
+inline auto bind(std::string_view key, RaylibKV& kv) -> config::keybinds::Binding<RaylibKV>
+{
+  return {.key    = key,
+          .target = &kv,
+          .apply  = [](char ascii, RaylibKV& out) -> void
+          {
+            out.key  = asciiToRaylib(ascii);
+            out.name = config::keybinds::parseKeyName(ascii);
+          }};
+}
+
 struct Keybinds
 {
   RaylibKV playPause;
@@ -87,32 +98,28 @@ struct Keybinds
 
   static auto load(std::string_view frontend) -> Keybinds
   {
-    Keybinds out{};
-
-    auto& kb = config::keybinds::Registry::theme(frontend);
-
-    // raylib maps keys in a different enum so simply giving the handler ascii
-    // will NOT work! (as it uses GetKeyPressed() which is a raylib func)
-    //
-    // So we need a constexpr func to map ascii -> raylib key codes
-    auto l_loadKeyAndName = [&](RaylibKV& k, std::string_view id, RaylibKey fallback,
-                                std::string_view nameFallback) -> void
-    {
-      k.key  = asciiToRaylib(kb.getAs<RaylibKey>(id, fallback));
-      k.name = kb.getKeyName(id, nameFallback);
+    // defaults
+    Keybinds out{
+      .playPause   = {KEY_P, "p"},
+      .nextTrack   = {KEY_N, "n"},
+      .prevTrack   = {KEY_B, "b"},
+      .randomTrack = {KEY_X, "x"},
+      .songInfo    = {KEY_I, "i"},
+      .restart     = {KEY_R, "r"},
+      .seekBack    = {KEY_J, "j"},
+      .seekFwd     = {KEY_K, "k"},
+      .volUp       = {KEY_EQUAL, "="},
+      .volDown     = {KEY_MINUS, "-"},
+      .quit        = {KEY_Q, "q"},
     };
 
-    l_loadKeyAndName(out.playPause, "play_pause", 'p', "p");
-    l_loadKeyAndName(out.nextTrack, "next_track", 'n', "n");
-    l_loadKeyAndName(out.prevTrack, "prev_track", 'b', "b");
-    l_loadKeyAndName(out.songInfo, "song_info", 'i', "i");
-    l_loadKeyAndName(out.randomTrack, "random_track", 'x', "x");
-    l_loadKeyAndName(out.restart, "restart", 'r', "r");
-    l_loadKeyAndName(out.seekBack, "seek_back", 'j', "j");
-    l_loadKeyAndName(out.seekFwd, "seek_fwd", 'k', "k");
-    l_loadKeyAndName(out.volUp, "vol_up", '=', "=");
-    l_loadKeyAndName(out.volDown, "vol_down", '-', "-");
-    l_loadKeyAndName(out.quit, "quit", 'q', "q");
+    config::keybinds::ConfigLoader loader(frontend);
+
+    loader.load(bind("play_pause", out.playPause), bind("next_track", out.nextTrack),
+                bind("prev_track", out.prevTrack), bind("random_track", out.randomTrack),
+                bind("song_info", out.songInfo), bind("restart", out.restart),
+                bind("seek_back", out.seekBack), bind("seek_fwd", out.seekFwd),
+                bind("vol_up", out.volUp), bind("vol_down", out.volDown), bind("quit", out.quit));
 
     return out;
   }
@@ -130,20 +137,18 @@ struct UiColors
 
   static auto load(std::string_view frontend) -> UiColors
   {
+    using namespace config::colors;
+
     UiColors out{};
 
-    auto& t = config::colors::Registry::theme(frontend);
+    ConfigLoader loader(frontend);
 
-    out.fg = t.ansi("fg", config::colors::Layer::Foreground, config::colors::Mode::TrueColor24);
-    out.bg = t.ansi("bg", config::colors::Layer::Background, config::colors::Mode::TrueColor24);
-    out.accent =
-      t.ansi("accent", config::colors::Layer::Foreground, config::colors::Mode::TrueColor24);
-    out.warning =
-      t.ansi("warning", config::colors::Layer::Foreground, config::colors::Mode::TrueColor24);
-    out.error =
-      t.ansi("error", config::colors::Layer::Foreground, config::colors::Mode::TrueColor24);
-    out.success =
-      t.ansi("success", config::colors::Layer::Foreground, config::colors::Mode::TrueColor24);
+    loader.load(bindAnsi("fg", out.fg, Layer::Foreground, Mode::TrueColor24),
+                bindAnsi("bg", out.bg, Layer::Background, Mode::TrueColor24),
+                bindAnsi("accent", out.accent, Layer::Foreground, Mode::TrueColor24),
+                bindAnsi("warning", out.warning, Layer::Foreground, Mode::TrueColor24),
+                bindAnsi("error", out.error, Layer::Foreground, Mode::TrueColor24),
+                bindAnsi("success", out.success, Layer::Foreground, Mode::TrueColor24));
 
     return out;
   }

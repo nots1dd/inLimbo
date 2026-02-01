@@ -9,10 +9,8 @@
 
 #include "Logger.hpp"
 #include "config/Colors.hpp"
-#include "config/colors/ConfigLoader.hpp"
+#include "config/Misc.hpp"
 #include "toml/Parser.hpp"
-
-#include "config/keybinds/ConfigLoader.hpp"
 
 #include "mpris/Service.hpp"
 #include "query/SongMap.hpp"
@@ -35,7 +33,7 @@ static constexpr int MIN_TERM_ROWS = 24;
 static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris) -> void
 {
   static ui8 lastTid;
-  auto infoOpt = audio.getCurrentTrackInfo();
+  auto       infoOpt = audio.getCurrentTrackInfo();
   if (!infoOpt)
     return;
 
@@ -61,21 +59,28 @@ static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris) -> 
   mpris.notify();
 }
 
+void Interface::loadMiscConfig(MiscConfig& miscCfg)
+{
+  config::misc::ConfigLoader loader(FRONTEND_NAME);
+
+  loader.load(
+    config::keybinds::Binding<int>{.key = "seek_duration", .target = &miscCfg.seekDuration});
+}
+
 void Interface::loadConfig()
 {
   try
   {
     tomlparser::Config::load();
 
-    colors::ConfigLoader colorsCfg(FRONTEND_NAME);
-    colorsCfg.loadIntoRegistry(true);
-
+    config::colors::ConfigLoader   colorsCfg(FRONTEND_NAME);
     config::keybinds::ConfigLoader keysCfg(FRONTEND_NAME);
-    keysCfg.loadIntoRegistry(true);
 
     CmdlineConfig next;
     next.kb     = Keybinds::load(FRONTEND_NAME);
     next.colors = UiColors::load(FRONTEND_NAME);
+
+    loadMiscConfig(next.misc);
 
     m_cfg.set(std::move(next));
 
@@ -140,8 +145,9 @@ void Interface::run(audio::Service& audio)
 
   while (m_isRunning.load())
   {
+    draw(audio);
     m_mprisService->poll();
-    std::this_thread::sleep_for(std::chrono::milliseconds(30));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
   }
 
   m_isRunning.store(false);
@@ -174,10 +180,6 @@ void Interface::enableRawMode()
 
 void Interface::disableRawMode() { tcsetattr(STDIN_FILENO, TCSAFLUSH, &m_termOrig); }
 
-// increasing the sleep duration for more than 10 (it was 120 in prev commits)
-//
-// causes it to lag behind seek and main thread causing a weird bug where
-// the autoNextIfFinished func would keep loading next track forever.
 void Interface::statusLoop(audio::Service& audio)
 {
   while (m_isRunning.load())
@@ -190,8 +192,7 @@ void Interface::statusLoop(audio::Service& audio)
     }
 
     autoNextIfFinished(audio, *m_mprisService);
-    draw(audio);
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 }
 
@@ -227,7 +228,7 @@ void Interface::seekLoop(audio::Service& audio)
         audio.seekBackward(-d);
     }
     m_mprisService->notify();
-    std::this_thread::sleep_for(std::chrono::milliseconds(70));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
   }
 }
 
@@ -564,12 +565,12 @@ auto Interface::handleKey(audio::Service& audio, char c) -> bool
   }
   else if (c == kb.seekFwd)
   {
-    m_pendingSeek += 2.0;
+    m_pendingSeek += cfg->misc.seekDuration;
     return true;
   }
   else if (c == kb.seekBack)
   {
-    m_pendingSeek -= 2.0;
+    m_pendingSeek -= cfg->misc.seekDuration;
     return true;
   }
   else if (c == kb.searchTitle)

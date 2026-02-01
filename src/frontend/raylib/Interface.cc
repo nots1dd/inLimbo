@@ -1,7 +1,5 @@
 #include "frontend/raylib/Interface.hpp"
 #include "Logger.hpp"
-#include "config/colors/ConfigLoader.hpp"
-#include "config/keybinds/ConfigLoader.hpp"
 #include "frontend/raylib/Constants.hpp"
 #include "query/SongMap.hpp"
 #include "toml/Parser.hpp"
@@ -45,7 +43,7 @@ void Interface::draw(audio::Service& audio)
 static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris) -> void
 {
   static ui8 lastTid;
-  auto infoOpt = audio.getCurrentTrackInfo();
+  auto       infoOpt = audio.getCurrentTrackInfo();
   if (!infoOpt)
     return;
 
@@ -89,7 +87,7 @@ void Interface::statusLoop(audio::Service& audio)
       loadConfig();
     }
     autoNextIfFinished(audio, *m_mpris);
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 }
 
@@ -102,11 +100,8 @@ void Interface::loadConfig()
   {
     tomlparser::Config::load();
 
-    colors::ConfigLoader colorsCfg(FRONTEND_NAME);
-    colorsCfg.loadIntoRegistry(true);
-
+    colors::ConfigLoader           colorsCfg(FRONTEND_NAME);
     config::keybinds::ConfigLoader keysCfg(FRONTEND_NAME);
-    keysCfg.loadIntoRegistry(true);
 
     RaylibConfig next;
     next.kb     = Keybinds::load(FRONTEND_NAME);

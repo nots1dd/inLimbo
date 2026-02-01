@@ -106,14 +106,11 @@ set(INLIMBO_CORE_SOURCES
     src/utils/signal/Handler.cc
     src/utils/string/Equals.cc
     src/utils/string/Transforms.cc
-    src/config/colors/ConfigLoader.cc
-    src/config/keybinds/ConfigLoader.cc
     src/config/Watcher.cc
     src/toml/Parser.cc
     src/audio/Engine.cc
     src/audio/Service.cc
     src/audio/Playlist.cc
-    # src/fft/Analyzer.cc
     src/Logger.cc
     src/Context.cc
 )

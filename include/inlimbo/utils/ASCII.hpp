@@ -2,6 +2,14 @@
 
 #include "InLimbo-Types.hpp"
 
+// basic ASCII char helpers and decls
+//
+// note that complex xterm compatible keycodes
+// like function keys are not supported here.
+//
+// Most configs and situations in a terminal
+// will not require them anyway.
+
 namespace utils::ascii
 {
 
@@ -17,12 +25,12 @@ static constexpr ui8 EOT = 4;
 static constexpr ui8 ENQ = 5;
 static constexpr ui8 ACK = 6;
 static constexpr ui8 BEL = 7;  // '\a'
-static constexpr ui8 BS  = 8;  // backspace  '\b'
-static constexpr ui8 TAB = 9;  // '\t'
-static constexpr ui8 LF  = 10; // line feed  '\n'
-static constexpr ui8 VT  = 11; // vertical tab '\v'
-static constexpr ui8 FF  = 12; // form feed '\f'
-static constexpr ui8 CR  = 13; // carriage return '\r'
+static constexpr ui8 BS  = 8;  // backspace -> '\b'
+static constexpr ui8 TAB = 9;  // tab space -> '\t'
+static constexpr ui8 LF  = 10; // line feed -> '\n'
+static constexpr ui8 VT  = 11; // vertical tab -> '\v'
+static constexpr ui8 FF  = 12; // form feed -> '\f'
+static constexpr ui8 CR  = 13; // carriage return -> '\r'
 static constexpr ui8 SO  = 14;
 static constexpr ui8 SI  = 15;
 
@@ -38,19 +46,17 @@ static constexpr ui8 CAN = 24;
 static constexpr ui8 EM  = 25;
 static constexpr ui8 SUB = 26;
 
-static constexpr ui8 ESC = 27; // escape
+static constexpr ui8 ESC = 27; // Escape
 static constexpr ui8 FS  = 28;
 static constexpr ui8 GS  = 29;
 static constexpr ui8 RS  = 30;
 static constexpr ui8 US  = 31;
 
-static constexpr ui8 DEL = 127;
-
 // ------------------------------------------------------------
 // Common visible/symbol keys (32..126)
 // ------------------------------------------------------------
 
-static constexpr ui8 SPACE = 32;
+static constexpr ui8 SPACE = 32; // Space char (' ')
 
 static constexpr ui8 EXCLAMATION  = 33; // !
 static constexpr ui8 DOUBLE_QUOTE = 34; // "
@@ -88,32 +94,32 @@ static constexpr ui8 QUESTION  = 63; // ?
 static constexpr ui8 AT        = 64; // @
 
 // A..Z
-static constexpr ui8 A = 65;
-static constexpr ui8 B = 66;
-static constexpr ui8 C = 67;
-static constexpr ui8 D = 68;
-static constexpr ui8 E = 69;
-static constexpr ui8 F = 70;
-static constexpr ui8 G = 71;
-static constexpr ui8 H = 72;
-static constexpr ui8 I = 73;
-static constexpr ui8 J = 74;
-static constexpr ui8 K = 75;
-static constexpr ui8 L = 76;
-static constexpr ui8 M = 77;
-static constexpr ui8 N = 78;
-static constexpr ui8 O = 79;
-static constexpr ui8 P = 80;
-static constexpr ui8 Q = 81;
-static constexpr ui8 R = 82;
-static constexpr ui8 S = 83;
-static constexpr ui8 T = 84;
-static constexpr ui8 U = 85;
-static constexpr ui8 V = 86;
-static constexpr ui8 W = 87;
-static constexpr ui8 X = 88;
-static constexpr ui8 Y = 89;
-static constexpr ui8 Z = 90;
+static constexpr ui8 A = 65; // A
+static constexpr ui8 B = 66; // B
+static constexpr ui8 C = 67; // C
+static constexpr ui8 D = 68; // D
+static constexpr ui8 E = 69; // E
+static constexpr ui8 F = 70; // F
+static constexpr ui8 G = 71; // G
+static constexpr ui8 H = 72; // H
+static constexpr ui8 I = 73; // I
+static constexpr ui8 J = 74; // J
+static constexpr ui8 K = 75; // K
+static constexpr ui8 L = 76; // L
+static constexpr ui8 M = 77; // M
+static constexpr ui8 N = 78; // N
+static constexpr ui8 O = 79; // O
+static constexpr ui8 P = 80; // P
+static constexpr ui8 Q = 81; // Q
+static constexpr ui8 R = 82; // R
+static constexpr ui8 S = 83; // S
+static constexpr ui8 T = 84; // T
+static constexpr ui8 U = 85; // U
+static constexpr ui8 V = 86; // V
+static constexpr ui8 W = 87; // W
+static constexpr ui8 X = 88; // X
+static constexpr ui8 Y = 89; // Y
+static constexpr ui8 Z = 90; // Z
 
 static constexpr ui8 LBRACKET   = 91; // [
 static constexpr ui8 BACKSLASH  = 92; // '\'
@@ -123,37 +129,42 @@ static constexpr ui8 UNDERSCORE = 95; // _
 static constexpr ui8 BACKTICK   = 96; // `
 
 // a..z
-static constexpr ui8 a = 97;
-static constexpr ui8 b = 98;
-static constexpr ui8 c = 99;
-static constexpr ui8 d = 100;
-static constexpr ui8 e = 101;
-static constexpr ui8 f = 102;
-static constexpr ui8 g = 103;
-static constexpr ui8 h = 104;
-static constexpr ui8 i = 105;
-static constexpr ui8 j = 106;
-static constexpr ui8 k = 107;
-static constexpr ui8 l = 108;
-static constexpr ui8 m = 109;
-static constexpr ui8 n = 110;
-static constexpr ui8 o = 111;
-static constexpr ui8 p = 112;
-static constexpr ui8 q = 113;
-static constexpr ui8 r = 114;
-static constexpr ui8 s = 115;
-static constexpr ui8 t = 116;
-static constexpr ui8 u = 117;
-static constexpr ui8 v = 118;
-static constexpr ui8 w = 119;
-static constexpr ui8 x = 120;
-static constexpr ui8 y = 121;
-static constexpr ui8 z = 122;
+static constexpr ui8 a = 97;  // a
+static constexpr ui8 b = 98;  // b
+static constexpr ui8 c = 99;  // c
+static constexpr ui8 d = 100; // d
+static constexpr ui8 e = 101; // e
+static constexpr ui8 f = 102; // f
+static constexpr ui8 g = 103; // g
+static constexpr ui8 h = 104; // h
+static constexpr ui8 i = 105; // i
+static constexpr ui8 j = 106; // j
+static constexpr ui8 k = 107; // k
+static constexpr ui8 l = 108; // l
+static constexpr ui8 m = 109; // m
+static constexpr ui8 n = 110; // n
+static constexpr ui8 o = 111; // o
+static constexpr ui8 p = 112; // p
+static constexpr ui8 q = 113; // q
+static constexpr ui8 r = 114; // r
+static constexpr ui8 s = 115; // s
+static constexpr ui8 t = 116; // t
+static constexpr ui8 u = 117; // u
+static constexpr ui8 v = 118; // v
+static constexpr ui8 w = 119; // w
+static constexpr ui8 x = 120; // x
+static constexpr ui8 y = 121; // y
+static constexpr ui8 z = 122; // z
 
 static constexpr ui8 LBRACE = 123; // {
 static constexpr ui8 PIPE   = 124; // |
 static constexpr ui8 RBRACE = 125; // }
 static constexpr ui8 TILDE  = 126; // ~
+
+static constexpr ui8 DEL = 127; // backspace or delete
+
+// aliases
+static constexpr ui8 ENTER = LF; // line feed (\n)
 
 // ------------------------------------------------------------
 // Helpers
@@ -163,13 +174,13 @@ static constexpr ui8 TILDE  = 126; // ~
 
 [[nodiscard]] constexpr auto is_control(int v) noexcept -> bool
 {
-  return is_ascii(v) && (v < 32 || v == 127);
+  return is_ascii(v) && (v < SPACE || v == TILDE);
 }
 
 [[nodiscard]] constexpr auto isPrintable(int v) noexcept -> bool
 {
   // Standard printable ASCII range
-  return v >= 32 && v <= 126;
+  return v >= SPACE && v <= TILDE;
 }
 
 [[nodiscard]] constexpr auto isWhitespace(int v) noexcept -> bool

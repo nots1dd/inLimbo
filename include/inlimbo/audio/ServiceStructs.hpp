@@ -21,7 +21,7 @@ struct SoundHandle
 // can be identified by a 8b unique counter
 struct TrackInfo
 {
-  ui8 tid = 0;
+  ui8    tid         = 0;
   double positionSec = 0.0;
   double lengthSec   = 0.0;
 

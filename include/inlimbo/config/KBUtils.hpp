@@ -1,6 +1,7 @@
 #pragma once
 
 #include "InLimbo-Types.hpp"
+#include "utils/ASCII.hpp"
 #include "utils/string/SmallString.hpp"
 #include "utils/string/Transforms.hpp"
 #include <optional>
@@ -32,27 +33,25 @@ static inline auto parseKeyName(KeyChar c) -> KeyName
 {
   switch ((unsigned char)c)
   {
-    case 0:
+    case utils::ascii::NUL:
       return "<none>";
-    case ' ':
+    case utils::ascii::SPACE:
       return "Space";
-    case '\n':
+    case utils::ascii::ENTER:
       return "Enter";
-    case '\t':
+    case utils::ascii::TAB:
       return "Tab";
-    case 27:
+    case utils::ascii::ESC:
       return "Escape";
-    case 127:
+    case utils::ascii::DEL:
       return "Backspace";
     default:
       break;
   }
 
-  if ((unsigned char)c >= 32 && (unsigned char)c <= 126)
+  if (utils::ascii::isPrintable(c))
   {
-    utils::string::SmallString s;
-    s += c;
-    return s;
+    return {c};
   }
 
   return "<unknown>";
@@ -69,16 +68,16 @@ static inline auto parseSingleChar(std::string_view s) -> std::optional<KeyChar>
     return s[0];
 
   if (lowered == "space")
-    return ' ';
+    return utils::ascii::SPACE;
 
   if (lowered == "enter")
-    return '\n';
+    return utils::ascii::ENTER;
 
   if (lowered == "tab")
-    return '\t';
+    return utils::ascii::TAB;
 
   if (lowered == "escape")
-    return 27;
+    return utils::ascii::ESC;
 
   return std::nullopt;
 }

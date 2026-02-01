@@ -67,6 +67,7 @@ private:
   static auto getTerminalSize() -> TermSize;
 
   void loadConfig();
+  void loadMiscConfig(MiscConfig& miscCfg);
 
   void enableRawMode();
   void disableRawMode();

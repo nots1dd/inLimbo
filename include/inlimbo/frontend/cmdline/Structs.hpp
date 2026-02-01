@@ -11,6 +11,11 @@ using CmdlineKey = char;
 
 using CmdlineKV = KeyValueBase<CmdlineKey, KeyName>;
 
+inline auto bind(std::string_view key, CmdlineKV& kv) -> config::keybinds::Binding<CmdlineKV>
+{
+  return config::keybinds::Binding<CmdlineKV>{.key = key, .target = &kv};
+}
+
 struct Keybinds
 {
   CmdlineKV playPause;
@@ -19,7 +24,6 @@ struct Keybinds
   CmdlineKV randomTrack;
   CmdlineKV searchTitle;
   CmdlineKV searchArtist;
-  CmdlineKV toggleAVBars;
   CmdlineKV restartTrack;
   CmdlineKV seekBack;
   CmdlineKV seekFwd;
@@ -29,29 +33,33 @@ struct Keybinds
 
   static auto load(std::string_view frontend) -> Keybinds
   {
-    Keybinds out{};
-    auto&    kb = config::keybinds::Registry::theme(frontend);
-
-    auto l_loadKeyAndName = [&](CmdlineKV& k, std::string_view id, CmdlineKey fallback,
-                                std::string_view nameFallback) -> void
-    {
-      k.key  = kb.getAs<CmdlineKey>(id, fallback);
-      k.name = kb.getKeyName(id, nameFallback);
+    // defaults
+    Keybinds out{
+      .playPause    = {'p', "p"},
+      .nextTrack    = {'n', "n"},
+      .prevTrack    = {'b', "b"},
+      .randomTrack  = {'x', "x"},
+      .searchTitle  = {'/', "/"},
+      .searchArtist = {'a', "a"},
+      .restartTrack = {'r', "r"},
+      .seekBack     = {'j', "j"},
+      .seekFwd      = {'k', "k"},
+      .volUp        = {'=', "="},
+      .volDown      = {'-', "-"},
+      .quit         = {'q', "q"},
     };
 
-    l_loadKeyAndName(out.playPause, "play_pause", 'p', "p");
-    l_loadKeyAndName(out.nextTrack, "next_track", 'n', "n");
-    l_loadKeyAndName(out.prevTrack, "prev_track", 'b', "b");
-    l_loadKeyAndName(out.searchTitle, "search_title", '/', "/");
-    l_loadKeyAndName(out.searchArtist, "search_artist", 'a', "a");
-    l_loadKeyAndName(out.toggleAVBars, "toggle_av_bars", 'v', "v");
-    l_loadKeyAndName(out.randomTrack, "random_track", 'x', "x");
-    l_loadKeyAndName(out.restartTrack, "restart_track", 'r', "r");
-    l_loadKeyAndName(out.seekBack, "seek_back", 'j', "j");
-    l_loadKeyAndName(out.seekFwd, "seek_fwd", 'k', "k");
-    l_loadKeyAndName(out.volUp, "vol_up", '=', "=");
-    l_loadKeyAndName(out.volDown, "vol_down", '-', "-");
-    l_loadKeyAndName(out.quit, "quit", 'q', "q");
+    // -----------------------------
+    // Binding-based loader
+    // -----------------------------
+    config::keybinds::ConfigLoader loader(frontend);
+
+    loader.load(bind("play_pause", out.playPause), bind("next_track", out.nextTrack),
+                bind("prev_track", out.prevTrack), bind("random_track", out.randomTrack),
+                bind("search_title", out.searchTitle), bind("search_artist", out.searchArtist),
+                bind("restart_track", out.restartTrack), bind("seek_back", out.seekBack),
+                bind("seek_fwd", out.seekFwd), bind("vol_up", out.volUp),
+                bind("vol_down", out.volDown), bind("quit", out.quit));
 
     return out;
   }
@@ -69,29 +77,33 @@ struct UiColors
 
   static auto load(std::string_view frontend) -> UiColors
   {
+    using namespace config::colors;
+
     UiColors out{};
 
-    auto& t = config::colors::Registry::theme(frontend);
+    ConfigLoader loader(frontend);
 
-    out.fg = t.ansi("fg", config::colors::Layer::Foreground, config::colors::Mode::TrueColor24);
-    out.bg = t.ansi("bg", config::colors::Layer::Background, config::colors::Mode::TrueColor24);
-    out.accent =
-      t.ansi("accent", config::colors::Layer::Foreground, config::colors::Mode::TrueColor24);
-    out.warning =
-      t.ansi("warning", config::colors::Layer::Foreground, config::colors::Mode::TrueColor24);
-    out.error =
-      t.ansi("error", config::colors::Layer::Foreground, config::colors::Mode::TrueColor24);
-    out.success =
-      t.ansi("success", config::colors::Layer::Foreground, config::colors::Mode::TrueColor24);
+    loader.load(bindAnsi("fg", out.fg, Layer::Foreground, Mode::TrueColor24),
+                bindAnsi("bg", out.bg, Layer::Background, Mode::TrueColor24),
+                bindAnsi("accent", out.accent, Layer::Foreground, Mode::TrueColor24),
+                bindAnsi("warning", out.warning, Layer::Foreground, Mode::TrueColor24),
+                bindAnsi("error", out.error, Layer::Foreground, Mode::TrueColor24),
+                bindAnsi("success", out.success, Layer::Foreground, Mode::TrueColor24));
 
     return out;
   }
 };
 
+struct MiscConfig
+{
+  int seekDuration;
+};
+
 struct CmdlineConfig
 {
-  Keybinds kb;
-  UiColors colors;
+  Keybinds   kb;
+  UiColors   colors;
+  MiscConfig misc;
 };
 
 } // namespace frontend::cmdline

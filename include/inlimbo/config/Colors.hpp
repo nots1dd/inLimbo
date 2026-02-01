@@ -1,78 +1,17 @@
 #pragma once
 
-#include "InLimbo-Types.hpp"
-#include "utils/map/AllocOptimization.hpp"
+#include "Logger.hpp"
+#include "config/Bind.hpp"
+#include "toml/Parser.hpp"
+#include "utils/Colors.hpp"
+#include <functional>
 #include <string>
-#include <string_view>
 #include <unordered_map>
 
 namespace config::colors
 {
 
 using Member = utils::string::SmallString;
-
-struct RGBA
-{
-  ui8 r{0};
-  ui8 g{0};
-  ui8 b{0};
-  ui8 a{255};
-
-  constexpr RGBA() = default;
-  constexpr RGBA(ui8 rr, ui8 gg, ui8 bb, ui8 aa = 255) : r(rr), g(gg), b(bb), a(aa) {}
-};
-
-constexpr auto rgba(ui8 r, ui8 g, ui8 b, ui8 a = 255) -> RGBA { return RGBA{r, g, b, a}; }
-
-// "#RRGGBB" or "#RRGGBBAA"
-constexpr auto hexNibble(char c) -> int
-{
-  if (c >= '0' && c <= '9')
-    return c - '0';
-  if (c >= 'a' && c <= 'f')
-    return 10 + (c - 'a');
-  if (c >= 'A' && c <= 'F')
-    return 10 + (c - 'A');
-  return -1;
-}
-
-constexpr auto hexByte(char a, char b) -> int
-{
-  const int hi = hexNibble(a);
-  const int lo = hexNibble(b);
-  if (hi < 0 || lo < 0)
-    return -1;
-  return (hi << 4) | lo;
-}
-
-constexpr auto fromHex(std::string_view hex, RGBA fallback = RGBA{}) -> RGBA
-{
-  if (hex.empty())
-    return fallback;
-
-  size_t i = 0;
-  if (hex[0] == '#')
-    i = 1;
-
-  const size_t n = hex.size() - i;
-  if (!(n == 6 || n == 8))
-    return fallback;
-
-  const int r = hexByte(hex[i + 0], hex[i + 1]);
-  const int g = hexByte(hex[i + 2], hex[i + 3]);
-  const int b = hexByte(hex[i + 4], hex[i + 5]);
-  if (r < 0 || g < 0 || b < 0)
-    return fallback;
-
-  int a = 255;
-  if (n == 8)
-  {
-    const int aa = hexByte(hex[i + 6], hex[i + 7]);
-    a            = (aa < 0) ? 255 : aa;
-  }
-
-  return RGBA{(ui8)r, (ui8)g, (ui8)b, (ui8)a};
-}
 
 enum class Layer : ui8
 {
@@ -131,13 +70,13 @@ struct Ansi
   static constexpr std::string_view NoItalic    = "\x1b[23m";
 
   // ----- 24-bit True Color -----
-  static inline auto fgTrue(RGBA c) -> std::string
+  static inline auto fgTrue(utils::colors::RGBA c) -> std::string
   {
     return "\x1b[38;2;" + std::to_string((int)c.r) + ";" + std::to_string((int)c.g) + ";" +
            std::to_string((int)c.b) + "m";
   }
 
-  static inline auto bgTrue(RGBA c) -> std::string
+  static inline auto bgTrue(utils::colors::RGBA c) -> std::string
   {
     return "\x1b[48;2;" + std::to_string((int)c.r) + ";" + std::to_string((int)c.g) + ";" +
            std::to_string((int)c.b) + "m";
@@ -206,7 +145,7 @@ constexpr auto cubeLevel(ui8 idx) -> ui8
   return (idx == 0) ? 0 : (ui8)(55 + 40 * idx);
 }
 
-constexpr auto toAnsi256(RGBA c) -> ui8
+constexpr auto toAnsi256(utils::colors::RGBA c) -> ui8
 {
   // grayscale special-casing
   if (c.r == c.g && c.g == c.b)
@@ -228,102 +167,108 @@ constexpr auto toAnsi256(RGBA c) -> ui8
   return (ui8)(16 + 36 * ri + 6 * gi + bi);
 }
 
-struct ColorValue
+// will check if apply is required or not,
+// this is just a dummy bind so we are leaving
+// it empty.
+//
+// in actuality, we are using ANSI scheme to bind
+inline auto bind(std::string_view key, utils::colors::RGBA& out)
+  -> config::colors::Binding<utils::colors::RGBA>
 {
-  RGBA rgba{};
-  ui8  ansi256{0};
+  return {.key = key, .target = &out, .apply = {}};
+}
 
-  constexpr ColorValue() = default;
-  constexpr ColorValue(RGBA c) : rgba(c) {}
+inline auto bindAnsi(std::string_view key, std::string& out, colors::Layer layer, colors::Mode mode)
+  -> colors::Binding<std::string>
+{
+  return {.key    = key,
+          .target = &out,
+          .apply  = [=](const utils::colors::RGBA& c, std::string& dst) -> void
+          {
+            using A = config::colors::Ansi;
+            if (mode == Mode::TrueColor24)
+              dst = (layer == Layer::Foreground) ? A::fgTrue(c) : A::bgTrue(c);
+            else if (mode == Mode::Color256)
+              dst = (layer == Layer::Foreground) ? A::fg256(toAnsi256(c)) : A::bg256(toAnsi256(c));
+            else
+              dst = A::Reset;
+          }};
+}
 
-  static auto fromRGBA(RGBA c) -> ColorValue
-  {
-    ColorValue v;
-    v.rgba    = c;
-    v.ansi256 = toAnsi256(c);
-    return v;
-  }
-};
-
-class Theme
+class ConfigLoader
 {
 public:
-  Theme() = default;
-  explicit Theme(std::string name) : m_name(std::move(name)) {}
+  explicit ConfigLoader(std::string_view frontend) : m_frontend(std::move(frontend)) {}
 
-  auto name() const noexcept -> const std::string& { return m_name; }
-
-  // Add/update a color
-  auto set(std::string key, RGBA value) -> Theme&
+  template <typename... Bindings> auto load(Bindings&&... bindings) const -> void
   {
-    m_colors[std::move(key)] = ColorValue::fromRGBA(value);
-    return *this;
-  }
+    if (!tomlparser::Config::isLoaded())
+      throw std::runtime_error("Colors::ConfigLoader: toml not loaded");
 
-  auto has(std::string_view key) const -> bool { return m_colors.find(key) != m_colors.end(); }
+    const auto& root = tomlparser::Config::table("colors");
+    const auto* node = root.get(m_frontend);
+    if (!node)
+      return;
 
-  auto get(std::string_view key, RGBA fallback = RGBA{}) const -> RGBA
-  {
-    auto it = m_colors.find(key);
-    if (it == m_colors.end())
-      return fallback;
-    return it->second.rgba;
-  }
+    const auto* tbl = node->as_table();
+    if (!tbl)
+      return;
 
-  auto get256(std::string_view key, ui8 fallback = 15) const -> ui8
-  {
-    auto it = m_colors.find(key);
-    if (it == m_colors.end())
-      return fallback;
-    return it->second.ansi256;
-  }
+    using Handler = std::function<void(const toml::node&)>;
+    std::unordered_map<std::string_view, Handler> handlers;
 
-  // Generate ANSI escape for theme color
-  auto ansi(std::string_view key, Layer layer = Layer::Foreground,
-            Mode mode = Mode::TrueColor24) const -> std::string
-  {
-    auto it = m_colors.find(key);
-    if (it == m_colors.end())
-      return std::string(Ansi::Reset);
+    (registerBinding(handlers, std::forward<Bindings>(bindings)), ...);
 
-    const auto& c = it->second;
-
-    if (mode == Mode::TrueColor24)
-      return (layer == Layer::Foreground) ? Ansi::fgTrue(c.rgba) : Ansi::bgTrue(c.rgba);
-
-    if (mode == Mode::Color256)
-      return (layer == Layer::Foreground) ? Ansi::fg256(c.ansi256) : Ansi::bg256(c.ansi256);
-
-    return std::string(Ansi::Reset);
+    for (const auto& [k, v] : *tbl)
+    {
+      auto it = handlers.find(k.str());
+      if (it != handlers.end())
+        it->second(v);
+      else
+        LOG_WARN("Unknown color key: colors.{}.{}", m_frontend, k.str());
+    }
   }
 
 private:
-  std::string m_name{"default"};
-  std::unordered_map<std::string, ColorValue, utils::map::TransparentHash,
-                     utils::map::TransparentEq>
-    m_colors;
-};
+  std::string m_frontend;
 
-class Registry
-{
-public:
-  static auto setActive(std::string name) -> void { s_active = std::move(name); }
+  template <typename T>
+  static auto registerBinding(
+    std::unordered_map<std::string_view, std::function<void(const toml::node&)>>& handlers,
+    const Binding<T>&                                                             b) -> void
+  {
+    handlers[b.key] = [ptr = b.target, apply = b.apply, key = b.key](const toml::node& n) -> auto
+    {
+      auto str = n.value<std::string>();
+      if (!str)
+      {
+        LOG_WARN("Color '{}' must be string", key);
+        return;
+      }
 
-  static auto activeName() -> const std::string& { return s_active; }
+      auto rgba = utils::colors::parseRGBA(*str);
+      if (!rgba)
+      {
+        LOG_WARN("Invalid color '{}'", key);
+        return;
+      }
 
-  static auto put(Theme theme) -> void { s_themes[theme.name()] = std::move(theme); }
-
-  static auto theme(std::string_view name) -> Theme& { return s_themes[std::string(name)]; }
-
-  static auto active() -> Theme& { return s_themes[s_active]; }
-
-  static auto setForced(bool enabled) -> void { s_forceColors = enabled; }
-  static auto forced() noexcept -> bool { return s_forceColors; }
-
-private:
-  static inline std::unordered_map<std::string, Theme> s_themes{};
-  static inline std::string                            s_active{"default"};
-  static inline bool                                   s_forceColors{true};
+      if constexpr (std::is_same_v<T, utils::colors::RGBA>)
+      {
+        *ptr = *rgba;
+      }
+      else
+      {
+        // non-RGBA targets must provide apply()
+        if (!apply)
+        {
+          LOG_ERROR("Color binding '{}' requires custom apply() for target type", key);
+          return;
+        }
+        apply(*rgba, *ptr);
+      }
+    };
+  }
 };
 
 } // namespace config::colors

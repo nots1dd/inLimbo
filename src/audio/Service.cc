@@ -276,9 +276,7 @@ auto Service::getCurrentTrackInfo() -> std::optional<service::TrackInfo>
   info.channels       = backend.channels;
   info.format         = backend.pcmFormatName;
 
-  static std::atomic<ui8> tidCounter{
-    static_cast<ui8>(std::random_device{}())
-  };
+  static std::atomic<ui8> tidCounter{static_cast<ui8>(std::random_device{}())};
 
   info.tid = tidCounter.fetch_add(1, std::memory_order_relaxed);
 
