@@ -284,12 +284,12 @@ void printSummary(const threads::SafeMap<SongMap>& safeMap, const telemetry::Con
   std::cout << "Genres Count       : " << genres.size() << "\n\n";
 
   std::cout << "Library Name       : " << tomlparser::Config::getString("library", "name") << "\n";
-  std::cout << "Directory          : " << tomlparser::Config::getString("library", "directory") << "\n\n";
+  std::cout << "Directory          : " << tomlparser::Config::getString("library", "directory")
+            << "\n\n";
 
   if (telemetryCtx.isRegistryLoaded)
   {
-    const auto mostPlayedSongId =
-      telemetry::analysis::mostReplayedSong(telemetryCtx.store);
+    const auto mostPlayedSongId = telemetry::analysis::mostReplayedSong(telemetryCtx.store);
 
     const auto hottestSongId =
       telemetry::analysis::hottestSong(telemetryCtx.store, utils::timer::nowUnix());
@@ -321,8 +321,7 @@ void printSummary(const threads::SafeMap<SongMap>& safeMap, const telemetry::Con
       std::cout << "Favorite Genre     : " << *name << "\n";
 
     std::cout << "Total Listen Time  : "
-              << utils::timer::fmtTime(
-                   telemetry::analysis::totalListenTime(telemetryCtx.store))
+              << utils::timer::fmtTime(telemetry::analysis::totalListenTime(telemetryCtx.store))
               << "\n";
   }
 }

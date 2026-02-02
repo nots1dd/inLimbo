@@ -26,8 +26,8 @@ auto favoriteArtist(const Store& s) -> ArtistID
 
 auto favoriteAlbum(const Store& s) -> AlbumID
 {
-  AlbumID best = INVALID_TELEMETRY_ID;
-  ui64 maxTime = 0;
+  AlbumID best    = INVALID_TELEMETRY_ID;
+  ui64    maxTime = 0;
 
   for (auto& [id, st] : s.albums())
     if (st.listenSec > maxTime)
@@ -38,8 +38,8 @@ auto favoriteAlbum(const Store& s) -> AlbumID
 
 auto favoriteGenre(const Store& s) -> GenreID
 {
-  GenreID best = INVALID_TELEMETRY_ID;
-  double bestTime = 0.0;
+  GenreID best     = INVALID_TELEMETRY_ID;
+  double  bestTime = 0.0;
 
   for (auto& [id, st] : s.genres())
     if (st.listenSec > bestTime)
@@ -83,8 +83,8 @@ auto hottestArtist(const Store& s, Timestamp now) -> ArtistID
 
 auto hottestGenre(const Store& s, Timestamp now) -> GenreID
 {
-  GenreID best = INVALID_TELEMETRY_ID;
-  double bestScore = 0.0;
+  GenreID best      = INVALID_TELEMETRY_ID;
+  double  bestScore = 0.0;
 
   for (auto& [id, st] : s.genres())
   {

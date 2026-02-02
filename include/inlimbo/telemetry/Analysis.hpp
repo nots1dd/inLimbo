@@ -10,7 +10,7 @@ auto totalListenTime(const Store& s) -> double;
 // Favorites (by time)
 auto favoriteArtist(const Store& s) -> ArtistID;
 auto favoriteAlbum(const Store& s) -> AlbumID;
-auto  favoriteGenre(const Store& s) -> GenreID;
+auto favoriteGenre(const Store& s) -> GenreID;
 
 // Favorites (by plays)
 auto mostReplayedSong(const Store& s) -> SongID;
