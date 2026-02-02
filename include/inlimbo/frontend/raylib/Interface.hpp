@@ -12,9 +12,11 @@
 #include "frontend/raylib/view/NowPlaying.hpp"
 #include "frontend/raylib/view/StatusBar.hpp"
 #include "mpris/Service.hpp"
+#include "telemetry/Context.hpp"
 #include "thread/Map.hpp"
-#include "utils/PathResolve.hpp"
+#include "utils/ClassRulesMacros.hpp"
 #include "utils/Snapshot.hpp"
+#include "utils/fs/Paths.hpp"
 
 static constexpr cstr FRONTEND_NAME = "raylib";
 
@@ -24,17 +26,21 @@ namespace frontend::raylib
 class Interface
 {
 public:
-  explicit Interface(threads::SafeMap<SongMap>* songMap, mpris::Service* mprisService)
-      : m_cfgWatcher(utils::getAppConfigPathWithFile(INLIMBO_DEFAULT_CONFIG_FILE_NAME)),
-        m_songMap(songMap), m_mpris(mprisService)
+  explicit Interface(threads::SafeMap<SongMap>* songMap, telemetry::Context* telemetry,
+                     mpris::Service* mprisService)
+      : m_cfgWatcher(utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_CONFIG_FILE_NAME)),
+        m_songMap(songMap), m_telemetryCtx(telemetry), m_mpris(mprisService)
   {
   }
+
+  NON_COPYABLE(Interface);
 
   void run(audio::Service& audio);
 
 private:
   config::Watcher            m_cfgWatcher;
   threads::SafeMap<SongMap>* m_songMap{nullptr};
+  telemetry::Context*        m_telemetryCtx{nullptr};
   mpris::Service*            m_mpris{nullptr};
 
   // config stuff

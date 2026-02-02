@@ -2,6 +2,7 @@
 
 #include "InLimbo-Types.hpp"
 #include "frontend/Plugin.hpp"
+#include "telemetry/Context.hpp"
 #include "thread/Map.hpp"
 
 namespace audio
@@ -19,10 +20,11 @@ namespace frontend
 class Interface
 {
 public:
-  Interface(Plugin& plugin, threads::SafeMap<SongMap>& map, mpris::Service* mpris)
+  Interface(Plugin& plugin, threads::SafeMap<SongMap>& map, telemetry::Context& telemetry,
+            mpris::Service* mpris)
       : m_fePlugin(plugin)
   {
-    m_instanceVPtr = m_fePlugin.create(&map, mpris);
+    m_instanceVPtr = m_fePlugin.create(&map, &telemetry, mpris);
     m_created      = (m_instanceVPtr != nullptr);
     if (!m_instanceVPtr)
       throw std::runtime_error("frontend::Interface: Failed to create frontend!");

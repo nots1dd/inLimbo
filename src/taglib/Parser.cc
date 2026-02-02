@@ -1,7 +1,7 @@
 #include "taglib/Parser.hpp"
 #include "Logger.hpp"
-#include "helpers/fs/Directory.hpp"
-#include "utils/PathResolve.hpp"
+#include "utils/fs/FileUri.hpp"
+#include "utils/fs/Paths.hpp"
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -331,7 +331,7 @@ auto extractThumbnail(const std::string& audioFilePath, const std::string& outpu
 
 auto Parser::fillArtUrl(Metadata& meta) -> bool
 {
-  const auto cacheDir = utils::getAppCacheArtPath();
+  const auto cacheDir = utils::fs::getAppCacheArtPath();
   std::filesystem::create_directories(cacheDir.c_str());
 
   const std::string     hash   = std::to_string(std::hash<std::string>{}(meta.filePath.c_str()));
@@ -339,7 +339,7 @@ auto Parser::fillArtUrl(Metadata& meta) -> bool
 
   if (std::filesystem::exists(outImg.c_str()) || extractThumbnail(meta.filePath, outImg))
   {
-    meta.artUrl = helpers::fs::toAbsFilePathUri(outImg);
+    meta.artUrl = utils::fs::toAbsFilePathUri(outImg);
     return true;
   }
 

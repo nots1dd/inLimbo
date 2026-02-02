@@ -9,7 +9,7 @@
 #include "query/SongMap.hpp"
 #include "thread/Map.hpp"
 #include "toml/Parser.hpp"
-#include "utils/PathResolve.hpp"
+#include "utils/fs/Paths.hpp"
 #include "utils/timer/Timer.hpp"
 #include "utils/unix/Lockfile.hpp"
 
@@ -248,7 +248,7 @@ auto maybeHandlePrintActions(AppContext& ctx) -> bool
       break;
 
     case PrintAction::Summary:
-      helpers::cmdline::printSummary(g_songMap);
+      helpers::cmdline::printSummary(g_songMap, ctx.m_telemetryCtx);
       break;
 
     case PrintAction::SongPaths:
@@ -365,6 +365,15 @@ auto initializeContext(int argc, char** argv) -> AppContext
     std::exit(cliApp.exit(e));
   }
 
+  ctx.m_telemetryCtx.isStoreLoaded = ctx.m_telemetryCtx.store.load(
+    utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_TELEMETRY_BIN_NAME));
+  ctx.m_telemetryCtx.isRegistryLoaded = ctx.m_telemetryCtx.registry.load(
+    utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_TELEMETRY_REGISTRY_BIN_NAME));
+  if (ctx.m_telemetryCtx.isStoreLoaded && ctx.m_telemetryCtx.isRegistryLoaded)
+    LOG_INFO("Successfully fetched telemetry registry and store.");
+  else
+    LOG_ERROR("Something went wrong when loading telemetry data (registry or store)!");
+
   ctx.m_songTitle    = ctx.args.song;
   ctx.m_fuzzyMaxDist = tomlparser::Config::getInt("fuzzy", "max_dist");
   ctx.m_fePluginName = frontend::PluginName{ctx.args.frontend};
@@ -375,7 +384,7 @@ auto initializeContext(int argc, char** argv) -> AppContext
   ctx.m_printAction = resolvePrintAction(ctx.args);
   ctx.m_editAction  = resolveEditAction(ctx.args);
   ctx.m_musicDir    = tomlparser::Config::getString("library", "directory");
-  ctx.m_binPath     = utils::getAppConfigPathWithFile(INLIMBO_DEFAULT_CACHE_BIN_NAME).c_str();
+  ctx.m_binPath     = utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_CACHE_BIN_NAME).c_str();
 
   LOG_INFO("Configured directory: {}, Playback song title query provided: '{}'", ctx.m_musicDir,
            ctx.m_songTitle);
@@ -457,7 +466,7 @@ void runFrontend(AppContext& ctx)
     // Initialize abstract frontend interface
     // ---------------------------------------------------------
     frontend::Plugin    fePlugin(ctx.m_fePluginName);
-    frontend::Interface ui(fePlugin, g_songMap, &mprisService);
+    frontend::Interface ui(fePlugin, g_songMap, ctx.m_telemetryCtx, &mprisService);
 
     if (ui.ready())
       LOG_INFO("Frontend plugin '{}' seems to be ready. Loading frontend...", ctx.m_fePluginName);
@@ -491,10 +500,17 @@ void runFrontend(AppContext& ctx)
     // Clean shutdown
     // ---------------------------------------------------------
     audio.shutdown();
+
+    if (ctx.m_telemetryCtx.registry.save(
+          utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_TELEMETRY_REGISTRY_BIN_NAME)))
+      LOG_INFO("Saved telemetry registry successfully!");
+    if (ctx.m_telemetryCtx.store.save(
+          utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_TELEMETRY_BIN_NAME)))
+      LOG_INFO("Saved telemetry store successfully!");
   }
   catch (const utils::unix::LockFileAlreadyLocked&)
   {
-    LOG_ERROR("Another instance of inLimbo is already running.");
+    LOG_ERROR("unix::LockFileAlreadyLocked: Another instance of inLimbo is already running.");
   }
   catch (const utils::unix::LockFileError& e)
   {
@@ -502,7 +518,7 @@ void runFrontend(AppContext& ctx)
   }
   catch (const frontend::PluginError& e)
   {
-    LOG_ERROR("Context threw Frontend error: {}", e.what());
+    LOG_ERROR("frontend::PluginError: Context threw Frontend error: {}", e.what());
   }
   catch (std::exception& e)
   {

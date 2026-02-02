@@ -3,10 +3,9 @@
 #include "InLimbo-Types.hpp"
 #include "Logger.hpp"
 #include "c/frontend_api.h"
-#include "utils/PathResolve.hpp"
+#include "utils/fs/Paths.hpp"
 #include "utils/string/SmallString.hpp"
 #include <dlfcn.h>
-#include <filesystem>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -74,7 +73,10 @@ public:
       dlclose(m_handleVPtr);
   }
 
-  auto create(vptr songMap, vptr mpris) -> void* { return m_api->create(songMap, mpris); }
+  auto create(vptr songMap, vptr telemetry, vptr mpris) -> void*
+  {
+    return m_api->create(songMap, telemetry, mpris);
+  }
 
   void run(vptr inst, vptr audio) { m_api->run(inst, audio); }
 
@@ -89,7 +91,7 @@ private:
   {
     Paths paths;
 
-    const auto localPath = (utils::getAppDataPath() / "frontends").string();
+    const auto localPath = (utils::fs::getAppDataPath() / "frontends").string();
 
     LOG_DEBUG("Found local path: {}", localPath);
 

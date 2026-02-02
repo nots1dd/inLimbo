@@ -15,7 +15,7 @@ extern "C"
     uint32_t abi_version;
     size_t   struct_size;
 
-    void* (*create)(void* song_map, void* mpris_service);
+    void* (*create)(void* song_map, void* telemetry_service, void* mpris_service);
     void (*run)(void* instance, void* audio_service);
     void (*destroy)(void* instance);
   };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "InLimbo-Types.hpp"
+#include "telemetry/Context.hpp"
 #include "thread/Map.hpp"
 #include <optional>
 
@@ -33,6 +34,6 @@ void printSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& ge
 
 void printSongPaths(const threads::SafeMap<SongMap>& safeMap);
 
-void printSummary(const threads::SafeMap<SongMap>& safeMap);
+void printSummary(const threads::SafeMap<SongMap>& safeMap, const telemetry::Context& telemetryCtx);
 
 } // namespace helpers::cmdline

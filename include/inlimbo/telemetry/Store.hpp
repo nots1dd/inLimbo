@@ -18,16 +18,19 @@ public:
   // ---- queries ----
   [[nodiscard]] auto song(SongID id) const -> const Stats*;
   [[nodiscard]] auto artist(ArtistID id) const -> const Stats*;
+  [[nodiscard]] auto album(AlbumID id) const -> const Stats*;
+  [[nodiscard]] auto genre(GenreID id) const -> const Stats*;
 
   [[nodiscard]] auto songs() const -> const ankerl::unordered_dense::map<SongID, Stats>&;
   [[nodiscard]] auto artists() const -> const ankerl::unordered_dense::map<ArtistID, Stats>&;
+  [[nodiscard]] auto albums() const -> const ankerl::unordered_dense::map<AlbumID, Stats>&;
+  [[nodiscard]] auto genres() const -> const ankerl::unordered_dense::map<GenreID, Stats>&;
 
   // Disk API
   [[nodiscard]] auto save(const std::string& path) const -> bool;
   auto               load(const std::string& path) -> bool;
 
   template <class Archive> void save(Archive& ar) const;
-
   template <class Archive> void load(Archive& ar);
 
 private:

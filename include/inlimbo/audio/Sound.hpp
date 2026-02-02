@@ -1,6 +1,7 @@
 #pragma once
 
 #include "InLimbo-Types.hpp"
+#include "utils/ClassRulesMacros.hpp"
 #include "utils/RingBuffer.hpp"
 #include <atomic>
 #include <memory>
@@ -80,10 +81,7 @@ struct AudioFormat
 struct Sound
 {
   // Sound struct is NOT trivially copyable
-  Sound(const Sound&)                        = delete;
-  auto operator=(const Sound&) -> Sound&     = delete;
-  Sound(Sound&&) noexcept                    = delete;
-  auto operator=(Sound&&) noexcept -> Sound& = delete;
+  IMMUTABLE(Sound);
 
   AudioFormat source; // exact file properties
   AudioFormat target; // engine output format (matches backend)

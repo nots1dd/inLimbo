@@ -9,12 +9,13 @@
   extern "C"                                                                                     \
   {                                                                                              \
                                                                                                  \
-    static void* fe_create(void* songMap, void* mpris)                                           \
+    static void* fe_create(void* songMap, void* telemetry, void* mpris)                          \
     {                                                                                            \
       if (!songMap)                                                                              \
         return nullptr;                                                                          \
                                                                                                  \
       return new FRONTEND_NS::Interface(static_cast<threads::SafeMap<SongMap>*>(songMap),        \
+                                        static_cast<telemetry::Context*>(telemetry),             \
                                         static_cast<mpris::Service*>(mpris));                    \
     }                                                                                            \
                                                                                                  \

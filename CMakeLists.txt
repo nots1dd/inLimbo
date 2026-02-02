@@ -123,6 +123,7 @@ set(INLIMBO_CORE_SOURCES
     src/telemetry/Sink.cc
     src/telemetry/Analysis.cc
     src/telemetry/Store.cc
+    src/telemetry/IDs.cc
     src/toml/Parser.cc
     src/audio/Engine.cc
     src/audio/Service.cc

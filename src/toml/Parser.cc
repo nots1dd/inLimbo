@@ -1,6 +1,6 @@
 #include "toml/Parser.hpp"
 #include "Logger.hpp"
-#include "utils/PathResolve.hpp"
+#include "utils/fs/Paths.hpp"
 #include <filesystem>
 
 namespace tomlparser
@@ -10,7 +10,7 @@ std::optional<toml::parse_result> Config::s_config;
 
 void Config::load()
 {
-  const auto path = utils::getAppConfigPathWithFile(INLIMBO_DEFAULT_CONFIG_FILE_NAME);
+  const auto path = utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_CONFIG_FILE_NAME);
 
   if (!std::filesystem::exists(path.c_str()))
   {

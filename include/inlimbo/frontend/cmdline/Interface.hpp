@@ -9,11 +9,12 @@
 #include "config/Watcher.hpp"
 #include "frontend/cmdline/Structs.hpp"
 #include "mpris/Service.hpp"
-#include "telemetry/Store.hpp"
+#include "telemetry/Context.hpp"
 #include "thread/Map.hpp"
 #include "utils/ASCII.hpp"
-#include "utils/PathResolve.hpp"
+#include "utils/ClassRulesMacros.hpp"
 #include "utils/Snapshot.hpp"
+#include "utils/fs/Paths.hpp"
 
 static constexpr cstr FRONTEND_NAME = "cmdline";
 
@@ -31,14 +32,14 @@ class Interface
 {
 public:
   // NOTE: pointers because this is created via C ABI
-  explicit Interface(threads::SafeMap<SongMap>* songMap, mpris::Service* mprisService)
-      : m_cfgWatcher(utils::getAppConfigPathWithFile(INLIMBO_DEFAULT_CONFIG_FILE_NAME)),
-        m_songMapTS(songMap), m_mprisService(mprisService)
+  explicit Interface(threads::SafeMap<SongMap>* songMap, telemetry::Context* telemetry,
+                     mpris::Service* mprisService)
+      : m_cfgWatcher(utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_CONFIG_FILE_NAME)),
+        m_songMapTS(songMap), m_telemetryCtx(telemetry), m_mprisService(mprisService)
   {
   }
 
-  Interface(const Interface&)                    = delete;
-  auto operator=(const Interface&) -> Interface& = delete;
+  NON_COPYABLE(Interface);
 
   [[nodiscard]] auto ready() -> bool;
   void               run(audio::Service& audio);
@@ -48,6 +49,7 @@ private:
   std::string                m_searchBuf;
   config::Watcher            m_cfgWatcher;
   threads::SafeMap<SongMap>* m_songMapTS{nullptr};
+  telemetry::Context*        m_telemetryCtx{nullptr};
   mpris::Service*            m_mprisService{nullptr};
   mutable std::mutex         m_renderMutex;
 
@@ -56,9 +58,11 @@ private:
 
   std::atomic<bool>   m_isRunning{false};
   std::atomic<double> m_pendingSeek{0.0};
+  std::atomic<ui8>    m_lastAutoNextTid{0};
+  std::atomic<bool>   m_autoNextInProgress{false};
+  std::optional<i64>  m_lastPlayTick;
 
   // telemetry
-  telemetry::Store                m_telemetry;
   std::optional<telemetry::Event> m_currentPlay; // active play session
 
   termios m_termOrig{};
@@ -78,6 +82,7 @@ private:
   void disableRawMode();
 
   void beginPlay(audio::Service& audio);
+  void updateTelemetryProgress(audio::Service& audio);
   void endCurrentPlay(audio::Service& audio);
 
   void statusLoop(audio::Service& audio);

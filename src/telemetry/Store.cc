@@ -29,6 +29,28 @@ auto Store::artists() const -> const ankerl::unordered_dense::map<ArtistID, Stat
   return artistStats;
 }
 
+auto Store::album(AlbumID id) const -> const Stats*
+{
+  return find(albumStats, id);
+}
+
+auto Store::genre(GenreID id) const -> const Stats*
+{
+  return find(genreStats, id);
+}
+
+auto Store::albums() const
+  -> const ankerl::unordered_dense::map<AlbumID, Stats>&
+{
+  return albumStats;
+}
+
+auto Store::genres() const
+  -> const ankerl::unordered_dense::map<GenreID, Stats>&
+{
+  return genreStats;
+}
+
 auto Store::save(const std::string& path) const -> bool
 {
   std::ofstream os(path, std::ios::binary);

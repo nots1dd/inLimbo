@@ -49,34 +49,40 @@ inline auto fmtAgo(i64 ts) -> std::string
   return std::to_string(d / 86400) + "d ago";
 }
 
-static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris) -> bool
+static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris,
+                               std::atomic<ui8>& lastTid, std::atomic<bool>& inProgress) -> bool
 {
-  static ui8 lastTid;
-  auto       infoOpt = audio.getCurrentTrackInfo();
+  if (inProgress.load(std::memory_order_acquire))
+    return false;
+
+  auto infoOpt = audio.getCurrentTrackInfo();
   if (!infoOpt)
     return false;
 
   const auto& info = *infoOpt;
 
-  if (!info.playing)
-    return false;
-
   if (info.lengthSec <= 0.0)
     return false;
 
-  if (info.tid == lastTid)
-    return false;
-
-  constexpr double EPS = 0.10;
-
+  constexpr double EPS = 0.05;
   if (info.positionSec + EPS < info.lengthSec)
     return false;
 
-  lastTid = info.tid;
+  // Already handled this track
+  if (info.tid == lastTid.load(std::memory_order_relaxed))
+    return false;
+
+  bool expected = false;
+  if (!inProgress.compare_exchange_strong(expected, true))
+    return false;
+
+  lastTid.store(info.tid, std::memory_order_relaxed);
+
   audio.nextTrackGapless();
   mpris.updateMetadata();
   mpris.notify();
 
+  inProgress.store(false, std::memory_order_release);
   return true;
 }
 
@@ -116,8 +122,6 @@ void Interface::loadConfig()
 void Interface::run(audio::Service& audio)
 {
   loadConfig();
-
-  m_telemetry.load(utils::getAppConfigPathWithFile(INLIMBO_DEFAULT_TELEMETRY_BIN_NAME));
 
   // Query is very nice and easy to add. Take this for example:
   //
@@ -185,8 +189,7 @@ void Interface::run(audio::Service& audio)
     seek.join();
 
   endCurrentPlay(audio);
-  if (!m_telemetry.save(utils::getAppConfigPathWithFile(INLIMBO_DEFAULT_TELEMETRY_BIN_NAME)))
-    LOG_CRITICAL("Failed to save telemetry data (likely to be an fstream or cereal problem)!");
+  // inLimbo's app context will save telemetry data
 }
 
 auto Interface::getTerminalSize() -> TermSize
@@ -212,6 +215,7 @@ void Interface::statusLoop(audio::Service& audio)
 {
   while (m_isRunning.load())
   {
+    updateTelemetryProgress(audio);
 
     if (m_cfgWatcher.pollChanged())
     {
@@ -219,7 +223,19 @@ void Interface::statusLoop(audio::Service& audio)
       loadConfig();
     }
 
-    if (autoNextIfFinished(audio, *m_mprisService))
+    const auto pos = audio.getCurrentTrackInfo()->positionSec;
+    const auto len = audio.getCurrentTrackInfo()->lengthSec;
+
+    if (pos >= len)
+    {
+      endCurrentPlay(audio);
+      audio.nextTrack();
+      beginPlay(audio);
+      m_mprisService->updateMetadata();
+      m_mprisService->notify();
+    }
+
+    if (autoNextIfFinished(audio, *m_mprisService, m_lastAutoNextTid, m_autoNextInProgress))
     {
       endCurrentPlay(audio);
       beginPlay(audio);
@@ -443,10 +459,10 @@ void Interface::draw(audio::Service& audio)
   // ------------------------------------------------------------
   l_Section("Telemetry");
 
-  const auto songId   = telemetry::makeSongID(*curMeta);
-  const auto artistId = telemetry::makeArtistID(*curMeta);
+  const auto songId   = m_telemetryCtx->registry.titles.getOrCreate(curMeta->title);
+  const auto artistId = m_telemetryCtx->registry.artists.getOrCreate(curMeta->artist);
 
-  if (const auto* s = m_telemetry.song(songId))
+  if (const auto* s = m_telemetryCtx->store.song(songId))
   {
     std::cout << "   Song plays   : " << s->playCount << "\n";
     std::cout << "   Song time    : " << utils::timer::fmtTime(s->listenSec) << "\n";
@@ -457,7 +473,7 @@ void Interface::draw(audio::Service& audio)
     std::cout << "   Song plays   : 0\n";
   }
 
-  if (const auto* a = m_telemetry.artist(artistId))
+  if (const auto* a = m_telemetryCtx->store.artist(artistId))
   {
     std::cout << "   Artist plays : " << a->playCount << "\n";
     std::cout << "   Artist time  : " << utils::timer::fmtTime(a->listenSec) << "\n";
@@ -509,7 +525,9 @@ auto Interface::handleSearchTitleMode(audio::Service& audio, char c) -> bool
       auto h = audio.registerTrack(*song);
       audio.addToPlaylist(h);
 
+      endCurrentPlay(audio);
       audio.nextTrack();
+      beginPlay(audio);
       m_mprisService->updateMetadata();
       m_mprisService->notify();
 
@@ -573,13 +591,33 @@ auto Interface::handleSearchArtistMode(audio::Service& audio, char c) -> bool
         return true;
       }
 
+      endCurrentPlay(audio);
       audio.restart();
+      beginPlay(audio);
       m_mprisService->updateMetadata();
       m_mprisService->notify();
 
       m_mode = UiMode::Normal;
       return true;
     });
+}
+
+void Interface::updateTelemetryProgress(audio::Service& audio)
+{
+  if (!m_currentPlay || !m_lastPlayTick)
+    return;
+
+  auto infoOpt = audio.getCurrentTrackInfo();
+  if (!infoOpt || !infoOpt->playing)
+    return;
+
+  const auto now = utils::timer::nowUnix();
+  const auto dt  = now - *m_lastPlayTick;
+
+  if (dt > 0)
+    m_currentPlay->seconds += double(dt);
+
+  m_lastPlayTick = now;
 }
 
 void Interface::beginPlay(audio::Service& audio)
@@ -590,14 +628,15 @@ void Interface::beginPlay(audio::Service& audio)
 
   telemetry::Event ev{};
   ev.type      = telemetry::EventType::PlayEnd;
-  ev.song      = telemetry::makeSongID(*metaOpt);
-  ev.artist    = telemetry::makeArtistID(*metaOpt);
-  ev.album     = telemetry::makeAlbumID(*metaOpt);
-  ev.genre     = telemetry::makeGenreID(*metaOpt);
+  ev.song      = m_telemetryCtx->registry.titles.getOrCreate(metaOpt->title);
+  ev.artist    = m_telemetryCtx->registry.artists.getOrCreate(metaOpt->artist);
+  ev.album     = m_telemetryCtx->registry.albums.getOrCreate(metaOpt->album);
+  ev.genre     = m_telemetryCtx->registry.genres.getOrCreate(metaOpt->genre);
   ev.seconds   = 0.0;
   ev.timestamp = utils::timer::nowUnix();
 
-  m_currentPlay = ev;
+  m_currentPlay  = ev;
+  m_lastPlayTick = ev.timestamp;
 }
 
 void Interface::endCurrentPlay(audio::Service& audio)
@@ -609,23 +648,22 @@ void Interface::endCurrentPlay(audio::Service& audio)
   if (!infoOpt)
     return;
 
-  auto& ev = *m_currentPlay;
-
   // Ignore zero-length or accidental triggers
   if (infoOpt->positionSec < 1.0)
   {
     m_currentPlay.reset();
+    m_lastPlayTick.reset();
     return;
   }
 
-  ev.seconds   = infoOpt->positionSec;
-  ev.timestamp = utils::timer::nowUnix();
+  m_currentPlay->timestamp = utils::timer::nowUnix();
+  m_telemetryCtx->store.onEvent(*m_currentPlay);
 
-  m_telemetry.onEvent(ev);
   m_currentPlay.reset();
+  m_lastPlayTick.reset();
 }
 
-auto Interface::handleKey(audio::Service& audio, char c) -> bool
+auto Interface::handleKey(audio::Service& audio, config::keybinds::KeyChar c) -> bool
 {
 
   if (m_mode == UiMode::SearchTitle)

@@ -3,6 +3,7 @@
 #include "Engine.hpp"
 #include "Playlist.hpp"
 #include "thread/Map.hpp"
+#include "utils/ClassRulesMacros.hpp"
 
 #include <memory>
 #include <mutex>
@@ -23,10 +24,7 @@ public:
   Service(threads::SafeMap<SongMap>& songMap);
   ~Service();
 
-  Service(const Service&)                    = delete;
-  auto operator=(const Service&) -> Service& = delete;
-  Service(Service&&)                         = delete;
-  auto operator=(Service&&) -> Service&      = delete;
+  IMMUTABLE(Service);
 
   auto enumeratePlaybackDevices() -> Devices;
   void initDevice(const DeviceName& deviceName = "default");

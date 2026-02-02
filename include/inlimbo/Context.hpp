@@ -4,6 +4,7 @@
 #include "CLI/CLI.hpp"
 #include "frontend/Plugin.hpp"
 #include "taglib/Parser.hpp"
+#include "telemetry/Context.hpp"
 #include "thread/Map.hpp"
 
 #define APP_NAME "inLimbo"
@@ -62,6 +63,9 @@ struct AppContext
   // Paths
   Directory m_musicDir;
   Path      m_binPath;
+
+  // Telemetry
+  telemetry::Context m_telemetryCtx;
 
   // Frontend plugin
   frontend::PluginName m_fePluginName;
