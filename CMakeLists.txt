@@ -22,6 +22,10 @@ set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/external)
 set(CLI11_INCLUDE_DIRS ${EXTERNAL_DIR}/CLI11/include)
 set(TOMLPLUSPLUS_INCLUDE_DIRS ${EXTERNAL_DIR}/tomlplusplus)
 set(CEREAL_INCLUDE_DIRS ${EXTERNAL_DIR}/cereal/include)
+set(ANKERL_UNORDERED_DENSE_DIR ${EXTERNAL_DIR}/unordered_dense)
+set(ANKERL_UNORDERED_DENSE_INCLUDE_DIRS
+    ${ANKERL_UNORDERED_DENSE_DIR}/include
+)
 
 # -----------------------------------------------------------
 # Local libbacktrace (Debug only)
@@ -47,6 +51,12 @@ target_include_directories(cli11 INTERFACE ${CLI11_INCLUDE_DIRS})
 
 # --- spdlog (compiled)
 set(SPDLOG_DIR ${EXTERNAL_DIR}/spdlog)
+
+# --- ankerl::unordered_dense (header-only)
+add_library(ankerl_unordered_dense INTERFACE)
+target_include_directories(ankerl_unordered_dense
+  INTERFACE ${ANKERL_UNORDERED_DENSE_INCLUDE_DIRS}
+)
 
 if(NOT EXISTS ${SPDLOG_DIR}/CMakeLists.txt)
     message(STATUS "spdlog not found — cloning into ${SPDLOG_DIR}")
@@ -107,6 +117,12 @@ set(INLIMBO_CORE_SOURCES
     src/utils/string/Equals.cc
     src/utils/string/Transforms.cc
     src/config/Watcher.cc
+    src/config/Keybinds.cc
+    src/config/Colors.cc
+    src/config/Misc.cc
+    src/telemetry/Sink.cc
+    src/telemetry/Analysis.cc
+    src/telemetry/Store.cc
     src/toml/Parser.cc
     src/audio/Engine.cc
     src/audio/Service.cc
@@ -122,6 +138,7 @@ target_include_directories(inLimbo-core
         include/inlimbo
         ${CMAKE_SOURCE_DIR}
         ${TAGLIB_INCLUDE_DIRS}
+        ${ANKERL_UNORDERED_DENSE_INCLUDE_DIRS}
         ${TOMLPLUSPLUS_INCLUDE_DIRS}
         ${CLI11_INCLUDE_DIRS}
         ${CEREAL_INCLUDE_DIRS}
@@ -136,6 +153,7 @@ target_include_directories(inLimbo-core
 
 target_link_libraries(inLimbo-core
     PUBLIC
+        ankerl_unordered_dense
         inLimbo-mpris-c
         ${TAGLIB_LIBRARIES}
         spdlog::spdlog

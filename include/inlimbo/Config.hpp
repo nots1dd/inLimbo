@@ -37,9 +37,10 @@
 #define INLIMBO_BUILD_ID INLIMBO_VERSION_STR "-" INLIMBO_GIT_COMMIT_SHORT
 
 // Global defaults
-#define INLIMBO_DEFAULT_CONFIG_FILE_NAME "config.toml"
-#define INLIMBO_DEFAULT_LOCKFILE_PATH    "/tmp/inLimbo.lock"
-#define INLIMBO_DEFAULT_CACHE_BIN_NAME   "lib.bin"
+#define INLIMBO_DEFAULT_CONFIG_FILE_NAME   "config.toml"
+#define INLIMBO_DEFAULT_LOCKFILE_PATH      "/tmp/inLimbo.lock"
+#define INLIMBO_DEFAULT_CACHE_BIN_NAME     "lib.bin"
+#define INLIMBO_DEFAULT_TELEMETRY_BIN_NAME "telemetry.bin"
 
 // ============================================================
 // Compiler / Standard / Platform Detection

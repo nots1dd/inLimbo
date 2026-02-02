@@ -27,7 +27,7 @@ void StatusBar::draw(const ui::Fonts& fonts, audio::Service& audio)
                           TEXT_DIM, 300);
 
   const std::string time =
-    utils::fmtTime(info->positionSec) + " / " + utils::fmtTime(info->lengthSec);
+    utils::timer::fmtTime(info->positionSec) + " / " + utils::timer::fmtTime(info->lengthSec);
   int tw = MeasureTextEx(fonts.regular, time.c_str(), 16, 1).x;
   DrawTextEx(fonts.regular, time.c_str(),
              {(float)(WIN_W / 2 - tw / 2), (float)WIN_H - STATUS_H + 16}, 16, 1, TEXT_DIM);

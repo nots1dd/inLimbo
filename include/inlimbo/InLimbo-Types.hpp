@@ -1,10 +1,10 @@
 #pragma once
 
+#include "utils/ankerl/Cereal.hpp"
 #include "utils/string/SmallString.hpp"
 #include <cstdint>
 #include <map>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 using i8  = std::int8_t;
@@ -49,7 +49,7 @@ using Comment    = std::string;
 using Year       = uint;
 using Disc       = uint;
 using Track      = uint;
-using Properties = std::unordered_map<std::string, std::string>;
+using Properties = ankerl::unordered_dense::map<std::string, std::string>;
 
 using TitleCStr  = const char*;
 using AlbumCStr  = const char*;
@@ -61,7 +61,8 @@ using Artists = std::vector<Artist>;
 using Albums  = std::vector<Album>;
 using Genres  = std::vector<Genre>;
 
-template <typename T, typename S> using BucketedMap = std::map<T, std::vector<S>>;
+template <typename T, typename S>
+using BucketedMap = ankerl::unordered_dense::map<T, std::vector<S>>;
 
 /**
  * @brief A structure to hold metadata information for a song.
@@ -108,24 +109,17 @@ struct Song
   template <class Archive> void serialize(Archive& ar) { ar(inode, metadata); }
 };
 
-//
-// NOTE:
-//
-// If you have the entire song map, use the inode map (that is NOT in the Song structure)
-//
-// If you only have the Song struct at your disposal (say for printing, etc.) just Song.inode
-// instead.
-//
-// Theoretically there should be no difference between the two but this can be a bit confusing.
-//
-// This was initially done to account for duplicated metadata files.
-//
 using Songs = std::vector<Song>;
 
-using InodeMap = std::map<ino_t, Song>;
-using TrackMap = std::map<Track, InodeMap>;
-using DiscMap  = std::map<Disc, TrackMap>;
-using AlbumMap = std::map<Album, DiscMap>;
+// So we could use vector in case of Track and Disc mapping for better
+// cache behaviour, but using ankerl here already is great in terms
+// of memory usage and removing unneeded RBT allocs happening in std::map
+//
+// lookup time also should decrease but no benchmarks are done yet.
+using InodeMap = ankerl::unordered_dense::map<ino_t, Song>;
+using TrackMap = ankerl::unordered_dense::map<Track, InodeMap>;
+using DiscMap  = ankerl::unordered_dense::map<Disc, TrackMap>;
+using AlbumMap = ankerl::unordered_dense::map<Album, DiscMap>;
 
 // this corresponds to Artist -> Album -> Disc -> Track -> Inode -> Song
-using SongMap = std::map<Artist, AlbumMap>;
+using SongMap = ankerl::unordered_dense::map<Artist, AlbumMap>;

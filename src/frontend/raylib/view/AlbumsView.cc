@@ -146,7 +146,7 @@ void AlbumsView::draw(const ui::Fonts& fonts, state::Library& lib, audio::Servic
                                     hover ? ACCENT : TEXT_MAIN, row.width - 80);
 
             // Duration (right)
-            std::string dur = utils::fmtTime(song.metadata.duration);
+            std::string dur = utils::timer::fmtTime(song.metadata.duration);
 
             int dw = MeasureTextEx(fonts.regular, dur.c_str(), 14, 1).x;
 

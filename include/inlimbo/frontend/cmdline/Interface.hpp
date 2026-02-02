@@ -9,6 +9,7 @@
 #include "config/Watcher.hpp"
 #include "frontend/cmdline/Structs.hpp"
 #include "mpris/Service.hpp"
+#include "telemetry/Store.hpp"
 #include "thread/Map.hpp"
 #include "utils/ASCII.hpp"
 #include "utils/PathResolve.hpp"
@@ -56,6 +57,10 @@ private:
   std::atomic<bool>   m_isRunning{false};
   std::atomic<double> m_pendingSeek{0.0};
 
+  // telemetry
+  telemetry::Store                m_telemetry;
+  std::optional<telemetry::Event> m_currentPlay; // active play session
+
   termios m_termOrig{};
 
   struct TermSize
@@ -71,6 +76,9 @@ private:
 
   void enableRawMode();
   void disableRawMode();
+
+  void beginPlay(audio::Service& audio);
+  void endCurrentPlay(audio::Service& audio);
 
   void statusLoop(audio::Service& audio);
   void inputLoop(audio::Service& audio);

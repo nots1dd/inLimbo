@@ -12,7 +12,7 @@ namespace config::misc
 class ConfigLoader
 {
 public:
-  explicit ConfigLoader(std::string frontend) : m_frontend(std::move(frontend)) {}
+  explicit ConfigLoader(std::string_view frontend);
 
   template <typename... Bindings> auto load(Bindings&&... bindings) const -> void
   {
@@ -32,7 +32,7 @@ public:
     using Node    = toml::node;
     using Handler = std::function<void(const Node&)>;
 
-    std::unordered_map<std::string_view, Handler> handlers;
+    ankerl::unordered_dense::map<std::string_view, Handler> handlers;
 
     (registerBinding(handlers, std::forward<Bindings>(bindings)), ...);
 
@@ -52,9 +52,10 @@ private:
   std::string m_frontend;
 
   template <typename T>
-  static auto registerBinding(
-    std::unordered_map<std::string_view, std::function<void(const toml::node&)>>& handlers,
-    const keybinds::Binding<T>&                                                   b) -> void
+  static auto
+  registerBinding(ankerl::unordered_dense::map<std::string_view,
+                                               std::function<void(const toml::node&)>>& handlers,
+                  const keybinds::Binding<T>&                                           b) -> void
   {
     handlers[b.key] = [ptr = b.target, key = b.key](const toml::node& n) -> auto
     {

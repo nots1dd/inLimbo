@@ -19,6 +19,8 @@
 
 namespace colors = config::colors;
 
+using Ansi = utils::colors::Ansi;
+
 namespace frontend::cmdline
 {
 
@@ -30,33 +32,52 @@ static constexpr int MIN_TERM_ROWS = 24;
 #define UI_BAR_FILL  "█"
 #define UI_BAR_EMPTY "░"
 
-static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris) -> void
+inline auto fmtAgo(i64 ts) -> std::string
+{
+  if (ts == 0)
+    return "never";
+
+  const auto now = utils::timer::nowUnix();
+  const auto d   = now > ts ? now - ts : 0;
+
+  if (d < 60)
+    return std::to_string(d) + "s ago";
+  if (d < 3600)
+    return std::to_string(d / 60) + "m ago";
+  if (d < 86400)
+    return std::to_string(d / 3600) + "h ago";
+  return std::to_string(d / 86400) + "d ago";
+}
+
+static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris) -> bool
 {
   static ui8 lastTid;
   auto       infoOpt = audio.getCurrentTrackInfo();
   if (!infoOpt)
-    return;
+    return false;
 
   const auto& info = *infoOpt;
 
   if (!info.playing)
-    return;
+    return false;
 
   if (info.lengthSec <= 0.0)
-    return;
+    return false;
 
   if (info.tid == lastTid)
-    return;
+    return false;
 
   constexpr double EPS = 0.10;
 
   if (info.positionSec + EPS < info.lengthSec)
-    return;
+    return false;
 
   lastTid = info.tid;
   audio.nextTrackGapless();
   mpris.updateMetadata();
   mpris.notify();
+
+  return true;
 }
 
 void Interface::loadMiscConfig(MiscConfig& miscCfg)
@@ -95,6 +116,8 @@ void Interface::loadConfig()
 void Interface::run(audio::Service& audio)
 {
   loadConfig();
+
+  m_telemetry.load(utils::getAppConfigPathWithFile(INLIMBO_DEFAULT_TELEMETRY_BIN_NAME));
 
   // Query is very nice and easy to add. Take this for example:
   //
@@ -135,6 +158,7 @@ void Interface::run(audio::Service& audio)
   //   });
 
   m_mprisService->updateMetadata();
+  beginPlay(audio);
 
   enableRawMode();
   m_isRunning.store(true);
@@ -159,6 +183,10 @@ void Interface::run(audio::Service& audio)
     status.join();
   if (seek.joinable())
     seek.join();
+
+  endCurrentPlay(audio);
+  if (!m_telemetry.save(utils::getAppConfigPathWithFile(INLIMBO_DEFAULT_TELEMETRY_BIN_NAME)))
+    LOG_CRITICAL("Failed to save telemetry data (likely to be an fstream or cereal problem)!");
 }
 
 auto Interface::getTerminalSize() -> TermSize
@@ -191,7 +219,11 @@ void Interface::statusLoop(audio::Service& audio)
       loadConfig();
     }
 
-    autoNextIfFinished(audio, *m_mprisService);
+    if (autoNextIfFinished(audio, *m_mprisService))
+    {
+      endCurrentPlay(audio);
+      beginPlay(audio);
+    }
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 }
@@ -234,21 +266,20 @@ void Interface::seekLoop(audio::Service& audio)
 
 void Interface::drawTooSmall(const TermSize& ts)
 {
-  auto        cfg    = m_cfg.get();
-  const auto& colors = cfg->colors;
 
-  std::cout << colors::Ansi::Clear;
+  auto        cfg       = m_cfg.get();
+  const auto& cfgColors = cfg->colors;
 
-  std::cout << colors::Ansi::Bold << colors.accent << APP_TITLE << colors::Ansi::Reset << "\n\n";
+  std::cout << Ansi::Clear;
 
-  std::cout << colors::Ansi::Bold << colors.warning << " Terminal too small" << colors::Ansi::Reset
-            << "\n\n";
+  std::cout << Ansi::Bold << cfgColors.accent << APP_TITLE << Ansi::Reset << "\n\n";
 
-  std::cout << " Current  : " << colors::Ansi::Bold << colors.error << ts.cols << " cols × "
-            << ts.rows << " rows" << colors::Ansi::Reset << "\n\n";
+  std::cout << Ansi::Bold << cfgColors.warning << " Terminal too small" << Ansi::Reset << "\n\n";
 
-  std::cout << colors::Ansi::Dim << colors.fg << " Resize the terminal window."
-            << colors::Ansi::Reset << "\n";
+  std::cout << " Current  : " << Ansi::Bold << cfgColors.error << ts.cols << " cols × " << ts.rows
+            << " rows" << Ansi::Reset << "\n\n";
+
+  std::cout << Ansi::Dim << cfgColors.fg << " Resize the terminal window." << Ansi::Reset << "\n";
 
   std::cout.flush();
 }
@@ -256,10 +287,11 @@ void Interface::drawTooSmall(const TermSize& ts)
 void Interface::drawBottomPrompt(const TermSize& ts, const UiColors& colors, std::string_view label,
                                  std::string_view text)
 {
-  std::cout << colors::Ansi::MoveCursor(ts.rows, 1) << colors::Ansi::ClearLine;
 
-  std::cout << colors::Ansi::Bold << colors.accent << label << colors::Ansi::Reset << colors.fg
-            << text << colors::Ansi::Reset;
+  std::cout << Ansi::MoveCursor(ts.rows, 1) << Ansi::ClearLine;
+
+  std::cout << Ansi::Bold << colors.accent << label << Ansi::Reset << colors.fg << text
+            << Ansi::Reset;
 
   std::cout.flush();
 }
@@ -334,23 +366,23 @@ void Interface::draw(audio::Service& audio)
   // ------------------------------------------------------------
 
   auto l_Title = [&](std::string_view s) -> void
-  { std::cout << colors::Ansi::Bold << colors.accent << s << colors::Ansi::Reset << "\n"; };
+  { std::cout << Ansi::Bold << colors.accent << s << Ansi::Reset << "\n"; };
 
   auto l_Section = [&](std::string_view s) -> void
-  { std::cout << colors::Ansi::Bold << colors.accent << " " << s << colors::Ansi::Reset << "\n"; };
+  { std::cout << Ansi::Bold << colors.accent << " " << s << Ansi::Reset << "\n"; };
 
   auto l_Sep = [&]() -> void
   {
-    std::cout << colors::Ansi::Dim << colors.fg
-              << "──────────────────────────────────────────────────────────" << colors::Ansi::Reset
+    std::cout << Ansi::Dim << colors.fg
+              << "──────────────────────────────────────────────────────────" << Ansi::Reset
               << "\n\n";
   };
 
   auto l_KvValue = [&](std::string_view k) -> void
-  { std::cout << colors::Ansi::Bold << colors.fg << k << colors::Ansi::Reset; };
+  { std::cout << Ansi::Bold << colors.fg << k << Ansi::Reset; };
 
   auto l_KeyTag = [&](std::string_view keyName) -> void
-  { std::cout << colors.accent << "[" << keyName << "]" << colors::Ansi::Reset; };
+  { std::cout << colors.accent << "[" << keyName << "]" << Ansi::Reset; };
 
   auto l_Control3 = [&](std::string_view k1, std::string_view l1, std::string_view k2,
                         std::string_view l2, std::string_view k3, std::string_view l3) -> void
@@ -364,7 +396,7 @@ void Interface::draw(audio::Service& audio)
     std::cout << " " << l3 << "\n";
   };
 
-  std::cout << colors::Ansi::Clear;
+  std::cout << Ansi::Clear;
 
   // base theme
   std::cout << colors.bg << colors.fg;
@@ -374,9 +406,9 @@ void Interface::draw(audio::Service& audio)
 
   l_Section("Playlist");
   std::cout << "   Prev : " << prevTitle << "\n";
-  std::cout << " " << colors.accent << "▶" << colors::Ansi::Reset << " Now  : ";
+  std::cout << " " << colors.accent << "▶" << Ansi::Reset << " Now  : ";
   l_KvValue(curMeta->title);
-  std::cout << colors::Ansi::Reset << " — " << curMeta->artist << " (" << current + 1 << "/" << size
+  std::cout << Ansi::Reset << " — " << curMeta->artist << " (" << current + 1 << "/" << size
             << ")\n";
 
   std::cout << "   Next : " << nextTitle << "\n\n";
@@ -392,8 +424,8 @@ void Interface::draw(audio::Service& audio)
 
   l_Section("Playback");
   std::cout << "   State   : " << (info.playing ? "Playing" : "Paused") << "\n";
-  std::cout << "   Time    : " << utils::fmtTime(info.positionSec) << " / "
-            << utils::fmtTime(info.lengthSec) << "\n";
+  std::cout << "   Time    : " << utils::timer::fmtTime(info.positionSec) << " / "
+            << utils::timer::fmtTime(info.lengthSec) << "\n";
   std::cout << "   Volume  : " << std::setw(3) << int(audio.getVolume() * 100.0f) << "%\n\n";
 
   std::cout << "   ";
@@ -404,18 +436,42 @@ void Interface::draw(audio::Service& audio)
     else
       std::cout << colors.fg << UI_BAR_EMPTY;
   }
-  std::cout << colors::Ansi::Reset << "\n\n";
+  std::cout << Ansi::Reset << "\n\n";
+
+  // ------------------------------------------------------------
+  // Telemetry
+  // ------------------------------------------------------------
+  l_Section("Telemetry");
+
+  const auto songId   = telemetry::makeSongID(*curMeta);
+  const auto artistId = telemetry::makeArtistID(*curMeta);
+
+  if (const auto* s = m_telemetry.song(songId))
+  {
+    std::cout << "   Song plays   : " << s->playCount << "\n";
+    std::cout << "   Song time    : " << utils::timer::fmtTime(s->listenSec) << "\n";
+    std::cout << "   Last played  : " << fmtAgo(s->last) << "\n";
+  }
+  else
+  {
+    std::cout << "   Song plays   : 0\n";
+  }
+
+  if (const auto* a = m_telemetry.artist(artistId))
+  {
+    std::cout << "   Artist plays : " << a->playCount << "\n";
+    std::cout << "   Artist time  : " << utils::timer::fmtTime(a->listenSec) << "\n";
+  }
+
+  std::cout << "\n";
 
   l_Section("Backend");
   std::cout << "   Device   : " << backend.dev.name.c_str() << "\n";
   std::cout << "   Codec    : " << backend.codecLongName.c_str() << " - ("
             << backend.codecName.c_str() << ")\n";
-  std::cout << "   Format   : " << backend.pcmFormatName.c_str() << "\n";
-  std::cout << "   Rate     : " << backend.sampleRate << " Hz\n";
-  std::cout << "   Channels : " << backend.channels << "\n";
+  std::cout << "   Rate     : " << backend.sampleRate << " Hz (" << backend.channels << " ch)\n";
   std::cout << "   Buffer   : " << backend.bufferSize << " frames (" << std::fixed
-            << std::setprecision(1) << backend.latencyMs << " ms)\n";
-  std::cout << "   XRuns    : " << backend.xruns << "\n\n";
+            << std::setprecision(1) << backend.latencyMs << " ms)\n\n";
 
   l_Section("Controls");
   l_Control3(kb.playPause->c_str(), "play/pause", kb.restartTrack->c_str(), "restart",
@@ -431,7 +487,7 @@ void Interface::draw(audio::Service& audio)
     return;
   }
 
-  std::cout << colors::Ansi::Reset;
+  std::cout << Ansi::Reset;
   std::cout.flush();
 }
 
@@ -526,6 +582,49 @@ auto Interface::handleSearchArtistMode(audio::Service& audio, char c) -> bool
     });
 }
 
+void Interface::beginPlay(audio::Service& audio)
+{
+  auto metaOpt = audio.getCurrentMetadata();
+  if (!metaOpt)
+    return;
+
+  telemetry::Event ev{};
+  ev.type      = telemetry::EventType::PlayEnd;
+  ev.song      = telemetry::makeSongID(*metaOpt);
+  ev.artist    = telemetry::makeArtistID(*metaOpt);
+  ev.album     = telemetry::makeAlbumID(*metaOpt);
+  ev.genre     = telemetry::makeGenreID(*metaOpt);
+  ev.seconds   = 0.0;
+  ev.timestamp = utils::timer::nowUnix();
+
+  m_currentPlay = ev;
+}
+
+void Interface::endCurrentPlay(audio::Service& audio)
+{
+  if (!m_currentPlay)
+    return;
+
+  auto infoOpt = audio.getCurrentTrackInfo();
+  if (!infoOpt)
+    return;
+
+  auto& ev = *m_currentPlay;
+
+  // Ignore zero-length or accidental triggers
+  if (infoOpt->positionSec < 1.0)
+  {
+    m_currentPlay.reset();
+    return;
+  }
+
+  ev.seconds   = infoOpt->positionSec;
+  ev.timestamp = utils::timer::nowUnix();
+
+  m_telemetry.onEvent(ev);
+  m_currentPlay.reset();
+}
+
 auto Interface::handleKey(audio::Service& audio, char c) -> bool
 {
 
@@ -546,17 +645,23 @@ auto Interface::handleKey(audio::Service& audio, char c) -> bool
   }
   else if (c == kb.nextTrack)
   {
+    endCurrentPlay(audio);
     audio.nextTrack();
+    beginPlay(audio);
     trackChanged = true;
   }
   else if (c == kb.prevTrack)
   {
+    endCurrentPlay(audio);
     audio.previousTrack();
+    beginPlay(audio);
     trackChanged = true;
   }
   else if (c == kb.randomTrack)
   {
+    endCurrentPlay(audio);
     audio.randomTrack();
+    beginPlay(audio);
     trackChanged = true;
   }
   else if (c == kb.restartTrack)

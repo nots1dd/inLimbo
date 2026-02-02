@@ -29,7 +29,7 @@ void SongTree::saveToFile(const utils::string::SmallString& filename) const
 {
   std::ofstream file(filename.c_str(), std::ios::binary);
   if (!file)
-    throw std::runtime_error("Failed to open file for saving.");
+    throw std::runtime_error("SongTree::saveToFile: Failed to open file for saving.");
 
   cereal::BinaryOutputArchive archive(file);
   archive(*this);
@@ -40,7 +40,7 @@ void SongTree::loadFromFile(const utils::string::SmallString& filename)
 {
   std::ifstream file(filename.c_str(), std::ios::binary);
   if (!file)
-    throw std::runtime_error("Failed to open file for loading.");
+    throw std::runtime_error("SongTree::loadFromFile: Failed to open file for loading.");
 
   cereal::BinaryInputArchive archive(file);
   archive(*this);

@@ -8,6 +8,27 @@
 namespace utils::colors
 {
 
+enum class Basic16 : ui8
+{
+  Black = 0,
+  Red,
+  Green,
+  Yellow,
+  Blue,
+  Magenta,
+  Cyan,
+  White,
+
+  BrightBlack,
+  BrightRed,
+  BrightGreen,
+  BrightYellow,
+  BrightBlue,
+  BrightMagenta,
+  BrightCyan,
+  BrightWhite
+};
+
 struct RGBA
 {
   ui8 r{0};
@@ -131,6 +152,120 @@ inline auto parseRGBA(std::string_view s) -> std::optional<RGBA>
   vals[idx] = cur;
 
   return RGBA{(ui8)vals[0], (ui8)vals[1], (ui8)vals[2], (ui8)vals[3]};
+}
+
+struct Ansi
+{
+  // Basic ANSI "controls"
+  static constexpr std::string_view Esc       = "\x1b[";
+  static constexpr std::string_view Clear     = "\x1b[2J\x1b[H";
+  static constexpr std::string_view ClearLine = "\x1b[2K";
+  static constexpr std::string_view Reset     = "\x1b[0m";
+  static constexpr std::string_view Bold      = "\x1b[1m";
+  static constexpr std::string_view Dim       = "\x1b[2m";
+  static constexpr std::string_view Underline = "\x1b[4m";
+  static constexpr std::string_view Italic    = "\x1b[3m";
+
+  static constexpr std::string_view NoBold      = "\x1b[22m";
+  static constexpr std::string_view NoUnderline = "\x1b[24m";
+  static constexpr std::string_view NoItalic    = "\x1b[23m";
+
+  // ----- 24-bit True Color -----
+  static inline auto fgTrue(utils::colors::RGBA c) -> std::string
+  {
+    return "\x1b[38;2;" + std::to_string((int)c.r) + ";" + std::to_string((int)c.g) + ";" +
+           std::to_string((int)c.b) + "m";
+  }
+
+  static inline auto bgTrue(utils::colors::RGBA c) -> std::string
+  {
+    return "\x1b[48;2;" + std::to_string((int)c.r) + ";" + std::to_string((int)c.g) + ";" +
+           std::to_string((int)c.b) + "m";
+  }
+
+  // ----- 256-color palette -----
+  static inline auto fg256(ui8 idx) -> std::string
+  {
+    return "\x1b[38;5;" + std::to_string((int)idx) + "m";
+  }
+
+  static inline auto bg256(ui8 idx) -> std::string
+  {
+    return "\x1b[48;5;" + std::to_string((int)idx) + "m";
+  }
+
+  // ----- Basic 16 colors -----
+  static inline auto fg16(Basic16 c) -> std::string
+  {
+    const int base = (int)c;
+    if (base < 8)
+      return "\x1b[" + std::to_string(30 + base) + "m";
+    return "\x1b[" + std::to_string(90 + (base - 8)) + "m";
+  }
+
+  static inline auto bg16(Basic16 c) -> std::string
+  {
+    const int base = (int)c;
+    if (base < 8)
+      return "\x1b[" + std::to_string(40 + base) + "m";
+    return "\x1b[" + std::to_string(100 + (base - 8)) + "m";
+  }
+
+  static inline auto MoveCursor(int row, int col) -> std::string
+  {
+    // 1-based rows/cols
+    return "\x1b[" + std::to_string(row) + ";" + std::to_string(col) + "H";
+  }
+
+  static inline auto HideCursor() -> std::string { return "\x1b[?25l"; }
+
+  static inline auto ShowCursor() -> std::string { return "\x1b[?25h"; }
+};
+
+// ============================================================
+// Conversions: RGBA -> ANSI 256 (simple mapping)
+// ============================================================
+//
+// This is a classic approximation:
+// - If r=g=b -> grayscale ramp
+// - Otherwise map to 6x6x6 cube
+//
+constexpr auto clampU8(int x) -> ui8 { return (ui8)(x < 0 ? 0 : (x > 255 ? 255 : x)); }
+
+constexpr auto nearestCubeIndex(ui8 v) -> ui8
+{
+  // 0..255 -> 0..5
+  // (value * 5 + 127) / 255 for rounding
+  return (ui8)((v * 5 + 127) / 255);
+}
+
+constexpr auto cubeLevel(ui8 idx) -> ui8
+{
+  // 0, 95, 135, 175, 215, 255
+  // official xterm table levels
+  return (idx == 0) ? 0 : (ui8)(55 + 40 * idx);
+}
+
+constexpr auto toAnsi256(utils::colors::RGBA c) -> ui8
+{
+  // grayscale special-casing
+  if (c.r == c.g && c.g == c.b)
+  {
+    if (c.r < 8)
+      return 16;
+    if (c.r > 248)
+      return 231;
+
+    // 24 grayscale levels in xterm palette
+    const int gray = (c.r - 8) / 10; // 0..23
+    return (ui8)(232 + gray);
+  }
+
+  const ui8 ri = nearestCubeIndex(c.r);
+  const ui8 gi = nearestCubeIndex(c.g);
+  const ui8 bi = nearestCubeIndex(c.b);
+
+  return (ui8)(16 + 36 * ri + 6 * gi + bi);
 }
 
 } // namespace utils::colors

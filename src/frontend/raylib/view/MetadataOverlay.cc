@@ -49,7 +49,7 @@ void MetadataOverlay::draw(const ui::Fonts& fonts, const Metadata& meta)
   row("Genre", meta.genre.empty() ? "—" : meta.genre);
   row("Year", std::to_string(meta.year));
   row("Track #", std::to_string(meta.track));
-  row("Duration", utils::fmtTime(meta.duration));
+  row("Duration", utils::timer::fmtTime(meta.duration));
 
   // path gets its own area
   y += 10;

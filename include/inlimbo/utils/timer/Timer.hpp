@@ -9,6 +9,9 @@
 namespace utils
 {
 
+namespace timer
+{
+
 // ---------------------------------------------------------------------------
 // Generic Time utility
 // ---------------------------------------------------------------------------
@@ -25,6 +28,12 @@ inline auto timestamp_now() -> std::string
   return oss.str();
 }
 
+[[nodiscard]] inline auto nowUnix() noexcept -> std::int64_t
+{
+  using namespace std::chrono;
+  return duration_cast<seconds>(system_clock::now().time_since_epoch()).count();
+}
+
 inline static auto fmtTime(double sec) -> std::string
 {
   int s = static_cast<int>(sec);
@@ -35,6 +44,8 @@ inline static auto fmtTime(double sec) -> std::string
   oss << std::setw(2) << std::setfill('0') << m << ":" << std::setw(2) << std::setfill('0') << s;
   return oss.str();
 }
+
+} // namespace timer
 
 /// High-resolution, type-safe timer for benchmarking or profiling.
 ///

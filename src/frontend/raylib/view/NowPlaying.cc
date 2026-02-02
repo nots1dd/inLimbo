@@ -84,8 +84,8 @@ void NowPlaying::drawProgress(const audio::service::TrackInfo& info, audio::Serv
 
   knob = util::smooth(knob, knobTarget, 0.18f);
 
-  const std::string cur = utils::fmtTime(info.positionSec);
-  const std::string len = utils::fmtTime(info.lengthSec);
+  const std::string cur = utils::timer::fmtTime(info.positionSec);
+  const std::string len = utils::timer::fmtTime(info.lengthSec);
 
   DrawTextEx(fonts.regular, cur.c_str(), {barX - 60, barY - 6}, 14, 1, TEXT_DIM);
 
