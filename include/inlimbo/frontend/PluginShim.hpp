@@ -31,14 +31,12 @@
     {                                                                                            \
       delete static_cast<FRONTEND_NS::Interface*>(instance);                                     \
     }                                                                                            \
-                                                                                                 \
     static const InLimboFrontendAPI g_inlimbo_frontend_api = {                                   \
       .abi_version = INLIMBO_FRONTEND_ABI_VERSION,                                               \
       .struct_size = sizeof(InLimboFrontendAPI),                                                 \
       .create      = fe_create,                                                                  \
       .run         = fe_run,                                                                     \
-      .destroy     = fe_destroy,                                                                 \
-    };                                                                                           \
+      .destroy     = fe_destroy};                                                                    \
                                                                                                  \
     const InLimboFrontendAPI* inlimbo_frontend_get_api() { return &g_inlimbo_frontend_api; }     \
                                                                                                  \

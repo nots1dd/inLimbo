@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstddef>
-#include <utility>
 
 // ============================================================
 // Project and Version Info
@@ -57,13 +56,8 @@
 #elif CPP_STD >= 202002L
 #define CPP_VER 20
 #elif CPP_STD >= 201703L
-#define CPP_VER 17
-#elif CPP_STD >= 201402L
-#define CPP_VER 14
-#elif CPP_STD >= 201103L
-#define CPP_VER 11
 #else
-#error "C++11 or higher required."
+#error "C++20 or higher required."
 #endif
 
 #if defined(_MSC_VER)
@@ -227,24 +221,6 @@
 #else
 #define ENDIAN_LITTLE 1
 #endif
-
-// ============================================================
-// Casting Helpers
-// ============================================================
-template <typename T, typename A> constexpr auto scast(A&& a) noexcept -> T
-{
-  return static_cast<T>(std::forward<A>(a));
-}
-
-template <typename T, typename A> constexpr auto recast(A&& a) noexcept -> T
-{
-  return reinterpret_cast<T>(std::forward<A>(a));
-}
-
-template <typename T, typename A> constexpr auto dcast(A&& a) noexcept -> T
-{
-  return dynamic_cast<T>(std::forward<A>(a));
-}
 
 // ============================================================
 // ABI & Binary Compatibility

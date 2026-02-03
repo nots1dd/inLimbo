@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_compile_options(-Wall -Wextra -Wpedantic -g)
+add_compile_options(-Wall -Wextra -Wpedantic -Werror -g)
 
 set(INLIMBO_USER_FRONTEND_DIR
     "$ENV{HOME}/.local/share/inLimbo/frontends"
@@ -110,6 +110,7 @@ set(INLIMBO_CORE_SOURCES
     src/taglib/Parser.cc
     src/mpris/Service.cc
     src/query/SongMap.cc
+    src/frontend/Plugin.cc
     src/helpers/cmdline/Display.cc
     src/helpers/fs/Directory.cc
     src/utils/DirectoryWalker.cc
@@ -185,6 +186,7 @@ set(INLIMBO_FRONTEND_NAMES "")
 # ===================== FRONTENDS ============================
 include(${CMAKE_SOURCE_DIR}/cmake/frontends/cmdline.cmake)
 # include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
+# include(${CMAKE_SOURCE_DIR}/cmake/frontends/ftxui.cmake)
 # ===================== FRONTENDS ============================
 
 include(${CMAKE_SOURCE_DIR}/cmake/FrontendPluginList.cmake)

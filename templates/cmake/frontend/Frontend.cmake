@@ -10,7 +10,7 @@
 # set(INLIMBO_FRONTEND_OUTPUT_NAME "inlimbo-frontend-dummy")
 set(INLIMBO_FRONTEND_TARGET      inLimbo-fe-dummy)
 set(INLIMBO_FRONTEND_NAME        "dummy")
-set(INLIMBO_FRONTEND_OUTPUT_NAME "inlimbo-frontend-cmdline")
+set(INLIMBO_FRONTEND_OUTPUT_NAME "inlimbo-frontend-ftxui")
 
 # Typically the file structure of a frontend would be like so:
 #
@@ -24,7 +24,7 @@ set(INLIMBO_FRONTEND_OUTPUT_NAME "inlimbo-frontend-cmdline")
 # 
 # Failing to abide by the above will most def cause compilation and frontend plugin errors as the 
 # ABI is meant to be quite strict but powerful.
-set(INLIMBO_FE_CMDLINE_SOURCES
+set(INLIMBO_FE_DUMMY_SOURCES
   ${CMAKE_SOURCE_DIR}/src/frontend/dummy/Interface.cc
   ${CMAKE_SOURCE_DIR}/src/frontend/dummy/PluginShim.cc
 )
@@ -34,7 +34,7 @@ set(INLIMBO_FE_CMDLINE_SOURCES
 # -------------------- NOTE ----------------------
 
 add_library(${INLIMBO_FRONTEND_TARGET} SHARED
-    ${INLIMBO_FE_CMDLINE_SOURCES}
+    ${INLIMBO_FE_DUMMY_SOURCES}
 )
 
 set_target_properties(${INLIMBO_FRONTEND_TARGET} PROPERTIES

@@ -1,6 +1,6 @@
 #include "Context.hpp"
+#include "Logger.hpp"
 #include "StackTrace.hpp"
-#include "toml/Parser.hpp"
 #include "utils/signal/Handler.hpp"
 
 // this is optional to have, but useful for debugging
@@ -15,7 +15,6 @@ auto main(int argc, char** argv) -> int
 
   try
   {
-    tomlparser::Config::load();
     auto ctx = inlimbo::initializeContext(argc, argv);
     inlimbo::buildOrLoadLibrary(ctx);
     if (inlimbo::maybeHandlePrintActions(ctx))

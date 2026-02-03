@@ -68,7 +68,7 @@ struct AppContext
   telemetry::Context m_telemetryCtx;
 
   // Frontend plugin
-  frontend::PluginName m_fePluginName;
+  PluginName m_fePluginName;
 
   // Core objects
   taglib::Parser m_tagLibParser;

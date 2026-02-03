@@ -47,7 +47,7 @@ void setupArgs(CLI::App& app, Args& args)
     });
 
   app.add_option("-f,--frontend", args.frontend, "Frontend name to plugin and play")
-    ->check([](const frontend::PluginNameStr& s) -> frontend::PluginNameStr {
+    ->check([](const PluginNameStr& s) -> PluginNameStr {
       if (s.empty()) return "Frontend plugin name cannot be empty";
       return {};
     });
@@ -353,6 +353,9 @@ auto maybeHandleEditActions(AppContext& ctx) -> bool
 
 auto initializeContext(int argc, char** argv) -> AppContext
 {
+
+  tomlparser::Config::load();
+
   CLI::App   cliApp{APP_DESC, APP_NAME};
   AppContext ctx(cliApp);
 
@@ -376,7 +379,7 @@ auto initializeContext(int argc, char** argv) -> AppContext
 
   ctx.m_songTitle    = ctx.args.song;
   ctx.m_fuzzyMaxDist = tomlparser::Config::getInt("fuzzy", "max_dist");
-  ctx.m_fePluginName = frontend::PluginName{ctx.args.frontend};
+  ctx.m_fePluginName = PluginName{ctx.args.frontend};
 
   const float vol = ctx.args.volume;
 
@@ -468,8 +471,13 @@ void runFrontend(AppContext& ctx)
     frontend::Plugin    fePlugin(ctx.m_fePluginName);
     frontend::Interface ui(fePlugin, g_songMap, ctx.m_telemetryCtx, &mprisService);
 
-    if (ui.ready())
-      LOG_INFO("Frontend plugin '{}' seems to be ready. Loading frontend...", ctx.m_fePluginName);
+    if (!ui.ready())
+    {
+      LOG_CRITICAL("Frontend plugin '{}' is not ready. Aborting...", ctx.m_fePluginName);
+      return;
+    }
+
+    LOG_INFO("---- Frontend Plugin Loaded ----");
 
     // ---------------------------------------------------------
     // Initialize backend
@@ -501,6 +509,7 @@ void runFrontend(AppContext& ctx)
     // ---------------------------------------------------------
     audio.shutdown();
 
+    LOG_INFO("---- Frontend Plugin Ended ----");
     if (ctx.m_telemetryCtx.registry.save(
           utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_TELEMETRY_REGISTRY_BIN_NAME)))
       LOG_INFO("Saved telemetry registry successfully!");
