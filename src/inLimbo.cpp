@@ -3,11 +3,6 @@
 #include "StackTrace.hpp"
 #include "utils/signal/Handler.hpp"
 
-// this is optional to have, but useful for debugging
-#ifdef INLIMBO_DEBUG_BUILD
-#warning "INLIMBO_DEBUG_BUILD is enabled!"
-#endif
-
 auto main(int argc, char** argv) -> int
 {
   RECORD_FUNC_TO_BACKTRACE("<MAIN>");

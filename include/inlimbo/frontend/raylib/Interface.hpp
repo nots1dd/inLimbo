@@ -33,7 +33,7 @@ public:
   {
   }
 
-  NON_COPYABLE(Interface);
+  IMMUTABLE(Interface);
 
   void run(audio::Service& audio);
 

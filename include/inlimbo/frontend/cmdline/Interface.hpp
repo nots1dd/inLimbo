@@ -39,7 +39,7 @@ public:
   {
   }
 
-  NON_COPYABLE(Interface);
+  IMMUTABLE(Interface);
 
   [[nodiscard]] auto ready() -> bool;
   void               run(audio::Service& audio);
