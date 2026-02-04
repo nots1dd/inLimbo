@@ -6,6 +6,15 @@
 namespace utils::fs
 {
 
+auto toRelFilePathUri(const std::filesystem::path& p) -> const Path
+{
+  Path uri("file://");
+
+  uri += p.c_str();
+
+  return uri;
+}
+
 auto toAbsFilePathUri(const std::filesystem::path& p) -> const Path
 {
   Path uri("file://");

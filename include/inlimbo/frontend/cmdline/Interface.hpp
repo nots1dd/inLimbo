@@ -81,10 +81,6 @@ private:
   void enableRawMode();
   void disableRawMode();
 
-  void beginPlay(audio::Service& audio);
-  void updateTelemetryProgress(audio::Service& audio);
-  void endCurrentPlay(audio::Service& audio);
-
   void statusLoop(audio::Service& audio);
   void inputLoop(audio::Service& audio);
   void seekLoop(audio::Service& audio);

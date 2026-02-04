@@ -107,12 +107,20 @@ include(${CMAKE_SOURCE_DIR}/cmake/Version.cmake)
 # -----------------------------------------------------------
 set(INLIMBO_CORE_SOURCES
     src/core/SongTree.cc
+    src/audio/Engine.cc
+    src/audio/Service.cc
+    src/audio/Playlist.cc
     src/taglib/Parser.cc
     src/mpris/Service.cc
+    src/telemetry/Sink.cc
+    src/telemetry/Analysis.cc
+    src/telemetry/Store.cc
+    src/telemetry/IDs.cc
     src/query/SongMap.cc
     src/frontend/Plugin.cc
     src/helpers/cmdline/Display.cc
     src/helpers/fs/Directory.cc
+    src/helpers/telemetry/Playback.cc
     src/utils/DirectoryWalker.cc
     src/utils/signal/Handler.cc
     src/utils/string/Equals.cc
@@ -121,14 +129,7 @@ set(INLIMBO_CORE_SOURCES
     src/config/Keybinds.cc
     src/config/Colors.cc
     src/config/Misc.cc
-    src/telemetry/Sink.cc
-    src/telemetry/Analysis.cc
-    src/telemetry/Store.cc
-    src/telemetry/IDs.cc
     src/toml/Parser.cc
-    src/audio/Engine.cc
-    src/audio/Service.cc
-    src/audio/Playlist.cc
     src/Logger.cc
     src/Context.cc
 )
@@ -186,7 +187,7 @@ set(INLIMBO_FRONTEND_NAMES "")
 # ===================== FRONTENDS ============================
 include(${CMAKE_SOURCE_DIR}/cmake/frontends/cmdline.cmake)
 # include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
-# include(${CMAKE_SOURCE_DIR}/cmake/frontends/ftxui.cmake)
+# include(${CMAKE_SOURCE_DIR}/cmake/frontends/webview.cmake)
 # ===================== FRONTENDS ============================
 
 include(${CMAKE_SOURCE_DIR}/cmake/FrontendPluginList.cmake)

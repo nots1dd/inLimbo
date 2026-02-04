@@ -12,6 +12,7 @@
 #include "config/Misc.hpp"
 #include "toml/Parser.hpp"
 
+#include "helpers/telemetry/Playback.hpp"
 #include "mpris/Service.hpp"
 #include "query/SongMap.hpp"
 #include "utils/Index.hpp"
@@ -162,7 +163,7 @@ void Interface::run(audio::Service& audio)
   //   });
 
   m_mprisService->updateMetadata();
-  beginPlay(audio);
+  helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
 
   enableRawMode();
   m_isRunning.store(true);
@@ -188,7 +189,7 @@ void Interface::run(audio::Service& audio)
   if (seek.joinable())
     seek.join();
 
-  endCurrentPlay(audio);
+  helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
   // inLimbo's app context will save telemetry data
 }
 
@@ -215,7 +216,7 @@ void Interface::statusLoop(audio::Service& audio)
 {
   while (m_isRunning.load())
   {
-    updateTelemetryProgress(audio);
+    helpers::telemetry::updateTelemetryProgress(audio, m_currentPlay, m_lastPlayTick);
 
     if (m_cfgWatcher.pollChanged())
     {
@@ -228,17 +229,17 @@ void Interface::statusLoop(audio::Service& audio)
 
     if (pos >= len)
     {
-      endCurrentPlay(audio);
+      helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
       audio.nextTrack();
-      beginPlay(audio);
+      helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
       m_mprisService->updateMetadata();
       m_mprisService->notify();
     }
 
     if (autoNextIfFinished(audio, *m_mprisService, m_lastAutoNextTid, m_autoNextInProgress))
     {
-      endCurrentPlay(audio);
-      beginPlay(audio);
+      helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
+      helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
@@ -525,9 +526,9 @@ auto Interface::handleSearchTitleMode(audio::Service& audio, char c) -> bool
       auto h = audio.registerTrack(*song);
       audio.addToPlaylist(h);
 
-      endCurrentPlay(audio);
+      helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
       audio.nextTrack();
-      beginPlay(audio);
+      helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
       m_mprisService->updateMetadata();
       m_mprisService->notify();
 
@@ -591,76 +592,15 @@ auto Interface::handleSearchArtistMode(audio::Service& audio, char c) -> bool
         return true;
       }
 
-      endCurrentPlay(audio);
+      helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
       audio.restart();
-      beginPlay(audio);
+      helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
       m_mprisService->updateMetadata();
       m_mprisService->notify();
 
       m_mode = UiMode::Normal;
       return true;
     });
-}
-
-void Interface::updateTelemetryProgress(audio::Service& audio)
-{
-  if (!m_currentPlay || !m_lastPlayTick)
-    return;
-
-  auto infoOpt = audio.getCurrentTrackInfo();
-  if (!infoOpt || !infoOpt->playing)
-    return;
-
-  const auto now = utils::timer::nowUnix();
-  const auto dt  = now - *m_lastPlayTick;
-
-  if (dt > 0)
-    m_currentPlay->seconds += double(dt);
-
-  m_lastPlayTick = now;
-}
-
-void Interface::beginPlay(audio::Service& audio)
-{
-  auto metaOpt = audio.getCurrentMetadata();
-  if (!metaOpt)
-    return;
-
-  telemetry::Event ev{};
-  ev.type      = telemetry::EventType::PlayEnd;
-  ev.song      = m_telemetryCtx->registry.titles.getOrCreate(metaOpt->title);
-  ev.artist    = m_telemetryCtx->registry.artists.getOrCreate(metaOpt->artist);
-  ev.album     = m_telemetryCtx->registry.albums.getOrCreate(metaOpt->album);
-  ev.genre     = m_telemetryCtx->registry.genres.getOrCreate(metaOpt->genre);
-  ev.seconds   = 0.0;
-  ev.timestamp = utils::timer::nowUnix();
-
-  m_currentPlay  = ev;
-  m_lastPlayTick = ev.timestamp;
-}
-
-void Interface::endCurrentPlay(audio::Service& audio)
-{
-  if (!m_currentPlay)
-    return;
-
-  auto infoOpt = audio.getCurrentTrackInfo();
-  if (!infoOpt)
-    return;
-
-  // Ignore zero-length or accidental triggers
-  if (infoOpt->positionSec < 1.0)
-  {
-    m_currentPlay.reset();
-    m_lastPlayTick.reset();
-    return;
-  }
-
-  m_currentPlay->timestamp = utils::timer::nowUnix();
-  m_telemetryCtx->store.onEvent(*m_currentPlay);
-
-  m_currentPlay.reset();
-  m_lastPlayTick.reset();
 }
 
 auto Interface::handleKey(audio::Service& audio, config::keybinds::KeyChar c) -> bool
@@ -683,23 +623,23 @@ auto Interface::handleKey(audio::Service& audio, config::keybinds::KeyChar c) ->
   }
   else if (c == kb.nextTrack)
   {
-    endCurrentPlay(audio);
+    helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
     audio.nextTrack();
-    beginPlay(audio);
+    helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
     trackChanged = true;
   }
   else if (c == kb.prevTrack)
   {
-    endCurrentPlay(audio);
+    helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
     audio.previousTrack();
-    beginPlay(audio);
+    helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
     trackChanged = true;
   }
   else if (c == kb.randomTrack)
   {
-    endCurrentPlay(audio);
+    helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
     audio.randomTrack();
-    beginPlay(audio);
+    helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
     trackChanged = true;
   }
   else if (c == kb.restartTrack)
