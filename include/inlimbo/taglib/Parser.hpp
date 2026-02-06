@@ -1,6 +1,8 @@
 #pragma once
 
-#include "InLimbo-Types.hpp"
+#include "ITag.hpp"
+#include "taglib/source/FLAC.hpp"
+#include "taglib/source/MP3.hpp"
 #include <sys/stat.h>
 
 #include <png.h>
@@ -12,42 +14,38 @@
 #include <taglib/tag.h>
 #include <taglib/tpropertymap.h>
 
-#define INLIMBO_TITLE_NAME_FALLBACK  "<Unknown-Title>"
-#define INLIMBO_ARTIST_NAME_FALLBACK "<Unknown-Artist>"
-#define INLIMBO_ALBUM_NAME_FALLBACK  "<Unknown-Album>"
-#define INLIMBO_GENRE_NAME_FALLBACK  "<Unknown-Genre>"
-#define INLIMBO_COMMENT_FALLBACK     "<No-Comment>"
-
 namespace taglib
 {
 
-struct TagLibConfig
-{
-  bool debugLog = false;
-};
-
-/**
- * @brief A class for parsing metadata from audio files using TagLib.
- */
 class Parser
 {
 public:
   explicit Parser(TagLibConfig config);
 
   auto parseFile(const Path& filePath, Metadata& metadata) -> bool;
-
   auto modifyMetadata(const Path& filePath, const Metadata& newData) -> bool;
 
   static auto fillArtUrl(Metadata& meta) -> bool;
 
 private:
   TagLibConfig m_config;
+  ParseSession m_parseSession;
 };
 
-/**
- * @brief Extracts album art (thumbnail) from audio files (MP3, FLAC).
- * @return true on success.
- */
-auto extractThumbnail(const Path& audioFilePath, const Path& outputImagePath) -> bool;
+static source::MP3  MP3_STRATEGY;
+static source::FLAC FLAC_STRATEGY;
+
+constexpr std::array SOURCE_TABLE = {
+  TagSourceEntry{.ext = ".mp3", .source_tag = &MP3_STRATEGY},
+  TagSourceEntry{.ext = ".flac", .source_tag = &FLAC_STRATEGY},
+};
+
+inline static auto findSource(std::string_view ext) -> ITag*
+{
+  for (auto& s : SOURCE_TABLE)
+    if (s.ext == ext)
+      return s.source_tag;
+  return nullptr;
+}
 
 } // namespace taglib

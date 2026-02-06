@@ -2,83 +2,13 @@
 #include "Logger.hpp"
 #include "utils/fs/FileUri.hpp"
 #include "utils/fs/Paths.hpp"
-#include <filesystem>
-#include <fstream>
-#include <iostream>
+#include <string_view>
+#include <taglib/flacfile.h>
 #include <taglib/id3v2.h>
+#include <taglib/mpegfile.h>
 
 namespace taglib
 {
-
-static void extractTrackAndTotal(TagLib::FileRef& file, Metadata& metadata)
-{
-  TagLib::PropertyMap props = file.file()->properties();
-
-  metadata.track      = 0;
-  metadata.trackTotal = 0;
-
-  // -------------------------
-  // TRACKNUMBER: "X" or "X/Y"
-  // -------------------------
-  if (props.contains("TRACKNUMBER"))
-  {
-    TagLib::String text  = props["TRACKNUMBER"].toString(); // e.g. "3/9"
-    auto           parts = text.split('/');
-
-    if (!parts.isEmpty())
-      metadata.track = parts[0].toInt();
-
-    if (parts.size() > 1)
-      metadata.trackTotal = parts[1].toInt();
-  }
-
-  // -------------------------
-  // Fallback: TRACKTOTAL / TOTALTRACKS
-  // -------------------------
-  if (metadata.trackTotal == 0)
-  {
-    if (props.contains("TRACKTOTAL"))
-      metadata.trackTotal = props["TRACKTOTAL"].toString().toInt();
-    else if (props.contains("TOTALTRACKS"))
-      metadata.trackTotal = props["TOTALTRACKS"].toString().toInt();
-  }
-}
-
-static void extractDiscAndTotal(TagLib::FileRef& file, Metadata& metadata)
-{
-  TagLib::PropertyMap props = file.file()->properties();
-
-  metadata.discNumber = 0;
-  metadata.discTotal  = 0;
-
-  // -------------------------
-  // DISCNUMBER: "X" or "X/Y"
-  // -------------------------
-  if (props.contains("DISCNUMBER"))
-  {
-    TagLib::String text  = props["DISCNUMBER"].toString(); // e.g. "1/2"
-    auto           parts = text.split('/');
-
-    if (!parts.isEmpty())
-      metadata.discNumber = parts[0].toInt();
-
-    if (parts.size() > 1)
-      metadata.discTotal = parts[1].toInt();
-  }
-
-  // -------------------------
-  // Fallback: DISCTOTAL / TOTALDISCS
-  // -------------------------
-  if (metadata.discTotal == 0)
-  {
-    if (props.contains("DISCTOTAL"))
-      metadata.discTotal = props["DISCTOTAL"].toString().toInt();
-    else if (props.contains("TOTALDISCS"))
-      metadata.discTotal = props["TOTALDISCS"].toString().toInt();
-  }
-}
-
-static int unknownArtistTracks = 0;
 
 Parser::Parser(TagLibConfig config) { m_config = std::move(config); }
 
@@ -87,76 +17,22 @@ auto Parser::parseFile(const Path& filePath, Metadata& metadata) -> bool
   if (m_config.debugLog)
     LOG_DEBUG("Parsing file: {}", filePath);
 
-  TagLib::FileRef file(filePath.c_str());
-  if (file.isNull())
+  auto ext = filePath.extension();
+
+  auto* source = findSource(ext.c_str());
+
+  if (!source)
   {
-    LOG_ERROR("Failed to open file: {}", filePath);
-    metadata.title = filePath.filename();
+    LOG_WARN("No parser strategy for file: {}", filePath);
     return false;
   }
 
-  if (!file.tag())
-  {
-    LOG_WARN("No tag information found in file: {}", filePath);
-    metadata.title = filePath.filename();
-    return true;
-  }
-
-  TagLib::Tag* tag = file.tag();
-  metadata.title = tag->title().isEmpty() ? filePath.filename().c_str() : tag->title().to8Bit(true);
-  metadata.artist =
-    tag->artist().isEmpty() ? INLIMBO_ARTIST_NAME_FALLBACK : tag->artist().to8Bit(true);
-  metadata.album = tag->album().isEmpty() ? INLIMBO_ALBUM_NAME_FALLBACK : tag->album().to8Bit(true);
-  metadata.genre = tag->genre().isEmpty() ? INLIMBO_GENRE_NAME_FALLBACK : tag->genre().to8Bit(true);
-  metadata.comment =
-    tag->comment().isEmpty() ? INLIMBO_COMMENT_FALLBACK : tag->comment().to8Bit(true);
-  metadata.year       = tag->year();
-  metadata.track      = tag->track();
-  metadata.trackTotal = 0;
-
-  extractDiscAndTotal(file, metadata);
-  extractTrackAndTotal(file, metadata);
-
-  TagLib::AudioProperties* audioProps = file.audioProperties();
-  if (audioProps)
-  {
-    metadata.duration = audioProps->lengthInSeconds();
-    metadata.bitrate  = audioProps->bitrate();
-  }
+  LOG_DEBUG("Using tag source for extension: {}", ext);
 
   metadata.filePath = filePath;
 
-  TagLib::PropertyMap props = file.file()->properties();
-
-  // this is required to sort features in a song properly.
-  //
-  // if a song is indexed as <Song> feat. <Artist B> but it is in
-  // the album of Artist A, the metadata in artist tag of TagLib
-  // shows: <Artist A>/<Artist B>
-  //
-  // This isnt entirely wrong, it lets us know features and mixed songs.
-  //
-  // But when fetching albums which is very important, the song tree screws up.
-  //
-  // It finds a new key (<Artist A>/<Artist B>) and will use that as a "new" artist.
-  // So the album although maybe downloaded by the user, it wont show up contiguosly.
-  //
-  // If we dont find this property "ALBUMARTIST", we have the fallback artist tag anyway.
-  if (props.contains("ALBUMARTIST"))
-    metadata.artist = props["ALBUMARTIST"].toString().to8Bit(true);
-
-  if (metadata.track == 0 && metadata.artist == INLIMBO_ARTIST_NAME_FALLBACK)
-    metadata.track = ++unknownArtistTracks;
-
-  if (props.contains("LYRICS"))
-    metadata.lyrics = props["LYRICS"].toString().to8Bit(true);
-
-  for (const auto& [key, val] : props)
-  {
-    metadata.additionalProperties[key.to8Bit(true)] = val.toString().to8Bit(true);
-  }
-
-  // Art URL
+  if (!source->parse(filePath, metadata, m_config, m_parseSession))
+    return false;
 
   if (!fillArtUrl(metadata))
   {
@@ -167,179 +43,46 @@ auto Parser::parseFile(const Path& filePath, Metadata& metadata) -> bool
   return true;
 }
 
-// NOTE: This function currently supports only MP3 and FLAC files.
-//
-// Currently modifies the following fields:
-// - Title
-// - Artist
-// - Album
-// - Genre
-// - Comment
-// - Year
-// - Track
-// - Lyrics
 auto Parser::modifyMetadata(const Path& filePath, const Metadata& newData) -> bool
 {
-  const auto ext     = filePath.extension();
-  bool       success = false;
+  auto* source = findSource(filePath.extension().c_str());
+
+  if (!source)
+  {
+    LOG_CRITICAL("Unsupported file type for metadata modification: {}", filePath.extension());
+    return false;
+  }
 
   try
   {
-    if (ext == ".mp3")
-    {
-      TagLib::MPEG::File file(filePath.c_str());
-      if (!file.isValid())
-      {
-        LOG_ERROR("Invalid MP3 file: {}", filePath);
-        return false;
-      }
-
-      TagLib::ID3v2::Tag* tag = file.ID3v2Tag(true);
-      if (!tag)
-      {
-        LOG_WARN("Unable to get ID3v2 tag for: {}", filePath);
-        return false;
-      }
-
-      if (!newData.title.empty())
-        tag->setTitle(TagLib::String(newData.title, TagLib::String::UTF8));
-      if (!newData.artist.empty())
-        tag->setArtist(TagLib::String(newData.artist, TagLib::String::UTF8));
-      if (!newData.album.empty())
-        tag->setAlbum(TagLib::String(newData.album, TagLib::String::UTF8));
-      if (!newData.genre.empty())
-        tag->setGenre(TagLib::String(newData.genre, TagLib::String::UTF8));
-      if (!newData.comment.empty())
-        tag->setComment(TagLib::String(newData.comment, TagLib::String::UTF8));
-      if (newData.year != 0)
-        tag->setYear(newData.year);
-      if (newData.track != 0)
-        tag->setTrack(newData.track);
-
-      if (!newData.lyrics.empty())
-      {
-        TagLib::PropertyMap props = file.properties();
-        props.replace("LYRICS",
-                      TagLib::StringList(TagLib::String(newData.lyrics, TagLib::String::UTF8)));
-        file.setProperties(props);
-      }
-
-      file.save();
-      success = true;
-    }
-    else if (ext == ".flac")
-    {
-      TagLib::FLAC::File file(filePath.c_str());
-      if (!file.isValid())
-      {
-        LOG_WARN("Invalid FLAC file: {}", filePath);
-        return false;
-      }
-
-      TagLib::Tag* tag = file.tag();
-      if (!tag)
-      {
-        LOG_WARN("Unable to get tag for FLAC file: {}", filePath);
-        return false;
-      }
-
-      if (!newData.title.empty())
-        tag->setTitle(TagLib::String(newData.title, TagLib::String::UTF8));
-      if (!newData.artist.empty())
-        tag->setArtist(TagLib::String(newData.artist, TagLib::String::UTF8));
-      if (!newData.album.empty())
-        tag->setAlbum(TagLib::String(newData.album, TagLib::String::UTF8));
-      if (!newData.genre.empty())
-        tag->setGenre(TagLib::String(newData.genre, TagLib::String::UTF8));
-      if (!newData.comment.empty())
-        tag->setComment(TagLib::String(newData.comment, TagLib::String::UTF8));
-      if (newData.year != 0)
-        tag->setYear(newData.year);
-      if (newData.track != 0)
-        tag->setTrack(newData.track);
-
-      if (!newData.lyrics.empty())
-      {
-        TagLib::PropertyMap props = file.properties();
-        props.replace("LYRICS",
-                      TagLib::StringList(TagLib::String(newData.lyrics, TagLib::String::UTF8)));
-        file.setProperties(props);
-      }
-
-      file.save();
-      success = true;
-    }
-    else
-    {
-      LOG_WARN("Unsupported file type for metadata modification: {}", ext);
-      return false;
-    }
-
-    if (m_config.debugLog && success)
+    bool ok = source->modify(filePath, newData, m_config);
+    if (m_config.debugLog && ok)
       LOG_INFO("Metadata updated successfully for: {}", filePath);
+    return ok;
   }
   catch (const std::exception& e)
   {
     LOG_WARN("Exception during metadata update: {}", e.what());
-    success = false;
+    return false;
   }
-
-  return success;
-}
-
-auto extractThumbnail(const std::string& audioFilePath, const std::string& outputImagePath) -> bool
-{
-  const std::string ext = std::filesystem::path(audioFilePath).extension().string();
-
-  if (ext == ".mp3")
-  {
-    TagLib::MPEG::File file(audioFilePath.c_str());
-    if (!file.isValid())
-      return false;
-    auto* tag = file.ID3v2Tag();
-    if (!tag)
-      return false;
-
-    const auto& frames = tag->frameListMap()["APIC"];
-    if (frames.isEmpty())
-      return false;
-
-    auto* pic = dynamic_cast<TagLib::ID3v2::AttachedPictureFrame*>(frames.front());
-    if (!pic)
-      return false;
-
-    std::ofstream out(outputImagePath.c_str(), std::ios::binary);
-    out.write(reinterpret_cast<cstr>(pic->picture().data()), pic->picture().size());
-    return true;
-  }
-  else if (ext == ".flac")
-  {
-    TagLib::FLAC::File file(audioFilePath.c_str());
-    if (!file.isValid())
-      return false;
-    auto pics = file.pictureList();
-    if (pics.isEmpty())
-      return false;
-
-    std::ofstream out(outputImagePath.c_str(), std::ios::binary);
-    out.write(reinterpret_cast<cstr>(pics.front()->data().data()), pics.front()->data().size());
-    return true;
-  }
-
-  return false;
 }
 
 auto Parser::fillArtUrl(Metadata& meta) -> bool
 {
-  const auto cacheDir = utils::fs::getAppCacheArtPath();
+  const auto cacheDir = ::utils::fs::getAppCacheArtPath();
   std::filesystem::create_directories(cacheDir.c_str());
 
   const std::string     hash   = std::to_string(std::hash<std::string>{}(meta.filePath.c_str()));
   std::filesystem::path outImg = cacheDir / (hash + ".jpg");
 
-  if (std::filesystem::exists(outImg.c_str()) || extractThumbnail(meta.filePath, outImg))
+  auto* source = findSource(std::filesystem::path(meta.filePath).extension().string());
+  if (!source)
+    return false;
+
+  if (std::filesystem::exists(outImg) ||
+      source->extractThumbnail(meta.filePath.c_str(), outImg.c_str()))
   {
-    meta.artUrl = utils::fs::toAbsFilePathUri(outImg);
+    meta.artUrl = ::utils::fs::toAbsFilePathUri(outImg);
     return true;
   }
 

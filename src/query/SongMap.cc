@@ -442,6 +442,16 @@ void forEachSong(const threads::SafeMap<SongMap>&                     safeMap,
 namespace mut
 {
 
+void sortSongMap(threads::SafeMap<SongMap>& safeMap, sort::Mode mode)
+{
+  safeMap.withWriteLock(
+    [&](auto& map) -> auto
+    {
+      LOG_DEBUG("Sorting SongMap with mode={}", static_cast<int>(mode));
+      sort::apply(map, mode);
+    });
+}
+
 auto replaceSongObjAndUpdateMetadata(threads::SafeMap<SongMap>& safeMap, const Song& oldSong,
                                      const Song& newSong, taglib::Parser& parser) -> bool
 {

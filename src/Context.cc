@@ -424,8 +424,19 @@ void buildOrLoadLibrary(AppContext& ctx)
   helpers::fs::dirWalkProcessAll(ctx.m_musicDir, ctx.m_tagLibParser, tempSongTree);
 
   tempSongTree.setMusicPath(ctx.m_musicDir);
-  tempSongTree.saveToFile(ctx.m_binPath);
   g_songMap.replace(tempSongTree.moveSongMap());
+
+  // the song map is unordered so lets sort it
+  //
+  // note that by default, we are only sorting artists in ascending order,
+  // as that is most logical.
+  //
+  // other ways to sort & store (or) just query from CLI are coming soon.
+  query::songmap::mut::sortSongMap(g_songMap, query::songmap::sort::Mode::ArtistAsc);
+
+  // now let us save the newly sorted song map to disk
+  tempSongTree.newSongMap(g_songMap.snapshot());
+  tempSongTree.saveToFile(ctx.m_binPath);
 
   // SongTree has destructor so mem shud clear here
   LOG_INFO("Library rebuilt in {:.3f} ms", timer.elapsed_ms());

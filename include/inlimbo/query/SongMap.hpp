@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Config.hpp"
+#include "query/sort/Engine.hpp"
 #include "taglib/Parser.hpp"
 #include "thread/Map.hpp"
 
@@ -16,6 +17,8 @@ namespace read
 
 INLIMBO_API_CPP auto findSongPathByInode(const threads::SafeMap<SongMap>& safeMap,
                                          const ino_t                      givenInode) -> PathStr;
+
+// Song Object retrieval (ptr)
 
 INLIMBO_API_CPP auto findSongObjByTitle(const threads::SafeMap<SongMap>& safeMap,
                                         const Title&                     songTitle) -> const Song*;
@@ -85,8 +88,11 @@ forEachSong(const threads::SafeMap<SongMap>&                     safeMap,
 
 } // namespace read
 
+// Query methods here will cause MUTABLE changes to the song map datastructure.
 namespace mut
 {
+
+INLIMBO_API_CPP void sortSongMap(threads::SafeMap<SongMap>& safeMap, sort::Mode mode);
 
 INLIMBO_API_CPP auto replaceSongObjAndUpdateMetadata(threads::SafeMap<SongMap>& safeMap,
                                                      const Song& oldSong, const Song& newSong,

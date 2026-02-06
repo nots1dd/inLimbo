@@ -111,6 +111,9 @@ set(INLIMBO_CORE_SOURCES
     src/audio/Service.cc
     src/audio/Playlist.cc
     src/taglib/Parser.cc
+    src/taglib/Utils.cc
+    src/taglib/source/MP3.cc
+    src/taglib/source/FLAC.cc
     src/mpris/Service.cc
     src/telemetry/Sink.cc
     src/telemetry/Analysis.cc
