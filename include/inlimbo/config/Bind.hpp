@@ -10,7 +10,8 @@ namespace config
 namespace keybinds
 {
 
-template <typename T> struct Binding
+template <typename T>
+struct Binding
 {
   std::string_view key;    // TOML key name
   T*               target; // pointer to member
@@ -25,7 +26,8 @@ template <typename T> struct Binding
 namespace colors
 {
 
-template <typename T> struct Binding
+template <typename T>
+struct Binding
 {
   std::string_view key;
   T*               target;

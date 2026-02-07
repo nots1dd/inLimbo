@@ -1,0 +1,8 @@
+// ENUM_NAME, TOML_KEY
+
+X(LexAsc, "lex_asc", AlbumLexicographicAsc)
+X(LexDesc, "lex_desc", AlbumLexicographicDesc)
+X(YearAsc, "year_asc", AlbumYearAsc)
+X(YearDesc, "year_desc", AlbumYearDesc)
+X(TrackCountAsc, "track_count_asc", AlbumTrackCountAsc)
+X(TrackCountDesc, "track_count_desc", AlbumTrackCountDesc)

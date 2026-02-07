@@ -442,13 +442,16 @@ void forEachSong(const threads::SafeMap<SongMap>&                     safeMap,
 namespace mut
 {
 
-void sortSongMap(threads::SafeMap<SongMap>& safeMap, sort::Mode mode)
+void sortSongMap(threads::SafeMap<SongMap>& safeMap, const query::sort::RuntimeSortPlan& rtSortPlan)
 {
   safeMap.withWriteLock(
-    [&](auto& map) -> auto
+    [&](auto& map) -> void
     {
-      LOG_DEBUG("Sorting SongMap with mode={}", static_cast<int>(mode));
-      sort::apply(map, mode);
+      LOG_DEBUG("Sorting SongMap with runtime plan (artist={}, album={}, track={})",
+                static_cast<int>(rtSortPlan.artist), static_cast<int>(rtSortPlan.album),
+                static_cast<int>(rtSortPlan.track));
+
+      query::sort::applyRuntimeSortPlan(map, rtSortPlan);
     });
 }
 

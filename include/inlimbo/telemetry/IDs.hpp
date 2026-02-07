@@ -24,7 +24,11 @@ struct Registry
   [[nodiscard]] auto save(const std::string& path) const -> bool;
   auto               load(const std::string& path) -> bool;
 
-  template <class Archive> void serialize(Archive& ar) { ar(titles, artists, albums, genres); }
+  template <class Archive>
+  void serialize(Archive& ar)
+  {
+    ar(titles, artists, albums, genres);
+  }
 };
 
 } // namespace telemetry

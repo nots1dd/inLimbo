@@ -86,7 +86,8 @@ struct Metadata
 
   PathStr artUrl;
 
-  template <class Archive> void serialize(Archive& ar)
+  template <class Archive>
+  void serialize(Archive& ar)
   {
     ar(title, artist, album, genre, comment, year, track, trackTotal, discNumber, discTotal, lyrics,
        additionalProperties, filePath, duration, bitrate, artUrl);
@@ -105,7 +106,11 @@ struct Song
   Song() : inode(0), metadata() {};
   explicit Song(ino_t inode) : inode(inode) {}
 
-  template <class Archive> void serialize(Archive& ar) { ar(inode, metadata); }
+  template <class Archive>
+  void serialize(Archive& ar)
+  {
+    ar(inode, metadata);
+  }
 };
 
 using Songs = std::vector<Song>;

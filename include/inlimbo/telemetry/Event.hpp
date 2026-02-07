@@ -23,7 +23,8 @@ struct Event
   double    seconds;   // listened or seek delta
   Timestamp timestamp; // unix time
 
-  template <class Archive> void serialize(Archive& ar)
+  template <class Archive>
+  void serialize(Archive& ar)
   {
     ar(type, song, artist, album, genre, seconds, timestamp);
   }

@@ -3,7 +3,8 @@
 #include "utils/string/SmallString.hpp"
 #include <spdlog/fmt/fmt.h>
 
-template <> struct fmt::formatter<utils::string::SmallString>
+template <>
+struct fmt::formatter<utils::string::SmallString>
 {
   constexpr auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
 

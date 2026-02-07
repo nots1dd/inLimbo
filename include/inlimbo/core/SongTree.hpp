@@ -65,7 +65,11 @@ public:
   [[nodiscard]] auto returnMusicPath() const -> const Path { return m_musicPath; }
 
   // Persistence
-  template <class Archive> void serialize(Archive& ar) { ar(m_songMap, m_musicPath); }
+  template <class Archive>
+  void serialize(Archive& ar)
+  {
+    ar(m_songMap, m_musicPath);
+  }
 
   void saveToFile(const utils::string::SmallString& filename) const;
   void loadFromFile(const utils::string::SmallString& filename);

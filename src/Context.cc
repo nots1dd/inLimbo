@@ -1,5 +1,6 @@
 #include "Context.hpp"
 #include "Logger.hpp"
+#include "config/sort/Model.hpp"
 #include "frontend/Interface.hpp"
 #include "helpers/cmdline/Display.hpp"
 #include "helpers/fs/Directory.hpp"
@@ -413,7 +414,10 @@ void buildOrLoadLibrary(AppContext& ctx)
 
   if (!rebuild)
   {
+    LOG_INFO("No song map rebuild. Loading song map and sorting...");
     g_songMap.replace(tempSongTree.moveSongMap());
+    const auto plan = config::sort::loadRuntimeSortPlan();
+    query::songmap::mut::sortSongMap(g_songMap, plan);
     return;
   }
 
@@ -425,14 +429,14 @@ void buildOrLoadLibrary(AppContext& ctx)
 
   tempSongTree.setMusicPath(ctx.m_musicDir);
   g_songMap.replace(tempSongTree.moveSongMap());
-
   // the song map is unordered so lets sort it
   //
   // note that by default, we are only sorting artists in ascending order,
   // as that is most logical.
   //
   // other ways to sort & store (or) just query from CLI are coming soon.
-  query::songmap::mut::sortSongMap(g_songMap, query::songmap::sort::Mode::ArtistAsc);
+  const auto plan = config::sort::loadRuntimeSortPlan();
+  query::songmap::mut::sortSongMap(g_songMap, plan);
 
   // now let us save the newly sorted song map to disk
   tempSongTree.newSongMap(g_songMap.snapshot());

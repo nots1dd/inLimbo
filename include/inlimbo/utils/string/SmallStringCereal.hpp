@@ -8,14 +8,16 @@
 namespace utils::string
 {
 
-template <class Archive> void save(Archive& ar, const SmallString& s)
+template <class Archive>
+void save(Archive& ar, const SmallString& s)
 {
   // Serialize as a normal string
   std::string tmp{s.c_str(), s.size()};
   ar(tmp);
 }
 
-template <class Archive> void load(Archive& ar, SmallString& s)
+template <class Archive>
+void load(Archive& ar, SmallString& s)
 {
   std::string tmp;
   ar(tmp);

@@ -85,9 +85,10 @@ private:
   void inputLoop(audio::Service& audio);
   void seekLoop(audio::Service& audio);
 
-  template <typename OnSubmit> auto handleSearchCommon(char c, OnSubmit&& onSubmit) -> bool;
-  auto                              handleSearchTitleMode(audio::Service& audio, char c) -> bool;
-  auto                              handleSearchArtistMode(audio::Service& audio, char c) -> bool;
+  template <typename OnSubmit>
+  auto handleSearchCommon(char c, OnSubmit&& onSubmit) -> bool;
+  auto handleSearchTitleMode(audio::Service& audio, char c) -> bool;
+  auto handleSearchArtistMode(audio::Service& audio, char c) -> bool;
 
   void draw(audio::Service& audio);
   void drawBottomPrompt(const TermSize& ts, const UiColors& colors, std::string_view label,
@@ -99,7 +100,8 @@ private:
   static void showMetadata(const Metadata& m);
 };
 
-template <typename OnSubmit> auto Interface::handleSearchCommon(char c, OnSubmit&& onSubmit) -> bool
+template <typename OnSubmit>
+auto Interface::handleSearchCommon(char c, OnSubmit&& onSubmit) -> bool
 {
   // ESC exits search
   if (c == utils::ascii::ESC)

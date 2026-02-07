@@ -9,7 +9,8 @@
 namespace utils
 {
 
-template <typename T> class RingBuffer
+template <typename T>
+class RingBuffer
 {
   static_assert(std::is_trivially_copyable_v<T>,
                 "RingBuffer requires trivially copyable T for memcpy speed.");

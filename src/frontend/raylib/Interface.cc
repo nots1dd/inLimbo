@@ -1,5 +1,6 @@
 #include "frontend/raylib/Interface.hpp"
 #include "Logger.hpp"
+#include "config/sort/Model.hpp"
 #include "frontend/raylib/Constants.hpp"
 #include "query/SongMap.hpp"
 #include "toml/Parser.hpp"
@@ -98,7 +99,11 @@ void Interface::loadConfig()
 {
   try
   {
+    m_library.artists.clear();
     tomlparser::Config::load();
+
+    const auto plan = config::sort::loadRuntimeSortPlan();
+    query::songmap::mut::sortSongMap(*m_songMap, plan);
 
     colors::ConfigLoader           colorsCfg(FRONTEND_NAME);
     config::keybinds::ConfigLoader keysCfg(FRONTEND_NAME);
@@ -109,7 +114,12 @@ void Interface::loadConfig()
 
     m_cfg.set(std::move(next));
 
-    LOG_INFO("Configuration loaded for {}'s keybinds and colors.", FRONTEND_NAME);
+    LOG_INFO("Configuration loaded for {}'s keybinds and colors, and song map sort plans.",
+             FRONTEND_NAME);
+
+    query::songmap::read::forEachArtist(*m_songMap,
+                                        [&](const Artist& artist, const AlbumMap&) -> void
+                                        { m_library.artists.push_back(artist); });
   }
   catch (const std::exception& e)
   {
@@ -125,9 +135,6 @@ void Interface::run(audio::Service& audio)
   loadConfig();
   m_fonts.load();
   m_ui.running = true;
-
-  query::songmap::read::forEachArtist(*m_songMap, [&](const Artist& artist, const AlbumMap&) -> void
-                                      { m_library.artists.push_back(artist); });
 
   if (m_mpris)
     m_mpris->updateMetadata();

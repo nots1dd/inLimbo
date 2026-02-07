@@ -23,6 +23,7 @@ void printSongLyrics(const threads::SafeMap<SongMap>& safeMap, const Title& song
 
 void printAlbums(const threads::SafeMap<SongMap>& safeMap,
                  const std::optional<Artist>&     artist = std::nullopt);
+void printAlbumsByYear(const threads::SafeMap<SongMap>& safeMap);
 
 void printGenres(const threads::SafeMap<SongMap>& safeMap);
 

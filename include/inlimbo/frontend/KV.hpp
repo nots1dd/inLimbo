@@ -14,7 +14,8 @@ namespace frontend
 // or        frontend/raylib/Structs.hpp
 // to see how it is being used to load config.
 
-template <typename KeyT, typename NameT> struct KeyValueBase
+template <typename KeyT, typename NameT>
+struct KeyValueBase
 {
   KeyT  key{};
   NameT name{};

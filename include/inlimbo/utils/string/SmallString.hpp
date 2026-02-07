@@ -358,7 +358,8 @@ private:
   }
 
   // ---------------- Numeric helpers ----------------
-  template <typename T> void append_integral(T value)
+  template <typename T>
+  void append_integral(T value)
   {
     char buf[std::numeric_limits<T>::digits10 + 3];
     auto [ptr, ec] = std::to_chars(buf, buf + sizeof(buf), value);
@@ -368,7 +369,8 @@ private:
     }
   }
 
-  template <typename T> void append_floating(T value)
+  template <typename T>
+  void append_floating(T value)
   {
     char buf[64];
     auto [ptr, ec] = std::to_chars(buf, buf + sizeof(buf), value, std::chars_format::general);

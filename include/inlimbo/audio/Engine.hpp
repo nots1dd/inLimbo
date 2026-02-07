@@ -120,9 +120,10 @@ public:
   auto getSoundPtrMut() const -> std::shared_ptr<Sound>;
   auto getSoundPtr() const -> std::shared_ptr<const Sound>;
 
-  template <typename Fn> auto returnAudioBuffersView(Fn&& fn) const -> void;
-  auto                        getCopySeq() const noexcept -> ui64;
-  auto                        getCopyBufferSize() const noexcept -> size_t;
+  template <typename Fn>
+  auto returnAudioBuffersView(Fn&& fn) const -> void;
+  auto getCopySeq() const noexcept -> ui64;
+  auto getCopyBufferSize() const noexcept -> size_t;
 
 private:
   snd_pcm_t*  m_pcmData = nullptr;
@@ -180,7 +181,8 @@ private:
   }
 };
 
-template <typename Fn> auto AudioEngine::returnAudioBuffersView(Fn&& fn) const -> void
+template <typename Fn>
+auto AudioEngine::returnAudioBuffersView(Fn&& fn) const -> void
 {
   std::lock_guard<std::mutex> copyLock(m_copyMutex);
 

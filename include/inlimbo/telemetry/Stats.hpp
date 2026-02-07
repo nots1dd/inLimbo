@@ -23,7 +23,11 @@ struct Stats
     last = ts;
   }
 
-  template <class Archive> void serialize(Archive& ar) { ar(playCount, listenSec, first, last); }
+  template <class Archive>
+  void serialize(Archive& ar)
+  {
+    ar(playCount, listenSec, first, last);
+  }
 };
 
 } // namespace telemetry

@@ -1,0 +1,4 @@
+// ENUM_NAME, TOML_KEY
+
+X(TrackAsc, "track_asc", TrackNumberAsc)
+X(TrackDesc, "track_desc", TrackNumberDesc)

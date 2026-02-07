@@ -7,7 +7,8 @@
 namespace threads
 {
 
-template <typename TMap> class SafeMap
+template <typename TMap>
+class SafeMap
 {
 private:
   TMap                      m_map;
@@ -69,14 +70,16 @@ public:
   }
 
   // ---- Access for custom operations ----
-  template <typename Fn> auto withReadLock(Fn&& fn) const -> decltype(auto)
+  template <typename Fn>
+  auto withReadLock(Fn&& fn) const -> decltype(auto)
   {
     std::shared_lock lock(m_mtx);
     return fn(m_map);
   }
 
   // this shud be used with the intention of modifying the map
-  template <typename Fn> auto withWriteLock(Fn&& fn) -> decltype(auto)
+  template <typename Fn>
+  auto withWriteLock(Fn&& fn) -> decltype(auto)
   {
     std::unique_lock lock(m_mtx);
     return fn(m_map);

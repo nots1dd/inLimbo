@@ -65,12 +65,14 @@ auto Store::load(const std::string& path) -> bool
   return true;
 }
 
-template <class Archive> void Store::save(Archive& ar) const
+template <class Archive>
+void Store::save(Archive& ar) const
 {
   ar(events, songStats, artistStats, albumStats, genreStats);
 }
 
-template <class Archive> void Store::load(Archive& ar)
+template <class Archive>
+void Store::load(Archive& ar)
 {
   ar(events, songStats, artistStats, albumStats, genreStats);
 }

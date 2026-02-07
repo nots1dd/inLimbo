@@ -30,8 +30,10 @@ public:
   [[nodiscard]] auto save(const std::string& path) const -> bool;
   auto               load(const std::string& path) -> bool;
 
-  template <class Archive> void save(Archive& ar) const;
-  template <class Archive> void load(Archive& ar);
+  template <class Archive>
+  void save(Archive& ar) const;
+  template <class Archive>
+  void load(Archive& ar);
 
 private:
   std::vector<Event> events;

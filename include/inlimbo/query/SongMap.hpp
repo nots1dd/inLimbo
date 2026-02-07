@@ -92,7 +92,8 @@ forEachSong(const threads::SafeMap<SongMap>&                     safeMap,
 namespace mut
 {
 
-INLIMBO_API_CPP void sortSongMap(threads::SafeMap<SongMap>& safeMap, sort::Mode mode);
+INLIMBO_API_CPP void sortSongMap(threads::SafeMap<SongMap>&          safeMap,
+                                 const query::sort::RuntimeSortPlan& rtSortPlan);
 
 INLIMBO_API_CPP auto replaceSongObjAndUpdateMetadata(threads::SafeMap<SongMap>& safeMap,
                                                      const Song& oldSong, const Song& newSong,

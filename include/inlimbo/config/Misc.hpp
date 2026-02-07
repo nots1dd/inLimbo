@@ -14,7 +14,8 @@ class ConfigLoader
 public:
   explicit ConfigLoader(std::string_view frontend);
 
-  template <typename... Bindings> auto load(Bindings&&... bindings) const -> void
+  template <typename... Bindings>
+  auto load(Bindings&&... bindings) const -> void
   {
     if (!tomlparser::Config::isLoaded())
       throw std::runtime_error("Misc::ConfigLoader: toml not loaded");

@@ -22,7 +22,8 @@
 namespace utils
 {
 
-template <typename T> class Snapshot
+template <typename T>
+class Snapshot
 {
 public:
   using Ptr = std::shared_ptr<const T>;
@@ -45,7 +46,8 @@ public:
   }
 
   // build new snapshot by copying old snapshot, mutating, swapping
-  template <typename Fn> auto update(Fn&& fn) -> void
+  template <typename Fn>
+  auto update(Fn&& fn) -> void
   {
     auto cur = get();
 

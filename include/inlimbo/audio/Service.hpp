@@ -56,9 +56,10 @@ public:
   auto randomIndex() -> std::optional<size_t>;
 
   // AV stuff
-  template <typename Fn> auto returnAudioBuffersView(Fn&& fn) -> void;
-  auto                        getCopySeq() -> ui64;
-  auto                        getCopyBufferSize() -> size_t;
+  template <typename Fn>
+  auto returnAudioBuffersView(Fn&& fn) -> void;
+  auto getCopySeq() -> ui64;
+  auto getCopyBufferSize() -> size_t;
 
   void seekToAbsolute(double seconds);
   void seekForward(double seconds);
@@ -88,7 +89,8 @@ private:
   void shutdownLocked();
 };
 
-template <typename Fn> auto Service::returnAudioBuffersView(Fn&& fn) -> void
+template <typename Fn>
+auto Service::returnAudioBuffersView(Fn&& fn) -> void
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   ensureEngine();

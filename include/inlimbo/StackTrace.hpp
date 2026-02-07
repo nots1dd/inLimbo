@@ -153,7 +153,8 @@ private:
   }
 };
 
-template <typename Payload = std::string> struct Event
+template <typename Payload = std::string>
+struct Event
 {
   std::string ts;
   std::string cat;
@@ -194,9 +195,11 @@ template <typename Payload = std::string> struct Event
   }
 };
 
-template <typename T> using Events = std::vector<Event<T>>;
+template <typename T>
+using Events = std::vector<Event<T>>;
 
-template <typename Payload = std::string> class EventLog
+template <typename Payload = std::string>
+class EventLog
 {
 public:
   static auto instance() -> EventLog&

@@ -35,7 +35,7 @@ Watcher::Watcher(std::string filePath) : m_filePath(std::move(filePath))
 
   m_fd = inotify_init1(IN_NONBLOCK);
   if (m_fd < 0)
-    throw std::runtime_error("inotify_init1 failed");
+    throw std::runtime_error("config::Watcher: inotify_init1 failed");
 
   setupWatch();
 }
@@ -56,7 +56,7 @@ void Watcher::setupWatch()
   {
     ::close(m_fd);
     m_fd = -1;
-    throw std::runtime_error("inotify_add_watch failed");
+    throw std::runtime_error("config::Watcher: inotify_add_watch failed");
   }
 }
 

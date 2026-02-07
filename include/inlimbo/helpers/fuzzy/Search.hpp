@@ -14,7 +14,8 @@ enum class FuzzyKind
   Genre
 };
 
-template <typename T> void logFuzzyNoMatch(const char* kind, const T& query)
+template <typename T>
+void logFuzzyNoMatch(const char* kind, const T& query)
 {
   LOG_ERROR("No fuzzy match found for kind '{}'. Provided query='{}'", kind, query);
 }

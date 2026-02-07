@@ -120,6 +120,7 @@ set(INLIMBO_CORE_SOURCES
     src/telemetry/Store.cc
     src/telemetry/IDs.cc
     src/query/SongMap.cc
+    src/query/sort/Stats.cc
     src/frontend/Plugin.cc
     src/helpers/cmdline/Display.cc
     src/helpers/fs/Directory.cc
@@ -189,7 +190,7 @@ set(INLIMBO_FRONTEND_NAMES "")
 
 # ===================== FRONTENDS ============================
 include(${CMAKE_SOURCE_DIR}/cmake/frontends/cmdline.cmake)
-# include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
 # include(${CMAKE_SOURCE_DIR}/cmake/frontends/webview.cmake)
 # ===================== FRONTENDS ============================
 

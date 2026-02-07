@@ -8,7 +8,8 @@
 namespace utils::string
 {
 
-template <typename ID> class StringTable
+template <typename ID>
+class StringTable
 {
 public:
   auto getOrCreate(std::string_view s) -> ID
@@ -32,7 +33,11 @@ public:
     return std::string_view{it->second};
   }
 
-  template <class Archive> void serialize(Archive& ar) { ar(strToId, idToStr, nextId); }
+  template <class Archive>
+  void serialize(Archive& ar)
+  {
+    ar(strToId, idToStr, nextId);
+  }
 
 private:
   ID                                                                                      nextId{1};
