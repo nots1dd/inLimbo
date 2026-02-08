@@ -25,6 +25,32 @@ void forEachArtist(const threads::SafeMap<SongMap>&                           sa
     });
 }
 
+void forEachAlbum(const threads::SafeMap<SongMap>&                                        safeMap,
+                  const std::function<void(const Artist&, const Album&, const DiscMap&)>& fn)
+{
+  safeMap.withReadLock(
+    [&](const auto& map) -> void
+    {
+      for (const auto& [artist, albums] : map)
+        for (const auto& [album, discs] : albums)
+          fn(artist, album, discs);
+    });
+}
+
+void forEachDisc(
+  const threads::SafeMap<SongMap>&                                                     safeMap,
+  const std::function<void(const Artist&, const Album&, const Disc, const TrackMap&)>& fn)
+{
+  safeMap.withReadLock(
+    [&](const auto& map) -> void
+    {
+      for (const auto& [artist, albums] : map)
+        for (const auto& [album, discs] : albums)
+          for (const auto& [disc, tracks] : discs)
+            fn(artist, album, disc, tracks);
+    });
+}
+
 void forEachSong(const threads::SafeMap<SongMap>&                         safeMap,
                  const std::function<void(const Artist&, const Album&, Disc, Track, ino_t,
                                           const std::shared_ptr<Song>&)>& fn)

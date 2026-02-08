@@ -218,7 +218,7 @@ target_include_directories(inLimbo-core
         ${AVUTIL_INCLUDE_DIRS}
         ${SWRESAMPLE_INCLUDE_DIRS}
         ${FFTW3F_INCLUDE_DIRS}
-        $<$<CONFIG:Debug>:${BACKTRACE_INCLUDE_DIR}>
+        $<$<CONFIG:Debug>:${BACKTRACE_INCLUDE_DIRS}>
 )
 
 target_link_libraries(inLimbo-core
@@ -253,7 +253,7 @@ set(INLIMBO_FRONTEND_NAMES "")
 
 # ===================== FRONTENDS ============================
 include(${CMAKE_SOURCE_DIR}/cmake/frontends/cmdline.cmake)
-# include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
 # include(${CMAKE_SOURCE_DIR}/cmake/frontends/webview.cmake)
 # ===================== FRONTENDS ============================
 
