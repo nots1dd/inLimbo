@@ -126,15 +126,16 @@ void printAlbums(const threads::SafeMap<SongMap>& safeMap, const std::optional<A
 {
   std::map<Artist, std::set<Album>> albums;
 
-  query::songmap::read::forEachSong(
-    safeMap,
-    [&](const Artist& a, const Album& al, const Disc, const Track, const ino_t, const Song&) -> void
-    {
-      if (artist && !artist->empty() && !utils::string::isEquals(a, *artist))
-        return;
+  query::songmap::read::forEachSong(safeMap,
+                                    [&](const Artist& a, const Album& al, const Disc, const Track,
+                                        const ino_t, const std::shared_ptr<Song>&) -> void
+                                    {
+                                      if (artist && !artist->empty() &&
+                                          !utils::string::isEquals(a, *artist))
+                                        return;
 
-      albums[a].insert(al);
-    });
+                                      albums[a].insert(al);
+                                    });
 
   std::cout << "\nAlbums:\n";
   std::cout << "────────────────────────────\n";
@@ -154,13 +155,13 @@ void printGenres(const threads::SafeMap<SongMap>& safeMap)
 {
   std::set<Genre> genres;
 
-  query::songmap::read::forEachSong(
-    safeMap,
-    [&](const Artist&, const Album&, const Disc, const Track, const ino_t, const Song& song) -> void
-    {
-      if (!song.metadata.genre.empty())
-        genres.insert(song.metadata.genre);
-    });
+  query::songmap::read::forEachSong(safeMap,
+                                    [&](const Artist&, const Album&, const Disc, const Track,
+                                        const ino_t, const std::shared_ptr<Song> song) -> void
+                                    {
+                                      if (!song->metadata.genre.empty())
+                                        genres.insert(song->metadata.genre);
+                                    });
 
   std::cout << "\nGenres:\n";
   std::cout << "────────────────────────────\n";
@@ -181,8 +182,9 @@ void printSongsByArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& 
 
   query::songmap::read::forEachSongInArtist(
     safeMap, artist,
-    [&](const Album& album, const Disc, const Track, const ino_t, const Song& song) -> void
-    { std::cout << "• " << song.metadata.title << " [" << album << "]\n"; });
+    [&](const Album&                album, const Disc, const Track, const ino_t,
+        const std::shared_ptr<Song> song) -> void
+    { std::cout << "• " << song->metadata.title << " [" << album << "]\n"; });
 }
 
 // ------------------------------------------------------------
@@ -198,25 +200,24 @@ void printSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Album& al
 
   Disc currentDisc = -1;
 
-  query::songmap::read::forEachSong(safeMap,
-                                    [&](const Artist&, const Album& al, const Disc, const Track,
-                                        const ino_t, const Song&    song) -> void
-                                    {
-                                      if (!utils::string::isEquals(al, album))
-                                        return;
+  query::songmap::read::forEachSong(
+    safeMap,
+    [&](const Artist&, const Album& al, const Disc, const Track, const ino_t,
+        const std::shared_ptr<Song> song) -> void
+    {
+      if (!utils::string::isEquals(al, album))
+        return;
 
-                                      const Disc disc =
-                                        song.metadata.discNumber > 0 ? song.metadata.discNumber : 1;
+      const Disc disc = song->metadata.discNumber > 0 ? song->metadata.discNumber : 1;
 
-                                      if (disc != currentDisc)
-                                      {
-                                        currentDisc = disc;
-                                        std::cout << "Disc " << currentDisc << ":\n";
-                                      }
+      if (disc != currentDisc)
+      {
+        currentDisc = disc;
+        std::cout << "Disc " << currentDisc << ":\n";
+      }
 
-                                      std::cout << "  └─ " << song.metadata.track << ". "
-                                                << song.metadata.title << "\n";
-                                    });
+      std::cout << "  └─ " << song->metadata.track << ". " << song->metadata.title << "\n";
+    });
 }
 
 // ------------------------------------------------------------
@@ -233,8 +234,8 @@ void printSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& ge
   query::songmap::read::forEachSongInGenre(
     safeMap, genre,
     [&](const Artist& artist, const Album& album, const Disc, const Track, const ino_t,
-        const Song& song) -> void
-    { std::cout << "• " << song.metadata.title << " — " << artist << " [" << album << "]\n"; });
+        const std::shared_ptr<Song> song) -> void
+    { std::cout << "• " << song->metadata.title << " — " << artist << " [" << album << "]\n"; });
 }
 
 // ------------------------------------------------------------
@@ -247,11 +248,11 @@ void printSongPaths(const threads::SafeMap<SongMap>& safeMap)
 
   query::songmap::read::forEachSong(safeMap,
                                     [&](const Artist& artist, const Album&, const Disc, const Track,
-                                        const ino_t, const Song& song) -> void
+                                        const ino_t, const std::shared_ptr<Song> song) -> void
                                     {
-                                      std::cout << "• " << song.metadata.title << " — " << artist
-                                                << "\n"
-                                                << "    " << song.metadata.filePath.c_str() << "\n";
+                                      std::cout
+                                        << "• " << song->metadata.title << " — " << artist << "\n"
+                                        << "    " << song->metadata.filePath.c_str() << "\n";
                                     });
 }
 
@@ -267,13 +268,14 @@ void printSummary(const threads::SafeMap<SongMap>& safeMap, const telemetry::Con
 
   query::songmap::read::forEachSong(safeMap,
                                     [&](const Artist& artist, const Album& album, const Disc,
-                                        const Track, const ino_t, const Song& song) -> void
+                                        const Track, const ino_t,
+                                        const std::shared_ptr<Song> song) -> void
                                     {
                                       ++songs;
                                       artists.insert(artist);
                                       albums.insert(album);
-                                      if (!song.metadata.genre.empty())
-                                        genres.insert(song.metadata.genre);
+                                      if (!song->metadata.genre.empty())
+                                        genres.insert(song->metadata.genre);
                                     });
 
   std::cout << "\nLibrary Summary\n";

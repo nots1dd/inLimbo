@@ -2,6 +2,33 @@ cmake_minimum_required(VERSION 3.5...3.20)
 project(inLimbo LANGUAGES C CXX)
 
 # -----------------------------------------------------------
+# Sanitizers (Debug only)
+# -----------------------------------------------------------
+option(INLIMBO_ENABLE_ASAN "Enable AddressSanitizer in Debug builds" ON)
+
+if(INLIMBO_ENABLE_ASAN AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+
+    message(STATUS "AddressSanitizer ENABLED")
+
+    set(SANITIZER_FLAGS
+        -fsanitize=address
+        -fsanitize=undefined
+        -fno-omit-frame-pointer
+        -fno-optimize-sibling-calls
+    )
+
+    add_compile_options(${SANITIZER_FLAGS})
+    add_link_options(${SANITIZER_FLAGS})
+
+endif()
+
+if(INLIMBO_ENABLE_ASAN AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(
+        ASAN_ENABLED=1
+    )
+endif()
+
+# -----------------------------------------------------------
 # Build configuration
 # -----------------------------------------------------------
 set(CMAKE_CXX_STANDARD 20)
@@ -120,6 +147,7 @@ set(INLIMBO_CORE_SOURCES
     src/telemetry/Store.cc
     src/telemetry/IDs.cc
     src/query/SongMap.cc
+    src/query/sort/Engine.cc
     src/query/sort/Stats.cc
     src/frontend/Plugin.cc
     src/helpers/cmdline/Display.cc
@@ -129,6 +157,8 @@ set(INLIMBO_CORE_SOURCES
     src/utils/signal/Handler.cc
     src/utils/string/Equals.cc
     src/utils/string/Transforms.cc
+    src/config/sort/Model.cc
+    src/config/sort/ParseMetrics.cc
     src/config/Watcher.cc
     src/config/Keybinds.cc
     src/config/Colors.cc
@@ -190,7 +220,7 @@ set(INLIMBO_FRONTEND_NAMES "")
 
 # ===================== FRONTENDS ============================
 include(${CMAKE_SOURCE_DIR}/cmake/frontends/cmdline.cmake)
-include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
+# include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
 # include(${CMAKE_SOURCE_DIR}/cmake/frontends/webview.cmake)
 # ===================== FRONTENDS ============================
 

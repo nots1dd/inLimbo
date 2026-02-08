@@ -45,12 +45,12 @@ auto Service::getBackendInfo() -> BackendInfo
   return m_engine->getBackendInfo();
 }
 
-auto Service::registerTrack(const Song& song) -> service::SoundHandle
+auto Service::registerTrack(std::shared_ptr<const Song> song) -> service::SoundHandle
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
   service::SoundHandle h{m_nextTrackId++};
-  m_trackTable.emplace(h.id, &song);
+  m_trackTable.emplace(h.id, std::move(song));
 
   return h;
 }

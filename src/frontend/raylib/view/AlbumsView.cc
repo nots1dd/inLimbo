@@ -9,7 +9,7 @@ namespace frontend::raylib::view
 {
 
 static void playSongWithAlbumQueue(audio::Service& audio, threads::SafeMap<SongMap>& songs,
-                                   const Song& song, mpris::Service& mpris)
+                                   const std::shared_ptr<Song> song, mpris::Service& mpris)
 {
   audio.clearPlaylist();
 
@@ -18,10 +18,10 @@ static void playSongWithAlbumQueue(audio::Service& audio, threads::SafeMap<SongM
   audio.nextTrack();
 
   query::songmap::read::forEachSongInAlbum(
-    songs, song.metadata.artist, song.metadata.album,
-    [&](const Disc&, const Track&, const ino_t, const Song& s) -> void
+    songs, song->metadata.artist, song->metadata.album,
+    [&](const Disc&, const Track&, const ino_t, const std::shared_ptr<Song>& s) -> auto
     {
-      if (s.metadata.track <= song.metadata.track)
+      if (s->metadata.track <= song->metadata.track)
         return;
 
       auto next = audio.registerTrack(s);
@@ -140,13 +140,13 @@ void AlbumsView::draw(const ui::Fonts& fonts, state::Library& lib, audio::Servic
 
             // Track title (left)
             std::string title =
-              TextFormat("%02d  %s", song.metadata.track, song.metadata.title.c_str());
+              TextFormat("%02d  %s", song->metadata.track, song->metadata.title.c_str());
 
             ui::text::drawTruncated(fonts.regular, title.c_str(), {row.x + 8, row.y + 2}, 16, 1,
                                     hover ? ACCENT : TEXT_MAIN, row.width - 80);
 
             // Duration (right)
-            std::string dur = utils::timer::fmtTime(song.metadata.duration);
+            std::string dur = utils::timer::fmtTime(song->metadata.duration);
 
             int dw = MeasureTextEx(fonts.regular, dur.c_str(), 14, 1).x;
 

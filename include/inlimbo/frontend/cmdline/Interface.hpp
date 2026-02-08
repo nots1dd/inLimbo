@@ -101,21 +101,21 @@ private:
 };
 
 template <typename OnSubmit>
-auto Interface::handleSearchCommon(char c, OnSubmit&& onSubmit) -> bool
+auto Interface::handleSearchCommon(config::keybinds::KeyChar character, OnSubmit&& onSubmit) -> bool
 {
   // ESC exits search
-  if (c == utils::ascii::ESC)
+  if (character == utils::ascii::ESC)
   {
     m_mode = UiMode::Normal;
     return true;
   }
 
   // ENTER submits
-  if (utils::ascii::isEnter(c))
+  if (utils::ascii::isEnter(character))
     return onSubmit();
 
   // Backspace
-  if (c == utils::ascii::DEL || c == utils::ascii::BS)
+  if (character == utils::ascii::DEL || character == utils::ascii::BS)
   {
     if (!m_searchBuf.empty())
       m_searchBuf.pop_back();
@@ -123,10 +123,10 @@ auto Interface::handleSearchCommon(char c, OnSubmit&& onSubmit) -> bool
   }
 
   // Printable ASCII
-  if (utils::ascii::isPrintable(c))
+  if (utils::ascii::isPrintable(character))
   {
     if (m_searchBuf.size() < 128)
-      m_searchBuf.push_back(c);
+      m_searchBuf.push_back(character);
     return true;
   }
 

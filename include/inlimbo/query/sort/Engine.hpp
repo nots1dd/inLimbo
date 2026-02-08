@@ -58,48 +58,51 @@ inline void apply(SongMap& map)
 {
   auto stats = sort::buildStats(map);
 
-  std::vector<const SongMap::value_type*> artistVec;
-  artistVec.reserve(map.size());
+  std::vector<const SongMap::value_type*>  artistBuf;
+  std::vector<const AlbumMap::value_type*> albumBuf;
+  std::vector<const TrackMap::value_type*> trackBuf;
+
+  artistBuf.reserve(map.size());
 
   for (auto& e : map)
-    artistVec.push_back(&e);
+    artistBuf.push_back(&e);
 
-  std::ranges::sort(artistVec, [&](auto* A, auto* B) -> bool
+  std::ranges::sort(artistBuf, [&](auto* A, auto* B)
                     { return metric::Comparator<ArtistTag>::cmp(stats, *A, *B); });
 
   SongMap newMap;
   newMap.reserve(map.size());
 
-  for (auto* artistPair : artistVec)
+  for (auto* artistPair : artistBuf)
   {
     const auto& [artist, albums] = *artistPair;
 
-    std::vector<const decltype(albums)::value_type*> albumVec;
-    albumVec.reserve(albums.size());
+    albumBuf.clear();
+    albumBuf.reserve(albums.size());
 
     for (auto& e : albums)
-      albumVec.push_back(&e);
+      albumBuf.push_back(&e);
 
-    std::ranges::sort(albumVec, [&](auto* A, auto* B) -> bool
+    std::ranges::sort(albumBuf, [&](auto* A, auto* B)
                       { return metric::Comparator<AlbumTag>::cmp(stats, &artist, *A, *B); });
 
-    for (auto* albumPair : albumVec)
+    for (auto* albumPair : albumBuf)
     {
       const auto& [album, discs] = *albumPair;
       auto& newDiscs             = newMap[artist][album];
 
       for (auto& [disc, tracks] : discs)
       {
-        std::vector<const decltype(tracks)::value_type*> trackVec;
-        trackVec.reserve(tracks.size());
+        trackBuf.clear();
+        trackBuf.reserve(tracks.size());
 
         for (auto& e : tracks)
-          trackVec.push_back(&e);
+          trackBuf.push_back(&e);
 
-        std::ranges::sort(trackVec, [&](auto* A, auto* B) -> bool
+        std::ranges::sort(trackBuf, [&](auto* A, auto* B)
                           { return metric::Comparator<TrackTag>::cmp(*A, *B); });
 
-        for (auto* trackPair : trackVec)
+        for (auto* trackPair : trackBuf)
         {
           const auto& [track, inodeMap] = *trackPair;
           newDiscs[disc][track]         = inodeMap;
@@ -263,7 +266,9 @@ constexpr auto buildDispatchTable()
  Contains pre-instantiated sorting functions for
  every valid metric combination.
 */
-inline constexpr auto DISPATCH_TABLE = buildDispatchTable();
+using DispatchTableType = decltype(buildDispatchTable());
+
+extern const DispatchTableType DISPATCH_TABLE;
 
 /*
  Runtime execution path.
@@ -271,10 +276,6 @@ inline constexpr auto DISPATCH_TABLE = buildDispatchTable();
  Runtime plan values are used as array indices.
  This selects a precompiled sorting function and executes it.
 */
-inline void applyRuntimeSortPlan(SongMap& map, const RuntimeSortPlan& plan)
-{
-  DISPATCH_TABLE
-  [(size_t)plan.artist][(size_t)plan.album][(size_t)plan.track](map);
-}
+void applyRuntimeSortPlan(SongMap& map, const RuntimeSortPlan& plan);
 
 } // namespace query::sort

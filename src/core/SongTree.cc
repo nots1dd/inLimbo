@@ -17,7 +17,7 @@ void SongTree::addSong(const Song& song)
   auto& trackMap  = discMap[song.metadata.track];
 
   // Insert song by inode
-  trackMap[song.inode] = song;
+  trackMap[song.inode] = std::make_shared<Song>(song);
 
   LOG_TRACE("Added song '{}' by '{}' [Album: {}, Disc: {}, Track: {}, inode: {}]",
             song.metadata.title, song.metadata.artist, song.metadata.album,

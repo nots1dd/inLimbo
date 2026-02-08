@@ -2,6 +2,7 @@
 
 #include "utils/ankerl/Cereal.hpp"
 #include "utils/string/SmallString.hpp"
+#include <cereal/types/memory.hpp>
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -113,14 +114,14 @@ struct Song
   }
 };
 
-using Songs = std::vector<Song>;
+using Songs = std::vector<std::shared_ptr<Song>>;
 
 // So we could use vector in case of Track and Disc mapping for better
 // cache behaviour, but using ankerl here already is great in terms
 // of memory usage and removing unneeded RBT allocs happening in std::map
 //
 // lookup time also should decrease but no benchmarks are done yet.
-using InodeMap = ankerl::unordered_dense::map<ino_t, Song>;
+using InodeMap = ankerl::unordered_dense::map<ino_t, std::shared_ptr<Song>>;
 using TrackMap = ankerl::unordered_dense::map<Track, InodeMap>;
 using DiscMap  = ankerl::unordered_dense::map<Disc, TrackMap>;
 using AlbumMap = ankerl::unordered_dense::map<Album, DiscMap>;

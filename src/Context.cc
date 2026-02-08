@@ -310,15 +310,15 @@ auto maybeHandleEditActions(AppContext& ctx) -> bool
     return true;
   }
 
-  Song edited  = *song;
+  auto edited  = std::make_shared<Song>(*song);
   bool touched = false;
 
   auto apply = [&](const std::string& value, auto Metadata::* field) -> void
   {
     if (!value.empty())
     {
-      edited.metadata.*field = value;
-      touched                = true;
+      edited->metadata.*field = value;
+      touched                 = true;
     }
   };
 
@@ -335,7 +335,7 @@ auto maybeHandleEditActions(AppContext& ctx) -> bool
     return true;
   }
 
-  if (!query::songmap::mut::replaceSongObjAndUpdateMetadata(g_songMap, *song, edited,
+  if (!query::songmap::mut::replaceSongObjAndUpdateMetadata(g_songMap, song, edited,
                                                             ctx.m_tagLibParser))
   {
     LOG_CRITICAL("Failed to update metadata for song: {}", song->metadata.title);
@@ -354,7 +354,6 @@ auto maybeHandleEditActions(AppContext& ctx) -> bool
 
 auto initializeContext(int argc, char** argv) -> AppContext
 {
-
   tomlparser::Config::load();
 
   CLI::App   cliApp{APP_DESC, APP_NAME};
@@ -503,7 +502,7 @@ void runFrontend(AppContext& ctx)
     // ---------------------------------------------------------
     // Register track + add to playlist (NO decoding here)
     // ---------------------------------------------------------
-    audio::service::SoundHandle handle = audio.registerTrack(*song);
+    audio::service::SoundHandle handle = audio.registerTrack(song);
 
     ASSERT_MSG(handle, "Failed to register track");
 

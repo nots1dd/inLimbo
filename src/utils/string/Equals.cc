@@ -6,6 +6,23 @@
 namespace utils::string
 {
 
+auto icompare(std::string_view a, std::string_view b) -> bool
+{
+  auto ai = a.begin();
+  auto bi = b.begin();
+
+  for (; ai != a.end() && bi != b.end(); ++ai, ++bi)
+  {
+    char ac = transform::fast_tolower_ascii((unsigned char)*ai);
+    char bc = transform::fast_tolower_ascii((unsigned char)*bi);
+
+    if (ac != bc)
+      return ac < bc;
+  }
+
+  return a.size() < b.size();
+}
+
 auto isEquals(const std::string& a, const std::string& b) noexcept -> bool
 {
   if (a.size() != b.size())

@@ -2,6 +2,7 @@
 
 #include "Base.hpp"
 #include "query/sort/Stats.hpp"
+#include "utils/string/Equals.hpp"
 
 namespace query::sort::metric
 {
@@ -41,12 +42,7 @@ struct Comparator<ArtistLexicographicAsc>
 {
   static auto cmp(const Stats&, auto& A, auto& B) -> bool
   {
-    auto a = std::string_view(A.first);
-    auto b = std::string_view(B.first);
-
-    return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end(),
-                                        [](unsigned char ac, unsigned char bc) -> bool
-                                        { return std::tolower(ac) < std::tolower(bc); });
+    return utils::string::icompare(A.first, B.first);
   }
 };
 
@@ -55,12 +51,7 @@ struct Comparator<ArtistLexicographicDesc>
 {
   static auto cmp(const Stats&, auto& A, auto& B) -> bool
   {
-    auto a = std::string_view(A.first);
-    auto b = std::string_view(B.first);
-
-    return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end(),
-                                        [](unsigned char ac, unsigned char bc) -> bool
-                                        { return std::tolower(ac) > std::tolower(bc); });
+    return utils::string::icompare(B.first, A.first);
   }
 };
 

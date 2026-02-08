@@ -10,6 +10,7 @@
 #include "Logger.hpp"
 #include "config/Colors.hpp"
 #include "config/Misc.hpp"
+#include "config/sort/Model.hpp"
 #include "toml/Parser.hpp"
 
 #include "helpers/telemetry/Playback.hpp"
@@ -101,6 +102,10 @@ void Interface::loadConfig()
   {
     tomlparser::Config::load();
 
+    auto plan = config::sort::loadRuntimeSortPlan();
+    m_songMapTS->withWriteLock([&](auto& map) -> void
+                               { query::sort::applyRuntimeSortPlan(map, plan); });
+
     config::colors::ConfigLoader   colorsCfg(FRONTEND_NAME);
     config::keybinds::ConfigLoader keysCfg(FRONTEND_NAME);
 
@@ -131,9 +136,9 @@ void Interface::run(audio::Service& audio)
 
   query::songmap::read::forEachSongInAlbum(
     *m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
-    [&](const Disc&, const Track&, const ino_t, const Song& song) -> void
+    [&](const Disc&, const Track&, const ino_t, const std::shared_ptr<Song>& song) -> void
     {
-      if (song.metadata.track <= audio.getCurrentMetadata()->track)
+      if (song->metadata.track <= audio.getCurrentMetadata()->track)
         return;
 
       auto h = audio.registerTrack(song);
@@ -176,7 +181,7 @@ void Interface::run(audio::Service& audio)
   {
     draw(audio);
     m_mprisService->poll();
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    std::this_thread::sleep_for(std::chrono::milliseconds(70));
   }
 
   m_isRunning.store(false);
@@ -222,6 +227,24 @@ void Interface::statusLoop(audio::Service& audio)
     {
       LOG_DEBUG("Configuration file changed, reloading...");
       loadConfig();
+      const auto title = audio.getCurrentMetadata()->title;
+      audio.clearPlaylist();
+      auto songObj = query::songmap::read::findSongObjByTitle(*m_songMapTS, title);
+      auto h       = audio.registerTrack(songObj);
+      audio.addToPlaylist(h);
+
+      m_mprisService->updateMetadata();
+
+      query::songmap::read::forEachSongInAlbum(
+        *m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
+        [&](const Disc&, const Track&, const ino_t, const std::shared_ptr<Song>& song) -> void
+        {
+          if (song->metadata.track <= audio.getCurrentMetadata()->track)
+            return;
+
+          auto h = audio.registerTrack(song);
+          audio.addToPlaylist(h);
+        });
     }
 
     const auto pos = audio.getCurrentTrackInfo()->positionSec;
@@ -229,17 +252,16 @@ void Interface::statusLoop(audio::Service& audio)
 
     if (pos >= len)
     {
-      helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
-      audio.nextTrack();
-      helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
+      helpers::telemetry::playbackTransition(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick,
+                                             [&]() -> void { audio.nextTrack(); });
       m_mprisService->updateMetadata();
       m_mprisService->notify();
     }
 
     if (autoNextIfFinished(audio, *m_mprisService, m_lastAutoNextTid, m_autoNextInProgress))
     {
-      helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
-      helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
+      helpers::telemetry::playbackTransition(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick,
+                                             []() -> void {});
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
@@ -508,10 +530,11 @@ void Interface::draw(audio::Service& audio)
   std::cout.flush();
 }
 
-auto Interface::handleSearchTitleMode(audio::Service& audio, char c) -> bool
+auto Interface::handleSearchTitleMode(audio::Service& audio, config::keybinds::KeyChar character)
+  -> bool
 {
   return handleSearchCommon(
-    c,
+    character,
     [&]() -> bool
     {
       auto song = query::songmap::read::findSongObjByTitleFuzzy(*m_songMapTS, m_searchBuf);
@@ -523,20 +546,19 @@ auto Interface::handleSearchTitleMode(audio::Service& audio, char c) -> bool
       }
 
       audio.clearPlaylist();
-      auto h = audio.registerTrack(*song);
+      auto h = audio.registerTrack(song);
       audio.addToPlaylist(h);
 
-      helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
-      audio.nextTrack();
-      helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
+      helpers::telemetry::playbackTransition(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick,
+                                             [&]() -> void { audio.nextTrack(); });
       m_mprisService->updateMetadata();
       m_mprisService->notify();
 
       query::songmap::read::forEachSongInAlbum(
         *m_songMapTS, audio.getCurrentMetadata()->artist, audio.getCurrentMetadata()->album,
-        [&](const Disc&, const Track&, const ino_t, const Song& song) -> void
+        [&](const Disc&, const Track&, const ino_t, const std::shared_ptr<Song>& song) -> void
         {
-          if (song.metadata.track <= audio.getCurrentMetadata()->track)
+          if (song->metadata.track <= audio.getCurrentMetadata()->track)
             return;
 
           auto h = audio.registerTrack(song);
@@ -574,17 +596,17 @@ auto Interface::handleSearchArtistMode(audio::Service& audio, char c) -> bool
 
       bool queuedAny = false;
 
-      query::songmap::read::forEachSong(
-        *m_songMapTS,
-        [&](const Artist& artist, const Album&, Disc, Track, ino_t, const Song& song) -> void
-        {
-          if (artist != bestArtist)
-            return;
+      query::songmap::read::forEachSong(*m_songMapTS,
+                                        [&](const Artist& artist, const Album&, Disc, Track, ino_t,
+                                            std::shared_ptr<Song> song) -> void
+                                        {
+                                          if (artist != bestArtist)
+                                            return;
 
-          auto h = audio.registerTrack(song);
-          audio.addToPlaylist(h);
-          queuedAny = true;
-        });
+                                          auto h = audio.registerTrack(song);
+                                          audio.addToPlaylist(h);
+                                          queuedAny = true;
+                                        });
 
       if (!queuedAny)
       {
@@ -592,9 +614,8 @@ auto Interface::handleSearchArtistMode(audio::Service& audio, char c) -> bool
         return true;
       }
 
-      helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
-      audio.restart();
-      helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
+      helpers::telemetry::playbackTransition(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick,
+                                             [&]() -> void { audio.restart(); });
       m_mprisService->updateMetadata();
       m_mprisService->notify();
 
@@ -623,23 +644,20 @@ auto Interface::handleKey(audio::Service& audio, config::keybinds::KeyChar c) ->
   }
   else if (c == kb.nextTrack)
   {
-    helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
-    audio.nextTrack();
-    helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
+    helpers::telemetry::playbackTransition(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick,
+                                           [&]() -> void { audio.nextTrack(); });
     trackChanged = true;
   }
   else if (c == kb.prevTrack)
   {
-    helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
-    audio.previousTrack();
-    helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
+    helpers::telemetry::playbackTransition(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick,
+                                           [&]() -> void { audio.previousTrack(); });
     trackChanged = true;
   }
   else if (c == kb.randomTrack)
   {
-    helpers::telemetry::endPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
-    audio.randomTrack();
-    helpers::telemetry::beginPlayback(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick);
+    helpers::telemetry::playbackTransition(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick,
+                                           [&]() -> void { audio.randomTrack(); });
     trackChanged = true;
   }
   else if (c == kb.restartTrack)

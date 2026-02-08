@@ -191,6 +191,37 @@ public:
 
   // ---------------- Comparisons ----------------
 
+  // SMALL STRING VS SMALL STRING
+  friend constexpr auto operator==(const SmallString& a, const SmallString& b) noexcept -> bool
+  {
+    return a.view() == b.view();
+  }
+
+  friend constexpr auto operator!=(const SmallString& a, const SmallString& b) noexcept -> bool
+  {
+    return !(a == b);
+  }
+
+  friend constexpr auto operator<(const SmallString& a, const SmallString& b) noexcept -> bool
+  {
+    return a.view() < b.view();
+  }
+
+  friend constexpr auto operator>(const SmallString& a, const SmallString& b) noexcept -> bool
+  {
+    return a.view() > b.view();
+  }
+
+  friend constexpr auto operator<=(const SmallString& a, const SmallString& b) noexcept -> bool
+  {
+    return a.view() <= b.view();
+  }
+
+  friend constexpr auto operator>=(const SmallString& a, const SmallString& b) noexcept -> bool
+  {
+    return a.view() >= b.view();
+  }
+
   // SMALL STRING VS STRING_VIEW
   friend constexpr auto operator==(const SmallString& a, std::string_view b) noexcept -> bool
   {
@@ -202,15 +233,54 @@ public:
     return !(a == b);
   }
 
-  // STRING_VIEW VS SMALL STRING
-  friend constexpr auto operator==(const SmallString& a, const SmallString& b) noexcept -> bool
+  friend constexpr auto operator<(const SmallString& a, std::string_view b) noexcept -> bool
   {
-    return a.view() == b.view();
+    return a.view() < b;
   }
 
-  friend constexpr auto operator!=(const SmallString& a, const SmallString& b) noexcept -> bool
+  friend constexpr auto operator>(const SmallString& a, std::string_view b) noexcept -> bool
+  {
+    return a.view() > b;
+  }
+
+  friend constexpr auto operator<=(const SmallString& a, std::string_view b) noexcept -> bool
+  {
+    return a.view() <= b;
+  }
+
+  friend constexpr auto operator>=(const SmallString& a, std::string_view b) noexcept -> bool
+  {
+    return a.view() >= b;
+  }
+
+  // STRING_VIEW VS SMALL STRING
+  friend constexpr auto operator==(std::string_view a, const SmallString& b) noexcept -> bool
+  {
+    return a == b.view();
+  }
+
+  friend constexpr auto operator!=(std::string_view a, const SmallString& b) noexcept -> bool
   {
     return !(a == b);
+  }
+  friend constexpr auto operator<(std::string_view a, const SmallString& b) noexcept -> bool
+  {
+    return a < b.view();
+  }
+
+  friend constexpr auto operator>(std::string_view a, const SmallString& b) noexcept -> bool
+  {
+    return a > b.view();
+  }
+
+  friend constexpr auto operator<=(std::string_view a, const SmallString& b) noexcept -> bool
+  {
+    return a <= b.view();
+  }
+
+  friend constexpr auto operator>=(std::string_view a, const SmallString& b) noexcept -> bool
+  {
+    return a >= b.view();
   }
 
   // SMALL STRING VS C-STRING
@@ -224,6 +294,26 @@ public:
   friend constexpr auto operator!=(const SmallString& a, const char* b) noexcept -> bool
   {
     return !(a == b);
+  }
+
+  friend auto operator<(const SmallString& a, const char* b) noexcept -> bool
+  {
+    return b ? a.view() < std::string_view(b) : false;
+  }
+
+  friend auto operator>(const SmallString& a, const char* b) noexcept -> bool
+  {
+    return b ? a.view() > std::string_view(b) : true;
+  }
+
+  friend auto operator<=(const SmallString& a, const char* b) noexcept -> bool
+  {
+    return b ? a.view() <= std::string_view(b) : false;
+  }
+
+  friend auto operator>=(const SmallString& a, const char* b) noexcept -> bool
+  {
+    return b ? a.view() >= std::string_view(b) : true;
   }
 
   [[nodiscard]] auto extension() const -> SmallString

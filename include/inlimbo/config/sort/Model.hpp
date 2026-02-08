@@ -1,7 +1,7 @@
 #pragma once
 
-#include "InLimbo-Types.hpp"
 #include "Logger.hpp"
+#include "StackTrace.hpp"
 #include "config/sort/ParseMetrics.hpp"
 #include "query/sort/Engine.hpp"
 #include "toml/Parser.hpp"
@@ -51,28 +51,6 @@ auto loadMetricOrFallback(tomlparser::SectionView section, tomlparser::KeyView k
   return fallbackValue;
 }
 
-template <typename Plan>
-static void applyPlan(SongMap& map)
-{
-  query::sort::apply<Plan>(map);
-}
-
-inline auto loadRuntimeSortPlan() -> query::sort::RuntimeSortPlan
-{
-  using namespace tomlparser;
-
-  query::sort::RuntimeSortPlan plan;
-
-  plan.artist = loadMetricOrFallback("sort", "artist", "lex_asc", DefaultArtistMetric,
-                                     config::sort::parseArtistPlan, "artist");
-
-  plan.album = loadMetricOrFallback("sort", "album", "lex_asc", DefaultAlbumMetric,
-                                    config::sort::parseAlbumPlan, "album");
-
-  plan.track = loadMetricOrFallback("sort", "track", "track_asc", DefaultTrackMetric,
-                                    config::sort::parseTrackPlan, "track");
-
-  return plan;
-}
+auto loadRuntimeSortPlan() -> query::sort::RuntimeSortPlan;
 
 } // namespace config::sort

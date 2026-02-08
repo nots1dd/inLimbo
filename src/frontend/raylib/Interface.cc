@@ -102,8 +102,9 @@ void Interface::loadConfig()
     m_library.artists.clear();
     tomlparser::Config::load();
 
-    const auto plan = config::sort::loadRuntimeSortPlan();
-    query::songmap::mut::sortSongMap(*m_songMap, plan);
+    auto plan = config::sort::loadRuntimeSortPlan();
+    m_songMap->withWriteLock([&](auto& map) -> void
+                             { query::sort::applyRuntimeSortPlan(map, plan); });
 
     colors::ConfigLoader           colorsCfg(FRONTEND_NAME);
     config::keybinds::ConfigLoader keysCfg(FRONTEND_NAME);

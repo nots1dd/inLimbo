@@ -30,7 +30,7 @@ public:
   void initDevice(const DeviceName& deviceName = "default");
   auto getBackendInfo() -> BackendInfo;
 
-  auto registerTrack(const Song& song) -> service::SoundHandle;
+  auto registerTrack(std::shared_ptr<const Song> song) -> service::SoundHandle;
   auto isPlaying() -> bool;
 
   void addToPlaylist(service::SoundHandle h);

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "InLimbo-Types.hpp"
-#include <unordered_map>
 
 namespace audio::service
 {
@@ -10,7 +9,7 @@ namespace audio::service
 //
 // This is unique to each song (almost as unique as the inode itself) and more importantly,
 // makes it easy to immediately load the song file without calling song map queries.
-using TrackTable = std::unordered_map<ui64, const Song*>;
+using TrackTable = ankerl::unordered_dense::map<ui64, std::shared_ptr<const Song>>;
 
 struct SoundHandle
 {

@@ -1,88 +1,146 @@
 #pragma once
 
-#include <mutex>
+#include <atomic>
+#include <memory>
 #include <optional>
-#include <shared_mutex>
 
 namespace threads
 {
+
+/*
+threads::SafeMap is a thread-safe wrapper around a map-like container using an atomic
+std::shared_ptr. Readers access immutable snapshots without locking, while
+writers modify a private copy and atomically publish it.
+
+Reader Behavior
+- Lock-free
+- Atomic snapshot load
+- Always see consistent data
+- No read/write blocking
+
+Writer Behavior:
+- Copy current map (most expensive downside)
+- Apply modifications
+- Atomically replace snapshot
+- Old data stays alive while readers use it
+
+Advantages:
+- Very fast reads
+- No reader blocking
+- Strong write safety
+- Simple concurrency model
+
+Limitations:
+- Writes are O(N) due to full copy
+- Temporary memory spikes during writes
+- Readers may see slightly stale data
+- Requires copyable map type
+- Not ideal for write-heavy workloads
+
+Optimized for many readers and few writers. Trades write cost for safe,
+lock-free read performance.
+
+*/
 
 template <typename TMap>
 class SafeMap
 {
 private:
-  TMap                      m_map;
-  mutable std::shared_mutex m_mtx;
+  std::atomic<std::shared_ptr<TMap>> m_mapPtr;
 
 public:
-  SafeMap()                                  = default;
+  SafeMap() { m_mapPtr.store(std::make_shared<TMap>(), std::memory_order_release); }
+
   SafeMap(const SafeMap&)                    = delete;
   auto operator=(const SafeMap&) -> SafeMap& = delete;
 
   SafeMap(SafeMap&& other) noexcept
   {
-    std::unique_lock lock(other.m_mtx);
-    m_map = std::move(other.m_map);
+    auto ptr = std::atomic_load(&other.m_mapPtr);
+    std::atomic_store(&m_mapPtr, std::move(ptr));
   }
 
   auto operator=(SafeMap&& other) noexcept -> SafeMap&
   {
     if (this != &other)
     {
-      std::unique_lock lhs_lock(m_mtx, std::defer_lock);
-      std::unique_lock rhs_lock(other.m_mtx, std::defer_lock);
-      std::lock(lhs_lock, rhs_lock);
-      m_map = std::move(other.m_map);
+      auto ptr = std::atomic_load(&other.m_mapPtr);
+      std::atomic_store(&m_mapPtr, std::move(ptr));
     }
     return *this;
   }
 
+  // -------------------------------------------------
+  // WRITERS
+  // -------------------------------------------------
+
   void replace(TMap newMap)
   {
-    std::unique_lock lock(m_mtx);
-    m_map.swap(newMap); // O(1)
+    auto newPtr = std::make_shared<TMap>(std::move(newMap));
+    std::atomic_store(&m_mapPtr, std::move(newPtr));
   }
 
   void clear()
   {
-    std::unique_lock lock(m_mtx);
-    m_map.clear();
+    auto newPtr = std::make_shared<TMap>();
+    std::atomic_store(&m_mapPtr, std::move(newPtr));
   }
 
-  // ---- Readers ----
+  // -------------------------------------------------
+  // READERS
+  // -------------------------------------------------
+
   template <typename LookupFn>
   auto get(LookupFn&& fn) const -> std::optional<typename TMap::mapped_type>
   {
-    std::shared_lock lock(m_mtx);
-    return fn(m_map);
+    auto ptr = std::atomic_load(&m_mapPtr);
+    return fn(*ptr);
   }
 
   auto snapshot() const -> TMap
   {
-    std::shared_lock lock(m_mtx);
-    return m_map; // safe copy
+    auto ptr = std::atomic_load(&m_mapPtr);
+    return *ptr; // copy
   }
 
-  auto empty() const -> bool
+  [[nodiscard]] auto empty() const -> bool
   {
-    std::shared_lock lock(m_mtx);
-    return m_map.empty();
+    auto ptr = std::atomic_load(&m_mapPtr);
+    return ptr->empty();
   }
 
-  // ---- Access for custom operations ----
   template <typename Fn>
   auto withReadLock(Fn&& fn) const -> decltype(auto)
   {
-    std::shared_lock lock(m_mtx);
-    return fn(m_map);
+    auto ptr = std::atomic_load(&m_mapPtr);
+
+    if constexpr (std::is_void_v<std::invoke_result_t<Fn, const TMap&>>)
+    {
+      fn(*ptr);
+    }
+    else
+    {
+      return fn(*ptr);
+    }
   }
 
-  // this shud be used with the intention of modifying the map
   template <typename Fn>
   auto withWriteLock(Fn&& fn) -> decltype(auto)
   {
-    std::unique_lock lock(m_mtx);
-    return fn(m_map);
+    auto oldPtr = std::atomic_load(&m_mapPtr);
+    auto newPtr = std::make_shared<TMap>(*oldPtr);
+
+    if constexpr (std::is_void_v<std::invoke_result_t<Fn, TMap&>>)
+    {
+      fn(*newPtr);
+      std::atomic_store(&m_mapPtr, std::move(newPtr));
+    }
+    else
+    {
+      auto result = fn(*newPtr);
+      std::atomic_store(&m_mapPtr, std::move(newPtr));
+      return result;
+    }
   }
 };
 

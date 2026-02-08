@@ -47,72 +47,14 @@ constexpr auto TrackMetric_DefCount = []() -> size_t
   return n;
 }();
 
-// ============================================================
-// STRING → ENUM PARSERS
-// Uses .def as single source of truth.
-// ============================================================
+// parse the artist sorting plan found in config.toml (read the ArtistMetrics.def for available
+// metrics)
+auto parseArtistPlan(std::string_view s) -> std::optional<query::sort::metric::ArtistMetric>;
 
-inline auto parseArtistPlan(std::string_view s) -> std::optional<query::sort::metric::ArtistMetric>
-{
-  using namespace query::sort::metric;
+// parse the album sorting plan found in config.toml (AlbumMetrics.def for available metrics)
+auto parseAlbumPlan(std::string_view s) -> std::optional<query::sort::metric::AlbumMetric>;
 
-  static_assert(ArtistMetric_DefCount == static_cast<size_t>(ArtistMetric::COUNT),
-                "ArtistMetric enum and ArtistMetrics.def mismatch");
-
-  static const ankerl::unordered_dense::map<std::string_view, ArtistMetric> map = {
-
-#define X(name, str, tag) {str, ArtistMetric::name},
-#include "config/defs/ArtistMetrics.def"
-#undef X
-
-  };
-
-  if (auto it = map.find(s); it != map.end())
-    return it->second;
-
-  return std::nullopt;
-}
-
-inline auto parseAlbumPlan(std::string_view s) -> std::optional<query::sort::metric::AlbumMetric>
-{
-  using namespace query::sort::metric;
-
-  static_assert(AlbumMetric_DefCount == static_cast<size_t>(AlbumMetric::COUNT),
-                "AlbumMetric enum and AlbumMetrics.def mismatch");
-
-  static const ankerl::unordered_dense::map<std::string_view, AlbumMetric> map = {
-
-#define X(name, str, tag) {str, AlbumMetric::name},
-#include "config/defs/AlbumMetrics.def"
-#undef X
-
-  };
-
-  if (auto it = map.find(s); it != map.end())
-    return it->second;
-
-  return std::nullopt;
-}
-
-inline auto parseTrackPlan(std::string_view s) -> std::optional<query::sort::metric::TrackMetric>
-{
-  using namespace query::sort::metric;
-
-  static_assert(TrackMetric_DefCount == static_cast<size_t>(TrackMetric::COUNT),
-                "TrackMetric enum and TrackMetrics.def mismatch");
-
-  static const ankerl::unordered_dense::map<std::string_view, TrackMetric> map = {
-
-#define X(name, str, tag) {str, TrackMetric::name},
-#include "config/defs/TrackMetrics.def"
-#undef X
-
-  };
-
-  if (auto it = map.find(s); it != map.end())
-    return it->second;
-
-  return std::nullopt;
-}
+// parse the track sorting plan found in config.toml (TrackMetrics.def for available metrics)
+auto parseTrackPlan(std::string_view s) -> std::optional<query::sort::metric::TrackMetric>;
 
 } // namespace config::sort

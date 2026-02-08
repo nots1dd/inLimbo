@@ -17,8 +17,8 @@ auto buildStats(const SongMap& map) -> Stats
     {
       size_t albumTracks = 0;
 
-      int bestTrack = std::numeric_limits<int>::max();
-      int bestYear  = 0;
+      uint bestTrack = std::numeric_limits<uint>::max();
+      uint bestYear  = 0;
 
       for (auto& [disc, tracks] : discs)
         for (auto& [track, inodeMap] : tracks)
@@ -27,10 +27,10 @@ auto buildStats(const SongMap& map) -> Stats
             albumTracks++;
             artistTracks++;
 
-            if ((int)track < bestTrack && song.metadata.year > 0)
+            if (track < bestTrack && song->metadata.year > 0)
             {
               bestTrack = track;
-              bestYear  = song.metadata.year;
+              bestYear  = song->metadata.year;
             }
           }
 
