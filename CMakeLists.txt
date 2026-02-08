@@ -1,12 +1,55 @@
-cmake_minimum_required(VERSION 3.5...3.20)
+cmake_minimum_required(VERSION 3.5...4.2.1)
 project(inLimbo LANGUAGES C CXX)
+
+# -----------------------------------------------------------
+# Build configuration
+# -----------------------------------------------------------
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # -----------------------------------------------------------
 # Sanitizers (Debug only)
 # -----------------------------------------------------------
 option(INLIMBO_ENABLE_ASAN "Enable AddressSanitizer in Debug builds" ON)
 
-if(INLIMBO_ENABLE_ASAN AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+# -----------------------------------------------------------
+# Build-Type Specific Compiler Options
+# -----------------------------------------------------------
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+
+    message(STATUS "Configuring RELEASE compiler flags")
+
+    add_compile_options(
+        -Wall
+        -Wextra
+        -Wpedantic
+        -Werror
+    )
+
+    add_compile_options(
+        -O3
+        -DNDEBUG
+    )
+
+    add_compile_options(-march=native)
+
+elseif(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+
+    message(STATUS "Configuring RELWITHDEBINFO compiler flags")
+
+    add_compile_options(
+        -Wall
+        -Wextra
+        -Wpedantic
+        -O2
+        -g
+        -DNDEBUG
+    )
+
+elseif(INLIMBO_ENABLE_ASAN AND CMAKE_BUILD_TYPE STREQUAL "Debug")
 
     message(STATUS "AddressSanitizer ENABLED")
 
@@ -28,16 +71,6 @@ if(INLIMBO_ENABLE_ASAN AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     )
 endif()
 
-# -----------------------------------------------------------
-# Build configuration
-# -----------------------------------------------------------
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-add_compile_options(-Wall -Wextra -Wpedantic -Werror -g)
-
 set(INLIMBO_USER_FRONTEND_DIR
     "$ENV{HOME}/.local/share/inLimbo/frontends"
 )
@@ -58,7 +91,7 @@ set(ANKERL_UNORDERED_DENSE_INCLUDE_DIRS
 # Local libbacktrace (Debug only)
 # -----------------------------------------------------------
 set(BACKTRACE_PREFIX "${CMAKE_SOURCE_DIR}/external/libbacktrace/build/install")
-set(BACKTRACE_INCLUDE_DIR "${BACKTRACE_PREFIX}/include")
+set(BACKTRACE_INCLUDE_DIRS "${BACKTRACE_PREFIX}/include")
 set(BACKTRACE_LIBRARY_DIR "${BACKTRACE_PREFIX}/lib")
 set(BACKTRACE_LIBRARY "${BACKTRACE_LIBRARY_DIR}/libbacktrace.a")
 
@@ -269,6 +302,8 @@ if(UNIX AND NOT APPLE)
     )
 endif()
 
+get_target_property(CORE_COMPILE_OPTS inLimbo-core COMPILE_OPTIONS)
+
 # -----------------------------------------------------------
 # Diagnostics Summary
 # -----------------------------------------------------------
@@ -285,23 +320,36 @@ message(STATUS "${SEP}  C++ Standard     : C++${CMAKE_CXX_STANDARD}")
 message(STATUS "${SEP}  Build Directory  : ${CMAKE_BINARY_DIR}")
 message(STATUS "${SEP}  Source Directory : ${CMAKE_SOURCE_DIR}")
 message(STATUS "${SEP}")
+message(STATUS "${SEP}  ── Compiler Flags (inLimbo/inLimbo-core) ───────────────────────────────")
+
+message(STATUS "${SEP}  • C Flags           : ${CMAKE_C_FLAGS}")
+message(STATUS "${SEP}  • C Flags Debug     : ${CMAKE_C_FLAGS_DEBUG}")
+message(STATUS "${SEP}  • C Flags Release   : ${CMAKE_C_FLAGS_RELEASE}")
+message(STATUS "${SEP}  • CXX Flags         : ${CMAKE_CXX_FLAGS}")
+message(STATUS "${SEP}  • CXX Flags Debug   : ${CMAKE_CXX_FLAGS_DEBUG}")
+message(STATUS "${SEP}  • CXX Flags Release : ${CMAKE_CXX_FLAGS_RELEASE}")
+message(STATUS "${SEP}  • All flags         :")
+foreach(opt ${CORE_COMPILE_OPTS})
+    message(STATUS "${SEP}                      > ${opt}")
+endforeach()
+message(STATUS "${SEP}")
 message(STATUS "${SEP}  ── External Dependencies ───────────────────────────────")
-message(STATUS "${SEP}  • TOML++     : ${TOMLPLUSPLUS_INCLUDE_DIRS}")
-message(STATUS "${SEP}  • cereal     : ${CEREAL_INCLUDE_DIRS}")
-message(STATUS "${SEP}  • CLI11      : ${CLI11_INCLUDE_DIRS}")
-message(STATUS "${SEP}  • spdlog     : ${SPDLOG_DIR}")
+message(STATUS "${SEP}  • TOML++        : ${TOMLPLUSPLUS_INCLUDE_DIRS}")
+message(STATUS "${SEP}  • cereal        : ${CEREAL_INCLUDE_DIRS}")
+message(STATUS "${SEP}  • CLI11         : ${CLI11_INCLUDE_DIRS}")
+message(STATUS "${SEP}  • libbacktrace  : '${BACKTRACE_INCLUDE_DIRS}' (Debug builds only)")
+message(STATUS "${SEP}  • spdlog        : ${SPDLOG_DIR}")
 message(STATUS "${SEP}")
-message(STATUS "${SEP}  ── Multimedia / Audio ───────────────────────────────")
-message(STATUS "${SEP}  • libavformat  : ${AVFORMAT_VERSION} (${AVFORMAT_LIBRARIES})")
-message(STATUS "${SEP}  • libavcodec   : ${AVCODEC_VERSION} (${AVCODEC_LIBRARIES})")
-message(STATUS "${SEP}  • libavutil    : ${AVUTIL_VERSION} (${AVUTIL_LIBRARIES})")
-message(STATUS "${SEP}  • libswresample: ${SWRESAMPLE_VERSION} (${SWRESAMPLE_LIBRARIES})")
-message(STATUS "${SEP}  • ALSA         : ${ALSA_VERSION} (${ALSA_LIBRARIES})")
-message(STATUS "${SEP}  • FFTW         : ${FFTW3F_VERSION} (${FFTW3F_LIBRARIES})")
+message(STATUS "${SEP}  ── Multimedia / Audio (System Libraries) ───────────────────────────────")
+message(STATUS "${SEP}  • libavformat   : ${AVFORMAT_VERSION} (${AVFORMAT_LIBRARIES})")
+message(STATUS "${SEP}  • libavcodec    : ${AVCODEC_VERSION} (${AVCODEC_LIBRARIES})")
+message(STATUS "${SEP}  • libavutil     : ${AVUTIL_VERSION} (${AVUTIL_LIBRARIES})")
+message(STATUS "${SEP}  • libswresample : ${SWRESAMPLE_VERSION} (${SWRESAMPLE_LIBRARIES})")
+message(STATUS "${SEP}  • ALSA          : ${ALSA_VERSION} (${ALSA_LIBRARIES})")
+message(STATUS "${SEP}  • FFTW          : ${FFTW3F_VERSION} (${FFTW3F_LIBRARIES})")
 message(STATUS "${SEP}")
-message(STATUS "${SEP}  ── System Libraries ────────────────────────────────────")
-message(STATUS "${SEP}  • TagLib     : ${TAGLIB_INCLUDE_DIRS}")
-message(STATUS "${SEP}  • backtrace  : ${BACKTRACE_LIBRARY} (Debug builds only)")
-message(STATUS "${SEP}  • DBUS-1     : ${DBUS_INCLUDE_DIRS}")
+message(STATUS "${SEP}  ── Misc (System Libraries) ────────────────────────────────────")
+message(STATUS "${SEP}  • TagLib        : ${TAGLIB_INCLUDE_DIRS}")
+message(STATUS "${SEP}  • DBUS-1        : ${DBUS_INCLUDE_DIRS}")
 message(STATUS "${SEP}")
 message(STATUS "${LINE_BOTTOM}\n")
