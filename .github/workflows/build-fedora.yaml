@@ -18,7 +18,7 @@ jobs:
       # (seems that fedora does not ship it with gcc?)
       run: |
         dnf upgrade -y
-        dnf install -y git libasan
+        dnf install -y git libasan libubsan
 
     - name: Checkout repository with submodules
       uses: actions/checkout@v3

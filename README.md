@@ -19,8 +19,6 @@
   <a href="https://github.com/nots1dd/inLimbo/issues">Report a bug</a>
 </p>
 
-**MOST OF THIS README IS OUTDATED OR IRRELEVANT TO THIS BRANCH.**
-
 > [!CAUTION]
 >
 > This is the develop branch!
@@ -28,7 +26,7 @@
 > Firstly ensure that you have **ALL** the dependencies resolved.
 > (**spdlog**, **toml++**, **miniaudio** and **cereal** should all be resolved by git and cmake itself!)
 >
-> You will have to install **CMake**, **Git**, **C++20 Compiler (GCC/Clang/MSVC)**, **libbacktrace**!!
+> You will have to install **CMake & Make**, **Git**, **C++20 Compiler (GCC/Clang)**, **dbus-1**, **TagLib**!!
 >
 > Have the repo cloned **WITH THE SUBMODULES**:
 >
@@ -50,7 +48,7 @@
 > and no stable release is present as of yet.
 >
 
-The inLimbo project aims to be a new upcoming TUI music player for UNIX based systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.
+The inLimbo project aims to be a new upcoming TUI music player for *NIX based operating systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.
 
 ## **Why**
 
@@ -159,25 +157,33 @@ Check out [example config file](https://github.com/nots1dd/inLimbo/blob/develop/
 
 **LOGO**:
 
-*DISCLAIMER*: This is not an original logo nor was it commisioned by me
+> **!! DISCLAIMER !!**: This is not an original logo nor was it commisioned by me
 
 It is a basic stock image found online. I got it from [here](https://unsplash.com/photos/black-and-white-decor-FrQKfzoTgsw)
 
-**TOML PARSER: TOML++**:
+1. **TOML PARSER: TOML++**:
 
 To parse the [config.toml](https://github.com/nots1dd/inlimbo/blob/main/src/parser/examples/config.toml) is thanks to [TOML++](https://github.com/marzer/tomlplusplus)
 
-**Command Line Parsing (Arguments): CLI11**:
+2. **Command Line Parsing (Arguments): CLI11**:
 
 To parse the command line arguments (and sparing me time to work on the actual project) is thanks to [CLI11](https://github.com/CLIUtils/CLI11)
 
-**Serialization: Cereal**:
+3. **Serialization: Cereal**:
 
 Easy and fast serialization and deserialization of song map is thanks to [cereal](https://github.com/USCiLab/cereal/)
 
-**Logging: spdlog**:
+4. **Logging: spdlog**:
 
 Modular and fast logging is thanks to [spdlog](https://github.com/gabime/spdlog)
+
+5. **Backtrace: libbacktrace**:
+
+Very convenient stack trace for easy debugging thanks to [libbacktrace](https://github.com/ianlancetaylor/libbacktrace)
+
+6. **Datastructures: unordered_dense**:
+
+A super easy and better drop in replacement of `std::unordered_map` with `ankerl::unordered_dense::map` thanks to [unordered_dense](https://github.com/martinus/unordered_dense)
 
 **INSPIRATIONS**:
 
