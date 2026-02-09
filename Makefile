@@ -124,14 +124,14 @@ app-dbg:
 
 build:
 	@echo -e "$(COLOR_BLUE)▶ Building...$(COLOR_RESET)"
-	@$(CMAKE) -S . -B $(BUILD_DIR) \
-    -D CMAKE_BUILD_TYPE=Release \
-    $(EXTRA_CMAKE_FLAGS)
+	@$(CMAKE) --build $(BUILD_DIR)
 	@echo -e "$(COLOR_GREEN)✔ Build complete!$(COLOR_RESET)"
 
 buildx:
 	@echo -e "$(COLOR_BLUE)▶ Configuring build ($(BUILD_DIR))...$(COLOR_RESET)"
-	@$(CMAKE) -S . -B $(BUILD_DIR) -D CMAKE_BUILD_TYPE=Release
+	@$(CMAKE) -S . -B $(BUILD_DIR) \
+    -D CMAKE_BUILD_TYPE=Release \
+    $(EXTRA_CMAKE_FLAGS)
 	$(MAKE) build
 
 rebuild: clean buildx
