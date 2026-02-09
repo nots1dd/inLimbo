@@ -132,6 +132,7 @@ The configuration aspect of the inLimbo project comprises of the following field
 
 1. Keybinds
 2. Colors (Theme)
+3. Library Sort
 
 Something that is quite cool and almost standardised nowadays that inLimbo has is **hot-reloading** of the config file.
 
@@ -152,6 +153,42 @@ So currently for example, the `cmdline` frontend is super dynamic and can be hot
 The config and the app itself is just to show how multiple frontends can exist for inLimbo. (config is statically compiled)
 
 Check out [example config file](https://github.com/nots1dd/inLimbo/blob/develop/examples/config/config.toml)
+
+### **Config 1.1: Library Sorting**
+
+Library sort is a feature in most music players and they do get the job done (sometimes UX maybe a bit scuffed), which is why I felt the need to add one that is fast, reliable and easy to set.
+
+The idea behind the sort is that we can "reorder" the song map based on 3 field members:
+
+1. Artist
+2. Album
+3. Track
+
+More *could* be added if that is required but these are the most used fields.
+
+Now each field has certain criteria upon which the map is reordered.
+
+1. Artist: `Lexicographically Ascending/Descending (ASCII only)`, `Albums Count Ascending/Descending`, `Track Count Ascending/Descending`
+2. Album: `Lexicographically Ascending/Descending (ASCII only)`, `Track Count Ascending/Descending`
+3. Track: `Track Number Ascending/Descending`
+
+These are self-explanatory and easy to understand what each sort does. You can check out [example config.toml](https://github.com/nots1dd/inLimbo/tree/develop/examples/config/config.toml) for how to customize each sort.
+
+You can set each field as however you desire and `inLimbo-core` is made in such a way that it supports **runtime change** of the sorting "plan".
+
+This isn't to say there won't be more options coming (ex: Artist sorted by `Year Ascending/Descending`, etc.) but those are not a top priority at the moment and with the initial groundwork setup, I make it easy to add new sorting plans to the codebase without too many changes.
+
+If you are wondering how to integrate this into the frontend, I will have a blog / doc coming up on it but for now I suggest looking at the `cmdline` frontend code here: [Frontend Interface (cmdline)](https://github.com/nots1dd/inLimbo/tree/develop/src/frontend/cmdline/Interface.cc)
+
+> [!NOTE]
+> 
+> As of writing this, I did **NOT** find any bugs, but 
+> honestly this is a pretty dynamic feature that affects the 
+> audio engine's playlist and frontend.
+> 
+> Am fairly certain editing the sort just as a song ends *may* cause a 
+> problem but I could be wrong.
+> 
 
 ## **CREDITS**
 

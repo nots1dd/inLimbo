@@ -12,7 +12,15 @@ directory = "/home/s1dd/Downloads/Songs/" # just an example
 [fuzzy]
 max_dist = 3
 
-# NOTE: Only `Tab`, `Escape`, `Enter/Return` and `Space` are accepted as special chars
+[sort]
+# artist has `lex_asc`, `lex_desc`, `album_count_asc`, `album_count_desc`, `track_count_asc`, `track_count_desc`
+artist = "lex_desc"
+# album has `lex_asc`, `lex_desc`, `year_asc`, `year_desc`, `track_count_asc`, `track_count_desc` 
+album  = "year_asc"
+# track has `track_asc`, `track_desc`
+track  = "track_asc"
+
+# NOTE: Only `Tab`, `Escape`, `Enter/Return` and `Space` are accepted as special chars!
 [keybinds.cmdline]
 play_pause = "p"
 search_title = "/"
