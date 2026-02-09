@@ -20,6 +20,10 @@ CLANG_FORMAT := clang-format
 CLANG_TIDY   := clang-tidy
 MAKE 	:= make
 CMAKE := cmake
+CCACHE := ccache
+
+# Extra flags to pass to CMake configure step
+EXTRA_CMAKE_FLAGS ?=
 
 # Path to compile_commands.json
 COMPILE_COMMANDS := $(BUILD_DIR)/compile_commands.json
@@ -51,7 +55,7 @@ COLOR_CYAN  := \033[36m
 	buildx build build-dbg rebuild rebuild-dbg\
 	test test-dbg \
 	verify-deps install-deps \
-	stats all-checks help
+	stats all-checks ccache-stats help
 
 # ============================================================
 # Init stuff (explicit flags)
@@ -120,7 +124,9 @@ app-dbg:
 
 build:
 	@echo -e "$(COLOR_BLUE)▶ Building...$(COLOR_RESET)"
-	@$(CMAKE) --build $(BUILD_DIR)
+	@$(CMAKE) -S . -B $(BUILD_DIR) \
+    -D CMAKE_BUILD_TYPE=Release \
+    $(EXTRA_CMAKE_FLAGS)
 	@echo -e "$(COLOR_GREEN)✔ Build complete!$(COLOR_RESET)"
 
 buildx:
@@ -141,7 +147,9 @@ build-dbg:
 
 buildx-dbg:
 	@echo -e "$(COLOR_BLUE)▶ Configuring debug build ($(BUILD_DBG_DIR))...$(COLOR_RESET)"
-	@$(CMAKE) -S . -B $(BUILD_DBG_DIR) -D CMAKE_BUILD_TYPE=Debug
+	@$(CMAKE) -S . -B $(BUILD_DBG_DIR) \
+    -D CMAKE_BUILD_TYPE=Debug \
+    $(EXTRA_CMAKE_FLAGS)
 	$(MAKE) build-dbg
 
 rebuild-dbg: clean buildx-dbg
@@ -294,6 +302,15 @@ stats:
 all-checks: check verify-deps fmt-check tidy
 	@echo -e "$(COLOR_GREEN)✔ All checks passed$(COLOR_RESET)"
 
+ccache-stats:
+	@if [ -n "$(CCACHE)" ]; then \
+		echo -e "$(COLOR_BLUE)▶ ccache statistics$(COLOR_RESET)"; \
+		echo -e "  Using: $(CCACHE)"; \
+		$(CCACHE) -s; \
+	else \
+		echo -e "$(COLOR_YELLOW)ccache not installed$(COLOR_RESET)"; \
+	fi
+
 # ============================================================
 # Help
 # ============================================================
@@ -328,6 +345,7 @@ help:
 	@echo -e "  $(COLOR_CYAN)install-deps$(COLOR_RESET)   Install system dependencies (uses sudo)"
 	@echo -e "  $(COLOR_CYAN)stats$(COLOR_RESET)          Show project statistics"
 	@echo -e "  $(COLOR_CYAN)all-checks$(COLOR_RESET)     Run all verification steps"
+	@echo -e "  $(COLOR_CYAN)ccache-stats$(COLOR_RESET)   Show ccache statistics if ccache is installed"
 	@echo -e ""
 	@echo -e "  $(COLOR_CYAN)help$(COLOR_RESET)           Show this help message"
 	@echo -e ""

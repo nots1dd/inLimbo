@@ -2,6 +2,26 @@ cmake_minimum_required(VERSION 3.5...4.2.1)
 project(inLimbo LANGUAGES C CXX)
 
 # -----------------------------------------------------------
+# ccache detect
+# -----------------------------------------------------------
+
+find_program(INLIMBO_CCACHE_PROGRAM ccache)
+
+if(INLIMBO_CCACHE_PROGRAM)
+
+    message(STATUS "ccache found: ${INLIMBO_CCACHE_PROGRAM}")
+    message(STATUS "ccache enabled for C/C++ compilation")
+
+    set(CMAKE_C_COMPILER_LAUNCHER   ${INLIMBO_CCACHE_PROGRAM})
+    set(CMAKE_CXX_COMPILER_LAUNCHER ${INLIMBO_CCACHE_PROGRAM})
+
+else()
+
+    message(STATUS "ccache not found — builds will proceed without cache")
+
+endif()
+
+# -----------------------------------------------------------
 # Build configuration
 # -----------------------------------------------------------
 set(CMAKE_CXX_STANDARD 20)
@@ -13,6 +33,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Sanitizers (Debug only)
 # -----------------------------------------------------------
 option(INLIMBO_ENABLE_ASAN "Enable AddressSanitizer in Debug builds" ON)
+option(INLIMBO_ENABLE_TEST "Build unit tests" ON)
 
 # -----------------------------------------------------------
 # Build-Type Specific Compiler Options
@@ -30,7 +51,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
     )
 
     add_compile_options(
-        -O3
+        -O2
         -DNDEBUG
     )
 
@@ -285,12 +306,41 @@ target_compile_definitions(${PROJECT_NAME}
         $<$<CONFIG:Debug>:INLIMBO_DEBUG_BUILD>
 )
 
-# Enable testing
-include(CTest)
-enable_testing()
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
 
-# Add tests
-add_subdirectory(tests)
+    include(CheckIPOSupported)
+    check_ipo_supported(RESULT IPO_SUPPORTED OUTPUT IPO_ERROR)
+
+    if(IPO_SUPPORTED)
+
+        message(STATUS ">> Enabling LTO for core targets")
+
+        set_property(TARGET inLimbo-core PROPERTY
+            INTERPROCEDURAL_OPTIMIZATION TRUE)
+
+        set_property(TARGET ${PROJECT_NAME} PROPERTY
+            INTERPROCEDURAL_OPTIMIZATION TRUE)
+
+    else()
+        message(WARNING "LTO not supported: ${IPO_ERROR}")
+    endif()
+
+endif()
+
+if(INLIMBO_ENABLE_TEST)
+
+    message(STATUS "Tests ENABLED")
+
+    include(CTest)
+    enable_testing()
+
+    add_subdirectory(tests)
+
+else()
+
+    message(STATUS "Tests DISABLED")
+
+endif()
 
 # -----------------------------------------------------------
 # RPATH & Build Options

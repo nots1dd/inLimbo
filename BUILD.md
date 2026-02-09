@@ -116,6 +116,22 @@ This additionally ensures **libbacktrace** is built and linked in Debug mode.
 
 You can still use the raw build targets if you prefer direct control.
 
+> [!NOTE]
+> 
+> You can pass custom cmake flags via `EXTRA_CMAKE_FLAGS`
+> in Makefile like so:
+> 
+> ```bash
+> make <cmd> EXTRA_CMAKE_FLAGS="-D INLIMBO_ENABLE_TESTING=OFF"
+> ```
+>
+> Here `<cmd>` can be `buildx` or `buildx-dbg` (it initializes CMake)
+> with the required flags.
+> 
+> As such, it is obvious that rebuilds (like `build` or `build-dbg` targets)
+> will not take these flags properly.
+> 
+
 ### Release build
 
 #### First-time build (configure + build)
@@ -127,7 +143,7 @@ make buildx
 Equivalent to:
 
 ```bash
-cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
+cmake -S . -B build $(EXTRA_CMAKE_FLAGS) -D CMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
@@ -148,7 +164,7 @@ make buildx-dbg
 Equivalent to:
 
 ```bash
-cmake -S . -B build-dbg -D CMAKE_BUILD_TYPE=Debug
+cmake -S . -B build-dbg $(EXTRA_CMAKE_FLAGS) -D CMAKE_BUILD_TYPE=Debug
 cmake --build build-dbg
 ```
 

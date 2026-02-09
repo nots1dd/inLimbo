@@ -14,9 +14,11 @@ jobs:
 
     steps:
     - name: Update DNF
+      # we need libasan explicitly for debug build
+      # (seems that fedora does not ship it with gcc?)
       run: |
         dnf upgrade -y
-        dnf install -y git
+        dnf install -y git libasan
 
     - name: Checkout repository with submodules
       uses: actions/checkout@v3
