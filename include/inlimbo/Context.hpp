@@ -38,7 +38,8 @@ enum class EditAction
   Artist,
   Album,
   Genre,
-  Lyrics
+  Lyrics,
+  FetchLyrics
 };
 
 void setupArgs(CLI::App& app, Args& args);

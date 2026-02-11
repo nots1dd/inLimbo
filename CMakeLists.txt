@@ -103,6 +103,7 @@ set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/external)
 set(CLI11_INCLUDE_DIRS ${EXTERNAL_DIR}/CLI11/include)
 set(TOMLPLUSPLUS_INCLUDE_DIRS ${EXTERNAL_DIR}/tomlplusplus)
 set(CEREAL_INCLUDE_DIRS ${EXTERNAL_DIR}/cereal/include)
+set(NLOHMANN_JSON_INCLUDE_DIRS ${EXTERNAL_DIR}/nlohmann_json/include)
 set(ANKERL_UNORDERED_DENSE_DIR ${EXTERNAL_DIR}/unordered_dense)
 set(ANKERL_UNORDERED_DENSE_INCLUDE_DIRS
     ${ANKERL_UNORDERED_DENSE_DIR}/include
@@ -129,6 +130,10 @@ target_include_directories(cereal INTERFACE ${CEREAL_INCLUDE_DIRS})
 # --- CLI11 (header-only)
 add_library(cli11 INTERFACE)
 target_include_directories(cli11 INTERFACE ${CLI11_INCLUDE_DIRS})
+
+# --- nlohmann::json (header-only)
+add_library(nlohmann_json INTERFACE)
+target_include_directories(nlohmann_json INTERFACE ${NLOHMANN_JSON_INCLUDE_DIRS})
 
 # --- spdlog (compiled)
 set(SPDLOG_DIR ${EXTERNAL_DIR}/spdlog)
@@ -166,6 +171,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # System Dependencies
 # -----------------------------------------------------------
 find_package(PkgConfig REQUIRED)
+find_package(OpenSSL REQUIRED)
 pkg_check_modules(TAGLIB REQUIRED taglib)
 pkg_check_modules(AVFORMAT REQUIRED libavformat)
 pkg_check_modules(AVCODEC  REQUIRED libavcodec)
@@ -174,6 +180,9 @@ pkg_check_modules(SWRESAMPLE REQUIRED libswresample)
 pkg_check_modules(ALSA REQUIRED alsa)
 pkg_check_modules(DBUS REQUIRED dbus-1)
 pkg_check_modules(FFTW3F REQUIRED fftw3f)
+
+message(STATUS "OpenSSL version : ${OpenSSL_VERSION}")
+message(STATUS "OpenSSL include : ${OPENSSL_INCLUDE_DIR}")
 
 # Make MPRIS C bindings
 include(${CMAKE_SOURCE_DIR}/cmake/mpris/mpris-c.cmake)
@@ -211,6 +220,7 @@ set(INLIMBO_CORE_SOURCES
     src/utils/signal/Handler.cc
     src/utils/string/Equals.cc
     src/utils/string/Transforms.cc
+    src/utils/unix/net/HTTPSClient.cc
     src/config/sort/Model.cc
     src/config/sort/ParseMetrics.cc
     src/config/Watcher.cc
@@ -218,6 +228,7 @@ set(INLIMBO_CORE_SOURCES
     src/config/Colors.cc
     src/config/Misc.cc
     src/toml/Parser.cc
+    src/lrc/Client.cc
     src/Logger.cc
     src/Context.cc
 )
@@ -232,6 +243,7 @@ target_include_directories(inLimbo-core
         ${ANKERL_UNORDERED_DENSE_INCLUDE_DIRS}
         ${TOMLPLUSPLUS_INCLUDE_DIRS}
         ${CLI11_INCLUDE_DIRS}
+        ${NLOHMANN_JSON_INCLUDE_DIRS}
         ${CEREAL_INCLUDE_DIRS}
         ${ALSA_INCLUDE_DIRS}
         ${AVFORMAT_INCLUDE_DIRS}
@@ -248,6 +260,8 @@ target_link_libraries(inLimbo-core
         inLimbo-mpris-c
         ${TAGLIB_LIBRARIES}
         spdlog::spdlog
+        OpenSSL::SSL
+        OpenSSL::Crypto
         ${AVFORMAT_LIBRARIES}
         ${AVCODEC_LIBRARIES}
         ${AVUTIL_LIBRARIES}

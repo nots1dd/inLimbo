@@ -5,6 +5,7 @@
 #include "helpers/cmdline/Display.hpp"
 #include "helpers/fs/Directory.hpp"
 #include "helpers/fuzzy/Search.hpp"
+#include "lrc/Client.hpp"
 #include "mpris/Service.hpp"
 #include "mpris/backends/Common.hpp"
 #include "query/SongMap.hpp"
@@ -85,11 +86,17 @@ void setupArgs(CLI::App& app, Args& args)
       return {};
     });
 
-  edit->add_option("-y,--edit-lyrics", args.editLyrics, "Edit lyrics in metadata")
+  edit->add_option("-y,--edit-lyrics",
+                   args.editLyrics,
+                   "Edit lyrics manually in metadata")
     ->check([](const Lyrics& s) -> Lyrics {
-      if (s.empty()) return "Metadata edit requires non-empty lyrics";
-      return {};
+        if (s.empty()) return "Metadata edit requires non-empty lyrics";
+        return {};
     });
+
+  edit->add_flag("-f,--fetch-lyrics",
+                 args.fetchLyricsMode,
+                 "Fetch lyrics from LRCLIB and embed into metadata");
 
   auto* modify = app.add_subcommand("modify", "Modify library");
   modify->add_flag("-r,--rebuild-library", args.rebuildLibrary,
@@ -185,6 +192,9 @@ auto resolvePrintAction(const Args& args) -> PrintAction
 
 auto resolveEditAction(const Args& args) -> EditAction
 {
+  if (args.fetchLyricsMode)
+    return EditAction::FetchLyrics;
+
   if (!args.editTitle.empty())
     return EditAction::Title;
 
@@ -197,7 +207,7 @@ auto resolveEditAction(const Args& args) -> EditAction
   if (!args.editGenre.empty())
     return EditAction::Genre;
 
-  if (!args.editLyrics.empty())
+  if (!args.editLyrics.empty() || args.fetchLyricsMode)
     return EditAction::Lyrics;
 
   return EditAction::None;
@@ -303,7 +313,7 @@ auto maybeHandleEditActions(AppContext& ctx) -> bool
     return true;
   }
 
-  auto song = query::songmap::read::findSongObjByTitle(g_songMap, ctx.m_songTitle);
+  auto song = query::songmap::read::findSongObjByTitleFuzzy(g_songMap, ctx.m_songTitle);
   if (!song)
   {
     LOG_ERROR("Song not found: '{}'", ctx.m_songTitle);
@@ -327,7 +337,53 @@ auto maybeHandleEditActions(AppContext& ctx) -> bool
   apply(ctx.args.editArtist, &Metadata::artist);
   apply(ctx.args.editAlbum, &Metadata::album);
   apply(ctx.args.editGenre, &Metadata::genre);
-  apply(ctx.args.editLyrics, &Metadata::lyrics);
+
+  // lyrics can be fetched from lrclib as well via fetchLyricsMode
+  switch (ctx.m_editAction)
+  {
+    case EditAction::FetchLyrics:
+    {
+      LOG_INFO("Fetching lyrics from LRCLIB...");
+
+      lrc::Client lrcClient;
+
+      lrc::Query q;
+      q.artist = song->metadata.artist;
+      q.track  = song->metadata.title;
+      q.album  = song->metadata.album;
+
+      auto res = lrcClient.fetchBestMatchAndCache(q);
+
+      if (!res.ok())
+      {
+        LOG_ERROR("Failed to fetch lyrics: {}", res.error.message);
+        return true;
+      }
+
+      auto& [lyrics, path] = res.value;
+
+      if (!lyrics.plainLyrics)
+      {
+        LOG_WARN("No plain lyrics returned from LRCLIB");
+        return true;
+      }
+
+      edited->metadata.lyrics = *lyrics.plainLyrics;
+      touched                 = true;
+
+      LOG_INFO("Lyrics fetched successfully from LRCLIB and cached to file path: '{}'", path);
+      break;
+    }
+
+    case EditAction::Lyrics:
+    {
+      apply(ctx.args.editLyrics, &Metadata::lyrics);
+      break;
+    }
+
+    default:
+      break;
+  }
 
   if (!touched)
   {
@@ -389,8 +445,9 @@ auto initializeContext(int argc, char** argv) -> AppContext
   ctx.m_musicDir    = tomlparser::Config::getString("library", "directory");
   ctx.m_binPath     = utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_CACHE_BIN_NAME).c_str();
 
-  LOG_INFO("Configured directory: {}, Playback song title query provided: '{}'", ctx.m_musicDir,
-           ctx.m_songTitle);
+  LOG_INFO(
+    "Initialized inLimbo context for directory: '{}', Playback song title query provided: '{}'",
+    ctx.m_musicDir, ctx.m_songTitle);
 
   return ctx;
 }

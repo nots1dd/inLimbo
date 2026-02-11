@@ -1,6 +1,8 @@
 #include "helpers/cmdline/Display.hpp"
 #include "Logger.hpp"
 #include "build/generated/PluginList.ipp"
+#include "helpers/fs/LRC.hpp"
+#include "lrc/Client.hpp"
 #include "query/SongMap.hpp"
 #include "telemetry/Analysis.hpp"
 #include "toml/Parser.hpp"
@@ -116,7 +118,46 @@ void printSongLyrics(const threads::SafeMap<SongMap>& safeMap, const Title& song
   std::cout << "\nLyrics for '" << song->metadata.title << "' by " << song->metadata.artist
             << ":\n";
   std::cout << "────────────────────────────\n";
-  std::cout << song->metadata.lyrics << "\n";
+
+  if (!song->metadata.lyrics.empty())
+  {
+    std::cout << song->metadata.lyrics << "\n";
+    return;
+  }
+
+  auto cachePath =
+    helpers::lrc::genLRCFilePath(song->metadata.artist, song->metadata.title, song->metadata.album);
+
+  if (auto cached = helpers::lrc::tryReadCachedLRC(cachePath))
+  {
+    LOG_INFO("Loaded lyrics from cache: {}", cachePath.string());
+    std::cout << *cached << "\n";
+    return;
+  }
+
+  LOG_WARN("No lyrics in metadata or cache - fetching from LRCLIB...");
+
+  ::lrc::Client client;
+
+  ::lrc::Query query;
+  query.artist = song->metadata.artist;
+  query.album  = song->metadata.album;
+  query.track  = song->metadata.title;
+
+  auto res = client.fetchBestMatchAndCache(query);
+
+  if (!res.ok())
+  {
+    LOG_ERROR("lrc::Client error: {}", res.error.message);
+    return;
+  }
+
+  auto& [lyrics, path] = res.value;
+
+  LOG_INFO("Fetched + cached lyrics at '{}'", path);
+
+  if (lyrics.plainLyrics)
+    std::cout << *lyrics.plainLyrics << "\n";
 }
 
 // ------------------------------------------------------------

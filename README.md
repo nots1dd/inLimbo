@@ -190,6 +190,52 @@ If you are wondering how to integrate this into the frontend, I will have a blog
 > problem but I could be wrong.
 > 
 
+
+## **MISC**
+
+### **MISC 1.1: Lyrics**
+
+inLimbo can showcase lyrics in this manner:
+
+```bash 
+inLimbo query -L "some song"
+```
+
+The underlying logic of finding the lyrics is like so:
+
+```text
+Metadata Obj fetched of "some song"
+            |
+            |
+            V
+        If lyrics present
+          and not empty          -----> PRINT and EXIT
+            |
+            | (else)
+            V
+Check $HOME/.config/inLimbo/LRC/<LRC-GEN-PATH>.lrc
+for "some song"
+            |
+            |
+            V
+        If file present
+         and not emtpy         ------> PRINT and EXIT
+            |
+            | (else)
+            V
+Fetch from lrclib.net via utils::unix::net::HTTPSClient
+and cache JSON body and LRC in $HOME/.config/inLimbo/
+            |
+            |
+            V
+       PRINT and EXIT
+```
+
+The logic is made in such a way that we wont need to query `lrclib.net` multiple times on the same song (unless the cache is removed ofc).
+
+So in frontend, displaying the lyrics should follow the same flow as the above to avoid minimal network queries.
+
+
 ## **CREDITS**
 
 **LOGO**:
@@ -225,5 +271,7 @@ A super easy and better drop in replacement of `std::unordered_map` with `ankerl
 **INSPIRATIONS**:
 
 This music player's UI flow is heavily inspired by [CMUS](https://github.com/cmus/cmus), it seemed (to me atleast) the fastest and most responsive and logical UI/UX design of a TUI that has a great balance between looking good and feeling smooth
+
+A lot of the features and UX came to my head thanks to [namida](https://github.com/namidaco/namida), very sleek cross platform player with great UI.
 
 inLimbo is Free and Open Source Software Licensed under [GNU GPL v3](https://github.com/nots1dd/inlimbo/blob/main/LICENSE)

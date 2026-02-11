@@ -20,6 +20,8 @@ struct Args
   Album  editAlbum;
   Genre  editGenre;
   Lyrics editLyrics;
+  // to fetch lyrics from external sources and embed into metadata
+  bool fetchLyricsMode = false;
 
   // Modify
   bool rebuildLibrary = false;

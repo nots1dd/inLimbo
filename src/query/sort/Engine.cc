@@ -33,8 +33,6 @@ void applyRuntimeSortPlan(SongMap& map, const RuntimeSortPlan& plan)
     return;
   }
 
-  LOG_DEBUG("Found dispatch table!");
-
   fn(map);
 }
 
