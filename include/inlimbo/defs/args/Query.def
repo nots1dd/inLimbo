@@ -17,27 +17,21 @@ ARG(printArtists, bool, FLAG, "-a,--print-artists", "Print all artists", Artists
 ARG(printSummary, bool, FLAG, "-s,--print-summary", "Print library summary", Summary)
 ARG(songsPaths, bool, FLAG, "-p,--print-song-paths", "Print song paths", SongPaths)
 
+OPTIONAL_ARG(printGenres, Artist, "-g,--print-genres",
+             "Print all genres (optional filter by artist)", Genres)
 
-OPTIONAL_ARG(printGenres, Artist, "-g,--print-genres", "Print all genres (optional filter by artist)", Genres)
-OPTIONAL_ARG(printAlbums, Artist, "-b,--print-albums", "Print all albums (optional filter by artist)", Albums)
+OPTIONAL_ARG(printAlbums, Artist, "-b,--print-albums",
+             "Print all albums (optional filter by artist)", Albums)
 
-OPTIONAL_ARG(printSongTree,
-             Artist,
-             "-t,--print-song-tree",
-             "Print song tree optionally filtered by artist",
-             SongTree)
+OPTIONAL_ARG(printSongTree, Artist, "-t,--print-song-tree",
+             "Print song tree optionally filtered by artist", SongTree)
 
-ARG(printSong, Title, OPTION, "-i,--print-song-info",
-    "Print song info", SongInfoByTitle)
+ARG(printSong, Title, OPTION, "-i,--print-song-info", "Print song info", SongInfoByTitle)
 
-ARG(printLyrics, Title, OPTION, "-L,--print-song-lyrics",
-    "Print song lyrics", Lyrics)
+ARG(printLyrics, Title, OPTION, "-L,--print-song-lyrics", "Print song lyrics", Lyrics)
 
-ARG(songsArtist, Title, OPTION, "-A,--print-songs-by-artist",
-    "Songs by artist", SongsByArtist)
+ARG(songsArtist, Title, OPTION, "-A,--print-songs-by-artist", "Songs by artist", SongsByArtist)
 
-ARG(songsAlbum, Title, OPTION, "-B,--print-songs-by-album",
-    "Songs by album", SongsByAlbum)
+ARG(songsAlbum, Title, OPTION, "-B,--print-songs-by-album", "Songs by album", SongsByAlbum)
 
-ARG(songsGenre, Title, OPTION, "-G,--print-songs-by-genre",
-    "Songs by genre", SongsByGenre)
+ARG(songsGenre, Title, OPTION, "-G,--print-songs-by-genre", "Songs by genre", SongsByGenre)

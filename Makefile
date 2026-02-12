@@ -14,6 +14,7 @@ BACKTRACE_PREFIX := $(BACKTRACE_BUILD_DIR)/install
 # Find source files
 CPP_FILES := $(shell find $(SRC_DIRS) -type f \( -name "*.cpp" -o -name "*.cc" -o -name "*.cxx" \))
 HDR_FILES := $(shell find $(SRC_DIRS) -type f \( -name "*.h" -o -name "*.hpp" \))
+DEF_FILES := $(shell find $(SRC_DIRS) -type f -name "*.def")
 
 # Tools
 CLANG_FORMAT := clang-format
@@ -176,7 +177,7 @@ test-dbg:
 
 fmt:
 	@echo -e "$(COLOR_BLUE)▶ Running clang-format...$(COLOR_RESET)"
-	@for file in $(CPP_FILES) $(HDR_FILES); do \
+	@for file in $(CPP_FILES) $(HDR_FILES) $(DEF_FILES); do \
 		echo -e "  $(COLOR_CYAN)fmt$(COLOR_RESET)  $$file"; \
 		$(CLANG_FORMAT) -i "$$file"; \
 	done

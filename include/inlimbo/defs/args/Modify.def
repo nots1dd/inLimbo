@@ -13,5 +13,5 @@
  Keep entries declarative only.
 */
 
-ARG(rebuildLibrary, bool, FLAG, "-r,--rebuild-library",
-    "Force rebuild of music library cache", None)
+ARG(rebuildLibrary, bool, FLAG, "-r,--rebuild-library", "Force rebuild of music library cache",
+    None)
