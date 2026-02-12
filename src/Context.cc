@@ -34,8 +34,7 @@ static auto buildVersionString() -> std::string
   oss << "Build ID : " << INLIMBO_BUILD_ID << "\n";
   oss << "Branch   : " << INLIMBO_GIT_BRANCH << "\n";
   oss << "Dirty    : " << (INLIMBO_GIT_DIRTY ? "yes" : "no") << "\n";
-  oss << "Compiler : " << INLIMBO_COMPILER_NAME
-      << " " << INLIMBO_COMPILER_VERSION_FULL_STR << "\n";
+  oss << "Compiler : " << INLIMBO_COMPILER_NAME << " " << INLIMBO_COMPILER_VERSION_FULL_STR << "\n";
 
   return oss.str();
 }
@@ -44,11 +43,7 @@ static void addHelpAndVersion(CLI::App& app)
 {
   app.set_help_flag("-h,--help", "Show help");
 
-  app.set_version_flag(
-    "-v,--version",
-    buildVersionString(),
-    "Show version information"
-  );
+  app.set_version_flag("-v,--version", buildVersionString(), "Show version information");
 }
 
 // clang-format off
