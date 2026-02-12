@@ -60,15 +60,75 @@
 #error "C++20 or higher required."
 #endif
 
+// ============================================================
+// Compiler Detection
+// ============================================================
+
 #if defined(_MSC_VER)
+
 #define COMPILER_MSVC 1
+#define INLIMBO_COMPILER_ID_MSVC 1
+#define INLIMBO_COMPILER_NAME "MSVC"
+#define INLIMBO_COMPILER_VERSION_MAJOR (_MSC_VER / 100)
+#define INLIMBO_COMPILER_VERSION_MINOR (_MSC_VER % 100)
+
 #elif defined(__clang__)
+
 #define COMPILER_CLANG 1
+#define INLIMBO_COMPILER_ID_CLANG 2
+#define INLIMBO_COMPILER_NAME "Clang"
+#define INLIMBO_COMPILER_VERSION_MAJOR __clang_major__
+#define INLIMBO_COMPILER_VERSION_MINOR __clang_minor__
+#define INLIMBO_COMPILER_VERSION_PATCH __clang_patchlevel__
+
 #elif defined(__GNUC__)
+
 #define COMPILER_GCC 1
+#define INLIMBO_COMPILER_ID_GCC 3
+#define INLIMBO_COMPILER_NAME "GCC"
+#define INLIMBO_COMPILER_VERSION_MAJOR __GNUC__
+#define INLIMBO_COMPILER_VERSION_MINOR __GNUC_MINOR__
+#define INLIMBO_COMPILER_VERSION_PATCH __GNUC_PATCHLEVEL__
+
 #else
+
 #define COMPILER_UNKNOWN 1
+#define INLIMBO_COMPILER_ID_UNKNOWN 0
+#define INLIMBO_COMPILER_NAME "Unknown"
+
 #endif
+
+#if defined(INLIMBO_COMPILER_ID_MSVC)
+#define INLIMBO_COMPILER_ID INLIMBO_COMPILER_ID_MSVC
+#elif defined(INLIMBO_COMPILER_ID_CLANG)
+#define INLIMBO_COMPILER_ID INLIMBO_COMPILER_ID_CLANG
+#elif defined(INLIMBO_COMPILER_ID_GCC)
+#define INLIMBO_COMPILER_ID INLIMBO_COMPILER_ID_GCC
+#else
+#define INLIMBO_COMPILER_ID INLIMBO_COMPILER_ID_UNKNOWN
+#endif
+
+#define INLIMBO_COMPILER_VERSION_STR \
+    STRINGIFY(INLIMBO_COMPILER_VERSION_MAJOR) "." \
+    STRINGIFY(INLIMBO_COMPILER_VERSION_MINOR)
+
+#if defined(INLIMBO_COMPILER_VERSION_PATCH)
+#define INLIMBO_COMPILER_VERSION_FULL_STR \
+    STRINGIFY(INLIMBO_COMPILER_VERSION_MAJOR) "." \
+    STRINGIFY(INLIMBO_COMPILER_VERSION_MINOR) "." \
+    STRINGIFY(INLIMBO_COMPILER_VERSION_PATCH)
+#else
+#define INLIMBO_COMPILER_VERSION_FULL_STR INLIMBO_COMPILER_VERSION_STR
+#endif
+
+// Final BUILD version string
+#define INLIMBO_BUILD_VERSION_STRING \
+  std::string("Version  : ") + INLIMBO_VERSION_STR + "\n" \
++ "Commit   : " + INLIMBO_GIT_COMMIT_HASH + "\n" \
++ "Build ID : " + INLIMBO_BUILD_ID + "\n" \
++ "Branch   : " + INLIMBO_GIT_BRANCH + "\n" \
++ "Dirty    : " + std::string(INLIMBO_GIT_DIRTY ? "yes" : "no") + "\n" \
++ "Compiler : " + std::string(INLIMBO_COMPILER_NAME) + " " + INLIMBO_COMPILER_VERSION_FULL_STR + "\n"
 
 #if defined(_WIN32) || defined(_WIN64)
 #define PLATFORM_WINDOWS 1

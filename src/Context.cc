@@ -25,16 +25,30 @@ namespace fuzzy = helpers::fuzzy;
 namespace inlimbo
 {
 
+static auto buildVersionString() -> std::string
+{
+  std::ostringstream oss;
+
+  oss << "Version  : " << INLIMBO_VERSION_STR << "\n";
+  oss << "Commit   : " << INLIMBO_GIT_COMMIT_HASH << "\n";
+  oss << "Build ID : " << INLIMBO_BUILD_ID << "\n";
+  oss << "Branch   : " << INLIMBO_GIT_BRANCH << "\n";
+  oss << "Dirty    : " << (INLIMBO_GIT_DIRTY ? "yes" : "no") << "\n";
+  oss << "Compiler : " << INLIMBO_COMPILER_NAME
+      << " " << INLIMBO_COMPILER_VERSION_FULL_STR << "\n";
+
+  return oss.str();
+}
+
 static void addHelpAndVersion(CLI::App& app)
 {
   app.set_help_flag("-h,--help", "Show help");
 
-  app.set_version_flag("-v,--version",
-                       std::string("Version : ") + INLIMBO_VERSION_STR + "\n" + "Commit  : " +
-                         INLIMBO_GIT_COMMIT_HASH + "\n" + "Build ID: " + INLIMBO_BUILD_ID + "\n" +
-                         "Branch  : " + INLIMBO_GIT_BRANCH + "\n" + "Dirty   : " +
-                         (INLIMBO_GIT_DIRTY ? std::string("yes") : std::string("no")) + "\n",
-                       "Show version information");
+  app.set_version_flag(
+    "-v,--version",
+    buildVersionString(),
+    "Show version information"
+  );
 }
 
 // clang-format off
