@@ -19,7 +19,7 @@ constexpr auto ArtistMetric_DefCount = []() -> size_t
   size_t n = 0;
 
 #define X(name, str, tag) ++n;
-#include "config/defs/ArtistMetrics.def"
+#include "defs/config/ArtistMetrics.def"
 #undef X
 
   return n;
@@ -30,7 +30,7 @@ constexpr auto AlbumMetric_DefCount = []() -> size_t
   size_t n = 0;
 
 #define X(name, str, tag) ++n;
-#include "config/defs/AlbumMetrics.def"
+#include "defs/config/AlbumMetrics.def"
 #undef X
 
   return n;
@@ -41,7 +41,7 @@ constexpr auto TrackMetric_DefCount = []() -> size_t
   size_t n = 0;
 
 #define X(name, str, tag) ++n;
-#include "config/defs/TrackMetrics.def"
+#include "defs/config/TrackMetrics.def"
 #undef X
 
   return n;

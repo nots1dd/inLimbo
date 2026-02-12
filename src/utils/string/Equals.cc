@@ -1,5 +1,6 @@
 #include "utils/string/Equals.hpp"
 #include "utils/string/Transforms.hpp"
+#include "utils/string/Unicode.hpp"
 #include <cstddef>
 #include <string>
 
@@ -8,38 +9,47 @@ namespace utils::string
 
 auto icompare(std::string_view a, std::string_view b) -> bool
 {
-  auto ai = a.begin();
-  auto bi = b.begin();
+  const char* ap = a.data();
+  const char* bp = b.data();
 
-  for (; ai != a.end() && bi != b.end(); ++ai, ++bi)
+  const char* ae = ap + a.size();
+  const char* be = bp + b.size();
+
+  while (ap < ae && bp < be)
   {
-    char ac = transform::fast_tolower_ascii((unsigned char)*ai);
-    char bc = transform::fast_tolower_ascii((unsigned char)*bi);
+    char32_t ac = unicode_tolower(utf8_decode(ap, ae));
+    char32_t bc = unicode_tolower(utf8_decode(bp, be));
 
     if (ac != bc)
       return ac < bc;
   }
 
-  return a.size() < b.size();
+  // shorter string wins
+  if (ap == ae && bp == be)
+    return false;
+
+  return ap == ae;
 }
 
 auto isEquals(const std::string& a, const std::string& b) noexcept -> bool
 {
-  if (a.size() != b.size())
-    return false;
+  const char* ap = a.data();
+  const char* bp = b.data();
 
-  const char*  pa = a.data();
-  const char*  pb = b.data();
-  const size_t n  = a.size();
+  const char* ae = ap + a.size();
+  const char* be = bp + b.size();
 
-  for (size_t i = 0; i < n; ++i)
+  while (ap < ae && bp < be)
   {
-    char ca = transform::fast_tolower_ascii(pa[i]);
-    char cb = transform::fast_tolower_ascii(pb[i]);
-    if (ca != cb)
+    char32_t ac = unicode_tolower(utf8_decode(ap, ae));
+    char32_t bc = unicode_tolower(utf8_decode(bp, be));
+
+    if (ac != bc)
       return false;
   }
-  return true;
+
+  // Both must end at same time
+  return (ap == ae) && (bp == be);
 }
 
 // Optimized "contains-like" equality for situations where you already know one side is lowercase

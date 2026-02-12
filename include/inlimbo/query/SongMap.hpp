@@ -68,6 +68,9 @@ forEachSongInGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& genreN
                    const std::function<void(const Artist&, const Album&, const Disc, const Track,
                                             const ino_t, const std::shared_ptr<Song>&)>& fn);
 
+void forEachGenreInArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
+                          const std::function<void(const Genre&)>& fn);
+
 // ==--------------------==
 // Direct Lookups / Finders
 // ==--------------------==

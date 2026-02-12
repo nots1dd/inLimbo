@@ -21,6 +21,7 @@ enum class PrintAction
   Frontends,
   Artists,
   Albums,
+  SongTree,
   Genres,
   Summary,
   SongInfoByTitle,

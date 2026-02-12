@@ -12,7 +12,7 @@ using namespace query::sort::metric;
 static const ankerl::unordered_dense::map<std::string_view, ArtistMetric> ARTIST_MAP = {
 
 #define X(name, str, tag) {str, ArtistMetric::name},
-#include "config/defs/ArtistMetrics.def"
+#include "defs/config/ArtistMetrics.def"
 #undef X
 
 };
@@ -20,7 +20,7 @@ static const ankerl::unordered_dense::map<std::string_view, ArtistMetric> ARTIST
 static const ankerl::unordered_dense::map<std::string_view, AlbumMetric> ALBUM_MAP = {
 
 #define X(name, str, tag) {str, AlbumMetric::name},
-#include "config/defs/AlbumMetrics.def"
+#include "defs/config/AlbumMetrics.def"
 #undef X
 
 };
@@ -28,7 +28,7 @@ static const ankerl::unordered_dense::map<std::string_view, AlbumMetric> ALBUM_M
 static const ankerl::unordered_dense::map<std::string_view, TrackMetric> TRACK_MAP = {
 
 #define X(name, str, tag) {str, TrackMetric::name},
-#include "config/defs/TrackMetrics.def"
+#include "defs/config/TrackMetrics.def"
 #undef X
 
 };

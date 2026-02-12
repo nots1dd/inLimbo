@@ -91,4 +91,33 @@ auto bestCandidate(SongMap& songMap, const T& query, const int fuzzyMaxDist,
   }
 }
 
+template <FuzzyKind Kind, typename T>
+inline static auto fuzzyResolve(const threads::SafeMap<SongMap>& map, const T& input,
+                                size_t maxDist, bool enableFuzzy) -> T
+{
+  if constexpr (std::is_same_v<T, std::optional<typename T::value_type>>)
+  {
+    if (!input.has_value() || input->empty())
+      return input;
+
+    auto best = bestCandidate<Kind>(map, *input, maxDist, enableFuzzy);
+    return T{best};
+  }
+  else
+  {
+    if (input.empty())
+      return input;
+
+    return bestCandidate<Kind>(map, input, maxDist, enableFuzzy);
+  }
+}
+
+template <FuzzyKind Kind, typename T, typename Fn>
+inline static void fuzzyDispatch(const threads::SafeMap<SongMap>& map, const T& input,
+                                 size_t maxDist, bool enableFuzzy, Fn&& fn)
+{
+  auto best = fuzzyResolve<Kind>(map, input, maxDist, enableFuzzy);
+  fn(best);
+}
+
 } // namespace helpers::fuzzy

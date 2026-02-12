@@ -21,11 +21,11 @@ void printSongInfoByTitleAndArtist(const threads::SafeMap<SongMap>& safeMap,
 
 void printSongLyrics(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle);
 
-void printAlbums(const threads::SafeMap<SongMap>& safeMap,
-                 const std::optional<Artist>&     artist = std::nullopt);
-void printAlbumsByYear(const threads::SafeMap<SongMap>& safeMap);
+void printSongTree(const threads::SafeMap<SongMap>& safeMap, const std::optional<Artist>& artist);
 
-void printGenres(const threads::SafeMap<SongMap>& safeMap);
+void printAlbums(const threads::SafeMap<SongMap>& safeMap, const std::optional<Artist>& artist);
+
+void printGenres(const threads::SafeMap<SongMap>& safeMap, const std::optional<Artist>& artist);
 
 void printSongsByArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artist);
 

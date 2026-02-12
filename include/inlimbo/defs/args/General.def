@@ -1,0 +1,20 @@
+/*
+ X-Macro Argument Table — General Arguments
+
+ Schema:
+   ARG(field, storage_type, cli_binding, flags, help, action_enum)
+
+ This table is used for:
+   - CLI registration
+   - Args layout
+   - Action resolution
+   - Validation wiring
+
+ Keep entries declarative only.
+*/
+
+ARG(song, Title, OPTION, "-s,--song", "Play song name (fuzzy search)", None)
+ARG(frontend, std::string, OPTION, "-f,--frontend", "Frontend plugin name", None)
+ARG(listFrontend, bool, FLAG, "-l,--list-frontend", "List frontend plugins", Frontends)
+ARG(volume, float, OPTION, "-V,--volume", "Initial playback volume", None)
+ARG(fuzzySearch, bool, FLAG, "-z,--fuzzy-search", "Enable fuzzy search", None)

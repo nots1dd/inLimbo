@@ -15,7 +15,7 @@ void Config::load()
   if (!std::filesystem::exists(path.c_str()))
   {
     LOG_ERROR("config.toml not found at '{}'", path.c_str());
-    throw std::runtime_error("Missing config.toml");
+    throw std::runtime_error("tomlparser: Missing config.toml");
   }
 
   LOG_DEBUG("Loading config.toml: {}", path.c_str());
@@ -27,7 +27,7 @@ void Config::loadFrom(const Path& path)
   if (!std::filesystem::exists(path.c_str()))
   {
     LOG_ERROR("Custom config not found at '{}'", path);
-    throw std::runtime_error("Missing custom config");
+    throw std::runtime_error("tomlparser: Missing custom config file!");
   }
 
   LOG_DEBUG("Loading custom config: {}", path);
@@ -79,11 +79,11 @@ auto Config::requireString(SectionView section, KeyView key) -> std::string
   return "";
 }
 
-auto Config::requireInt(SectionView section, KeyView key) -> int64_t
+auto Config::requireInt(SectionView section, KeyView key) -> i64
 {
   ensureLoaded();
 
-  if (auto v = (*s_config)[section][key].value<int64_t>())
+  if (auto v = (*s_config)[section][key].value<i64>())
     return *v;
 
   throwMissing(section, key);
@@ -113,7 +113,7 @@ auto Config::table(SectionView section) -> const toml::table&
 
   const auto* tbl = (*s_config)[section].as_table();
   if (!tbl)
-    throw std::runtime_error("TOML section is not a table");
+    throw std::runtime_error("tomlparser: TOML section is not a table!");
 
   return *tbl;
 }
@@ -131,7 +131,7 @@ void Config::ensureLoaded()
 void Config::throwMissing(SectionView section, KeyView key)
 {
   LOG_ERROR("Missing or invalid config value: [{}].{}", section, key);
-  throw std::runtime_error("Invalid configuration");
+  throw std::runtime_error("tomlparser: Invalid configuration!");
 }
 
 } // namespace tomlparser

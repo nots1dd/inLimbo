@@ -25,7 +25,7 @@ public:
   static auto getString(SectionView section, KeyView key, std::string_view fallback = "")
     -> std::string_view;
 
-  static auto getInt(SectionView section, KeyView key, i64 fallback = -1) -> int64_t;
+  static auto getInt(SectionView section, KeyView key, i64 fallback = -1) -> i64;
 
   static auto getBool(SectionView section, KeyView key, bool fallback = false) -> bool;
 

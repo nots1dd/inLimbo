@@ -10,7 +10,7 @@ namespace query::sort::metric
 enum class AlbumMetric
 {
 #define X(name, str, tag) name,
-#include "config/defs/AlbumMetrics.def"
+#include "defs/config/AlbumMetrics.def"
 #undef X
 
   COUNT

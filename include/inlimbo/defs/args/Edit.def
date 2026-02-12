@@ -1,0 +1,23 @@
+/*
+ X-Macro Argument Table — Edit Arguments
+
+ Schema:
+   ARG(field, storage_type, cli_binding, flags, help, action_enum)
+
+ This table is used for:
+   - CLI registration
+   - Args layout
+   - Action resolution
+   - Validation wiring
+
+ Keep entries declarative only.
+*/
+
+ARG(editTitle, Title, OPTION, "-t,--edit-title", "Edit title metadata", Title)
+ARG(editArtist, Artist, OPTION, "-a,--edit-artist", "Edit artist metadata", Artist)
+ARG(editAlbum, Album, OPTION, "-b,--edit-album", "Edit album metadata", Album)
+ARG(editGenre, Genre, OPTION, "-g,--edit-genre", "Edit genre metadata", Genre)
+ARG(editLyrics, Lyrics, OPTION, "-y,--edit-lyrics", "Edit lyrics manually", Lyrics)
+
+ARG(fetchLyricsMode, bool, FLAG, "-F,--fetch-lyrics",
+    "Fetch lyrics from LRCLIB and embed", FetchLyrics)

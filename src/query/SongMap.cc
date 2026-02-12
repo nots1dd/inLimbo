@@ -172,6 +172,32 @@ void forEachSongInGenre(
     });
 }
 
+void forEachGenreInArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
+                          const std::function<void(const Genre&)>& fn)
+{
+  std::set<Genre> genres;
+
+  safeMap.withReadLock(
+    [&](const auto& map) -> void
+    {
+      auto itArtist = map.find(artistName);
+      if (itArtist == map.end())
+        return;
+
+      for (const auto& [album, discs] : itArtist->second)
+        for (const auto& [disc, tracks] : discs)
+          for (const auto& [track, inodeMap] : tracks)
+            for (const auto& [inode, song] : inodeMap)
+            {
+              if (!song->metadata.genre.empty())
+                genres.insert(song->metadata.genre);
+            }
+    });
+
+  for (const auto& g : genres)
+    fn(g);
+}
+
 auto findSongPathByInode(const threads::SafeMap<SongMap>& safeMap, const ino_t givenInode)
   -> PathStr
 {

@@ -8,7 +8,7 @@ namespace query::sort::metric
 enum class TrackMetric
 {
 #define X(name, str, tag) name,
-#include "config/defs/TrackMetrics.def"
+#include "defs/config/TrackMetrics.def"
 #undef X
 
   COUNT

@@ -23,10 +23,7 @@
 >
 > This is the develop branch!
 >
-> Firstly ensure that you have **ALL** the dependencies resolved.
-> (**spdlog**, **toml++**, **miniaudio** and **cereal** should all be resolved by git and cmake itself!)
->
-> You will have to install **CMake & Make**, **Git**, **C++20 Compiler (GCC/Clang)**, **dbus-1**, **TagLib**!!
+> You will have to install **CMake & Make**, **Git**, **C++20 Compiler (GCC/Clang)**, **dbus-1**, **OpenSSL**, **TagLib**!!
 >
 > Have the repo cloned **WITH THE SUBMODULES**:
 >
@@ -235,6 +232,11 @@ The logic is made in such a way that we wont need to query `lrclib.net` multiple
 
 So in frontend, displaying the lyrics should follow the same flow as the above to avoid minimal network queries.
 
+## **PHILOSOPHY**
+
+The core philosophy of inLimbo can be primarily summarized in:
+
+1. No action is done without the user knowing
 
 ## **CREDITS**
 
@@ -267,6 +269,10 @@ Very convenient stack trace for easy debugging thanks to [libbacktrace](https://
 6. **Datastructures: unordered_dense**:
 
 A super easy and better drop in replacement of `std::unordered_map` with `ankerl::unordered_dense::map` thanks to [unordered_dense](https://github.com/martinus/unordered_dense)
+
+7. **JSON Parser: nlohmann/json**:
+
+For easy HTTP body parsing is thanks to [nlohmann/json](https://github.com/nlohmann/json)
 
 **INSPIRATIONS**:
 

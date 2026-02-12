@@ -1,0 +1,247 @@
+/* ===== Root layout ===== */
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden; /* prevent page scroll */
+}
+
+body {
+  background: #121212;
+  color: #eee;
+  font-family: sans-serif;
+
+  display: grid;
+  grid-template-rows: 56px 1fr 96px; /* header | main | footer */
+}
+
+/* ===== Header ===== */
+header {
+  background: #000;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 20px;
+}
+
+header button {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+}
+
+header button.active {
+  color: #fff;
+  font-weight: bold;
+}
+
+/* ===== Main split panes ===== */
+main {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  overflow: hidden; /* critical */
+}
+
+/* ===== LEFT: Artist list ===== */
+#library {
+  background: #181818;
+  padding: 12px;
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.item:hover {
+  background: #222;
+}
+
+/* ===== RIGHT: Content area ===== */
+#content {
+  overflow: hidden;
+}
+
+/* Screens */
+.screen {
+  display: none;
+  height: 100%;
+}
+
+.screen.active {
+  display: flex;
+}
+
+/* ===== Library screen layout ===== */
+#libraryScreen {
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Header stays fixed */
+.library-header {
+  flex: 0 0 auto;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #333;
+}
+
+/* Scrollable album pane */
+#albumPane {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Album content */
+.album-view {
+  padding: 0 16px 80px; /* avoid footer overlap */
+}
+
+/* ===== Footer ===== */
+footer {
+  background: #111;
+  border-top: 1px solid #333;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+
+  /* DO NOT fix-position inside grid */
+}
+
+.cover {
+  width: 56px;
+  height: 56px;
+  background: #333;
+}
+
+.controls button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  margin: 0 6px;
+}
+
+/* ===== Shared interactive row style ===== */
+.item,
+.album-view h3,
+.album-view .disc,
+.album-view .track {
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* ===== Hover behavior (same as left pane) ===== */
+.item:hover,
+.album-view h3:hover,
+.album-view .track:hover {
+  background: #222;
+}
+
+/* ===== Album headers ===== */
+.album-view h3 {
+  margin: 16px 0 4px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ===== Disc labels ===== */
+.album-view .disc {
+  margin: 6px 0 2px;
+  font-size: 13px;
+  color: #aaa;
+  cursor: default;        /* discs aren’t clickable */
+}
+
+.album-view .disc:hover {
+  background: none;       /* no hover highlight for disc labels */
+}
+
+/* ===== Track rows ===== */
+.album-view .track {
+  font-size: 14px;
+  padding-left: 16px;     /* visual hierarchy under album */
+}
+
+/* Optional: active / playing track */
+.album-view .track.playing {
+  color: #1db954;         /* Spotify-style accent */
+  background: rgba(29, 185, 84, 0.15);
+}
+
+/* ===== Fullscreen Now Playing ===== */
+.now-playing-screen {
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+/* When active */
+.now-playing-screen.active {
+  display: flex;
+}
+
+/* Hide sidebar + normal content when Now Playing */
+body.now-playing-active #library,
+body.now-playing-active #content > :not(#nowPlaying) {
+  display: none;
+}
+
+/* Centered player */
+.np-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Large album art */
+.np-art-large {
+  width: 320px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #222;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+/* Metadata */
+.np-meta-large h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.np-meta-large div {
+  color: #aaa;
+  margin-top: 4px;
+  text-align: center;
+}
+
+/* Controls */
+.np-controls {
+  display: flex;
+  gap: 32px;
+}
+
+.np-controls button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.np-controls button:hover {
+  color: #1db954;
+}
+
+/* When Now Playing is active, collapse layout */
+body.now-playing-active main {
+  grid-template-columns: 1fr;
+}

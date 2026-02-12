@@ -16,12 +16,15 @@ The Makefile is a thin, explicit wrapper around **CMake**.
 
 Before building, ensure the following tools are available:
 
-> [!NOTE]
+> [!IMPORTANT]
 >
 > Although the CMake build allows versions starting from `3.5`,
 > this is **not actively tested**.
 > It is strongly recommended to use the **latest CMake version**
 > available for your distribution.
+> 
+
+**REQUIRED TOOLS**:
 
 * CMake (3.16 or newer recommended)
 * CTest (comes with CMake)
@@ -30,6 +33,9 @@ Before building, ensure the following tools are available:
 * clang-format (for formatting)
 * clang-tidy (for static analysis)
 * Git (for submodules)
+* OpenSSL (SSL/Crypto)
+* TagLib
+* DBus-1 (aka libdbus-1)
 
 You can verify required tools using:
 

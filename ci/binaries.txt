@@ -7,3 +7,4 @@ clang-format
 clang-tidy
 pkg-config
 ffmpeg
+taglib-config

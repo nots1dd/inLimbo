@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Logger.hpp"
-#include "StackTrace.hpp"
-#include "config/sort/ParseMetrics.hpp"
 #include "query/sort/Engine.hpp"
 #include "toml/Parser.hpp"
 #include <ankerl/unordered_dense.h>
@@ -15,7 +13,7 @@ constexpr auto DefaultArtistMetric =
 []() -> query::sort::metric::ArtistMetric
 {
 #define X(name, str, tag) return query::sort::metric::ArtistMetric::name;
-#include "config/defs/ArtistMetrics.def"
+#include "defs/config/ArtistMetrics.def"
 #undef X
 }();
 
@@ -23,7 +21,7 @@ constexpr auto DefaultAlbumMetric =
 []() -> query::sort::metric::AlbumMetric
 {
 #define X(name, str, tag) return query::sort::metric::AlbumMetric::name;
-#include "config/defs/AlbumMetrics.def"
+#include "defs/config/AlbumMetrics.def"
 #undef X
 }();
 
@@ -31,7 +29,7 @@ constexpr auto DefaultTrackMetric =
 []() -> query::sort::metric::TrackMetric
 {
 #define X(name, str, tag) return query::sort::metric::TrackMetric::name;
-#include "config/defs/TrackMetrics.def"
+#include "defs/config/TrackMetrics.def"
 #undef X
 }();
 

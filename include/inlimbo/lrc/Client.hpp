@@ -40,7 +40,8 @@ class Client
 public:
   Client() = default;
 
-  auto fetchBestMatchAndCache(const Query& q) -> utils::unix::net::Result<std::pair<Lyrics, PathStr>>;
+  auto fetchBestMatchAndCache(const Query& q)
+    -> utils::unix::net::Result<std::pair<Lyrics, PathStr>>;
 
 private:
   utils::unix::net::HTTPSClient m_http;

@@ -7,38 +7,17 @@ namespace inlimbo
 
 struct Args
 {
-  // General
-  Title       song;
-  std::string frontend;
-  bool        listFrontend = false;
-  float       volume       = 75.0f;
-  bool        fuzzySearch  = false;
+#define ARG(name, type, kind, cli, desc, action) type name{};
 
-  // Edit
-  Title  editTitle;
-  Artist editArtist;
-  Album  editAlbum;
-  Genre  editGenre;
-  Lyrics editLyrics;
-  // to fetch lyrics from external sources and embed into metadata
-  bool fetchLyricsMode = false;
+#define OPTIONAL_ARG(name, type, cli, desc, action) std::optional<type> name{};
 
-  // Modify
-  bool rebuildLibrary = false;
+#include "defs/args/Edit.def"
+#include "defs/args/General.def"
+#include "defs/args/Modify.def"
+#include "defs/args/Query.def"
 
-  // Query
-  bool printArtists = false;
-  bool printAlbums  = false;
-  bool printGenre   = false;
-  bool printSummary = false;
-  bool songsPaths   = false;
-
-  Title printSong;
-  Title printLyrics;
-
-  Title songsArtist;
-  Title songsAlbum;
-  Title songsGenre;
+#undef ARG
+#undef OPTIONAL_ARG
 };
 
 } // namespace inlimbo

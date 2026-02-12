@@ -5,10 +5,10 @@
 // ============================================================
 // Project and Version Info
 // ============================================================
-#define INLIMBO_VERSION_MAJOR                       1
+#define INLIMBO_VERSION_MAJOR                       0
 #define INLIMBO_VERSION_MINOR                       0
 #define INLIMBO_VERSION_PATCH                       0
-#define INLIMBO_VERSION_STR                         "1.0.0"
+#define INLIMBO_VERSION_STR                         "0.0.1"
 #define INLIMBO_VERSION_ENCODE(major, minor, patch) (((major) * 10000) + ((minor) * 100) + (patch))
 #define INLIMBO_VERSION \
   INLIMBO_VERSION_ENCODE(INLIMBO_VERSION_MAJOR, INLIMBO_VERSION_MINOR, INLIMBO_VERSION_PATCH)

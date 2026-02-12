@@ -160,10 +160,25 @@ void printSongLyrics(const threads::SafeMap<SongMap>& safeMap, const Title& song
     std::cout << *lyrics.plainLyrics << "\n";
 }
 
-// ------------------------------------------------------------
-// Print albums (optionally filtered by artist)
-// ------------------------------------------------------------
 void printAlbums(const threads::SafeMap<SongMap>& safeMap, const std::optional<Artist>& artist)
+{
+  std::cout << (!artist.has_value() ? "\nAll Albums:\n" : "\nAlbums by " + *artist + ":\n");
+  std::cout << "────────────────────────────\n";
+
+  query::songmap::read::forEachAlbum(
+    safeMap,
+    [&](const Artist& a, const Album& album, const DiscMap&) -> void
+    {
+      if (artist && !artist->empty() && !utils::string::isEquals(a, *artist))
+        return;
+      std::cout << "• " << album << "\n";
+    });
+}
+
+// ------------------------------------------------------------
+// Print song tree (optionally filtered by artist)
+// ------------------------------------------------------------
+void printSongTree(const threads::SafeMap<SongMap>& safeMap, const std::optional<Artist>& artist)
 {
   std::map<Artist, std::set<Album>> albums;
 
@@ -192,22 +207,32 @@ void printAlbums(const threads::SafeMap<SongMap>& safeMap, const std::optional<A
 // ------------------------------------------------------------
 // Print genres
 // ------------------------------------------------------------
-void printGenres(const threads::SafeMap<SongMap>& safeMap)
+void printGenres(const threads::SafeMap<SongMap>& safeMap, const std::optional<Artist>& artist)
 {
-  std::set<Genre> genres;
+  const bool hasArtist = artist && !artist->empty();
 
-  query::songmap::read::forEachSong(safeMap,
-                                    [&](const Artist&, const Album&, const Disc, const Track,
-                                        const ino_t, const std::shared_ptr<Song> song) -> void
-                                    {
-                                      if (!song->metadata.genre.empty())
-                                        genres.insert(song->metadata.genre);
-                                    });
+  std::cout << (!hasArtist ? "\nAll Genres:\n" : "\nGenres in songs by " + *artist + ":\n");
 
-  std::cout << "\nGenres:\n";
   std::cout << "────────────────────────────\n";
-  for (const auto& g : genres)
-    std::cout << "• " << g << "\n";
+
+  if (hasArtist)
+  {
+    query::songmap::read::forEachGenreInArtist(safeMap, *artist,
+                                               [&](const Genre& genre)
+                                               {
+                                                 if (!genre.empty())
+                                                   std::cout << "• " << genre << "\n";
+                                               });
+  }
+  else
+  {
+    query::songmap::read::forEachGenre(safeMap,
+                                       [&](const Genre& genre)
+                                       {
+                                         if (!genre.empty())
+                                           std::cout << "• " << genre << "\n";
+                                       });
+  }
 }
 
 // ------------------------------------------------------------

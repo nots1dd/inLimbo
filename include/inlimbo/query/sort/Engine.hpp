@@ -154,7 +154,7 @@ struct ArtistTagFromEnum;
     using type = metric::tag;                          \
   };
 
-#include "config/defs/ArtistMetrics.def"
+#include "defs/config/ArtistMetrics.def"
 #undef X
 
 template <metric::AlbumMetric M>
@@ -167,7 +167,7 @@ struct AlbumTagFromEnum;
     using type = metric::tag;                        \
   };
 
-#include "config/defs/AlbumMetrics.def"
+#include "defs/config/AlbumMetrics.def"
 #undef X
 
 template <metric::TrackMetric M>
@@ -180,7 +180,7 @@ struct TrackTagFromEnum;
     using type = metric::tag;                        \
   };
 
-#include "config/defs/TrackMetrics.def"
+#include "defs/config/TrackMetrics.def"
 #undef X
 
 /*
