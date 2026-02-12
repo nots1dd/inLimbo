@@ -17,5 +17,5 @@ clang
 clang-tools-extra
 cmake
 make
-openssl
+openssl-devel
 git
