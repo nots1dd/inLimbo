@@ -26,7 +26,7 @@ OPTIONAL_ARG(printAlbums, Artist, "-b,--print-albums",
 OPTIONAL_ARG(printSongTree, Artist, "-t,--print-song-tree",
              "Print song tree optionally filtered by artist", SongTree)
 
-ARG(printSong, Title, OPTION, "-i,--print-song-info", "Print song info", SongInfoByTitle)
+ARG(printSong, Title, OPTION, "-i,--print-song-info", "Print song info of all title matches", SongInfoByTitle)
 
 ARG(printLyrics, Title, OPTION, "-L,--print-song-lyrics", "Print song lyrics", Lyrics)
 

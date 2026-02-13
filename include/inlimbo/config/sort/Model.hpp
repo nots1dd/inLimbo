@@ -43,7 +43,7 @@ auto loadMetricOrFallback(tomlparser::SectionView section, tomlparser::KeyView k
   if (auto v = parseFn(str))
     return *v;
 
-  LOG_WARN("RuntimeSortPlan: Invalid {} sort '{}' — falling back to '{}'", logLabel, str,
+  LOG_WARN("config::sort::RuntimeSortPlan: Invalid {} sort '{}' — falling back to '{}'", logLabel, str,
            fallbackName);
 
   return fallbackValue;

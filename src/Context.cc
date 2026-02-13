@@ -290,7 +290,6 @@ auto maybeHandlePrintActions(AppContext& ctx) -> bool
       helpers::fuzzy::fuzzyDispatch<fuzzy::FuzzyKind::Artist>(
         g_songMap, ctx.args.printSongTree, ctx.m_fuzzyMaxDist, useFuzzySearch,
         [&](const auto& best) { helpers::cmdline::printSongTree(g_songMap, best); });
-
       break;
     }
 
@@ -299,7 +298,6 @@ auto maybeHandlePrintActions(AppContext& ctx) -> bool
       helpers::fuzzy::fuzzyDispatch<fuzzy::FuzzyKind::Artist>(
         g_songMap, ctx.args.printGenres, ctx.m_fuzzyMaxDist, useFuzzySearch,
         [&](const auto& best) { helpers::cmdline::printGenres(g_songMap, best); });
-
       break;
     }
 
@@ -313,28 +311,25 @@ auto maybeHandlePrintActions(AppContext& ctx) -> bool
 
     case PrintAction::SongsByArtist:
     {
-      const auto input = ctx.args.songsArtist;
-      const auto best  = fuzzy::bestCandidate<fuzzy::FuzzyKind::Artist>(
-        g_songMap, input, ctx.m_fuzzyMaxDist, useFuzzySearch);
-      helpers::cmdline::printSongsByArtist(g_songMap, best);
+      helpers::fuzzy::fuzzyDispatch<fuzzy::FuzzyKind::Artist>(
+        g_songMap, ctx.args.songsArtist, ctx.m_fuzzyMaxDist, useFuzzySearch,
+        [&](const auto& best) { helpers::cmdline::printSongsByArtist(g_songMap, best); });
       break;
     }
 
     case PrintAction::SongsByAlbum:
     {
-      const auto input = ctx.args.songsAlbum;
-      const auto best  = fuzzy::bestCandidate<fuzzy::FuzzyKind::Album>(
-        g_songMap, input, ctx.m_fuzzyMaxDist, useFuzzySearch);
-      helpers::cmdline::printSongsByAlbum(g_songMap, best);
+      helpers::fuzzy::fuzzyDispatch<fuzzy::FuzzyKind::Album>(
+        g_songMap, ctx.args.songsAlbum, ctx.m_fuzzyMaxDist, useFuzzySearch,
+        [&](const auto& best) { helpers::cmdline::printSongsByAlbum(g_songMap, best); });
       break;
     }
 
     case PrintAction::SongsByGenre:
     {
-      const auto input = ctx.args.songsGenre;
-      const auto best  = fuzzy::bestCandidate<fuzzy::FuzzyKind::Genre>(
-        g_songMap, input, ctx.m_fuzzyMaxDist, useFuzzySearch);
-      helpers::cmdline::printSongsByGenre(g_songMap, best);
+      helpers::fuzzy::fuzzyDispatch<fuzzy::FuzzyKind::Genre>(
+        g_songMap, ctx.args.songsGenre, ctx.m_fuzzyMaxDist, useFuzzySearch,
+        [&](const auto& best) { helpers::cmdline::printSongsByGenre(g_songMap, best); });
       break;
     }
 
@@ -342,7 +337,7 @@ auto maybeHandlePrintActions(AppContext& ctx) -> bool
       break;
   }
 
-  LOG_INFO("Print action completed. Exiting.");
+  LOG_DEBUG("Print action completed. Exiting app...");
   return true;
 }
 
@@ -449,7 +444,7 @@ auto maybeHandleEditActions(AppContext& ctx) -> bool
   tempSongTree.newSongMap(g_songMap.snapshot());
   tempSongTree.saveToFile(ctx.m_binPath);
 
-  LOG_INFO("Metadata updated successfully. Exiting.");
+  LOG_DEBUG("Song object metadata updated successfully. Exiting app...");
   return true;
 }
 
@@ -535,7 +530,12 @@ void buildOrLoadLibrary(AppContext& ctx)
   g_songMap.replace(tempSongTree.moveSongMap());
   // the song map is unordered so lets sort it
   //
-  // note that by default, we are only sorting artists in ascending order,
+  // note that by default, we are only sorting this following:
+  //
+  // -> artists in ascending order (lexicographically),
+  // -> albums in ascending order (lexicographically),
+  // -> tracks in ascending order (numerically)
+  //
   // as that is most logical.
   //
   // other ways to sort & store (or) just query from CLI are coming soon.

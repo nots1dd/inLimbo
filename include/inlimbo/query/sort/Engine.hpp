@@ -67,7 +67,7 @@ inline void apply(SongMap& map)
   for (auto& e : map)
     artistBuf.push_back(&e);
 
-  std::ranges::sort(artistBuf, [&](auto* A, auto* B)
+  std::ranges::sort(artistBuf, [&](auto* A, auto* B) -> bool
                     { return metric::Comparator<ArtistTag>::cmp(stats, *A, *B); });
 
   SongMap newMap;
@@ -83,7 +83,7 @@ inline void apply(SongMap& map)
     for (auto& e : albums)
       albumBuf.push_back(&e);
 
-    std::ranges::sort(albumBuf, [&](auto* A, auto* B)
+    std::ranges::sort(albumBuf, [&](auto* A, auto* B) -> bool
                       { return metric::Comparator<AlbumTag>::cmp(stats, &artist, *A, *B); });
 
     for (auto* albumPair : albumBuf)
@@ -99,7 +99,7 @@ inline void apply(SongMap& map)
         for (auto& e : tracks)
           trackBuf.push_back(&e);
 
-        std::ranges::sort(trackBuf, [&](auto* A, auto* B)
+        std::ranges::sort(trackBuf, [&](auto* A, auto* B) -> bool
                           { return metric::Comparator<TrackTag>::cmp(*A, *B); });
 
         for (auto* trackPair : trackBuf)

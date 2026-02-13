@@ -6,6 +6,8 @@
 #include "utils/string/Equals.hpp"
 #include <sys/types.h>
 
+#include <algorithm>
+
 namespace query::songmap
 {
 
@@ -196,6 +198,66 @@ void forEachGenreInArtist(const threads::SafeMap<SongMap>& safeMap, const Artist
 
   for (const auto& g : genres)
     fn(g);
+}
+
+auto findAllSongsByTitle(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle) -> Songs
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findAllSongsByTitle");
+
+  Songs results;
+
+  if (songTitle.empty())
+    return results;
+
+  forEachSong(
+    safeMap,
+    [&](const Artist&, const Album&, Disc, Track, ino_t, const std::shared_ptr<Song>& song) -> void
+    {
+      if (strhelp::isEquals(song->metadata.title, songTitle))
+        results.push_back(song);
+    });
+
+  return results;
+}
+
+auto findAllSongsByTitleFuzzy(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle,
+                              size_t maxDistance) -> Songs
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findAllSongsByTitleFuzzy");
+
+  Songs results;
+
+  if (songTitle.empty())
+    return results;
+
+  const auto qLower = utils::string::transform::tolower_ascii(songTitle.c_str());
+
+  std::vector<std::pair<size_t, std::shared_ptr<Song>>> matches;
+
+  forEachSong(
+    safeMap,
+    [&](const Artist&, const Album&, Disc, Track, ino_t, const std::shared_ptr<Song>& song) -> void
+    {
+      if (song->metadata.title.empty())
+        return;
+
+      const auto tLower = utils::string::transform::tolower_ascii(song->metadata.title.c_str());
+
+      const size_t d = utils::algorithm::StringDistance::levenshteinDistance(
+        tLower.c_str(), qLower.c_str(), maxDistance);
+
+      if (d <= maxDistance)
+        matches.emplace_back(d, song);
+    });
+
+  std::ranges::sort(matches,
+                    [](const auto& a, const auto& b) -> bool { return a.first < b.first; });
+
+  results.reserve(matches.size());
+  for (auto& [_, song] : matches)
+    results.push_back(std::move(song));
+
+  return results;
 }
 
 auto findSongPathByInode(const threads::SafeMap<SongMap>& safeMap, const ino_t givenInode)
@@ -450,6 +512,46 @@ auto getSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Artist& art
   return songs;
 }
 
+auto getSongsByArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artist) -> Songs
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::getSongsByArtist");
+
+  Songs songs;
+
+  if (artist.empty())
+    return songs;
+
+  forEachSong(safeMap,
+              [&](const Artist&                a, const Album&, Disc, Track, ino_t,
+                  const std::shared_ptr<Song>& song) -> void
+              {
+                if (strhelp::isEquals(a, artist))
+                  songs.push_back(song);
+              });
+
+  return songs;
+}
+
+auto getSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& genre) -> Songs
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::getSongsByGenre");
+
+  Songs songs;
+
+  if (genre.empty())
+    return songs;
+
+  forEachSong(
+    safeMap,
+    [&](const Artist&, const Album&, Disc, Track, ino_t, const std::shared_ptr<Song>& song) -> void
+    {
+      if (strhelp::isEquals(song->metadata.genre, genre))
+        songs.push_back(song);
+    });
+
+  return songs;
+}
+
 auto countTracks(const threads::SafeMap<SongMap>& safeMap) -> size_t
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countTracks");
@@ -461,6 +563,124 @@ auto countTracks(const threads::SafeMap<SongMap>& safeMap) -> size_t
                   const std::shared_ptr<Song>&) -> void { ++total; });
 
   return total;
+}
+
+auto countSongsByArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artist) -> size_t
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countSongsByArtist");
+
+  if (artist.empty())
+    return 0;
+
+  size_t count = 0;
+
+  forEachSong(
+    safeMap,
+    [&](const Artist& a, const Album&, Disc, Track, ino_t, const std::shared_ptr<Song>&) -> void
+    {
+      if (strhelp::isEquals(a, artist))
+        ++count;
+    });
+
+  return count;
+}
+
+auto countSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Artist& artist,
+                       const Album& album) -> size_t
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countSongsByAlbum");
+
+  if (artist.empty() || album.empty())
+    return 0;
+
+  size_t count = 0;
+
+  safeMap.withReadLock(
+    [&](const auto& map) -> void
+    {
+      auto itArtist = map.find(artist);
+      if (itArtist == map.end())
+        return;
+
+      auto itAlbum = itArtist->second.find(album);
+      if (itAlbum == itArtist->second.end())
+        return;
+
+      for (const auto& [disc, tracks] : itAlbum->second)
+        for (const auto& [track, inodeMap] : tracks)
+          count += inodeMap.size();
+    });
+
+  return count;
+}
+
+auto countSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& genre) -> size_t
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countSongsByGenre");
+
+  if (genre.empty())
+    return 0;
+
+  size_t count = 0;
+
+  forEachSong(
+    safeMap,
+    [&](const Artist&, const Album&, Disc, Track, ino_t, const std::shared_ptr<Song>& song) -> void
+    {
+      if (strhelp::isEquals(song->metadata.genre, genre))
+        ++count;
+    });
+
+  return count;
+}
+
+auto countArtists(const threads::SafeMap<SongMap>& safeMap) -> size_t
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countArtists");
+
+  std::set<Artist> artists;
+
+  forEachArtist(safeMap,
+                [&](const Artist& artist, const AlbumMap&) -> void
+                {
+                  if (!artist.empty())
+                    artists.insert(artist);
+                });
+
+  return artists.size();
+}
+
+auto countAlbums(const threads::SafeMap<SongMap>& safeMap) -> size_t
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countAlbums");
+
+  std::set<Album> albums;
+
+  forEachAlbum(safeMap,
+               [&](const Artist&, const Album& album, const DiscMap&) -> void
+               {
+                 if (!album.empty())
+                   albums.insert(album);
+               });
+
+  return albums.size();
+}
+
+auto countGenres(const threads::SafeMap<SongMap>& safeMap) -> size_t
+{
+  RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countGenres");
+
+  std::set<Genre> genres;
+
+  forEachSong(
+    safeMap,
+    [&](const Artist&, const Album&, Disc, Track, ino_t, const std::shared_ptr<Song>& song) -> void
+    {
+      if (!song->metadata.genre.empty())
+        genres.insert(song->metadata.genre);
+    });
+
+  return genres.size();
 }
 
 } // namespace read
@@ -503,7 +723,7 @@ auto replaceSongObjAndUpdateMetadata(threads::SafeMap<SongMap>&   safeMap,
               for (auto& [inodeKey, song] : inodeMap)
                 if (inodeKey == oldSong->inode)
                 {
-                  LOG_INFO("Match found → Artist='{}', Title='{}', Album='{}', Disc={}, Track={}, "
+                  LOG_INFO("Match found -> Artist='{}', Title='{}', Album='{}', Disc={}, Track={}, "
                            "Inode={}",
                            artist, song->metadata.title, album, disc, track, inodeKey);
 

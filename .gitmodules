@@ -26,6 +26,7 @@
 [submodule "external/unordered_dense"]
 	path = external/unordered_dense
 	url = https://github.com/martinus/unordered_dense.git
+
 [submodule "external/nlohmann_json"]
 	path = external/nlohmann_json
 	url = https://github.com/nlohmann/json

@@ -51,49 +51,53 @@ void printSongInfoByTitle(const threads::SafeMap<SongMap>& safeMap,
     return;
   }
 
-  auto song = query::songmap::read::findSongObjByTitle(safeMap, *songName);
+  auto songs = query::songmap::read::findAllSongsByTitle(safeMap, *songName);
 
-  if (!song)
+  for (const auto& song : songs)
   {
-    LOG_ERROR("Song not found: '{}' (MAYBE USE FUZZY SEARCH?)", *songName);
-    return;
+
+    if (!song)
+    {
+      LOG_ERROR("Song not found: '{}' (MAYBE USE FUZZY SEARCH?)", *songName);
+      return;
+    }
+
+    std::cout << "Song Information\n";
+    std::cout << "────────────────────────────\n";
+
+    std::cout << "INODE " << song->inode << ":\n\n";
+    std::cout << "Title       : " << song->metadata.title << "\n";
+    std::cout << "Artist      : " << song->metadata.artist << "\n";
+    std::cout << "Album       : " << song->metadata.album << "\n";
+    std::cout << "Genre       : " << song->metadata.genre << "\n";
+    std::cout << "Duration    : " << song->metadata.duration << "s\n";
+    std::cout << "Bitrate     : " << song->metadata.bitrate << "kbps\n";
+    std::cout << "HasLyrics   : " << (song->metadata.lyrics.empty() ? "NO" : "YES") << "\n";
+    std::cout << "HasArt      : " << (song->metadata.artUrl.empty() ? "NO" : "YES") << "\n";
+
+    if (song->metadata.track > 0)
+      std::cout << "Track       : " << song->metadata.track << "\n";
+
+    if (song->metadata.trackTotal > 0)
+      std::cout << "Track Total : " << song->metadata.trackTotal << "\n";
+
+    if (song->metadata.discNumber > 0)
+      std::cout << "Disc        : " << song->metadata.discNumber << "\n";
+
+    if (song->metadata.discTotal > 0)
+      std::cout << "Disc Total  : " << song->metadata.discTotal << "\n";
+
+    if (song->metadata.year > 0)
+      std::cout << "Year        : " << song->metadata.year << "\n";
+
+    if (!song->metadata.filePath.empty())
+      std::cout << "File Path   : " << song->metadata.filePath.c_str() << "\n";
+
+    if (!song->metadata.comment.empty())
+      std::cout << "Comment     : " << song->metadata.comment << "\n";
+
+    std::cout << "\n";
   }
-
-  std::cout << "Song Information\n";
-  std::cout << "────────────────────────────\n";
-
-  std::cout << "INODE " << song->inode << ":\n\n";
-  std::cout << "Title       : " << song->metadata.title << "\n";
-  std::cout << "Artist      : " << song->metadata.artist << "\n";
-  std::cout << "Album       : " << song->metadata.album << "\n";
-  std::cout << "Genre       : " << song->metadata.genre << "\n";
-  std::cout << "Duration    : " << song->metadata.duration << "s\n";
-  std::cout << "Bitrate     : " << song->metadata.bitrate << "kbps\n";
-  std::cout << "HasLyrics   : " << (song->metadata.lyrics.empty() ? "NO" : "YES") << "\n";
-  std::cout << "HasArt      : " << (song->metadata.artUrl.empty() ? "NO" : "YES") << "\n";
-
-  if (song->metadata.track > 0)
-    std::cout << "Track       : " << song->metadata.track << "\n";
-
-  if (song->metadata.trackTotal > 0)
-    std::cout << "Track Total : " << song->metadata.trackTotal << "\n";
-
-  if (song->metadata.discNumber > 0)
-    std::cout << "Disc        : " << song->metadata.discNumber << "\n";
-
-  if (song->metadata.discTotal > 0)
-    std::cout << "Disc Total  : " << song->metadata.discTotal << "\n";
-
-  if (song->metadata.year > 0)
-    std::cout << "Year        : " << song->metadata.year << "\n";
-
-  if (!song->metadata.filePath.empty())
-    std::cout << "File Path   : " << song->metadata.filePath.c_str() << "\n";
-
-  if (!song->metadata.comment.empty())
-    std::cout << "Comment     : " << song->metadata.comment << "\n";
-
-  std::cout << "\n";
 }
 
 // ------------------------------------------------------------
@@ -218,7 +222,7 @@ void printGenres(const threads::SafeMap<SongMap>& safeMap, const std::optional<A
   if (hasArtist)
   {
     query::songmap::read::forEachGenreInArtist(safeMap, *artist,
-                                               [&](const Genre& genre)
+                                               [&](const Genre& genre) -> void
                                                {
                                                  if (!genre.empty())
                                                    std::cout << "• " << genre << "\n";
@@ -227,7 +231,7 @@ void printGenres(const threads::SafeMap<SongMap>& safeMap, const std::optional<A
   else
   {
     query::songmap::read::forEachGenre(safeMap,
-                                       [&](const Genre& genre)
+                                       [&](const Genre& genre) -> void
                                        {
                                          if (!genre.empty())
                                            std::cout << "• " << genre << "\n";
@@ -327,6 +331,8 @@ void printSongPaths(const threads::SafeMap<SongMap>& safeMap)
 // ------------------------------------------------------------
 void printSummary(const threads::SafeMap<SongMap>& safeMap, const telemetry::Context& telemetryCtx)
 {
+  // we could use aggregate queries here but since we need to iterate all songs for the summary
+  // anyway, we might as well do it in one pass
   std::set<Artist> artists;
   std::set<Album>  albums;
   std::set<Genre>  genres;

@@ -79,6 +79,7 @@ auto Parser::fillArtUrl(Metadata& meta) -> bool
   if (!source)
     return false;
 
+  // [TODO] Replace filesystem with DB to avoid cache explosion for large libraries
   if (std::filesystem::exists(outImg) ||
       source->extractThumbnail(meta.filePath.c_str(), outImg.c_str()))
   {

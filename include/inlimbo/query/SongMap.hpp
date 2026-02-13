@@ -10,8 +10,6 @@
 namespace query::songmap
 {
 
-namespace strhelp = utils::string;
-
 namespace read
 {
 
@@ -75,6 +73,14 @@ void forEachGenreInArtist(const threads::SafeMap<SongMap>& safeMap, const Artist
 // Direct Lookups / Finders
 // ==--------------------==
 
+// Find all songs with exact title match (returns all matches across artists/albums)
+INLIMBO_API_CPP auto findAllSongsByTitle(const threads::SafeMap<SongMap>& safeMap,
+                                         const Title&                     songTitle) -> Songs;
+
+INLIMBO_API_CPP auto findAllSongsByTitleFuzzy(const threads::SafeMap<SongMap>& safeMap,
+                                              const Title& songTitle, size_t maxDistance = 3)
+  -> Songs;
+
 // Find file path by inode
 INLIMBO_API_CPP auto findSongPathByInode(const threads::SafeMap<SongMap>& safeMap,
                                          const ino_t                      givenInode) -> PathStr;
@@ -114,12 +120,41 @@ INLIMBO_API_CPP auto findSongByTitleAndArtistFuzzy(const threads::SafeMap<SongMa
 // Aggregates queries
 // ==--------------------==
 
+// Get songs belonging to artist
+INLIMBO_API_CPP auto getSongsByArtist(const threads::SafeMap<SongMap>& safeMap,
+                                      const Artist&                    artist) -> Songs;
+
 // Get songs belonging to album
 INLIMBO_API_CPP auto getSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Artist& artist,
                                      const Album& album) -> const Songs;
 
+// Get songs belonging to genre
+INLIMBO_API_CPP auto getSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& genre)
+  -> Songs;
+
+// Count songs belonging to artist
+INLIMBO_API_CPP auto countSongsByArtist(const threads::SafeMap<SongMap>& safeMap,
+                                        const Artist&                    artist) -> size_t;
+
+// Count songs belonging to album
+INLIMBO_API_CPP auto countSongsByAlbum(const threads::SafeMap<SongMap>& safeMap,
+                                       const Artist& artist, const Album& album) -> size_t;
+
+// Count songs belonging to genre
+INLIMBO_API_CPP auto countSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& genre)
+  -> size_t;
+
 // Count total tracks
 INLIMBO_API_CPP auto countTracks(const threads::SafeMap<SongMap>& safeMap) -> size_t;
+
+// Count total artists (Unique)
+INLIMBO_API_CPP auto countArtists(const threads::SafeMap<SongMap>& safeMap) -> size_t;
+
+// Count total albums (Unique)
+INLIMBO_API_CPP auto countAlbums(const threads::SafeMap<SongMap>& safeMap) -> size_t;
+
+// Count total genres (Unique)
+INLIMBO_API_CPP auto countGenres(const threads::SafeMap<SongMap>& safeMap) -> size_t;
 
 } // namespace read
 
