@@ -146,10 +146,16 @@ target_include_directories(ankerl_unordered_dense
 
 if(NOT EXISTS ${SPDLOG_DIR}/CMakeLists.txt)
     message(STATUS "spdlog not found — cloning into ${SPDLOG_DIR}")
+
     execute_process(
-        COMMAND git clone --branch master ${SPDLOG_GH_URL} ${SPDLOG_DIR}
+        COMMAND git clone --progress --branch master ${SPDLOG_GH_URL} ${SPDLOG_DIR}
         WORKING_DIRECTORY ${EXTERNAL_DIR}
+        RESULT_VARIABLE GIT_RESULT
     )
+
+    if(NOT GIT_RESULT EQUAL 0)
+        message(FATAL_ERROR "Failed to clone spdlog")
+    endif()
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -289,7 +295,7 @@ set(INLIMBO_FRONTEND_NAMES "")
 # ===================== FRONTENDS ============================
 include(${CMAKE_SOURCE_DIR}/cmake/frontends/cmdline.cmake)
 # include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
-# include(${CMAKE_SOURCE_DIR}/cmake/frontends/webview.cmake)
+# include(${CMAKE_SOURCE_DIR}/cmake/frontends/ftxui.cmake)
 # ===================== FRONTENDS ============================
 
 include(${CMAKE_SOURCE_DIR}/cmake/FrontendPluginList.cmake)

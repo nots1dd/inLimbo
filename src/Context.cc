@@ -627,6 +627,7 @@ void runFrontend(AppContext& ctx)
     // Clean shutdown
     // ---------------------------------------------------------
     audio.shutdown();
+    ui.destroy();
 
     LOG_INFO("---- Frontend Plugin Ended ----");
 

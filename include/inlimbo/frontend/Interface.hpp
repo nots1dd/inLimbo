@@ -35,6 +35,16 @@ public:
   // NOTE: This ASSUMES you have already checked for ready!
   void run(audio::Service& audio) { m_fePlugin.run(m_instanceVPtr, &audio); }
 
+  void destroy()
+  {
+    if (m_created && m_instanceVPtr)
+    {
+      m_fePlugin.destroy(m_instanceVPtr);
+      m_instanceVPtr = nullptr;
+      m_created      = false;
+    }
+  }
+
 private:
   Plugin& m_fePlugin;
   void*   m_instanceVPtr{nullptr};
