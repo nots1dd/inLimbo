@@ -93,6 +93,9 @@ void printSongInfoByTitle(const threads::SafeMap<SongMap>& safeMap,
     if (!song->metadata.filePath.empty())
       std::cout << "File Path   : " << song->metadata.filePath.c_str() << "\n";
 
+    if (!song->metadata.artUrl.empty())
+      std::cout << "Album Art   : " << song->metadata.artUrl.c_str() << "\n";
+
     if (!song->metadata.comment.empty())
       std::cout << "Comment     : " << song->metadata.comment << "\n";
 

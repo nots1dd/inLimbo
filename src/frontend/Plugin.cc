@@ -109,12 +109,6 @@ Plugin::Plugin(const PluginName& name)
   validateAPI();
 }
 
-Plugin::~Plugin()
-{
-  if (m_handleVPtr)
-    dlclose(m_handleVPtr);
-}
-
 auto Plugin::create(vptr songMap, vptr telemetry, vptr mpris) -> void*
 {
   return m_api->create(songMap, telemetry, mpris);

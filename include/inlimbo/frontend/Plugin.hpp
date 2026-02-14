@@ -2,6 +2,7 @@
 
 #include "InLimbo-Types.hpp"
 #include "c/frontend_api.h"
+#include "utils/ClassRulesMacros.hpp"
 #include "utils/string/SmallString.hpp"
 
 #include <exception>
@@ -48,7 +49,8 @@ class Plugin
 {
 public:
   explicit Plugin(const PluginName& name);
-  ~Plugin();
+
+  DEFAULT_DTOR(Plugin);
 
   auto create(vptr songMap, vptr telemetry, vptr mpris) -> void*;
   void run(vptr inst, vptr audio);

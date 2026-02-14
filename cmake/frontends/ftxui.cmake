@@ -7,8 +7,7 @@ set(INLIMBO_FRONTEND_NAME        "ftxui")
 set(INLIMBO_FRONTEND_OUTPUT_NAME "inlimbo-frontend-ftxui")
 
 set(INLIMBO_FE_FTXUI_SOURCES
-  # ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/Interface.cc
-  ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/STBImageImpl.cc
+  ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/Interface.cc
   ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/PluginShim.cc
 
   # components
