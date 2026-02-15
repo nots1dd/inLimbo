@@ -1,0 +1,52 @@
+#pragma once
+
+#include "audio/Service.hpp"
+#include "frontend/ftxui/managers/Threads.hpp"
+#include "frontend/ftxui/state/library/Impl.hpp"
+#include "frontend/ftxui/state/now_playing/Impl.hpp"
+#include "mpris/Service.hpp"
+#include <ftxui/component/component.hpp>
+
+namespace frontend::tui
+{
+enum class UIScreen
+{
+  Main,
+  NowPlaying,
+  Help,
+  Config,
+  Queue
+};
+}
+
+namespace frontend::tui::ui
+{
+
+class EventHandler
+{
+public:
+  EventHandler(UIScreen& activeScreen, state::library::LibraryState& libraryState,
+               state::now_playing::NowPlayingState& nowState,
+               managers::ThreadManager& threadManager, threads::SafeMap<SongMap>* songMap,
+               mpris::Service* mpris);
+
+  auto handle(ftxui::Event e) -> bool;
+
+  void attachAudioService(audio::Service& audio) { m_audioPtr = &audio; }
+
+private:
+  UIScreen& m_activeScreen;
+
+  state::library::LibraryState&        m_libraryState;
+  state::now_playing::NowPlayingState& m_nowState;
+
+  managers::ThreadManager& m_threadManager;
+
+  audio::Service*            m_audioPtr;
+  threads::SafeMap<SongMap>* m_songMap{nullptr};
+  mpris::Service*            m_mpris{nullptr};
+
+  void playSelected();
+};
+
+} // namespace frontend::tui::ui

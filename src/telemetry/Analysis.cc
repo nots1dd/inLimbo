@@ -126,4 +126,44 @@ auto hottestSong(const Store& s, Timestamp now) -> SongID
   return best;
 }
 
+auto firstListenedSong(const Store& s) -> SongID
+{
+  SongID    best  = INVALID_TELEMETRY_ID;
+  Timestamp first = std::numeric_limits<Timestamp>::max();
+
+  for (auto& [id, st] : s.songs())
+  {
+    if (st.playCount == 0)
+      continue;
+
+    if (st.last < first)
+    {
+      first = st.last;
+      best  = id;
+    }
+  }
+
+  return best;
+}
+
+auto lastListenedSong(const Store& s) -> SongID
+{
+  SongID    best = INVALID_TELEMETRY_ID;
+  Timestamp last = 0;
+
+  for (auto& [id, st] : s.songs())
+  {
+    if (st.playCount == 0)
+      continue;
+
+    if (st.last > last)
+    {
+      last = st.last;
+      best = id;
+    }
+  }
+
+  return best;
+}
+
 } // namespace telemetry::analysis

@@ -334,8 +334,6 @@ void printSongPaths(const threads::SafeMap<SongMap>& safeMap)
 // ------------------------------------------------------------
 void printSummary(const threads::SafeMap<SongMap>& safeMap, const telemetry::Context& telemetryCtx)
 {
-  // we could use aggregate queries here but since we need to iterate all songs for the summary
-  // anyway, we might as well do it in one pass
   std::set<Artist> artists;
   std::set<Album>  albums;
   std::set<Genre>  genres;
@@ -364,43 +362,75 @@ void printSummary(const threads::SafeMap<SongMap>& safeMap, const telemetry::Con
   std::cout << "Directory          : " << tomlparser::Config::getString("library", "directory")
             << "\n\n";
 
-  if (telemetryCtx.isRegistryLoaded)
+  if (!telemetryCtx.isRegistryLoaded)
+    return;
+
+  auto resolveSong = [&](telemetry::SongID id) -> std::pair<std::string_view, std::string_view>
   {
-    const auto mostPlayedSongId = telemetry::analysis::mostReplayedSong(telemetryCtx.store);
+    if (id == telemetry::INVALID_TELEMETRY_ID)
+      return {"<unknown>", "<unknown>"};
 
-    const auto hottestSongId =
-      telemetry::analysis::hottestSong(telemetryCtx.store, utils::timer::nowUnix());
+    auto titleOpt = telemetryCtx.registry.titles.toString(id);
 
-    const auto titleMP  = telemetryCtx.registry.titles.toString(mostPlayedSongId);
-    const auto titleHS  = telemetryCtx.registry.titles.toString(hottestSongId);
-    const auto artistMP = telemetryCtx.registry.artists.toString(mostPlayedSongId);
-    const auto artistHS = telemetryCtx.registry.artists.toString(hottestSongId);
+    auto artistId  = telemetryCtx.registry.songToArtist(id);
+    auto artistOpt = telemetryCtx.registry.artists.toString(artistId);
 
-    std::cout << "Most Played Song   : " << (titleMP ? *titleMP : "<unknown>") << " by "
-              << (artistMP ? *artistMP : "<unknown>") << "\n";
+    const auto title  = titleOpt ? *titleOpt : "<unknown>";
+    const auto artist = artistOpt ? *artistOpt : "<unknown>";
 
-    std::cout << "Hottest Song       : " << (titleHS ? *titleHS : "<unknown>") << " by "
-              << (artistHS ? *artistHS : "<unknown>") << "\n";
+    return {title, artist};
+  };
 
-    // ---- favorite artist ----
-    const auto favArtistId = telemetry::analysis::favoriteArtist(telemetryCtx.store);
-    if (auto name = telemetryCtx.registry.artists.toString(favArtistId))
-      std::cout << "Favorite Artist    : " << *name << "\n";
+  const auto mostPlayedSongId = telemetry::analysis::mostReplayedSong(telemetryCtx.store);
 
-    // ---- favorite album ----
-    const auto favAlbumId = telemetry::analysis::favoriteAlbum(telemetryCtx.store);
-    if (auto name = telemetryCtx.registry.albums.toString(favAlbumId))
-      std::cout << "Favorite Album     : " << *name << "\n";
+  const auto hottestSongId =
+    telemetry::analysis::hottestSong(telemetryCtx.store, utils::timer::nowUnix());
 
-    // ---- favorite genre ----
-    const auto favGenreId = telemetry::analysis::favoriteGenre(telemetryCtx.store);
-    if (auto name = telemetryCtx.registry.genres.toString(favGenreId))
-      std::cout << "Favorite Genre     : " << *name << "\n";
+  const auto firstSongId = telemetry::analysis::firstListenedSong(telemetryCtx.store);
 
-    std::cout << "Total Listen Time  : "
-              << utils::timer::fmtTime(telemetry::analysis::totalListenTime(telemetryCtx.store))
-              << "\n";
+  const auto lastSongId = telemetry::analysis::lastListenedSong(telemetryCtx.store);
+
+  {
+    auto [title, artist] = resolveSong(mostPlayedSongId);
+    std::cout << "Most Played Song   : " << title << " by " << artist << "\n";
   }
+
+  {
+    auto [title, artist] = resolveSong(hottestSongId);
+    std::cout << "Hottest Song       : " << title << " by " << artist << "\n";
+  }
+
+  {
+    auto [title, artist] = resolveSong(firstSongId);
+    std::cout << "First Listened     : " << title << " by " << artist << "\n";
+  }
+
+  {
+    auto [title, artist] = resolveSong(lastSongId);
+    std::cout << "Last Listened      : " << title << " by " << artist << "\n";
+  }
+
+  // ---- favorite artist ----
+  const auto favArtistId = telemetry::analysis::favoriteArtist(telemetryCtx.store);
+
+  if (auto name = telemetryCtx.registry.artists.toString(favArtistId))
+    std::cout << "Favorite Artist    : " << *name << "\n";
+
+  // ---- favorite album ----
+  const auto favAlbumId = telemetry::analysis::favoriteAlbum(telemetryCtx.store);
+
+  if (auto name = telemetryCtx.registry.albums.toString(favAlbumId))
+    std::cout << "Favorite Album     : " << *name << "\n";
+
+  // ---- favorite genre ----
+  const auto favGenreId = telemetry::analysis::favoriteGenre(telemetryCtx.store);
+
+  if (auto name = telemetryCtx.registry.genres.toString(favGenreId))
+    std::cout << "Favorite Genre     : " << *name << "\n";
+
+  std::cout << "Total Listen Time  : "
+            << utils::timer::fmtTime(telemetry::analysis::totalListenTime(telemetryCtx.store))
+            << "\n";
 }
 
 } // namespace helpers::cmdline

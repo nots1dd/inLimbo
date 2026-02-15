@@ -7,6 +7,9 @@ namespace telemetry::analysis
 // Totals
 auto totalListenTime(const Store& s) -> double;
 
+auto firstListenedSong(const Store& s) -> SongID;
+auto lastListenedSong(const Store& s) -> SongID;
+
 // Favorites (by time)
 auto favoriteArtist(const Store& s) -> ArtistID;
 auto favoriteAlbum(const Store& s) -> AlbumID;

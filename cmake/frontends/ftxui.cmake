@@ -10,6 +10,19 @@ set(INLIMBO_FE_FTXUI_SOURCES
   ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/Interface.cc
   ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/PluginShim.cc
 
+  # managers
+  ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/managers/Threads.cc
+
+  # state
+  ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/state/album_art/Impl.cc
+  ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/state/library/Impl.cc
+  ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/state/now_playing/Impl.cc
+
+  # ui::screens
+  ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/ui/screens/Main.cc
+  ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/ui/screens/NowPlaying.cc
+  ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/ui/EventHandler.cc
+
   # components
   ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/components/scroll/Scrollable.cc
 )

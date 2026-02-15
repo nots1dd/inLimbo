@@ -14,23 +14,27 @@ class StringTable
 public:
   auto getOrCreate(std::string_view s) -> ID
   {
-    auto it = strToId.find(s);
-    if (it != strToId.end())
+    if (auto it = strToId.find(s); it != strToId.end())
       return it->second;
 
     ID id = nextId++;
+
     strToId.emplace(std::string(s), id);
-    idToStr.emplace(id, std::string(s));
+
+    if (id >= idToStr.size())
+      idToStr.resize(id + 1);
+
+    idToStr[id] = std::string(s);
+
     return id;
   }
 
   auto toString(ID id) const -> std::optional<std::string_view>
   {
-    auto it = idToStr.find(id);
-    if (it == idToStr.end())
+    if (id == 0 || id >= idToStr.size())
       return std::nullopt;
 
-    return std::string_view{it->second};
+    return std::string_view{idToStr[id]};
   }
 
   template <class Archive>
@@ -40,9 +44,10 @@ public:
   }
 
 private:
-  ID                                                                                      nextId{1};
+  ID nextId{1};
+
   ankerl::unordered_dense::map<std::string, ID, map::TransparentHash, map::TransparentEq> strToId;
-  ankerl::unordered_dense::map<ID, std::string>                                           idToStr;
+  std::vector<std::string>                                                                idToStr;
 };
 
 } // namespace utils::string

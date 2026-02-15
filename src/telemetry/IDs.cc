@@ -1,5 +1,6 @@
 #include "telemetry/IDs.hpp"
-#include "cereal/archives/binary.hpp"
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/vector.hpp>
 #include <fstream>
 
 namespace telemetry
