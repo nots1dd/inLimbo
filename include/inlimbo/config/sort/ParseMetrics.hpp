@@ -2,6 +2,7 @@
 
 #include "query/sort/metric/Album.hpp"
 #include "query/sort/metric/Artist.hpp"
+#include "query/sort/metric/Disc.hpp"
 #include "query/sort/metric/Track.hpp"
 
 #include <ankerl/unordered_dense.h>
@@ -36,6 +37,17 @@ constexpr auto AlbumMetric_DefCount = []() -> size_t
   return n;
 }();
 
+constexpr auto DiscMetric_DefCount = []() -> size_t
+{
+  size_t n = 0;
+
+#define X(name, str, tag) ++n;
+#include "defs/config/DiscMetrics.def"
+#undef X
+
+  return n;
+}();
+
 constexpr auto TrackMetric_DefCount = []() -> size_t
 {
   size_t n = 0;
@@ -53,6 +65,9 @@ auto parseArtistPlan(std::string_view s) -> std::optional<query::sort::metric::A
 
 // parse the album sorting plan found in config.toml (AlbumMetrics.def for available metrics)
 auto parseAlbumPlan(std::string_view s) -> std::optional<query::sort::metric::AlbumMetric>;
+
+// parse the disc sorting plan found in config.toml (DiscMetrics.def for available metrics)
+auto parseDiscPlan(std::string_view s) -> std::optional<query::sort::metric::DiscMetric>;
 
 // parse the track sorting plan found in config.toml (TrackMetrics.def for available metrics)
 auto parseTrackPlan(std::string_view s) -> std::optional<query::sort::metric::TrackMetric>;

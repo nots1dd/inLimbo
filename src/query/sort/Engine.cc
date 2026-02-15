@@ -5,35 +5,24 @@
 namespace query::sort
 {
 
-const DispatchTableType DISPATCH_TABLE = buildDispatchTable();
+static auto dispatchTable() -> const auto&
+{
+    static const auto table =
+        buildDispatch(std::make_index_sequence<TOTAL>{});
+    return table;
+}
 
 void applyRuntimeSortPlan(SongMap& map, const RuntimeSortPlan& plan)
 {
   RECORD_FUNC_TO_BACKTRACE("query::sort::applyRuntimeSortPlan");
 
-  constexpr auto A = (size_t)metric::ArtistMetric::COUNT;
-  constexpr auto B = (size_t)metric::AlbumMetric::COUNT;
-  constexpr auto C = (size_t)metric::TrackMetric::COUNT;
+  size_t index = static_cast<size_t>(plan.artist) * (AlbumCount * DiscCount * TrackCount) +
+                 static_cast<size_t>(plan.album) * (DiscCount * TrackCount) +
+                 static_cast<size_t>(plan.disc) * TrackCount + static_cast<size_t>(plan.track);
 
-  const auto ai = (size_t)plan.artist;
-  const auto bi = (size_t)plan.album;
-  const auto ci = (size_t)plan.track;
+  dispatchTable()[index](map);
 
-  if (ai >= A || bi >= B || ci >= C)
-  {
-    LOG_ERROR("Invalid sort plan indices: {} {} {}", ai, bi, ci);
-    return;
-  }
-
-  auto fn = DISPATCH_TABLE[ai][bi][ci];
-
-  if (!fn)
-  {
-    LOG_ERROR("Dispatch table entry is null: {} {} {}", ai, bi, ci);
-    return;
-  }
-
-  fn(map);
+  LOG_DEBUG("query::sort::applyRuntimeSortPlan: Applied sort plan!");
 }
 
 } // namespace query::sort

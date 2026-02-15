@@ -17,6 +17,8 @@ max_dist = 3
 artist = "lex_desc"
 # album has `lex_asc`, `lex_desc`, `year_asc`, `year_desc`, `track_count_asc`, `track_count_desc` 
 album  = "year_asc"
+# disc has `disc_asc`, `disc_desc`
+disc   = "disc_asc"
 # track has `track_asc`, `track_desc`
 track  = "track_asc"
 

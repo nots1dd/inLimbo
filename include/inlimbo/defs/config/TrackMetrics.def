@@ -1,4 +1,4 @@
-// ENUM_NAME, TOML_KEY
+// ENUM, TOML_KEY, TAG_TYPE
 
 X(TrackAsc, "track_asc", TrackNumberAsc)
 X(TrackDesc, "track_desc", TrackNumberDesc)

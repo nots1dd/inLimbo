@@ -25,6 +25,14 @@ constexpr auto DefaultAlbumMetric =
 #undef X
 }();
 
+constexpr auto DefaultDiscMetric =
+[]() -> query::sort::metric::DiscMetric
+{
+#define X(name, str, tag) return query::sort::metric::DiscMetric::name;
+#include "defs/config/DiscMetrics.def"
+#undef X
+}();
+
 constexpr auto DefaultTrackMetric =
 []() -> query::sort::metric::TrackMetric
 {

@@ -60,11 +60,11 @@ MainScreen::MainScreen(state::library::LibraryState& state) : m_state(state)
         }
       }
 
-      return vbox(rows);
+      return vbox(rows) | frame;
     });
 
   album_scroller =
-    Scroller(album_content, &m_state.selected_album_index, Color::Green, Color::GrayDark);
+    Scroller(album_content, &m_state.selected_album_index, Color::Green, Color::GrayDark) | frame | flex;
 
   container = Container::Horizontal({artist_menu, album_scroller});
 }
@@ -94,16 +94,16 @@ auto MainScreen::render() -> Element
   auto artist_inner = window(text(" Artists ") | bold, artist_menu->Render() | frame | flex) |
                       size(WIDTH, EQUAL, half_width);
 
-  auto album_inner = window(text(" Albums ") | bold, album_scroller->Render() | flex) |
+  auto album_inner = window(text(" Albums ") | bold, album_scroller->Render() | frame | flex) |
                      size(WIDTH, EQUAL, term.dimx - half_width);
 
   Color artist_border_color = m_state.focusOnArtists() ? Color::Green : Color::GrayDark;
 
   Color album_border_color = !m_state.focusOnArtists() ? Color::Green : Color::GrayDark;
 
-  auto artist_pane = artist_inner | borderStyled(BorderStyle::ROUNDED, artist_border_color);
+  auto artist_pane = artist_inner | borderStyled(BorderStyle::HEAVY, artist_border_color);
 
-  auto album_pane = album_inner | borderStyled(BorderStyle::ROUNDED, album_border_color);
+  auto album_pane = album_inner | borderStyled(BorderStyle::HEAVY, album_border_color);
 
   return hbox({artist_pane, album_pane}) | flex;
 }

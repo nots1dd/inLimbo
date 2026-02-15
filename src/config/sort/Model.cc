@@ -18,6 +18,9 @@ auto loadRuntimeSortPlan() -> query::sort::RuntimeSortPlan
   plan.album = loadMetricOrFallback("sort", "album", "lex_asc", DefaultAlbumMetric,
                                     config::sort::parseAlbumPlan, "album");
 
+  plan.disc = loadMetricOrFallback("sort", "disc", "disc_asc", DefaultDiscMetric,
+                                   config::sort::parseDiscPlan, "disc");
+
   plan.track = loadMetricOrFallback("sort", "track", "track_asc", DefaultTrackMetric,
                                     config::sort::parseTrackPlan, "track");
 

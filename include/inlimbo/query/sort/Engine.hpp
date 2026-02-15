@@ -5,11 +5,11 @@
 #include "query/sort/metric/Album.hpp"
 #include "query/sort/metric/Artist.hpp"
 #include "query/sort/metric/Base.hpp"
+#include "query/sort/metric/Disc.hpp"
 #include "query/sort/metric/Track.hpp"
 
 #include <algorithm>
 #include <array>
-#include <tuple>
 #include <vector>
 
 namespace query::sort
@@ -17,53 +17,25 @@ namespace query::sort
 
 using SortApplyFn = void (*)(SongMap&);
 
-/*
- Runtime configuration object.
-
- This is filled from config (TOML or elsewhere) and represents
- which metric should be used at runtime for:
-
-   - Artist sorting
-   - Album sorting
-   - Track sorting
-
- It does NOT perform sorting itself.
- It is only used to index into the compile-time dispatch table.
-*/
 struct RuntimeSortPlan
 {
   metric::ArtistMetric artist = metric::ArtistMetric::LexAsc;
   metric::AlbumMetric  album  = metric::AlbumMetric::LexAsc;
+  metric::DiscMetric   disc   = metric::DiscMetric::DiscAsc;
   metric::TrackMetric  track  = metric::TrackMetric::TrackAsc;
 };
 
-/*
- apply<ArtistTag, AlbumTag, TrackTag>()
-
- This is the core sorting implementation.
-
- It is fully compile-time configured via template parameters.
- Each Tag type selects a Comparator specialization.
-
- The actual sorting work happens here:
-   1. Build statistics (album counts, track counts, years, etc)
-   2. Copy map layers into vectors
-   3. Sort vectors using comparator logic selected by Tag types
-   4. Rebuild SongMap in sorted order
-
- Only instantiated at compile time.
-*/
-template <typename ArtistTag, typename AlbumTag, typename TrackTag>
+template <typename ArtistTag, typename AlbumTag, typename DiscTag, typename TrackTag>
 inline void apply(SongMap& map)
 {
   auto stats = sort::buildStats(map);
 
   std::vector<const SongMap::value_type*>  artistBuf;
   std::vector<const AlbumMap::value_type*> albumBuf;
+  std::vector<const DiscMap::value_type*>  discBuf;
   std::vector<const TrackMap::value_type*> trackBuf;
 
   artistBuf.reserve(map.size());
-
   for (auto& e : map)
     artistBuf.push_back(&e);
 
@@ -91,8 +63,20 @@ inline void apply(SongMap& map)
       const auto& [album, discs] = *albumPair;
       auto& newDiscs             = newMap[artist][album];
 
-      for (auto& [disc, tracks] : discs)
+      discBuf.clear();
+      discBuf.reserve(discs.size());
+
+      for (auto& e : discs)
+        discBuf.push_back(&e);
+
+      std::ranges::sort(discBuf, [&](auto* A, auto* B) -> bool
+                        { return metric::Comparator<DiscTag>::cmp(*A, *B); });
+
+      for (auto* discPair : discBuf)
       {
+        const auto& [disc, tracks] = *discPair;
+        auto& newTracks            = newDiscs[disc];
+
         trackBuf.clear();
         trackBuf.reserve(tracks.size());
 
@@ -105,7 +89,7 @@ inline void apply(SongMap& map)
         for (auto* trackPair : trackBuf)
         {
           const auto& [track, inodeMap] = *trackPair;
-          newDiscs[disc][track]         = inodeMap;
+          newTracks[track]              = inodeMap;
         }
       }
     }
@@ -114,38 +98,14 @@ inline void apply(SongMap& map)
   map = std::move(newMap);
 }
 
-/*
- makeApplyFn<AT, BT, CT>()
-
- Converts a template instantiation into a plain function pointer.
-
- The unary + forces lambda -> function pointer conversion.
-
- Result:
-   apply<AT,BT,CT> becomes callable through SortApplyFn.
-*/
-template <typename AT, typename BT, typename CT>
-constexpr auto makeApplyFn() -> SortApplyFn
-{
-  return +[](SongMap& map) -> void { apply<AT, BT, CT>(map); };
-}
-
-/*
- DEF-driven mapping from enum -> Tag type.
-
- Each .def file entry:
-   X(EnumValue, "toml_string", ComparatorTagType)
-
- Generates specializations:
-   ArtistMetric::LexAsc -> metric::ArtistLexicographicAsc
-   etc.
-
- This allows compile-time selection of comparator tag types
- based on enum values.
-*/
-
 template <metric::ArtistMetric M>
 struct ArtistTagFromEnum;
+template <metric::AlbumMetric M>
+struct AlbumTagFromEnum;
+template <metric::DiscMetric M>
+struct DiscTagFromEnum;
+template <metric::TrackMetric M>
+struct TrackTagFromEnum;
 
 #define X(name, str, tag)                              \
   template <>                                          \
@@ -153,12 +113,8 @@ struct ArtistTagFromEnum;
   {                                                    \
     using type = metric::tag;                          \
   };
-
 #include "defs/config/ArtistMetrics.def"
 #undef X
-
-template <metric::AlbumMetric M>
-struct AlbumTagFromEnum;
 
 #define X(name, str, tag)                            \
   template <>                                        \
@@ -166,12 +122,17 @@ struct AlbumTagFromEnum;
   {                                                  \
     using type = metric::tag;                        \
   };
-
 #include "defs/config/AlbumMetrics.def"
 #undef X
 
-template <metric::TrackMetric M>
-struct TrackTagFromEnum;
+#define X(name, str, tag)                          \
+  template <>                                      \
+  struct DiscTagFromEnum<metric::DiscMetric::name> \
+  {                                                \
+    using type = metric::tag;                      \
+  };
+#include "defs/config/DiscMetrics.def"
+#undef X
 
 #define X(name, str, tag)                            \
   template <>                                        \
@@ -179,103 +140,38 @@ struct TrackTagFromEnum;
   {                                                  \
     using type = metric::tag;                        \
   };
-
 #include "defs/config/TrackMetrics.def"
 #undef X
 
-/*
- buildEntry<AI, BI, CI>()
+constexpr size_t ArtistCount = (size_t)metric::ArtistMetric::COUNT;
+constexpr size_t AlbumCount  = (size_t)metric::AlbumMetric::COUNT;
+constexpr size_t DiscCount   = (size_t)metric::DiscMetric::COUNT;
+constexpr size_t TrackCount  = (size_t)metric::TrackMetric::COUNT;
 
- Instantiates one dispatch table cell.
+constexpr size_t TOTAL = ArtistCount * AlbumCount * DiscCount * TrackCount;
 
- Steps:
-   1. Convert integer indices -> enum values
-   2. Convert enum values -> Tag types (via TagFromEnum)
-   3. Generate function pointer to apply<TagA, TagB, TagC>()
-
- All resolved at compile time.
-*/
-template <size_t AI, size_t BI, size_t CI>
-constexpr auto buildEntry() -> SortApplyFn
+template <size_t Index>
+constexpr auto buildOne() -> SortApplyFn
 {
-  using namespace metric;
+  constexpr size_t A = Index / (AlbumCount * DiscCount * TrackCount);
+  constexpr size_t B = (Index / (DiscCount * TrackCount)) % AlbumCount;
+  constexpr size_t C = (Index / TrackCount) % DiscCount;
+  constexpr size_t D = Index % TrackCount;
 
-  constexpr auto A = static_cast<ArtistMetric>(AI);
-  constexpr auto B = static_cast<AlbumMetric>(BI);
-  constexpr auto C = static_cast<TrackMetric>(CI);
+  using AT = typename ArtistTagFromEnum<static_cast<metric::ArtistMetric>(A)>::type;
+  using BT = typename AlbumTagFromEnum<static_cast<metric::AlbumMetric>(B)>::type;
+  using CT = typename DiscTagFromEnum<static_cast<metric::DiscMetric>(C)>::type;
+  using DT = typename TrackTagFromEnum<static_cast<metric::TrackMetric>(D)>::type;
 
-  using AT = typename ArtistTagFromEnum<A>::type;
-  using BT = typename AlbumTagFromEnum<B>::type;
-  using CT = typename TrackTagFromEnum<C>::type;
-
-  return makeApplyFn<AT, BT, CT>();
+  return +[](SongMap& map) { apply<AT, BT, CT, DT>(map); };
 }
 
-/*
- buildTrackRow()
-
- Builds one row of Track metric combinations
- for a fixed Artist + Album combination.
-*/
-template <size_t AI, size_t BI, size_t... CI>
-constexpr auto buildTrackRow(std::index_sequence<CI...>)
+template <size_t... I>
+constexpr auto buildDispatch(std::index_sequence<I...>)
 {
-  return std::array<SortApplyFn, sizeof...(CI)>{buildEntry<AI, BI, CI>()...};
+  return std::array<SortApplyFn, TOTAL>{buildOne<I>()...};
 }
 
-/*
- buildAlbumRow()
-
- Builds all Track rows for one Artist metric value.
-*/
-template <size_t AI, size_t... BI>
-constexpr auto buildAlbumRow(std::index_sequence<BI...>)
-{
-  constexpr auto TrackCount = (size_t)metric::TrackMetric::COUNT;
-
-  return std::array{buildTrackRow<AI, BI>(std::make_index_sequence<TrackCount>{})...};
-}
-
-/*
- buildDispatchTableImpl()
-
- Builds full 3D table:
-   [Artist][Album][Track]
-*/
-template <size_t... AI>
-constexpr auto buildDispatchTableImpl(std::index_sequence<AI...>)
-{
-  constexpr auto AlbumCount = (size_t)metric::AlbumMetric::COUNT;
-
-  return std::array{buildAlbumRow<AI>(std::make_index_sequence<AlbumCount>{})...};
-}
-
-/*
- Entry point for dispatch table generation.
-*/
-constexpr auto buildDispatchTable()
-{
-  constexpr auto ArtistCount = (size_t)metric::ArtistMetric::COUNT;
-
-  return buildDispatchTableImpl(std::make_index_sequence<ArtistCount>{});
-}
-
-/*
- Global compile-time dispatch table.
-
- Contains pre-instantiated sorting functions for
- every valid metric combination.
-*/
-using DispatchTableType = decltype(buildDispatchTable());
-
-extern const DispatchTableType DISPATCH_TABLE;
-
-/*
- Runtime execution path.
-
- Runtime plan values are used as array indices.
- This selects a precompiled sorting function and executes it.
-*/
 void applyRuntimeSortPlan(SongMap& map, const RuntimeSortPlan& plan);
 
 } // namespace query::sort

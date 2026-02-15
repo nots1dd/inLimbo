@@ -1,4 +1,5 @@
 #include "config/sort/ParseMetrics.hpp"
+#include "query/sort/metric/Disc.hpp"
 
 namespace config::sort
 {
@@ -33,6 +34,14 @@ static const ankerl::unordered_dense::map<std::string_view, TrackMetric> TRACK_M
 
 };
 
+static const ankerl::unordered_dense::map<std::string_view, DiscMetric> DISC_MAP = {
+
+#define X(name, str, tag) {str, DiscMetric::name},
+#include "defs/config/DiscMetrics.def"
+#undef X
+
+};
+
 auto parseArtistPlan(std::string_view s) -> std::optional<ArtistMetric>
 {
   static_assert(ArtistMetric_DefCount == static_cast<size_t>(ArtistMetric::COUNT),
@@ -61,6 +70,17 @@ auto parseTrackPlan(std::string_view s) -> std::optional<TrackMetric>
                 "TrackMetric enum and TrackMetrics.def mismatch");
 
   if (auto it = TRACK_MAP.find(s); it != TRACK_MAP.end())
+    return it->second;
+
+  return std::nullopt;
+}
+
+auto parseDiscPlan(std::string_view s) -> std::optional<DiscMetric>
+{
+  static_assert(DiscMetric_DefCount == static_cast<size_t>(DiscMetric::COUNT),
+                "DiscMetric enum and DiscMetrics.def mismatch");
+
+  if (auto it = DISC_MAP.find(s); it != DISC_MAP.end())
     return it->second;
 
   return std::nullopt;
