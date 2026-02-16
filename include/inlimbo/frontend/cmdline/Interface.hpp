@@ -58,7 +58,6 @@ private:
 
   std::atomic<bool>   m_isRunning{false};
   std::atomic<double> m_pendingSeek{0.0};
-  std::atomic<ui8>    m_lastAutoNextTid{0};
   std::atomic<bool>   m_autoNextInProgress{false};
   std::optional<i64>  m_lastPlayTick;
 

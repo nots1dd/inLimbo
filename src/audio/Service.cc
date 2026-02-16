@@ -64,6 +64,31 @@ void Service::addToPlaylist(service::SoundHandle h)
   m_playlist.tracks.push_back(h);
 }
 
+void Service::removeFromPlaylist(size_t index)
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+
+  if (index >= m_playlist.tracks.size())
+    return;
+
+  const bool removingCurrent = (index == m_playlist.current);
+
+  m_playlist.removeAt(index);
+
+  if (removingCurrent)
+  {
+    // Stop current playback
+    m_engine->stop();
+
+    // Load next valid track if any
+    if (!m_playlist.empty())
+    {
+      loadSound();
+      m_engine->play();
+    }
+  }
+}
+
 void Service::clearPlaylist()
 {
   std::lock_guard<std::mutex> lock(m_mutex);
@@ -115,6 +140,22 @@ void Service::pauseCurrent()
   std::lock_guard<std::mutex> lock(m_mutex);
   ensureEngine();
   m_engine->pause();
+}
+
+auto Service::isTrackFinished() -> bool
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  ensureEngine();
+
+  return m_engine->isTrackFinished();
+}
+
+void Service::clearTrackFinishedFlag()
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  ensureEngine();
+
+  m_engine->clearTrackFinishedFlag();
 }
 
 auto Service::nextTrack() -> std::optional<service::SoundHandle>

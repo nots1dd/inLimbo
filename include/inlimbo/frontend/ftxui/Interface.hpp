@@ -9,6 +9,7 @@
 #include "frontend/ftxui/state/album_art/Impl.hpp"
 #include "frontend/ftxui/state/now_playing/Impl.hpp"
 #include "frontend/ftxui/ui/screens/Main.hpp"
+#include "frontend/ftxui/ui/screens/Queue.hpp"
 #include "mpris/Service.hpp"
 #include "thread/Map.hpp"
 
@@ -22,6 +23,24 @@
 
 namespace frontend::tui
 {
+
+enum class StatusBarMode
+{
+  Full,
+  Reduced,
+  Compact,
+};
+
+inline static auto statusBarMode() -> StatusBarMode
+{
+  const int w = ftxui::Terminal::Size().dimx;
+
+  if (w >= 120)
+    return StatusBarMode::Full;
+  if (w >= 90)
+    return StatusBarMode::Reduced;
+  return StatusBarMode::Compact;
+}
 
 class Interface
 {
@@ -40,6 +59,10 @@ private:
   auto renderTitleBar() -> ftxui::Element;
   auto renderStatusBar() -> ftxui::Element;
 
+  auto renderStatusBarFull() -> ftxui::Element;
+  auto renderStatusBarReduced() -> ftxui::Element;
+  auto renderStatusBarCompact() -> ftxui::Element;
+
   void playSelected();
 
   threads::SafeMap<SongMap>*                            m_songMapTS{nullptr};
@@ -57,9 +80,11 @@ private:
   state::library::LibraryState        m_libraryState;
   state::now_playing::NowPlayingState m_nowState;
   state::album_art::AlbumArtState     m_albumArtState;
+  state::queue::QueueState            m_queueState;
 
   ui::screens::MainScreen       m_mainScreen;
   ui::screens::NowPlayingScreen m_nowPlayingScreen;
+  ui::screens::QueueScreen      m_queueScreen;
 
   ui::EventHandler m_eventHandler;
   ftxui::Component renderer;

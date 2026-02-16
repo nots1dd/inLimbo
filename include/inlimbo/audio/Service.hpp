@@ -34,6 +34,7 @@ public:
   auto isPlaying() -> bool;
 
   void addToPlaylist(service::SoundHandle h);
+  void removeFromPlaylist(size_t index);
   void clearPlaylist();
 
   auto getPlaybackTime() -> std::optional<std::pair<double, double>>;
@@ -44,6 +45,8 @@ public:
   void start();
   void playCurrent();
   void pauseCurrent();
+  auto isTrackFinished() -> bool;
+  void clearTrackFinishedFlag();
   auto nextTrack() -> std::optional<service::SoundHandle>;
   auto previousTrack() -> std::optional<service::SoundHandle>;
   auto nextTrackGapless() -> std::optional<service::SoundHandle>;

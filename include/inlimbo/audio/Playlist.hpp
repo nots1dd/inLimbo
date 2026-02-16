@@ -34,6 +34,7 @@ struct Playlist
   [[nodiscard]] auto jumpToRandom() noexcept -> std::optional<Handle>;
 
   void clear();
+  void removeAt(size_t index) noexcept;
 };
 
 } // namespace audio::service

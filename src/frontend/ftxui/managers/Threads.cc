@@ -9,48 +9,12 @@
 namespace frontend::tui::managers
 {
 
-static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris,
-                               std::atomic<ui8>& lastTid, std::atomic<bool>& inProgress) -> bool
-{
-  if (inProgress.load(std::memory_order_acquire))
-    return false;
-
-  auto infoOpt = audio.getCurrentTrackInfo();
-  if (!infoOpt)
-    return false;
-
-  const auto& info = *infoOpt;
-
-  if (info.lengthSec <= 0.0)
-    return false;
-
-  constexpr double EPS = 0.05;
-  if (info.positionSec + EPS < info.lengthSec)
-    return false;
-
-  if (info.tid == lastTid.load(std::memory_order_relaxed))
-    return false;
-
-  bool expected = false;
-  if (!inProgress.compare_exchange_strong(expected, true))
-    return false;
-
-  lastTid.store(info.tid, std::memory_order_relaxed);
-
-  audio.nextTrackGapless();
-  mpris.updateMetadata();
-  mpris.notify();
-
-  inProgress.store(false, std::memory_order_release);
-  return true;
-}
-
 void ThreadManager::executeWithTelemetry(const std::function<void(audio::Service&)>& fn)
 {
   if (!m_audioPtr || !m_telemetry)
     return;
 
-  helpers::telemetry::playbackTransition(*m_audioPtr, m_telemetry, currentPlay, lastPlayTick,
+  helpers::telemetry::playbackTransition(*m_audioPtr, m_telemetry, m_currentPlay, m_lastPlayTick,
                                          [&]() -> void { fn(*m_audioPtr); });
 }
 
@@ -105,9 +69,9 @@ ThreadManager::ThreadManager(mpris::Service* mpris, threads::SafeMap<SongMap>* s
 
 void ThreadManager::start()
 {
-  running = true;
+  m_isRunning = true;
 
-  helpers::telemetry::beginPlayback(*m_audioPtr, m_telemetry, currentPlay, lastPlayTick);
+  helpers::telemetry::beginPlayback(*m_audioPtr, m_telemetry, m_currentPlay, m_lastPlayTick);
 
   status_thread = std::thread(&ThreadManager::statusLoop, this);
 
@@ -118,7 +82,7 @@ void ThreadManager::start()
 
 void ThreadManager::stop()
 {
-  running = false;
+  m_isRunning = false;
 
   if (status_thread.joinable())
     status_thread.join();
@@ -127,16 +91,16 @@ void ThreadManager::stop()
   if (seek_thread.joinable())
     seek_thread.join();
 
-  helpers::telemetry::endPlayback(*m_audioPtr, m_telemetry, currentPlay, lastPlayTick);
+  helpers::telemetry::endPlayback(*m_audioPtr, m_telemetry, m_currentPlay, m_lastPlayTick);
 }
 
 void ThreadManager::setScreen(ftxui::ScreenInteractive* screen) { m_screen = screen; }
 
 void ThreadManager::statusLoop()
 {
-  while (running.load())
+  while (m_isRunning.load())
   {
-    helpers::telemetry::updateTelemetryProgress(*m_audioPtr, currentPlay, lastPlayTick);
+    helpers::telemetry::updateTelemetryProgress(*m_audioPtr, m_currentPlay, m_lastPlayTick);
 
     if (m_cfgWatcher.pollChanged())
     {
@@ -169,21 +133,19 @@ void ThreadManager::statusLoop()
 
     if (auto info = m_audioPtr->getCurrentTrackInfo())
     {
-      if (info->lengthSec > 0 && info->positionSec >= info->lengthSec)
+      if ((info->lengthSec > 0 && info->positionSec >= info->lengthSec) ||
+          m_audioPtr->isTrackFinished())
       {
-        helpers::telemetry::playbackTransition(*m_audioPtr, m_telemetry, currentPlay, lastPlayTick,
-                                               [&] { m_audioPtr->nextTrack(); });
+        helpers::telemetry::playbackTransition(*m_audioPtr, m_telemetry, m_currentPlay,
+                                               m_lastPlayTick,
+                                               [&] { m_audioPtr->nextTrackGapless(); });
 
         m_mpris->updateMetadata();
         m_mpris->notify();
-      }
-    }
 
-    if (autoNextIfFinished(*m_audioPtr, *m_mpris, m_lastAutoNextTid, m_autoNextInProgress))
-    {
-      helpers::telemetry::playbackTransition(
-        *m_audioPtr, m_telemetry, currentPlay, lastPlayTick,
-        [] { /* already transitioned in autoNextIfFinished */ });
+        if (m_audioPtr->isTrackFinished())
+          m_audioPtr->clearTrackFinishedFlag();
+      }
     }
 
     if (m_screen)
@@ -195,7 +157,7 @@ void ThreadManager::statusLoop()
 
 void ThreadManager::mprisLoop()
 {
-  while (running.load())
+  while (m_isRunning.load())
   {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     m_mpris->poll();
@@ -204,9 +166,9 @@ void ThreadManager::mprisLoop()
 
 void ThreadManager::seekLoop()
 {
-  while (running.load())
+  while (m_isRunning.load())
   {
-    double d = pendingSeek.exchange(0.0);
+    double d = m_pendingSeek.exchange(0.0);
 
     if (std::abs(d) > 0.01)
     {

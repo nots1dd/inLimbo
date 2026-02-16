@@ -117,6 +117,9 @@ public:
     return m_currentDevice;
   }
 
+  auto isTrackFinished() const -> bool { return m_trackFinished.load(); }
+  auto clearTrackFinishedFlag() -> void { m_trackFinished.store(false, std::memory_order_release); }
+
   auto getSoundPtrMut() const -> std::shared_ptr<Sound>;
   auto getSoundPtr() const -> std::shared_ptr<const Sound>;
 
@@ -136,6 +139,7 @@ private:
   std::shared_ptr<audio::Sound> m_nextSound;
   std::atomic<float>            m_volume{1.0f};
   std::atomic<bool>             m_isRunning{false};
+  std::atomic<bool>             m_trackFinished{false};
   std::atomic<PlaybackState>    m_playbackState{PlaybackState::Stopped};
   std::thread                   m_audioThread;
   mutable std::mutex            m_mutex;

@@ -7,9 +7,8 @@ namespace query::sort
 
 static auto dispatchTable() -> const auto&
 {
-    static const auto table =
-        buildDispatch(std::make_index_sequence<TOTAL>{});
-    return table;
+  static const auto table = buildDispatch(std::make_index_sequence<TOTAL>{});
+  return table;
 }
 
 void applyRuntimeSortPlan(SongMap& map, const RuntimeSortPlan& plan)

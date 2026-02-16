@@ -43,7 +43,7 @@ MainScreen::MainScreen(state::library::LibraryState& state) : m_state(state)
               row = row | color(Color::Cyan);
           }
 
-          rows.push_back(row);
+          rows.push_back(row | frame);
         }
         else
         {
@@ -56,15 +56,15 @@ MainScreen::MainScreen(state::library::LibraryState& state) : m_state(state)
           else
             header = header | bgcolor(Color::RGB(25, 25, 25)) | color(Color::Cyan) | bold;
 
-          rows.push_back(header);
+          rows.push_back(header | frame);
         }
       }
 
-      return vbox(rows) | frame;
+      return vbox(rows);
     });
 
   album_scroller =
-    Scroller(album_content, &m_state.selected_album_index, Color::Green, Color::GrayDark) | frame | flex;
+    Scroller(album_content, &m_state.selected_album_index, Color::Green, Color::GrayDark);
 
   container = Container::Horizontal({artist_menu, album_scroller});
 }
@@ -94,7 +94,7 @@ auto MainScreen::render() -> Element
   auto artist_inner = window(text(" Artists ") | bold, artist_menu->Render() | frame | flex) |
                       size(WIDTH, EQUAL, half_width);
 
-  auto album_inner = window(text(" Albums ") | bold, album_scroller->Render() | frame | flex) |
+  auto album_inner = window(text(" Songs ") | bold, album_scroller->Render() | frame | flex) |
                      size(WIDTH, EQUAL, term.dimx - half_width);
 
   Color artist_border_color = m_state.focusOnArtists() ? Color::Green : Color::GrayDark;
@@ -105,7 +105,7 @@ auto MainScreen::render() -> Element
 
   auto album_pane = album_inner | borderStyled(BorderStyle::HEAVY, album_border_color);
 
-  return hbox({artist_pane, album_pane}) | flex;
+  return vbox({hbox({artist_pane, album_pane}) | flex});
 }
 
 } // namespace frontend::tui::ui::screens

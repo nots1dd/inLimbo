@@ -5,7 +5,7 @@
 namespace helpers::telemetry
 {
 
-void beginPlayback(audio::Service& audio, ::telemetry::Context* telemetryCtx,
+void beginPlayback(::audio::Service& audio, ::telemetry::Context* telemetryCtx,
                    std::optional<::telemetry::Event>& currentTelemetryEvent,
                    std::optional<i64>&                lastTick)
 {
@@ -34,7 +34,7 @@ void beginPlayback(audio::Service& audio, ::telemetry::Context* telemetryCtx,
             *telemetryCtx->registry.titles.toString(ev.song));
 }
 
-void updateTelemetryProgress(audio::Service&                    audio,
+void updateTelemetryProgress(::audio::Service&                  audio,
                              std::optional<::telemetry::Event>& currentTelemetryEvent,
                              std::optional<i64>&                lastTick)
 
@@ -58,7 +58,7 @@ void updateTelemetryProgress(audio::Service&                    audio,
   lastTick = now;
 }
 
-void endPlayback(audio::Service& audio, ::telemetry::Context* telemetryCtx,
+void endPlayback(::audio::Service& audio, ::telemetry::Context* telemetryCtx,
                  std::optional<::telemetry::Event>& currentTelemetryEvent,
                  std::optional<i64>&                lastTick)
 {

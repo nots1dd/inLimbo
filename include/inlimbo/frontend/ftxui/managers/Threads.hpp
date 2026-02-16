@@ -31,13 +31,13 @@ public:
 
   void requestSeek(double positionSec)
   {
-    pendingSeek.store(positionSec, std::memory_order_release);
+    m_pendingSeek.store(positionSec, std::memory_order_release);
   }
 
   // for us to post screen events on
   void setScreen(ftxui::ScreenInteractive* screen);
 
-  auto getPendingSeek() -> double { return pendingSeek.load(std::memory_order_acquire); }
+  auto getPendingSeek() -> double { return m_pendingSeek.load(std::memory_order_acquire); }
 
   void executeWithTelemetry(const std::function<void(audio::Service&)>& fn);
   void setOnConfigReload(std::function<void()> fn);
@@ -64,13 +64,12 @@ private:
   std::thread mpris_thread;
   std::thread seek_thread;
 
-  std::atomic<bool>   running{false};
-  std::atomic<double> pendingSeek{0.0};
+  std::atomic<bool>   m_isRunning{false};
+  std::atomic<double> m_pendingSeek{0.0};
 
-  std::optional<telemetry::Event> currentPlay;
-  std::optional<i64>              lastPlayTick;
+  std::optional<telemetry::Event> m_currentPlay;
+  std::optional<i64>              m_lastPlayTick;
 
-  std::atomic<ui8>  m_lastAutoNextTid{0};
   std::atomic<bool> m_autoNextInProgress{false};
 };
 

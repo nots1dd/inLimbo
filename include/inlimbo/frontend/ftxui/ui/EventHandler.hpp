@@ -4,6 +4,7 @@
 #include "frontend/ftxui/managers/Threads.hpp"
 #include "frontend/ftxui/state/library/Impl.hpp"
 #include "frontend/ftxui/state/now_playing/Impl.hpp"
+#include "frontend/ftxui/state/queue/Impl.hpp"
 #include "mpris/Service.hpp"
 #include <ftxui/component/component.hpp>
 
@@ -26,7 +27,7 @@ class EventHandler
 {
 public:
   EventHandler(UIScreen& activeScreen, state::library::LibraryState& libraryState,
-               state::now_playing::NowPlayingState& nowState,
+               state::now_playing::NowPlayingState& nowState, state::queue::QueueState& queueState,
                managers::ThreadManager& threadManager, threads::SafeMap<SongMap>* songMap,
                mpris::Service* mpris);
 
@@ -39,6 +40,7 @@ private:
 
   state::library::LibraryState&        m_libraryState;
   state::now_playing::NowPlayingState& m_nowState;
+  state::queue::QueueState&            m_queueState;
 
   managers::ThreadManager& m_threadManager;
 

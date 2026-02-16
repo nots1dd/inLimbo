@@ -8,7 +8,7 @@ namespace utils::fs
 
 // Convert regular file path to a file URI. The resulting URI will have the format
 // "file://path/to/file".
-auto toRelFilePathUri(const std::filesystem::path& p) -> const Path
+inline auto toRelFilePathUri(const std::filesystem::path& p) -> const Path
 {
   Path uri("file://");
 
@@ -19,7 +19,7 @@ auto toRelFilePathUri(const std::filesystem::path& p) -> const Path
 
 // Convert regular file path to an absolute file URI. The resulting URI will have the format
 // "file:///absolute/path/to/file".
-auto toAbsFilePathUri(const std::filesystem::path& p) -> const Path
+inline auto toAbsFilePathUri(const std::filesystem::path& p) -> const Path
 {
   Path uri("file://");
 
@@ -30,7 +30,7 @@ auto toAbsFilePathUri(const std::filesystem::path& p) -> const Path
 
 // Convert a file URI to a regular file path. If the URI does not start with "file://", an empty
 // path is returned.
-auto fromAbsFilePathUri(const std::string uriPath) -> const Path
+inline auto fromAbsFilePathUri(const std::string uriPath) -> const Path
 {
   Path path;
 

@@ -6,20 +6,20 @@
 namespace helpers::telemetry
 {
 
-void beginPlayback(audio::Service& audio, ::telemetry::Context* telemetryCtx,
+void beginPlayback(::audio::Service& audio, ::telemetry::Context* telemetryCtx,
                    std::optional<::telemetry::Event>& currentTelemetryEvent,
                    std::optional<i64>&                lastTick);
 
-void updateTelemetryProgress(audio::Service&                    audio,
+void updateTelemetryProgress(::audio::Service&                  audio,
                              std::optional<::telemetry::Event>& currentTelemetryEvent,
                              std::optional<i64>&                lastTick);
 
-void endPlayback(audio::Service& audio, ::telemetry::Context* telemetryCtx,
+void endPlayback(::audio::Service& audio, ::telemetry::Context* telemetryCtx,
                  std::optional<::telemetry::Event>& currentTelemetryEvent,
                  std::optional<i64>&                lastTick);
 
 template <typename Fn>
-inline void playbackTransition(audio::Service& audio, ::telemetry::Context* telemetryCtx,
+inline void playbackTransition(::audio::Service& audio, ::telemetry::Context* telemetryCtx,
                                std::optional<::telemetry::Event>& currentTelemetryEvent,
                                std::optional<i64>& lastTick, Fn&& customFn)
 {

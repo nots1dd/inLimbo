@@ -1,4 +1,5 @@
 #include "audio/Engine.hpp"
+#include "Logger.hpp"
 #include "StackTrace.hpp"
 #include "audio/Constants.hpp"
 #include "utils/string/SmallString.hpp"
@@ -431,9 +432,12 @@ void AudioEngine::shutdownAlsa()
 
 void AudioEngine::decodeAndPlay()
 {
-  auto sound = getSoundPtrMut();
-  if (!sound)
-    return;
+  std::shared_ptr<Sound> sound;
+  {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    sound = m_sound;
+  }
+
   auto& s = *sound;
 
   const size_t samplesNeeded = constants::FramesPerBuffer * s.channels;
@@ -454,22 +458,36 @@ void AudioEngine::decodeAndPlay()
     s.eof = false;
   }
 
-  if (s.eof)
+  if (s.eof.load(std::memory_order_acquire) && s.ring->available() == 0)
   {
-    // If current sound ended but ring still has samples, keep draining it.
-    // If ring is empty and we have a queued sound -> switch immediately.
-    if (s.ring->available() == 0)
+    // emit track finished
+    m_trackFinished.exchange(true, std::memory_order_release);
+    LOG_TRACE("AudioEngine: track finished");
+
+    std::shared_ptr<Sound> next;
+
     {
-      auto sound = returnNextSoundIfQueued();
-      if (!sound)
-        return;
+      std::lock_guard<std::mutex> lock(m_mutex);
+      if (m_nextSound)
+      {
+        next    = std::move(m_nextSound);
+        m_sound = next;
+      }
+    }
+
+    if (next)
+    {
+      // switch to local reference
+      sound    = next;
       auto& ns = *sound;
 
-      // reset playback state for new sound
-      ns.cursorFrames.store(0);
-      ns.seekPending.store(false);
-      ns.eof = false;
+      ns.cursorFrames.store(0, std::memory_order_relaxed);
+      ns.seekPending.store(false, std::memory_order_relaxed);
+      ns.eof.store(false, std::memory_order_relaxed);
+
+      return; // next loop iteration decodes new sound
     }
+
     return;
   }
 

@@ -114,4 +114,28 @@ void Playlist::clear()
   current = 0;
 }
 
+void Playlist::removeAt(size_t index) noexcept
+{
+  if (index >= tracks.size())
+    return;
+
+  tracks.erase(tracks.begin() + index);
+
+  if (tracks.empty())
+  {
+    current = 0;
+    return;
+  }
+
+  // Adjust current idx
+  if (current > index)
+  {
+    --current;
+  }
+  else if (current >= tracks.size())
+  {
+    current = tracks.size() - 1;
+  }
+}
+
 } // namespace audio::service

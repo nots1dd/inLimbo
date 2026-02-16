@@ -51,43 +51,6 @@ inline auto fmtAgo(i64 ts) -> std::string
   return std::to_string(d / 86400) + "d ago";
 }
 
-static auto autoNextIfFinished(audio::Service& audio, mpris::Service& mpris,
-                               std::atomic<ui8>& lastTid, std::atomic<bool>& inProgress) -> bool
-{
-  if (inProgress.load(std::memory_order_acquire))
-    return false;
-
-  auto infoOpt = audio.getCurrentTrackInfo();
-  if (!infoOpt)
-    return false;
-
-  const auto& info = *infoOpt;
-
-  if (info.lengthSec <= 0.0)
-    return false;
-
-  constexpr double EPS = 0.05;
-  if (info.positionSec + EPS < info.lengthSec)
-    return false;
-
-  // Already handled this track
-  if (info.tid == lastTid.load(std::memory_order_relaxed))
-    return false;
-
-  bool expected = false;
-  if (!inProgress.compare_exchange_strong(expected, true))
-    return false;
-
-  lastTid.store(info.tid, std::memory_order_relaxed);
-
-  audio.nextTrackGapless();
-  mpris.updateMetadata();
-  mpris.notify();
-
-  inProgress.store(false, std::memory_order_release);
-  return true;
-}
-
 void Interface::loadMiscConfig(MiscConfig& miscCfg)
 {
   config::misc::ConfigLoader loader(FRONTEND_NAME);
@@ -250,19 +213,17 @@ void Interface::statusLoop(audio::Service& audio)
     const auto pos = audio.getCurrentTrackInfo()->positionSec;
     const auto len = audio.getCurrentTrackInfo()->lengthSec;
 
-    if (pos >= len)
+    if (pos >= len || audio.isTrackFinished())
     {
       helpers::telemetry::playbackTransition(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick,
-                                             [&]() -> void { audio.nextTrack(); });
+                                             [&]() -> void { audio.nextTrackGapless(); });
       m_mprisService->updateMetadata();
       m_mprisService->notify();
+
+      if (audio.isTrackFinished())
+        audio.clearTrackFinishedFlag();
     }
 
-    if (autoNextIfFinished(audio, *m_mprisService, m_lastAutoNextTid, m_autoNextInProgress))
-    {
-      helpers::telemetry::playbackTransition(audio, m_telemetryCtx, m_currentPlay, m_lastPlayTick,
-                                             []() -> void {});
-    }
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 }
