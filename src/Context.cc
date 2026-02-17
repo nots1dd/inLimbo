@@ -273,7 +273,7 @@ auto maybeHandlePrintActions(AppContext& ctx) -> bool
 
     case PrintAction::AudioDevs:
     {
-      audio::Service tempService(g_songMap);
+      audio::Service tempService(g_songMap, ctx.m_audioBackendName);
       auto           devs = tempService.enumerateDevices();
       helpers::cmdline::printAudioDevices(devs);
       break;
@@ -498,9 +498,10 @@ auto initializeContext(int argc, char** argv) -> AppContext
   else
     LOG_ERROR("Something went wrong when loading telemetry data (registry or store)!");
 
-  ctx.m_songTitle    = ctx.args.song;
-  ctx.m_fuzzyMaxDist = tomlparser::Config::getInt("fuzzy", "max_dist");
-  ctx.m_fePluginName = PluginName{ctx.args.frontend};
+  ctx.m_songTitle        = ctx.args.song;
+  ctx.m_fuzzyMaxDist     = tomlparser::Config::getInt("fuzzy", "max_dist");
+  ctx.m_audioBackendName = tomlparser::Config::getString("audio", "backend", "alsa");
+  ctx.m_fePluginName     = PluginName{ctx.args.frontend};
 
   const float vol = ctx.args.volume;
 
@@ -601,7 +602,7 @@ void runFrontend(AppContext& ctx)
     // ---------------------------------------------------------
     // Create AudioService (owns AudioEngine)
     // ---------------------------------------------------------
-    audio::Service audio(g_songMap);
+    audio::Service audio(g_songMap, ctx.m_audioBackendName);
 
     mpris::backend::Common mprisBackend(audio);
     mpris::Service         mprisService(mprisBackend, APP_NAME);

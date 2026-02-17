@@ -130,6 +130,7 @@ The configuration aspect of the inLimbo project comprises of the following field
 1. Keybinds
 2. Colors (Theme)
 3. Library Sort
+4. Audio backend
 
 Something that is quite cool and almost standardised nowadays that inLimbo has is **hot-reloading** of the config file.
 
@@ -186,6 +187,21 @@ If you are wondering how to integrate this into the frontend, I will have a blog
 > Am fairly certain editing the sort just as a song ends *may* cause a 
 > problem but I could be wrong.
 > 
+
+### **Config 1.2: Audio Backend**
+
+For now we can set the backend automatically via `config.toml` like so:
+
+```toml
+[audio]
+backend = "alsa"
+```
+
+Note that audio backends will default to `ALSA` always. All builds will also cater to `ALSA` until I add specific
+build options for other options.
+
+I plan on adding `pipewire` for detecting device nodes that are not just audio hardware devices (that `ALSA` can find only) so that in the 
+future inLimbo will be capable of changing audio sink within the app itself (and maybe changing other params in the future).
 
 
 ## **MISC**

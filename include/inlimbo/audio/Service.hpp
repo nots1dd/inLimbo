@@ -23,7 +23,7 @@ namespace audio
 class Service final
 {
 public:
-  Service(threads::SafeMap<SongMap>& songMap);
+  Service(threads::SafeMap<SongMap>& songMap, const std::string& backendName);
   ~Service();
 
   IMMUTABLE(Service);
@@ -32,7 +32,7 @@ public:
   void               initForDevice(const DeviceName& deviceName = "default");
   void               switchDevice(const DeviceName& deviceName);
   [[nodiscard]] auto getCurrentDevice() -> DeviceName;
-  auto               getBackendInfo() -> BackendInfo;
+  auto               getBackendInfo() -> backend::BackendInfo;
 
   auto registerTrack(std::shared_ptr<const Song> song) -> service::SoundHandle;
   auto isPlaying() -> bool;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "audio/backend/Backend.hpp"
 #include "audio/backend/Devices.hpp"
 #include <memory>
 #include <optional>
@@ -18,7 +19,11 @@ enum class PlaybackState : ui8
 class IAudioBackend
 {
 public:
-  virtual ~IAudioBackend() = default;
+  virtual ~IAudioBackend();
+
+  /* ---------------- Audio Backend Info ---------------- */
+  [[nodiscard]] virtual auto backendID() const noexcept -> backend::BackendID   = 0;
+  [[nodiscard]] virtual auto backendString() const noexcept -> std::string_view = 0;
 
   /* ---------------- Device management ---------------- */
 
@@ -54,7 +59,7 @@ public:
   virtual void               setVolume(float volume) = 0;
   [[nodiscard]] virtual auto volume() const -> float = 0;
 
-  [[nodiscard]] virtual auto getBackendInfo() const -> BackendInfo = 0;
+  [[nodiscard]] virtual auto getBackendInfo() const -> backend::BackendInfo = 0;
 
   /* ---------------- Visualization support ---------------- */
 

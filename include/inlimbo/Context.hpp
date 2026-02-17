@@ -71,6 +71,9 @@ struct AppContext
   Directory m_musicDir;
   Path      m_binPath;
 
+  // Audio Backend name
+  std::string m_audioBackendName;
+
   // Telemetry
   telemetry::Context m_telemetryCtx;
 

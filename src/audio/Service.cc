@@ -1,14 +1,24 @@
 #include "audio/Service.hpp"
+#include "Logger.hpp"
 #include "audio/backend/alsa/Impl.hpp"
+#include "utils/string/Equals.hpp"
 #include <random>
 
 namespace audio
 {
 
-Service::Service(threads::SafeMap<SongMap>& songMapTS) : m_songMapTS(songMapTS)
+Service::Service(threads::SafeMap<SongMap>& songMapTS, const std::string& backendName)
+    : m_songMapTS(songMapTS)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
-  m_backend = std::make_shared<backend::AlsaBackend>();
+
+  if (utils::string::isEquals(backendName, "alsa"))
+  {
+    LOG_DEBUG("Found ALSA backend. Creating audio service...");
+    m_backend = std::make_shared<backend::AlsaBackend>();
+    LOG_INFO("Audio Backend '{}' (ID: {}) created.", m_backend->backendString(),
+             (int)m_backend->backendID());
+  }
 }
 
 Service::~Service() { shutdown(); }
@@ -48,9 +58,9 @@ void Service::clearTrackFinishedFlag()
   withBackend([](IAudioBackend& b) -> void { b.clearTrackFinished(); });
 }
 
-auto Service::getBackendInfo() -> BackendInfo
+auto Service::getBackendInfo() -> backend::BackendInfo
 {
-  return withBackend([](IAudioBackend& b) -> BackendInfo { return b.getBackendInfo(); });
+  return withBackend([](IAudioBackend& b) -> backend::BackendInfo { return b.getBackendInfo(); });
 }
 
 auto Service::getPlaybackTime() -> std::optional<std::pair<double, double>>
@@ -294,8 +304,8 @@ auto Service::getVolume() -> float
 
 auto Service::getCurrentTrackInfo() -> std::optional<service::TrackInfo>
 {
-  BackendInfo backend;
-  auto        timeOpt = withBackend(
+  backend::BackendInfo backend;
+  auto                 timeOpt = withBackend(
     [&](IAudioBackend& b) -> auto
     {
       backend = b.getBackendInfo();

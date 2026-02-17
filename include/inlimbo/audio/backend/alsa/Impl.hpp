@@ -1,5 +1,6 @@
 #pragma once
 
+#include "audio/backend/Backend.hpp"
 #include "audio/backend/Interface.hpp"
 #include <algorithm>
 #include <thread>
@@ -15,6 +16,13 @@ namespace audio::backend
 class AlsaBackend : public IAudioBackend
 {
 public:
+  static constexpr std::string_view kID        = "alsa";
+  static constexpr std::string_view kName      = "AlsaBackend";
+  static constexpr BackendID        kBackendID = BackendID::Alsa;
+
+  auto backendID() const noexcept -> BackendID override { return kBackendID; }
+  auto backendString() const noexcept -> std::string_view override { return kID; }
+
   auto enumerateDevices() -> Devices override;
   void initForDevice(const DeviceName& deviceName = "default") override;
   void switchDevice(const DeviceName& device) override;
