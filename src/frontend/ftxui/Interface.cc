@@ -230,8 +230,8 @@ auto Interface::renderStatusBarFull() -> Element
     play_icon = text("⏸") | color(Color::RedLight) | bold;
   }
 
-  Element health =
-    backend.common.xruns > 0 ? text("⚠") | color(Color::RedLight) : text("✓") | color(Color::GreenLight);
+  Element health = backend.common.xruns > 0 ? text("⚠") | color(Color::RedLight)
+                                            : text("✓") | color(Color::GreenLight);
 
   return hbox({
            text(" "),

@@ -106,14 +106,10 @@ QueueScreen::QueueScreen(state::queue::QueueState& state) : m_state(state)
           if constexpr (std::is_same_v<T, audio::backend::AlsaBackendInfo>)
           {
             rows.push_back(text("Type     : ALSA"));
-            rows.push_back(text(std::string("Format   : ") +
-                                info.pcmFormatName.c_str()));
-            rows.push_back(text("Period   : " +
-                                std::to_string(info.periodSize) + " frames"));
-            rows.push_back(text("Buffer   : " +
-                                std::to_string(info.bufferSize) + " frames"));
-            rows.push_back(text(std::string("Draining : ") +
-                                yesno(info.isDraining)));
+            rows.push_back(text(std::string("Format   : ") + info.pcmFormatName.c_str()));
+            rows.push_back(text("Period   : " + std::to_string(info.periodSize) + " frames"));
+            rows.push_back(text("Buffer   : " + std::to_string(info.bufferSize) + " frames"));
+            rows.push_back(text(std::string("Draining : ") + yesno(info.isDraining)));
           }
           else
           {

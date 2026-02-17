@@ -27,8 +27,8 @@ struct BackendCommonInfo
   // ---------------------------------------------------------
   // Audio format (NEGOTIATED, not requested)
   // ---------------------------------------------------------
-  uint sampleRate = DEFAULT_SOUND_SAMPLE_RATE;
-  uint channels   = DEFAULT_SOUND_CHANNELS;
+  uint                       sampleRate = DEFAULT_SOUND_SAMPLE_RATE;
+  uint                       channels   = DEFAULT_SOUND_CHANNELS;
   utils::string::SmallString pcmFormatName;
 
   CodecName codecName;     // "flac", "mp3", "aac", ...
@@ -41,7 +41,7 @@ struct BackendCommonInfo
   bool isPaused   = false;
   bool isDraining = false;
 
-  ui64 xruns  = 0; // underrun count (https://unix.stackexchange.com/questions/199498/what-are-xruns)
+  ui64 xruns = 0; // underrun count (https://unix.stackexchange.com/questions/199498/what-are-xruns)
   ui64 writes = 0; // audio backend write calls (ex: snd_pcm_writei for ALSA)
 };
 
