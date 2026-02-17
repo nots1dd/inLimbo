@@ -82,6 +82,7 @@ struct Sound
 {
   // Sound struct is NOT trivially copyable
   IMMUTABLE(Sound);
+  DEFAULT_CTOR(Sound);
 
   AudioFormat source; // exact file properties
   AudioFormat target; // engine output format (matches backend)
@@ -111,8 +112,6 @@ struct Sound
 
   // Reusable decode buffer - size calculated based on audio params
   std::vector<float> decodeBuffer;
-
-  Sound() = default;
 
   // Initialize buffers after audio parameters are known
   void initializeBuffers()

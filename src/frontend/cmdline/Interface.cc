@@ -466,12 +466,14 @@ void Interface::draw(audio::Service& audio)
   std::cout << "\n";
 
   l_Section("Backend");
-  std::cout << "   Device   : " << backend.dev.name.c_str() << "\n";
-  std::cout << "   Codec    : " << backend.codecLongName.c_str() << " - ("
-            << backend.codecName.c_str() << ")\n";
-  std::cout << "   Rate     : " << backend.sampleRate << " Hz (" << backend.channels << " ch)\n";
-  std::cout << "   Buffer   : " << backend.bufferSize << " frames (" << std::fixed
-            << std::setprecision(1) << backend.latencyMs << " ms)\n\n";
+
+  std::cout << "   Device   : " << backend.common.dev.name.c_str() << "\n";
+  std::cout << "   Codec    : " << backend.common.codecLongName.c_str() << " - ("
+            << backend.common.codecName.c_str() << ")\n";
+  std::cout << "   Rate     : " << backend.common.sampleRate << " Hz (" << backend.common.channels
+            << " ch)\n";
+  std::cout << "   Latency  : " << std::fixed << std::setprecision(1) << backend.common.latencyMs
+            << " ms\n";
 
   l_Section("Controls");
   l_Control3(kb.playPause->c_str(), "play/pause", kb.restartTrack->c_str(), "restart",

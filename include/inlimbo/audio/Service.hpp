@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Engine.hpp"
+#include "InLimbo-Types.hpp"
 #include "Playlist.hpp"
+#include "audio/backend/Devices.hpp"
+#include "audio/backend/Interface.hpp"
 #include "thread/Map.hpp"
 #include "utils/ClassRulesMacros.hpp"
 
@@ -26,16 +28,14 @@ public:
 
   IMMUTABLE(Service);
 
-  auto enumeratePlaybackDevices() -> Devices;
-  void initDevice(const DeviceName& deviceName = "default");
-  auto getBackendInfo() -> BackendInfo;
+  auto               enumerateDevices() -> Devices;
+  void               initForDevice(const DeviceName& deviceName = "default");
+  void               switchDevice(const DeviceName& deviceName);
+  [[nodiscard]] auto getCurrentDevice() -> DeviceName;
+  auto               getBackendInfo() -> BackendInfo;
 
   auto registerTrack(std::shared_ptr<const Song> song) -> service::SoundHandle;
   auto isPlaying() -> bool;
-
-  void addToPlaylist(service::SoundHandle h);
-  void removeFromPlaylist(size_t index);
-  void clearPlaylist();
 
   auto getPlaybackTime() -> std::optional<std::pair<double, double>>;
   auto getCurrentTrack() -> std::optional<service::SoundHandle>;
@@ -57,12 +57,15 @@ public:
   // playlist stuff
   auto randomTrack() -> std::optional<service::SoundHandle>;
   auto randomIndex() -> std::optional<size_t>;
+  void addToPlaylist(service::SoundHandle h);
+  void removeFromPlaylist(size_t index);
+  void clearPlaylist();
 
   // AV stuff
   template <typename Fn>
-  auto returnAudioBuffersView(Fn&& fn) -> void;
-  auto getCopySeq() -> ui64;
-  auto getCopyBufferSize() -> size_t;
+  auto withAudioBuffer(Fn&& fn) -> void;
+  auto copySequence() -> ui64;
+  auto copyBufferSize() -> size_t;
 
   void seekToAbsolute(double seconds);
   void seekForward(double seconds);
@@ -78,27 +81,43 @@ public:
   void shutdown();
 
 private:
-  std::shared_ptr<AudioEngine> m_engine;
-  service::Playlist            m_playlist;
-  threads::SafeMap<SongMap>&   m_songMapTS;
+  std::shared_ptr<IAudioBackend> m_backend;
+  service::Playlist              m_playlist;
+  threads::SafeMap<SongMap>&     m_songMapTS;
 
   service::TrackTable m_trackTable;
   ui64                m_nextTrackId = 1;
 
   std::mutex m_mutex;
 
+  template <typename Fn>
+  auto withBackend(Fn&& fn);
+
   void ensureEngine();
-  void loadSound();
+  // void loadSound();
+  void loadSoundUnlocked();
   void shutdownLocked();
 };
 
 template <typename Fn>
-auto Service::returnAudioBuffersView(Fn&& fn) -> void
+auto Service::withBackend(Fn&& fn)
+{
+  std::shared_ptr<IAudioBackend> backend;
+  {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    ensureEngine();
+    backend = m_backend;
+  }
+  return fn(*backend);
+}
+
+template <typename Fn>
+auto Service::withAudioBuffer(Fn&& fn) -> void
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   ensureEngine();
 
-  m_engine->returnAudioBuffersView(fn);
+  m_backend->withAudioBuffer(fn);
 }
 
 } // namespace audio

@@ -26,6 +26,7 @@ private:
   ftxui::Component album_content;
   ftxui::Component album_scroller;
   ftxui::Component container;
+  ftxui::Component root_renderer;
 
   bool focus_on_artists{true};
 

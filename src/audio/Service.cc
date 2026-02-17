@@ -1,5 +1,5 @@
 #include "audio/Service.hpp"
-#include "Logger.hpp"
+#include "audio/backend/alsa/Impl.hpp"
 #include <random>
 
 namespace audio
@@ -8,50 +8,61 @@ namespace audio
 Service::Service(threads::SafeMap<SongMap>& songMapTS) : m_songMapTS(songMapTS)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
-  m_engine = std::make_shared<AudioEngine>();
+  m_backend = std::make_shared<backend::AlsaBackend>();
 }
 
-Service::~Service()
+Service::~Service() { shutdown(); }
+
+auto Service::enumerateDevices() -> Devices
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  shutdownLocked();
+  return withBackend([](IAudioBackend& b) -> Devices { return b.enumerateDevices(); });
 }
 
-auto Service::enumeratePlaybackDevices() -> Devices
+void Service::initForDevice(const DeviceName& deviceName)
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
-  return m_engine->enumeratePlaybackDevices();
+  withBackend([&](IAudioBackend& b) -> void { b.initForDevice(deviceName); });
 }
 
-void Service::initDevice(const DeviceName& deviceName)
+void Service::switchDevice(const DeviceName& deviceName)
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
-  m_engine->initEngineForDevice(deviceName);
+  withBackend([&](IAudioBackend& b) -> void { b.switchDevice(deviceName); });
+}
+
+auto Service::getCurrentDevice() -> DeviceName
+{
+  return withBackend([](IAudioBackend& b) -> DeviceName { return b.currentDevice(); });
 }
 
 auto Service::isPlaying() -> bool
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
-  return m_engine->isPlaying();
+  return withBackend([](IAudioBackend& b) -> bool { return b.state() == PlaybackState::Playing; });
+}
+
+auto Service::isTrackFinished() -> bool
+{
+  return withBackend([](IAudioBackend& b) -> bool { return b.isTrackFinished(); });
+}
+
+void Service::clearTrackFinishedFlag()
+{
+  withBackend([](IAudioBackend& b) -> void { b.clearTrackFinished(); });
 }
 
 auto Service::getBackendInfo() -> BackendInfo
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
-  return m_engine->getBackendInfo();
+  return withBackend([](IAudioBackend& b) -> BackendInfo { return b.getBackendInfo(); });
+}
+
+auto Service::getPlaybackTime() -> std::optional<std::pair<double, double>>
+{
+  return withBackend([](IAudioBackend& b) -> auto { return b.playbackTime(); });
 }
 
 auto Service::registerTrack(std::shared_ptr<const Song> song) -> service::SoundHandle
 {
   std::lock_guard<std::mutex> lock(m_mutex);
-
-  service::SoundHandle h{m_nextTrackId++};
+  service::SoundHandle        h{m_nextTrackId++};
   m_trackTable.emplace(h.id, std::move(song));
-
   return h;
 }
 
@@ -59,47 +70,44 @@ void Service::addToPlaylist(service::SoundHandle h)
 {
   if (!h)
     return;
-
   std::lock_guard<std::mutex> lock(m_mutex);
   m_playlist.tracks.push_back(h);
 }
 
 void Service::removeFromPlaylist(size_t index)
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::shared_ptr<IAudioBackend> backend;
 
-  if (index >= m_playlist.tracks.size())
-    return;
-
-  const bool removingCurrent = (index == m_playlist.current);
-
-  m_playlist.removeAt(index);
-
-  if (removingCurrent)
   {
-    // Stop current playback
-    m_engine->stop();
+    std::lock_guard<std::mutex> lock(m_mutex);
 
-    // Load next valid track if any
-    if (!m_playlist.empty())
-    {
-      loadSound();
-      m_engine->play();
-    }
+    if (index >= m_playlist.tracks.size())
+      return;
+
+    const bool removingCurrent = (index == m_playlist.current);
+    m_playlist.removeAt(index);
+
+    if (!removingCurrent)
+      return;
+
+    backend = m_backend;
   }
+
+  backend->stop();
+
+  {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    if (!m_playlist.empty())
+      loadSoundUnlocked();
+  }
+
+  backend->play();
 }
 
 void Service::clearPlaylist()
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   m_playlist.clear();
-}
-
-auto Service::getPlaybackTime() -> std::optional<std::pair<double, double>>
-{
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
-  return m_engine->getPlaybackTime();
 }
 
 auto Service::getCurrentTrack() -> std::optional<service::SoundHandle>
@@ -122,186 +130,178 @@ auto Service::getPlaylistSize() -> size_t
 
 void Service::start()
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
-  loadSound();
-  m_engine->play();
+  std::shared_ptr<IAudioBackend> backend;
+
+  {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    ensureEngine();
+    loadSoundUnlocked();
+    backend = m_backend;
+  }
+
+  backend->play();
 }
 
 void Service::playCurrent()
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
-  m_engine->play();
+  withBackend([](IAudioBackend& b) -> void { b.play(); });
 }
 
 void Service::pauseCurrent()
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
-  m_engine->pause();
+  withBackend([](IAudioBackend& b) -> void { b.pause(); });
 }
 
-auto Service::isTrackFinished() -> bool
+void Service::restart()
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
+  std::shared_ptr<IAudioBackend> backend;
 
-  return m_engine->isTrackFinished();
+  {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    ensureEngine();
+    loadSoundUnlocked();
+    backend = m_backend;
+  }
+
+  backend->restart();
 }
 
-void Service::clearTrackFinishedFlag()
+void Service::restartCurrent()
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
-
-  m_engine->clearTrackFinishedFlag();
+  withBackend([](IAudioBackend& b) -> void { b.restart(); });
 }
 
 auto Service::nextTrack() -> std::optional<service::SoundHandle>
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
+  std::shared_ptr<IAudioBackend>      backend;
+  std::optional<service::SoundHandle> h;
 
-  auto h = m_playlist.next();
-  if (!h)
-    return std::nullopt;
+  {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    h = m_playlist.next();
+    if (!h)
+      return std::nullopt;
+    loadSoundUnlocked();
+    backend = m_backend;
+  }
 
-  loadSound();
-  m_engine->play();
+  backend->play();
   return h;
 }
 
 auto Service::nextTrackGapless() -> std::optional<service::SoundHandle>
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
+  std::optional<service::SoundHandle> h;
+  Path                                path;
 
-  auto h = m_playlist.next();
-  if (!h)
-    return std::nullopt;
+  {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    h = m_playlist.next();
+    if (!h)
+      return std::nullopt;
 
-  auto it = m_trackTable.find(h->id);
-  if (it == m_trackTable.end() || it->second == nullptr)
-    throw std::runtime_error("audio::Service: invalid track handle (nextTrackGapless)");
+    auto it = m_trackTable.find(h->id);
+    if (it == m_trackTable.end() || !it->second)
+      throw std::runtime_error("invalid track handle");
 
-  const auto& path = it->second->metadata.filePath;
+    path = it->second->metadata.filePath.c_str();
+  }
 
-  if (!m_engine->queueNextSound(path.c_str()))
-    throw std::runtime_error("audio::Service: failed to queue next sound (gapless)");
+  withBackend(
+    [&](IAudioBackend& b) -> void
+    {
+      if (!b.queueNext(path.c_str()))
+        throw std::runtime_error("failed to queue next sound");
+    });
 
   return h;
 }
 
 auto Service::previousTrack() -> std::optional<service::SoundHandle>
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
+  std::shared_ptr<IAudioBackend>      backend;
+  std::optional<service::SoundHandle> h;
 
-  auto h = m_playlist.previous();
-  if (!h)
-    return std::nullopt;
+  {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    h = m_playlist.previous();
+    if (!h)
+      return std::nullopt;
+    loadSoundUnlocked();
+    backend = m_backend;
+  }
 
-  loadSound();
-  m_engine->play();
+  backend->play();
   return h;
-}
-
-auto Service::previousTrackGapless() -> std::optional<service::SoundHandle>
-{
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
-
-  auto h = m_playlist.previous();
-  if (!h)
-    return std::nullopt;
-
-  auto it = m_trackTable.find(h->id);
-  if (it == m_trackTable.end() || it->second == nullptr)
-    throw std::runtime_error("audio::Service: invalid track handle (prevTrackGapless)");
-
-  const auto& path = it->second->metadata.filePath;
-
-  if (!m_engine->queueNextSound(path.c_str()))
-    throw std::runtime_error("audio::Service: failed to queue next sound (gapless)");
-
-  return h;
-}
-
-void Service::restart()
-{
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
-
-  loadSound();
-  m_engine->restart();
-}
-
-void Service::restartCurrent()
-{
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
-  m_engine->restart();
-}
-
-auto Service::randomIndex() -> std::optional<size_t>
-{
-  std::lock_guard<std::mutex> lock(m_mutex);
-  return m_playlist.randomIndex();
 }
 
 auto Service::randomTrack() -> std::optional<service::SoundHandle>
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
+  std::shared_ptr<IAudioBackend>      backend;
+  std::optional<service::SoundHandle> h;
+  Path                                path;
 
-  auto h = m_playlist.jumpToRandom();
-  if (!h)
-    return std::nullopt;
+  {
+    std::lock_guard<std::mutex> lock(m_mutex);
 
-  LOG_TRACE("audio::Service: random track selected id={}", h->id);
+    ensureEngine();
 
-  loadSound();
-  m_engine->play();
+    h = m_playlist.jumpToRandom();
+    if (!h)
+      return std::nullopt;
+
+    auto it = m_trackTable.find(h->id);
+    if (it == m_trackTable.end() || it->second == nullptr)
+      throw std::runtime_error("audio::Service: invalid track handle");
+
+    path    = it->second->metadata.filePath.c_str();
+    backend = m_backend;
+  }
+
+  backend->stop();
+
+  if (!backend->load(path.c_str()))
+    throw std::runtime_error("audio::Service: failed to load sound!");
+
+  backend->play();
   return h;
 }
 
 void Service::seekToAbsolute(double seconds)
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  m_engine->seekToAbsolute(seconds);
+  withBackend([&](IAudioBackend& b) -> void { b.seekAbsolute(seconds); });
 }
 
 void Service::seekForward(double seconds)
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  m_engine->seekForward(seconds);
+  withBackend([&](IAudioBackend& b) -> void { b.seekForward(seconds); });
 }
 
 void Service::seekBackward(double seconds)
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  m_engine->seekBackward(seconds);
+  withBackend([&](IAudioBackend& b) -> void { b.seekBackward(seconds); });
 }
 
 void Service::setVolume(float v)
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  m_engine->setVolume(v);
+  withBackend([&](IAudioBackend& b) -> void { b.setVolume(v); });
 }
 
 auto Service::getVolume() -> float
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  return m_engine->getVolume();
+  return withBackend([](IAudioBackend& b) -> float { return b.volume(); });
 }
 
 auto Service::getCurrentTrackInfo() -> std::optional<service::TrackInfo>
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
+  BackendInfo backend;
+  auto        timeOpt = withBackend(
+    [&](IAudioBackend& b) -> auto
+    {
+      backend = b.getBackendInfo();
+      return b.playbackTime();
+    });
 
-  auto timeOpt = m_engine->getPlaybackTime();
   if (!timeOpt)
     return std::nullopt;
 
@@ -310,15 +310,16 @@ auto Service::getCurrentTrackInfo() -> std::optional<service::TrackInfo>
   service::TrackInfo info;
   info.positionSec = pos;
   info.lengthSec   = len;
-  info.playing     = m_engine->isPlaying();
+  info.playing     = backend.common.isPlaying;
+  info.sampleRate  = backend.common.sampleRate;
+  info.channels    = backend.common.channels;
 
-  const auto& backend = m_engine->getBackendInfo();
-  info.sampleRate     = backend.sampleRate;
-  info.channels       = backend.channels;
-  info.format         = backend.pcmFormatName;
+  if (auto* alsa = std::get_if<backend::AlsaBackendInfo>(&backend.specific))
+    info.format = alsa->pcmFormatName;
+  else
+    info.format = "<unknown>";
 
   static std::atomic<ui8> tidCounter{static_cast<ui8>(std::random_device{}())};
-
   info.tid = tidCounter.fetch_add(1, std::memory_order_relaxed);
 
   return info;
@@ -327,13 +328,12 @@ auto Service::getCurrentTrackInfo() -> std::optional<service::TrackInfo>
 auto Service::getCurrentMetadata() -> std::optional<Metadata>
 {
   std::lock_guard<std::mutex> lock(m_mutex);
-
-  auto h = m_playlist.currentTrack();
+  auto                        h = m_playlist.currentTrack();
   if (!h)
     return std::nullopt;
 
   auto it = m_trackTable.find(h->id);
-  if (it == m_trackTable.end() || it->second == nullptr)
+  if (it == m_trackTable.end() || !it->second)
     return std::nullopt;
 
   return it->second->metadata;
@@ -359,60 +359,53 @@ auto Service::getMetadataAt(size_t index) -> std::optional<Metadata>
 
 void Service::shutdown()
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  shutdownLocked();
+  std::shared_ptr<IAudioBackend> backend;
+
+  {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    backend = std::move(m_backend);
+  }
+
+  if (backend)
+    backend->stop();
 }
 
 void Service::ensureEngine()
 {
-  if (!m_engine)
-    throw std::runtime_error("audio::Service: engine not initialized");
+  if (!m_backend)
+    throw std::runtime_error("audio::Service: backend not initialized");
 }
 
-void Service::loadSound()
+void Service::loadSoundUnlocked()
 {
   if (m_playlist.empty())
     return;
 
-  const auto h = m_playlist.currentTrack();
+  auto h = m_playlist.currentTrack();
   if (!h)
     return;
 
   auto it = m_trackTable.find(h->id);
-  if (it == m_trackTable.end() || it->second == nullptr)
-    throw std::runtime_error("audio::Service: invalid track handle");
+  if (it == m_trackTable.end() || !it->second)
+    throw std::runtime_error("invalid track handle");
 
   const auto& path = it->second->metadata.filePath;
 
-  m_engine->stop();
+  auto backend = m_backend; // safe: lock already held
+  backend->stop();
 
-  if (!m_engine->loadSound(path.c_str()))
-    throw std::runtime_error("audio::Service: failed to load sound!");
+  if (!backend->load(path.c_str()))
+    throw std::runtime_error("failed to load sound");
 }
 
-void Service::shutdownLocked()
+auto Service::copySequence() -> ui64
 {
-  if (!m_engine)
-    return;
-
-  m_engine->stop();
-  m_engine.reset();
+  return withBackend([](IAudioBackend& b) -> ui64 { return b.copySequence(); });
 }
 
-auto Service::getCopySeq() -> ui64
+auto Service::copyBufferSize() -> size_t
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
-
-  return m_engine->getCopySeq();
-}
-
-auto Service::getCopyBufferSize() -> size_t
-{
-  std::lock_guard<std::mutex> lock(m_mutex);
-  ensureEngine();
-
-  return m_engine->getCopyBufferSize();
+  return withBackend([](IAudioBackend& b) -> size_t { return b.copyBufferSize(); });
 }
 
 } // namespace audio

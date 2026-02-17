@@ -24,4 +24,14 @@ namespace utils::index
   return (i + 1 == n) ? 0 : (i + 1);
 }
 
+[[nodiscard]] inline constexpr auto prevWrapFast(size_t i, size_t n) noexcept -> size_t
+{
+  return (i == 0) ? (n - 1) : (i - 1);
+}
+
+[[nodiscard]] inline constexpr auto nextWrapFast(size_t i, size_t n) noexcept -> size_t
+{
+  return (i + 1 == n) ? 0 : (i + 1);
+}
+
 } // namespace utils::index

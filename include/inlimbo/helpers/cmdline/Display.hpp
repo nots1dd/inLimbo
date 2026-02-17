@@ -1,6 +1,8 @@
 #pragma once
 
 #include "InLimbo-Types.hpp"
+#include "audio/Registry.hpp"
+#include "audio/backend/Devices.hpp"
 #include "telemetry/Context.hpp"
 #include "thread/Map.hpp"
 #include <optional>
@@ -9,6 +11,10 @@ namespace helpers::cmdline
 {
 
 void printFrontendPlugins();
+
+void printAudioBackends(const audio::BackendList& backends);
+
+void printAudioDevices(audio::Devices& devices);
 
 void printArtists(const threads::SafeMap<SongMap>& safeMap);
 

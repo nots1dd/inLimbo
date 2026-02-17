@@ -62,8 +62,6 @@ QueueScreen::QueueScreen(state::queue::QueueState& state) : m_state(state)
 
       Elements rows;
 
-      /* ---------- TRACK METADATA ---------- */
-
       rows.push_back(text("Track") | bold | color(Color::Cyan));
       rows.push_back(text("Title     : " + m.title));
       rows.push_back(text("Artist    : " + m.artist));
@@ -89,41 +87,48 @@ QueueScreen::QueueScreen(state::queue::QueueState& state) : m_state(state)
 
       rows.push_back(separator());
 
-      rows.push_back(text("Playback") | bold | color(Color::Cyan));
-
-      if (infoOpt)
-      {
-        const auto& info = *infoOpt;
-
-        rows.push_back(text("Position : " + utils::timer::fmtTime(info.positionSec) + " / " +
-                            utils::timer::fmtTime(info.lengthSec)));
-
-        rows.push_back(text("Playing  : " + yesno(info.playing)));
-        rows.push_back(text("Rate     : " + std::to_string(info.sampleRate) + " Hz"));
-        rows.push_back(text("Channels : " + std::to_string(info.channels)));
-        rows.push_back(text("Format   : " + info.format));
-      }
-      else
-      {
-        rows.push_back(text("No active playback") | dim);
-      }
+      rows.push_back(text("Backend (Common)") | bold | color(Color::Cyan));
+      rows.push_back(text(std::string("Device   : ") + backend.common.dev.name.c_str()));
+      rows.push_back(text("Latency  : " + std::to_string((int)backend.common.latencyMs) + " ms"));
+      rows.push_back(text("XRuns    : " + std::to_string(backend.common.xruns)));
+      rows.push_back(text("Writes   : " + std::to_string(backend.common.writes)));
+      rows.push_back(text("Active   : " + yesno(backend.common.isActive)));
 
       rows.push_back(separator());
 
-      rows.push_back(text("Backend") | bold | color(Color::Cyan));
-      rows.push_back(text(backend.dev.name.c_str()));
-      rows.push_back(text("Latency  : " + std::to_string((int)backend.latencyMs) + " ms"));
-      rows.push_back(text("XRuns    : " + std::to_string(backend.xruns)));
-      rows.push_back(text("Writes   : " + std::to_string(backend.writes)));
-      rows.push_back(text("Active   : " + yesno(backend.isActive)));
+      rows.push_back(text("Backend Details") | bold | color(Color::Cyan));
+
+      std::visit(
+        [&](const auto& info)
+        {
+          using T = std::decay_t<decltype(info)>;
+
+          if constexpr (std::is_same_v<T, audio::backend::AlsaBackendInfo>)
+          {
+            rows.push_back(text("Type     : ALSA"));
+            rows.push_back(text(std::string("Format   : ") +
+                                info.pcmFormatName.c_str()));
+            rows.push_back(text("Period   : " +
+                                std::to_string(info.periodSize) + " frames"));
+            rows.push_back(text("Buffer   : " +
+                                std::to_string(info.bufferSize) + " frames"));
+            rows.push_back(text(std::string("Draining : ") +
+                                yesno(info.isDraining)));
+          }
+          else
+          {
+            rows.push_back(text("Type     : <unknown>") | dim);
+          }
+        },
+        backend.specific);
 
       rows.push_back(separator());
       rows.push_back(text("Decoder") | bold | color(Color::Cyan));
 
-      if (!backend.codecLongName.empty())
-        rows.push_back(text(std::string("Name     : ") + backend.codecLongName.c_str()));
-      else if (!backend.codecName.empty())
-        rows.push_back(text(std::string("Name     : ") + backend.codecName.c_str()));
+      if (!backend.common.codecLongName.empty())
+        rows.push_back(text(std::string("Name     : ") + backend.common.codecLongName.c_str()));
+      else if (!backend.common.codecName.empty())
+        rows.push_back(text(std::string("Name     : ") + backend.common.codecName.c_str()));
       else
         rows.push_back(text("Name     : <unknown>") | dim);
 

@@ -2,6 +2,7 @@
 
 #include "InLimbo-Types.hpp"
 #include "thread/Map.hpp"
+#include <ftxui/dom/elements.hpp>
 #include <memory>
 #include <string>
 #include <vector>
@@ -16,12 +17,19 @@ public:
 
   void rebuild();
   void rebuildForSelectedArtist(int selected_artist);
+  void decorateAlbumViewSelection(int                            selectedIndex,
+                                  const std::optional<Metadata>& playingMetadata);
 
   void moveSelection(int delta);
 
   auto toggleFocus() -> void { focus_on_artists = !focus_on_artists; }
 
-  [[nodiscard]] auto focusOnArtists() const -> bool { return focus_on_artists; }
+  [[nodiscard]] auto focusOnArtists() const noexcept -> bool { return focus_on_artists; }
+
+  [[nodiscard]] auto returnAlbumElements() const noexcept -> std::vector<ftxui::Element>
+  {
+    return album_elements;
+  }
 
   std::vector<Artist>                artists;
   std::vector<std::string>           album_view_lines;
@@ -32,8 +40,10 @@ public:
   int current_artist_cache{0};
 
 private:
-  threads::SafeMap<SongMap>* m_songMapTS;
-  bool                       focus_on_artists = true;
+  threads::SafeMap<SongMap>*  m_songMapTS;
+  bool                        focus_on_artists = true;
+  std::vector<ftxui::Element> album_elements;
+  std::vector<ftxui::Element> album_elements_base;
 
   void buildAlbumViewForArtist(const Artist& artist);
 };

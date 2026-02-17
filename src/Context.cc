@@ -142,6 +142,14 @@ auto resolvePrintAction(const Args& a) -> PrintAction
   if (a.name)                          \
     return PrintAction::Frontends;
 
+#define CHECK_PRINT_AudioBackends(a, name) \
+  if (a.name)                              \
+    return PrintAction::AudioBackends;
+
+#define CHECK_PRINT_AudioDevs(a, name) \
+  if (a.name)                          \
+    return PrintAction::AudioDevs;
+
 #define CHECK_PRINT_Artists(a, name) \
   if (a.name)                        \
     return PrintAction::Artists;
@@ -256,6 +264,20 @@ auto maybeHandlePrintActions(AppContext& ctx) -> bool
     case PrintAction::Frontends:
       helpers::cmdline::printFrontendPlugins();
       break;
+
+    case PrintAction::AudioBackends:
+    {
+      helpers::cmdline::printAudioBackends(audio::enumerateBackends());
+      break;
+    }
+
+    case PrintAction::AudioDevs:
+    {
+      audio::Service tempService(g_songMap);
+      auto           devs = tempService.enumerateDevices();
+      helpers::cmdline::printAudioDevices(devs);
+      break;
+    }
 
     case PrintAction::Artists:
       helpers::cmdline::printArtists(g_songMap);
@@ -601,7 +623,7 @@ void runFrontend(AppContext& ctx)
     // ---------------------------------------------------------
     // Initialize backend
     // ---------------------------------------------------------
-    audio.initDevice(); // default device
+    audio.initForDevice(); // default device
     audio.setVolume(ctx.m_volume);
 
     // ---------------------------------------------------------

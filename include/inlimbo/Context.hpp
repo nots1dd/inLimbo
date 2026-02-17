@@ -11,7 +11,7 @@
 #define APP_AUTHOR    "nots1dd (Siddharth Karanam)"
 #define APP_COPYRIGHT "Copyright (c) 2024-2026 nots1dd. All rights reserved."
 
-#define APP_DESC "inLimbo: Advanced Song Management and Playback Tool\n" APP_COPYRIGHT
+#define APP_DESC "inLimbo: Advanced Audio Library Management and Playback Tool\n" APP_COPYRIGHT
 
 extern threads::SafeMap<SongMap> g_songMap;
 
@@ -22,6 +22,8 @@ enum class PrintAction
 {
   None,
   Frontends,
+  AudioBackends,
+  AudioDevs,
   Artists,
   Albums,
   SongTree,

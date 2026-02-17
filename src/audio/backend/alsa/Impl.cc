@@ -1,21 +1,26 @@
-#include "audio/Engine.hpp"
+#include "audio/backend/alsa/Impl.hpp"
 #include "Logger.hpp"
 #include "StackTrace.hpp"
 #include "audio/Constants.hpp"
 #include "utils/string/SmallString.hpp"
 #include <mutex>
 
-namespace audio
+namespace audio::backend
 {
 
-auto AudioEngine::enumeratePlaybackDevices() -> Devices
+static auto alsaInfo(BackendInfo& info) -> AlsaBackendInfo&
 {
-  RECORD_FUNC_TO_BACKTRACE("AudioEngine::enumeratePlaybackDevices");
+  return std::get<AlsaBackendInfo>(info.specific);
+}
+
+auto AlsaBackend::enumerateDevices() -> Devices
+{
+  RECORD_FUNC_TO_BACKTRACE("AlsaBackend::enumeratePlaybackDevices");
 
   Devices devices;
   devices.reserve(16);
 
-  devices.push_back({"default", "Default Audio Device", -1, -1, true});
+  devices.push_back({"default", "System Default Audio Device", -1, -1, true});
 
   int cardIdx = -1;
   while (snd_card_next(&cardIdx) == 0 && cardIdx >= 0)
@@ -102,9 +107,49 @@ auto AudioEngine::enumeratePlaybackDevices() -> Devices
   return devices;
 }
 
-void AudioEngine::initEngineForDevice(const DeviceName& deviceName)
+void AlsaBackend::switchDevice(const DeviceName& deviceName)
 {
-  RECORD_FUNC_TO_BACKTRACE("AudioEngine::initEngineForDevice");
+  RECORD_FUNC_TO_BACKTRACE("AlsaBackend::switchDeviceOutput");
+
+  {
+    std::lock_guard<std::mutex> lock(m_mutex);
+
+    if (deviceName == m_currentDevice)
+      return;
+
+    m_pendingDevice = deviceName;
+    m_switchPending.store(true, std::memory_order_release);
+  }
+}
+
+void AlsaBackend::switchAlsaDevice()
+{
+  RECORD_FUNC_TO_BACKTRACE("AlsaBackend::switchAlsaDevice");
+
+  // Stop ALSA writes temporarily
+  if (m_pcmData)
+  {
+    snd_pcm_drop(m_pcmData);
+    snd_pcm_close(m_pcmData);
+    m_pcmData = nullptr;
+  }
+
+  // Switch device
+  m_currentDevice               = m_pendingDevice;
+  m_backendInfo.common.dev.name = m_currentDevice;
+
+  // Reinitialize ALSA
+  initAlsa(m_currentDevice);
+
+  // Prepare PCM for playback
+  snd_pcm_prepare(m_pcmData);
+
+  m_backendInfo.common.isActive = true;
+}
+
+void AlsaBackend::initForDevice(const DeviceName& deviceName)
+{
+  RECORD_FUNC_TO_BACKTRACE("AlsaBackend::initEngineForDevice");
 
   std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -113,18 +158,18 @@ void AudioEngine::initEngineForDevice(const DeviceName& deviceName)
     shutdownAlsa();
   }
 
-  m_currentDevice         = deviceName;
-  m_backendInfo.dev.name  = deviceName;
-  m_backendInfo.isActive  = false;
-  m_backendInfo.isPlaying = false;
-  m_backendInfo.isPaused  = false;
-  m_backendInfo.xruns     = 0;
-  m_backendInfo.writes    = 0;
+  m_currentDevice                = deviceName;
+  m_backendInfo.common.dev.name  = deviceName;
+  m_backendInfo.common.isActive  = false;
+  m_backendInfo.common.isPlaying = false;
+  m_backendInfo.common.isPaused  = false;
+  m_backendInfo.common.xruns     = 0;
+  m_backendInfo.common.writes    = 0;
 
   initAlsa(deviceName);
 }
 
-auto AudioEngine::prepareSound(const Path& path) -> std::shared_ptr<Sound>
+auto AlsaBackend::prepareSound(const Path& path) -> std::shared_ptr<Sound>
 {
   auto s = std::make_shared<Sound>();
 
@@ -146,8 +191,9 @@ auto AudioEngine::prepareSound(const Path& path) -> std::shared_ptr<Sound>
   if (!codec)
     return nullptr;
 
-  m_backendInfo.codecName     = codec->name ? codec->name : "<unknown-codec-name>";
-  m_backendInfo.codecLongName = codec->long_name ? codec->long_name : "<unknown-codec-longName>";
+  m_backendInfo.common.codecName = codec->name ? codec->name : "<unknown-codec-name>";
+  m_backendInfo.common.codecLongName =
+    codec->long_name ? codec->long_name : "<unknown-codec-longName>";
 
   AVCodecContext* rawDec = avcodec_alloc_context3(codec);
   if (!rawDec)
@@ -169,8 +215,8 @@ auto AudioEngine::prepareSound(const Path& path) -> std::shared_ptr<Sound>
   av_channel_layout_copy(&s->source.channelLayout, &s->dec->ch_layout);
 
   // TARGET format (engine output)
-  s->target.sampleRate    = m_backendInfo.sampleRate;
-  s->target.channels      = m_backendInfo.channels;
+  s->target.sampleRate    = m_backendInfo.common.sampleRate;
+  s->target.channels      = m_backendInfo.common.channels;
   s->target.sampleFmt     = AV_SAMPLE_FMT_FLT;
   s->target.sampleFmtName = "float";
 
@@ -206,9 +252,9 @@ auto AudioEngine::prepareSound(const Path& path) -> std::shared_ptr<Sound>
   return s;
 }
 
-auto AudioEngine::loadSound(const Path& path) -> bool
+auto AlsaBackend::load(const Path& path) -> bool
 {
-  RECORD_FUNC_TO_BACKTRACE("AudioEngine::loadSound");
+  RECORD_FUNC_TO_BACKTRACE("AlsaBackend::loadSound");
 
   std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -220,13 +266,13 @@ auto AudioEngine::loadSound(const Path& path) -> bool
   return true;
 }
 
-auto AudioEngine::getSoundPtr() const -> std::shared_ptr<const Sound>
+auto AlsaBackend::getSoundPtr() const -> std::shared_ptr<const Sound>
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   return m_sound;
 }
 
-auto AudioEngine::getSoundPtrMut() const -> std::shared_ptr<Sound>
+auto AlsaBackend::getSoundPtrMut() const -> std::shared_ptr<Sound>
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   return m_sound;
@@ -234,9 +280,9 @@ auto AudioEngine::getSoundPtrMut() const -> std::shared_ptr<Sound>
 
 // logic is identical to loadSound; just that nextSound is loaded into memory
 // for gapless playback
-auto AudioEngine::queueNextSound(const Path& path) -> bool
+auto AlsaBackend::queueNext(const Path& path) -> bool
 {
-  RECORD_FUNC_TO_BACKTRACE("AudioEngine::queueNextSound");
+  RECORD_FUNC_TO_BACKTRACE("AlsaBackend::queueNextSound");
 
   std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -248,7 +294,7 @@ auto AudioEngine::queueNextSound(const Path& path) -> bool
   return true;
 }
 
-auto AudioEngine::returnNextSoundIfQueued() -> std::shared_ptr<Sound>
+auto AlsaBackend::returnNextSoundIfQueued() -> std::shared_ptr<Sound>
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -258,7 +304,7 @@ auto AudioEngine::returnNextSoundIfQueued() -> std::shared_ptr<Sound>
   return m_sound;
 }
 
-void AudioEngine::play()
+void AlsaBackend::play()
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -268,24 +314,24 @@ void AudioEngine::play()
   if (m_playbackState == PlaybackState::Paused && m_pcmData)
     snd_pcm_prepare(m_pcmData);
 
-  m_playbackState         = PlaybackState::Playing;
-  m_backendInfo.isPlaying = true;
-  m_backendInfo.isPaused  = false;
-  m_backendInfo.isActive  = true;
+  m_playbackState                = PlaybackState::Playing;
+  m_backendInfo.common.isPlaying = true;
+  m_backendInfo.common.isPaused  = false;
+  m_backendInfo.common.isActive  = true;
 
   startThread();
 }
 
-void AudioEngine::pause()
+void AlsaBackend::pause()
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
   if (m_playbackState != PlaybackState::Playing)
     return;
 
-  m_playbackState         = PlaybackState::Paused;
-  m_backendInfo.isPaused  = true;
-  m_backendInfo.isPlaying = false;
+  m_playbackState                = PlaybackState::Paused;
+  m_backendInfo.common.isPaused  = true;
+  m_backendInfo.common.isPlaying = false;
 
   if (m_pcmData)
   {
@@ -294,17 +340,17 @@ void AudioEngine::pause()
   }
 }
 
-void AudioEngine::stop()
+void AlsaBackend::stop()
 {
-  RECORD_FUNC_TO_BACKTRACE("AudioEngine::stop");
+  RECORD_FUNC_TO_BACKTRACE("AlsaBackend::stop");
 
   std::unique_lock<std::mutex> lock(m_mutex);
 
-  m_playbackState         = PlaybackState::Stopped;
-  m_backendInfo.isActive  = false;
-  m_backendInfo.isPlaying = false;
-  m_backendInfo.isPaused  = false;
-  m_isRunning             = false;
+  m_playbackState                = PlaybackState::Stopped;
+  m_backendInfo.common.isActive  = false;
+  m_backendInfo.common.isPlaying = false;
+  m_backendInfo.common.isPaused  = false;
+  m_isRunning                    = false;
   lock.unlock();
 
   if (m_audioThread.joinable())
@@ -318,7 +364,7 @@ void AudioEngine::stop()
   }
 }
 
-auto AudioEngine::getPlaybackTime() const -> std::optional<std::pair<double, double>>
+auto AlsaBackend::playbackTime() const -> std::optional<std::pair<double, double>>
 {
   auto sound = getSoundPtr();
   if (!sound)
@@ -331,9 +377,9 @@ auto AudioEngine::getPlaybackTime() const -> std::optional<std::pair<double, dou
 
 // seek
 
-void AudioEngine::seekToAbsolute(double seconds)
+void AlsaBackend::seekAbsolute(double seconds)
 {
-  RECORD_FUNC_TO_BACKTRACE("AudioEngine::seekAbsolute");
+  RECORD_FUNC_TO_BACKTRACE("AlsaBackend::seekAbsolute");
 
   auto sound = getSoundPtrMut();
   if (!sound)
@@ -359,30 +405,32 @@ void AudioEngine::seekToAbsolute(double seconds)
   s.seekPending.store(true, std::memory_order_release);
 }
 
-void AudioEngine::seekForward(double sec)
+void AlsaBackend::seekForward(double sec)
 {
-  auto time = getPlaybackTime();
+  auto time = playbackTime();
   if (!time)
     return;
 
   auto [p, l] = *time;
-  seekToAbsolute(std::min(p + sec, l));
+  seekAbsolute(std::min(p + sec, l));
 }
 
-void AudioEngine::seekBackward(double sec)
+void AlsaBackend::seekBackward(double sec)
 {
-  auto time = getPlaybackTime();
+  auto time = playbackTime();
   if (!time)
     return;
 
   auto [p, _] = *time;
-  seekToAbsolute(std::max(0.0, p - sec));
+  seekAbsolute(std::max(0.0, p - sec));
 }
 
 // private methods
 
-void AudioEngine::initAlsa(const DeviceName& deviceName)
+void AlsaBackend::initAlsa(const DeviceName& deviceName)
 {
+  m_backendInfo.specific.emplace<AlsaBackendInfo>();
+
   int err;
   if ((err = snd_pcm_open(&m_pcmData, deviceName.c_str(), SND_PCM_STREAM_PLAYBACK, 0)) < 0)
     throw std::runtime_error(snd_strerror(err));
@@ -392,17 +440,18 @@ void AudioEngine::initAlsa(const DeviceName& deviceName)
 
   for (auto f : formats)
   {
-    err = snd_pcm_set_params(m_pcmData, f, SND_PCM_ACCESS_RW_INTERLEAVED, m_backendInfo.channels,
-                             m_backendInfo.sampleRate, 1, 50000);
+    err =
+      snd_pcm_set_params(m_pcmData, f, SND_PCM_ACCESS_RW_INTERLEAVED, m_backendInfo.common.channels,
+                         m_backendInfo.common.sampleRate, 1, 50000);
     if (err >= 0)
     {
-      m_backendInfo.pcmFormat     = f;
-      m_backendInfo.pcmFormatName = snd_pcm_format_name(f);
+      alsaInfo(m_backendInfo).pcmFormat     = f;
+      alsaInfo(m_backendInfo).pcmFormatName = snd_pcm_format_name(f);
       break;
     }
   }
 
-  const size_t maxSamples = constants::FramesPerBuffer * m_backendInfo.channels;
+  const size_t maxSamples = constants::FramesPerBuffer * m_backendInfo.common.channels;
   m_playbackBuffer.resize(maxSamples);
 
   // worst-case scratch size (S32 is largest)
@@ -412,15 +461,16 @@ void AudioEngine::initAlsa(const DeviceName& deviceName)
   snd_pcm_hw_params_alloca(&hw);
   snd_pcm_hw_params_current(m_pcmData, hw);
 
-  snd_pcm_hw_params_get_channels(hw, &m_backendInfo.channels);
-  snd_pcm_hw_params_get_rate(hw, &m_backendInfo.sampleRate, nullptr);
-  snd_pcm_hw_params_get_period_size(hw, &m_backendInfo.periodSize, nullptr);
-  snd_pcm_hw_params_get_buffer_size(hw, &m_backendInfo.bufferSize);
+  snd_pcm_hw_params_get_channels(hw, &m_backendInfo.common.channels);
+  snd_pcm_hw_params_get_rate(hw, &m_backendInfo.common.sampleRate, nullptr);
+  snd_pcm_hw_params_get_period_size(hw, &alsaInfo(m_backendInfo).periodSize, nullptr);
+  snd_pcm_hw_params_get_buffer_size(hw, &alsaInfo(m_backendInfo).bufferSize);
 
-  m_backendInfo.latencyMs = double(m_backendInfo.bufferSize) / m_backendInfo.sampleRate * 1000.0;
+  m_backendInfo.common.latencyMs =
+    double(alsaInfo(m_backendInfo).bufferSize) / m_backendInfo.common.sampleRate * 1000.0;
 }
 
-void AudioEngine::shutdownAlsa()
+void AlsaBackend::shutdownAlsa()
 {
   if (m_pcmData)
   {
@@ -430,8 +480,14 @@ void AudioEngine::shutdownAlsa()
   }
 }
 
-void AudioEngine::decodeAndPlay()
+void AlsaBackend::decodeAndPlay()
 {
+  // first check for current device to then play to sink
+  if (m_switchPending.exchange(false, std::memory_order_acquire))
+  {
+    switchAlsaDevice();
+  }
+
   std::shared_ptr<Sound> sound;
   {
     std::lock_guard<std::mutex> lock(m_mutex);
@@ -462,7 +518,7 @@ void AudioEngine::decodeAndPlay()
   {
     // emit track finished
     m_trackFinished.exchange(true, std::memory_order_release);
-    LOG_TRACE("AudioEngine: track finished");
+    LOG_TRACE("AlsaBackend: track finished");
 
     std::shared_ptr<Sound> next;
 
@@ -530,18 +586,24 @@ void AudioEngine::decodeAndPlay()
 
   float vol = m_volume.load();
 
-  if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_FLOAT_LE)
+  const auto pcmFormat = alsaInfo(m_backendInfo).pcmFormat;
+
+  if (pcmFormat == SND_PCM_FORMAT_FLOAT_LE)
   {
     for (size_t i = 0; i < samplesRead; ++i)
       m_playbackBuffer[i] *= vol;
 
     int r = snd_pcm_writei(m_pcmData, m_playbackBuffer.data(), framesRead);
+    m_backendInfo.common.writes++;
     if (r == -EPIPE)
+    {
+      m_backendInfo.common.xruns++;
       snd_pcm_prepare(m_pcmData);
+    }
     else if (r < 0)
       snd_pcm_recover(m_pcmData, r, 0);
   }
-  else if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_S16_LE)
+  else if (pcmFormat == SND_PCM_FORMAT_S16_LE)
   {
     const size_t bytes = samplesRead * sizeof(i16);
     if (m_scratchBuffer.size() < bytes)
@@ -556,13 +618,17 @@ void AudioEngine::decodeAndPlay()
       out[i] = static_cast<i16>(sample * constants::S16MaxFloat);
     }
 
-    int r = snd_pcm_writei(m_pcmData, out, framesRead);
+    int r = snd_pcm_writei(m_pcmData, m_playbackBuffer.data(), framesRead);
+    m_backendInfo.common.writes++;
     if (r == -EPIPE)
+    {
+      m_backendInfo.common.xruns++;
       snd_pcm_prepare(m_pcmData);
+    }
     else if (r < 0)
       snd_pcm_recover(m_pcmData, r, 0);
   }
-  else if (m_backendInfo.pcmFormat == SND_PCM_FORMAT_S32_LE)
+  else if (pcmFormat == SND_PCM_FORMAT_S32_LE)
   {
     const size_t bytes = samplesRead * sizeof(i32);
     if (m_scratchBuffer.size() < bytes)
@@ -577,9 +643,13 @@ void AudioEngine::decodeAndPlay()
       out[i] = static_cast<i32>(sample * constants::S32MaxFloat);
     }
 
-    int r = snd_pcm_writei(m_pcmData, out, framesRead);
+    int r = snd_pcm_writei(m_pcmData, m_playbackBuffer.data(), framesRead);
+    m_backendInfo.common.writes++;
     if (r == -EPIPE)
+    {
+      m_backendInfo.common.xruns++;
       snd_pcm_prepare(m_pcmData);
+    }
     else if (r < 0)
       snd_pcm_recover(m_pcmData, r, 0);
   }
@@ -587,7 +657,7 @@ void AudioEngine::decodeAndPlay()
   s.cursorFrames.fetch_add((i64)framesRead, std::memory_order_relaxed);
 }
 
-void AudioEngine::decodeStep(Sound& s)
+void AlsaBackend::decodeStep(Sound& s)
 {
   if (!s.frame)
   {
@@ -675,15 +745,15 @@ void AudioEngine::decodeStep(Sound& s)
   }
 }
 
-auto AudioEngine::getCopySeq() const noexcept -> ui64
+auto AlsaBackend::copySequence() const noexcept -> ui64
 {
   return m_copySeq.load(std::memory_order_acquire);
 }
 
-auto AudioEngine::getCopyBufferSize() const noexcept -> size_t
+auto AlsaBackend::copyBufferSize() const noexcept -> size_t
 {
   std::lock_guard<std::mutex> copyLock(m_copyMutex);
   return m_copyBuffer.size();
 }
 
-} // namespace audio
+} // namespace audio::backend

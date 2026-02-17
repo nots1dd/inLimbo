@@ -28,6 +28,38 @@ void printFrontendPlugins()
 }
 
 // ------------------------------------------------------------
+// Print all audio devices found by registry (comptime)
+// ------------------------------------------------------------
+void printAudioBackends(const audio::BackendList& backends)
+{
+  std::cout << "\nAvailable Audio Backends:\n";
+  std::cout << "────────────────────────────\n";
+
+  for (const auto& b : backends)
+  {
+    std::cout << ">> " << b.name << ":\n";
+    std::cout << "  - Description : " << b.description << "\n";
+    std::cout << "  - Available   : " << (b.available ? "Yes" : "No") << "\n";
+  }
+}
+
+// ------------------------------------------------------------
+// Print all audio devices found by currently used audio backend
+// ------------------------------------------------------------
+void printAudioDevices(audio::Devices& devices)
+{
+  std::cout << "\nAvailable Audio Devices:\n";
+  std::cout << "────────────────────────────\n";
+  for (const auto& i : devices)
+  {
+    std::cout << ">> " << i.name.c_str() << ":\n";
+    std::cout << "  - Description : " << i.description.c_str() << "\n";
+    std::cout << "  - DeviceIndex : " << i.deviceIndex << "\n";
+    std::cout << "  - IsDefault   : " << (i.isDefault ? "Yes" : "No") << "\n";
+  }
+}
+
+// ------------------------------------------------------------
 // Print all artists
 // ------------------------------------------------------------
 void printArtists(const threads::SafeMap<SongMap>& safeMap)

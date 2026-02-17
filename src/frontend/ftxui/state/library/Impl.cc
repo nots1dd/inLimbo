@@ -1,6 +1,9 @@
 #include "frontend/ftxui/state/library/Impl.hpp"
 #include "query/SongMap.hpp"
 #include "utils/Index.hpp"
+#include "utils/timer/Timer.hpp"
+
+using namespace ftxui;
 
 namespace frontend::tui::state::library
 {
@@ -38,6 +41,7 @@ void LibraryState::buildAlbumViewForArtist(const Artist& artist)
 {
   album_view_lines.clear();
   view_song_objects.clear();
+  album_elements_base.clear();
 
   Album current_album;
   Disc  current_disc = -1;
@@ -45,7 +49,7 @@ void LibraryState::buildAlbumViewForArtist(const Artist& artist)
   query::songmap::read::forEachSong(
     *m_songMapTS,
     [&](const Artist& a, const Album& album, const Disc disc, const Track track, const ino_t,
-        const std::shared_ptr<Song>& song) -> void
+        const std::shared_ptr<Song>& song)
     {
       if (a != artist)
         return;
@@ -54,23 +58,37 @@ void LibraryState::buildAlbumViewForArtist(const Artist& artist)
       {
         current_album = album;
         current_disc  = -1;
-        album_view_lines.push_back(album);
+
+        album_elements_base.push_back(hbox({text("  "), text(album)}) |
+                                      bgcolor(Color::RGB(25, 25, 25)) | color(Color::Cyan) | bold |
+                                      frame);
+
         view_song_objects.push_back(nullptr);
       }
 
       if (disc != current_disc)
       {
         current_disc = disc;
-        album_view_lines.push_back("Disc " + std::to_string(disc));
+
+        album_elements_base.push_back(hbox({text("  "), text("Disc " + std::to_string(disc))}) |
+                                      bgcolor(Color::RGB(35, 35, 35)) | color(Color::YellowLight) |
+                                      bold | frame);
+
         view_song_objects.push_back(nullptr);
       }
 
       std::string line =
         (track < 10 ? "0" : "") + std::to_string(track) + "  " + song->metadata.title;
 
-      album_view_lines.push_back(line);
+      std::string dur = utils::timer::fmtTime(song->metadata.duration);
+
+      album_elements_base.push_back(hbox({text("  "), text(line), filler(), text(dur) | dim}) |
+                                    frame);
+
       view_song_objects.push_back(song);
     });
+
+  album_elements = album_elements_base;
 }
 
 void LibraryState::moveSelection(int delta)
@@ -132,6 +150,24 @@ void LibraryState::moveSelection(int delta)
 
   if (view_song_objects[new_index])
     selected_album_index = static_cast<int>(new_index);
+}
+
+void LibraryState::decorateAlbumViewSelection(int                            selectedIndex,
+                                              const std::optional<Metadata>& playingMetadata)
+{
+  album_elements = album_elements_base;
+
+  for (int i = 0; i < (int)album_elements.size(); ++i)
+  {
+    if (i == selectedIndex)
+      album_elements[i] = album_elements[i] | bgcolor(Color::RGB(40, 60, 90)) | bold;
+
+    if (playingMetadata && view_song_objects[i] &&
+        view_song_objects[i]->metadata.title == playingMetadata->title)
+    {
+      album_elements[i] = album_elements[i] | color(Color::Cyan);
+    }
+  }
 }
 
 } // namespace frontend::tui::state::library

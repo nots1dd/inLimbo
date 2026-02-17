@@ -203,7 +203,8 @@ include(${CMAKE_SOURCE_DIR}/cmake/Version.cmake)
 # -----------------------------------------------------------
 set(INLIMBO_CORE_SOURCES
     src/core/SongTree.cc
-    src/audio/Engine.cc
+    src/audio/backend/alsa/Impl.cc
+    src/audio/Registry.cc
     src/audio/Service.cc
     src/audio/Playlist.cc
     src/taglib/Parser.cc

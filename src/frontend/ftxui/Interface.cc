@@ -231,7 +231,7 @@ auto Interface::renderStatusBarFull() -> Element
   }
 
   Element health =
-    backend.xruns > 0 ? text("⚠") | color(Color::RedLight) : text("✓") | color(Color::GreenLight);
+    backend.common.xruns > 0 ? text("⚠") | color(Color::RedLight) : text("✓") | color(Color::GreenLight);
 
   return hbox({
            text(" "),

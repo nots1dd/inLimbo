@@ -1,7 +1,6 @@
 #include "frontend/ftxui/ui/screens/Main.hpp"
 #include "frontend/ftxui/components/scroll/Scrollable.hpp"
 #include "frontend/ftxui/state/library/Impl.hpp"
-#include "utils/timer/Timer.hpp"
 
 using namespace ftxui;
 
@@ -10,58 +9,11 @@ namespace frontend::tui::ui::screens
 
 MainScreen::MainScreen(state::library::LibraryState& state) : m_state(state)
 {
-  artist_menu = Menu(&m_state.artists, &m_state.selected_artist);
+  artist_menu = Menu(&m_state.artists, &m_state.selected_artist) | vscroll_indicator;
 
-  album_content = Renderer(
-    [&]() mutable -> Element
-    {
-      Elements rows;
-
-      for (size_t i = 0; i < m_state.album_view_lines.size(); ++i)
-      {
-        const auto& line    = m_state.album_view_lines[i];
-        auto        songObj = m_state.view_song_objects[i];
-
-        bool    selected = (int)i == m_state.selected_album_index;
-        Element selector = selected ? text("➤ ") | color(Color::Yellow) : text("  ");
-
-        if (songObj)
-        {
-          std::string dur = utils::timer::fmtTime(songObj->metadata.duration);
-
-          auto row = hbox({text("  "), text(line), filler(), text(dur) | dim});
-
-          if (selected)
-          {
-            row = row | bgcolor(Color::RGB(40, 60, 90)) | color(Color::White) | bold;
-          }
-
-          if (m_audioPtr->isPlaying())
-          {
-            auto meta = m_audioPtr->getCurrentMetadata();
-            if (meta && meta->title == songObj->metadata.title)
-              row = row | color(Color::Cyan);
-          }
-
-          rows.push_back(row | frame);
-        }
-        else
-        {
-          bool is_disc = line.starts_with("Disc ");
-
-          Element header = hbox({selector, text(" " + line)});
-
-          if (is_disc)
-            header = header | bgcolor(Color::RGB(35, 35, 35)) | color(Color::YellowLight) | bold;
-          else
-            header = header | bgcolor(Color::RGB(25, 25, 25)) | color(Color::Cyan) | bold;
-
-          rows.push_back(header | frame);
-        }
-      }
-
-      return vbox(rows);
-    });
+  album_content =
+    Renderer([&]() mutable -> Element
+             { return vbox(m_state.returnAlbumElements()) | vscroll_indicator | frame | flex; });
 
   album_scroller =
     Scroller(album_content, &m_state.selected_album_index, Color::Green, Color::GrayDark);
@@ -86,6 +38,12 @@ auto MainScreen::render() -> Element
   if (m_state.selected_artist != m_state.current_artist_cache)
   {
     m_state.rebuildForSelectedArtist(m_state.selected_artist);
+  }
+
+  if (m_audioPtr)
+  {
+    m_state.decorateAlbumViewSelection(m_state.selected_album_index,
+                                       m_audioPtr->getCurrentMetadata());
   }
 
   auto term       = Terminal::Size();
