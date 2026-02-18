@@ -18,14 +18,17 @@ public:
 
   void attachAudioService(audio::Service& audio) { m_audioPtr = &audio; }
 
+  ftxui::Component container;
+
 private:
   state::library::LibraryState& m_state;
   audio::Service*               m_audioPtr;
 
   ftxui::Component artist_menu;
   ftxui::Component album_content;
-  ftxui::Component album_scroller;
-  ftxui::Component container;
+  ftxui::Component album_view;
+  float            album_scroll;
+  float            album_scroll_target = 0.0f;
   ftxui::Component root_renderer;
 
   bool focus_on_artists{true};

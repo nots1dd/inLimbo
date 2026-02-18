@@ -22,9 +22,8 @@ QueueScreen::QueueScreen(state::queue::QueueState& state) : m_state(state)
 
       for (size_t i = 0; i < size; ++i)
       {
-        auto metaOpt = m_audioPtr->getMetadataAt(i);
-
-        std::string title = metaOpt ? metaOpt->title : "<unknown>";
+        auto        metaOpt = m_audioPtr->getMetadataAt(i);
+        std::string title   = metaOpt ? metaOpt->title : "<unknown>";
 
         Element row = hbox({
           text(i == current ? "▶ " : "  "),
@@ -34,13 +33,36 @@ QueueScreen::QueueScreen(state::queue::QueueState& state) : m_state(state)
         if ((int)i == m_state.selected())
           row = row | bgcolor(Color::RGB(40, 60, 90)) | color(Color::White) | bold;
 
-        rows.push_back(row | frame);
+        rows.push_back(row);
       }
 
       if (rows.empty())
         rows.push_back(text("Queue is empty") | dim | center);
 
       return vbox(rows);
+    });
+
+  queue_view = Renderer(
+    queue_content,
+    [&]() -> Element
+    {
+      const size_t size = m_audioPtr->getPlaylistSize();
+
+      if (size > 1)
+      {
+        queue_scroll_target = float(m_state.selected()) / float(std::max<size_t>(1, size - 1));
+      }
+
+      // ---- smoothing ----
+      constexpr float smoothing = 0.15f;
+      queue_scroll += (queue_scroll_target - queue_scroll) * smoothing;
+
+      if (std::abs(queue_scroll_target - queue_scroll) < 0.001f)
+        queue_scroll = queue_scroll_target;
+
+      queue_scroll = std::clamp(queue_scroll, 0.0f, 1.0f);
+
+      return queue_content->Render() | focusPositionRelative(0.0f, queue_scroll) | frame | flex;
     });
 
   meta_content = Renderer(
@@ -141,7 +163,7 @@ auto QueueScreen::render() -> Element
   auto term       = Terminal::Size();
   int  half_width = term.dimx / 2;
 
-  auto queue_inner = window(text(" Queue ") | bold, queue_content->Render() | frame | flex) |
+  auto queue_inner = window(text(" Queue ") | bold, queue_view->Render() | frame | flex) |
                      size(WIDTH, EQUAL, half_width);
 
   auto meta_inner = window(text(" Track Info ") | bold, meta_content->Render() | frame | flex) |

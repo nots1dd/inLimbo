@@ -60,7 +60,7 @@ void LibraryState::buildAlbumViewForArtist(const Artist& artist)
   query::songmap::read::forEachSongInArtist(
     *m_songMapTS, artist,
     [&](const Album& album, const Disc disc, const Track track, const ino_t,
-        const std::shared_ptr<Song>& song)
+        const std::shared_ptr<Song>& song) -> void
     {
       if (album != current_album)
       {

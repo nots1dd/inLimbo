@@ -1,5 +1,4 @@
 #include "frontend/ftxui/ui/screens/Main.hpp"
-#include "frontend/ftxui/components/scroll/Scrollable.hpp"
 #include "frontend/ftxui/state/library/Impl.hpp"
 
 using namespace ftxui;
@@ -12,12 +11,35 @@ MainScreen::MainScreen(state::library::LibraryState& state) : m_state(state)
   artist_menu = Menu(&m_state.artists, &m_state.selected_artist) | vscroll_indicator;
 
   album_content =
-    Renderer([&]() mutable -> Element { return vbox(m_state.returnAlbumElements()); });
+    Renderer([&]() -> Element { return vbox(m_state.returnAlbumElements()) | vscroll_indicator; });
 
-  album_scroller =
-    Scroller(album_content, &m_state.selected_album_index, Color::Green, Color::GrayDark);
+  album_scroll        = 0.0f;
+  album_scroll_target = 0.0f;
 
-  container = Container::Horizontal({artist_menu, album_scroller});
+  album_view = Renderer(album_content,
+                        [&]() -> Element
+                        {
+                          const auto& elems = m_state.returnAlbumElements();
+
+                          if (!elems.empty())
+                          {
+                            album_scroll_target = float(m_state.selected_album_index) /
+                                                  float(std::max<int>(1, elems.size() - 1));
+                          }
+
+                          constexpr float smoothing = 0.15f; // 0.1 = slow, 0.25 = fast
+                          album_scroll += (album_scroll_target - album_scroll) * smoothing;
+
+                          album_scroll = std::clamp(album_scroll, 0.0f, 1.0f);
+
+                          return album_content->Render() |
+                                 focusPositionRelative(0.0f, album_scroll) | frame | flex;
+                        });
+
+  container = Container::Horizontal({
+    artist_menu,
+    album_view,
+  });
 }
 
 void MainScreen::syncFocus()
@@ -25,7 +47,7 @@ void MainScreen::syncFocus()
   if (m_state.focusOnArtists())
     artist_menu->TakeFocus();
   else
-    album_scroller->TakeFocus();
+    album_view->TakeFocus();
 }
 
 auto MainScreen::component() -> Component { return container; }
@@ -51,7 +73,7 @@ auto MainScreen::render() -> Element
   auto artist_inner = window(text(" Artists ") | bold, artist_menu->Render() | frame | flex) |
                       size(WIDTH, EQUAL, half_width);
 
-  auto album_inner = window(text(" Songs ") | bold, album_scroller->Render() | frame | flex) |
+  auto album_inner = window(text(" Songs ") | bold, album_view->Render() | frame | flex) |
                      size(WIDTH, EQUAL, term.dimx - half_width);
 
   Color artist_border_color = m_state.focusOnArtists() ? Color::Green : Color::GrayDark;
