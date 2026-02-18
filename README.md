@@ -105,14 +105,16 @@ Check out [BUILD.md](https://github.com/nots1dd/inLimbo/blob/develop/BUILD.md) f
 Just run:
 
 ```bash
-./build/inLimbo -h                           # for help
+./build/inLimbo -h                              # for help
 
 # A few examples
-./build/inLimbo query -h                     # to show help for query options
-./build/inLimbo query -s                     # to show summary of the library
-./build/inLimbo modify -r query -a           # rebuild the library then query library to show all artists
+./build/inLimbo query -h                        # to show help for query options
+./build/inLimbo query -s                        # to show summary of the library
+./build/inLimbo modify -r query -a              # rebuild the library then query library to show all artists
 
-./build/inLimbo -s "Song A" edit -t "Song B" # Give title 'Song A' and edit the title to 'Song B'
+./build/inLimbo -s "Song A" edit -t "Song B"    # Give title 'Song A' and edit the title to 'Song B'
+
+./build/inLimbo -s "Song A" -f "cmdline" -V 100 # Run frontend `cmdline` with initial song `Song A` at 100% volume
 ```
 
 A LOT of things are possible with your song library with inLimbo. Lots of read only queries at your fingertips, and it unleashes the potential of having locally downloaded music.
@@ -122,6 +124,10 @@ A LOT of things are possible with your song library with inLimbo. Lots of read o
 > Some arguments mentioned maybe outdated so always run `--help` or `-h`
 > before running the above!!
 >
+
+## **PROJECT STATUS**
+
+Check the draft PR for more [pull/5](https://github.com/nots1dd/inLimbo/pull/5)
 
 ## **CONFIG**
 
@@ -248,11 +254,30 @@ The logic is made in such a way that we wont need to query `lrclib.net` multiple
 
 So in frontend, displaying the lyrics should follow the same flow as the above to avoid minimal network queries.
 
+## **DOCUMENTATION**
+
+Currently, the only source of docs for understanding the source code are in the header files itself.
+
+I do plan on having atleast a few markdown files explaning the core structure before destroying the codebase
+with doxygen comments everywhere.
+
+I will also be writing a detailed blog post on this so hopefully that can also be helpful.
+
+> [!NOTE]
+> 
+> More docs coming soon!
+> 
+
 ## **PHILOSOPHY**
 
 The core philosophy of inLimbo can be primarily summarized in:
 
-1. No action is done without the user knowing
+1. No action is done without the user knowing (well if u read enough)
+2. Easy, simple yet powerful to interact with (like a power vim user)
+3. Hopefully good code with minimal tech debt lol
+
+But most of all, since my goal with this project is for me to use it myself, I can only guarantee 
+my very best effort was given in making this happen.
 
 ## **CREDITS**
 
@@ -295,5 +320,7 @@ For easy HTTP body parsing is thanks to [nlohmann/json](https://github.com/nlohm
 This music player's UI flow is heavily inspired by [CMUS](https://github.com/cmus/cmus), it seemed (to me atleast) the fastest and most responsive and logical UI/UX design of a TUI that has a great balance between looking good and feeling smooth
 
 A lot of the features and UX came to my head thanks to [namida](https://github.com/namidaco/namida), very sleek cross platform player with great UI.
+
+## **LICENSE**
 
 inLimbo is Free and Open Source Software Licensed under [GNU GPL v3](https://github.com/nots1dd/inlimbo/blob/main/LICENSE)
