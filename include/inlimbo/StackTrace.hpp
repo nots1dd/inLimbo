@@ -15,8 +15,11 @@
 //
 // Uses libbacktrace like so:
 //
-// 1. Record a function for backtrace (so in runtime we get the info that at this time, this function was called from this parent)
-// 2. If it doesnt exit the functional scope, we know that something went wrong within that scope (or its children scopes)
+// 1. Record a function for backtrace
+// (so in runtime we get the info that at this time, this function was called from this parent)
+//
+// 2. If it doesnt exit the functional scope, we know that something went wrong within that scope
+// (or its children scopes)
 //
 // It is very useful for me to debug and understand the program flow of where things went wrong.
 //

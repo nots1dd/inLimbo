@@ -9,6 +9,13 @@
 name = "Songs"
 directory = "/home/s1dd/Downloads/Songs/" # just an example
 
+[audio]
+backend = "alsa" # only ALSA available for now
+volume = 80
+
+[telemetry]
+min_playback_event_time = 10 # in seconds
+
 [fuzzy]
 max_dist = 3
 

@@ -12,8 +12,7 @@ MainScreen::MainScreen(state::library::LibraryState& state) : m_state(state)
   artist_menu = Menu(&m_state.artists, &m_state.selected_artist) | vscroll_indicator;
 
   album_content =
-    Renderer([&]() mutable -> Element
-             { return vbox(m_state.returnAlbumElements()) | vscroll_indicator | frame | flex; });
+    Renderer([&]() mutable -> Element { return vbox(m_state.returnAlbumElements()); });
 
   album_scroller =
     Scroller(album_content, &m_state.selected_album_index, Color::Green, Color::GrayDark);
@@ -63,7 +62,7 @@ auto MainScreen::render() -> Element
 
   auto album_pane = album_inner | borderStyled(BorderStyle::HEAVY, album_border_color);
 
-  return vbox({hbox({artist_pane, album_pane}) | flex});
+  return vbox({hbox({artist_pane, album_pane})});
 }
 
 } // namespace frontend::tui::ui::screens

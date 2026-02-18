@@ -21,12 +21,13 @@ struct Event
   GenreID  genre;
 
   double    seconds;   // listened or seek delta
+  double    duration;  // duration of the song
   Timestamp timestamp; // unix time
 
   template <class Archive>
   void serialize(Archive& ar)
   {
-    ar(type, song, artist, album, genre, seconds, timestamp);
+    ar(type, song, artist, album, genre, seconds, duration, timestamp);
   }
 };
 

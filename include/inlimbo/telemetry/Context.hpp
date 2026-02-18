@@ -8,6 +8,8 @@ namespace telemetry
 
 struct Context
 {
+  explicit Context(double minPlaybackTimeSecs) : store(minPlaybackTimeSecs) {}
+
   Store    store;
   Registry registry;
 

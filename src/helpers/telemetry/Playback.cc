@@ -24,6 +24,7 @@ void beginPlayback(::audio::Service& audio, ::telemetry::Context* telemetryCtx,
   ev.album     = telemetryCtx->registry.albums.getOrCreate(metaOpt->album);
   ev.genre     = telemetryCtx->registry.genres.getOrCreate(metaOpt->genre);
   ev.seconds   = 0.0;
+  ev.duration  = audio.getCurrentTrackInfo()->lengthSec;
   ev.timestamp = utils::timer::nowUnix();
 
   currentTelemetryEvent = ev;

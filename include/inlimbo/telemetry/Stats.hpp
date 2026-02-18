@@ -13,10 +13,11 @@ struct Stats
   Timestamp first = 0;
   Timestamp last  = 0;
 
-  inline void update(double sec, Timestamp ts)
+  inline void addListen(double sec) { listenSec += sec; }
+
+  inline void commitPlay(Timestamp ts)
   {
     ++playCount;
-    listenSec += sec;
 
     if (first == 0)
       first = ts;

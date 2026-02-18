@@ -8,6 +8,17 @@ using namespace ftxui;
 namespace frontend::tui::state::library
 {
 
+static auto trimTitle(const std::string& s, std::size_t max) -> std::string
+{
+  if (s.size() <= max)
+    return s;
+
+  if (max <= 3)
+    return s.substr(0, max);
+
+  return s.substr(0, max - 3) + "...";
+}
+
 LibraryState::LibraryState(threads::SafeMap<SongMap>* map) : m_songMapTS(map) {}
 
 void LibraryState::rebuild()
@@ -46,22 +57,19 @@ void LibraryState::buildAlbumViewForArtist(const Artist& artist)
   Album current_album;
   Disc  current_disc = -1;
 
-  query::songmap::read::forEachSong(
-    *m_songMapTS,
-    [&](const Artist& a, const Album& album, const Disc disc, const Track track, const ino_t,
+  query::songmap::read::forEachSongInArtist(
+    *m_songMapTS, artist,
+    [&](const Album& album, const Disc disc, const Track track, const ino_t,
         const std::shared_ptr<Song>& song)
     {
-      if (a != artist)
-        return;
-
       if (album != current_album)
       {
         current_album = album;
         current_disc  = -1;
 
-        album_elements_base.push_back(hbox({text("  "), text(album)}) |
-                                      bgcolor(Color::RGB(25, 25, 25)) | color(Color::Cyan) | bold |
-                                      frame);
+        album_elements_base.push_back(
+          hbox({text("▌ ") | color(Color::Cyan), text(trimTitle(album, 50))}) |
+          bgcolor(Color::RGB(25, 25, 25)) | color(Color::Cyan) | bold | frame);
 
         view_song_objects.push_back(nullptr);
       }
@@ -77,8 +85,8 @@ void LibraryState::buildAlbumViewForArtist(const Artist& artist)
         view_song_objects.push_back(nullptr);
       }
 
-      std::string line =
-        (track < 10 ? "0" : "") + std::to_string(track) + "  " + song->metadata.title;
+      std::string line = (track < 10 ? "0" : "") + std::to_string(track) + "  " +
+                         trimTitle(song->metadata.title, 50);
 
       std::string dur = utils::timer::fmtTime(song->metadata.duration);
 

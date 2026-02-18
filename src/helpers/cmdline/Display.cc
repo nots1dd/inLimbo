@@ -219,27 +219,46 @@ void printAlbums(const threads::SafeMap<SongMap>& safeMap, const std::optional<A
 // ------------------------------------------------------------
 void printSongTree(const threads::SafeMap<SongMap>& safeMap, const std::optional<Artist>& artist)
 {
-  std::map<Artist, std::set<Album>> albums;
+  using TInfo = std::pair<Track, Title>;
+  using DMap  = std::map<Disc, std::vector<TInfo>>;
+  using AMap  = std::map<Album, DMap>;
+  using Tree  = std::map<Artist, AMap>;
 
-  query::songmap::read::forEachSong(safeMap,
-                                    [&](const Artist& a, const Album& al, const Disc, const Track,
-                                        const ino_t, const std::shared_ptr<Song>&) -> void
-                                    {
-                                      if (artist && !artist->empty() &&
-                                          !utils::string::isEquals(a, *artist))
-                                        return;
+  Tree tree;
 
-                                      albums[a].insert(al);
-                                    });
+  query::songmap::read::forEachSong(
+    safeMap,
+    [&](const Artist& a, const Album& al, const Disc disc, const Track track, const ino_t,
+        const std::shared_ptr<Song>& song) -> void
+    {
+      if (artist && !artist->empty() && !utils::string::isEquals(a, *artist))
+        return;
 
-  std::cout << "\nAlbums:\n";
+      tree[a][al][disc].emplace_back(track, song->metadata.title);
+    });
+
+  std::cout << "\nSong tree:\n";
   std::cout << "────────────────────────────\n";
 
-  for (const auto& [a, als] : albums)
+  for (const auto& [a, albums] : tree)
   {
     std::cout << a << "\n";
-    for (const auto& al : als)
-      std::cout << "  └─ " << al << "\n";
+
+    for (const auto& [al, discs] : albums)
+    {
+      std::cout << "  ├─ " << al << "\n";
+
+      for (const auto& [disc, tracks] : discs)
+      {
+        std::cout << "  │  ├─ Disc " << disc << "\n";
+
+        for (const auto& [track, title] : tracks)
+        {
+          std::cout << "  │  │  └─ " << std::setw(2) << std::setfill('0') << track << " – " << title
+                    << "\n";
+        }
+      }
+    }
   }
 }
 
@@ -383,86 +402,72 @@ void printSummary(const threads::SafeMap<SongMap>& safeMap, const telemetry::Con
                                         genres.insert(song->metadata.genre);
                                     });
 
-  std::cout << "\nLibrary Summary\n";
-  std::cout << "────────────────────────────\n";
-  std::cout << "Artists Count      : " << artists.size() << "\n";
-  std::cout << "Albums Count       : " << albums.size() << "\n";
-  std::cout << "Songs Count        : " << songs << "\n";
-  std::cout << "Genres Count       : " << genres.size() << "\n\n";
-
-  std::cout << "Library Name       : " << tomlparser::Config::getString("library", "name") << "\n";
-  std::cout << "Directory          : " << tomlparser::Config::getString("library", "directory")
+  std::cout << "\nLibrary Summary\n"
+            << "────────────────────────────\n"
+            << "Artists Count      : " << artists.size() << "\n"
+            << "Albums Count       : " << albums.size() << "\n"
+            << "Songs Count        : " << songs << "\n"
+            << "Genres Count       : " << genres.size() << "\n\n"
+            << "Library Name       : " << tomlparser::Config::getString("library", "name") << "\n"
+            << "Directory          : " << tomlparser::Config::getString("library", "directory")
             << "\n\n";
 
   if (!telemetryCtx.isRegistryLoaded)
     return;
 
-  auto resolveSong = [&](telemetry::SongID id) -> std::pair<std::string_view, std::string_view>
+  bool printed = false;
+
+  auto resolveSong =
+    [&](telemetry::SongID id) -> std::optional<std::pair<std::string_view, std::string_view>>
   {
     if (id == telemetry::INVALID_TELEMETRY_ID)
-      return {"<unknown>", "<unknown>"};
+      return std::nullopt;
 
-    auto titleOpt = telemetryCtx.registry.titles.toString(id);
+    auto title  = telemetryCtx.registry.titles.toString(id);
+    auto artist = telemetryCtx.registry.artists.toString(telemetryCtx.registry.songToArtist(id));
 
-    auto artistId  = telemetryCtx.registry.songToArtist(id);
-    auto artistOpt = telemetryCtx.registry.artists.toString(artistId);
+    if (!title || !artist)
+      return std::nullopt;
 
-    const auto title  = titleOpt ? *titleOpt : "<unknown>";
-    const auto artist = artistOpt ? *artistOpt : "<unknown>";
-
-    return {title, artist};
+    return std::pair{*title, *artist};
   };
 
-  const auto mostPlayedSongId = telemetry::analysis::mostReplayedSong(telemetryCtx.store);
-
-  const auto hottestSongId =
-    telemetry::analysis::hottestSong(telemetryCtx.store, utils::timer::nowUnix());
-
-  const auto firstSongId = telemetry::analysis::firstListenedSong(telemetryCtx.store);
-
-  const auto lastSongId = telemetry::analysis::lastListenedSong(telemetryCtx.store);
-
+  auto printSongLine = [&](const char* label, telemetry::SongID id) -> void
   {
-    auto [title, artist] = resolveSong(mostPlayedSongId);
-    std::cout << "Most Played Song   : " << title << " by " << artist << "\n";
-  }
+    if (auto r = resolveSong(id))
+    {
+      std::cout << label << " : " << r->first << " by " << r->second << "\n";
+      printed = true;
+    }
+  };
 
-  {
-    auto [title, artist] = resolveSong(hottestSongId);
-    std::cout << "Hottest Song       : " << title << " by " << artist << "\n";
-  }
+  const auto now = utils::timer::nowUnix();
 
-  {
-    auto [title, artist] = resolveSong(firstSongId);
-    std::cout << "First Listened     : " << title << " by " << artist << "\n";
-  }
+  printSongLine("Most Played Song  ", telemetry::analysis::mostReplayedSong(telemetryCtx.store));
+  printSongLine("Hottest Song      ", telemetry::analysis::hottestSong(telemetryCtx.store, now));
+  printSongLine("First Listened    ", telemetry::analysis::firstListenedSong(telemetryCtx.store));
+  printSongLine("Last Listened     ", telemetry::analysis::lastListenedSong(telemetryCtx.store));
 
-  {
-    auto [title, artist] = resolveSong(lastSongId);
-    std::cout << "Last Listened      : " << title << " by " << artist << "\n";
-  }
+  if (auto n = telemetryCtx.registry.artists.toString(
+        telemetry::analysis::favoriteArtist(telemetryCtx.store)))
+    std::cout << "Favorite Artist    : " << *n << "\n", printed = true;
 
-  // ---- favorite artist ----
-  const auto favArtistId = telemetry::analysis::favoriteArtist(telemetryCtx.store);
+  if (auto n = telemetryCtx.registry.albums.toString(
+        telemetry::analysis::favoriteAlbum(telemetryCtx.store)))
+    std::cout << "Favorite Album     : " << *n << "\n", printed = true;
 
-  if (auto name = telemetryCtx.registry.artists.toString(favArtistId))
-    std::cout << "Favorite Artist    : " << *name << "\n";
+  if (auto n = telemetryCtx.registry.genres.toString(
+        telemetry::analysis::favoriteGenre(telemetryCtx.store)))
+    std::cout << "Favorite Genre     : " << *n << "\n", printed = true;
 
-  // ---- favorite album ----
-  const auto favAlbumId = telemetry::analysis::favoriteAlbum(telemetryCtx.store);
+  const auto totalListen = telemetry::analysis::totalListenTime(telemetryCtx.store);
 
-  if (auto name = telemetryCtx.registry.albums.toString(favAlbumId))
-    std::cout << "Favorite Album     : " << *name << "\n";
+  if (totalListen > 0.0)
+    std::cout << "Total Listen Time  : " << utils::timer::fmtTime(totalListen) << "\n",
+      printed = true;
 
-  // ---- favorite genre ----
-  const auto favGenreId = telemetry::analysis::favoriteGenre(telemetryCtx.store);
-
-  if (auto name = telemetryCtx.registry.genres.toString(favGenreId))
-    std::cout << "Favorite Genre     : " << *name << "\n";
-
-  std::cout << "Total Listen Time  : "
-            << utils::timer::fmtTime(telemetry::analysis::totalListenTime(telemetryCtx.store))
-            << "\n";
+  if (!printed)
+    std::cout << "Not enough telemetry data\n";
 }
 
 } // namespace helpers::cmdline

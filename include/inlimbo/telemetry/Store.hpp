@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Event.hpp"
+#include "Logger.hpp"
 #include "Stats.hpp"
 
 #include "utils/ankerl/Cereal.hpp"
@@ -13,6 +14,11 @@ namespace telemetry
 class Store
 {
 public:
+  explicit Store(double minPlaySec) : minPlaySec(minPlaySec)
+  {
+    LOG_DEBUG("Telemetry store initializing. Min Playback Event capture time set to '{}'s",
+              minPlaySec);
+  }
   void onEvent(const Event& ev);
 
   // ---- queries ----
@@ -37,6 +43,7 @@ public:
 
 private:
   std::vector<Event> events;
+  double             minPlaySec = 30.0;
 
   ankerl::unordered_dense::map<SongID, Stats>   songStats;
   ankerl::unordered_dense::map<ArtistID, Stats> artistStats;

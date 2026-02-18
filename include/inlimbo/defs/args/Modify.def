@@ -15,3 +15,5 @@
 
 ARG(rebuildLibrary, bool, FLAG, "-r,--rebuild-library", "Force rebuild of music library cache",
     None)
+ARG(deleteTelemetry, bool, FLAG, "-t,--delete-telemetry",
+    "Force delete all telemetry cache present", None)

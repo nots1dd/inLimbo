@@ -25,80 +25,90 @@
 //                            |
 //                            |
 //                            V
-//                  audio::backend::AlsaBackend, etc.      (core logic of each audio backend written as child of interface)
+//                  audio::backend::AlsaBackend, etc.
+//        (core logic of each audio backend written as child of interface)
 //
-// The available backends are enumerated at compile time but choosing the backend can be done via config.
+// The available backends are enumerated at compile time but choosing the backend can be done via
+// config.
 //
-// The Service has a ctor that will read the config (and fallback if none) and make the audio backend. If it doesnt work
-// (due to invalid fallback or any error) it will not run the application!
+// The Service has a ctor that will read the config (and fallback if none) and make the audio
+// backend. If it doesnt work (due to invalid fallback or any error) it will not run the
+// application!
 //
 // The API is simple enough and quite self explanatory with the exception of playlists.
 //
 // 1.1 audio::service::Playlist
 //
-// This is currently a misnomer on my part, this is not really a playlist that people imagine it to be. It is simply
-// the list (or queue) of next/previous items to be played (check include/inlimbo/audio/Playlist.hpp)
-// 
+// This is currently a misnomer on my part, this is not really a playlist that people imagine it to
+// be. It is simply the list (or queue) of next/previous items to be played (check
+// include/inlimbo/audio/Playlist.hpp)
+//
 // It allows for the following:
 //
 // 1. Operates as a pretty decent queue (can enumerate it, delete/add items to it)
 // 2. Can jump to random index in the playlist itself
 //
-// In the future, we can extend this logic to have multiple "playlists" that will act the same except that
-// each playlist will have different songs queued in them.
+// In the future, we can extend this logic to have multiple "playlists" that will act the same
+// except that each playlist will have different songs queued in them.
 //
 // Ex: Top Listened to Songs Playlist:
-// Since we have basic telemetry that can gather the top X listened to songs, we simply register them to 
-// a new playlist and thats it! We just need to have the logic to "swap" between playlists rather than 
-// overwriting `m_playlist` member in audio::Service.
+// Since we have basic telemetry that can gather the top X listened to songs, we simply register
+// them to a new playlist and thats it! We just need to have the logic to "swap" between playlists
+// rather than overwriting `m_playlist` member in audio::Service.
 //
 // Anyway that is planned for later but is not implemented yet.
 //
 // 1.2 audio::Devices:
 //
-// Here "devices" mean nodes that can play audio output. Now the terminology does defer between different
-// audio backend API (like ex: ALSA it only refers to actuall hardware device sinks, but pipewire refers to 
-// any output - even bluetooth as a device node)
+// Here "devices" mean nodes that can play audio output. Now the terminology does defer between
+// different audio backend API (like ex: ALSA it only refers to actuall hardware device sinks, but
+// pipewire refers to any output - even bluetooth as a device node)
 //
-// I prefer pipewire's meaning of a device so the codebase does not mention it to be hardware specific.
+// I prefer pipewire's meaning of a device so the codebase does not mention it to be hardware
+// specific.
 //
 // 1.3 audio::BackendInfo:
 //
-// This is the interfacing struct for the frontends to fetch details on the audio backend in real time.
+// This is the interfacing struct for the frontends to fetch details on the audio backend in real
+// time.
 //
 // It is split into 2 components:
 //
 // 1. Common
 // 2. Specific
 //
-// Common backend info is well... common. It has primitive dtypes and members that represent the general
-// characteristics of any audio backend (ex: sample rate, channels, xruns, writes, etc.)
+// Common backend info is well... common. It has primitive dtypes and members that represent the
+// general characteristics of any audio backend (ex: sample rate, channels, xruns, writes, etc.)
 //
 // Check out include/inlimbo/audio/backend/Backend.hpp for more details.
 //
-// Specific backend info is implemented as `std::variant` of different implemented backends and can house 
-// backend specific information like `snd_pcm_uframes_t` to get the buffer / period size, `snd_pcm_format_t`
-// and so on
+// Specific backend info is implemented as `std::variant` of different implemented backends and can
+// house backend specific information like `snd_pcm_uframes_t` to get the buffer / period size,
+// `snd_pcm_format_t` and so on
 //
-// Displaying the logic is easy enough just use `std::visit` and check for the currently implemented backends
-// in the codebase. (FTXUI frontend has this covered check out the code there)
+// Displaying the logic is easy enough just use `std::visit` and check for the currently implemented
+// backends in the codebase. (FTXUI frontend has this covered check out the code there)
 //
 // 1.4 audio::TrackTable and audio::SoundHandle;
 //
-// Each song in playlist and in audio backends are referenced not by the whole song obj but by their `SoundHandle`.
-// This saves needless copying and gruesome object lifetime management in multiple places, and there is a singular
-// place to make the `SoundHandle` -> std::shared_ptr<const Song> relation - in audio::TrackTable.
+// Each song in playlist and in audio backends are referenced not by the whole song obj but by their
+// `SoundHandle`. This saves needless copying and gruesome object lifetime management in multiple
+// places, and there is a singular place to make the `SoundHandle` -> std::shared_ptr<const Song>
+// relation - in audio::TrackTable.
 //
-// It is a simple unordered map that maps each sound handle to the respective shared pointer of the Song obj.
-// 
-// This also has a side benefit of not invoking too many `query::songmap` commands to fetch the right object.
+// It is a simple unordered map that maps each sound handle to the respective shared pointer of the
+// Song obj.
+//
+// This also has a side benefit of not invoking too many `query::songmap` commands to fetch the
+// right object.
 //
 // 2. Future
 //
-// As you can see there are few public interfacing methods like `copySequence`, `withAudioBuffer` so on.
+// As you can see there are few public interfacing methods like `copySequence`, `withAudioBuffer` so
+// on.
 //
-// The goal for that was to be able to safely share the current resampled audio buffers from the backend in
-// real time to anybody that needs it.
+// The goal for that was to be able to safely share the current resampled audio buffers from the
+// backend in real time to anybody that needs it.
 //
 // I wrote this keeping audio visualization in mind like so:
 //

@@ -77,10 +77,6 @@ void Store::load(Archive& ar)
   ar(events, songStats, artistStats, albumStats, genreStats);
 }
 
-// ------------------------------------------------------------
-// Internals
-// ------------------------------------------------------------
-
 auto Store::find(const auto& map, auto id) -> const Stats*
 {
   auto it = map.find(id);
@@ -92,10 +88,27 @@ void Store::apply(const Event& ev)
   if (ev.type != EventType::PlayEnd)
     return;
 
-  songStats[ev.song].update(ev.seconds, ev.timestamp);
-  artistStats[ev.artist].update(ev.seconds, ev.timestamp);
-  albumStats[ev.album].update(ev.seconds, ev.timestamp);
-  genreStats[ev.genre].update(ev.seconds, ev.timestamp);
+  songStats[ev.song].addListen(ev.seconds);
+  artistStats[ev.artist].addListen(ev.seconds);
+  albumStats[ev.album].addListen(ev.seconds);
+  genreStats[ev.genre].addListen(ev.seconds);
+
+  if (ev.duration <= 0.0)
+    return;
+
+  const double required = std::min(minPlaySec, ev.duration * 0.5);
+
+  if (ev.seconds < required)
+  {
+    LOG_DEBUG("Event ('{}') lasted for {}s which was less than required {}s. Skipped event.",
+              ev.song, ev.seconds, required);
+    return;
+  }
+
+  songStats[ev.song].commitPlay(ev.timestamp);
+  artistStats[ev.artist].commitPlay(ev.timestamp);
+  albumStats[ev.album].commitPlay(ev.timestamp);
+  genreStats[ev.genre].commitPlay(ev.timestamp);
 }
 
 } // namespace telemetry

@@ -79,7 +79,7 @@ void setupArgs(CLI::App& app, Args& args)
 #undef OPTIONAL_ARG
 
     [[maybe_unused]] auto* edit =
-        app.add_subcommand("edit", "Edit metadata");
+        app.add_subcommand("edit", "Edit audio metadata fields (tags) via TagLib");
 
 #define ARG(name, type, kind, cli, desc, action) \
     INLIMBO_ADD_##kind((*edit), args, name, cli, desc)
@@ -93,7 +93,7 @@ void setupArgs(CLI::App& app, Args& args)
 #undef OPTIONAL_ARG
 
     [[maybe_unused]] auto* modify =
-        app.add_subcommand("modify", "Modify library");
+        app.add_subcommand("modify", "Modify library settings and cache behaviour");
 
 #define ARG(name, type, kind, cli, desc, action) \
     INLIMBO_ADD_##kind((*modify), args, name, cli, desc)
@@ -107,7 +107,7 @@ void setupArgs(CLI::App& app, Args& args)
 #undef OPTIONAL_ARG
 
     [[maybe_unused]] auto* query =
-        app.add_subcommand("query", "Query library");
+        app.add_subcommand("query", "Query library and telemetry data");
 
 #define ARG(name, type, kind, cli, desc, action) \
     INLIMBO_ADD_##kind((*query), args, name, cli, desc)
@@ -128,6 +128,7 @@ void setupArgs(CLI::App& app, Args& args)
 
 AppContext::AppContext(CLI::App& cliApp)
     : m_taglibDbgLog(tomlparser::Config::getBool("debug", "taglib_parser_log")),
+      m_telemetryCtx(tomlparser::Config::getInt("telemetry", "min_playback_event_time", 30)),
       m_tagLibParser({.debugLog = m_taglibDbgLog})
 {
   setupArgs(cliApp, args);
@@ -486,6 +487,22 @@ auto initializeContext(int argc, char** argv) -> AppContext
     std::exit(cliApp.exit(e));
   }
 
+  if (ctx.args.deleteTelemetry)
+  {
+    try
+    {
+      std::filesystem::remove(
+        utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_TELEMETRY_BIN_NAME));
+      std::filesystem::remove(
+        utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_TELEMETRY_REGISTRY_BIN_NAME));
+      LOG_INFO("Deleted all telemetry cache.");
+    }
+    catch (std::exception& e)
+    {
+      LOG_ERROR("Error while deleting telemetry cache: {}", e.what());
+    }
+  }
+
   // ---------------------------------------------------------
   // Create or load telemetry service
   // ---------------------------------------------------------
@@ -510,7 +527,7 @@ auto initializeContext(int argc, char** argv) -> AppContext
     LOG_DEBUG("Invalid volume found in arguments, fetching default from config...");
     vol = tomlparser::Config::getInt("audio", "volume", 75);
   }
-  
+
   // volume fetched from user is (0-150) range but is normalized to 0-1.5
   // in the audio backend.
   ctx.m_volume      = std::clamp(vol / 100.0f, 0.0f, 1.5f);
@@ -569,7 +586,7 @@ void buildOrLoadLibrary(AppContext& ctx)
   //
   // as that is most logical.
   //
-  // We can change this sort logic via config.toml 
+  // We can change this sort logic via config.toml
   // (check out examples/config/config.toml for more!)
   const auto plan = config::sort::loadRuntimeSortPlan();
   query::songmap::mut::sortSongMap(g_songMap, plan);
@@ -595,14 +612,16 @@ void runFrontend(AppContext& ctx)
   // in the frontend only we care about locking the application so we run lock here, not in main
   // file.
   //
-  // so this lets us run cmd line args of the main inLimbo binary without lock (as they are *mostly* read ops)
-  // but if we launch a frontend then it will not allow multiple procs to run.
+  // so this lets us run cmd line args of the main inLimbo binary without lock (as they are *mostly*
+  // read ops) but if we launch a frontend then it will not allow multiple procs to run.
   //
-  // Even if some args write to the actual file (like edit subcommand), the frontends are designed to use 
-  // the in memory `threads::SafeMap<SongMap>` which does not know about the changes made - if any change
-  // is too destructive (say file path has changed) it will give a neat runtime error and exit the app.
+  // Even if some args write to the actual file (like edit subcommand), the frontends are designed
+  // to use the in memory `threads::SafeMap<SongMap>` which does not know about the changes made -
+  // if any change is too destructive (say file path has changed) it will give a neat runtime error
+  // and exit the app.
   //
-  // The next time you run the binary, inLimbo will notice these changes and immediately do a re-cache.
+  // The next time you run the binary, inLimbo will notice these changes and immediately do a
+  // re-cache.
 
   try
   {

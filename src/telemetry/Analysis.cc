@@ -1,16 +1,30 @@
 #include "telemetry/Analysis.hpp"
 #include <cmath>
+#include <limits>
 
 namespace telemetry::analysis
 {
+
+// ------------------------------------------------------------
+// Aggregates
+// ------------------------------------------------------------
 
 auto totalListenTime(const Store& s) -> double
 {
   double sum = 0.0;
   for (auto& [_, st] : s.songs())
+  {
+    if (st.playCount == 0)
+      continue;
+
     sum += st.listenSec;
+  }
   return sum;
 }
+
+// ------------------------------------------------------------
+// Favorites (committed only)
+// ------------------------------------------------------------
 
 auto favoriteArtist(const Store& s) -> ArtistID
 {
@@ -18,20 +32,30 @@ auto favoriteArtist(const Store& s) -> ArtistID
   double   bestTime = 0.0;
 
   for (auto& [id, st] : s.artists())
+  {
+    if (st.playCount == 0)
+      continue;
+
     if (st.listenSec > bestTime)
       best = id, bestTime = st.listenSec;
+  }
 
   return best;
 }
 
 auto favoriteAlbum(const Store& s) -> AlbumID
 {
-  AlbumID best    = INVALID_TELEMETRY_ID;
-  ui64    maxTime = 0;
+  AlbumID best     = INVALID_TELEMETRY_ID;
+  double  bestTime = 0.0;
 
   for (auto& [id, st] : s.albums())
-    if (st.listenSec > maxTime)
-      best = id, maxTime = st.listenSec;
+  {
+    if (st.playCount == 0)
+      continue;
+
+    if (st.listenSec > bestTime)
+      best = id, bestTime = st.listenSec;
+  }
 
   return best;
 }
@@ -42,11 +66,20 @@ auto favoriteGenre(const Store& s) -> GenreID
   double  bestTime = 0.0;
 
   for (auto& [id, st] : s.genres())
+  {
+    if (st.playCount == 0)
+      continue;
+
     if (st.listenSec > bestTime)
       best = id, bestTime = st.listenSec;
+  }
 
   return best;
 }
+
+// ------------------------------------------------------------
+// Replays
+// ------------------------------------------------------------
 
 auto mostReplayedSong(const Store& s) -> SongID
 {
@@ -54,11 +87,17 @@ auto mostReplayedSong(const Store& s) -> SongID
   ui32   maxPlays = 0;
 
   for (auto& [id, st] : s.songs())
+  {
     if (st.playCount > maxPlays)
       best = id, maxPlays = st.playCount;
+  }
 
   return best;
 }
+
+// ------------------------------------------------------------
+// Recency
+// ------------------------------------------------------------
 
 auto recencyWeight(Timestamp last, Timestamp now) -> double
 {
@@ -73,6 +112,9 @@ auto hottestArtist(const Store& s, Timestamp now) -> ArtistID
 
   for (auto& [id, st] : s.artists())
   {
+    if (st.playCount == 0)
+      continue;
+
     double score = st.listenSec * recencyWeight(st.last, now);
     if (score > bestScore)
       best = id, bestScore = score;
@@ -88,6 +130,9 @@ auto hottestGenre(const Store& s, Timestamp now) -> GenreID
 
   for (auto& [id, st] : s.genres())
   {
+    if (st.playCount == 0)
+      continue;
+
     double score = st.listenSec * recencyWeight(st.last, now);
     if (score > bestScore)
       best = id, bestScore = score;
@@ -96,35 +141,53 @@ auto hottestGenre(const Store& s, Timestamp now) -> GenreID
   return best;
 }
 
+// ------------------------------------------------------------
+// Averages
+// ------------------------------------------------------------
+
 auto averageSongListenTime(const Store& s) -> double
 {
   double sum   = 0.0;
-  ui32   count = 0;
+  ui32   plays = 0;
 
   for (auto& [_, st] : s.songs())
   {
+    if (st.playCount == 0)
+      continue;
+
     sum += st.listenSec;
-    count += st.playCount;
+    plays += st.playCount;
   }
 
-  return count ? sum / count : 0.0;
+  return plays ? sum / plays : 0.0;
 }
 
-// A song is “hot” if it is played often and was played recently
+// ------------------------------------------------------------
+// Hot songs (play count + recency)
+// ------------------------------------------------------------
+
 auto hottestSong(const Store& s, Timestamp now) -> SongID
 {
-  SongID best      = 0;
+  SongID best      = INVALID_TELEMETRY_ID;
   double bestScore = 0.0;
 
   for (auto& [id, st] : s.songs())
   {
-    double score = st.playCount * recencyWeight(st.last, now);
+    if (st.playCount == 0)
+      continue;
+
+    double score = static_cast<double>(st.playCount) * recencyWeight(st.last, now);
+
     if (score > bestScore)
       best = id, bestScore = score;
   }
 
   return best;
 }
+
+// ------------------------------------------------------------
+// First / last listened (committed only)
+// ------------------------------------------------------------
 
 auto firstListenedSong(const Store& s) -> SongID
 {
@@ -136,9 +199,9 @@ auto firstListenedSong(const Store& s) -> SongID
     if (st.playCount == 0)
       continue;
 
-    if (st.last < first)
+    if (st.first < first)
     {
-      first = st.last;
+      first = st.first;
       best  = id;
     }
   }
