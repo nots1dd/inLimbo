@@ -50,17 +50,8 @@ QueueScreen::QueueScreen(state::queue::QueueState& state) : m_state(state)
 
       if (size > 1)
       {
-        queue_scroll_target = float(m_state.selected()) / float(std::max<size_t>(1, size - 1));
+        queue_scroll = float(m_state.selected()) / float(std::max<size_t>(1, size - 1));
       }
-
-      // ---- smoothing ----
-      constexpr float smoothing = 0.15f;
-      queue_scroll += (queue_scroll_target - queue_scroll) * smoothing;
-
-      if (std::abs(queue_scroll_target - queue_scroll) < 0.001f)
-        queue_scroll = queue_scroll_target;
-
-      queue_scroll = std::clamp(queue_scroll, 0.0f, 1.0f);
 
       return queue_content->Render() | focusPositionRelative(0.0f, queue_scroll) | frame | flex;
     });

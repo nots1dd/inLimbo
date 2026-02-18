@@ -462,9 +462,7 @@ void printSummary(const threads::SafeMap<SongMap>& safeMap, const telemetry::Con
 
   const auto totalListen = telemetry::analysis::totalListenTime(telemetryCtx.store);
 
-  if (totalListen > 0.0)
-    std::cout << "Total Listen Time  : " << utils::timer::fmtTime(totalListen) << "\n",
-      printed = true;
+  std::cout << "Total Listen Time  : " << utils::timer::fmtTime(totalListen) << "\n";
 
   if (!printed)
     std::cout << "Not enough telemetry data\n";

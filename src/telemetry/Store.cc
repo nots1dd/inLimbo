@@ -100,7 +100,7 @@ void Store::apply(const Event& ev)
 
   if (ev.seconds < required)
   {
-    LOG_DEBUG("Event ('{}') lasted for {}s which was less than required {}s. Skipped event.",
+    LOG_DEBUG("Event (song id: {}) lasted for {}s which was less than required {}s. Skipped event.",
               ev.song, ev.seconds, required);
     return;
   }

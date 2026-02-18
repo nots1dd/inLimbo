@@ -35,7 +35,7 @@ void LibraryState::rebuild()
                                       { artists.push_back(artist); });
 
   if (!artists.empty())
-    buildAlbumViewForArtist(artists[0]);
+    buildAlbumViewForArtist(artists[selected_artist]);
 }
 
 void LibraryState::rebuildForSelectedArtist(int selected_artist)

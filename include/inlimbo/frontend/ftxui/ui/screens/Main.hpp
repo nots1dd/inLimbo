@@ -28,7 +28,6 @@ private:
   ftxui::Component album_content;
   ftxui::Component album_view;
   float            album_scroll;
-  float            album_scroll_target = 0.0f;
   ftxui::Component root_renderer;
 
   bool focus_on_artists{true};

@@ -14,9 +14,6 @@ auto totalListenTime(const Store& s) -> double
   double sum = 0.0;
   for (auto& [_, st] : s.songs())
   {
-    if (st.playCount == 0)
-      continue;
-
     sum += st.listenSec;
   }
   return sum;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils/Colors.hpp"
 #include <ftxui/dom/elements.hpp>
 #include <string>
 #include <vector>
@@ -14,7 +15,8 @@ public:
   auto render() -> ftxui::Element;
 
 private:
-  auto getAverageColor(int x, int y, int w, int h) -> ftxui::Color;
+  auto getAverageColor(int start_x, int start_y, int width, int height) -> utils::colors::RGBA;
+  auto getDominantColor(int x, int y, int bw, int bh) -> utils::colors::RGBA;
 
   std::vector<unsigned char> pixels;
   int                        w{0};

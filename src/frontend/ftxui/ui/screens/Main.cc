@@ -13,8 +13,7 @@ MainScreen::MainScreen(state::library::LibraryState& state) : m_state(state)
   album_content =
     Renderer([&]() -> Element { return vbox(m_state.returnAlbumElements()) | vscroll_indicator; });
 
-  album_scroll        = 0.0f;
-  album_scroll_target = 0.0f;
+  album_scroll = 0.0f;
 
   album_view = Renderer(album_content,
                         [&]() -> Element
@@ -23,14 +22,9 @@ MainScreen::MainScreen(state::library::LibraryState& state) : m_state(state)
 
                           if (!elems.empty())
                           {
-                            album_scroll_target = float(m_state.selected_album_index) /
-                                                  float(std::max<int>(1, elems.size() - 1));
+                            album_scroll = float(m_state.selected_album_index) /
+                                           float(std::max<int>(1, elems.size() - 1));
                           }
-
-                          constexpr float smoothing = 0.15f; // 0.1 = slow, 0.25 = fast
-                          album_scroll += (album_scroll_target - album_scroll) * smoothing;
-
-                          album_scroll = std::clamp(album_scroll, 0.0f, 1.0f);
 
                           return album_content->Render() |
                                  focusPositionRelative(0.0f, album_scroll) | frame | flex;

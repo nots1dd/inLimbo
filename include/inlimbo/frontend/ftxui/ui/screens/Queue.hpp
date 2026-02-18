@@ -27,8 +27,7 @@ private:
   ftxui::Component meta_content;
   ftxui::Component container;
 
-  float queue_scroll        = 0.0f;
-  float queue_scroll_target = 0.0f;
+  float queue_scroll = 0.0f;
 };
 
 } // namespace frontend::tui::ui::screens
