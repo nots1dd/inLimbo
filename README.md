@@ -25,12 +25,13 @@
 >
 > You will have to install **CMake & Make**, **Git**, **C++20 Compiler (GCC/Clang)**, **dbus-1**, **OpenSSL**, **TagLib**!!
 >
-> Have the repo cloned **WITH THE SUBMODULES**:
+> Then, you can simply run:
 >
 > ```bash
 > # clone repo (develop branch)
 > git clone -b develop https://github.com/nots1dd/inlimbo
 >
+> # note: this is for release build
 > cd inlimbo
 > make init
 > make buildx

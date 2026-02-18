@@ -297,7 +297,7 @@ set(INLIMBO_FRONTEND_NAMES "")
 # ===================== FRONTENDS ============================
 include(${CMAKE_SOURCE_DIR}/cmake/frontends/cmdline.cmake)
 # include(${CMAKE_SOURCE_DIR}/cmake/frontends/raylib.cmake)
-# include(${CMAKE_SOURCE_DIR}/cmake/frontends/ftxui.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/frontends/ftxui.cmake)
 # ===================== FRONTENDS ============================
 
 include(${CMAKE_SOURCE_DIR}/cmake/FrontendPluginList.cmake)
