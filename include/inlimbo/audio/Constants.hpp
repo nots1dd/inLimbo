@@ -5,7 +5,7 @@
 namespace audio::constants
 {
 
-// Frames written per snd_pcm_writei() call
+// Frames written per "write" call (ex: snd_pcm_writei() in ALSA)
 inline constexpr std::size_t FramesPerBuffer = 512;
 
 inline constexpr std::size_t MaxChannels = 8;

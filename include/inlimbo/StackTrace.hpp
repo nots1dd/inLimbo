@@ -7,6 +7,25 @@
 #include <unistd.h>
 #include <vector>
 
+// Note:
+//
+// This header is not used in release build.
+//
+// StackTrace:
+//
+// Uses libbacktrace like so:
+//
+// 1. Record a function for backtrace (so in runtime we get the info that at this time, this function was called from this parent)
+// 2. If it doesnt exit the functional scope, we know that something went wrong within that scope (or its children scopes)
+//
+// It is very useful for me to debug and understand the program flow of where things went wrong.
+//
+// IMPORTANT:
+// Depending on where we record backtraces, memory usage keeps spiking over time quite fast!
+//
+// It is highly recommended NOT to use debug build for regular purposes!!
+//
+
 #ifdef INLIMBO_DEBUG_BUILD
 
 #include "utils/timer/Timer.hpp"

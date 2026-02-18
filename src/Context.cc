@@ -503,8 +503,16 @@ auto initializeContext(int argc, char** argv) -> AppContext
   ctx.m_audioBackendName = tomlparser::Config::getString("audio", "backend", "alsa");
   ctx.m_fePluginName     = PluginName{ctx.args.frontend};
 
-  const float vol = ctx.args.volume;
+  float vol = ctx.args.volume;
 
+  if (vol <= 0.0)
+  {
+    LOG_DEBUG("Invalid volume found in arguments, fetching default from config...");
+    vol = tomlparser::Config::getInt("audio", "volume", 75);
+  }
+  
+  // volume fetched from user is (0-150) range but is normalized to 0-1.5
+  // in the audio backend.
   ctx.m_volume      = std::clamp(vol / 100.0f, 0.0f, 1.5f);
   ctx.m_printAction = resolvePrintAction(ctx.args);
   ctx.m_editAction  = resolveEditAction(ctx.args);
@@ -561,7 +569,8 @@ void buildOrLoadLibrary(AppContext& ctx)
   //
   // as that is most logical.
   //
-  // other ways to sort & store (or) just query from CLI are coming soon.
+  // We can change this sort logic via config.toml 
+  // (check out examples/config/config.toml for more!)
   const auto plan = config::sort::loadRuntimeSortPlan();
   query::songmap::mut::sortSongMap(g_songMap, plan);
 
@@ -585,6 +594,15 @@ void runFrontend(AppContext& ctx)
 
   // in the frontend only we care about locking the application so we run lock here, not in main
   // file.
+  //
+  // so this lets us run cmd line args of the main inLimbo binary without lock (as they are *mostly* read ops)
+  // but if we launch a frontend then it will not allow multiple procs to run.
+  //
+  // Even if some args write to the actual file (like edit subcommand), the frontends are designed to use 
+  // the in memory `threads::SafeMap<SongMap>` which does not know about the changes made - if any change
+  // is too destructive (say file path has changed) it will give a neat runtime error and exit the app.
+  //
+  // The next time you run the binary, inLimbo will notice these changes and immediately do a re-cache.
 
   try
   {

@@ -5,9 +5,8 @@
 namespace audio::service
 {
 
-// we store mapping of SoundHandle ID to Song file path stored in metadata (verified metadata)
+// we store mapping of SoundHandle ID to a shared pointer to the song object
 //
-// This is unique to each song (almost as unique as the inode itself) and more importantly,
 // makes it easy to immediately load the song file without calling song map queries.
 using TrackTable = ankerl::unordered_dense::map<ui64, std::shared_ptr<const Song>>;
 

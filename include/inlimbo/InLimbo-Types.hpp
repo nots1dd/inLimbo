@@ -85,6 +85,7 @@ struct Metadata
   float      duration = 0.0f;
   int        bitrate  = 0;
 
+  // Path stored in `file://` URI format.
   PathStr artUrl;
 
   template <class Archive>
