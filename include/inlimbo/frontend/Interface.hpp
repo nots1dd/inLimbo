@@ -29,14 +29,14 @@
 // - Codebase Structure
 //
 // Currently inLimbo works as a monorepo for all frontends as well it is easier for me to
-// traverse and make changes and as such, frontend code is expected to be integrated the 
+// traverse and make changes and as such, frontend code is expected to be integrated the
 // same way (but is not a compulsion)
 //
 // ideal tree:
 // include/inlimbo/frontend/<your-frontend> -> define headers here:
 //    - Interface.hpp
 //    - Structs.hpp
-// 
+//
 // src/frontend/<your-frontend>             -> define source files here:
 //    - Interface.cc
 //    - PluginShim.cc
@@ -100,8 +100,8 @@
 // in your frontend neatly that is readable for easy debugging.
 //
 // The only disadvantage of this method is that over the C ABI, we have to pass all parameters
-// of the constructor as raw pointers so C++ purists maybe a bit upset with this, but if handled well
-// it is of trivial concern.
+// of the constructor as raw pointers so C++ purists maybe a bit upset with this, but if handled
+// well it is of trivial concern.
 //
 // 1.1.3 What is Structs.hpp?
 //
@@ -119,16 +119,17 @@
 // 2. Colors
 // 3. Song map sorting
 //
-// I will be writing a more detailed doc on creating this (check include/inlimbo/frontend/cmdline/Structs.hpp).
+// I will be writing a more detailed doc on creating this (check
+// include/inlimbo/frontend/cmdline/Structs.hpp).
 //
-// Well this is where your config handling will come into picture. 
+// Well this is where your config handling will come into picture.
 //
 // 1.2 Combining your code with CMake
 //
 // The number of frontends and their basic info is gathered at compile time via CMake. It is easy
 // to integrate (check out templates/cmake/frontend/Frontend.cmake) for easy reference.
 //
-// The comments in that file neatly give the outline of what is expected to be changed by you in 
+// The comments in that file neatly give the outline of what is expected to be changed by you in
 // order to make it work. Again if you face any problems, check out cmake/frontends/cmdline.cmake
 // or ftxui.cmake files.
 //
@@ -148,11 +149,12 @@
 //
 //  - Plugin path not found -> Did not integrate with cmake pipeline properly.
 //
-//  - ABI mismatch -> Did not invoke plugin shim and likely tried to implement interface on your own?
-//                                            
-//  
+//  - ABI mismatch -> Did not invoke plugin shim and likely tried to implement interface on your
+//  own?
+//
+//
 // 3. End
-// 
+//
 // The frontend interface logic is pretty stable as of writing this and I do not plan any big
 // changes on this as it works pretty well and I do not have to touch a lot of the codebase now
 // when making frontend changes.
