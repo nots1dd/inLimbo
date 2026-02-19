@@ -134,9 +134,10 @@ void NowPlayingState::loadLyrics(const Metadata& meta, int wrap_width, const boo
 
     if (auto cached = helpers::lrc::tryReadCachedLRC(cachePath))
     {
-      raw_lyrics    = *cached;
-      m_source      = LyricsSource::LrcCache;
-      m_source_info = "Source: LRC cache (" + utils::string::transform::trim(cachePath.string(), 30) + ")";
+      raw_lyrics = *cached;
+      m_source   = LyricsSource::LrcCache;
+      m_source_info =
+        "Source: LRC cache (" + utils::string::transform::trim(cachePath.string(), 30) + ")";
     }
   }
 
