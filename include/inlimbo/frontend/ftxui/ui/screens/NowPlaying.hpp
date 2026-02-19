@@ -24,8 +24,8 @@ private:
   state::album_art::AlbumArtState&     m_art;
   audio::Service*                      m_audioPtr;
 
-  ftxui::Component lyrics_menu;
-  ftxui::Component lyrics_scroller;
+  ftxui::Component lyrics_content;
+  ftxui::Component lyrics_view;
 };
 
 } // namespace frontend::tui::ui::screens

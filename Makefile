@@ -205,7 +205,10 @@ tidy:
 		exit 1; \
 	fi
 	@echo -e "$(COLOR_BLUE)▶ Running clang-tidy...$(COLOR_RESET)"
-	@$(CLANG_TIDY) $(CPP_FILES) -- -std=c++20
+	@$(CLANG_TIDY) \
+	  $(CPP_FILES) \
+	  -p $(dir $(COMPILE_COMMANDS)) \
+	  --header-filter='($(HDR_DIRS_REGEX))'
 	@echo -e "$(COLOR_GREEN)✔ clang-tidy finished$(COLOR_RESET)"
 
 # ============================================================

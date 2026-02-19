@@ -16,6 +16,28 @@ EventHandler::EventHandler(UIScreen& activeScreen, state::library::LibraryState&
 {
 }
 
+// delta in range 0.0 to 1.5 (will be clamped)
+void EventHandler::adjustVolume(float delta)
+{
+  float vol = m_audioPtr->getVolume();
+  vol       = std::clamp(vol + delta, 0.0f, 1.5f);
+  m_audioPtr->setVolume(vol);
+  m_volume = vol;
+}
+
+void EventHandler::toggleMute()
+{
+  float vol = m_audioPtr->getVolume();
+
+  if (vol == 0.0f)
+    m_audioPtr->setVolume(m_volume);
+  else
+  {
+    m_volume = vol;
+    m_audioPtr->setVolume(0.0f);
+  }
+}
+
 auto EventHandler::handle(Event e) -> bool
 {
   if (e == Event::Character('q'))
@@ -113,6 +135,23 @@ auto EventHandler::handle(Event e) -> bool
       if (e == Event::Character('3'))
       {
         m_activeScreen = UIScreen::Queue;
+        return true;
+      }
+
+      if (e == Event::Character('l'))
+      {
+        if (!m_audioPtr)
+          return true;
+
+        auto meta = m_audioPtr->getCurrentMetadata();
+        if (!meta)
+          return true;
+
+        auto term       = ftxui::Terminal::Size();
+        int  half_width = term.dimx / 2;
+        int  wrap_width = std::max(10, term.dimx - half_width - 6);
+
+        m_nowState.fetchLyricsFromLRCAsync(*meta, wrap_width, m_threadManager);
         return true;
       }
 
@@ -271,13 +310,19 @@ auto EventHandler::handle(Event e) -> bool
 
   if (e == Event::Character('='))
   {
-    m_audioPtr->setVolume(std::min(1.5f, m_audioPtr->getVolume() + 0.05f));
+    adjustVolume(+0.05f);
     return true;
   }
 
   if (e == Event::Character('-'))
   {
-    m_audioPtr->setVolume(std::max(0.0f, m_audioPtr->getVolume() - 0.05f));
+    adjustVolume(-0.05f);
+    return true;
+  }
+
+  if (e == Event::Character('m'))
+  {
+    toggleMute();
     return true;
   }
 

@@ -9,6 +9,30 @@
 namespace frontend::tui::managers
 {
 
+void ThreadManager::execute(std::function<void()> fn)
+{
+  if (!m_isRunning.load())
+    return;
+
+  std::thread(
+    [fn = std::move(fn)]() mutable -> void
+    {
+      try
+      {
+        fn();
+      }
+      catch (const std::exception& e)
+      {
+        LOG_ERROR("ThreadManager::execute task failed: {}", e.what());
+      }
+      catch (...)
+      {
+        LOG_ERROR("ThreadManager::execute task failed with unknown error");
+      }
+    })
+    .detach();
+}
+
 void ThreadManager::executeWithTelemetry(const std::function<void(audio::Service&)>& fn)
 {
   if (!m_audioPtr || !m_telemetry)
@@ -138,7 +162,7 @@ void ThreadManager::statusLoop()
       {
         helpers::telemetry::playbackTransition(*m_audioPtr, m_telemetry, m_currentPlay,
                                                m_lastPlayTick,
-                                               [&] { m_audioPtr->nextTrackGapless(); });
+                                               [&]() -> void { m_audioPtr->nextTrackGapless(); });
 
         m_mpris->updateMetadata();
         m_mpris->notify();

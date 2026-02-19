@@ -44,11 +44,15 @@ private:
 
   managers::ThreadManager& m_threadManager;
 
+  float m_volume{0.0f};
+
   audio::Service*            m_audioPtr;
   threads::SafeMap<SongMap>* m_songMap{nullptr};
   mpris::Service*            m_mpris{nullptr};
 
   void playSelected();
+  void adjustVolume(float delta);
+  void toggleMute();
 };
 
 } // namespace frontend::tui::ui

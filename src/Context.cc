@@ -522,7 +522,7 @@ auto initializeContext(int argc, char** argv) -> AppContext
 
   float vol = ctx.args.volume;
 
-  if (vol <= 0.0)
+  if (vol < 0.0 || vol > 150.0)
   {
     LOG_DEBUG("Invalid volume found in arguments, fetching default from config...");
     vol = tomlparser::Config::getInt("audio", "volume", 75);

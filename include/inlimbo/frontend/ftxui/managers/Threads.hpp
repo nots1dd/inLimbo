@@ -41,6 +41,7 @@ public:
 
   void executeWithTelemetry(const std::function<void(audio::Service&)>& fn);
   void setOnConfigReload(std::function<void()> fn);
+  void execute(std::function<void()> fn);
 
 private:
   void loadMiscConfig(MiscConfig& miscCfg);

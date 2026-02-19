@@ -1,5 +1,4 @@
 #include "frontend/ftxui/ui/screens/NowPlaying.hpp"
-#include "frontend/ftxui/components/scroll/Scrollable.hpp"
 #include "utils/fs/FileUri.hpp"
 
 using namespace ftxui;
@@ -11,9 +10,22 @@ NowPlayingScreen::NowPlayingScreen(state::now_playing::NowPlayingState& nowState
                                    state::album_art::AlbumArtState&     artState)
     : m_now(nowState), m_art(artState)
 {
-  lyrics_menu = Menu(&m_now.lyrics(), &m_now.selectedIndex());
+  lyrics_content = Renderer([&]() -> Element { return vbox(m_now.renderLyrics()); });
 
-  lyrics_scroller = Scroller(lyrics_menu, &m_now.selectedIndex(), Color::Cyan, Color::GrayDark);
+  lyrics_view = Renderer(
+    lyrics_content,
+    [&]() -> Element
+    {
+      const auto& lines    = m_now.lyrics();
+      float       scroll_y = 0.0f;
+
+      if (!lines.empty())
+      {
+        scroll_y = float(m_now.selectedIndex()) / float(std::max<int>(1, int(lines.size()) - 1));
+      }
+
+      return lyrics_content->Render() | focusPositionRelative(0.0f, scroll_y) | frame | flex;
+    });
 }
 
 auto NowPlayingScreen::render() -> Element
@@ -27,14 +39,13 @@ auto NowPlayingScreen::render() -> Element
   if (!meta || !trackInfo)
     return text("No Track");
 
-  static PathStr last_art_path;
+  static PathStr last_art_url;
+  static int     last_wrap_width = 0;
 
   auto term       = Terminal::Size();
   int  half_width = term.dimx / 2;
 
   int wrap_width = std::max(10, term.dimx - half_width - 6);
-
-  static int last_wrap_width = 0;
 
   if (wrap_width != last_wrap_width)
   {
@@ -42,11 +53,10 @@ auto NowPlayingScreen::render() -> Element
     m_now.loadLyrics(*meta, wrap_width);
   }
 
-  if (meta->artUrl != last_art_path)
+  if (meta->artUrl != last_art_url)
   {
-    last_art_path = meta->artUrl;
-
-    m_art.load(utils::fs::fromAbsFilePathUri(meta->artUrl.c_str()).c_str());
+    last_art_url = meta->artUrl;
+    m_art.load(utils::fs::fromAbsFilePathUri(meta->artUrl).c_str());
     m_now.loadLyrics(*meta, wrap_width);
   }
 
@@ -55,11 +65,32 @@ auto NowPlayingScreen::render() -> Element
   auto left =
     m_art.render() | size(WIDTH, EQUAL, half_width) | size(HEIGHT, EQUAL, content_height) | border;
 
-  auto lyrics_view = window(text(" Lyrics ") | bold, lyrics_scroller->Render() | frame | flex) |
-                     size(WIDTH, EQUAL, term.dimx - half_width) |
-                     size(HEIGHT, EQUAL, content_height) | border;
+  Element lyrics_header = hbox({text(" Lyrics ") | bold, filler(), [&]() -> Element
+                                {
+                                  using namespace state::now_playing;
 
-  return hbox({left, lyrics_view}) | flex | bgcolor(Color::RGB(18, 18, 18));
+                                  switch (m_now.lyricsFetchState())
+                                  {
+                                    case LyricsFetchState::Fetching:
+                                      return text("Fetching lyrics... ") | color(Color::Yellow);
+
+                                    case LyricsFetchState::Error:
+                                      return text("Error <!> ") | color(Color::Red);
+
+                                    case LyricsFetchState::Ready:
+                                      return text("<:)> ") | dim;
+
+                                    case LyricsFetchState::Idle:
+                                    default:
+                                      return text("<::> ") | color(Color::Cyan);
+                                  }
+                                }()});
+
+  auto right = window(lyrics_header, lyrics_view->Render()) |
+               size(WIDTH, EQUAL, term.dimx - half_width) | size(HEIGHT, EQUAL, content_height) |
+               border;
+
+  return hbox({left, right}) | flex | bgcolor(Color::RGB(18, 18, 18));
 }
 
 } // namespace frontend::tui::ui::screens

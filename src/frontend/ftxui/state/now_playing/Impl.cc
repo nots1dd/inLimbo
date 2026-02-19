@@ -1,9 +1,62 @@
 #include "frontend/ftxui/state/now_playing/Impl.hpp"
 #include "frontend/ftxui/state/now_playing/LRC.hpp"
 #include "helpers/fs/LRC.hpp"
+#include "lrc/Client.hpp"
 
 namespace frontend::tui::state::now_playing
 {
+
+auto NowPlayingState::lyricsFetchState() const -> LyricsFetchState { return m_fetch_state; }
+
+auto NowPlayingState::lyricsError() const -> const std::string& { return m_fetch_error; }
+
+auto NowPlayingState::hasLyrics() const -> bool
+{
+  return !m_lyrics.empty() &&
+         !(m_lyrics.size() == 1 && m_lyrics[0].find("Lyrics not found") != std::string::npos);
+}
+
+void NowPlayingState::fetchLyricsFromLRCAsync(const Metadata& meta, int wrap_width,
+                                              managers::ThreadManager& tm)
+{
+  if (m_fetch_state == LyricsFetchState::Fetching)
+    return;
+
+  m_fetch_state = LyricsFetchState::Fetching;
+  m_fetch_error.clear();
+
+  tm.execute(
+    [this, meta, wrap_width]() -> void
+    {
+      auto cachePath = helpers::lrc::genLRCFilePath(meta.artist, meta.title, meta.album);
+
+      if (helpers::lrc::tryReadCachedLRC(cachePath))
+      {
+        m_fetch_state = LyricsFetchState::Ready;
+        loadLyrics(meta, wrap_width);
+        return;
+      }
+
+      ::lrc::Client client;
+
+      ::lrc::Query query;
+      query.artist = meta.artist;
+      query.album  = meta.album;
+      query.track  = meta.title;
+
+      auto res = client.fetchBestMatchAndCache(query);
+
+      if (!res.ok())
+      {
+        m_fetch_error = res.error.message;
+        m_fetch_state = LyricsFetchState::Error;
+        return;
+      }
+
+      loadLyrics(meta, wrap_width);
+      m_fetch_state = LyricsFetchState::Ready;
+    });
+}
 
 auto NowPlayingState::lyrics() -> std::vector<std::string>& { return m_lyrics; }
 
@@ -28,6 +81,30 @@ auto NowPlayingState::setSelectedIndex(int index) -> void
 }
 
 auto NowPlayingState::sourceInfo() const -> const std::string& { return m_source_info; }
+
+auto NowPlayingState::renderLyrics() -> std::vector<ftxui::Element>
+{
+  using namespace ftxui;
+  std::vector<Element> out;
+
+  for (int i = 0; i < (int)m_lyrics.size(); ++i)
+  {
+    Element line = text(m_lyrics[i]);
+
+    if (i == m_selected_index)
+      line = line | bgcolor(Color::RGB(40, 60, 90)) | color(Color::White) | bold;
+
+    if (m_lyrics[i].empty())
+      line = line | dim;
+
+    out.push_back(line);
+  }
+
+  if (out.empty())
+    out.push_back(text("No lyrics available.") | dim | center);
+
+  return out;
+}
 
 void NowPlayingState::loadLyrics(const Metadata& meta, int wrap_width)
 {
@@ -58,9 +135,17 @@ void NowPlayingState::loadLyrics(const Metadata& meta, int wrap_width)
 
   if (raw_lyrics.empty())
   {
-    m_lyrics = {"Lyrics not found.",    "", "Attempted sources:",     " • Embedded metadata",
-                " • Local LRC cache",   "", "Artist: " + meta.artist, "Title : " + meta.title,
-                "Album : " + meta.album};
+    m_lyrics = {"Lyrics not found.",
+                "",
+                "Attempted sources:",
+                " • Embedded metadata",
+                " • Local LRC cache",
+                "",
+                "Artist: " + meta.artist,
+                "Title : " + meta.title,
+                "Album : " + meta.album,
+                "",
+                "Press 'l' to fetch lyrics! (Requires internet connection)"};
     return;
   }
 
