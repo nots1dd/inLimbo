@@ -8,8 +8,10 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/License-GNU GPL%20v3-blue" alt="License" />
-  <img src="https://img.shields.io/badge/Version-3.0%20alpha-red" alt="Version" />
-  <img src="https://img.shields.io/badge/Build-passing-brightgreen" alt="Build" />
+  <img src="https://img.shields.io/badge/Version-1.0%20alpha-red" alt="Version" />
+  <img src="https://img.shields.io/github/actions/workflow/status/nots1dd/inLimbo/build-ubuntu.yml?label=ubuntu&logo=ubuntu" />
+  <img src="https://img.shields.io/github/actions/workflow/status/nots1dd/inLimbo/build-fedora.yml?label=fedora&logo=fedora" />
+  <img src="https://img.shields.io/github/actions/workflow/status/nots1dd/inLimbo/build-arch.yml?label=arch&logo=archlinux" />
 </p>
 <p align="center">
   <a href="https://nots1dd.github.io/inLimbo">Documentation</a> ·
@@ -321,6 +323,59 @@ For easy HTTP body parsing is thanks to [nlohmann/json](https://github.com/nlohm
 This music player's UI flow is heavily inspired by [CMUS](https://github.com/cmus/cmus), it seemed (to me atleast) the fastest and most responsive and logical UI/UX design of a TUI that has a great balance between looking good and feeling smooth
 
 A lot of the features and UX came to my head thanks to [namida](https://github.com/namidaco/namida), very sleek cross platform player with great UI.
+
+## **FAQ**
+
+1. Will this work on Windows now or in the future?
+
+> I highly doubt it. I myself do not have windows readily available 
+> to test and run on (and would not want to install it anyway)
+> so realistically, this will remain for *NIX systems only at best.
+
+2. Do I need network capabilities on my PC to build and run inLimbo?
+
+> You do not need network *per se* to use inLimbo, but you will need a stable network for:
+> 
+> 1. Building (as it fetches required submodules) the project
+> 2. Fetching lyrics (either during `query --print-song-lyrics` or in `ftxui`)
+> 
+> Clearly, not a lot of places where we are using active network connection. Now point number
+> 2 is totally optional and inLimbo's `HTTPS Client` will give clean errors anyway so 
+> even if you do not have a network connection you can use inLimbo to the fullest, 
+> but of course during building it has to find and get submodules to compile.
+
+3. Can I trust inLimbo with my data?
+
+> The only data inLimbo collects are all stored **LOCALLY** only:
+> 
+> 1. Library cache
+> 2. Telemetry data (cached)
+> 
+> Both of these cache can be modified and deleted by the user
+> at their own will and if it wasnt obvious, inLimbo does not
+> share this data anyway.
+
+4. Other TUI music players have great album art, why this so trash?
+
+> Ok well firstly this isnt trash #iloveasciiart
+> 
+> Secondly, I did not find a library or software that supports
+> proper image rendering within `FTXUI` - the main TUI for this project.
+> 
+> I did however, try to make the image as defined as possible without making
+> it too pixelated (yes there is a tradeoff) so certain artwork do look
+> bad (either very detailed ones or super plain ones suffer the most)
+> 
+> I could have an option in the future to switch between different
+> rendering styles, but it is of low priority imo and most of the art
+> already look better than I anticipated initially.
+> 
+> As for other TUI libraries, they were probably made with the notion
+> of using the terminal emulators graphical protocols (like sixel/kitty)
+> to get the job done. As far as I am aware, `FTXUI` did not consider it
+> which is fine, it is simple and neat, and if you really want to see
+> your thumbnail in 4k, change the frontend to `raylib` :) simple as that.
+
 
 ## **LICENSE**
 
