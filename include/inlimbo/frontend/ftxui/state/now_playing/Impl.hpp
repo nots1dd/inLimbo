@@ -30,11 +30,11 @@ class NowPlayingState
 public:
   DEFAULT_CTOR(NowPlayingState);
 
-  auto               renderLyrics() -> std::vector<ftxui::Element>;
-  void               loadLyrics(const Metadata& meta, int wrap_width);
-  auto               lyrics() -> std::vector<std::string>&;
-  auto               selectedIndex() -> int&;
-  auto               setSelectedIndex(int index) -> void;
+  auto renderLyrics() -> std::vector<ftxui::Element>;
+  void loadLyrics(const Metadata& meta, int wrap_width, const bool refreshFetchState = true);
+  auto lyrics() -> std::vector<std::string>&;
+  auto selectedIndex() -> int&;
+  auto setSelectedIndex(int index) -> void;
   [[nodiscard]] auto sourceInfo() const -> const std::string&;
   void fetchLyricsFromLRCAsync(const Metadata& meta, int wrap_width, managers::ThreadManager& tm);
   [[nodiscard]] auto hasLyrics() const -> bool;

@@ -72,17 +72,17 @@ auto NowPlayingScreen::render() -> Element
                                   switch (m_now.lyricsFetchState())
                                   {
                                     case LyricsFetchState::Fetching:
-                                      return text("Fetching lyrics... ") | color(Color::Yellow);
+                                      return text("Fetching <-.-> ") | color(Color::Yellow);
 
                                     case LyricsFetchState::Error:
-                                      return text("Error <!> ") | color(Color::Red);
+                                      return text("Error <!.!> ") | color(Color::Red);
 
                                     case LyricsFetchState::Ready:
-                                      return text("<:)> ") | dim;
+                                      return text("<:3> ") | dim;
 
                                     case LyricsFetchState::Idle:
                                     default:
-                                      return text("<::> ") | color(Color::Cyan);
+                                      return text("<=.=> ") | color(Color::Cyan);
                                   }
                                 }()});
 

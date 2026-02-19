@@ -24,10 +24,12 @@ private:
   state::library::LibraryState& m_state;
   audio::Service*               m_audioPtr;
 
-  ftxui::Component artist_menu;
+  ftxui::Component artist_content;
   ftxui::Component album_content;
   ftxui::Component album_view;
+  ftxui::Component artist_view;
   float            album_scroll;
+  float            artist_scroll;
   ftxui::Component root_renderer;
 
   bool focus_on_artists{true};

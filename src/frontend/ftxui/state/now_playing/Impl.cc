@@ -50,6 +50,7 @@ void NowPlayingState::fetchLyricsFromLRCAsync(const Metadata& meta, int wrap_wid
       {
         m_fetch_error = res.error.message;
         m_fetch_state = LyricsFetchState::Error;
+        loadLyrics(meta, wrap_width, false);
         return;
       }
 
@@ -106,8 +107,14 @@ auto NowPlayingState::renderLyrics() -> std::vector<ftxui::Element>
   return out;
 }
 
-void NowPlayingState::loadLyrics(const Metadata& meta, int wrap_width)
+void NowPlayingState::loadLyrics(const Metadata& meta, int wrap_width, const bool refreshFetchState)
 {
+  if (refreshFetchState)
+  {
+    m_fetch_state = LyricsFetchState::Idle;
+    m_fetch_error.clear();
+  }
+
   m_lyrics.clear();
   m_selected_index = 0;
   m_source         = LyricsSource::None;
@@ -129,23 +136,28 @@ void NowPlayingState::loadLyrics(const Metadata& meta, int wrap_width)
     {
       raw_lyrics    = *cached;
       m_source      = LyricsSource::LrcCache;
-      m_source_info = "Source: LRC cache (" + cachePath.string() + ")";
+      m_source_info = "Source: LRC cache (" + utils::string::transform::trim(cachePath.string(), 30) + ")";
     }
   }
 
   if (raw_lyrics.empty())
   {
-    m_lyrics = {"Lyrics not found.",
-                "",
-                "Attempted sources:",
-                " • Embedded metadata",
-                " • Local LRC cache",
-                "",
-                "Artist: " + meta.artist,
-                "Title : " + meta.title,
-                "Album : " + meta.album,
-                "",
-                "Press 'l' to fetch lyrics! (Requires internet connection)"};
+    m_lyrics = {
+      "Lyrics not found.", "", "Attempted sources:", " • Embedded metadata", " • Local LRC cache",
+    };
+
+    if (m_fetch_state == LyricsFetchState::Error && !m_fetch_error.empty())
+    {
+      m_lyrics.emplace_back("");
+      m_lyrics.emplace_back("Last fetch error:");
+      m_lyrics.emplace_back(" • " + m_fetch_error);
+    }
+
+    m_lyrics.insert(m_lyrics.end(),
+                    {"", "Artist: " + meta.artist, "Title : " + meta.title, "Album : " + meta.album,
+                     "", "Press 'l' to fetch lyrics (requires internet)", "",
+                     "NOTE: Some songs may not have LRC files - fetching may fail."});
+
     return;
   }
 

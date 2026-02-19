@@ -2,6 +2,7 @@
 
 #include "Config.hpp"
 #include "utils/string/SmallString.hpp"
+#include <string>
 
 namespace utils::string::transform
 {
@@ -22,5 +23,7 @@ INLIMBO_API_CPP constexpr auto fast_toupper_ascii(char c) noexcept -> char
 
 INLIMBO_API_CPP auto tolower_ascii(const char* s) noexcept -> SmallString;
 INLIMBO_API_CPP auto toupper_ascii(const char* s) noexcept -> SmallString;
+
+INLIMBO_API_CPP auto trim(const std::string& s, std::size_t max) -> std::string;
 
 } // namespace utils::string::transform

@@ -17,8 +17,8 @@ public:
 
   void rebuild();
   void rebuildForSelectedArtist(int selected_artist);
-  void decorateAlbumViewSelection(int                            selectedIndex,
-                                  const std::optional<Metadata>& playingMetadata);
+  void decorateAlbumViewSelection(int selectedIndex, const std::optional<Metadata>& playingMetadata,
+                                  bool focused);
 
   void moveSelection(int delta);
 

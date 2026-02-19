@@ -39,4 +39,15 @@ auto toupper_ascii(const char* s) noexcept -> SmallString
   return out;
 }
 
+auto trim(const std::string& s, std::size_t max) -> std::string
+{
+  if (s.size() <= max)
+    return s;
+
+  if (max <= 3)
+    return s.substr(0, max);
+
+  return s.substr(0, max - 3) + "...";
+}
+
 } // namespace utils::string::transform

@@ -1,23 +1,13 @@
 #include "frontend/ftxui/state/library/Impl.hpp"
 #include "query/SongMap.hpp"
 #include "utils/Index.hpp"
+#include "utils/string/Transforms.hpp"
 #include "utils/timer/Timer.hpp"
 
 using namespace ftxui;
 
 namespace frontend::tui::state::library
 {
-
-static auto trimTitle(const std::string& s, std::size_t max) -> std::string
-{
-  if (s.size() <= max)
-    return s;
-
-  if (max <= 3)
-    return s.substr(0, max);
-
-  return s.substr(0, max - 3) + "...";
-}
 
 LibraryState::LibraryState(threads::SafeMap<SongMap>* map) : m_songMapTS(map) {}
 
@@ -68,7 +58,7 @@ void LibraryState::buildAlbumViewForArtist(const Artist& artist)
         current_disc  = -1;
 
         album_elements_base.push_back(
-          hbox({text("▌ ") | color(Color::Cyan), text(trimTitle(album, 50))}) |
+          hbox({text("▌ ") | color(Color::Cyan), text(utils::string::transform::trim(album, 50))}) |
           bgcolor(Color::RGB(25, 25, 25)) | color(Color::Cyan) | bold | frame);
 
         view_song_objects.push_back(nullptr);
@@ -86,7 +76,7 @@ void LibraryState::buildAlbumViewForArtist(const Artist& artist)
       }
 
       std::string line = (track < 10 ? "0" : "") + std::to_string(track) + "  " +
-                         trimTitle(song->metadata.title, 50);
+                         utils::string::transform::trim(song->metadata.title, 50);
 
       std::string dur = utils::timer::fmtTime(song->metadata.duration);
 
@@ -161,14 +151,32 @@ void LibraryState::moveSelection(int delta)
 }
 
 void LibraryState::decorateAlbumViewSelection(int                            selectedIndex,
-                                              const std::optional<Metadata>& playingMetadata)
+                                              const std::optional<Metadata>& playingMetadata,
+                                              bool                           focused)
 {
   album_elements = album_elements_base;
 
   for (int i = 0; i < (int)album_elements.size(); ++i)
   {
-    if (i == selectedIndex)
-      album_elements[i] = album_elements[i] | bgcolor(Color::RGB(40, 60, 90)) | bold;
+    const bool selected = (i == selectedIndex);
+
+    if (selected)
+    {
+      if (focused)
+      {
+        album_elements[i] =
+          album_elements[i] | bgcolor(Color::RGB(40, 60, 90)) | color(Color::White) | bold;
+      }
+      else
+      {
+        album_elements[i] =
+          album_elements[i] | bgcolor(Color::GrayDark) | color(Color::RGB(180, 180, 180)) | bold;
+      }
+    }
+    else
+    {
+      album_elements[i] = album_elements[i] | dim;
+    }
 
     if (playingMetadata && view_song_objects[i] &&
         view_song_objects[i]->metadata.title == playingMetadata->title)

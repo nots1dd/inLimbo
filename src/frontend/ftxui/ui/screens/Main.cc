@@ -8,7 +8,56 @@ namespace frontend::tui::ui::screens
 
 MainScreen::MainScreen(state::library::LibraryState& state) : m_state(state)
 {
-  artist_menu = Menu(&m_state.artists, &m_state.selected_artist) | vscroll_indicator;
+  artist_content = Renderer(
+    [&]() -> Element
+    {
+      Elements rows;
+
+      const bool focused = m_state.focusOnArtists();
+
+      for (int i = 0; i < (int)m_state.artists.size(); ++i)
+      {
+        Element row = text(" " + m_state.artists[i]);
+
+        if (i == m_state.selected_artist)
+        {
+          if (focused)
+          {
+            row = row | bgcolor(Color::RGB(40, 60, 90)) | color(Color::White) | bold;
+          }
+          else
+          {
+            row = row | bgcolor(Color::GrayDark) | color(Color::RGB(180, 180, 180)) | bold;
+          }
+        }
+        else
+        {
+          row = row | dim;
+        }
+
+        rows.push_back(row);
+      }
+
+      if (rows.empty())
+        rows.push_back(text("No artists") | dim | center);
+
+      return vbox(rows);
+    });
+
+  artist_scroll = 0.0f;
+
+  artist_view = Renderer(artist_content,
+                         [&]() -> Element
+                         {
+                           const int count = (int)m_state.artists.size();
+                           if (count > 1)
+                             artist_scroll = float(m_state.selected_artist) / float(count - 1);
+                           else
+                             artist_scroll = 0.0f;
+
+                           return artist_content->Render() |
+                                  focusPositionRelative(0.0f, artist_scroll) | frame | flex;
+                         });
 
   album_content =
     Renderer([&]() -> Element { return vbox(m_state.returnAlbumElements()) | vscroll_indicator; });
@@ -31,7 +80,7 @@ MainScreen::MainScreen(state::library::LibraryState& state) : m_state(state)
                         });
 
   container = Container::Horizontal({
-    artist_menu,
+    artist_view,
     album_view,
   });
 }
@@ -39,7 +88,7 @@ MainScreen::MainScreen(state::library::LibraryState& state) : m_state(state)
 void MainScreen::syncFocus()
 {
   if (m_state.focusOnArtists())
-    artist_menu->TakeFocus();
+    artist_view->TakeFocus();
   else
     album_view->TakeFocus();
 }
@@ -58,13 +107,13 @@ auto MainScreen::render() -> Element
   if (m_audioPtr)
   {
     m_state.decorateAlbumViewSelection(m_state.selected_album_index,
-                                       m_audioPtr->getCurrentMetadata());
+                                       m_audioPtr->getCurrentMetadata(), !m_state.focusOnArtists());
   }
 
   auto term       = Terminal::Size();
   int  half_width = term.dimx / 2;
 
-  auto artist_inner = window(text(" Artists ") | bold, artist_menu->Render() | frame | flex) |
+  auto artist_inner = window(text(" Artists ") | bold, artist_view->Render() | frame | flex) |
                       size(WIDTH, EQUAL, half_width);
 
   auto album_inner = window(text(" Songs ") | bold, album_view->Render() | frame | flex) |
