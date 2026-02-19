@@ -1,0 +1,40 @@
+#pragma once
+
+#include "audio/Service.hpp"
+#include "frontend/ftxui/state/library/Impl.hpp"
+#include <ftxui/component/component.hpp>
+#include <ftxui/dom/elements.hpp>
+
+namespace frontend::tui::ui::screens
+{
+
+class MainScreen
+{
+public:
+  MainScreen(state::library::LibraryState& state);
+
+  auto component() -> ftxui::Component;
+  auto render() -> ftxui::Element;
+
+  void attachAudioService(audio::Service& audio) { m_audioPtr = &audio; }
+
+  ftxui::Component container;
+
+private:
+  state::library::LibraryState& m_state;
+  audio::Service*               m_audioPtr;
+
+  ftxui::Component artist_content;
+  ftxui::Component album_content;
+  ftxui::Component album_view;
+  ftxui::Component artist_view;
+  float            album_scroll;
+  float            artist_scroll;
+  ftxui::Component root_renderer;
+
+  bool focus_on_artists{true};
+
+  void syncFocus();
+};
+
+} // namespace frontend::tui::ui::screens

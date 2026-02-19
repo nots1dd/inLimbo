@@ -1,0 +1,9 @@
+CompileFlags:
+  CompilationDatabase: build
+
+  Add:
+    - -Iinclude
+    - -Iinclude/inlimbo
+    - -Iexternal/cxxopts/include
+    - -Iexternal/tomlplusplus
+    - -Iexternal/cereal/include

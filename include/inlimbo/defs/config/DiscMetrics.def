@@ -1,0 +1,4 @@
+// ENUM, TOML_KEY, TAG_TYPE
+
+X(DiscAsc, "disc_asc", DiscNumberAsc)
+X(DiscDesc, "disc_desc", DiscNumberDesc)

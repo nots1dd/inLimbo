@@ -1,0 +1,10 @@
+git
+cmake
+make
+clang
+clang++
+clang-format
+clang-tidy
+pkg-config
+ffmpeg
+taglib-config

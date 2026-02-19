@@ -1,0 +1,40 @@
+name: "inLimbo CI / Fedora Linux Build (x86-64 arch - GCC)"
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+
+    steps:
+    - name: Update DNF
+      # we need libasan explicitly for debug build
+      # (seems that fedora does not ship it with gcc?)
+      run: |
+        dnf upgrade -y
+        dnf install -y git libasan libubsan
+
+    - name: Checkout repository with submodules
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Install dependencies
+      run: |
+        dnf upgrade -y
+        xargs -a ci/rpm/packages.txt dnf install -y
+
+    - name: Build Release Version of inLimbo (x86-64 arch) - GCC
+      run: |
+        make buildx
+
+    - name: Build Debug Version of inLimbo (x86-64 arch) - GCC (with GNU-ld)
+      run: |
+        make init-dep-backtrace
+        make buildx-dbg

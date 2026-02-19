@@ -1,0 +1,19 @@
+/*
+ X-Macro Argument Table — Modify Arguments
+
+ Schema:
+   ARG(field, storage_type, cli_binding, flags, help, action_enum)
+
+ This table is used for:
+   - CLI registration
+   - Args layout
+   - Action resolution
+   - Validation wiring
+
+ Keep entries declarative only.
+*/
+
+ARG(rebuildLibrary, bool, FLAG, "-r,--rebuild-library", "Force rebuild of music library cache",
+    None)
+ARG(deleteTelemetry, bool, FLAG, "-t,--delete-telemetry",
+    "Force delete all telemetry cache present", None)

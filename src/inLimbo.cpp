@@ -1,0 +1,28 @@
+#include "Context.hpp"
+#include "Logger.hpp"
+#include "StackTrace.hpp"
+#include "utils/signal/Handler.hpp"
+
+auto main(int argc, char** argv) -> int
+{
+  RECORD_FUNC_TO_BACKTRACE("<MAIN>");
+  utils::signal::Handler::getInstance().setup();
+
+  try
+  {
+    auto ctx = inlimbo::initializeContext(argc, argv);
+    inlimbo::buildOrLoadLibrary(ctx);
+    if (inlimbo::maybeHandlePrintActions(ctx))
+      return EXIT_SUCCESS;
+    if (inlimbo::maybeHandleEditActions(ctx))
+      return EXIT_SUCCESS;
+    inlimbo::runFrontend(ctx);
+
+    return EXIT_SUCCESS;
+  }
+  catch (std::exception& e)
+  {
+    LOG_ERROR("inLimbo main thread threw error: {}", e.what());
+    return EXIT_FAILURE;
+  }
+}

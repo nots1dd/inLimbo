@@ -1,0 +1,13 @@
+base-devel
+ffmpeg
+taglib
+libpng
+alsa-lib
+pkgconf
+clang
+clang-tools-extra
+cmake
+make
+git
+dbus
+fftw

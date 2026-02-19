@@ -1,0 +1,76 @@
+#
+# Example config.toml for the inLimbo project.
+# 
+# URL: https://github.com/nots1dd/inLimbo (develop branch) 
+# Author: Siddharth Karanam (nots1dd)
+# 
+
+[library]
+name = "Songs"
+directory = "/home/s1dd/Downloads/Songs/" # just an example
+
+[audio]
+backend = "alsa" # only ALSA available for now
+volume = 80
+
+[telemetry]
+min_playback_event_time = 10 # in seconds
+
+[fuzzy]
+max_dist = 3
+
+[sort]
+# artist has `lex_asc`, `lex_desc`, `album_count_asc`, `album_count_desc`, `track_count_asc`, `track_count_desc`
+artist = "lex_desc"
+# album has `lex_asc`, `lex_desc`, `year_asc`, `year_desc`, `track_count_asc`, `track_count_desc` 
+album  = "year_asc"
+# disc has `disc_asc`, `disc_desc`
+disc   = "disc_asc"
+# track has `track_asc`, `track_desc`
+track  = "track_asc"
+
+# NOTE: Only `Tab`, `Escape`, `Enter/Return` and `Space` are accepted as special chars!
+[keybinds.cmdline]
+play_pause = "p"
+search_title = "/"
+search_artist = "a"
+next_track = "n"
+prev_track = "b"
+random_track = "x"
+restart_track = "r"
+seek_back = "j"
+seek_fwd = "k"
+vol_up = "="
+vol_down = "-"
+quit = "q"
+
+[colors.cmdline]
+bg = "#0B0F14"
+fg = "#9CF1F0"
+accent = "#6F8FAF"
+warning = "#FFC800"
+error = "#FF3C3C"
+success = "#6C948B"
+
+[misc.cmdline]
+seek_duration = 5
+
+[keybinds.raylib]
+play_pause = "p"
+next_track = "n"
+prev_track = "b"
+random_track = "x"
+restart = "r"
+seek_back = "j"
+seek_fwd = "k"
+vol_up = "="
+vol_down = "-"
+quit = "q"
+
+[colors.raylib]
+bg = "#0B0F14"
+fg = "#9CF1F0"
+accent = "#6F8FAF"
+warning = "#FFC800"
+error = "#FF3C3C"
+success = "#6C948B"

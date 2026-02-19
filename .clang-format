@@ -22,4 +22,5 @@ SpaceBeforeRangeBasedForLoopColon: true
 SpaceInEmptyParentheses: false
 PointerAlignment: Left
 IndentPPDirectives: None
+AlwaysBreakTemplateDeclarations: Yes
 ---

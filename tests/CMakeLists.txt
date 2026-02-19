@@ -1,9 +1,27 @@
-# Find all subdirectories in tests and add them
-file(GLOB TEST_DIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} */)
+# tests/CMakeLists.txt
 
-foreach(test_dir ${TEST_DIRS})
-    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${test_dir}/CMakeLists.txt)
-        set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${test_dir}/build)
-        add_subdirectory(${test_dir})
-    endif()
-endforeach()
+# Fetch GoogleTest (recommended way)
+include(FetchContent)
+
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+
+# Prevent overriding parent project compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(googletest)
+
+# Make GTest available to subdirs
+set(GTEST_LIBS
+  gtest
+  gtest_main
+  gmock
+  gmock_main
+)
+
+# Add each test subject
+add_subdirectory(smallstring)
+add_subdirectory(bench)

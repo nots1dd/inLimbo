@@ -1,0 +1,8 @@
+// ENUM, TOML_KEY, TAG_TYPE
+
+X(LexAsc, "lex_asc", ArtistLexicographicAsc)
+X(LexDesc, "lex_desc", ArtistLexicographicDesc)
+X(AlbumCountAsc, "album_count_asc", ArtistAlbumCountAsc)
+X(AlbumCountDesc, "album_count_desc", ArtistAlbumCountDesc)
+X(TrackCountAsc, "track_count_asc", ArtistTrackCountAsc)
+X(TrackCountDesc, "track_count_desc", ArtistTrackCountDesc)
