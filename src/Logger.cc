@@ -3,6 +3,7 @@
 #include "utils/fs/Paths.hpp"
 #include "utils/string/Transforms.hpp"
 
+#include <algorithm>
 #include <cstdlib>
 #include <sstream>
 #include <thread>
@@ -42,6 +43,69 @@ auto parse_log_level(const utils::string::SmallString& level_str) -> spdlog::lev
     return spdlog::level::critical;
 
   return spdlog::level::info;
+}
+
+auto make_session_log_file() -> utils::string::SmallString
+{
+  using namespace std::chrono;
+
+  const auto now = system_clock::now();
+  const auto tt  = system_clock::to_time_t(now);
+
+  std::tm tm{};
+  localtime_r(&tt, &tm);
+
+  std::ostringstream oss;
+  oss << "inLimbo-log-" << std::put_time(&tm, "%d-%m-%y-%H%M%S") << ".log";
+
+  return utils::fs::getAppCachePathWithFile(("logs/" + oss.str()).c_str()).c_str();
+}
+
+auto cleanup_old_logs() -> void
+{
+  namespace fs = std::filesystem;
+
+  const fs::path log_dir =
+    fs::path(utils::fs::getAppCachePathWithFile("logs/dummy")).parent_path();
+
+  if (!fs::exists(log_dir))
+    return;
+
+  struct LogFile
+  {
+    fs::path path;
+    fs::file_time_type time;
+  };
+
+  std::vector<LogFile> logs;
+  logs.reserve(kMaxLogFiles + 8);
+
+  for (const auto& entry : fs::directory_iterator(log_dir))
+  {
+    if (!entry.is_regular_file())
+      continue;
+
+    const auto name = entry.path().filename().string();
+    if (!name.starts_with("inLimbo-log-") || !name.ends_with(".log"))
+      continue;
+
+    logs.push_back({entry.path(), entry.last_write_time()});
+  }
+
+  if (logs.size() <= kMaxLogFiles)
+    return;
+
+  std::ranges::sort(logs,
+            [](const LogFile& a, const LogFile& b) -> bool
+            {
+              return a.time > b.time;
+            });
+
+  for (std::size_t i = kMaxLogFiles; i < logs.size(); ++i)
+  {
+    std::error_code ec;
+    fs::remove(logs[i].path, ec);
+  }
 }
 
 auto Logger::get() -> std::shared_ptr<spdlog::logger>&
@@ -107,13 +171,13 @@ void Logger::shutdown() noexcept
 
 void Logger::init_from_env()
 {
+  cleanup_old_logs();
+
   utils::string::SmallString env_file    = std::getenv(INLIMBO_LOG_FILE_ENV);
   utils::string::SmallString env_level   = std::getenv(INLIMBO_LOG_LEVEL_ENV);
   utils::string::SmallString env_pattern = std::getenv(INLIMBO_LOG_PATTERN_ENV);
 
-  const auto file    = !env_file.empty()
-                         ? env_file
-                         : utils::fs::getAppCachePathWithFile(__INLIMBO_DEFAULT_LOG_FILE__).c_str();
+  const auto file    = !env_file.empty() ? env_file : make_session_log_file();
   const auto pattern = !env_pattern.empty() ? env_pattern : __INLIMBO_DEFAULT_LOG_PATTERN__;
   const auto level   = !env_level.empty() ? parse_log_level(env_level) : spdlog::level::info;
 
@@ -133,22 +197,13 @@ void Logger::print_banner(const utils::string::SmallString& file, spdlog::level:
   if (!log)
     return;
 
-#ifdef PLATFORM_WINDOWS
-  SYSTEM_INFO sysinfo;
-  GetSystemInfo(&sysinfo);
-  DWORD       pid     = GetCurrentProcessId();
-  std::string sysname = "Windows";
-  std::string arch    = std::to_string(sysinfo.dwProcessorType);
-#else
   struct utsname uts = {};
   uname(&uts);
   pid_t       pid     = getpid();
   std::string sysname = uts.sysname;
   std::string arch    = uts.machine;
-#endif
 
-  std::ostringstream tid;
-  tid << std::this_thread::get_id();
+  auto tid = std::hash<std::thread::id>{}(std::this_thread::get_id());
 
   log->trace(
     "┌────────────────────────────── InLimbo Logger Initialized ──────────────────────────────┐");
@@ -157,9 +212,11 @@ void Logger::print_banner(const utils::string::SmallString& file, spdlog::level:
   log->trace("│  Output File : {}", file.c_str());
   log->trace("│  System      : {} ({})", sysname, arch);
   log->trace("│  PID         : {}", pid);
-  log->trace("│  Thread ID   : {}", tid.str());
+  log->trace("│  Thread ID   : {}", tid);
   log->trace(
     "└────────────────────────────────────────────────────────────────────────────────────────┘");
+
+  log->info("inLimbo logger session stored at: {}", file.c_str());
 }
 
 } // namespace inlimbo

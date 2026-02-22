@@ -10,6 +10,8 @@
 namespace inlimbo
 {
 
+constexpr std::size_t kMaxLogFiles = 100;
+
 enum class LogMode
 {
   ConsoleOnly,
@@ -18,6 +20,8 @@ enum class LogMode
 };
 
 auto parse_log_level(const utils::string::SmallString& level_str) -> spdlog::level::level_enum;
+auto make_session_log_file() -> utils::string::SmallString;
+auto cleanup_old_logs() -> void;
 
 class Logger
 {
