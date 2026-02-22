@@ -21,25 +21,6 @@
   <a href="https://github.com/nots1dd/inLimbo/issues">Report a bug</a>
 </p>
 
-> [!CAUTION]
->
-> This is the develop branch!
->
-> You will have to install **CMake & Make**, **Git**, **C++20 Compiler (GCC/Clang)**, **dbus-1**, **OpenSSL**, **TagLib**!!
->
-> Then, you can simply run:
->
-> ```bash
-> # clone repo (develop branch)
-> git clone -b develop https://github.com/nots1dd/inlimbo
->
-> # note: this is for release build
-> cd inlimbo
-> make init
-> make buildx
-> ```
->
-
 > [!WARNING]
 >
 > inLimbo is a WIP
@@ -50,7 +31,7 @@
 
 The inLimbo project aims to be a new upcoming TUI music player for *NIX based operating systems that gives music lovers a clean and efficient environment to browse, play and interact with your favourite offline music.
 
-## **Why**
+## **WHY?**
 
 There are a dozen of great music players out there that do a really good job of making my music experience top notch, but nothing was ever perfect. So I tried making something that in my opinion comes closest to my ideal TUI music player.
 
@@ -88,6 +69,64 @@ Note that `install-deps` will only work for:
 2. Fedora
 3. Ubuntu/Debian
 
+## **GETTING STARTED**
+
+You will have to install the following on your system:
+
+| Dependency                     | **Ubuntu / Debian** | **Fedora**          | **Arch Linux**  |
+| ------------------------------ | ------------------- | ------------------- | --------------- |
+| **CMake & Make**               | `cmake`, `make`     | `cmake`, `make`     | `cmake`, `make` |
+| **Git**                        | `git`               | `git`               | `git`           |
+| **C++20 Compiler (GCC/Clang)** | `g++` / `clang`     | `gcc-c++` / `clang` | `gcc` / `clang` |
+| **dbus-1 (libdbus-1)**         | `libdbus-1-dev`     | `dbus-devel`        | `dbus`          |
+| **OpenSSL**                    | `libssl-dev`        | `openssl-devel`     | `openssl`       |
+| **TagLib**                     | `libtag1-dev`       | `taglib-devel`      | `taglib`        |
+
+### **Installing dependecies**
+
+Note that it is advised to update your system before installing:
+
+#### **Ubuntu / Debian**
+
+```bash
+sudo apt update && sudo apt install -y \
+  cmake make git g++ clang \
+  libdbus-1-dev libssl-dev libtag1-dev
+```
+
+#### **Fedora**
+
+```bash
+sudo dnf install -y \
+  cmake make git gcc-c++ clang \
+  dbus-devel openssl-devel taglib-devel
+```
+
+#### **Arch Linux**
+
+```bash
+sudo pacman -S --needed \
+  cmake make git gcc clang \
+  dbus openssl taglib
+```
+
+Then, you can simply run:
+
+```bash
+# clone repo
+git clone https://github.com/nots1dd/inlimbo
+
+# cd and initialize
+cd inlimbo
+make init
+
+# note: this is cmake init for release build.
+make buildx
+
+# this is for debug build.
+make buildx-dbg
+```
+
 ## **BUILDING**
 
 > [!IMPORTANT]
@@ -95,13 +134,13 @@ Note that `install-deps` will only work for:
 > inLimbo has been **TRIED AND TESTED** in the following GNU/Linux distros:
 >
 > 1. Arch Linux (x86-64 arch)
-> 2. Ubuntu (x86-64 arch)
+> 2. Ubuntu/Debian (x86-64 arch)
 > 3. Fedora/Nobara Linux (x86-64 arch)
 >
 > As long as your distribution can install & build the requirements, there should *NOT* be any issue
 >
 
-Check out [BUILD.md](https://github.com/nots1dd/inLimbo/blob/develop/BUILD.md) for more options to build targets
+Check out [BUILD.md](https://github.com/nots1dd/inLimbo/BUILD.md) for more options to build targets
 
 ## **RUNNING**
 
@@ -159,7 +198,7 @@ Although more is to come for this, the architecture is made in such a way that t
 So currently for example, the `cmdline` frontend is super dynamic and can be hot-reloaded meanwhile, `raylib` is just a proof of concept.
 The config and the app itself is just to show how multiple frontends can exist for inLimbo. (config is statically compiled)
 
-Check out [example config file](https://github.com/nots1dd/inLimbo/blob/develop/examples/config/config.toml)
+Check out [example config file](https://github.com/nots1dd/inLimbo/examples/config/config.toml)
 
 ### **Config 1.1: Library Sorting**
 
@@ -179,13 +218,13 @@ Now each field has certain criteria upon which the map is reordered.
 2. Album: `Lexicographically Ascending/Descending (ASCII only)`, `Track Count Ascending/Descending`
 3. Track: `Track Number Ascending/Descending`
 
-These are self-explanatory and easy to understand what each sort does. You can check out [example config.toml](https://github.com/nots1dd/inLimbo/tree/develop/examples/config/config.toml) for how to customize each sort.
+These are self-explanatory and easy to understand what each sort does. You can check out [example config.toml](https://github.com/nots1dd/inLimbo/examples/config/config.toml) for how to customize each sort.
 
 You can set each field as however you desire and `inLimbo-core` is made in such a way that it supports **runtime change** of the sorting "plan".
 
 This isn't to say there won't be more options coming (ex: Artist sorted by `Year Ascending/Descending`, etc.) but those are not a top priority at the moment and with the initial groundwork setup, I make it easy to add new sorting plans to the codebase without too many changes.
 
-If you are wondering how to integrate this into the frontend, I will have a blog / doc coming up on it but for now I suggest looking at the `cmdline` frontend code here: [Frontend Interface (cmdline)](https://github.com/nots1dd/inLimbo/tree/develop/src/frontend/cmdline/Interface.cc)
+If you are wondering how to integrate this into the frontend, I will have a blog / doc coming up on it but for now I suggest looking at the `cmdline` frontend code here: [Frontend Interface (cmdline)](https://github.com/nots1dd/inLimbo/src/frontend/cmdline/Interface.cc)
 
 > [!NOTE]
 > 

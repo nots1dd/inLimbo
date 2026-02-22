@@ -6,6 +6,13 @@ using namespace ftxui;
 namespace frontend::tui::ui::screens
 {
 
+static auto pulse_border() -> bool
+{
+  using namespace std::chrono;
+  auto now = steady_clock::now().time_since_epoch();
+  return (duration_cast<milliseconds>(now).count() / 800) % 2;
+}
+
 MainScreen::MainScreen(state::library::LibraryState& state) : m_state(state)
 {
   artist_content = Renderer(
@@ -111,7 +118,7 @@ auto MainScreen::render() -> Element
   }
 
   auto term       = Terminal::Size();
-  int  half_width = term.dimx / 2;
+  const int  half_width = term.dimx / 2;
 
   auto artist_inner = window(text(" Artists ") | bold, artist_view->Render() | frame | flex) |
                       size(WIDTH, EQUAL, half_width);
@@ -119,9 +126,13 @@ auto MainScreen::render() -> Element
   auto album_inner = window(text(" Songs ") | bold, album_view->Render() | frame | flex) |
                      size(WIDTH, EQUAL, term.dimx - half_width);
 
-  Color artist_border_color = m_state.focusOnArtists() ? Color::Green : Color::GrayDark;
+  const bool pulse = pulse_border();
 
-  Color album_border_color = !m_state.focusOnArtists() ? Color::Green : Color::GrayDark;
+  Color artist_border_color =
+    m_state.focusOnArtists() ? (pulse ? Color::GreenLight : Color::Green) : Color::GrayDark;
+
+  Color album_border_color =
+    !m_state.focusOnArtists() ? (pulse ? Color::GreenLight : Color::Green) : Color::GrayDark;
 
   auto artist_pane = artist_inner | borderStyled(BorderStyle::HEAVY, artist_border_color);
 

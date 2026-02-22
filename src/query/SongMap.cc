@@ -19,7 +19,7 @@ namespace read
 void forEachArtist(const threads::SafeMap<SongMap>&                           safeMap,
                    const std::function<void(const Artist&, const AlbumMap&)>& fn)
 {
-  safeMap.withReadLock(
+  safeMap.read(
     [&](const auto& map) -> void
     {
       for (const auto& [artist, albums] : map)
@@ -30,7 +30,7 @@ void forEachArtist(const threads::SafeMap<SongMap>&                           sa
 void forEachAlbum(const threads::SafeMap<SongMap>&                                        safeMap,
                   const std::function<void(const Artist&, const Album&, const DiscMap&)>& fn)
 {
-  safeMap.withReadLock(
+  safeMap.read(
     [&](const auto& map) -> void
     {
       for (const auto& [artist, albums] : map)
@@ -43,7 +43,7 @@ void forEachDisc(
   const threads::SafeMap<SongMap>&                                                     safeMap,
   const std::function<void(const Artist&, const Album&, const Disc, const TrackMap&)>& fn)
 {
-  safeMap.withReadLock(
+  safeMap.read(
     [&](const auto& map) -> void
     {
       for (const auto& [artist, albums] : map)
@@ -57,7 +57,7 @@ void forEachSong(const threads::SafeMap<SongMap>&                         safeMa
                  const std::function<void(const Artist&, const Album&, Disc, Track, ino_t,
                                           const std::shared_ptr<Song>&)>& fn)
 {
-  safeMap.withReadLock(
+  safeMap.read(
     [&](const auto& map) -> void
     {
       for (const auto& [artist, albums] : map)
@@ -73,7 +73,7 @@ void forEachSongInArtist(const threads::SafeMap<SongMap>& safeMap, const Artist&
                          const std::function<void(const Album&, const Disc, const Track,
                                                   const ino_t, const std::shared_ptr<Song>&)>& fn)
 {
-  safeMap.withReadLock(
+  safeMap.read(
     [&](const auto& map) -> void
     {
       auto itArtist = map.find(artistName);
@@ -92,7 +92,7 @@ void forEachSongInAlbum(
   const threads::SafeMap<SongMap>& safeMap, const Artist& artistName, const Album& albumName,
   const std::function<void(const Disc, const Track, const ino_t, const std::shared_ptr<Song>&)>& fn)
 {
-  safeMap.withReadLock(
+  safeMap.read(
     [&](const auto& map) -> void
     {
       auto itArtist = map.find(artistName);
@@ -115,7 +115,7 @@ void forEachSongInDisc(
   Disc                                                                               discNumber,
   const std::function<void(const Track, const ino_t, const std::shared_ptr<Song>&)>& fn)
 {
-  safeMap.withReadLock(
+  safeMap.read(
     [&](const auto& map) -> void
     {
       auto itArtist = map.find(artistName);
@@ -141,7 +141,7 @@ void forEachGenre(const threads::SafeMap<SongMap>&         safeMap,
 {
   std::set<Genre> genres;
 
-  safeMap.withReadLock(
+  safeMap.read(
     [&](const auto& map) -> void
     {
       for (const auto& [artist, albums] : map)
@@ -161,7 +161,7 @@ void forEachSongInGenre(
   const std::function<void(const Artist&, const Album&, const Disc, const Track, const ino_t,
                            const std::shared_ptr<Song>&)>& fn)
 {
-  safeMap.withReadLock(
+  safeMap.read(
     [&](const auto& map) -> void
     {
       for (const auto& [artist, albums] : map)
@@ -179,7 +179,7 @@ void forEachGenreInArtist(const threads::SafeMap<SongMap>& safeMap, const Artist
 {
   std::set<Genre> genres;
 
-  safeMap.withReadLock(
+  safeMap.read(
     [&](const auto& map) -> void
     {
       auto itArtist = map.find(artistName);
@@ -595,7 +595,7 @@ auto countSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Artist& a
 
   size_t count = 0;
 
-  safeMap.withReadLock(
+  safeMap.read(
     [&](const auto& map) -> void
     {
       auto itArtist = map.find(artist);
@@ -692,7 +692,7 @@ void sortSongMap(threads::SafeMap<SongMap>& safeMap, const query::sort::RuntimeS
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::mut::sortSongMap");
 
-  safeMap.withWriteLock(
+  safeMap.update(
     [&](auto& map) -> void
     {
       LOG_DEBUG("query::songmap::mut::sortSongMap: Provided runtime sort plan: artist={}, "
@@ -713,7 +713,7 @@ auto replaceSongObjAndUpdateMetadata(threads::SafeMap<SongMap>&   safeMap,
 
   ASSERT_MSG(oldSong->inode == newSong->inode, "Inode details changed! Will not be writing...");
 
-  return safeMap.withWriteLock(
+  return safeMap.update(
     [&](auto& map) -> bool
     {
       for (auto& [artist, albums] : map)

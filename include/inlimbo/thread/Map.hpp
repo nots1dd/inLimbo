@@ -46,26 +46,28 @@ template <typename TMap>
 class SafeMap
 {
 private:
-  std::atomic<std::shared_ptr<TMap>> m_mapPtr;
+  static_assert(std::is_copy_constructible_v<TMap>);
+
+  mutable std::atomic<std::shared_ptr<TMap>> m_mapPtr;
 
 public:
-  SafeMap() { m_mapPtr.store(std::make_shared<TMap>(), std::memory_order_release); }
+  SafeMap() { m_mapPtr.store(std::make_shared<TMap>(), std::memory_order_relaxed); }
 
   SafeMap(const SafeMap&)                    = delete;
   auto operator=(const SafeMap&) -> SafeMap& = delete;
 
   SafeMap(SafeMap&& other) noexcept
   {
-    auto ptr = std::atomic_load(&other.m_mapPtr);
-    std::atomic_store(&m_mapPtr, std::move(ptr));
+    auto ptr = other.m_mapPtr.load(std::memory_order_acquire);
+    m_mapPtr.store(std::move(ptr), std::memory_order_release);
   }
 
   auto operator=(SafeMap&& other) noexcept -> SafeMap&
   {
     if (this != &other)
     {
-      auto ptr = std::atomic_load(&other.m_mapPtr);
-      std::atomic_store(&m_mapPtr, std::move(ptr));
+      auto ptr = other.m_mapPtr.load(std::memory_order_acquire);
+      m_mapPtr.store(std::move(ptr), std::memory_order_release);
     }
     return *this;
   }
@@ -77,13 +79,13 @@ public:
   void replace(TMap newMap)
   {
     auto newPtr = std::make_shared<TMap>(std::move(newMap));
-    std::atomic_store(&m_mapPtr, std::move(newPtr));
+    m_mapPtr.store(std::move(newPtr), std::memory_order_release);
   }
 
   void clear()
   {
     auto newPtr = std::make_shared<TMap>();
-    std::atomic_store(&m_mapPtr, std::move(newPtr));
+    m_mapPtr.store(std::move(newPtr), std::memory_order_release);
   }
 
   // -------------------------------------------------
@@ -93,30 +95,31 @@ public:
   template <typename LookupFn>
   auto get(LookupFn&& fn) const -> std::optional<typename TMap::mapped_type>
   {
-    auto ptr = std::atomic_load(&m_mapPtr);
+    auto ptr = m_mapPtr.load(std::memory_order_acquire);
     return fn(*ptr);
   }
 
   auto snapshot() const -> TMap
   {
-    auto ptr = std::atomic_load(&m_mapPtr);
-    return *ptr; // copy
+    auto ptr = m_mapPtr.load(std::memory_order_acquire);
+    return *ptr;
   }
 
   [[nodiscard]] auto empty() const -> bool
   {
-    auto ptr = std::atomic_load(&m_mapPtr);
+    auto ptr = m_mapPtr.load(std::memory_order_acquire);
     return ptr->empty();
   }
 
   template <typename Fn>
-  auto withReadLock(Fn&& fn) const -> decltype(auto)
+  auto read(Fn&& fn) const -> decltype(auto)
   {
-    auto ptr = std::atomic_load(&m_mapPtr);
+    auto ptr = m_mapPtr.load(std::memory_order_acquire);
 
     if constexpr (std::is_void_v<std::invoke_result_t<Fn, const TMap&>>)
     {
       fn(*ptr);
+      return;
     }
     else
     {
@@ -125,20 +128,21 @@ public:
   }
 
   template <typename Fn>
-  auto withWriteLock(Fn&& fn) -> decltype(auto)
+  auto update(Fn&& fn) -> decltype(auto)
   {
-    auto oldPtr = std::atomic_load(&m_mapPtr);
+    auto oldPtr = m_mapPtr.load(std::memory_order_acquire);
     auto newPtr = std::make_shared<TMap>(*oldPtr);
 
     if constexpr (std::is_void_v<std::invoke_result_t<Fn, TMap&>>)
     {
       fn(*newPtr);
-      std::atomic_store(&m_mapPtr, std::move(newPtr));
+      m_mapPtr.store(std::move(newPtr), std::memory_order_release);
+      return;
     }
     else
     {
       auto result = fn(*newPtr);
-      std::atomic_store(&m_mapPtr, std::move(newPtr));
+      m_mapPtr.store(std::move(newPtr), std::memory_order_release);
       return result;
     }
   }

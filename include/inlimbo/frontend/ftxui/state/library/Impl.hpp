@@ -33,6 +33,8 @@ public:
 
   std::vector<Artist>                artists;
   std::vector<std::string>           album_view_lines;
+  std::vector<int>                   album_header_indices;
+  std::vector<int>                   disc_header_indices;
   std::vector<std::shared_ptr<Song>> view_song_objects;
 
   int selected_artist{0};

@@ -66,8 +66,7 @@ void Interface::loadConfig()
     tomlparser::Config::load();
 
     auto plan = config::sort::loadRuntimeSortPlan();
-    m_songMapTS->withWriteLock([&](auto& map) -> void
-                               { query::sort::applyRuntimeSortPlan(map, plan); });
+    m_songMapTS->update([&](auto& map) -> void { query::sort::applyRuntimeSortPlan(map, plan); });
 
     config::colors::ConfigLoader   colorsCfg(FRONTEND_NAME);
     config::keybinds::ConfigLoader keysCfg(FRONTEND_NAME);
