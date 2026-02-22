@@ -117,8 +117,8 @@ auto MainScreen::render() -> Element
                                        m_audioPtr->getCurrentMetadata(), !m_state.focusOnArtists());
   }
 
-  auto term       = Terminal::Size();
-  const int  half_width = term.dimx / 2;
+  auto      term       = Terminal::Size();
+  const int half_width = term.dimx / 2;
 
   auto artist_inner = window(text(" Artists ") | bold, artist_view->Render() | frame | flex) |
                       size(WIDTH, EQUAL, half_width);

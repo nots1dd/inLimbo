@@ -140,7 +140,7 @@ make buildx-dbg
 > As long as your distribution can install & build the requirements, there should *NOT* be any issue
 >
 
-Check out [BUILD.md](https://github.com/nots1dd/inLimbo/BUILD.md) for more options to build targets
+Check out [BUILD.md](https://github.com/nots1dd/inLimbo/blob/main/BUILD.md) for more options to build targets
 
 ## **RUNNING**
 
@@ -198,7 +198,7 @@ Although more is to come for this, the architecture is made in such a way that t
 So currently for example, the `cmdline` frontend is super dynamic and can be hot-reloaded meanwhile, `raylib` is just a proof of concept.
 The config and the app itself is just to show how multiple frontends can exist for inLimbo. (config is statically compiled)
 
-Check out [example config file](https://github.com/nots1dd/inLimbo/examples/config/config.toml)
+Check out [example config file](https://github.com/nots1dd/inLimbo/blob/main/examples/config/config.toml)
 
 ### **Config 1.1: Library Sorting**
 
@@ -218,13 +218,13 @@ Now each field has certain criteria upon which the map is reordered.
 2. Album: `Lexicographically Ascending/Descending (ASCII only)`, `Track Count Ascending/Descending`
 3. Track: `Track Number Ascending/Descending`
 
-These are self-explanatory and easy to understand what each sort does. You can check out [example config.toml](https://github.com/nots1dd/inLimbo/examples/config/config.toml) for how to customize each sort.
+These are self-explanatory and easy to understand what each sort does. You can check out [example config.toml](https://github.com/nots1dd/inLimbo/blob/main/examples/config/config.toml) for how to customize each sort.
 
 You can set each field as however you desire and `inLimbo-core` is made in such a way that it supports **runtime change** of the sorting "plan".
 
 This isn't to say there won't be more options coming (ex: Artist sorted by `Year Ascending/Descending`, etc.) but those are not a top priority at the moment and with the initial groundwork setup, I make it easy to add new sorting plans to the codebase without too many changes.
 
-If you are wondering how to integrate this into the frontend, I will have a blog / doc coming up on it but for now I suggest looking at the `cmdline` frontend code here: [Frontend Interface (cmdline)](https://github.com/nots1dd/inLimbo/src/frontend/cmdline/Interface.cc)
+If you are wondering how to integrate this into the frontend, I will have a blog / doc coming up on it but for now I suggest looking at the `cmdline` frontend code here: [Frontend Interface (cmdline)](https://github.com/nots1dd/inLimbo/blob/main/src/frontend/cmdline/Interface.cc)
 
 > [!NOTE]
 > 
@@ -321,6 +321,12 @@ The core philosophy of inLimbo can be primarily summarized in:
 But most of all, since my goal with this project is for me to use it myself, I can only guarantee 
 my very best effort was given in making this happen.
 
+## **CONTRIBUTING**
+
+The project is yet to be released as stable software, but contributions are much appreciated!
+
+Check out [CONTRIBUTION GUIDE](https://github.com/nots1dd/inLimbo/CONTRIBUTING.md)
+
 ## **CREDITS**
 
 **LOGO**:
@@ -331,7 +337,7 @@ It is a basic stock image found online. I got it from [here](https://unsplash.co
 
 1. **TOML PARSER: TOML++**:
 
-To parse the [config.toml](https://github.com/nots1dd/inlimbo/blob/main/src/parser/examples/config.toml) is thanks to [TOML++](https://github.com/marzer/tomlplusplus)
+To parse the [config.toml](https://github.com/nots1dd/inlimbo/blob/main/examples/config/config.toml) is thanks to [TOML++](https://github.com/marzer/tomlplusplus)
 
 2. **Command Line Parsing (Arguments): CLI11**:
 
