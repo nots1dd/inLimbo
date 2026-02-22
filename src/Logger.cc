@@ -65,15 +65,14 @@ auto cleanup_old_logs() -> void
 {
   namespace fs = std::filesystem;
 
-  const fs::path log_dir =
-    fs::path(utils::fs::getAppCachePathWithFile("logs/dummy")).parent_path();
+  const fs::path log_dir = fs::path(utils::fs::getAppCachePathWithFile("logs/dummy")).parent_path();
 
   if (!fs::exists(log_dir))
     return;
 
   struct LogFile
   {
-    fs::path path;
+    fs::path           path;
     fs::file_time_type time;
   };
 
@@ -96,10 +95,7 @@ auto cleanup_old_logs() -> void
     return;
 
   std::ranges::sort(logs,
-            [](const LogFile& a, const LogFile& b) -> bool
-            {
-              return a.time > b.time;
-            });
+                    [](const LogFile& a, const LogFile& b) -> bool { return a.time > b.time; });
 
   for (std::size_t i = kMaxLogFiles; i < logs.size(); ++i)
   {

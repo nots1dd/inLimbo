@@ -8,7 +8,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/License-GNU GPL%20v3-blue" alt="License" />
-  <img src="https://img.shields.io/badge/Version-1.0%20alpha-red" alt="Version" />
+  <img src="https://img.shields.io/badge/Version-0.0.1%20alpha-red" alt="Version" />
   <img src="https://img.shields.io/github/actions/workflow/status/nots1dd/inLimbo/build-ubuntu.yml?label=ubuntu&logo=ubuntu" />
   <img src="https://img.shields.io/github/actions/workflow/status/nots1dd/inLimbo/build-fedora.yml?label=fedora&logo=fedora" />
   <img src="https://img.shields.io/github/actions/workflow/status/nots1dd/inLimbo/build-arch.yml?label=arch&logo=archlinux" />
@@ -17,7 +17,7 @@
   <a href="https://nots1dd.github.io/inLimbo">Documentation</a> ·
   <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#features">Features</a> ·
   <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#looks">Looks</a> .
-  <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#building">Get Started</a> ·
+  <a href="https://github.com/nots1dd/inLimbo?tab=readme-ov-file#getting-started">Get Started</a> ·
   <a href="https://github.com/nots1dd/inLimbo/issues">Report a bug</a>
 </p>
 
