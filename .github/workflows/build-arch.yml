@@ -2,9 +2,9 @@ name: "inLimbo CI / Arch Linux Build (x86-64 arch - GCC)"
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "develop" ]
+    branches: [ "main" ]
 
 jobs:
   release:

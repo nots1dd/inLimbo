@@ -2,9 +2,9 @@ name: "inLimbo CI / Clang Format Check (ARCH LINUX) (x86-64 arch)"
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "develop" ]
+    branches: [ "main" ]
 
 jobs:
   release:
