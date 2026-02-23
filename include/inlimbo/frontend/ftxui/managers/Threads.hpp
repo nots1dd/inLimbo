@@ -21,8 +21,7 @@ static inline constexpr cstr FRONTEND_NAME = "ftxui";
 class ThreadManager
 {
 public:
-  ThreadManager(mpris::Service* mpris, threads::SafeMap<SongMap>* songMap,
-                telemetry::Context* telemetry);
+  ThreadManager(mpris::Service* mpris, TS_SongMap* songMap, telemetry::Context* telemetry);
 
   void start();
   void stop();
@@ -51,11 +50,11 @@ private:
   void mprisLoop();
   void seekLoop();
 
-  audio::Service*            m_audioPtr;
-  mpris::Service*            m_mpris;
-  threads::SafeMap<SongMap>* m_songMap{nullptr};
-  telemetry::Context*        m_telemetry{nullptr};
-  ftxui::ScreenInteractive*  m_screen{nullptr};
+  audio::Service*           m_audioPtr;
+  mpris::Service*           m_mpris;
+  TS_SongMap*               m_songMap{nullptr};
+  telemetry::Context*       m_telemetry{nullptr};
+  ftxui::ScreenInteractive* m_screen{nullptr};
 
   config::Watcher            m_cfgWatcher;
   utils::Snapshot<TuiConfig> m_cfg{};

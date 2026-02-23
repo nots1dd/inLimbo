@@ -5,7 +5,6 @@
 #include "frontend/Plugin.hpp"
 #include "mpris/Service.hpp"
 #include "telemetry/Context.hpp"
-#include "thread/Map.hpp"
 
 // Frontend Interface
 //
@@ -169,8 +168,7 @@ namespace frontend
 class Interface
 {
 public:
-  Interface(Plugin& plugin, threads::SafeMap<SongMap>& map, telemetry::Context& telemetry,
-            mpris::Service* mpris)
+  Interface(Plugin& plugin, TS_SongMap& map, telemetry::Context& telemetry, mpris::Service* mpris)
       : m_fePlugin(plugin)
   {
     m_instanceVPtr = m_fePlugin.create(&map, &telemetry, mpris);

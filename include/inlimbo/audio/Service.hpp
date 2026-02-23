@@ -4,7 +4,6 @@
 #include "Playlist.hpp"
 #include "audio/backend/Devices.hpp"
 #include "audio/backend/Interface.hpp"
-#include "thread/Map.hpp"
 #include "utils/ClassRulesMacros.hpp"
 
 #include <memory>
@@ -130,7 +129,7 @@ namespace audio
 class Service final
 {
 public:
-  Service(threads::SafeMap<SongMap>& songMap, const std::string& backendName);
+  Service(TS_SongMap& songMap, const std::string& backendName);
   ~Service();
 
   IMMUTABLE(Service);
@@ -190,7 +189,7 @@ public:
 private:
   std::shared_ptr<IAudioBackend> m_backend;
   service::Playlist              m_playlist;
-  threads::SafeMap<SongMap>&     m_songMapTS;
+  TS_SongMap&                    m_songMapTS;
 
   service::TrackTable m_trackTable;
   ui64                m_nextTrackId = 1;

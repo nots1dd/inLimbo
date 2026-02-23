@@ -11,8 +11,6 @@
 #include "config/Colors.hpp"
 #include "config/Misc.hpp"
 #include "config/sort/Model.hpp"
-#include "toml/Parser.hpp"
-
 #include "helpers/telemetry/Playback.hpp"
 #include "mpris/Service.hpp"
 #include "query/SongMap.hpp"
@@ -63,7 +61,7 @@ void Interface::loadConfig()
 {
   try
   {
-    tomlparser::Config::load();
+    config::Config::load();
 
     auto plan = config::sort::loadRuntimeSortPlan();
     m_songMapTS->update([&](auto& map) -> void { query::sort::applyRuntimeSortPlan(map, plan); });

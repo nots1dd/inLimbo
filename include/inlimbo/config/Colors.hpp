@@ -2,7 +2,7 @@
 
 #include "Logger.hpp"
 #include "config/Bind.hpp"
-#include "toml/Parser.hpp"
+#include "config/Config.hpp"
 #include "utils/Colors.hpp"
 #include <functional>
 #include <string>
@@ -67,10 +67,10 @@ public:
   template <typename... Bindings>
   auto load(Bindings&&... bindings) const -> void
   {
-    if (!tomlparser::Config::isLoaded())
+    if (!Config::isLoaded())
       throw std::runtime_error("Colors::ConfigLoader: toml not loaded");
 
-    const auto& root = tomlparser::Config::table("colors");
+    const auto& root = Config::table("colors");
     const auto* node = root.get(m_frontend);
     if (!node)
       return;
@@ -79,7 +79,7 @@ public:
     if (!tbl)
       return;
 
-    using Handler = std::function<void(const toml::node&)>;
+    using Handler = std::function<void(const ::toml::node&)>;
     ankerl::unordered_dense::map<std::string_view, Handler> handlers;
 
     (registerBinding(handlers, std::forward<Bindings>(bindings)), ...);
@@ -100,10 +100,10 @@ private:
   template <typename T>
   static auto
   registerBinding(ankerl::unordered_dense::map<std::string_view,
-                                               std::function<void(const toml::node&)>>& handlers,
-                  const Binding<T>&                                                     b) -> void
+                                               std::function<void(const ::toml::node&)>>& handlers,
+                  const Binding<T>&                                                       b) -> void
   {
-    handlers[b.key] = [ptr = b.target, apply = b.apply, key = b.key](const toml::node& n) -> auto
+    handlers[b.key] = [ptr = b.target, apply = b.apply, key = b.key](const ::toml::node& n) -> auto
     {
       auto str = n.value<std::string>();
       if (!str)

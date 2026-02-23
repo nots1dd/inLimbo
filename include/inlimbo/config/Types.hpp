@@ -2,7 +2,7 @@
 
 #include <string_view>
 
-namespace tomlparser
+namespace config::toml
 {
 
 template <typename T>
@@ -16,4 +16,4 @@ using ValueView = std::string_view;
 
 using SectionView = std::string_view;
 
-} // namespace tomlparser
+} // namespace config::toml

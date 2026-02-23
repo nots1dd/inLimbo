@@ -1,11 +1,11 @@
 #include "helpers/cmdline/Display.hpp"
 #include "Logger.hpp"
 #include "build/generated/PluginList.ipp"
+#include "config/Config.hpp"
 #include "helpers/fs/LRC.hpp"
 #include "lrc/Client.hpp"
 #include "query/SongMap.hpp"
 #include "telemetry/Analysis.hpp"
-#include "toml/Parser.hpp"
 #include "utils/string/Equals.hpp"
 #include "utils/timer/Timer.hpp"
 
@@ -62,7 +62,7 @@ void printAudioDevices(audio::Devices& devices)
 // ------------------------------------------------------------
 // Print all artists
 // ------------------------------------------------------------
-void printArtists(const threads::SafeMap<SongMap>& safeMap)
+void printArtists(const TS_SongMap& safeMap)
 {
   std::cout << "\nArtists:\n";
   std::cout << "────────────────────────────\n";
@@ -74,8 +74,7 @@ void printArtists(const threads::SafeMap<SongMap>& safeMap)
 // ------------------------------------------------------------
 // Print song info
 // ------------------------------------------------------------
-void printSongInfoByTitle(const threads::SafeMap<SongMap>& safeMap,
-                          const std::optional<Title>&      songName)
+void printSongInfoByTitle(const TS_SongMap& safeMap, const std::optional<Title>& songName)
 {
   if (!songName || songName->empty())
   {
@@ -138,7 +137,7 @@ void printSongInfoByTitle(const threads::SafeMap<SongMap>& safeMap,
 // ------------------------------------------------------------
 // Print song lyrics
 // ------------------------------------------------------------
-void printSongLyrics(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle)
+void printSongLyrics(const TS_SongMap& safeMap, const Title& songTitle)
 {
   if (songTitle.empty())
   {
@@ -199,7 +198,7 @@ void printSongLyrics(const threads::SafeMap<SongMap>& safeMap, const Title& song
     std::cout << *lyrics.plainLyrics << "\n";
 }
 
-void printAlbums(const threads::SafeMap<SongMap>& safeMap, const std::optional<Artist>& artist)
+void printAlbums(const TS_SongMap& safeMap, const std::optional<Artist>& artist)
 {
   std::cout << (!artist.has_value() ? "\nAll Albums:\n" : "\nAlbums by " + *artist + ":\n");
   std::cout << "────────────────────────────\n";
@@ -217,7 +216,7 @@ void printAlbums(const threads::SafeMap<SongMap>& safeMap, const std::optional<A
 // ------------------------------------------------------------
 // Print song tree (optionally filtered by artist)
 // ------------------------------------------------------------
-void printSongTree(const threads::SafeMap<SongMap>& safeMap, const std::optional<Artist>& artist)
+void printSongTree(const TS_SongMap& safeMap, const std::optional<Artist>& artist)
 {
   using TInfo = std::pair<Track, Title>;
   using DMap  = std::map<Disc, std::vector<TInfo>>;
@@ -265,7 +264,7 @@ void printSongTree(const threads::SafeMap<SongMap>& safeMap, const std::optional
 // ------------------------------------------------------------
 // Print genres
 // ------------------------------------------------------------
-void printGenres(const threads::SafeMap<SongMap>& safeMap, const std::optional<Artist>& artist)
+void printGenres(const TS_SongMap& safeMap, const std::optional<Artist>& artist)
 {
   const bool hasArtist = artist && !artist->empty();
 
@@ -296,7 +295,7 @@ void printGenres(const threads::SafeMap<SongMap>& safeMap, const std::optional<A
 // ------------------------------------------------------------
 // Print songs by artist
 // ------------------------------------------------------------
-void printSongsByArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artist)
+void printSongsByArtist(const TS_SongMap& safeMap, const Artist& artist)
 {
   if (artist.empty())
     return;
@@ -314,7 +313,7 @@ void printSongsByArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& 
 // ------------------------------------------------------------
 // Print songs by album
 // ------------------------------------------------------------
-void printSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Album& album)
+void printSongsByAlbum(const TS_SongMap& safeMap, const Album& album)
 {
   if (album.empty())
     return;
@@ -347,7 +346,7 @@ void printSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Album& al
 // ------------------------------------------------------------
 // Print songs by genre
 // ------------------------------------------------------------
-void printSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& genre)
+void printSongsByGenre(const TS_SongMap& safeMap, const Genre& genre)
 {
   if (genre.empty())
     return;
@@ -365,7 +364,7 @@ void printSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& ge
 // ------------------------------------------------------------
 // Print song paths
 // ------------------------------------------------------------
-void printSongPaths(const threads::SafeMap<SongMap>& safeMap)
+void printSongPaths(const TS_SongMap& safeMap)
 {
   std::cout << "\nSong Paths:\n";
   std::cout << "────────────────────────────\n";
@@ -383,7 +382,7 @@ void printSongPaths(const threads::SafeMap<SongMap>& safeMap)
 // ------------------------------------------------------------
 // Print library summary
 // ------------------------------------------------------------
-void printSummary(const threads::SafeMap<SongMap>& safeMap, const telemetry::Context& telemetryCtx)
+void printSummary(const TS_SongMap& safeMap, const telemetry::Context& telemetryCtx)
 {
   std::set<Artist> artists;
   std::set<Album>  albums;
@@ -408,8 +407,8 @@ void printSummary(const threads::SafeMap<SongMap>& safeMap, const telemetry::Con
             << "Albums Count       : " << albums.size() << "\n"
             << "Songs Count        : " << songs << "\n"
             << "Genres Count       : " << genres.size() << "\n\n"
-            << "Library Name       : " << tomlparser::Config::getString("library", "name") << "\n"
-            << "Directory          : " << tomlparser::Config::getString("library", "directory")
+            << "Library Name       : " << config::Config::getString("library", "name") << "\n"
+            << "Directory          : " << config::Config::getString("library", "directory")
             << "\n\n";
 
   if (!telemetryCtx.isRegistryLoaded)

@@ -43,8 +43,7 @@ static auto vuMeter(float volume, int bars = 10) -> Element
   return hbox(elems);
 }
 
-Interface::Interface(threads::SafeMap<SongMap>* songMap, telemetry::Context* telemetry,
-                     mpris::Service* mpris)
+Interface::Interface(TS_SongMap* songMap, telemetry::Context* telemetry, mpris::Service* mpris)
     : m_songMapTS(songMap), m_telemetryCtx(telemetry), m_mpris(mpris),
       m_threadManager(m_mpris, m_songMapTS, m_telemetryCtx), m_libraryState(songMap),
       m_mainScreen(m_libraryState), m_nowPlayingScreen(m_nowState, m_albumArtState),

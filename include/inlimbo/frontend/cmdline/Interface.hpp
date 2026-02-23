@@ -10,7 +10,6 @@
 #include "frontend/cmdline/Structs.hpp"
 #include "mpris/Service.hpp"
 #include "telemetry/Context.hpp"
-#include "thread/Map.hpp"
 #include "utils/ASCII.hpp"
 #include "utils/ClassRulesMacros.hpp"
 #include "utils/Snapshot.hpp"
@@ -32,7 +31,7 @@ class Interface
 {
 public:
   // NOTE: pointers because this is created via C ABI
-  explicit Interface(threads::SafeMap<SongMap>* songMap, telemetry::Context* telemetry,
+  explicit Interface(TS_SongMap* songMap, telemetry::Context* telemetry,
                      mpris::Service* mprisService)
       : m_cfgWatcher(utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_CONFIG_FILE_NAME)),
         m_songMapTS(songMap), m_telemetryCtx(telemetry), m_mprisService(mprisService)
@@ -45,13 +44,13 @@ public:
   void               run(audio::Service& audio);
 
 private:
-  UiMode                     m_mode{UiMode::Normal};
-  std::string                m_searchBuf;
-  config::Watcher            m_cfgWatcher;
-  threads::SafeMap<SongMap>* m_songMapTS{nullptr};
-  telemetry::Context*        m_telemetryCtx{nullptr};
-  mpris::Service*            m_mprisService{nullptr};
-  mutable std::mutex         m_renderMutex;
+  UiMode              m_mode{UiMode::Normal};
+  std::string         m_searchBuf;
+  config::Watcher     m_cfgWatcher;
+  TS_SongMap*         m_songMapTS{nullptr};
+  telemetry::Context* m_telemetryCtx{nullptr};
+  mpris::Service*     m_mprisService{nullptr};
+  mutable std::mutex  m_renderMutex;
 
   // config
   utils::Snapshot<CmdlineConfig> m_cfg{};

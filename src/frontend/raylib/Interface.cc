@@ -1,9 +1,9 @@
 #include "frontend/raylib/Interface.hpp"
 #include "Logger.hpp"
+#include "config/Config.hpp"
 #include "config/sort/Model.hpp"
 #include "frontend/raylib/Constants.hpp"
 #include "query/SongMap.hpp"
-#include "toml/Parser.hpp"
 
 namespace colors = config::colors;
 
@@ -100,7 +100,7 @@ void Interface::loadConfig()
   try
   {
     m_library.artists.clear();
-    tomlparser::Config::load();
+    config::Config::load();
 
     auto plan = config::sort::loadRuntimeSortPlan();
     m_songMap->update([&](auto& map) -> void { query::sort::applyRuntimeSortPlan(map, plan); });

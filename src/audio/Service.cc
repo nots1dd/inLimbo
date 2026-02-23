@@ -7,8 +7,7 @@
 namespace audio
 {
 
-Service::Service(threads::SafeMap<SongMap>& songMapTS, const std::string& backendName)
-    : m_songMapTS(songMapTS)
+Service::Service(TS_SongMap& songMapTS, const std::string& backendName) : m_songMapTS(songMapTS)
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 

@@ -4,7 +4,6 @@
 #include "audio/Registry.hpp"
 #include "audio/backend/Devices.hpp"
 #include "telemetry/Context.hpp"
-#include "thread/Map.hpp"
 #include <optional>
 
 namespace helpers::cmdline
@@ -16,31 +15,29 @@ void printAudioBackends(const audio::BackendList& backends);
 
 void printAudioDevices(audio::Devices& devices);
 
-void printArtists(const threads::SafeMap<SongMap>& safeMap);
+void printArtists(const TS_SongMap& safeMap);
 
-void printSongInfoByTitle(const threads::SafeMap<SongMap>& safeMap,
-                          const std::optional<Title>&      songName);
+void printSongInfoByTitle(const TS_SongMap& safeMap, const std::optional<Title>& songName);
 
-void printSongInfoByTitleAndArtist(const threads::SafeMap<SongMap>& safeMap,
-                                   const std::optional<Title>&      songName,
-                                   const std::optional<Artist>&     artistName);
+void printSongInfoByTitleAndArtist(const TS_SongMap& safeMap, const std::optional<Title>& songName,
+                                   const std::optional<Artist>& artistName);
 
-void printSongLyrics(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle);
+void printSongLyrics(const TS_SongMap& safeMap, const Title& songTitle);
 
-void printSongTree(const threads::SafeMap<SongMap>& safeMap, const std::optional<Artist>& artist);
+void printSongTree(const TS_SongMap& safeMap, const std::optional<Artist>& artist);
 
-void printAlbums(const threads::SafeMap<SongMap>& safeMap, const std::optional<Artist>& artist);
+void printAlbums(const TS_SongMap& safeMap, const std::optional<Artist>& artist);
 
-void printGenres(const threads::SafeMap<SongMap>& safeMap, const std::optional<Artist>& artist);
+void printGenres(const TS_SongMap& safeMap, const std::optional<Artist>& artist);
 
-void printSongsByArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artist);
+void printSongsByArtist(const TS_SongMap& safeMap, const Artist& artist);
 
-void printSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Album& album);
+void printSongsByAlbum(const TS_SongMap& safeMap, const Album& album);
 
-void printSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& genre);
+void printSongsByGenre(const TS_SongMap& safeMap, const Genre& genre);
 
-void printSongPaths(const threads::SafeMap<SongMap>& safeMap);
+void printSongPaths(const TS_SongMap& safeMap);
 
-void printSummary(const threads::SafeMap<SongMap>& safeMap, const telemetry::Context& telemetryCtx);
+void printSummary(const TS_SongMap& safeMap, const telemetry::Context& telemetryCtx);
 
 } // namespace helpers::cmdline

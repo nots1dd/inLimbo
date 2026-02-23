@@ -16,7 +16,7 @@ namespace strhelp = utils::string;
 namespace read
 {
 
-void forEachArtist(const threads::SafeMap<SongMap>&                           safeMap,
+void forEachArtist(const TS_SongMap&                                          safeMap,
                    const std::function<void(const Artist&, const AlbumMap&)>& fn)
 {
   safeMap.read(
@@ -27,7 +27,7 @@ void forEachArtist(const threads::SafeMap<SongMap>&                           sa
     });
 }
 
-void forEachAlbum(const threads::SafeMap<SongMap>&                                        safeMap,
+void forEachAlbum(const TS_SongMap&                                                       safeMap,
                   const std::function<void(const Artist&, const Album&, const DiscMap&)>& fn)
 {
   safeMap.read(
@@ -40,7 +40,7 @@ void forEachAlbum(const threads::SafeMap<SongMap>&                              
 }
 
 void forEachDisc(
-  const threads::SafeMap<SongMap>&                                                     safeMap,
+  const TS_SongMap&                                                                    safeMap,
   const std::function<void(const Artist&, const Album&, const Disc, const TrackMap&)>& fn)
 {
   safeMap.read(
@@ -53,7 +53,7 @@ void forEachDisc(
     });
 }
 
-void forEachSong(const threads::SafeMap<SongMap>&                         safeMap,
+void forEachSong(const TS_SongMap&                                        safeMap,
                  const std::function<void(const Artist&, const Album&, Disc, Track, ino_t,
                                           const std::shared_ptr<Song>&)>& fn)
 {
@@ -69,7 +69,7 @@ void forEachSong(const threads::SafeMap<SongMap>&                         safeMa
     });
 }
 
-void forEachSongInArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
+void forEachSongInArtist(const TS_SongMap& safeMap, const Artist& artistName,
                          const std::function<void(const Album&, const Disc, const Track,
                                                   const ino_t, const std::shared_ptr<Song>&)>& fn)
 {
@@ -89,7 +89,7 @@ void forEachSongInArtist(const threads::SafeMap<SongMap>& safeMap, const Artist&
 }
 
 void forEachSongInAlbum(
-  const threads::SafeMap<SongMap>& safeMap, const Artist& artistName, const Album& albumName,
+  const TS_SongMap& safeMap, const Artist& artistName, const Album& albumName,
   const std::function<void(const Disc, const Track, const ino_t, const std::shared_ptr<Song>&)>& fn)
 {
   safeMap.read(
@@ -111,8 +111,7 @@ void forEachSongInAlbum(
 }
 
 void forEachSongInDisc(
-  const threads::SafeMap<SongMap>& safeMap, const Artist& artistName, const Album& albumName,
-  Disc                                                                               discNumber,
+  const TS_SongMap& safeMap, const Artist& artistName, const Album& albumName, Disc discNumber,
   const std::function<void(const Track, const ino_t, const std::shared_ptr<Song>&)>& fn)
 {
   safeMap.read(
@@ -136,8 +135,7 @@ void forEachSongInDisc(
     });
 }
 
-void forEachGenre(const threads::SafeMap<SongMap>&         safeMap,
-                  const std::function<void(const Genre&)>& fn)
+void forEachGenre(const TS_SongMap& safeMap, const std::function<void(const Genre&)>& fn)
 {
   std::set<Genre> genres;
 
@@ -157,7 +155,7 @@ void forEachGenre(const threads::SafeMap<SongMap>&         safeMap,
 }
 
 void forEachSongInGenre(
-  const threads::SafeMap<SongMap>& safeMap, const Genre& genreName,
+  const TS_SongMap& safeMap, const Genre& genreName,
   const std::function<void(const Artist&, const Album&, const Disc, const Track, const ino_t,
                            const std::shared_ptr<Song>&)>& fn)
 {
@@ -174,7 +172,7 @@ void forEachSongInGenre(
     });
 }
 
-void forEachGenreInArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
+void forEachGenreInArtist(const TS_SongMap& safeMap, const Artist& artistName,
                           const std::function<void(const Genre&)>& fn)
 {
   std::set<Genre> genres;
@@ -200,7 +198,7 @@ void forEachGenreInArtist(const threads::SafeMap<SongMap>& safeMap, const Artist
     fn(g);
 }
 
-auto findAllSongsByTitle(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle) -> Songs
+auto findAllSongsByTitle(const TS_SongMap& safeMap, const Title& songTitle) -> Songs
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findAllSongsByTitle");
 
@@ -220,8 +218,8 @@ auto findAllSongsByTitle(const threads::SafeMap<SongMap>& safeMap, const Title& 
   return results;
 }
 
-auto findAllSongsByTitleFuzzy(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle,
-                              size_t maxDistance) -> Songs
+auto findAllSongsByTitleFuzzy(const TS_SongMap& safeMap, const Title& songTitle, size_t maxDistance)
+  -> Songs
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findAllSongsByTitleFuzzy");
 
@@ -260,8 +258,7 @@ auto findAllSongsByTitleFuzzy(const threads::SafeMap<SongMap>& safeMap, const Ti
   return results;
 }
 
-auto findSongPathByInode(const threads::SafeMap<SongMap>& safeMap, const ino_t givenInode)
-  -> PathStr
+auto findSongPathByInode(const TS_SongMap& safeMap, const ino_t givenInode) -> PathStr
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongPathByInode");
 
@@ -278,8 +275,7 @@ auto findSongPathByInode(const threads::SafeMap<SongMap>& safeMap, const ino_t g
   return path;
 }
 
-auto findSongObjByTitle(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle)
-  -> std::shared_ptr<Song>
+auto findSongObjByTitle(const TS_SongMap& safeMap, const Title& songTitle) -> std::shared_ptr<Song>
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongByName");
 
@@ -296,8 +292,8 @@ auto findSongObjByTitle(const threads::SafeMap<SongMap>& safeMap, const Title& s
   return result;
 }
 
-auto findSongObjByTitleFuzzy(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle,
-                             size_t maxDistance) -> std::shared_ptr<Song>
+auto findSongObjByTitleFuzzy(const TS_SongMap& safeMap, const Title& songTitle, size_t maxDistance)
+  -> std::shared_ptr<Song>
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongByTitleFuzzy");
 
@@ -331,8 +327,8 @@ auto findSongObjByTitleFuzzy(const threads::SafeMap<SongMap>& safeMap, const Tit
   return bestSong;
 }
 
-auto findArtistFuzzy(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
-                     size_t maxDistance) -> Artist
+auto findArtistFuzzy(const TS_SongMap& safeMap, const Artist& artistName, size_t maxDistance)
+  -> Artist
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findArtistFuzzy");
 
@@ -365,8 +361,7 @@ auto findArtistFuzzy(const threads::SafeMap<SongMap>& safeMap, const Artist& art
   return bestArtist;
 }
 
-auto findAlbumFuzzy(const threads::SafeMap<SongMap>& safeMap, const Album& albumName,
-                    size_t maxDistance) -> Album
+auto findAlbumFuzzy(const TS_SongMap& safeMap, const Album& albumName, size_t maxDistance) -> Album
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findAlbumFuzzy");
 
@@ -402,8 +397,7 @@ auto findAlbumFuzzy(const threads::SafeMap<SongMap>& safeMap, const Album& album
   return bestAlbum;
 }
 
-auto findGenreFuzzy(const threads::SafeMap<SongMap>& safeMap, const Genre& genreName,
-                    size_t maxDistance) -> Genre
+auto findGenreFuzzy(const TS_SongMap& safeMap, const Genre& genreName, size_t maxDistance) -> Genre
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findGenreFuzzy");
 
@@ -438,7 +432,7 @@ auto findGenreFuzzy(const threads::SafeMap<SongMap>& safeMap, const Genre& genre
   return bestGenre;
 }
 
-auto findSongByTitleAndArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artistName,
+auto findSongByTitleAndArtist(const TS_SongMap& safeMap, const Artist& artistName,
                               const Title& songTitle) -> std::shared_ptr<Song>
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::findSongByNameAndArtist");
@@ -459,7 +453,7 @@ auto findSongByTitleAndArtist(const threads::SafeMap<SongMap>& safeMap, const Ar
   return result;
 }
 
-auto findSongByTitleAndArtistFuzzy(const threads::SafeMap<SongMap>& safeMap, const Title& songTitle,
+auto findSongByTitleAndArtistFuzzy(const TS_SongMap& safeMap, const Title& songTitle,
                                    const Artist& songArtist, size_t maxDistance)
   -> std::shared_ptr<Song>
 {
@@ -494,8 +488,8 @@ auto findSongByTitleAndArtistFuzzy(const threads::SafeMap<SongMap>& safeMap, con
   return bestSong;
 }
 
-auto getSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Artist& artist,
-                     const Album& album) -> const Songs
+auto getSongsByAlbum(const TS_SongMap& safeMap, const Artist& artist, const Album& album)
+  -> const Songs
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::getSongsByAlbum");
 
@@ -512,7 +506,7 @@ auto getSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Artist& art
   return songs;
 }
 
-auto getSongsByArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artist) -> Songs
+auto getSongsByArtist(const TS_SongMap& safeMap, const Artist& artist) -> Songs
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::getSongsByArtist");
 
@@ -532,7 +526,7 @@ auto getSongsByArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& ar
   return songs;
 }
 
-auto getSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& genre) -> Songs
+auto getSongsByGenre(const TS_SongMap& safeMap, const Genre& genre) -> Songs
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::getSongsByGenre");
 
@@ -552,7 +546,7 @@ auto getSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& genr
   return songs;
 }
 
-auto countTracks(const threads::SafeMap<SongMap>& safeMap) -> size_t
+auto countTracks(const TS_SongMap& safeMap) -> size_t
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countTracks");
 
@@ -565,7 +559,7 @@ auto countTracks(const threads::SafeMap<SongMap>& safeMap) -> size_t
   return total;
 }
 
-auto countSongsByArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& artist) -> size_t
+auto countSongsByArtist(const TS_SongMap& safeMap, const Artist& artist) -> size_t
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countSongsByArtist");
 
@@ -585,8 +579,8 @@ auto countSongsByArtist(const threads::SafeMap<SongMap>& safeMap, const Artist& 
   return count;
 }
 
-auto countSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Artist& artist,
-                       const Album& album) -> size_t
+auto countSongsByAlbum(const TS_SongMap& safeMap, const Artist& artist, const Album& album)
+  -> size_t
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countSongsByAlbum");
 
@@ -614,7 +608,7 @@ auto countSongsByAlbum(const threads::SafeMap<SongMap>& safeMap, const Artist& a
   return count;
 }
 
-auto countSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& genre) -> size_t
+auto countSongsByGenre(const TS_SongMap& safeMap, const Genre& genre) -> size_t
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countSongsByGenre");
 
@@ -634,7 +628,7 @@ auto countSongsByGenre(const threads::SafeMap<SongMap>& safeMap, const Genre& ge
   return count;
 }
 
-auto countArtists(const threads::SafeMap<SongMap>& safeMap) -> size_t
+auto countArtists(const TS_SongMap& safeMap) -> size_t
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countArtists");
 
@@ -650,7 +644,7 @@ auto countArtists(const threads::SafeMap<SongMap>& safeMap) -> size_t
   return artists.size();
 }
 
-auto countAlbums(const threads::SafeMap<SongMap>& safeMap) -> size_t
+auto countAlbums(const TS_SongMap& safeMap) -> size_t
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countAlbums");
 
@@ -666,7 +660,7 @@ auto countAlbums(const threads::SafeMap<SongMap>& safeMap) -> size_t
   return albums.size();
 }
 
-auto countGenres(const threads::SafeMap<SongMap>& safeMap) -> size_t
+auto countGenres(const TS_SongMap& safeMap) -> size_t
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::read::countGenres");
 
@@ -688,7 +682,7 @@ auto countGenres(const threads::SafeMap<SongMap>& safeMap) -> size_t
 namespace mut
 {
 
-void sortSongMap(threads::SafeMap<SongMap>& safeMap, const query::sort::RuntimeSortPlan& rtSortPlan)
+void sortSongMap(TS_SongMap& safeMap, const query::sort::RuntimeSortPlan& rtSortPlan)
 {
   RECORD_FUNC_TO_BACKTRACE("query::songmap::mut::sortSongMap");
 
@@ -704,8 +698,7 @@ void sortSongMap(threads::SafeMap<SongMap>& safeMap, const query::sort::RuntimeS
     });
 }
 
-auto replaceSongObjAndUpdateMetadata(threads::SafeMap<SongMap>&   safeMap,
-                                     const std::shared_ptr<Song>& oldSong,
+auto replaceSongObjAndUpdateMetadata(TS_SongMap& safeMap, const std::shared_ptr<Song>& oldSong,
                                      const std::shared_ptr<Song>& newSong, taglib::Parser& parser)
   -> bool
 {

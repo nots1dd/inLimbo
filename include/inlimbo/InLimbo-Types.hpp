@@ -2,6 +2,7 @@
 
 #include "utils/ankerl/Cereal.hpp"
 #include "utils/string/SmallString.hpp"
+#include "utils/threads/SafeMap.hpp"
 #include <cereal/types/memory.hpp>
 #include <cstdint>
 #include <string>
@@ -129,3 +130,7 @@ using AlbumMap = ankerl::unordered_dense::map<Album, DiscMap>;
 
 // this corresponds to Artist -> Album -> Disc -> Track -> Inode -> Song
 using SongMap = ankerl::unordered_dense::map<Artist, AlbumMap>;
+
+// It is recommend to use this alias throughout the project (including frontend)
+using TS_SongMap =
+  utils::threads::SafeMap<SongMap>; // An alias to utils::threads::SafeMap<SongMap>.

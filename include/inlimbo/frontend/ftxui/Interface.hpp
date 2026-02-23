@@ -11,7 +11,6 @@
 #include "frontend/ftxui/ui/screens/Main.hpp"
 #include "frontend/ftxui/ui/screens/Queue.hpp"
 #include "mpris/Service.hpp"
-#include "thread/Map.hpp"
 
 #include "state/album_art/Impl.hpp"
 #include "state/library/Impl.hpp"
@@ -45,8 +44,7 @@ inline static auto statusBarMode() -> StatusBarMode
 class Interface
 {
 public:
-  explicit Interface(threads::SafeMap<SongMap>* songMap, telemetry::Context* telemetry,
-                     mpris::Service* mpris);
+  explicit Interface(TS_SongMap* songMap, telemetry::Context* telemetry, mpris::Service* mpris);
 
   void run(audio::Service& audio);
 
@@ -65,7 +63,7 @@ private:
 
   void playSelected();
 
-  threads::SafeMap<SongMap>*                            m_songMapTS{nullptr};
+  TS_SongMap*                                           m_songMapTS{nullptr};
   telemetry::Context*                                   m_telemetryCtx{nullptr};
   mpris::Service*                                       m_mpris{nullptr};
   std::optional<std::reference_wrapper<audio::Service>> m_audio;

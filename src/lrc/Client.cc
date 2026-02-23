@@ -175,6 +175,8 @@ auto Client::fetchBestMatchAndCache(const Query& q) -> Result<std::pair<Lyrics, 
 
   LOG_DEBUG("lrc::Client fetched data in {:.3f} ms", timer.elapsed_ms());
 
+  timer.stop();
+
   auto parsed = parseLyrics(http.value);
   if (!parsed.ok())
     return {.value = {}, .error = parsed.error};

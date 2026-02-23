@@ -4,7 +4,7 @@
 #include <memory>
 #include <optional>
 
-namespace threads
+namespace utils::threads
 {
 
 /*
@@ -148,4 +148,4 @@ public:
   }
 };
 
-} // namespace threads
+} // namespace utils::threads

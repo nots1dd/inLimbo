@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Logger.hpp"
+#include "config/Config.hpp"
 #include "query/sort/Engine.hpp"
-#include "toml/Parser.hpp"
 #include <ankerl/unordered_dense.h>
 #include <string_view>
 
@@ -42,11 +42,11 @@ constexpr auto DefaultTrackMetric =
 }();
 
 template <typename EnumT, typename ParseFn>
-auto loadMetricOrFallback(tomlparser::SectionView section, tomlparser::KeyView key,
+auto loadMetricOrFallback(toml::SectionView section, toml::KeyView key,
                           std::string_view fallbackName, EnumT fallbackValue, ParseFn parseFn,
                           std::string_view logLabel) -> EnumT
 {
-  const auto str = tomlparser::Config::getString(section, key, fallbackName);
+  const auto str = Config::getString(section, key, fallbackName);
 
   if (auto v = parseFn(str))
     return *v;

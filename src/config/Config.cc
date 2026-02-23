@@ -1,12 +1,12 @@
-#include "toml/Parser.hpp"
+#include "config/Config.hpp"
 #include "Logger.hpp"
 #include "utils/fs/Paths.hpp"
 #include <filesystem>
 
-namespace tomlparser
+namespace config
 {
 
-std::optional<toml::parse_result> Config::s_config;
+std::optional<::toml::parse_result> Config::s_config;
 
 void Config::load()
 {
@@ -15,11 +15,11 @@ void Config::load()
   if (!std::filesystem::exists(path.c_str()))
   {
     LOG_ERROR("config.toml not found at '{}'", path.c_str());
-    throw std::runtime_error("tomlparser: Missing config.toml");
+    throw std::runtime_error("config::Config: Missing config.toml");
   }
 
   LOG_DEBUG("Loading config.toml: {}", path.c_str());
-  s_config = toml::parse_file(path.c_str());
+  s_config = ::toml::parse_file(path.c_str());
 }
 
 void Config::loadFrom(const Path& path)
@@ -27,11 +27,11 @@ void Config::loadFrom(const Path& path)
   if (!std::filesystem::exists(path.c_str()))
   {
     LOG_ERROR("Custom config not found at '{}'", path);
-    throw std::runtime_error("tomlparser: Missing custom config file!");
+    throw std::runtime_error("config::Config: Missing custom config file!");
   }
 
   LOG_DEBUG("Loading custom config: {}", path);
-  s_config = toml::parse_file(path);
+  s_config = ::toml::parse_file(path);
 }
 
 auto Config::isLoaded() noexcept -> bool { return s_config.has_value(); }
@@ -40,20 +40,20 @@ auto Config::isLoaded() noexcept -> bool { return s_config.has_value(); }
 // Optional accessors
 // ------------------------------------------------------------
 
-auto Config::getString(SectionView section, KeyView key, std::string_view fallback)
+auto Config::getString(toml::SectionView section, toml::KeyView key, std::string_view fallback)
   -> std::string_view
 {
   ensureLoaded();
   return (*s_config)[section][key].value_or(fallback);
 }
 
-auto Config::getInt(SectionView section, KeyView key, int64_t fallback) -> int64_t
+auto Config::getInt(toml::SectionView section, toml::KeyView key, int64_t fallback) -> int64_t
 {
   ensureLoaded();
   return (*s_config)[section][key].value_or(fallback);
 }
 
-auto Config::getBool(SectionView section, KeyView key, bool fallback) -> bool
+auto Config::getBool(toml::SectionView section, toml::KeyView key, bool fallback) -> bool
 {
   ensureLoaded();
 
@@ -67,7 +67,7 @@ auto Config::getBool(SectionView section, KeyView key, bool fallback) -> bool
 // Required accessors
 // ------------------------------------------------------------
 
-auto Config::requireString(SectionView section, KeyView key) -> std::string
+auto Config::requireString(toml::SectionView section, toml::KeyView key) -> std::string
 {
   ensureLoaded();
 
@@ -79,7 +79,7 @@ auto Config::requireString(SectionView section, KeyView key) -> std::string
   return "";
 }
 
-auto Config::requireInt(SectionView section, KeyView key) -> i64
+auto Config::requireInt(toml::SectionView section, toml::KeyView key) -> i64
 {
   ensureLoaded();
 
@@ -91,7 +91,7 @@ auto Config::requireInt(SectionView section, KeyView key) -> i64
   return false;
 }
 
-auto Config::requireBool(SectionView section, KeyView key) -> bool
+auto Config::requireBool(toml::SectionView section, toml::KeyView key) -> bool
 {
   ensureLoaded();
 
@@ -107,13 +107,13 @@ auto Config::requireBool(SectionView section, KeyView key) -> bool
 // Table access
 // ------------------------------------------------------------
 
-auto Config::table(SectionView section) -> const toml::table&
+auto Config::table(toml::SectionView section) -> const ::toml::table&
 {
   ensureLoaded();
 
   const auto* tbl = (*s_config)[section].as_table();
   if (!tbl)
-    throw std::runtime_error("tomlparser: TOML section is not a table!");
+    throw std::runtime_error("config::Config: TOML section is not a table!");
 
   return *tbl;
 }
@@ -128,10 +128,10 @@ void Config::ensureLoaded()
     throw std::runtime_error("Config accessed before load()");
 }
 
-void Config::throwMissing(SectionView section, KeyView key)
+void Config::throwMissing(toml::SectionView section, toml::KeyView key)
 {
   LOG_ERROR("Missing or invalid config value: [{}].{}", section, key);
-  throw std::runtime_error("tomlparser: Invalid configuration!");
+  throw std::runtime_error("config::Config: Invalid configuration!");
 }
 
-} // namespace tomlparser
+} // namespace config

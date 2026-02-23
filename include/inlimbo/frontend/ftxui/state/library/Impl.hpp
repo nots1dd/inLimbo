@@ -1,7 +1,6 @@
 #pragma once
 
 #include "InLimbo-Types.hpp"
-#include "thread/Map.hpp"
 #include <ftxui/dom/elements.hpp>
 #include <memory>
 #include <string>
@@ -13,7 +12,7 @@ namespace frontend::tui::state::library
 class LibraryState
 {
 public:
-  explicit LibraryState(threads::SafeMap<SongMap>* map);
+  explicit LibraryState(TS_SongMap* songMap);
 
   void rebuild();
   void rebuildForSelectedArtist(int selected_artist);
@@ -42,7 +41,7 @@ public:
   int current_artist_cache{0};
 
 private:
-  threads::SafeMap<SongMap>*  m_songMapTS;
+  TS_SongMap*                 m_songMapTS;
   bool                        focus_on_artists = true;
   std::vector<ftxui::Element> album_elements;
   std::vector<ftxui::Element> album_elements_base;

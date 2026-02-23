@@ -229,13 +229,13 @@ set(INLIMBO_CORE_SOURCES
     src/utils/string/Equals.cc
     src/utils/string/Transforms.cc
     src/utils/unix/net/HTTPSClient.cc
+    src/config/Config.cc
     src/config/sort/Model.cc
     src/config/sort/ParseMetrics.cc
     src/config/Watcher.cc
     src/config/Keybinds.cc
     src/config/Colors.cc
     src/config/Misc.cc
-    src/toml/Parser.cc
     src/lrc/Client.cc
     src/Logger.cc
     src/Context.cc

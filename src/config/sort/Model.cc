@@ -8,7 +8,6 @@ namespace config::sort
 auto loadRuntimeSortPlan() -> query::sort::RuntimeSortPlan
 {
   RECORD_FUNC_TO_BACKTRACE("config::sort::loadRuntimeSortPlan");
-  using namespace tomlparser;
 
   query::sort::RuntimeSortPlan plan;
 

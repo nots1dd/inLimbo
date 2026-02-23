@@ -25,7 +25,7 @@ static auto pulse_slow() -> bool
   return (duration_cast<milliseconds>(now).count() / 900) % 2;
 }
 
-LibraryState::LibraryState(threads::SafeMap<SongMap>* map) : m_songMapTS(map) {}
+LibraryState::LibraryState(TS_SongMap* songMap) : m_songMapTS(songMap) {}
 
 void LibraryState::rebuild()
 {

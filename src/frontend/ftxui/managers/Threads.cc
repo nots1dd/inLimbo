@@ -59,7 +59,7 @@ void ThreadManager::loadConfig()
 {
   try
   {
-    tomlparser::Config::load();
+    config::Config::load();
 
     auto plan = config::sort::loadRuntimeSortPlan();
     m_songMap->update([&](auto& map) -> void { query::sort::applyRuntimeSortPlan(map, plan); });
@@ -83,7 +83,7 @@ void ThreadManager::loadConfig()
   }
 }
 
-ThreadManager::ThreadManager(mpris::Service* mpris, threads::SafeMap<SongMap>* songMap,
+ThreadManager::ThreadManager(mpris::Service* mpris, TS_SongMap* songMap,
                              telemetry::Context* telemetry)
     : m_mpris(mpris), m_songMap(songMap), m_telemetry(telemetry),
       m_cfgWatcher(utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_CONFIG_FILE_NAME))

@@ -9,8 +9,8 @@ namespace frontend::tui::ui
 EventHandler::EventHandler(UIScreen& activeScreen, state::library::LibraryState& libraryState,
                            state::now_playing::NowPlayingState& nowState,
                            state::queue::QueueState&            queueState,
-                           managers::ThreadManager&             threadManager,
-                           threads::SafeMap<SongMap>* songMap, mpris::Service* mpris)
+                           managers::ThreadManager& threadManager, TS_SongMap* songMap,
+                           mpris::Service* mpris)
     : m_activeScreen(activeScreen), m_libraryState(libraryState), m_nowState(nowState),
       m_queueState(queueState), m_threadManager(threadManager), m_songMap(songMap), m_mpris(mpris)
 {

@@ -28,8 +28,7 @@ class EventHandler
 public:
   EventHandler(UIScreen& activeScreen, state::library::LibraryState& libraryState,
                state::now_playing::NowPlayingState& nowState, state::queue::QueueState& queueState,
-               managers::ThreadManager& threadManager, threads::SafeMap<SongMap>* songMap,
-               mpris::Service* mpris);
+               managers::ThreadManager& threadManager, TS_SongMap* songMap, mpris::Service* mpris);
 
   auto handle(ftxui::Event e) -> bool;
 
@@ -46,9 +45,9 @@ private:
 
   float m_volume{0.0f};
 
-  audio::Service*            m_audioPtr;
-  threads::SafeMap<SongMap>* m_songMap{nullptr};
-  mpris::Service*            m_mpris{nullptr};
+  audio::Service* m_audioPtr;
+  TS_SongMap*     m_songMap{nullptr};
+  mpris::Service* m_mpris{nullptr};
 
   void playSelected();
   void adjustVolume(float delta);

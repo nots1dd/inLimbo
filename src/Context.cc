@@ -9,15 +9,13 @@
 #include "mpris/Service.hpp"
 #include "mpris/backends/Common.hpp"
 #include "query/SongMap.hpp"
-#include "thread/Map.hpp"
-#include "toml/Parser.hpp"
 #include "utils/fs/Paths.hpp"
 #include "utils/timer/Timer.hpp"
 #include "utils/unix/Lockfile.hpp"
 
 #include <algorithm>
 
-threads::SafeMap<SongMap> g_songMap;
+TS_SongMap g_songMap;
 
 using namespace core;
 namespace fuzzy = helpers::fuzzy;
@@ -127,8 +125,8 @@ void setupArgs(CLI::App& app, Args& args)
 // clang-format on
 
 AppContext::AppContext(CLI::App& cliApp)
-    : m_taglibDbgLog(tomlparser::Config::getBool("debug", "taglib_parser_log")),
-      m_telemetryCtx(tomlparser::Config::getInt("telemetry", "min_playback_event_time", 30)),
+    : m_taglibDbgLog(config::Config::getBool("debug", "taglib_parser_log")),
+      m_telemetryCtx(config::Config::getInt("telemetry", "min_playback_event_time", 30)),
       m_tagLibParser({.debugLog = m_taglibDbgLog})
 {
   setupArgs(cliApp, args);
@@ -473,7 +471,7 @@ auto maybeHandleEditActions(AppContext& ctx) -> bool
 
 auto initializeContext(int argc, char** argv) -> AppContext
 {
-  tomlparser::Config::load();
+  config::Config::load();
 
   CLI::App   cliApp{APP_DESC, APP_NAME};
   AppContext ctx(cliApp);
@@ -516,8 +514,8 @@ auto initializeContext(int argc, char** argv) -> AppContext
     LOG_ERROR("Something went wrong when loading telemetry data (registry or store)!");
 
   ctx.m_songTitle        = ctx.args.song;
-  ctx.m_fuzzyMaxDist     = tomlparser::Config::getInt("fuzzy", "max_dist");
-  ctx.m_audioBackendName = tomlparser::Config::getString("audio", "backend", "alsa");
+  ctx.m_fuzzyMaxDist     = config::Config::getInt("fuzzy", "max_dist");
+  ctx.m_audioBackendName = config::Config::getString("audio", "backend", "alsa");
   ctx.m_fePluginName     = PluginName{ctx.args.frontend};
 
   float vol = ctx.args.volume;
@@ -525,7 +523,7 @@ auto initializeContext(int argc, char** argv) -> AppContext
   if (vol < 0.0 || vol > 150.0)
   {
     LOG_DEBUG("Invalid volume found in arguments, fetching default from config...");
-    vol = tomlparser::Config::getInt("audio", "volume", 75);
+    vol = config::Config::getInt("audio", "volume", 75);
   }
 
   // volume fetched from user is (0-150) range but is normalized to 0-1.5
@@ -533,7 +531,7 @@ auto initializeContext(int argc, char** argv) -> AppContext
   ctx.m_volume      = std::clamp(vol / 100.0f, 0.0f, 1.5f);
   ctx.m_printAction = resolvePrintAction(ctx.args);
   ctx.m_editAction  = resolveEditAction(ctx.args);
-  ctx.m_musicDir    = tomlparser::Config::getString("library", "directory");
+  ctx.m_musicDir    = config::Config::getString("library", "directory");
   ctx.m_binPath     = utils::fs::getAppConfigPathWithFile(INLIMBO_DEFAULT_CACHE_BIN_NAME).c_str();
 
   LOG_INFO(

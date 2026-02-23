@@ -14,7 +14,7 @@
       if (!songMap)                                                                              \
         return nullptr;                                                                          \
                                                                                                  \
-      return new FRONTEND_NS::Interface(static_cast<threads::SafeMap<SongMap>*>(songMap),        \
+      return new FRONTEND_NS::Interface(static_cast<TS_SongMap*>(songMap),                       \
                                         static_cast<telemetry::Context*>(telemetry),             \
                                         static_cast<mpris::Service*>(mpris));                    \
     }                                                                                            \

@@ -5,7 +5,6 @@
 #include "frontend/Plugin.hpp"
 #include "taglib/Parser.hpp"
 #include "telemetry/Context.hpp"
-#include "thread/Map.hpp"
 
 #define APP_NAME      "inLimbo"
 #define APP_AUTHOR    "nots1dd (Siddharth Karanam)"
@@ -13,7 +12,7 @@
 
 #define APP_DESC "inLimbo: Advanced Audio Library Management and Playback Tool\n" APP_COPYRIGHT
 
-extern threads::SafeMap<SongMap> g_songMap;
+extern TS_SongMap g_songMap;
 
 namespace inlimbo
 {

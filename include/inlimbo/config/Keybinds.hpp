@@ -2,8 +2,8 @@
 
 #include "Logger.hpp"
 #include "config/Bind.hpp"
+#include "config/Config.hpp"
 #include "config/KBUtils.hpp"
-#include "toml/Parser.hpp"
 #include <functional>
 #include <string>
 #include <string_view>
@@ -19,10 +19,10 @@ public:
   template <typename... Bindings>
   auto load(Bindings&&... bindings) const -> void
   {
-    if (!tomlparser::Config::isLoaded())
+    if (!Config::isLoaded())
       throw std::runtime_error("Keybinds::ConfigLoader: toml not loaded");
 
-    const auto& rootTbl = tomlparser::Config::table("keybinds");
+    const auto& rootTbl = Config::table("keybinds");
 
     const auto* frontendNode = rootTbl.get(m_frontend);
     if (!frontendNode)
@@ -32,7 +32,7 @@ public:
     if (!tbl)
       return;
 
-    using Node    = toml::node;
+    using Node    = ::toml::node;
     using Handler = std::function<void(const Node&)>;
 
     ankerl::unordered_dense::map<std::string_view, Handler> handlers;
@@ -55,11 +55,11 @@ private:
   template <typename T>
   static auto
   registerBinding(ankerl::unordered_dense::map<std::string_view,
-                                               std::function<void(const toml::node&)>>& handlers,
-                  const keybinds::Binding<T>&                                           b) -> void
+                                               std::function<void(const ::toml::node&)>>& handlers,
+                  const keybinds::Binding<T>&                                             b) -> void
   {
     handlers[b.key] = [ptr = b.target, nameKey = b.key,
-                       apply = b.apply](const toml::node& n) -> auto
+                       apply = b.apply](const ::toml::node& n) -> auto
     {
       if (auto v = n.value<std::string>())
       {

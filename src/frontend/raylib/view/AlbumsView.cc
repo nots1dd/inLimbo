@@ -8,7 +8,7 @@
 namespace frontend::raylib::view
 {
 
-static void playSongWithAlbumQueue(audio::Service& audio, threads::SafeMap<SongMap>& songs,
+static void playSongWithAlbumQueue(audio::Service& audio, TS_SongMap& songMap,
                                    const std::shared_ptr<Song> song, mpris::Service& mpris)
 {
   audio.clearPlaylist();
@@ -18,7 +18,7 @@ static void playSongWithAlbumQueue(audio::Service& audio, threads::SafeMap<SongM
   audio.nextTrack();
 
   query::songmap::read::forEachSongInAlbum(
-    songs, song->metadata.artist, song->metadata.album,
+    songMap, song->metadata.artist, song->metadata.album,
     [&](const Disc&, const Track&, const ino_t, const std::shared_ptr<Song>& s) -> auto
     {
       if (s->metadata.track <= song->metadata.track)
@@ -40,7 +40,7 @@ static void drawHoverRow(const Rectangle& r, bool hover)
                        {255, 255, 255, 20});
 }
 
-static auto getContentHeight(threads::SafeMap<SongMap>& songs, const Artist& artist) -> float
+static auto getContentHeight(TS_SongMap& songs, const Artist& artist) -> float
 {
   float h = 0.0f;
 
@@ -74,7 +74,7 @@ static auto getContentHeight(threads::SafeMap<SongMap>& songs, const Artist& art
 static constexpr int RIGHT_X = LEFT_W + 10;
 
 void AlbumsView::draw(const ui::Fonts& fonts, state::Library& lib, audio::Service& audio,
-                      threads::SafeMap<SongMap>& songs, mpris::Service& mpris)
+                      TS_SongMap& songs, mpris::Service& mpris)
 {
   if (lib.artists.empty())
     return;
