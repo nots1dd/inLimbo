@@ -5,13 +5,14 @@
 namespace helpers::fs
 {
 
-// does a singular pass over the given directory, parses any plausible audio files (mp3, flac, wav,
-// ...) then creates a Song obj (with inode and song file metadata) and stores in songTree
-// datastructure.
+// does a singular pass over the given directory, parses any plausible audio files (mp3, flac, ogg,
+// ...) then creates a Song obj (with inode and song file metadata) and stores in
+// songLibrarySnapshot object.
 //
 // Note that we arent immediately populating the SongMap as we are still yet to serialize to the
 // cache file via cereal.
-void dirWalkProcessAll(const Directory& directory, taglib::Parser& parser, core::SongTree& songTree)
+void dirWalkProcessAll(const Directory& directory, taglib::Parser& tagParser,
+                       core::SongLibrarySnapshot& songLibrarySnapshot)
 {
   RECORD_FUNC_TO_BACKTRACE("helpers::fs::dirWalkProcessAll");
 
@@ -35,14 +36,14 @@ void dirWalkProcessAll(const Directory& directory, taglib::Parser& parser, core:
       }
 
       Metadata md;
-      if (!parser.parseFile(path, md))
+      if (!tagParser.parseFile(path, md))
       {
         LOG_WARN("Unable to parse metadata for path: '{}'", path);
         return;
       }
 
       Song song{st.st_ino, md};
-      songTree.addSong(song);
+      songLibrarySnapshot.addSong(song);
     });
 }
 

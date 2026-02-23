@@ -16,9 +16,17 @@ Service::Service(threads::SafeMap<SongMap>& songMapTS, const std::string& backen
   {
     LOG_DEBUG("Found ALSA backend. Creating audio service...");
     m_backend = std::make_shared<backend::AlsaBackend>();
-    LOG_INFO("Audio Backend '{}' (ID: {}) created.", m_backend->backendString(),
-             (int)m_backend->backendID());
   }
+  else
+  {
+    // always default to ALSA for now
+    // (we will assume that inLimbo builds for ALSA at the bare minimum.)
+    LOG_WARN("audio::Service: Invalid audio backend name found, defaulting to ALSA...");
+    m_backend = std::make_shared<backend::AlsaBackend>();
+  }
+
+  LOG_INFO("Audio Backend '{}' (ID: {}) created.", m_backend->backendString(),
+           (int)m_backend->backendID());
 }
 
 Service::~Service() { shutdown(); }

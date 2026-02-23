@@ -18,14 +18,14 @@ namespace core
 {
 
 // ============================================================
-// SongTree Declaration (NOT THREAD SAFE)
+// SongLibrarySnapshot Declaration (NOT THREAD SAFE)
 // ============================================================
 //
 // Note that this structure is used ONLY for serialization and deserialization.
 // The in-memory representation used during runtime is a threads::SafeMap<SongMap>.
 //
 
-class SongTree
+class SongLibrarySnapshot
 {
 private:
   SongMap m_songMap;
@@ -36,11 +36,11 @@ public:
   void addSong(const Song& song);
   void setMusicPath(const Path& path) { m_musicPath = path; }
 
-  ~SongTree() { clear(); }
+  ~SongLibrarySnapshot() { clear(); }
 
   void clear()
   {
-    RECORD_FUNC_TO_BACKTRACE("SongTree::clear");
+    RECORD_FUNC_TO_BACKTRACE("SongLibrarySnapshot::clear");
     m_songMap.clear();
     m_musicPath.clear();
   }
@@ -48,18 +48,18 @@ public:
   // Query methods
   [[nodiscard]] auto returnSongMap() const -> const SongMap&
   {
-    RECORD_FUNC_TO_BACKTRACE("SongTree::returnSongMap");
+    RECORD_FUNC_TO_BACKTRACE("SongLibrarySnapshot::returnSongMap");
     return m_songMap;
   }
   [[nodiscard]] auto moveSongMap() noexcept -> SongMap
   {
-    RECORD_FUNC_TO_BACKTRACE("SongTree::moveSongMap");
+    RECORD_FUNC_TO_BACKTRACE("SongLibrarySnapshot::moveSongMap");
     return std::move(m_songMap);
   }
   // note that this replaces the entire song map and newMap is no longer valid after this call
   void newSongMap(const SongMap& newMap)
   {
-    RECORD_FUNC_TO_BACKTRACE("SongTree::replaceSongMap");
+    RECORD_FUNC_TO_BACKTRACE("SongLibrarySnapshot::replaceSongMap");
     m_songMap = std::move(newMap);
   }
   [[nodiscard]] auto returnMusicPath() const -> const Path { return m_musicPath; }

@@ -69,7 +69,7 @@ public:
     return m ? m->album : "";
   }
 
-  [[nodiscard]] auto artUrl() const -> std::string override
+  [[nodiscard]] auto artUrl() const -> PathStr override
   {
     auto m = m_audioService.getCurrentMetadata();
     return m ? m->artUrl : "";

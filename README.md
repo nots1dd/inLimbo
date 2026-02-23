@@ -214,9 +214,15 @@ More *could* be added if that is required but these are the most used fields.
 
 Now each field has certain criteria upon which the map is reordered.
 
-1. Artist: `Lexicographically Ascending/Descending (ASCII only)`, `Albums Count Ascending/Descending`, `Track Count Ascending/Descending`
-2. Album: `Lexicographically Ascending/Descending (ASCII only)`, `Track Count Ascending/Descending`
-3. Track: `Track Number Ascending/Descending`
+1. Artist: 
+    - `Lexicographically Ascending/Descending (ASCII only)`
+    - `Albums Count Ascending/Descending`
+    - `Track Count Ascending/Descending`
+2. Album: 
+    - `Lexicographically Ascending/Descending (ASCII only)`
+    - `Track Count Ascending/Descending`
+3. Track: 
+    - `Track Number Ascending/Descending`
 
 These are self-explanatory and easy to understand what each sort does. You can check out [example config.toml](https://github.com/nots1dd/inLimbo/blob/main/examples/config/config.toml) for how to customize each sort.
 

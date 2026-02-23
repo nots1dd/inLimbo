@@ -1,7 +1,6 @@
 #pragma once
 
 #include "InLimbo-Types.hpp"
-#include <string>
 
 namespace mpris
 {
@@ -28,10 +27,10 @@ public:
   [[nodiscard]] virtual auto durationSeconds() const -> double = 0;
 
   /* Metadata */
-  [[nodiscard]] virtual auto title() const -> Title        = 0;
-  [[nodiscard]] virtual auto artist() const -> Artist      = 0;
-  [[nodiscard]] virtual auto album() const -> Album        = 0;
-  [[nodiscard]] virtual auto artUrl() const -> std::string = 0;
+  [[nodiscard]] virtual auto title() const -> Title    = 0;
+  [[nodiscard]] virtual auto artist() const -> Artist  = 0;
+  [[nodiscard]] virtual auto album() const -> Album    = 0;
+  [[nodiscard]] virtual auto artUrl() const -> PathStr = 0;
 
   /* Volume */
   [[nodiscard]] virtual auto volume() const -> double = 0; // 0.0 → 1.0

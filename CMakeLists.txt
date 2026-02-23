@@ -202,7 +202,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/Version.cmake)
 # Backend Shared Library
 # -----------------------------------------------------------
 set(INLIMBO_CORE_SOURCES
-    src/core/SongTree.cc
+    src/core/SongLibrarySnapshot.cc
     src/audio/backend/alsa/Impl.cc
     src/audio/backend/Interface.cc
     src/audio/Registry.cc

@@ -462,10 +462,10 @@ auto maybeHandleEditActions(AppContext& ctx) -> bool
   }
 
   // Persist updated SongMap to disk
-  SongTree tempSongTree;
-  tempSongTree.clear();
-  tempSongTree.newSongMap(g_songMap.snapshot());
-  tempSongTree.saveToFile(ctx.m_binPath);
+  SongLibrarySnapshot tempSongLib;
+  tempSongLib.clear();
+  tempSongLib.newSongMap(g_songMap.snapshot());
+  tempSongLib.saveToFile(ctx.m_binPath);
 
   LOG_DEBUG("Song object metadata updated successfully. Exiting app...");
   return true;
@@ -545,13 +545,13 @@ auto initializeContext(int argc, char** argv) -> AppContext
 
 void buildOrLoadLibrary(AppContext& ctx)
 {
-  SongTree tempSongTree;
-  bool     rebuild = ctx.args.rebuildLibrary;
+  SongLibrarySnapshot tempSongLib;
+  bool                rebuild = ctx.args.rebuildLibrary;
 
   try
   {
-    tempSongTree.loadFromFile(ctx.m_binPath);
-    if (tempSongTree.returnMusicPath() != ctx.m_musicDir)
+    tempSongLib.loadFromFile(ctx.m_binPath);
+    if (tempSongLib.returnMusicPath() != ctx.m_musicDir)
       rebuild = true;
   }
   catch (...)
@@ -562,7 +562,8 @@ void buildOrLoadLibrary(AppContext& ctx)
   if (!rebuild)
   {
     LOG_INFO("No song map rebuild. Loading song map and sorting...");
-    g_songMap.replace(tempSongTree.moveSongMap());
+    g_songMap.replace(tempSongLib.moveSongMap());
+    // loads any changes in sorting plan from config
     const auto plan = config::sort::loadRuntimeSortPlan();
     query::songmap::mut::sortSongMap(g_songMap, plan);
     return;
@@ -570,18 +571,19 @@ void buildOrLoadLibrary(AppContext& ctx)
 
   utils::Timer<> timer;
   timer.start();
-  tempSongTree.clear();
+  tempSongLib.clear();
 
-  helpers::fs::dirWalkProcessAll(ctx.m_musicDir, ctx.m_tagLibParser, tempSongTree);
+  helpers::fs::dirWalkProcessAll(ctx.m_musicDir, ctx.m_tagLibParser, tempSongLib);
 
-  tempSongTree.setMusicPath(ctx.m_musicDir);
-  g_songMap.replace(tempSongTree.moveSongMap());
-  // the song map is unordered so lets sort it
+  tempSongLib.setMusicPath(ctx.m_musicDir);
+  g_songMap.replace(tempSongLib.moveSongMap());
+  // the fresh song map is unordered so lets sort it
   //
   // note that by default, we are only sorting this following:
   //
   // -> artists in ascending order (lexicographically),
   // -> albums in ascending order (lexicographically),
+  // -> discs in ascending order (numerically),
   // -> tracks in ascending order (numerically)
   //
   // as that is most logical.
@@ -592,10 +594,10 @@ void buildOrLoadLibrary(AppContext& ctx)
   query::songmap::mut::sortSongMap(g_songMap, plan);
 
   // now let us save the newly sorted song map to disk
-  tempSongTree.newSongMap(g_songMap.snapshot());
-  tempSongTree.saveToFile(ctx.m_binPath);
+  tempSongLib.newSongMap(g_songMap.snapshot());
+  tempSongLib.saveToFile(ctx.m_binPath);
 
-  // SongTree has destructor so mem shud clear here
+  // SongLibrarySnapshot has destructor so mem shud clear here
   LOG_INFO("Library rebuilt in {:.3f} ms", timer.elapsed_ms());
 }
 
@@ -637,10 +639,13 @@ void runFrontend(AppContext& ctx)
     LOG_INFO("Fuzzy search song title query returned: '{}'", song->metadata.title);
 
     // ---------------------------------------------------------
-    // Create AudioService (owns AudioEngine)
+    // Create audio::Service
     // ---------------------------------------------------------
     audio::Service audio(g_songMap, ctx.m_audioBackendName);
 
+    // ---------------------------------------------------------
+    // Create mpris::Service (common backend logic)
+    // ---------------------------------------------------------
     mpris::backend::Common mprisBackend(audio);
     mpris::Service         mprisService(mprisBackend, APP_NAME);
 
@@ -707,7 +712,7 @@ void runFrontend(AppContext& ctx)
   }
   catch (const utils::unix::LockFileError& e)
   {
-    LOG_ERROR("Context threw LockFileError: {}", e.what());
+    LOG_ERROR("unix::LockFileError: {}", e.what());
   }
   catch (const frontend::PluginError& e)
   {
@@ -715,7 +720,7 @@ void runFrontend(AppContext& ctx)
   }
   catch (std::exception& e)
   {
-    LOG_ERROR("Context threw generic std::exception: '{}'", e.what());
+    LOG_ERROR("inlimbp::runFrontend threw std::exception: '{}'", e.what());
   }
 }
 

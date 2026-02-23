@@ -1,4 +1,4 @@
-#include "core/SongTree.hpp"
+#include "core/SongLibrarySnapshot.hpp"
 #include "Logger.hpp"
 #include <fstream>
 
@@ -6,10 +6,10 @@ namespace core
 {
 
 // ============================================================
-// SongTree Implementations
+// SongLibrarySnapshot Implementations
 // ============================================================
 
-void SongTree::addSong(const Song& song)
+void SongLibrarySnapshot::addSong(const Song& song)
 {
   auto& artistMap = m_songMap[song.metadata.artist];
   auto& albumMap  = artistMap[song.metadata.album];
@@ -25,22 +25,22 @@ void SongTree::addSong(const Song& song)
 }
 
 // ------------------------------------------------------------
-void SongTree::saveToFile(const utils::string::SmallString& filename) const
+void SongLibrarySnapshot::saveToFile(const utils::string::SmallString& filename) const
 {
   std::ofstream file(filename.c_str(), std::ios::binary);
   if (!file)
-    throw std::runtime_error("SongTree::saveToFile: Failed to open file for saving.");
+    throw std::runtime_error("SongLibrarySnapshot::saveToFile: Failed to open file for saving.");
 
   cereal::BinaryOutputArchive archive(file);
   archive(*this);
 }
 
 // ------------------------------------------------------------
-void SongTree::loadFromFile(const utils::string::SmallString& filename)
+void SongLibrarySnapshot::loadFromFile(const utils::string::SmallString& filename)
 {
   std::ifstream file(filename.c_str(), std::ios::binary);
   if (!file)
-    throw std::runtime_error("SongTree::loadFromFile: Failed to open file for loading.");
+    throw std::runtime_error("SongLibrarySnapshot::loadFromFile: Failed to open file for loading.");
 
   cereal::BinaryInputArchive archive(file);
   archive(*this);

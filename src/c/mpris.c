@@ -61,7 +61,9 @@ on_message(DBusConnection* conn, DBusMessage* msg, void* data)
         else if (!strcmp(member, "Next")) {
             s->backend.next(s->backend.userdata);
             should_emit = 1;
-            s->backend.refresh_metadata(s->backend.userdata, s);
+
+            if (s->backend.refresh_metadata)
+                s->backend.refresh_metadata(s->backend.userdata, s);
         }
         else if (!strcmp(member, "Previous")) {
             s->backend.previous(s->backend.userdata);

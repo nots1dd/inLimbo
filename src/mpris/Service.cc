@@ -4,7 +4,7 @@
 namespace mpris
 {
 
-Service::Service(IMprisBackend& b, const std::string& name) : m_IBackend(b)
+Service::Service(IMprisBackend& b, const std::string& appName) : m_IBackend(b)
 {
   mpris_backend be{};
   be.userdata = &m_IBackend;
@@ -37,7 +37,7 @@ Service::Service(IMprisBackend& b, const std::string& name) : m_IBackend(b)
                           b->artUrl().c_str());
   };
 
-  m_C_svc = mpris_create(name.c_str(), be);
+  m_C_svc = mpris_create(appName.c_str(), be);
 
   /* Push initial metadata once */
   updateMetadata();

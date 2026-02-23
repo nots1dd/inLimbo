@@ -61,7 +61,7 @@ public:
 
   [[nodiscard]] virtual auto getBackendInfo() const -> backend::BackendInfo = 0;
 
-  /* ---------------- Visualization support ---------------- */
+  /* ---------------- Audio buffer read ---------------- */
 
   [[nodiscard]] virtual auto copySequence() const noexcept -> ui64     = 0;
   [[nodiscard]] virtual auto copyBufferSize() const noexcept -> size_t = 0;
