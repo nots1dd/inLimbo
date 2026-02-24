@@ -7,12 +7,14 @@ namespace frontend::tui::ui
 {
 
 EventHandler::EventHandler(UIScreen& activeScreen, state::library::LibraryState& libraryState,
+                           state::help::HelpState&              helpState,
                            state::now_playing::NowPlayingState& nowState,
                            state::queue::QueueState&            queueState,
                            managers::ThreadManager& threadManager, TS_SongMap* songMap,
                            mpris::Service* mpris)
-    : m_activeScreen(activeScreen), m_libraryState(libraryState), m_nowState(nowState),
-      m_queueState(queueState), m_threadManager(threadManager), m_songMap(songMap), m_mpris(mpris)
+    : m_activeScreen(activeScreen), m_libraryState(libraryState), m_helpState(helpState),
+      m_nowState(nowState), m_queueState(queueState), m_threadManager(threadManager),
+      m_songMap(songMap), m_mpris(mpris)
 {
 }
 
@@ -40,8 +42,12 @@ void EventHandler::toggleMute()
 
 auto EventHandler::handle(Event e) -> bool
 {
-  if (e == Event::Character('q'))
+  auto cfg = m_threadManager.getConfig().get();
+  auto kb  = cfg->kb;
+
+  if (e == Event::Character(kb.quit()))
   {
+    LOG_INFO("Quit pressed");
     ScreenInteractive::Active()->Exit();
     return true;
   }
@@ -50,7 +56,7 @@ auto EventHandler::handle(Event e) -> bool
   {
     case UIScreen::Main:
     {
-      if (e == Event::Character('\t'))
+      if (e == Event::Tab)
       {
         m_libraryState.toggleFocus();
         return true;
@@ -109,15 +115,56 @@ auto EventHandler::handle(Event e) -> bool
         return true;
       }
 
-      if (e == Event::Character('2'))
+      if (e == Event::Character(kb.gotoLyricsScreen()))
       {
         m_activeScreen = UIScreen::NowPlaying;
         return true;
       }
 
-      if (e == Event::Character('3'))
+      if (e == Event::Character(kb.gotoQueueScreen()))
       {
         m_activeScreen = UIScreen::Queue;
+        return true;
+      }
+
+      if (e == Event::Character(kb.gotoHelpScreen()))
+      {
+        m_activeScreen = UIScreen::Help;
+        return true;
+      }
+
+      break;
+    }
+
+    case UIScreen::Help:
+    {
+      if (e == Event::Character(kb.gotoLibraryScreen()) || e == Event::Escape)
+      {
+        m_activeScreen = UIScreen::Main;
+        return true;
+      }
+
+      if (e == Event::Character(kb.gotoQueueScreen()))
+      {
+        m_activeScreen = UIScreen::Queue;
+        return true;
+      }
+
+      if (e == Event::Character(kb.gotoLyricsScreen()))
+      {
+        m_activeScreen = UIScreen::NowPlaying;
+        return true;
+      }
+
+      if (e == Event::ArrowDown)
+      {
+        m_helpState.moveSelection(1);
+        return true;
+      }
+
+      if (e == Event::ArrowUp)
+      {
+        m_helpState.moveSelection(-1);
         return true;
       }
 
@@ -126,15 +173,21 @@ auto EventHandler::handle(Event e) -> bool
 
     case UIScreen::NowPlaying:
     {
-      if (e == Event::Character('1') || e == Event::Escape)
+      if (e == Event::Character(kb.gotoLibraryScreen()) || e == Event::Escape)
       {
         m_activeScreen = UIScreen::Main;
         return true;
       }
 
-      if (e == Event::Character('3'))
+      if (e == Event::Character(kb.gotoQueueScreen()))
       {
         m_activeScreen = UIScreen::Queue;
+        return true;
+      }
+
+      if (e == Event::Character(kb.gotoHelpScreen()))
+      {
+        m_activeScreen = UIScreen::Help;
         return true;
       }
 
@@ -188,15 +241,21 @@ auto EventHandler::handle(Event e) -> bool
 
     case UIScreen::Queue:
     {
-      if (e == Event::Character('1') || e == Event::Escape)
+      if (e == Event::Character(kb.gotoLibraryScreen()) || e == Event::Escape)
       {
         m_activeScreen = UIScreen::Main;
         return true;
       }
 
-      if (e == Event::Character('2'))
+      if (e == Event::Character(kb.gotoLyricsScreen()))
       {
         m_activeScreen = UIScreen::NowPlaying;
+        return true;
+      }
+
+      if (e == Event::Character(kb.gotoHelpScreen()))
+      {
+        m_activeScreen = UIScreen::Help;
         return true;
       }
 
@@ -258,13 +317,13 @@ auto EventHandler::handle(Event e) -> bool
 
   // Global audio controls
 
-  if (e == Event::Character('p'))
+  if (e == Event::Character(kb.playPause()))
   {
     m_audioPtr->isPlaying() ? m_audioPtr->pauseCurrent() : m_audioPtr->playCurrent();
     return true;
   }
 
-  if (e == Event::Character('n'))
+  if (e == Event::Character(kb.nextTrack()))
   {
     m_threadManager.executeWithTelemetry([&](audio::Service& audio) -> void { audio.nextTrack(); });
     m_mpris->updateMetadata();
@@ -272,7 +331,7 @@ auto EventHandler::handle(Event e) -> bool
     return true;
   }
 
-  if (e == Event::Character('x'))
+  if (e == Event::Character(kb.randomTrack()))
   {
     m_threadManager.executeWithTelemetry([&](audio::Service& audio) -> void
                                          { audio.randomTrack(); });
@@ -281,7 +340,7 @@ auto EventHandler::handle(Event e) -> bool
     return true;
   }
 
-  if (e == Event::Character('b'))
+  if (e == Event::Character(kb.prevTrack()))
   {
     m_threadManager.executeWithTelemetry([&](audio::Service& audio) -> void
                                          { audio.previousTrack(); });
@@ -290,37 +349,37 @@ auto EventHandler::handle(Event e) -> bool
     return true;
   }
 
-  if (e == Event::Character('r'))
+  if (e == Event::Character(kb.restartTrack()))
   {
     m_audioPtr->restartCurrent();
     return true;
   }
 
-  if (e == Event::Character('j'))
+  if (e == Event::Character(kb.seekBack()))
   {
     m_threadManager.requestSeek(m_threadManager.getPendingSeek() - 2);
     return true;
   }
 
-  if (e == Event::Character('k'))
+  if (e == Event::Character(kb.seekFwd()))
   {
     m_threadManager.requestSeek(m_threadManager.getPendingSeek() + 2);
     return true;
   }
 
-  if (e == Event::Character('='))
+  if (e == Event::Character(kb.volUp()))
   {
     adjustVolume(+0.05f);
     return true;
   }
 
-  if (e == Event::Character('-'))
+  if (e == Event::Character(kb.volDown()))
   {
     adjustVolume(-0.05f);
     return true;
   }
 
-  if (e == Event::Character('m'))
+  if (e == Event::Character(kb.toggleMute()))
   {
     toggleMute();
     return true;
@@ -376,6 +435,8 @@ auto EventHandler::handle(Event e) -> bool
         }
       }
     }
+
+    m_libraryState.moveSelection(1);
 
     return true;
   }

@@ -160,7 +160,7 @@ auto QueueScreen::render() -> Element
   auto meta_inner = window(text(" Track Info ") | bold, meta_content->Render() | frame | flex) |
                     size(WIDTH, EQUAL, term.dimx - half_width);
 
-  auto queue_pane = queue_inner | borderStyled(BorderStyle::HEAVY, Color::Green);
+  auto queue_pane = queue_inner | borderStyled(BorderStyle::HEAVY, Color::Pink3);
 
   auto meta_pane = meta_inner | borderStyled(BorderStyle::HEAVY, Color::GrayDark);
 

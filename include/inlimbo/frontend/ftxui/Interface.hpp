@@ -8,6 +8,7 @@
 #include "frontend/ftxui/managers/Threads.hpp"
 #include "frontend/ftxui/state/album_art/Impl.hpp"
 #include "frontend/ftxui/state/now_playing/Impl.hpp"
+#include "frontend/ftxui/ui/screens/Help.hpp"
 #include "frontend/ftxui/ui/screens/Main.hpp"
 #include "frontend/ftxui/ui/screens/Queue.hpp"
 #include "mpris/Service.hpp"
@@ -76,11 +77,13 @@ private:
   std::atomic<bool> m_needsRebuild{false};
 
   state::library::LibraryState        m_libraryState;
+  state::help::HelpState              m_helpState;
   state::now_playing::NowPlayingState m_nowState;
   state::album_art::AlbumArtState     m_albumArtState;
   state::queue::QueueState            m_queueState;
 
   ui::screens::MainScreen       m_mainScreen;
+  ui::screens::HelpScreen       m_helpScreen;
   ui::screens::NowPlayingScreen m_nowPlayingScreen;
   ui::screens::QueueScreen      m_queueScreen;
 

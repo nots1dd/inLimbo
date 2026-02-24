@@ -7,8 +7,23 @@
 #include <memory>
 #include <spdlog/spdlog.h>
 
+extern "C"
+{
+#include <libavutil/log.h>
+}
+
 namespace inlimbo
 {
+
+namespace ffmpeg
+{
+// instead of ffmpeg's logs contesting with ours for
+// printing to ostream, we set a primitive callback
+// and print the contents of their logs using our logger.
+//
+// This is supposed to be called during logger init.
+void log_callback(void*, int level, const char* fmt, va_list vl);
+} // namespace ffmpeg
 
 constexpr std::size_t kMaxLogFiles = 100;
 

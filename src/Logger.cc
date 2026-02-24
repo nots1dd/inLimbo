@@ -168,6 +168,8 @@ void Logger::shutdown() noexcept
 void Logger::init_from_env()
 {
   cleanup_old_logs();
+  av_log_set_callback(ffmpeg::log_callback);
+  av_log_set_level(AV_LOG_WARNING);
 
   utils::string::SmallString env_file    = std::getenv(INLIMBO_LOG_FILE_ENV);
   utils::string::SmallString env_level   = std::getenv(INLIMBO_LOG_LEVEL_ENV);
@@ -214,5 +216,42 @@ void Logger::print_banner(const utils::string::SmallString& file, spdlog::level:
 
   log->info("inLimbo logger session stored at: {}", file.c_str());
 }
+
+namespace ffmpeg
+{
+void log_callback(void*, int level, const char* fmt, va_list vl)
+{
+  if (level > av_log_get_level())
+    return;
+
+  char buf[1024];
+  vsnprintf(buf, sizeof(buf), fmt, vl);
+
+  // Trim trailing newline
+  if (auto len = strlen(buf); len && buf[len - 1] == '\n')
+    buf[len - 1] = '\0';
+
+  switch (level)
+  {
+    case AV_LOG_PANIC:
+    case AV_LOG_FATAL:
+    case AV_LOG_ERROR:
+      LOG_ERROR("[ffmpeg] {}", buf);
+      break;
+
+    case AV_LOG_WARNING:
+      LOG_WARN("[ffmpeg] {}", buf);
+      break;
+
+    case AV_LOG_INFO:
+      LOG_INFO("[ffmpeg] {}", buf);
+      break;
+
+    default:
+      LOG_DEBUG("[ffmpeg] {}", buf);
+      break;
+  }
+}
+} // namespace ffmpeg
 
 } // namespace inlimbo

@@ -2,6 +2,7 @@
 
 #include "audio/Service.hpp"
 #include "frontend/ftxui/managers/Threads.hpp"
+#include "frontend/ftxui/state/help/Impl.hpp"
 #include "frontend/ftxui/state/library/Impl.hpp"
 #include "frontend/ftxui/state/now_playing/Impl.hpp"
 #include "frontend/ftxui/state/queue/Impl.hpp"
@@ -27,8 +28,9 @@ class EventHandler
 {
 public:
   EventHandler(UIScreen& activeScreen, state::library::LibraryState& libraryState,
-               state::now_playing::NowPlayingState& nowState, state::queue::QueueState& queueState,
-               managers::ThreadManager& threadManager, TS_SongMap* songMap, mpris::Service* mpris);
+               state::help::HelpState& helpState, state::now_playing::NowPlayingState& nowState,
+               state::queue::QueueState& queueState, managers::ThreadManager& threadManager,
+               TS_SongMap* songMap, mpris::Service* mpris);
 
   auto handle(ftxui::Event e) -> bool;
 
@@ -38,6 +40,7 @@ private:
   UIScreen& m_activeScreen;
 
   state::library::LibraryState&        m_libraryState;
+  state::help::HelpState&              m_helpState;
   state::now_playing::NowPlayingState& m_nowState;
   state::queue::QueueState&            m_queueState;
 

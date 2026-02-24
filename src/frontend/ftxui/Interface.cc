@@ -46,12 +46,11 @@ static auto vuMeter(float volume, int bars = 10) -> Element
 Interface::Interface(TS_SongMap* songMap, telemetry::Context* telemetry, mpris::Service* mpris)
     : m_songMapTS(songMap), m_telemetryCtx(telemetry), m_mpris(mpris),
       m_threadManager(m_mpris, m_songMapTS, m_telemetryCtx), m_libraryState(songMap),
-      m_mainScreen(m_libraryState), m_nowPlayingScreen(m_nowState, m_albumArtState),
-      m_queueScreen(m_queueState),
-      m_eventHandler(active_screen, m_libraryState, m_nowState, m_queueState, m_threadManager,
-                     m_songMapTS, m_mpris)
+      m_mainScreen(m_libraryState), m_helpScreen(m_helpState),
+      m_nowPlayingScreen(m_nowState, m_albumArtState), m_queueScreen(m_queueState),
+      m_eventHandler(active_screen, m_libraryState, m_helpState, m_nowState, m_queueState,
+                     m_threadManager, m_songMapTS, m_mpris)
 {
-  m_libraryState.rebuild();
   renderer = CatchEvent(Renderer([&]() mutable -> Element { return renderRoot(); }),
                         [&](Event e) -> bool { return m_eventHandler.handle(e); });
 }
@@ -102,12 +101,17 @@ auto Interface::renderRoot() -> Element
   if (m_needsRebuild.exchange(false))
   {
     m_libraryState.rebuild();
+    m_helpState.rebuild(*m_threadManager.getConfig());
   }
 
   switch (active_screen)
   {
     case UIScreen::Main:
       return vbox({renderTitleBar(), m_mainScreen.render() | flex,
+                   renderStatusBar() | size(HEIGHT, EQUAL, 3)});
+
+    case UIScreen::Help:
+      return vbox({renderTitleBar(), m_helpScreen.render() | flex,
                    renderStatusBar() | size(HEIGHT, EQUAL, 3)});
 
     case UIScreen::NowPlaying:
@@ -132,6 +136,11 @@ auto Interface::renderTitleBar() -> Element
     case UIScreen::Main:
       screen_name  = "Library";
       screen_color = Color::GreenLight;
+      break;
+
+    case UIScreen::Help:
+      screen_name  = "Help";
+      screen_color = Color::Orange1;
       break;
 
     case UIScreen::NowPlaying:
@@ -240,7 +249,9 @@ auto Interface::renderStatusBarFull() -> Element
            text(" "),
            text(marquee(meta->title, TITLE_WIDTH, tick)) | bold,
            text("  ·  ") | dim,
-           text(meta->artist) | color(Color::Cyan),
+           text(marquee(meta->artist, TITLE_WIDTH, tick)) | color(Color::Cyan),
+           text("  ·  ") | dim,
+           text(marquee(meta->album, TITLE_WIDTH, tick)) | color(Color::GreenLight),
            text("  ·  ") | dim,
            text(meta->genre.empty() ? "Unknown" : meta->genre) | color(Color::MagentaLight),
            text("  "),
@@ -290,7 +301,7 @@ auto Interface::renderStatusBarReduced() -> Element
            text(" "),
            text(marquee(meta->title, 24, tick)) | bold,
            text(" · ") | dim,
-           text(meta->artist) | color(Color::Cyan),
+           text(marquee(meta->artist, 24, tick)) | color(Color::Cyan),
            text("  "),
            separatorLight(),
            text(" "),
@@ -325,6 +336,8 @@ auto Interface::renderStatusBarCompact() -> Element
                              : text("⏸") | color(Color::RedLight),
            text(" "),
            text(marquee(meta->title, 18, tick)) | bold,
+           text(" by "),
+           text(marquee(meta->artist, 18, tick)) | bold | color(Color::Blue),
            filler(),
            text(utils::timer::fmtTime(trackInfo->positionSec)) | dim,
            text(" "),

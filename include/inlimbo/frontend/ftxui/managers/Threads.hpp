@@ -42,6 +42,8 @@ public:
   void setOnConfigReload(std::function<void()> fn);
   void execute(std::function<void()> fn);
 
+  auto getConfig() -> std::shared_ptr<const TuiConfig> { return m_cfg.get(); }
+
 private:
   void loadMiscConfig(MiscConfig& miscCfg);
   void loadConfig();

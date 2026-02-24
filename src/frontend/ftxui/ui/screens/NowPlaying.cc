@@ -88,7 +88,7 @@ auto NowPlayingScreen::render() -> Element
 
   auto right = window(lyrics_header, lyrics_view->Render()) |
                size(WIDTH, EQUAL, term.dimx - half_width) | size(HEIGHT, EQUAL, content_height) |
-               border;
+               borderStyled(BorderStyle::HEAVY, Color::Green);
 
   return hbox({left, right}) | flex | bgcolor(Color::RGB(18, 18, 18));
 }

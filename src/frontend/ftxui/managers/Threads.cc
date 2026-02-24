@@ -94,6 +94,12 @@ void ThreadManager::start()
 {
   m_isRunning = true;
 
+  loadConfig();
+
+  // run it initially
+  if (m_onConfigReload)
+    m_onConfigReload();
+
   helpers::telemetry::beginPlayback(*m_audioPtr, m_telemetry, m_currentPlay, m_lastPlayTick);
 
   status_thread = std::thread(&ThreadManager::statusLoop, this);
