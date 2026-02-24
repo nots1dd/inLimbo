@@ -26,9 +26,6 @@ set(INLIMBO_FE_FTXUI_SOURCES
   ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/ui/screens/Queue.cc
   ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/ui/screens/Help.cc
   ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/ui/EventHandler.cc
-
-  # components
-  ${CMAKE_SOURCE_DIR}/src/frontend/ftxui/components/scroll/Scrollable.cc
 )
 
 include(FetchContent)
