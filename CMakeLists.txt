@@ -213,10 +213,9 @@ set(INLIMBO_CORE_SOURCES
     src/taglib/source/MP3.cc
     src/taglib/source/FLAC.cc
     src/mpris/Service.cc
-    src/telemetry/Sink.cc
     src/telemetry/Analysis.cc
     src/telemetry/Store.cc
-    src/telemetry/IDs.cc
+    src/telemetry/Registry.cc
     src/query/SongMap.cc
     src/query/sort/Engine.cc
     src/query/sort/Stats.cc

@@ -11,6 +11,13 @@
 namespace telemetry
 {
 
+/// a generic map that corresponds to T -> key && Stats -> value
+///
+/// ex: StatsMap<SongID> -> for each song id we have a corresponding stat struct
+/// describing about the song (like no of plays, total playtime, last played, etc.)
+template <typename T>
+using StatsMap = ankerl::unordered_dense::map<T, Stats>;
+
 class Store
 {
 public:
@@ -27,10 +34,10 @@ public:
   [[nodiscard]] auto album(AlbumID id) const -> const Stats*;
   [[nodiscard]] auto genre(GenreID id) const -> const Stats*;
 
-  [[nodiscard]] auto songs() const -> const ankerl::unordered_dense::map<SongID, Stats>&;
-  [[nodiscard]] auto artists() const -> const ankerl::unordered_dense::map<ArtistID, Stats>&;
-  [[nodiscard]] auto albums() const -> const ankerl::unordered_dense::map<AlbumID, Stats>&;
-  [[nodiscard]] auto genres() const -> const ankerl::unordered_dense::map<GenreID, Stats>&;
+  [[nodiscard]] auto songs() const -> const StatsMap<SongID>&;
+  [[nodiscard]] auto artists() const -> const StatsMap<ArtistID>&;
+  [[nodiscard]] auto albums() const -> const StatsMap<AlbumID>&;
+  [[nodiscard]] auto genres() const -> const StatsMap<GenreID>&;
 
   // Disk API
   [[nodiscard]] auto save(const std::string& path) const -> bool;
@@ -45,10 +52,10 @@ private:
   std::vector<Event> events;
   double             minPlaySec = 30.0;
 
-  ankerl::unordered_dense::map<SongID, Stats>   songStats;
-  ankerl::unordered_dense::map<ArtistID, Stats> artistStats;
-  ankerl::unordered_dense::map<AlbumID, Stats>  albumStats;
-  ankerl::unordered_dense::map<GenreID, Stats>  genreStats;
+  StatsMap<SongID>   songStats;
+  StatsMap<ArtistID> artistStats;
+  StatsMap<AlbumID>  albumStats;
+  StatsMap<GenreID>  genreStats;
 
   static auto find(const auto& map, auto id) -> const Stats*;
 

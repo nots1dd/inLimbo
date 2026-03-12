@@ -8,6 +8,15 @@
 namespace utils::string
 {
 
+/// a generic class that is meant to contain a ID, STRING relation
+///
+/// ex: id1 --- "hi", id2 --- "hello", etc.
+///
+/// class ensures that the relation is completely retrievable via
+/// 2 relation maps (id -> str) and (str -> id) for lookups.
+///
+/// there could be more memory efficient way to store this, but
+/// this works for now.
 template <typename ID>
 class StringTable
 {

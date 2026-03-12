@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IDs.hpp"
+#include "Registry.hpp"
 #include "Store.hpp"
 
 namespace telemetry
