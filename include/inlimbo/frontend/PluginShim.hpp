@@ -36,7 +36,7 @@
       .struct_size = sizeof(InLimboFrontendAPI),                                                 \
       .create      = fe_create,                                                                  \
       .run         = fe_run,                                                                     \
-      .destroy     = fe_destroy};                                                                    \
+      .destroy     = fe_destroy};                                                                \
                                                                                                  \
     const InLimboFrontendAPI* inlimbo_frontend_get_api() { return &g_inlimbo_frontend_api; }     \
                                                                                                  \

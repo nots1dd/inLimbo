@@ -2,10 +2,10 @@
 
 #include <chrono>
 #include <functional>
+#include <iomanip>
 #include <iostream>
 #include <string_view>
 #include <utility>
-#include <iomanip>
 
 namespace utils
 {

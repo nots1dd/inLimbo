@@ -286,8 +286,8 @@
 #define ABI_VERSION_MAJOR 1
 #define ABI_VERSION_MINOR 0
 #define ABI_VERSION_PATCH 0
-#define ABI_VERSION       INLIMBO_VERSION_ENCODE(ABI_VERSION_MAJOR, ABI_VERSION_MINOR, ABI_VERSION_PATCH)
-#define ABI_TAG_STRING    "ABI" STRINGIFY(ABI_VERSION_MAJOR) "." STRINGIFY(ABI_VERSION_MINOR)
+#define ABI_VERSION INLIMBO_VERSION_ENCODE(ABI_VERSION_MAJOR, ABI_VERSION_MINOR, ABI_VERSION_PATCH)
+#define ABI_TAG_STRING "ABI" STRINGIFY(ABI_VERSION_MAJOR) "." STRINGIFY(ABI_VERSION_MINOR)
 
 #if COMPILER_GCC || COMPILER_CLANG
 #define ABI_EXPORT              extern "C" __attribute__((visibility("default")))
@@ -329,10 +329,10 @@
 #define STABLE_STRUCT(name) struct name final
 #define STABLE_ENUM(name)   enum class name : int
 
-#define ABI_INLINE                inline __attribute__((__always_inline__, __gnu_inline__, __artificial__))
-#define ABI_NO_INLINE             __attribute__((noinline))
-#define EXPORT_C                  ABI_EXPORT INLIMBO_API_C
-#define EXPORT_CPP                INLIMBO_API_CPP
+#define ABI_INLINE    inline __attribute__((__always_inline__, __gnu_inline__, __artificial__))
+#define ABI_NO_INLINE __attribute__((noinline))
+#define EXPORT_C      ABI_EXPORT INLIMBO_API_C
+#define EXPORT_CPP    INLIMBO_API_CPP
 #define ABI_STABILITY_CHECK(expr) static_assert((expr), "ABI stability check failed")
 
 // ============================================================
